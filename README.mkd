@@ -23,8 +23,9 @@ NodeJS based MUD engine with full localization support
     git clone git://github.com/shawncplus/nodemud
     cd nodemud
     npm install
-    ./nodemud -v --save=10 --respawn=10
+    sudo ./nodemud -v --save=10 --respawn=10
 
+Binding the socket requires sudo for now... sorry
 ##Building
 
 See the 'Building' section of the wiki
