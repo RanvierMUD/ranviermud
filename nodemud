@@ -5,10 +5,10 @@
  *
  * Options:
  *   -v Verbose loggin
- *   -p Port to listen on
- *   -l Locale to act as the default
- *   -s Minutes between autosave
- *   -r Minutes between respawn
+ *   --port Port to listen on
+ *   --locale Locale to act as the default
+ *   --save Minutes between autosave
+ *   --respawn Minutes between respawn
  */
 
 
@@ -35,8 +35,8 @@ var net = require('net'),
  * we'll pass them around via construction as needed
  */
 	// cmdline options
-var locale  = argv.l || 'en',
-	port    = argv.p || 23,
+var locale  = argv.locale || 'en',
+	port    = argv.port || 23,
     verbose = !!argv.v,
 	save_interval    = argv.save || 10, // number of minutes between autosave ticks
 	respawn_interval = argv.respawn || 20, // "" between respawn tickets
