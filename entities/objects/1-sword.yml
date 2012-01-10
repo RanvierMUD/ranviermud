@@ -1,0 +1,14 @@
+- &longsword
+    vnum: 1
+    short_description:
+        en: "a longsword"
+        es: "A rapier"
+    keywords:
+        en: [ "longsword", "sword", "long" ]
+        es: [ "rapier", "sword" ]
+    description:
+        en: "A fairly plain, although sharp, steel longsword."
+        es: "Curved. Sword."
+    room: 1
+    script: "1-sword.js"
+- *longsword

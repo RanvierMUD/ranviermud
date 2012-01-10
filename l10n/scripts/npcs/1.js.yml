@@ -1,0 +1,6 @@
+PLAYER_ENTER:
+    en: "<bold><cyan>The guard says, \"I've got my eye on you...\"</cyan></bold>"
+    es: "<bold><cyan>ES-The guard says, \"I've got my eye on you...\"</cyan></bold>"
+PLAYER_DROP:
+    en: "<bold><cyan>The guard says \"Hey! No littering!\""
+    es: "<bold><cyan>ES-The guard says \"Hey! No littering!\""
