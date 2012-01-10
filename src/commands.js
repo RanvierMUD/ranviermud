@@ -62,7 +62,6 @@ var Commands = {
 			item.setInventory(null);
 			item.setRoom(room.getLocation());
 		},
-		eq: function (args, player) { return Commands.player_commands.equipment(args, player); },
 		equipment: function (args, player)
 		{
 			var equipped = player.getEquipped();
@@ -93,7 +92,6 @@ var Commands = {
 			player.addItem(item);
 			room.removeItem(item.getUuid());
 		},
-		inv: function (args, player) { return Commands.player_commands.inventory(args, player); },
 		inventory: function (args, player)
 		{
 			player.sayL10n(l10n, 'INV');
@@ -114,7 +112,6 @@ var Commands = {
 				}
 			});
 		},
-		l: function (args, player) { return Commands.player_commands.look(args, player); },
 		look: function (args, player)
 		{
 			var room = rooms.getAt(player.getLocation());
@@ -301,6 +298,11 @@ var Commands = {
 	}
 };
 
+alias('l',   'look');
+alias('inv', 'inventory');
+alias('eq',  'equipment');
+alias('rem', 'remove');
+
 exports.Commands = Commands;
 
 /**
@@ -475,3 +477,15 @@ function find_item_in_inventory (look_string, being, hydrate)
 
 	return item;
 }
+
+/**
+ * Alias commands
+ * @param string name   Name of the alias E.g., l for look
+ * @param string target name of the command
+ */
+function alias (name, target)
+{
+	Commands.player_commands[name] = function () {
+		Commands.player_commands[target].apply(null, [].slice.call(arguments))
+	};
+};
