@@ -37,3 +37,6 @@ ITEM_NOT_EQUIPPED:
 ITEM_WORN:
   en: "You're wearing that, remove it first."
   es: "ES-You're wearing that, remove it first."
+AMBIG_EXIT:
+  en: "Which one? Be more specific."
+  es: "ES-Which one? Be more specific."

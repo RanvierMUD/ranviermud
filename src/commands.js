@@ -277,20 +277,28 @@ var Commands = {
 	 */
 	room_exits : function (exit, player)
 	{
-		var found_exit = false;
 		var room = rooms.getAt(player.getLocation());
 		if (!room)
 		{
 			return false;
 		}
 
-		room.getExits().forEach(function (e) {
-			if (exit === e.direction) {
-				found_exit = true;
-				move(e, player, players);
-			}
+		var exits = room.getExits().filter(function (e) {
+			return e.direction.match(new RegExp("^" + exit));
 		});
-		return found_exit;
+
+		if (!exits.length) {
+			return false;
+		}
+
+		if (exits.length > 1) {
+			player.sayL10n(l10n, "AMBIG_EXIT");
+			return true;
+		}
+
+		move(exits.pop(), player, players);
+
+		return true;
 	},
 	setLocale : function (locale)
 	{
