@@ -196,12 +196,6 @@ var Commands = {
 			});
 			return false;
 		},
-		save: function (args, player)
-		{
-			player.save(function () {
-				player.say(L('SAVED'));
-			});
-		},
 		remove: function (args, player)
 		{
 			thing = find_item_in_inventory(args.split(' ')[0], player, true);
@@ -217,12 +211,28 @@ var Commands = {
 
 			player.unequip(thing);
 		},
+		save: function (args, player)
+		{
+			player.save(function () {
+				player.say(L('SAVED'));
+			});
+		},
 		say: function (args, player)
 		{
 			var location = player.getLocation();
 			args = args.replace("\033", '');
 			players.broadcastL10n(l10n, 'SAY', player.getName(), args);
 			players.eachExcept(player, function (p) { p.prompt(); });
+		},
+		where: function (args, player)
+		{
+			player.write(rooms.getAt(player.getLocation()).getArea() + "\n");
+		},
+		who: function (args, player)
+		{
+			players.each(function (p) {
+				player.say(p.getName());
+			});
 		},
 		wield: function (args, player)
 		{
@@ -238,16 +248,6 @@ var Commands = {
 				return;
 			}
 			thing.emit('wield', 'wield', player, players);
-		},
-		where: function (args, player)
-		{
-			player.write(rooms.getAt(player.getLocation()).getArea() + "\n");
-		},
-		who: function (args, player)
-		{
-			players.each(function (p) {
-				player.say(p.getName());
-			});
 		},
 	},
 
