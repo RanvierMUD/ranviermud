@@ -3,7 +3,7 @@ exports.listeners = {
 	{
 		return function (location, player, players)
 		{
-			player.sayL10n(l10n, 'WIELD');
+			player.sayL10n(l10n, 'WIELD', this.getShortDesc(player.getLocale()));
 			player.equip(location, this);
 		}
 	},
@@ -11,7 +11,8 @@ exports.listeners = {
 	{
 		return function (player)
 		{
-			player.sayL10n(l10n, 'REMOVE');
+			player.sayL10n(l10n, 'REMOVE', this.getShortDesc(player.getLocale()));
 		}
 	},
 };
+

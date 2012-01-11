@@ -10,5 +10,5 @@
         en: "A very point dagger. Edges are a bit dull though."
         es: "ES-A very point dagger. Edges are a bit dull though."
     room: 1
-    script: "2-dagger.js"
+    behaviors: "wieldable"
 

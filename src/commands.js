@@ -184,6 +184,14 @@ var Commands = {
 			});
 			player.say(']');
 		},
+		kill: function (args, player)
+		{
+			var npc = find_npc_in_room(args, rooms.getAt(player.getLocation()), player, true);
+			if (!npc.listeners('combat').length) {
+				player.sayL10n(l10n, 'KILL_PACIFIST');
+				return;
+			}
+		},
 		quit: function (args, player)
 		{
 			if (player.isInCombat()) {

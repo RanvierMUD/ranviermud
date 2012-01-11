@@ -157,7 +157,6 @@ var Events = {
 				var inv = [];
 				arg.getInventory().forEach(function (item) {
 					item = new Item(item);
-					Data.loadListeners(item, items.getL10nDir(), items.getScriptsDir(), item);
 					items.addItem(item);
 					inv.push(item);
 				});

@@ -70,7 +70,6 @@ var Items = function () {
 
 					object = new Item(object);
 					object.setUuid(uuid.v4());
-					object = Data.loadListeners(object_def[vnum], l10n_dir, objects_scripts_dir, object);
 					log("\t\tLoaded item [vnum:" + object.getUuid() + ', ' + object.getShortDesc('en') + ']');
 					self.addItem(object);
 				}
@@ -162,6 +161,8 @@ var Item = function (config)
 		self.uuid              = config.uuid        || null;
 		self.vnum              = config.vnum;
 		self.script            = config.script;
+
+		Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
 	};
 
 	self.getVnum      = function () { return self.vnum; };

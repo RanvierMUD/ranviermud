@@ -1,0 +1,7 @@
+WIELD:
+  en: "You wield $[1]"
+  es: "ES-You wield $[1]"
+REMOVE:
+  en: "You remove $[1]"
+  es: "ES-You remove $[1]"
+

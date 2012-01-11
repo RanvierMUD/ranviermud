@@ -5,9 +5,9 @@ var fs       = require('fs'),
     Localize = require('localize'),
     Data     = require('./data.js').Data;
 
-var npcs_dir        = __dirname + '/../entities/npcs/';
-var npcs_script_dir = __dirname + '/../scripts/npcs/';
-var l10n_dir        = __dirname + '/../l10n/scripts/npcs/';
+var npcs_dir         = __dirname + '/../entities/npcs/';
+var npcs_scripts_dir = __dirname + '/../scripts/npcs/';
+var l10n_dir         = __dirname + '/../l10n/scripts/npcs/';
 
 /**
  * Npc container class. Loads/finds npcs
@@ -69,7 +69,6 @@ var Npcs = function () {
 
 
 					npc = new Npc(npc);
-					Data.loadListeners(npc_def[vnum], l10n_dir, npcs_script_dir, npc);
 					npc.setUuid(uuid.v4());
 					log("\t\tLoaded npc [vnum:" + npc.getUuid() + ', ' + npc.getShortDesc('en') + ']');
 					self.add(npc);
@@ -160,6 +159,8 @@ var Npc = function (config)
 		self.description       = config.description || '';
 		self.room              = config.room        || null;
 		self.vnum              = config.vnum;
+
+		Data.loadListeners(config, l10n_dir, npcs_scripts_dir, Data.loadBehaviors(config, 'npcs/', self));
 	};
 
 	/**#@+

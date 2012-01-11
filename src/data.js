@@ -4,6 +4,8 @@ var fs   = require('fs'),
     Localize = require('localize');
 
 var data_path = __dirname + '/../data/';
+var behaviors_dir      = __dirname + '/../scripts/behaviors/';
+var behaviors_l10n_dir = __dirname + '/../l10n/scripts/behaviors/';
 
 var Data = {
 	/**
@@ -54,6 +56,7 @@ var Data = {
 	 * @param object config
 	 * @param string l10n_dir
 	 * @param object target
+	 * @return object The applied target
 	 */
 	loadListeners: function (config, l10n_dir, scripts_dir, target)
 	{
@@ -68,6 +71,33 @@ var Data = {
 			for (var listener in listeners) {
 				target.on(listener, listeners[listener](l10n));
 			}
+		}
+
+		return target;
+	},
+
+	/**
+	 * Load and set behaviors (predefined sets of listeners) onto an object
+	 * @param object config
+	 * @param string subdir The subdirectory of behaviors_dir which the behaviors live
+	 * @param object target
+	 * @return object The applied target
+	 */
+	loadBehaviors: function (config, subdir, target)
+	{
+		if ('behaviors' in config) {
+			var behaviors = config.behaviors.split(',');
+			// reverse to give left-to-right weight in the array
+			behaviors.reverse().forEach(function (behavior) {
+				var l10n_file = behaviors_l10n_dir + subdir + behavior + '.yml';
+				var l10n = new Localize(require('js-yaml').load(require('fs').readFileSync(l10n_file).toString('utf8')), undefined, 'zz');
+				var listeners = require(behaviors_dir + subdir + behavior + '.js').listeners;
+				for (var listener in listeners) {
+					// For now do not allow conflicting listeners in behaviors
+					target.removeAllListeners(listener);
+					target.on(listener, listeners[listener](l10n));
+				}
+			});
 		}
 
 		return target;

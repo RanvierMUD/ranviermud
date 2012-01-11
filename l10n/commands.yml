@@ -43,3 +43,6 @@ AMBIG_EXIT:
 CANT_WIELD:
   en: "You're already wielding $[1]."
   es: "ES-You're already wielding $[1]."
+KILL_PACIFIST:
+  en: "They are a pacifist an will not fight."
+  es: "ES-They are a pacifist an will not fight."

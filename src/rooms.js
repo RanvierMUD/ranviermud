@@ -113,7 +113,6 @@ var Rooms = function () {
 						log("\t\tLoaded room " + room.location + '...');
 						room.area = area;
 						room = new Room(room);
-						Data.loadListeners(room_def[vnum], l10n_dir, rooms_scripts_dir, room);
 						self.rooms[room.getLocation()] = room;
 
 
@@ -171,6 +170,7 @@ var Room = function (config)
 		self.location = config.location;
 		self.exits = config.exits || [];
 		self.area = config.area;
+		Data.loadListeners(config, l10n_dir, rooms_scripts_dir, Data.loadBehaviors(config, 'rooms/', self));
 	};
 
 	self.getLocation = function () { return self.location; };
