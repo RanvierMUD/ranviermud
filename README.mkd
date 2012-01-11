@@ -1,7 +1,7 @@
-#NodeMUD
+# NodeMUD
 NodeJS based MUD engine with full localization support
 
-##Features
+## Features
 * Full localization for any strings displayed to the player after they log in. This isn't a common feature in MUDs so I'll explain it. Player A and Player B log in, play the same game and see a different language. Same items, npcs, rooms, etc, different language.
 * Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.
 * Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the event is emitted. Adding new events is easy as npc.emit('eventName');
@@ -14,11 +14,11 @@ NodeJS based MUD engine with full localization support
 * Basic, easily customizable/overhauled skill system
 * Basic channel system
 
-##Requirements
+## Requirements
 
 * NodeJS >= 0.6.2
 
-##Up and running
+## Up and running
 
     git clone git://github.com/shawncplus/nodemud
     cd nodemud
@@ -26,10 +26,7 @@ NodeJS based MUD engine with full localization support
     sudo ./nodemud -v --save=10 --respawn=10
 
 Binding the socket requires sudo for now... sorry
-##Building
 
-See the 'Building' section of the wiki
-
-##Extending
-
-See the 'Extending' section of the wiki
+## Documentation
+Holy crap there is actually documentation and guides for this thing!
+[See the wiki right here.](https://github.com/shawncplus/nodemud/wiki/Home)
