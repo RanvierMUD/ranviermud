@@ -162,6 +162,9 @@ var Npc = function (config)
 		self.vnum              = config.vnum;
 	};
 
+	/**#@+
+	 * Mutators
+	 */
 	self.getVnum      = function () { return self.vnum; };
 	self.getInv       = function () { return self.inventory; };
 	self.isInCombat   = function () { return self.in_combat; };
@@ -172,6 +175,7 @@ var Npc = function (config)
 	self.setInventory = function (identifier) { self.inventory = identifier; }
 	self.setInCombat  = function (combat) { self.in_combat = combat; }
 	self.setContainer = function (uid) { self.container = uid; }
+	/**#@-*/
 
 	/**
 	 * Get the description, localized if possible

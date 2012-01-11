@@ -1,6 +1,6 @@
 var Data    = require('./data').Data,
     hashlib = require('hashlib'),
-	ansi    = require('sty');
+    ansi    = require('sty');
 
 var Player = function(socket) {
 	var self = this;
@@ -12,6 +12,8 @@ var Player = function(socket) {
 	self.inventory = [];
 	self.equipment = {};
 
+	// In combat is either false or an NPC vnum
+	self.in_combat = false;
 
 	/**#@+
 	 * Mutators
@@ -25,6 +27,7 @@ var Player = function(socket) {
 	// Note, only retreives hash, not a real password
 	self.getPassword     = function () { return self.password; };
 	self.getEquipped     = function (slot) { return slot ? self.equipment[slot] : self.equipment; };
+	self.isInCombat      = function () { return self.in_combat; };
 	self.setPromptString = function (prompt_string) { self.prompt_string = prompt_string; }
 	self.setLocale       = function (locale)        { self.locale = locale; };
 	self.setName         = function (newname)       { self.name = newname; };
@@ -33,6 +36,7 @@ var Player = function(socket) {
 	self.addItem         = function (item)          { self.inventory.push(item); };
 	self.removeItem      = function (item)          { self.inventory = self.inventory.filter(function (i) { return item !== i; }); };
 	self.setInventory    = function (inv)           { self.inventory = inv; };
+	self.setInCombat     = function (combat)        { self.in_combat = combat; };
 	/**#@-*/
 
 	/**
@@ -53,14 +57,13 @@ var Player = function(socket) {
 	self.unequip = function (item)
 	{
 		item.setEquipped(false);
-		for (var i in self.equipped) {
-			if (self.equipped[i] === item.getUuid()) {
-				delete self.equipped[i];
+		for (var i in self.equipment) {
+			if (self.equipment[i] === item.getUuid()) {
+				delete self.equipment[i];
 				break;
 			}
 		}
-		item.setEquipped(false);
-		item.emit('remove', player);
+		item.emit('remove', self);
 	};
 
 	/**

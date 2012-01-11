@@ -40,3 +40,6 @@ ITEM_WORN:
 AMBIG_EXIT:
   en: "Which one? Be more specific."
   es: "ES-Which one? Be more specific."
+CANT_WIELD:
+  en: "You're already wielding $[1]."
+  es: "ES-You're already wielding $[1]."

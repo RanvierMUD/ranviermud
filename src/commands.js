@@ -72,6 +72,12 @@ var Commands = {
 		},
 		get: function (args, player)
 		{
+			// No picking stuff up in combat
+			if (player.isInCombat()) {
+				player.sayL10n(l10n, 'GET_COMBAT');
+				return;
+			}
+
 			var room = rooms.getAt(player.getLocation());
 			if (player.getInventory().length >= 20) {
 				player.sayL10n(l10n, 'CARRY_MAX');
@@ -180,7 +186,14 @@ var Commands = {
 		},
 		quit: function (args, player)
 		{
-			players.removePlayer(player, true);
+			if (player.isInCombat()) {
+				player.L10n(l10n, 'COMBAT_COMMAND_FAIL');
+				return;
+			}
+
+			player.save(function() {
+				players.removePlayer(player, true);
+			});
 			return false;
 		},
 		save: function (args, player)
@@ -213,6 +226,11 @@ var Commands = {
 		},
 		wield: function (args, player)
 		{
+			var wield = player.getEquipped('wield');
+			if (wield) {
+				player.sayL10n(l10n, 'CANT_WIELD', items.get(wield).getShortDesc(player.getLocale()));
+				return;
+			}
 			var thing = args.split(' ')[0];
 			thing = find_item_in_inventory(thing, player, true);
 			if (!thing) {
@@ -220,11 +238,10 @@ var Commands = {
 				return;
 			}
 			thing.emit('wield', 'wield', player, players);
-
 		},
 		where: function (args, player)
 		{
-			player.write(player.getLocation() + "\n");
+			player.write(rooms.getAt(player.getLocation()).getArea() + "\n");
 		},
 		who: function (args, player)
 		{
