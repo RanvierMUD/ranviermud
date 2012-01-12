@@ -20,13 +20,13 @@ NodeJS based MUD engine with full localization support
 
 ## Up and running
 
-    git clone git://github.com/shawncplus/nodemud
-    cd nodemud
+    git clone git://github.com/shawncplus/ranviermud
+    cd ranviermud
     npm install
-    sudo ./nodemud -v --save=10 --respawn=10
+    sudo ./ranvier -v --save=10 --respawn=10
 
 Binding the socket requires sudo for now... sorry
 
 ## Documentation
 Holy crap there is actually documentation and guides for this thing!
-[See the wiki right here.](https://github.com/shawncplus/nodemud/wiki/Home)
+[See the wiki right here.](https://github.com/shawncplus/ranviermud/wiki/Home)

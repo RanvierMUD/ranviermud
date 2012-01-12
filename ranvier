@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Main file, use this to run the server:
- * node game.js [options]
+ * node ranvier [options]
  *
  * Options:
  *   -v Verbose loggin
