@@ -191,6 +191,10 @@ var Commands = {
 				player.sayL10n(l10n, 'KILL_PACIFIST');
 				return;
 			}
+
+			npc.emit('combat', player, rooms.getAt(player.getLocation()), players, npcs, function (success) {
+				// cleanup here...
+			});
 		},
 		quit: function (args, player)
 		{
@@ -319,6 +323,11 @@ var Commands = {
 		if (exits.length > 1) {
 			player.sayL10n(l10n, "AMBIG_EXIT");
 			return true;
+		}
+
+		if (player.isInCombat()) {
+			player.sayL10n(l10n, 'MOVE_COMBAT');
+			return;
 		}
 
 		move(exits.pop(), player, players);

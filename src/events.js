@@ -306,8 +306,6 @@ var Events = {
 						arg.say(L('NAME_TAKEN'));
 						return repeat();
 					}
-					console.log(util.inspect(name));
-					arg.getSocket().write(util.inspect(name));
 
 					// Always give them a name like Shawn instead of sHaWn
 					arg.setName(name[0].toUpperCase() + name.toLowerCase().substr(1));

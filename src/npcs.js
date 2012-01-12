@@ -45,8 +45,7 @@ var Npcs = function () {
 				}
 
 				// create and load the npcs
-				for (var vnum in npc_def) {
-					var npc = npc_def[vnum];
+				npc_def.forEach(function (npc) {
 					var validate = ['keywords', 'short_description', 'vnum'];
 
 					var err = false;
@@ -54,25 +53,15 @@ var Npcs = function () {
 						if (!(validate[v] in npc)) {
 							log("\t\tError loading npc in file " + npc + ' - no ' + validate[v] + ' specified');
 							err = true;
-							break;
+							return;
 						}
 					}
 
-					if (err) {
-						continue;
-					}
-
-					if (npc.vnum in self.npcs) {
-						log("\t\tConflicting vnum [" + npc.vnum + '] when loading npc ' + npc);
-						continue;
-					}
-
-
 					npc = new Npc(npc);
 					npc.setUuid(uuid.v4());
-					log("\t\tLoaded npc [vnum:" + npc.getUuid() + ', ' + npc.getShortDesc('en') + ']');
+					log("\t\tLoaded npc [uuid:" + npc.getUuid() + ', ' + npc.getShortDesc('en') + ']');
 					self.add(npc);
-				}
+				});
 			}
 
 			if (callback) {
@@ -131,6 +120,17 @@ var Npcs = function () {
 			callback(self.npcs[obj]);
 		}
 	};
+
+	/**
+	 * Blows away an NPC
+	 * WARNING: If you haven't removed the npc from the room it's in shit _will_ break
+	 * @param Npc npc
+	 */
+	self.destroy = function (npc)
+	{
+		delete self.npcs[npc.getUuid()];
+		delete npc;
+	};
 }
 
 /**
@@ -148,6 +148,12 @@ var Npc = function (config)
 	self.in_combat = false;
 	self.uuid = null;
 
+	// attributes
+	self.attributes = {
+		max_health : 0,
+		health: 0
+	};
+
 	/**
 	 * constructor
 	 * @param object config
@@ -159,6 +165,7 @@ var Npc = function (config)
 		self.description       = config.description || '';
 		self.room              = config.room        || null;
 		self.vnum              = config.vnum;
+		self.attributes        = config.attributes  || {};
 
 		Data.loadListeners(config, l10n_dir, npcs_scripts_dir, Data.loadBehaviors(config, 'npcs/', self));
 	};
@@ -171,11 +178,13 @@ var Npc = function (config)
 	self.isInCombat   = function () { return self.in_combat; };
 	self.getRoom      = function () { return self.room; };
 	self.getUuid      = function () { return self.uuid; };
+	self.getAttribute = function (attr) { return self.attributes[attr] || false; };
 	self.setUuid      = function (uid) { self.uuid = uid; };
 	self.setRoom      = function (room) { self.room = room; };
 	self.setInventory = function (identifier) { self.inventory = identifier; }
 	self.setInCombat  = function (combat) { self.in_combat = combat; }
 	self.setContainer = function (uid) { self.container = uid; }
+	self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
 	/**#@-*/
 
 	/**

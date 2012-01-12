@@ -11,4 +11,5 @@
         es: "Curved. Sword."
     room: 1
     script: "1-sword.js"
+    behaviors: "wieldable"
 - *longsword
