@@ -335,6 +335,7 @@ TelnetStream.prototype.processIncomingData = function (buf)
     emitData();
 
     var cmd = buf[i + 1];
+    if (typeof cmd !== 'undefined')
     switch (cmd) {
       case EOF:
       case IP:
@@ -372,6 +373,8 @@ TelnetStream.prototype.processIncomingData = function (buf)
             break;
           case OPT_WINDOW_SIZE:
             // they will send the window size via SB
+            // sbiddle: Or maybe they won't
+            call_next_neg(this);
             break;
           case OPT_BINARY:
             this.binary = true;
@@ -416,6 +419,7 @@ TelnetStream.prototype.processIncomingData = function (buf)
         console.log("unknown opcode %d", buf[i+1]);
         eat(2);
     }
+    else { eat(1); call_next_neg(this); }
   }
 
   if (buf.length) {

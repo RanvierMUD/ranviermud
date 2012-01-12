@@ -92,19 +92,27 @@ var Events = {
 				break;
 			case 'login':
 				if (!dontwelcome) {
-					arg.write("Welcome, what is your name?");
+					arg.write("Welcome, what is your name? ");
 				}
 
 				arg.once('data', function (name) {
 					// swallow any data that's not from player input i.e., doesn't end with a newline
-					if (name[name.length - 1] !== 0x0a) {
+					// Windows can s@#* a d@#$
+					var negot = false;
+					if (name[name.length - 1] === 0x0a) {
+						negot = true;
+					} else if (name[name.length - 1] === 0x0d) {
+						negot = true;
+					}
+
+					if (!negot) {
 						next(arg, 'login', true);
 						return;
 					}
 
 					var name = name.toString().trim();
 					if (/[^a-z]/i.test(name) || !name) {
-						arg.write("That's not really your name, now is it?\n");
+						arg.write("That's not really your name, now is it?\r\n");
 						return repeat();
 					}
 
@@ -247,7 +255,7 @@ var Events = {
 					}
 
 					if (check === 'n') {
-						arg.write("Goodbye!\n");
+						arg.write("Goodbye!\r\n");
 						arg.end();
 						return false;
 					}
@@ -265,7 +273,7 @@ var Events = {
 					};
 					locale = locale.toString().trim().toLowerCase();
 					if (!(locale in locales)) {
-						arg.write("Sorry, that's not a valid language.\n");
+						arg.write("Sorry, that's not a valid language.\r\n");
 						return repeat();
 					}
 
@@ -298,6 +306,8 @@ var Events = {
 						arg.say(L('NAME_TAKEN'));
 						return repeat();
 					}
+					console.log(util.inspect(name));
+					arg.getSocket().write(util.inspect(name));
 
 					// Always give them a name like Shawn instead of sHaWn
 					arg.setName(name[0].toUpperCase() + name.toLowerCase().substr(1));

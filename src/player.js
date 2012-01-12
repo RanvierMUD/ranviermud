@@ -102,7 +102,7 @@ var Player = function(socket) {
 	self.say = function (data, color) {
 		color = color || true;
 		if (!color) ansi.disable();
-		socket.write(ansi.parse(data) + "\n");
+		socket.write(ansi.parse(data) + "\r\n");
 		ansi.enable();
 	};
 
@@ -125,7 +125,7 @@ var Player = function(socket) {
 	 * Display the configured prompt to the player
 	 */
 	self.prompt = function () {
-		self.write("\n" + self.getPromptString());
+		self.write("\r\n" + self.getPromptString());
 	};
 
 

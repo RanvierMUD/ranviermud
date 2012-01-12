@@ -234,7 +234,7 @@ var Commands = {
 		},
 		where: function (args, player)
 		{
-			player.write(rooms.getAt(player.getLocation()).getArea() + "\n");
+			player.write(rooms.getAt(player.getLocation()).getArea() + "\r\n");
 		},
 		who: function (args, player)
 		{
