@@ -11,8 +11,8 @@ exports.listeners = {
 
 function initiate_combat (l10n, npc, player, room, npcs, callback)
 {
-	player.setInCombat(true);
-	npc.setInCombat(true);
+	player.setInCombat(npc.getUuid());
+	npc.setInCombat(player.getName());
 
 	player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(player.getLocale()));
 

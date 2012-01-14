@@ -6,7 +6,8 @@ var hashlib  = require('hashlib'),
     Commands = require('./commands').Commands,
     Data     = require('./data').Data,
     Item     = require('./items').Item,
-    Player   = require('./player').Player;
+    Player   = require('./player').Player,
+	Skills   = require('./skills').Skills;
 
 
 /**
@@ -18,6 +19,8 @@ var l10n_file = __dirname + '/../l10n/events.yml';
 var L  = null;
 
 var players = null;
+var npcs    = null;
+var rooms   = null;
 var items   = null;
 
 // Keep track of password attempts
@@ -201,8 +204,12 @@ var Events = {
 
 						var exit = Commands.room_exits(command, player);
 						if (exit === false) {
-							player.say(command + " is not a valid command.");
-							result = true;
+							if (!(command in player.getSkills())) {
+								player.say(command + " is not a valid command.");
+								result = true;
+							} else {
+								result = player.useSkill(command, player, args, rooms, npcs);
+							}
 						}
 					} else {
 						result = Commands.player_commands[command](args, player);
@@ -324,6 +331,23 @@ var Events = {
 
 					// setPassword handles hashing
 					arg.setPassword(pass);
+					next(arg, 'class');
+				});
+				break;
+			case 'class':
+				var classes = {w: '[W]arrior'};
+				arg.sayL10n(l10n, 'CLASS_SELECT');
+				for (var r in classes) {
+					arg.say(classes[r]);
+				}
+				arg.getSocket().once('data', function (cls) {
+					cls = cls.toString().trim().toLowerCase();
+					var classes = {w: "warrior"};
+					if (!(cls in classes)) {
+						arg.sayL10n(l10n,'INVALID_CLASS');
+						return repeat();
+					}
+					arg.setAttribute('class', classes[cls]);
 					next(arg, 'done');
 				});
 				break;
@@ -337,28 +361,7 @@ var Events = {
 					arg.getSocket().emit('commands', arg);
 				});
 				break;
-			/* Example stage:
-			case 'race':
-				var races = {h: '[H]uman', o: '[O]rc', e: '[E]lf'};
-				arg.say("What race would you like to play?);
-				for (var r in races) {
-					arg.say(races[r]);
-				}
-				arg.getSocket().once('data', function (race) {
-					race = race.toString().trim().toLowerCase();
-					if (!(race in races)) {
-						arg.say("Sorry, that's not a valid race.");
-						// emitting the same event with the same action will simply repeat this stage
-						// Hooray for not using stupid loops
-						arg.getSocket.emit('createPlayer', arg, 'race');
-						return;
-					}
-					var races = {h: 'human', o: 'orc', e: 'elf'};
-					arg.setRace(races[race]);
-					arg.getSocket().emit('createPlayer', arg, 'done');
-				});
-				break;
-			*/
+
 			}
 		}
 	},
@@ -366,6 +369,8 @@ var Events = {
 	{
 		players = players || config.players;
 		items   = items   || config.items;
+		rooms   = rooms   || config.rooms;
+		npcs    = npcs    || config.npcs;
 		if (!l10n) {
 			util.log("Loading event l10n... ");
 				l10n = new Localize(require('js-yaml').load(require('fs').readFileSync(l10n_file).toString('utf8')), undefined, 'zz');

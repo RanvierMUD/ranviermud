@@ -155,6 +155,10 @@ var Npc = function (config)
 		level: 1
 	};
 
+	// Anything affecting the player
+	self.affects = {
+	};
+
 	/**
 	 * constructor
 	 * @param object config
@@ -189,7 +193,41 @@ var Npc = function (config)
 	self.setInCombat  = function (combat) { self.in_combat = combat; }
 	self.setContainer = function (uid) { self.container = uid; }
 	self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
+	self.removeAffect = function (aff) { delete self.affects[aff]; };
 	/**#@-*/
+
+	/**
+	 * Get currently applied affects
+	 * @param string aff
+	 * @return Array|Object
+	 */
+	self.getAffects = function (aff)
+	{
+		if (aff) {
+			return typeof self.affects[aff] !== 'undefined' ? self.affects[aff] : false;
+		}
+		return self.affects;
+	};
+
+	/**
+	 * Add, activate and set a timer for an affect
+	 * @param string name
+	 * @param object affect
+	 */
+	self.addAffect = function (name, affect)
+	{
+		if (affect.activate) {
+			affect.activate();
+		}
+
+		setTimeout(function () {
+			if (affect.deactivate) {
+				affect.deactivate();
+			}
+			self.removeAffect(name);
+		}, affect.duration * 1000);
+		self.affects[name] = 1;
+	};
 
 	/**
 	 * Get the description, localized if possible

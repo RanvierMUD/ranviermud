@@ -1,4 +1,5 @@
 var Data    = require('./data').Data,
+    Skills  = require('./skills').Skills,
     hashlib = require('hashlib'),
     ansi    = require('sty'),
     util    = require('util');
@@ -28,7 +29,16 @@ var Player = function(socket) {
 		max_health: 100,
 		health : 100,
 		level: 1,
-		experience: 0
+		experience: 0,
+		'class': ''
+	};
+
+	// Anything affecting the player
+	self.affects = {
+	};
+
+	// Skills the players has
+	self.skills = {
 	};
 
 	/**#@+
@@ -41,7 +51,8 @@ var Player = function(socket) {
 	self.getLocation     = function () { return self.location; };
 	self.getSocket       = function () { return socket; };
 	self.getInventory    = function () { return self.inventory; };
-	self.getAttribute    = function (attr) { return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
+	self.getAttribute    = function (attr)  { return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
+	self.getSkills       = function (skill) { return typeof self.skills[skill] !== 'undefined'    ? self.skills[skill]    : self.skills; };
 	// Note, only retreives hash, not a real password
 	self.getPassword     = function () { return self.password; };
 	self.isInCombat      = function () { return self.in_combat; };
@@ -56,7 +67,44 @@ var Player = function(socket) {
 	self.setInventory    = function (inv)       { self.inventory = inv; };
 	self.setInCombat     = function (combat)    { self.in_combat = combat; };
 	self.setAttribute    = function (attr, val) { self.attributes[attr] = val; };
+	self.addSkill        = function (name, skill) { self.skills[name] = skill; };
+	self.removeAffect    = function (aff) { delete self.affects[aff]; };
 	/**#@-*/
+
+	/**
+	 * Get currently applied affects
+	 * @param string aff
+	 * @return Array|Object
+	 */
+	self.getAffects = function (aff)
+	{
+		if (aff) {
+			return typeof self.affects[aff] !== 'undefined' ? self.affects[aff] : false;
+		}
+		return self.affects;
+	};
+
+	/**
+	 * Add, activate and set a timer for an affect
+	 * @param string name
+	 * @param object affect
+	 */
+	self.addAffect = function (name, affect)
+	{
+		if (affect.activate) {
+			affect.activate();
+		}
+
+		setTimeout(function () {
+			if (affect.deactivate) {
+				affect.deactivate();
+				self.prompt();
+			}
+			self.removeAffect(name);
+		}, affect.duration * 1000);
+		self.affects[name] = 1;
+	};
+
 
 	/**
 	 * Get and possibly hydrate an equipped item
@@ -218,10 +266,12 @@ var Player = function(socket) {
 		self.location = data.location;
 		self.locale   = data.locale;
 		self.prompt_string = data.prompt_string;
-		self.password = data.password;
-		self.inventory = data.inventory || [];
-		self.equipment = data.equipment || {};
+		self.password   = data.password;
+		self.inventory  = data.inventory || [];
+		self.equipment  = data.equipment || {};
 		self.attributes = data.attributes;
+		self.affects    = data.affects;
+		self.skills     = data.skills;
 	};
 
 	/**
@@ -270,6 +320,7 @@ var Player = function(socket) {
 		self.getInventory().forEach(function (item) {
 			inv.push(item.flatten());
 		});
+
 		return JSON.stringify({
 			name: self.name,
 			location: self.location,
@@ -279,7 +330,9 @@ var Player = function(socket) {
 			password: self.password,
 			inventory: inv,
 			equipment: self.equipment,
-			attributes: self.attributes
+			attributes: self.attributes,
+			affects: self.affects,
+			skills: self.skills
 		});
 	};
 
@@ -289,6 +342,22 @@ var Player = function(socket) {
 	self.init = function ()
 	{
 		Data.loadListeners({script: "player.js"}, l10n_dir, npcs_scripts_dir, self);
+
+		// Activate any passive skills the player has
+		for (var skill in self.skills) {
+			if (Skills[self.getAttribute('class')][skill].type === 'passive') {
+				self.useSkill(skill, self);
+			}
+		}
+	};
+
+	/**
+	 * Helper to activate skills
+	 * @param string skill
+	 */
+	self.useSkill = function (skill/*, args... */)
+	{
+		Skills[self.getAttribute('class')][skill].activate.apply(null, [].slice.call(arguments).slice(1));
 	};
 
 	self.init();

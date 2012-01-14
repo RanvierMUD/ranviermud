@@ -243,8 +243,6 @@ var Commands = {
 			var tolevel    = LevelUtils.expToLevel(player.getAttribute('level'));
 			var percent    = (player_exp / tolevel) * 100;
 
-			console.log(player_exp, tolevel, percent);
-
 			var bar = new Array(Math.floor(percent)).join("#") + new Array(100 - Math.ceil(percent)).join(" ");
 			bar = bar.substr(0, 50) + percent + "%" + bar.substr(50);
 			bar = sprintf("<bgblue><bold><white>%s</white></bold></bgblue> %d/%d", bar, player_exp, tolevel);

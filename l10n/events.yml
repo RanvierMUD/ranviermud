@@ -25,3 +25,9 @@ PASSWORD_REPEAT:
 EMPTY_PASS:
     en: "Well that's not very secure is it? Try again, champ."
     es: "ES-Well that's not very secure is it? Try again, champ."
+CLASS_SELECT:
+    en: "What class would you like to play? "
+    es: "ES-What class would you like to play? "
+INVALID_CLASS:
+    en: "Sorry, that's not a valid class."
+    es: "ES-Sorry, that's not a valid class."

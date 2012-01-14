@@ -1,4 +1,4 @@
--
+- &guard
   vnum: 1
   room: 2
   script: '1.js'
@@ -13,7 +13,10 @@
     es: 'ES-Dressed in militia regalia, the weathered guard eyes you carefully.'
   behaviors: "rtcombat"
   attributes:
-    max_health: 40
-    health: 40
+    max_health: 80
+    health: 80
     speed: 2
     damage: 7-16
+    experience: 100
+- *guard
+- *guard

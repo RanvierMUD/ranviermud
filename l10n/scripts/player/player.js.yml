@@ -17,3 +17,6 @@ LEVELUP:
 EXPGAIN:
     en: "<bold><blue>You gain $[1] experience!</blue></bold>"
     es: "ES-<bold><blue>You gain $[1] experience!</blue></bold>"
+NEWSKILL:
+    en: "<bold><yellow>You gained a new skill: $[1]!</yellow></bold>"
+    es: "ES-<bold><yellow>You gained a new skill: $[1]!</yellow></bold>"

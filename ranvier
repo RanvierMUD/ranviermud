@@ -167,7 +167,9 @@ function load(callback)
 				Events.configure({
 					players: players,
 					items: items,
-					locale:  locale
+					locale:  locale,
+					npcs: npcs,
+					rooms: rooms
 				});
 				if (callback) {
 					callback(true);

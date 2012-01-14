@@ -1,4 +1,5 @@
-var LevelUtils = require('../../src/levels').LevelUtils;
+var LevelUtils = require('../../src/levels').LevelUtils,
+    Skills     = require('../../src/skills').Skills;
 exports.listeners = {
 	regen: function (l10n)
 	{
@@ -33,20 +34,38 @@ exports.listeners = {
 			var tnl = LevelUtils.expToLevel(this.getAttribute('level')) - this.getAttribute('experience');
 
 			if (experience >= tnl ) {
-				var newlevel = this.getAttribute('level') + 1;
-				var health_gain = Math.ceil(this.getAttribute('max_health') * 1.10);
-
-				this.sayL10n(l10n, 'LEVELUP', newlevel, health_gain - this.getAttribute('max_health'));
-				this.setAttribute('level', newlevel);
-				this.setAttribute('experience', 0);
-
-				// do whatever you want to do here when a player levels up...
-				this.setAttribute('max_health', health_gain);
-				this.setAttribute('health', this.getAttribute('max_health'));
-				return;
+				return this.emit('level');
 			}
 
 			this.setAttribute('experience', this.getAttribute('experience') + experience);
+		}
+	},
+	level: function (l10n)
+	{
+		return function ()
+		{
+			var newlevel = this.getAttribute('level') + 1;
+			var health_gain = Math.ceil(this.getAttribute('max_health') * 1.10);
+
+			this.sayL10n(l10n, 'LEVELUP', newlevel, health_gain - this.getAttribute('max_health'));
+			this.setAttribute('level', newlevel);
+			this.setAttribute('experience', 0);
+
+			// do whatever you want to do here when a player levels up...
+			this.setAttribute('max_health', health_gain);
+			this.setAttribute('health', this.getAttribute('max_health'));
+
+			// Assign any new skills
+			var skills = Skills[this.getAttribute('class')];
+			for (var sk in skills) {
+				var skill = skills[sk];
+				if (skill.level <= this.getAttribute('level')) {
+					this.addSkill(sk, {
+						type: skill.type
+					});
+					this.sayL10n(l10n, 'NEWSKILL', skill.name);
+				}
+			}
 		}
 	},
 	die: function (l10n)
