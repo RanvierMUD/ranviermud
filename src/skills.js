@@ -91,9 +91,5 @@ exports.Skills = {
 				});
 			},
 		}
-	},
-	_configure: function (config)
-	{
-		npcs = config.npcs;
 	}
 };
