@@ -21,6 +21,7 @@ exports.Skills = {
 			level: 2,
 			name: "Tackle",
 			description: "Tackle your opponent for 120% weapon damage. Target's attacks are slower for 5 seconds following the attack.",
+			cooldown: 4,
 			activate: function (player, args, rooms, npcs)
 			{
 				if (!player.isInCombat()) {
@@ -33,16 +34,20 @@ exports.Skills = {
 					return true;
 				}
 				
-				var target = npcs.get(player.isInCombat());
+				var target = player.isInCombat();
+				if (!target) {
+					player.say("Somehow you're in combat with a ghost");
+					return true;
+				}
 
 				var damage = Math.min(target.getAttribute('max_health'), Math.ceil(player.getDamage().max * 1.2));
 
 				player.say(L(player.getLocale(), 'warrior', 'TACKLE_DAMAGE', damage));
+				target.setAttribute('health', target.getAttribute('health') - damage);
 				var original_speed = target.getAttribute('speed');
 				if (!target.getAffects('slow')) {
 					target.addAffect('slow', {
 						activate: function () {
-						player.say("SETTING SPEED TO " + original_speed * 1.5);
 							target.setAttribute('speed', original_speed * 1.5);
 						},
 						deactivate : function () {
@@ -65,6 +70,26 @@ exports.Skills = {
 
 				return true;
 			}
+		},
+		battlehardened: {
+			type: 'passive',
+			level: 5,
+			name: "Battle Hardened",
+			description: "Your experience in battle has made you more hardy. Max health is increased by 200",
+			activate: function (player)
+			{
+				player.addAffect('battlehardened', {
+					activate:   function () {
+						player.setAttribute('max_health', player.getAttribute('max_health') + 200);
+						player.setAttribute('health', player.getAttribute('max_health'));
+					},
+					deactivate: function () {
+						player.setAttribute('max_health', player.getAttribute('max_health') - 200);
+						player.setAttribute('health', player.getAttribute('max_health'));
+					},
+					event: 'quit'
+				});
+			},
 		}
 	},
 	_configure: function (config)

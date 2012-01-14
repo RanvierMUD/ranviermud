@@ -2,7 +2,8 @@ var Localize = require('localize'),
     util = require('util'),
     ansi = require('sty').parse,
     sprintf = require('sprintf').sprintf,
-    LevelUtils = require('./levels').LevelUtils;
+    LevelUtils = require('./levels').LevelUtils,
+    Skills = require('./skills').Skills;
 
 var rooms   = null;
 var players = null;
@@ -174,7 +175,20 @@ var Commands = {
 
 			// show all npcs in the room
 			room.getNpcs().forEach(function (id) {
-				player.say('<cyan>' + npcs.get(id).getShortDesc(player.getLocale()) + '</cyan>');
+				var npc = npcs.get(id);
+				var color = 'cyan';
+				switch (true) {
+				case ((npc.getAttribute('level') - player.getAttribute('level')) > 3):
+					color = 'red';
+					break;
+				case ((npc.getAttribute('level') - player.getAttribute('level')) >= 1):
+					color = 'yellow';
+					break;
+				default:
+					color = 'green'
+					break;
+				}
+				player.say('<'+color+'>' + npcs.get(id).getShortDesc(player.getLocale()) + '</'+color+'>');
 			});
 
 			player.write('[');
@@ -188,6 +202,10 @@ var Commands = {
 		kill: function (args, player)
 		{
 			var npc = find_npc_in_room(args, rooms.getAt(player.getLocation()), player, true);
+			if (!npc) {
+				player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+				return;
+			}
 			if (!npc.listeners('combat').length) {
 				player.sayL10n(l10n, 'KILL_PACIFIST');
 				return;
@@ -204,6 +222,7 @@ var Commands = {
 				return;
 			}
 
+			player.emit('quit');
 			player.save(function() {
 				players.removePlayer(player, true);
 			});
@@ -237,6 +256,22 @@ var Commands = {
 			players.broadcastL10n(l10n, 'SAY', player.getName(), args);
 			players.eachExcept(player, function (p) { p.prompt(); });
 		},
+		skills: function (args, player)
+		{
+			var skills = player.getSkills();
+			for (var sk in skills) {
+				var skill = Skills[player.getAttribute('class')][sk];
+				player.say("<yellow>" + skill.name + "</yellow>");
+
+				player.write("  ");
+				player.sayL10n(l10n, "SKILL_DESC", skill.description);
+				if (typeof skill.cooldown !== "undefined") {
+					player.write("  ");
+					player.sayL10n(l10n, "SKILL_COOLDOWN", skill.cooldown);
+				}
+				player.say("");
+			}
+		},
 		tnl: function (args, player)
 		{
 			var player_exp = player.getAttribute('experience');
@@ -244,7 +279,7 @@ var Commands = {
 			var percent    = (player_exp / tolevel) * 100;
 
 			var bar = new Array(Math.floor(percent)).join("#") + new Array(100 - Math.ceil(percent)).join(" ");
-			bar = bar.substr(0, 50) + percent + "%" + bar.substr(50);
+			bar = bar.substr(0, 50) + sprintf("%.2f", percent) + "%" + bar.substr(50);
 			bar = sprintf("<bgblue><bold><white>%s</white></bold></bgblue> %d/%d", bar, player_exp, tolevel);
 
 			player.say(bar);

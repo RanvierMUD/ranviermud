@@ -190,7 +190,8 @@ var Events = {
 		 */
 		commands : function(player)
 		{
-			player.getSocket().once('data', function (data) {
+			player.getSocket().once('data', function (data)
+			{
 				data = data.toString().trim();
 				var result;
 				if (data) {

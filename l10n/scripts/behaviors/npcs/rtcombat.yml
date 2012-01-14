@@ -5,8 +5,8 @@ LOSE:
   en: "<bold><red>You were killed by $[1]</red></bold>"
   es: "ES-<bold><red>You were killed by $[1]</red></bold>"
 DAMAGE_DONE:
-  en: "<green>You deal $[1] damage to $[2]</green>"
-  es: "ES-<green>You deal $[1] damage to $[2]</green>"
+  en: "<green>You deal $[2] damage to $[1]</green>"
+  es: "ES-<green>You deal $[2] damage to $[1]</green>"
 DAMAGE_TAKEN:
   en: "<red>$[1] hits you for $[2] damage!</red>"
   es: "ES-<bold><red>$[1] hits you for $[2] damage!</red></bold>"

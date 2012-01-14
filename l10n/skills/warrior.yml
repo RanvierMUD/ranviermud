@@ -11,8 +11,8 @@ TACKLE_DAMAGE:
     en: "You tackle your opponent for $[1] damage and they stagger heavily."
     es: "ES-You tackle your opponent for $[1] damage and they stagger heavily."
 TACKLE_RECOVER:
-    en: "Your opponent gathers his composure."
-    es: "ES-Your opponent gathers his composure."
+    en: "Your opponent gathers their composure."
+    es: "ES-Your opponent gathers their composure."
 TACKLE_COOLDOWN:
     en: "You can't use that skill yet."
     es: "ES-You can't use that skill yet."

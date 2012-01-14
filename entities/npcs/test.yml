@@ -17,6 +17,11 @@
     health: 80
     speed: 2
     damage: 7-16
-    experience: 100
+    level: 4
+    experience: 1000
 - *guard
 - *guard
+- <<: *guard
+  room: 1
+- <<: *guard
+  room: 1

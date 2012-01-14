@@ -11,7 +11,7 @@ exports.listeners = {
 
 function initiate_combat (l10n, npc, player, room, npcs, callback)
 {
-	player.setInCombat(npc.getUuid());
+	player.setInCombat(npc);
 	npc.setInCombat(player.getName());
 
 	player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(player.getLocale()));
@@ -23,8 +23,12 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 	var weapon = player.getEquipped('wield', true);
 
-	var npc_timer = setInterval(function ()
+	var npc_combat = function ()
 	{
+		if (!player.isInCombat()) {
+			return;
+		}
+
 		var player_health  = player.getAttribute('health');
 		var damage = npc.getDamage();
 		damage = Math.min(player_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min))));
@@ -49,13 +53,21 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 			target_max_health: npc.getAttribute('max_health'),
 			target_health: npc.getAttribute('health'),
 		});
-	}, npc_speed);
 
-	var player_timer = setInterval(function ()
+		setTimeout(npc_combat, npc.getAttackSpeed() * 1000);
+	};
+
+	setTimeout(npc_combat, npc_speed);
+
+	var player_combat = function ()
 	{
 		var npc_health = npc.getAttribute('health');
+		if (npc_health <= 0) {
+			return combat_end(true);
+		}
+
 		var damage = player.getDamage();
-		damage = Math.min(npc_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min))));
+		damage = Math.max(0, Math.min(npc_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min)))));
 
 		if (!damage) {
 			if (weapon) {
@@ -79,7 +91,13 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 			target_max_health: npc.getAttribute('max_health'),
 			target_health: npc.getAttribute('health'),
 		});
-	}, player_speed);
+
+		setTimeout(player_combat, player.getAttackSpeed() * 1000);
+	};
+
+	setTimeout(player_combat, player_speed);
+
+
 
 	function combat_end (success)
 	{
@@ -102,8 +120,6 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 			player.emit('die');
 			npc.setAttribute('health', npc.getAttribute('max_health'));
 		}
-		clearInterval(npc_timer);
-		clearInterval(player_timer);
 		player.prompt();
 		callback(success);
 	}

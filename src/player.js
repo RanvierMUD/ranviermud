@@ -95,13 +95,17 @@ var Player = function(socket) {
 			affect.activate();
 		}
 
-		setTimeout(function () {
-			if (affect.deactivate) {
-				affect.deactivate();
-				self.prompt();
-			}
-			self.removeAffect(name);
-		}, affect.duration * 1000);
+		if (affect.duration) {
+			setTimeout(function () {
+				if (affect.deactivate) {
+					affect.deactivate();
+					self.prompt();
+				}
+				self.removeAffect(name);
+			}, affect.duration * 1000);
+		} else if (affect.event) {
+			self.on(affect.event, affect.deactivate);
+		}
 		self.affects[name] = 1;
 	};
 
@@ -272,6 +276,13 @@ var Player = function(socket) {
 		self.attributes = data.attributes;
 		self.affects    = data.affects;
 		self.skills     = data.skills;
+		// Activate any passive skills the player has
+		for (var skill in self.skills) {
+			if (Skills[self.getAttribute('class')][skill].type === 'passive') {
+				self.useSkill(skill, self);
+			}
+		}
+
 	};
 
 	/**
@@ -343,12 +354,6 @@ var Player = function(socket) {
 	{
 		Data.loadListeners({script: "player.js"}, l10n_dir, npcs_scripts_dir, self);
 
-		// Activate any passive skills the player has
-		for (var skill in self.skills) {
-			if (Skills[self.getAttribute('class')][skill].type === 'passive') {
-				self.useSkill(skill, self);
-			}
-		}
 	};
 
 	/**
