@@ -4,6 +4,7 @@ var hashlib  = require('hashlib'),
     ansi     = require('colorize').ansify,
 
     Commands = require('./commands').Commands,
+    Channels = require('./channels').Channels,
     Data     = require('./data').Data,
     Item     = require('./items').Item,
     Player   = require('./player').Player,
@@ -163,7 +164,7 @@ var Events = {
 				break;
 			case 'done':
 				players.addPlayer(arg);
-				arg.sayL10n(l10n, 'WELCOME', arg.getName());
+				players.broadcastL10n(l10n, 'WELCOME', arg.getName());
 
 				// Load the player's inventory (There's probably a better place to do this)
 				var inv = [];
@@ -190,6 +191,7 @@ var Events = {
 		 */
 		commands : function(player)
 		{
+			// Parse order is commands -> exits -> skills -> channels
 			player.getSocket().once('data', function (data)
 			{
 				data = data.toString().trim();
@@ -206,8 +208,12 @@ var Events = {
 						var exit = Commands.room_exits(command, player);
 						if (exit === false) {
 							if (!(command in player.getSkills())) {
-								player.say(command + " is not a valid command.");
-								result = true;
+								if (!(command in Channels)) {
+									player.say(command + " is not a valid command.");
+									result = true;
+								} else {
+									Channels[command](args, player, players);
+								}
 							} else {
 								result = player.useSkill(command, player, args, rooms, npcs);
 							}

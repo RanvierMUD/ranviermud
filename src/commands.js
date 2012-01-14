@@ -249,13 +249,6 @@ var Commands = {
 				player.say(L('SAVED'));
 			});
 		},
-		say: function (args, player)
-		{
-			var location = player.getLocation();
-			args = args.replace("\033", '');
-			players.broadcastL10n(l10n, 'SAY', player.getName(), args);
-			players.eachExcept(player, function (p) { p.prompt(); });
-		},
 		skills: function (args, player)
 		{
 			var skills = player.getSkills();
