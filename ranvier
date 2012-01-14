@@ -38,8 +38,8 @@ var net = require('net'),
 var locale  = argv.locale || 'en',
 	port    = argv.port || 23,
     verbose = !!argv.v,
-	save_interval    = argv.save || 10, // number of minutes between autosave ticks
-	respawn_interval = argv.respawn || 20, // "" between respawn tickets
+	save_interval    = isNaN(parseInt(argv.save, 10)) ? 10 : parseInt(argv.save, 10), // number of minutes between autosave ticks
+	respawn_interval = isNaN(parseInt(argv.respawn, 10)) ? 20 : parseInt(argv.respawn, 10), // "" between respawn tickets
 
 	//storage of main game entities
     players,
@@ -98,7 +98,8 @@ var init = function (restart_server) {
 
 			// respawn every 20 minutes, probably a better way to do this
 			util.log("Setting respawn to " + respawn_interval + " minutes.");
-			var respawonint = setInterval(load, respawn_interval * 60000);
+			// Respawn is disabled until I can find a better way...
+//			var respawonint = setInterval(load, respawn_interval * 60000);
 
 			util.log("END - Starting server");
 		}

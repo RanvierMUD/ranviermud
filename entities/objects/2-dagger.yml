@@ -11,4 +11,7 @@
         es: "ES-A very point dagger. Edges are a bit dull though."
     room: 1
     behaviors: "wieldable"
+    attributes:
+        speed: 1
+        damage: 5-12
 

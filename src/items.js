@@ -147,6 +147,7 @@ var Item = function (config)
 	self.uuid = null;
 	self.equipped = false;
 	self.script = '';
+	self.attributes = {};
 
 	self.init = function (config)
 	{
@@ -161,10 +162,14 @@ var Item = function (config)
 		self.uuid              = config.uuid        || null;
 		self.vnum              = config.vnum;
 		self.script            = config.script;
+		self.attributes        = config.attributes;
 
 		Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
 	};
 
+	/**#@+
+	 * Mutators
+	 */
 	self.getVnum      = function () { return self.vnum; };
 	self.getInv       = function () { return self.inventory; };
 	self.isNpcHeld    = function () { return self.npc_held; };
@@ -172,12 +177,15 @@ var Item = function (config)
 	self.getRoom      = function () { return self.room; };
 	self.getContainer = function () { return self.container; };
 	self.getUuid      = function () { return self.uuid; };
-	self.setUuid      = function (uid) { self.uuid = uid; };
-	self.setRoom      = function (room) { self.room = room; };
+	self.getAttribute = function (attr) { return self.attributes[attr] || false; };
+	self.setUuid      = function (uid)        { self.uuid = uid; };
+	self.setRoom      = function (room)       { self.room = room; };
 	self.setInventory = function (identifier) { self.inventory = identifier; };
-	self.setNpcHeld   = function (held) { self.npc_held = held; };
-	self.setContainer = function (uid) { self.container = uid; };
-	self.setEquipped  = function (equip) { self.equipped = !!equip; };
+	self.setNpcHeld   = function (held)       { self.npc_held = held; };
+	self.setContainer = function (uid)        { self.container = uid; };
+	self.setEquipped  = function (equip)      { self.equipped = !!equip; };
+	self.setAttribute = function (attr, val)  { self.attributes[attr] = val; };
+	/**#@-*/
 
 	/**
 	 * Get the description, localized if possible
@@ -240,7 +248,8 @@ var Item = function (config)
 			inventory: self.inventory,     // Player or Npc object that is holding it
 			vnum: self.vnum,
 			script: self.script,
-			equipped: self.equipped
+			equipped: self.equipped,
+			attributes: self.attributes
 		};
 	};
 

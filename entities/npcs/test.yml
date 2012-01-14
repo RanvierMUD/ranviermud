@@ -15,3 +15,5 @@
   attributes:
     max_health: 100
     health: 100
+    speed: 2
+    damage: 7-16

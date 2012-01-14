@@ -14,6 +14,8 @@ var Player = function(socket) {
 	self.location = null;
 	self.locale   = null;
 	self.prompt_string = '%health/%max_healthHP>';
+	self.combat_prompt =
+	   "<bold>[%health/%max_healthHP] 0--{======> %target_name: [%target_health/%target_max_health]</bold>\r\n>";
 	self.password = null;
 	self.inventory = [];
 	self.equipment = {};
@@ -30,7 +32,8 @@ var Player = function(socket) {
 	/**#@+
 	 * Mutators
 	 */
-	self.getPromptString = function () { return self.prompt_string; };
+	self.getPrompt       = function () { return self.prompt_string; };
+	self.getCombatPrompt = function () { return self.combat_prompt; };
 	self.getLocale       = function () { return self.locale; };
 	self.getName         = function () { return self.name; };
 	self.getLocation     = function () { return self.location; };
@@ -40,16 +43,17 @@ var Player = function(socket) {
 	// Note, only retreives hash, not a real password
 	self.getPassword     = function () { return self.password; };
 	self.isInCombat      = function () { return self.in_combat; };
-	self.setPromptString = function (prompt_string) { self.prompt_string = prompt_string; }
-	self.setLocale       = function (locale)        { self.locale = locale; };
-	self.setName         = function (newname)       { self.name = newname; };
-	self.setLocation     = function (loc)           { self.location = loc; };
-	self.setPassword     = function (pass)          { self.password = hashlib.md5(pass); };
-	self.addItem         = function (item)          { self.inventory.push(item); };
-	self.removeItem      = function (item)          { self.inventory = self.inventory.filter(function (i) { return item !== i; }); };
-	self.setInventory    = function (inv)           { self.inventory = inv; };
-	self.setInCombat     = function (combat)        { self.in_combat = combat; };
-	self.setAttribute    = function (attr, val)     { self.attributes[attr] = val; };
+	self.setPrompt       = function (str)       { self.prompt_string = str; }
+	self.setCombatPrompt = function (str)       { self.combat_prompt = str; }
+	self.setLocale       = function (locale)    { self.locale = locale; };
+	self.setName         = function (newname)   { self.name = newname; };
+	self.setLocation     = function (loc)       { self.location = loc; };
+	self.setPassword     = function (pass)      { self.password = hashlib.md5(pass); };
+	self.addItem         = function (item)      { self.inventory.push(item); };
+	self.removeItem      = function (item)      { self.inventory = self.inventory.filter(function (i) { return item !== i; }); };
+	self.setInventory    = function (inv)       { self.inventory = inv; };
+	self.setInCombat     = function (combat)    { self.in_combat = combat; };
+	self.setAttribute    = function (attr, val) { self.attributes[attr] = val; };
 	/**#@-*/
 
 	/**
@@ -106,7 +110,8 @@ var Player = function(socket) {
 	 * Write to a player's socket
 	 * @param string data Stuff to write
 	 */
-	self.write = function (data, color) {
+	self.write = function (data, color)
+	{
 		color = color || true;
 		if (!color) ansi.disable();
 		socket.write(ansi.parse(data));
@@ -135,7 +140,8 @@ var Player = function(socket) {
 	 * write() + newline
 	 * @see self.write
 	 */
-	self.say = function (data, color) {
+	self.say = function (data, color)
+	{
 		color = color || true;
 		if (!color) ansi.disable();
 		socket.write(ansi.parse(data) + "\r\n");
@@ -159,12 +165,42 @@ var Player = function(socket) {
 
 	/**
 	 * Display the configured prompt to the player
+	 * @param object extra Other data to show
 	 */
-	self.prompt = function () {
-		var pstring = self.getPromptString();
-		for(var attr in self.attributes) {
+	self.prompt = function (extra)
+	{
+		extra = extra || {};
+
+		var pstring = self.getPrompt();
+		for (var attr in self.attributes) {
 			pstring = pstring.replace("%" + attr, self.attributes[attr]);
 		}
+
+		for (var data in extra) {
+			pstring = pstring.replace("%" + data, extra[data]);
+		}
+
+		pstring = pstring.replace(/%[a-z_]+?/, '');
+		self.write("\r\n" + pstring);
+	};
+
+	/**
+	 * @see self.prompt
+	 */
+	self.combatPrompt = function (extra)
+	{
+		extra = extra || {};
+
+		var pstring = self.getCombatPrompt();
+		for (var attr in self.attributes) {
+			pstring = pstring.replace("%" + attr, self.attributes[attr]);
+		}
+
+		for (var data in extra) {
+			pstring = pstring.replace("%" + data, extra[data]);
+		}
+
+		pstring = pstring.replace(/%[a-z_]+?/, '');
 		self.write("\r\n" + pstring);
 	};
 
@@ -219,6 +255,7 @@ var Player = function(socket) {
 			location: self.location,
 			locale: self.locale,
 			prompt_string: self.prompt_string,
+			combat_prompt: self.combat_prompt,
 			password: self.password,
 			inventory: inv,
 			equipment: self.equipment,

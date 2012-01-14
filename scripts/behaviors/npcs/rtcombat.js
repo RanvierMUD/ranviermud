@@ -15,53 +15,86 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 	player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(player.getLocale()));
 
-	var timer = setInterval(function ()
+	var weapon = player.getEquipped('wield', true);
+	// Get the weapon speed or just use a standard 1 sec counter
+	var player_speed = (weapon ? (weapon.getAttribute('speed') || 1) : 1) * 1000;
+	// Same for npcs
+	var npc_speed    = (npc.getAttribute('speed') ? npc.getAttribute('speed') : 1.5) * 1000;
+
+	var npc_timer = setInterval(function ()
 	{
-		
-		var npc_damage     = Math.max(0, Math.floor(Math.random() * 10)),
-		    player_damage  = Math.max(0, Math.floor(Math.random() * 10)),
-		    npc_health     = npc.getAttribute('health'),
-		    player_health  = player.getAttribute('health');
+		// damage = [min, max]
+		var damage = npc.getAttribute('damage') ?
+			npc.getAttribute('damage').split('-').map(function (i) { return parseInt(i, 10); })
+			: [1,20];
+		damage = damage[0] + Math.max(0, Math.floor(Math.random() * (damage[1] - damage[0])));
 
-		npc_damage    = Math.min(player_health, npc_damage);
-		player_damage = Math.min(npc_health, player_damage);
+		var player_health  = player.getAttribute('health');
+		damage = Math.min(player_health, damage);
 
-		var weapon = player.getEquipped('wield', true);
+		if (!damage) {
+			if (weapon) {
+				weapon.emit('parry', player);
+			}
+			player.sayL10n(l10n, 'NPC_MISS', npc.getShortDesc(player.getLocale()), damage)
+		} else {
+			player.sayL10n(l10n, 'DAMAGE_TAKEN', npc.getShortDesc(player.getLocale()), damage)
+		}
 
-		if (!player_damage) {
+		player.setAttribute('health', player_health - damage);
+		if (player_health <= damage) {
+			player.setAttribute('health', 1);
+			return combat_end(false);
+		}
+
+		player.combatPrompt({
+			target_name: npc.getShortDesc(player.getLocale()),
+			target_max_health: npc.getAttribute('max_health'),
+			target_health: npc.getAttribute('health'),
+		});
+	}, npc_speed);
+
+	var player_timer = setInterval(function ()
+	{
+		var npc_health = npc.getAttribute('health');
+		var damage = weapon ? 
+			(weapon.getAttribute('damage') ?
+				weapon.getAttribute('damage').split('-').map(function (i) { return parseInt(i, 10); })
+				: [1,20]
+			)
+			: [1,20];
+		console.log(damage);
+		damage = damage[0] + Math.max(0, Math.floor(Math.random() * (damage[1] - damage[0])));
+		console.log(damage);
+		damage = Math.min(npc_health, damage);
+		console.log(damage);
+
+		if (!damage) {
 			if (weapon) {
 				weapon.emit('miss', player);
 			}
-			player.sayL10n(l10n, 'PLAYER_MISS', npc.getShortDesc(player.getLocale()), player_damage)
+			player.sayL10n(l10n, 'PLAYER_MISS', npc.getShortDesc(player.getLocale()), damage)
 		} else {
 			if (weapon) {
 				weapon.emit('hit', player);
 			}
-			player.sayL10n(l10n, 'DAMAGE_DONE', npc.getShortDesc(player.getLocale()), player_damage)
-		}
-		npc.setAttribute('health', npc_health - player_damage);
-		if (npc_health <= player_damage) {
-			return combat_end(true, timer);
+			player.sayL10n(l10n, 'DAMAGE_DONE', npc.getShortDesc(player.getLocale()), damage)
 		}
 
-		if (!npc_damage) {
-			if (weapon) {
-				weapon.emit('parry', player);
-			}
-			player.sayL10n(l10n, 'NPC_MISS', npc.getShortDesc(player.getLocale()), npc_damage)
-		} else {
-			player.sayL10n(l10n, 'DAMAGE_TAKEN', npc.getShortDesc(player.getLocale()), npc_damage)
+		npc.setAttribute('health', npc_health - damage);
+		if (npc_health <= damage) {
+			return combat_end(true);
 		}
 
-		player.setAttribute('health', player_health - npc_damage);
-		if (player_health <= npc_damage) {
-			player.setAttribute('health', 1);
-			return combat_end(false, timer);
-		}
-		player.prompt();
-	}, 1000);
+		player.combatPrompt({
+			target_name: npc.getShortDesc(player.getLocale()),
+			target_max_health: npc.getAttribute('max_health'),
+			target_health: npc.getAttribute('health'),
+		});
+	}, player_speed);
 
-	function combat_end (success, timer) {
+	function combat_end (success)
+	{
 		player.setInCombat(false);
 		npc.setInCombat(false);
 		if (success) {
@@ -74,7 +107,8 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 			player.die();
 			npc.setAttribute('health', npc.getAttribute('max_health'));
 		}
-		clearInterval(timer);
+		clearInterval(npc_timer);
+		clearInterval(player_timer);
 		player.prompt();
 		callback(success);
 	}
