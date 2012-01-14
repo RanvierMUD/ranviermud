@@ -1,7 +1,8 @@
 var Localize = require('localize'),
     util = require('util'),
-	ansi = require('sty').parse,
-	sprintf = require('sprintf').sprintf;
+    ansi = require('sty').parse,
+    sprintf = require('sprintf').sprintf,
+    LevelUtils = require('./levels').LevelUtils;
 
 var rooms   = null;
 var players = null;
@@ -236,6 +237,20 @@ var Commands = {
 			players.broadcastL10n(l10n, 'SAY', player.getName(), args);
 			players.eachExcept(player, function (p) { p.prompt(); });
 		},
+		tnl: function (args, player)
+		{
+			var player_exp = player.getAttribute('experience');
+			var tolevel    = LevelUtils.expToLevel(player.getAttribute('level'));
+			var percent    = (player_exp / tolevel) * 100;
+
+			console.log(player_exp, tolevel, percent);
+
+			var bar = new Array(Math.floor(percent)).join("#") + new Array(100 - Math.ceil(percent)).join(" ");
+			bar = bar.substr(0, 50) + percent + "%" + bar.substr(50);
+			bar = sprintf("<bgblue><bold><white>%s</white></bold></bgblue> %d/%d", bar, player_exp, tolevel);
+
+			player.say(bar);
+		},
 		where: function (args, player)
 		{
 			player.write(rooms.getAt(player.getLocation()).getArea() + "\r\n");
@@ -344,6 +359,7 @@ alias('l',   'look');
 alias('inv', 'inventory');
 alias('eq',  'equipment');
 alias('rem', 'remove');
+alias('exp', 'tnl');
 
 exports.Commands = Commands;
 

@@ -26,7 +26,9 @@ var Player = function(socket) {
 	// Attributes
 	self.attributes = {
 		max_health: 100,
-		health : 100
+		health : 100,
+		level: 1,
+		experience: 0
 	};
 
 	/**#@+
@@ -39,7 +41,7 @@ var Player = function(socket) {
 	self.getLocation     = function () { return self.location; };
 	self.getSocket       = function () { return socket; };
 	self.getInventory    = function () { return self.inventory; };
-	self.getAttribute    = function (attr) { return self.attributes[attr] || false; };
+	self.getAttribute    = function (attr) { return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
 	// Note, only retreives hash, not a real password
 	self.getPassword     = function () { return self.password; };
 	self.isInCombat      = function () { return self.in_combat; };
@@ -219,6 +221,7 @@ var Player = function(socket) {
 		self.password = data.password;
 		self.inventory = data.inventory || [];
 		self.equipment = data.equipment || {};
+		self.attributes = data.attributes;
 	};
 
 	/**
@@ -228,16 +231,6 @@ var Player = function(socket) {
 	self.save = function (callback)
 	{
 		Data.savePlayer(self, callback);
-	};
-
-	/**
-	 * this is called when a player dies
-	 */
-	self.die = function ()
-	{
-		// they died, move then back to the start... you can do whatever you want instead of this
-		self.setLocation(1);
-		self.emit('regen');
 	};
 
 	/**

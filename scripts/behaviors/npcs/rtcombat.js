@@ -1,3 +1,4 @@
+var LevelUtils = require("../../../src/levels").LevelUtils;
 exports.listeners = {
 	combat: function (l10n)
 	{
@@ -16,9 +17,9 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 	player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(player.getLocale()));
 
 	// Get the weapon speed or just use a standard 1 sec counter
-	var player_speed = player.getAttackSpeed();
+	var player_speed = player.getAttackSpeed() * 1000;
 	// Same for npcs
-	var npc_speed    = npc.getAttackSpeed();
+	var npc_speed    = npc.getAttackSpeed() * 1000;
 
 	var weapon = player.getEquipped('wield', true);
 
@@ -89,9 +90,16 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 			room.removeNpc(npc.getUuid());
 			npcs.destroy(npc);
 			player.sayL10n(l10n, 'WIN', npc.getShortDesc(player.getLocale()));
+
+			// hand out experience
+			var exp = npc.getAttribute('experience') !== false ?
+				npc.getAttribute('experience')
+				: LevelUtils.mobExp(player.getAttribute('level'));
+
+			player.emit('experience', exp);
 		} else {
 			player.sayL10n(l10n, 'LOSE', npc.getShortDesc(player.getLocale()));
-			player.die();
+			player.emit('die');
 			npc.setAttribute('health', npc.getAttribute('max_health'));
 		}
 		clearInterval(npc_timer);

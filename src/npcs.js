@@ -151,7 +151,8 @@ var Npc = function (config)
 	// attributes
 	self.attributes = {
 		max_health : 0,
-		health: 0
+		health: 0,
+		level: 1
 	};
 
 	/**
@@ -165,7 +166,10 @@ var Npc = function (config)
 		self.description       = config.description || '';
 		self.room              = config.room        || null;
 		self.vnum              = config.vnum;
-		self.attributes        = config.attributes  || {};
+
+		for (var i in config.attributes || {}) {
+			self.attributes[i] = config.attributes[i];
+		}
 
 		Data.loadListeners(config, l10n_dir, npcs_scripts_dir, Data.loadBehaviors(config, 'npcs/', self));
 	};
@@ -178,7 +182,7 @@ var Npc = function (config)
 	self.isInCombat   = function () { return self.in_combat; };
 	self.getRoom      = function () { return self.room; };
 	self.getUuid      = function () { return self.uuid; };
-	self.getAttribute = function (attr) { return self.attributes[attr] || false; };
+	self.getAttribute = function (attr) { return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
 	self.setUuid      = function (uid) { self.uuid = uid; };
 	self.setRoom      = function (room) { self.room = room; };
 	self.setInventory = function (identifier) { self.inventory = identifier; }

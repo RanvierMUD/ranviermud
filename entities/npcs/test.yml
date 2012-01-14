@@ -13,7 +13,7 @@
     es: 'ES-Dressed in militia regalia, the weathered guard eyes you carefully.'
   behaviors: "rtcombat"
   attributes:
-    max_health: 100
-    health: 100
+    max_health: 40
+    health: 40
     speed: 2
     damage: 7-16
