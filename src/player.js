@@ -241,6 +241,33 @@ var Player = function(socket) {
 	};
 
 	/**
+	 * Get attack speed of a player
+	 * @return float
+	 */
+	self.getAttackSpeed = function ()
+	{
+		var weapon = self.getEquipped('wield', true)
+		return weapon ? (weapon.getAttribute('speed') || 1) : 1;
+	};
+
+	/**
+	 * Get the damage a player can do
+	 * @return int
+	 */
+	self.getDamage = function ()
+	{
+		var weapon = self.getEquipped('wield', true)
+		var base = [1, 20];
+		var damage = weapon ? 
+			(weapon.getAttribute('damage') ?
+				weapon.getAttribute('damage').split('-').map(function (i) { return parseInt(i, 10); })
+				: base
+			)
+			: base;
+		return {min: damage[0], max: damage[1]};
+	};
+
+	/**
 	 * Turn the player into a JSON string for storage
 	 * @return string
 	 */

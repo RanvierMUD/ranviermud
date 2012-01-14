@@ -15,22 +15,18 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 	player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(player.getLocale()));
 
-	var weapon = player.getEquipped('wield', true);
 	// Get the weapon speed or just use a standard 1 sec counter
-	var player_speed = (weapon ? (weapon.getAttribute('speed') || 1) : 1) * 1000;
+	var player_speed = player.getAttackSpeed();
 	// Same for npcs
-	var npc_speed    = (npc.getAttribute('speed') ? npc.getAttribute('speed') : 1.5) * 1000;
+	var npc_speed    = npc.getAttackSpeed();
+
+	var weapon = player.getEquipped('wield', true);
 
 	var npc_timer = setInterval(function ()
 	{
-		// damage = [min, max]
-		var damage = npc.getAttribute('damage') ?
-			npc.getAttribute('damage').split('-').map(function (i) { return parseInt(i, 10); })
-			: [1,20];
-		damage = damage[0] + Math.max(0, Math.floor(Math.random() * (damage[1] - damage[0])));
-
 		var player_health  = player.getAttribute('health');
-		damage = Math.min(player_health, damage);
+		var damage = npc.getDamage();
+		damage = Math.min(player_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min))));
 
 		if (!damage) {
 			if (weapon) {
@@ -57,17 +53,8 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 	var player_timer = setInterval(function ()
 	{
 		var npc_health = npc.getAttribute('health');
-		var damage = weapon ? 
-			(weapon.getAttribute('damage') ?
-				weapon.getAttribute('damage').split('-').map(function (i) { return parseInt(i, 10); })
-				: [1,20]
-			)
-			: [1,20];
-		console.log(damage);
-		damage = damage[0] + Math.max(0, Math.floor(Math.random() * (damage[1] - damage[0])));
-		console.log(damage);
-		damage = Math.min(npc_health, damage);
-		console.log(damage);
+		var damage = player.getDamage();
+		damage = Math.min(npc_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min))));
 
 		if (!damage) {
 			if (weapon) {

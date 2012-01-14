@@ -234,6 +234,28 @@ var Npc = function (config)
 		return self.getKeywords(locale).some(function (word) { return keyword === word });
 	};
 
+	/**
+	 * Get attack speed of a player
+	 * @return float
+	 */
+	self.getAttackSpeed = function ()
+	{
+		return self.getAttribute('speed') || 1;
+	};
+
+	/**
+	 * Get the damage a player can do
+	 * @return int
+	 */
+	self.getDamage = function ()
+	{
+		var base = [1, 20];
+		var damage = self.getAttribute('damage') ?
+			self.getAttribute('damage').split('-').map(function (i) { return parseInt(i, 10); })
+			: base
+		return {min: damage[0], max: damage[1]};
+	};
+
 	self.init(config);
 };
 util.inherits(Npc, events.EventEmitter);

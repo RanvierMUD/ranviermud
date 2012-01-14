@@ -146,11 +146,12 @@ var Events = {
 					return false;
 				}
 
-				arg.write(L('PASSWORD'));
+				
+				arg.getSocket().write(L('PASSWORD'));
 				arg.getSocket().once('data', function (pass) {
 					pass = hashlib.md5(pass.toString().trim());
 					if (pass !== arg.getPassword()) {
-						arg.say(L('PASSWORD_FAIL'));
+						arg.sayL10n(l10n, 'PASSWORD_FAIL');
 						password_attempts[arg.getName()] += 1;
 						return repeat();
 					}
@@ -159,7 +160,7 @@ var Events = {
 				break;
 			case 'done':
 				players.addPlayer(arg);
-				arg.say(L('WELCOME', arg.getName()));
+				arg.sayL10n(l10n, 'WELCOME', arg.getName());
 
 				// Load the player's inventory (There's probably a better place to do this)
 				var inv = [];
