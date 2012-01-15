@@ -54,7 +54,6 @@ var Commands = {
 			}
 
 			player.say(L('ITEM_DROP', item.getShortDesc(player.getLocale())), false);
-			players.broadcastExceptL10n(player, l10n, 'ITEM_DROPPED', player.getName(), function (p) { return item.getShortDesc(p.getLocale()); });
 			room.getNpcs().forEach(function (id) {
 				npcs.get(id).emit('playerDropItem', room, player, players, item);
 			});
@@ -443,37 +442,11 @@ function move (exit, player)
 function find_item_in_room (look_string, room, player, hydrate)
 {
 	hydrate = hydrate || false;
-	var keyword = look_string.split(' ')[0];
-	var multi = false;
-	var nth = null;
-	// Are they trying to get the nth item of a keyword?
-	if (/^\d+\./.test(keyword)) {
-		nth = parseInt(keyword.split('.')[0], 10);
-		keyword = keyword.split('.')[1];
-		multi = true
-	}
-
-	var found = [];
-	room.getItems().forEach(function (id) {
-		var item = items.get(id);
-
-		if (item.hasKeyword(keyword, player.getLocale())) {
-			found.push(hydrate ? item : id);
-		}
+	var thing = parse_dot(look_string, room.getItems(), function (item) {
+		return items.get(item).hasKeyword(this.keyword, player.getLocale());
 	});
 
-	if (!found.length) {
-		return false;
-	}
-
-	var item = null;
-	if (multi && !isNaN(nth) && nth && nth <= found.length) {
-		item = found[nth-1];
-	} else {
-		item = found[0];
-	}
-
-	return item;
+	return thing ? (hydrate ? items.get(thing) : thing) : false;
 }
 
 /**
@@ -488,37 +461,11 @@ function find_item_in_room (look_string, room, player, hydrate)
 function find_npc_in_room (look_string, room, player, hydrate)
 {
 	hydrate = hydrate || false;
-	var keyword = look_string.split(' ')[0];
-	var multi = false;
-	var nth = null;
-	// Are they trying to get the nth item of a keyword?
-	if (/^\d+\./.test(keyword)) {
-		nth = parseInt(keyword.split('.')[0], 10);
-		keyword = keyword.split('.')[1];
-		multi = true
-	}
-
-	var found = [];
-	room.getNpcs().forEach(function (id) {
-		var npc = npcs.get(id);
-
-		if (npc.hasKeyword(keyword, player.getLocale())) {
-			found.push(hydrate ? npc : id);
-		}
+	var thing = parse_dot(look_string, room.getNpcs(), function (id) {
+		return npcs.get(id).hasKeyword(this.keyword, player.getLocale());
 	});
 
-	if (!found.length) {
-		return false;
-	}
-
-	var item = null;
-	if (multi && !isNaN(nth) && nth && nth <= found.length) {
-		item = found[nth-1];
-	} else {
-		item = found[0];
-	}
-
-	return item;
+	return thing ? (hydrate ? npcs.get(thing) : thing) : false;
 }
 
 /**
@@ -531,7 +478,23 @@ function find_npc_in_room (look_string, room, player, hydrate)
 function find_item_in_inventory (look_string, being, hydrate)
 {
 	hydrate = hydrate || false;
-	var keyword = look_string.split(' ')[0];
+	var thing = parse_dot(look_string, being.getInventory(), function (item) {
+		return item.hasKeyword(this.keyword, being.getLocale());
+	});
+
+	return thing ? (hydrate ? thing : thing.getUuid()) : false;
+}
+
+/**
+ * Parse 3.blah item notation
+ * @param string arg    The actual 3.blah string
+ * @param Array objects The array of objects to search in
+ * @param Function filter_func Function to filter the list
+ * @return object
+ */
+function parse_dot (arg, objects, filter_func)
+{
+	var keyword = arg.split(' ')[0];
 	var multi = false;
 	var nth = null;
 	// Are they trying to get the nth item of a keyword?
@@ -541,11 +504,9 @@ function find_item_in_inventory (look_string, being, hydrate)
 		multi = true
 	}
 
-	var found = [];
-	being.getInventory().forEach(function (item) {
-		if (item.hasKeyword(keyword, being.getLocale())) {
-			found.push(hydrate ? item : item.getUuid());
-		}
+	var found = objects.filter(filter_func, {
+		keyword: keyword,
+		nth: nth
 	});
 
 	if (!found.length) {
