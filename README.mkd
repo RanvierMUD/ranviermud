@@ -28,8 +28,6 @@ NodeJS based MUD engine with full localization support
 ### Note for Mac
 You may run into issues doing `npm install` for hashlib. If so, look at this thread https://github.com/brainfucker/hashlib/issues/29
 
-Binding the socket requires sudo for now... sorry
-
 ## Documentation
 Holy crap there is actually documentation and guides for this thing!
 [See the wiki right here.](https://github.com/shawncplus/ranviermud/wiki/Home)
