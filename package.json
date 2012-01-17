@@ -3,7 +3,6 @@
 	"version":"0.0.1",
 	"dependencies":{
 		"colorize":"",
-		"hashlib":"",
 		"js-yaml":"",
 		"localize":"",
 		"node-uuid":"",

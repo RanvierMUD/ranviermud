@@ -19,6 +19,7 @@
     damage: 7-16
     level: 4
     experience: 1000
+  load_max: 7
 - *guard
 - *guard
 - <<: *guard

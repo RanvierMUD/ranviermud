@@ -105,11 +105,6 @@ var Rooms = function () {
 							continue;
 						}
 
-						if (room.location in self.rooms) {
-							log("\t\tConflicting vnum [" + room.location + '] when loading ' + room);
-							continue;
-						}
-
 						log("\t\tLoaded room " + room.location + '...');
 						room.area = area;
 						room = new Room(room);
@@ -250,6 +245,26 @@ var Room = function (config)
 	self.removeNpc = function (uid)
 	{
 		self.npcs = self.npcs.filter(function (i) { return i !== uid; });
+	};
+
+	/**
+	 * Check to see if an npc is in the room
+	 * @param string uid
+	 * @return boolean
+	 */
+	self.hasNpc = function (uid)
+	{
+		return self.npcs.some(function (i) { return i === uid; });
+	};
+
+	/**
+	 * Check to see if an npc is in the room
+	 * @param string uid
+	 * @return boolean
+	 */
+	self.hasItem = function (uid)
+	{
+		return self.items.some(function (i) { return i === uid; });
 	};
 
 	self.init(config);

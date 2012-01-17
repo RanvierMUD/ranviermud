@@ -15,6 +15,7 @@ var l10n_dir         = __dirname + '/../l10n/scripts/npcs/';
 var Npcs = function () {
 	var self = this;
 	self.npcs = {};
+	self.load_count = {};
 
 	/**
 	 * Load NPCs from the configs
@@ -57,9 +58,15 @@ var Npcs = function () {
 						}
 					}
 
+					// max load for items so we don't have 1000 items in a room due to respawn
+					if (self.load_count[npc.vnum] && self.load_count[npc.vnum] > npc.load_max) {
+						log("\t\tMaxload of " + npc.load_max + " hit for npc " + npc.vnum);
+						return;
+					}
+
 					npc = new Npc(npc);
 					npc.setUuid(uuid.v4());
-					log("\t\tLoaded npc [uuid:" + npc.getUuid() + ', ' + npc.getShortDesc('en') + ']');
+					log("\t\tLoaded npc [uuid:" + npc.getUuid() + ', vnum:' + npc.vnum + ']');
 					self.add(npc);
 				});
 			}
@@ -80,6 +87,7 @@ var Npcs = function () {
 			npc.setUuid(uuid.v4());
 		}
 		self.npcs[npc.getUuid()] = npc;
+		self.load_count[npc.vnum] = self.load_count[npc.vnum] ? self.load_count[npc.vnum] + 1 : 1;
 	};
 
 	/**

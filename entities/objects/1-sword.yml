@@ -15,4 +15,5 @@
     attributes:
         speed: 1.5
         damage: 10-20
+    load_max: 4
 - *longsword

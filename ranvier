@@ -42,11 +42,11 @@ var locale  = argv.locale || 'en',
 	respawn_interval = isNaN(parseInt(argv.respawn, 10)) ? 20 : parseInt(argv.respawn, 10), // "" between respawn tickets
 
 	//storage of main game entities
-    players,
-    rooms,
-    npcs,
-    items,
-    server,
+	players,
+	rooms = new Rooms(),
+	items = new Items(),
+	npcs  = new Npcs(),
+	server,
 	
 	// Stuff for the server executable
 	l10n,
@@ -99,7 +99,7 @@ var init = function (restart_server) {
 			// respawn every 20 minutes, probably a better way to do this
 			util.log("Setting respawn to " + respawn_interval + " minutes.");
 			// Respawn is disabled until I can find a better way...
-//			var respawonint = setInterval(load, respawn_interval * 60000);
+			var respawonint = setInterval(load, respawn_interval * 60000);
 
 			util.log("END - Starting server");
 		}
@@ -126,9 +126,6 @@ function save()
  */
 function load(callback)
 {
-	rooms = new Rooms();
-	items = new Items();
-	npcs  = new Npcs();
 	util.log("Loading rooms...");
 	rooms.load(verbose, function () {
 		util.log("Done.");
@@ -139,7 +136,10 @@ function load(callback)
 			util.log("Adding items to rooms...");
 			items.each(function (item) {
 				if (item.getRoom()) {
-					rooms.getAt(item.getRoom()).addItem(item.getUuid());
+					var room = rooms.getAt(item.getRoom());
+					if (!room.hasItem(item.getUuid())) {
+						room.addItem(item.getUuid());
+					}
 				}
 			});
 			util.log("Done.");
@@ -151,7 +151,10 @@ function load(callback)
 				util.log("Adding npcs to rooms...");
 				npcs.each(function (npc) {
 					if (npc.getRoom()) {
-						rooms.getAt(npc.getRoom()).addNpc(npc.getUuid());
+						var room =rooms.getAt(npc.getRoom());
+						if (!room.hasNpc(npc.getUuid())) {
+							room.addNpc(npc.getUuid());
+						}
 					}
 				});
 				util.log("Done.");

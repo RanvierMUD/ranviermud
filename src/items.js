@@ -11,6 +11,7 @@ var objects_scripts_dir = __dirname + '/../scripts/objects/';
 var Items = function () {
 	var self = this;
 	self.objects = {};
+	self.load_count = {};
 
 	self.getScriptsDir = function ()
 	{
@@ -46,8 +47,7 @@ var Items = function () {
 				}
 
 				// create and load the objects
-				for (var vnum in object_def) {
-					var object = object_def[vnum];
+				object_def.forEach(function (object) {
 					var validate = ['keywords', 'short_description', 'vnum'];
 
 					var err = false;
@@ -55,24 +55,25 @@ var Items = function () {
 						if (!(validate[v] in object)) {
 							log("\t\tError loading object in file " + object + ' - no ' + validate[v] + ' specified');
 							err = true;
-							break;
+							return;
 						}
 					}
 
 					if (err) {
-						continue;
+						return;
 					}
 
-					if (object.vnum in self.objects) {
-						log("\t\tConflicting vnum [" + object.vnum + '] when loading object ' + object);
-						continue;
+					// max load for items so we don't have 1000 items in a room due to respawn
+					if (self.load_count[object.vnum] && self.load_count[object.vnum] > object.load_max) {
+						log("\t\tMaxload of " + object.load_max + " hit for object " + object.vnum);
+						return;
 					}
 
 					object = new Item(object);
 					object.setUuid(uuid.v4());
-					log("\t\tLoaded item [vnum:" + object.getUuid() + ', ' + object.getShortDesc('en') + ']');
+					log("\t\tLoaded item [uuid:" + object.getUuid() + ', vnum:' + object.vnum + ']');
 					self.addItem(object);
-				}
+				});
 			}
 
 			if (callback) {
@@ -92,6 +93,7 @@ var Items = function () {
 			item.setUuid(uuid.v4());
 		}
 		self.objects[item.getUuid()] = item;
+		self.load_count[item.vnum] = self.load_count[item.vnum] ? self.load_count[item.vnum] + 1 : 1;
 	};
 
 	/**

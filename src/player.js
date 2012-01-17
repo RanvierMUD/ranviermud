@@ -1,6 +1,6 @@
 var Data    = require('./data').Data,
     Skills  = require('./skills').Skills,
-    hashlib = require('hashlib'),
+    crypto  = require('crypto'),
     ansi    = require('sty'),
     util    = require('util');
     events  = require('events');
@@ -61,14 +61,13 @@ var Player = function(socket) {
 	self.setLocale       = function (locale)    { self.locale = locale; };
 	self.setName         = function (newname)   { self.name = newname; };
 	self.setLocation     = function (loc)       { self.location = loc; };
-	self.setPassword     = function (pass)      { self.password = hashlib.md5(pass); };
+	self.setPassword     = function (pass)      { self.password = crypto.createHash('md5').update(pass).digest('hex'); };
 	self.addItem         = function (item)      { self.inventory.push(item); };
 	self.removeItem      = function (item)      { self.inventory = self.inventory.filter(function (i) { return item !== i; }); };
 	self.setInventory    = function (inv)       { self.inventory = inv; };
 	self.setInCombat     = function (combat)    { self.in_combat = combat; };
 	self.setAttribute    = function (attr, val) { self.attributes[attr] = val; };
 	self.addSkill        = function (name, skill) { self.skills[name] = skill; };
-	self.removeAffect    = function (aff) { delete self.affects[aff]; };
 	/**#@-*/
 
 	/**
@@ -95,20 +94,31 @@ var Player = function(socket) {
 			affect.activate();
 		}
 
+		var deact = function () {
+			if (affect.deactivate) {
+				affect.deactivate();
+				self.prompt();
+			}
+			self.removeAffect(name);
+		};
+
 		if (affect.duration) {
-			setTimeout(function () {
-				if (affect.deactivate) {
-					affect.deactivate();
-					self.prompt();
-				}
-				self.removeAffect(name);
-			}, affect.duration * 1000);
+			affect.timer = setTimeout(deact, affect.duration * 1000);
 		} else if (affect.event) {
-			self.on(affect.event, affect.deactivate);
+			self.on(affect.event, deact);
 		}
-		self.affects[name] = 1;
+		self.affects[name] = affect;
 	};
 
+	self.removeAffect = function (aff)
+	{
+		if (self.affects[aff].event) {
+			self.removeListener(self.affects[aff].event, self.affects[aff].deactivate);
+		} else {
+			clearTimeout(self.affects[aff].timer);
+		}
+		delete self.affects[aff];
+	};
 
 	/**
 	 * Get and possibly hydrate an equipped item

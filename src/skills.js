@@ -1,4 +1,5 @@
-var Localize = require('localize');
+var Localize = require('localize'),
+    Affects  = require('./affects.js').Affects;
 
 var l10n_dir = __dirname + '/../l10n/skills/';
 var l10ncache = {};
@@ -44,20 +45,17 @@ exports.Skills = {
 
 				player.say(L(player.getLocale(), 'warrior', 'TACKLE_DAMAGE', damage));
 				target.setAttribute('health', target.getAttribute('health') - damage);
-				var original_speed = target.getAttribute('speed');
+
 				if (!target.getAffects('slow')) {
-					target.addAffect('slow', {
-						activate: function () {
-							target.setAttribute('speed', original_speed * 1.5);
-						},
-						deactivate : function () {
-							if (target && target.isInCombat()) {
-								target.setAttribute('speed', original_speed);
-								player.say(L(player.getLocale(), 'warrior', 'TACKLE_RECOVER'));
-							}
-						},
-						duration: 3
-					});
+					target.addAffect('slow', Affects.slow({
+						duration: 3,
+						magnitude: 1.5,
+						player: player,
+						target: target,
+						deactivate: function () {
+							player.say(L(player.getLocale(), 'warrior', 'TACKLE_RECOVER'));
+						}
+					}));
 				}
 
 				// Slap a cooldown on the player
@@ -78,18 +76,15 @@ exports.Skills = {
 			description: "Your experience in battle has made you more hardy. Max health is increased by 200",
 			activate: function (player)
 			{
-				player.addAffect('battlehardened', {
-					activate:   function () {
-						player.setAttribute('max_health', player.getAttribute('max_health') + 200);
-						player.setAttribute('health', player.getAttribute('max_health'));
-					},
-					deactivate: function () {
-						player.setAttribute('max_health', player.getAttribute('max_health') - 200);
-						player.setAttribute('health', player.getAttribute('max_health'));
-					},
+				if (player.getAffects('battlehardened')) {
+					player.removeAffect('battlehardened');
+				}
+				player.addAffect('battlehardened', Affects.health_boost({
+					magnitude: 200,
+					player: player,
 					event: 'quit'
-				});
-			},
+				}));
+			}
 		}
 	}
 };

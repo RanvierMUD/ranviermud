@@ -1,4 +1,4 @@
-var hashlib  = require('hashlib'),
+var crypto   = require('crypto'),
     Localize = require('localize'),
     util     = require('util'),
     ansi     = require('colorize').ansify,
@@ -153,7 +153,7 @@ var Events = {
 				
 				arg.getSocket().write(L('PASSWORD'));
 				arg.getSocket().once('data', function (pass) {
-					pass = hashlib.md5(pass.toString().trim());
+					pass = crypto.createHash('md5').update(pass.toString().trim()).digest('hex');
 					if (pass !== arg.getPassword()) {
 						arg.sayL10n(l10n, 'PASSWORD_FAIL');
 						password_attempts[arg.getName()] += 1;
