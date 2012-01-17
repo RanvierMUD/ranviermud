@@ -1,5 +1,4 @@
-var Localize = require('localize'),
-    Affects  = require('./affects.js').Affects;
+var Affects  = require('./affects.js').Affects;
 
 var l10n_dir = __dirname + '/../l10n/skills/';
 var l10ncache = {};
@@ -10,7 +9,7 @@ var l10ncache = {};
 var L = function (locale, cls, key /*, args... */)
 {
 	var l10n_file = l10n_dir + cls + '.yml';
-	var l10n = l10ncache[cls+locale] || new Localize(require('js-yaml').load(require('fs').readFileSync(l10n_file).toString('utf8')), undefined, 'zz');
+	var l10n = l10ncache[cls+locale] || require('./l10n')(l10n_file);
 	l10n.setLocale(locale);
 	return l10n.translate.apply(null, [].slice.call(arguments).slice(2));
 };

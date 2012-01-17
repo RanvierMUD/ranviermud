@@ -1,12 +1,3 @@
-/**
- * Localization
- */
-var l10n = null;
-var l10n_file = __dirname + '/../l10n/commands.yml';
-// shortcut for l10n.translate
-var L  = null;
-
-
 exports.Channels = {
 	say: function (args, player, players)
 	{

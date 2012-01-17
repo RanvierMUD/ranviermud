@@ -1,0 +1,9 @@
+ITEM_WORN:
+    en: "You're wearing that, remove it first."
+    es: "ES-You're wearing that, remove it first."
+ITEM_DROP:
+    en: "You drop $[1]."
+    es: "ES-You drop $[1]."
+ITEM_NOT_FOUND:
+    en: "You don't see that here."
+    es: "ES-You don't see that here."

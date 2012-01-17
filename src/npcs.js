@@ -2,7 +2,6 @@ var fs       = require('fs'),
     util     = require('util'),
     uuid     = require('node-uuid'),
     events   = require('events'),
-    Localize = require('localize'),
     Data     = require('./data.js').Data;
 
 var npcs_dir         = __dirname + '/../entities/npcs/';

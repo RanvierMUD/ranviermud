@@ -1,0 +1,12 @@
+GET_COMBAT:
+  en: "You can do that while you're fighting."
+  es: "ES-You can do that while you're fighting."
+CARRY_MAX:
+  en: "You can't carry anymore."
+  es: "ES-You can't carry anymore."
+ITEM_NOT_FOUND:
+    en: "You don't see that here."
+    es: "ES-You don't see that here."
+ITEM_PICKUP:
+    en: "You pick up $[1]."
+    es: "ES-You pick up $[1]."

@@ -1,58 +1,10 @@
-SAY:
-    en: "$[1] says, '$[2]'"
-    es: "$[1] says in spanish, '$[2]'"
-LIMBO:
-    en: "You found yourself in limbo. How the heck did you manage that?"
-    es: "ES-You found yourself in limbo. How the heck did you manage that?"
-EXITS:
-    en: "Exits"
-    es: "ES-Exits"
 LEAVE:
     en: "$[1] leaves."
     es: "ES-$[1] leaves."
-IN_ROOM:
-    en: "$[1] is here."
-    es: "ES-$[1] is here."
-SAVED:
-    en: "Saved."
-    es: "ES-Saved."
-ITEM_PICKUP:
-    en: "You pick up $[1]."
-    es: "ES-You pick up $[1]."
-ITEM_NOT_FOUND:
-    en: "You don't see that here."
-    es: "ES-You don't see that here."
-INV:
-    en: "Inventory:"
-    es: "ES-Inventory:"
-ITEM_DROP:
-    en: "You drop $[1]."
-    es: "ES-You drop $[1]."
-ITEM_DROPPED:
-    en: "$[1] dropped $[2]"
-    es: "ES-$[1] dropped $[2]"
-ITEM_NOT_EQUIPPED:
-    en: "You're not wearing it but to keep from embarassing yourself you put it on then remove it."
-    es: "ES-You're not wearing it but to keep from embarassing yourself you put it on then remove it."
-ITEM_WORN:
-    en: "You're wearing that, remove it first."
-    es: "ES-You're wearing that, remove it first."
 AMBIG_EXIT:
     en: "Which one? Be more specific."
     es: "ES-Which one? Be more specific."
-CANT_WIELD:
-    en: "You're already wielding $[1]."
-    es: "ES-You're already wielding $[1]."
-KILL_PACIFIST:
-    en: "They are a pacifist an will not fight."
-    es: "ES-They are a pacifist an will not fight."
 MOVE_COMBAT:
     en: "Where do you think you're going in the middle of a fight?"
     es: "ES-Where do you think you're going in the middle of a fight?"
-SKILL_DESC:
-    en: "Description: $[1]"
-    es: "ES-Description: $[1]"
-SKILL_COOLDOWN:
-    en: "Cooldown: <magenta>$[1]</magenta>"
-    es: "Cooldown: ES-<magenta>$[1]</magenta>"
 # vim: set ts=4 sw=4 et :

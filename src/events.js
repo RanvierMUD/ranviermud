@@ -1,5 +1,4 @@
 var crypto   = require('crypto'),
-    Localize = require('localize'),
     util     = require('util'),
     ansi     = require('colorize').ansify,
 
@@ -8,7 +7,8 @@ var crypto   = require('crypto'),
     Data     = require('./data').Data,
     Item     = require('./items').Item,
     Player   = require('./player').Player,
-	Skills   = require('./skills').Skills;
+	Skills   = require('./skills').Skills,
+	l10nHelper = require('./l10n');
 
 
 /**
@@ -380,7 +380,7 @@ var Events = {
 		npcs    = npcs    || config.npcs;
 		if (!l10n) {
 			util.log("Loading event l10n... ");
-				l10n = new Localize(require('js-yaml').load(require('fs').readFileSync(l10n_file).toString('utf8')), undefined, 'zz');
+			l10n = l10nHelper(l10n_file);
 			util.log("Done");
 		}
 		l10n.setLocale(config.locale);
@@ -397,3 +397,4 @@ var Events = {
 	}
 };
 exports.Events = Events;
+

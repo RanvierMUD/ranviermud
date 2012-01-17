@@ -284,7 +284,6 @@ var Player = function(socket) {
 		self.inventory  = data.inventory || [];
 		self.equipment  = data.equipment || {};
 		self.attributes = data.attributes;
-		self.affects    = data.affects;
 		self.skills     = data.skills;
 		// Activate any passive skills the player has
 		for (var skill in self.skills) {
@@ -352,7 +351,6 @@ var Player = function(socket) {
 			inventory: inv,
 			equipment: self.equipment,
 			attributes: self.attributes,
-			affects: self.affects,
 			skills: self.skills
 		});
 	};
@@ -363,7 +361,6 @@ var Player = function(socket) {
 	self.init = function ()
 	{
 		Data.loadListeners({script: "player.js"}, l10n_dir, npcs_scripts_dir, self);
-
 	};
 
 	/**

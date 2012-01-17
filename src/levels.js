@@ -72,7 +72,7 @@ var level_exp_formula = function (level)
 	return ((8 * level) + diff(level)) * mob_exp(level) * reduction(level);
 };
 
-exports.LevelUtils = {
+exports.LevelUtil = {
 	expToLevel: function (level)
 	{
 		return level_exp_formula(level);

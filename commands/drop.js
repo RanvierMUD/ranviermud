@@ -1,0 +1,30 @@
+var l10n_file = __dirname + '/../l10n/commands/drop.yml';
+var l10n = require('../src/l10n')(l10n_file);
+exports.command = function (rooms, items, players, npcs, Commands)
+{
+	return function (args, player)
+	{
+		var room = rooms.getAt(player.getLocation());
+		var item = CommandUtil.findItemInInventory(args, player, true);
+
+		if (!item) {
+			player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+			return;
+		}
+
+		if (item.isEquipped()) {
+			player.sayL10n(l10n, 'ITEM_WORN');
+			return;
+		}
+
+		player.say(L('ITEM_DROP', item.getShortDesc(player.getLocale())), false);
+		room.getNpcs().forEach(function (id) {
+			npcs.get(id).emit('playerDropItem', room, player, players, item);
+		});
+
+		player.removeItem(item);
+		room.addItem(item.getUuid());
+		item.setInventory(null);
+		item.setRoom(room.getLocation());
+	};
+};
