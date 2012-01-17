@@ -24,8 +24,9 @@ NodeJS based MUD engine with full localization support
     cd ranviermud
     npm install
     sudo ./ranvier -v --save=10 --respawn=10
-
-Binding the socket requires sudo for now... sorry
+    
+### Note for Mac
+You may run into issues doing `npm install` for hashlib. If so, look at this thread https://github.com/brainfucker/hashlib/issues/29
 
 ## Documentation
 Holy crap there is actually documentation and guides for this thing!
