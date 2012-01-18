@@ -142,7 +142,7 @@ var Events = {
 
 				// Boot and log any failed password attempts
 				if (password_attempts[name] > 2) {
-					arg.say(L('PASSWORD_EXCEEDED'));
+					arg.write(L('PASSWORD_EXCEEDED') + "\r\n");
 					password_attempts[name] = 0;
 					util.log('Failed login - exceeded password attempts - ' + name);
 					arg.end();
