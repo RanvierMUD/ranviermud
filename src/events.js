@@ -129,58 +129,71 @@ var Events = {
 						return;
 					}
 
-					player = new Player(arg);
-					player.load(data);
 
-					next(player, 'password');
+					next(arg, 'password', name);
 					return;
 				});
 				break;
 			case 'password':
-				if (typeof password_attempts[arg.getName()] === 'undefined') {
-					password_attempts[arg.getName()] = 0;
+				var name = dontwelcome;
+				if (typeof password_attempts[name] === 'undefined') {
+					password_attempts[name] = 0;
 				}
 
 				// Boot and log any failed password attempts
-				if (password_attempts[arg.getName()] > 2) {
+				if (password_attempts[name] > 2) {
 					arg.say(L('PASSWORD_EXCEEDED'));
-					password_attempts[arg.getName()] = 0;
-					util.log('Failed login - exceeded password attempts - ' + arg.getName());
-					arg.getSocket().end();
+					password_attempts[name] = 0;
+					util.log('Failed login - exceeded password attempts - ' + name);
+					arg.end();
 					return false;
 				}
 
 				
-				arg.getSocket().write(L('PASSWORD'));
-				arg.getSocket().once('data', function (pass) {
+				arg.write(L('PASSWORD'));
+				arg.once('data', function (pass) {
 					pass = crypto.createHash('md5').update(pass.toString().trim()).digest('hex');
-					if (pass !== arg.getPassword()) {
-						arg.sayL10n(l10n, 'PASSWORD_FAIL');
-						password_attempts[arg.getName()] += 1;
+					if (pass !== Data.loadPlayer(name).password) {
+						arg.write(L('PASSWORD_FAIL') + "\r\n");
+						password_attempts[name] += 1;
 						return repeat();
 					}
-					next(arg, 'done');
+					next(arg, 'done', name);
 				});
 				break;
 			case 'done':
-				players.addPlayer(arg);
-				players.broadcastL10n(l10n, 'WELCOME', arg.getName());
+				var name = dontwelcome;
+				// If there is a player connected with the same name boot them the heck off
+				if (players.some(function (p) { return p.getName() === name; })) {
+					players.eachIf(function (p) { return p.getName() === name; }, function (p) {
+						p.emit('quit');
+						p.say("Replaced.");
+						players.removePlayer(p, true);
+					});
+				}
+
+				player = new Player(arg);
+				player.load(Data.loadPlayer(name));
+				players.addPlayer(player);
+
+				player.getSocket().on('close', function () { players.removePlayer(player);});
+				players.broadcastL10n(l10n, 'WELCOME', player.getName());
 
 				// Load the player's inventory (There's probably a better place to do this)
 				var inv = [];
-				arg.getInventory().forEach(function (item) {
+				player.getInventory().forEach(function (item) {
 					item = new Item(item);
 					items.addItem(item);
 					inv.push(item);
 				});
-				arg.setInventory(inv);
+				player.setInventory(inv);
 
 
-				Commands.player_commands.look(null, arg);
-				arg.prompt();
+				Commands.player_commands.look(null, player);
+				player.prompt();
 
 				// All that shit done, let them play!
-				arg.getSocket().emit("commands", arg);
+				player.getSocket().emit("commands", player);
 				break;
 			};
 		},

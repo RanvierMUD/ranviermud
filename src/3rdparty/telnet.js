@@ -452,8 +452,7 @@ function Server(connectionListener)
 
     /* query the sorts of things that a server might be interested in,
      * and then trigger the connection event */
-    var opts = [OPT_TTYPE, OPT_WINDOW_SIZE, OPT_NEW_ENVIRON,
-        OPT_BINARY, OPT_COMPRESS2];
+    var opts = [];//OPT_TTYPE, OPT_WINDOW_SIZE, OPT_NEW_ENVIRON, OPT_BINARY, OPT_COMPRESS2];
 
     function neg_next() {
       if (!opts.length) {

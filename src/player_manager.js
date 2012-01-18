@@ -56,6 +56,15 @@ var PlayerManager = function ()
 	};
 
 	/**
+	 * Execute a function on all players
+	 * @param Callback callback
+	 */
+	self.some = function (callback)
+	{
+		return self.players.some(callback);
+	};
+
+	/**
 	 * Execute a function on all players except one
 	 * @param Player   player
 	 * @param Callback callback
