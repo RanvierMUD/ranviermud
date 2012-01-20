@@ -4,6 +4,7 @@ var rooms   = null;
 var items   = null;
 
 var express = require('express');
+var routing = require('./web/routes');
 exports.Web = {
 	init: function (app)
 	{
@@ -12,38 +13,11 @@ exports.Web = {
 		app.set("view options", { layout: false });
 		app.use(express.static(__dirname + '/../web/static/'));
 
-		app.get('/', function (req, res)
-		{
-			res.render('index.jade', {area: req.params.area || 'test'});
-		});
-
-		app.get('/area/:area', function (req, res)
-		{
-			if (!req.params.area) {
-				return res.send(JSON.stringify({rooms:[]}));
-			}
-
-			var area = rooms.getArea(req.params.area);
-
-			var roomvals = [];
-			for (var i in rooms.rooms) { roomvals.push(rooms.rooms[i].flatten()); }
-			roomvals = roomvals.filter(function (r) { return r.area === req.params.area; });
-
-			res.send(JSON.stringify({
-				area: {
-					title: area.title,
-					rooms: roomvals
-				}
-			}));
-		});
-
-		app.get('/room/:room', function (req, res)
-		{
-			if (!req.params.room) {
-				return res.send(JSON.stringify({}));
-			}
-
-			return 
+		routing.configure(app, {
+			players: players,
+			npcs: npcs,
+			rooms: rooms,
+			items: items
 		});
 
 		app.listen(8080);
