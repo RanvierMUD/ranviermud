@@ -432,9 +432,18 @@ TelnetStream.prototype.attachStream = function (sock)
   var telnet = this;
 
   telnet.stream = sock;
+  var buftext = new Buffer(512);
+  var buflen  = 0;
 
   sock.on('data', function (buf) {
-    telnet.processIncomingData(buf);
+    buf.copy(buftext, buflen);
+    buflen += buf.length;
+    if ((!buf.toString().match(/[\r\n]/))) {
+      return;
+    }
+    telnet.processIncomingData(buftext.slice(0, buflen));
+    buftext = new Buffer(512);
+    buflen = 0;
   });
   sock.on('close', function () {
     telnet.emit('close');
@@ -452,7 +461,7 @@ function Server(connectionListener)
 
     /* query the sorts of things that a server might be interested in,
      * and then trigger the connection event */
-    var opts = [];//OPT_TTYPE, OPT_WINDOW_SIZE, OPT_NEW_ENVIRON, OPT_BINARY, OPT_COMPRESS2];
+    var opts = [];// OPT_TTYPE, OPT_WINDOW_SIZE, OPT_NEW_ENVIRON, OPT_BINARY, OPT_COMPRESS2];
 
     function neg_next() {
       if (!opts.length) {
