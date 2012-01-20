@@ -1,0 +1,12 @@
+html
+	head
+		title Ranvier Web Builder
+		script(src='/js/ext/ext-all-debug.js')
+		script(src='/js/rwb.js')
+		link(rel='stylesheet', href='/3rdparty/resources/css/ext-all-gray.css')
+		script
+			Ext.onReady(function () {var rwb = new Builder({area: "#{area}"});});
+	body
+		p Welcome to the Ranvier Web Builder
+		div#target
+// vim: set syn=jade :

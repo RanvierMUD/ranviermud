@@ -267,6 +267,36 @@ var Room = function (config)
 		return self.items.some(function (i) { return i === uid; });
 	};
 
+	/**
+	 * Flatten into a simple structure
+	 * @return object
+	 */
+	self.flatten = function ()
+	{
+		return {
+			title: self.getTitle('en'),
+			description: self.getDescription('en'),
+			exits: self.exits,
+			location: self.location,
+			area: self.area
+		};
+	};
+
+	/**
+	 * Get a full object of the room
+	 * @return object
+	 */
+	self.stringify = function ()
+	{
+		return {
+			title: self.title,
+			description: self.description,
+			exits: self.exits,
+			location: self.location,
+			area: self.area
+		};
+	};
+
 	self.init(config);
 };
 util.inherits(Room, events.EventEmitter);

@@ -14,21 +14,25 @@
 
     // built-ins
 var net = require('net'),
-	util = require('util'),
+    util = require('util'),
+    express = require('express'),
 
-	// local
-	Commands = require('./src/commands').Commands,
-	Rooms    = require('./src/rooms').Rooms,
-	Npcs     = require('./src/npcs').Npcs,
-	Items    = require('./src/items').Items,
-	Data     = require('./src/data').Data,
-	Events   = require('./src/events').Events,
-	PlayerManager = require('./src/player_manager').PlayerManager,
+    // local
+    Commands = require('./src/commands').Commands,
+    Rooms    = require('./src/rooms').Rooms,
+    Npcs     = require('./src/npcs').Npcs,
+    Items    = require('./src/items').Items,
+    Data     = require('./src/data').Data,
+    Events   = require('./src/events').Events,
+    PlayerManager = require('./src/player_manager').PlayerManager,
 
-	// third party
-	Localize  = require('localize'),
-	argv = require('optimist').argv,
-	telnet = require('./src/3rdparty/telnet.js');
+    // webserver stuffs
+    Web = require('./src/web').Web;
+
+    // third party
+    Localize  = require('localize'),
+    argv = require('optimist').argv,
+    telnet = require('./src/3rdparty/telnet.js');
 
 /**
  * These aren't really globals, they're only "global" to this file,
@@ -51,7 +55,10 @@ var locale  = argv.locale || 'en',
 	// Stuff for the server executable
 	l10n,
 	respawnint,
-	saveint;
+	saveint,
+
+	// Stuff for the webserver
+	webserver;
 
 /**
  * Do the dirty work
@@ -71,6 +78,14 @@ var init = function (restart_server)
 	});
 
 	Events.configure({
+		players: players,
+		items: items,
+		locale:  locale,
+		npcs: npcs,
+		rooms: rooms
+	});
+
+	Web.configure({
 		players: players,
 		items: items,
 		locale:  locale,
@@ -107,6 +122,9 @@ var init = function (restart_server)
 
 				// start the server
 				server.listen(port);
+
+				webserver = Web.init(express.createServer());
+
 			}
 
 			// save every 10 minutes
@@ -123,7 +141,10 @@ var init = function (restart_server)
 	});
 };
 
+
+// START IT UP!
 init();
+
 
 /**
  * Save all connected players
