@@ -9,7 +9,7 @@ exports.command = function (rooms, items, players, npcs, Commands)
 
 		if (args) {
 			// Look at items in the room first
-			var thing = CommandUtil.findItemInRoom(args, room, player, true);
+			var thing = CommandUtil.findItemInRoom(items, args, room, player, true);
 
 			if (!thing) {
 				// Then the inventory
@@ -18,7 +18,7 @@ exports.command = function (rooms, items, players, npcs, Commands)
 
 			if (!thing) {
 				// then for an NPC
-				thing = CommandUtil.findNpcInRoom(args, room, player, true);
+				thing = CommandUtil.findNpcInRoom(npcs, args, room, player, true);
 			}
 
 			// TODO: look at players

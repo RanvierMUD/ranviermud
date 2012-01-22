@@ -10,7 +10,7 @@ exports.Affects = {
 		var original_speed = config.target.getAttribute('speed');
 		return {
 			activate: function () {
-				config.target.setAttribute('speed', original_speed * magnitude);
+				config.target.setAttribute('speed', original_speed * config.magnitude);
 			},
 			deactivate : function () {
 				if (config.target && config.target.isInCombat()) {
