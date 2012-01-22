@@ -2,16 +2,16 @@ var CommandUtil = {
 	/**
 	 * Find an item in a room based on the syntax
 	 *   things like: get 2.thing or look 6.thing or look thing
-	 * @param string look_string
+	 * @param string lookString
 	 * @param Room   room
 	 * @param Player player
 	 * @param boolean hydrade Whether to return the id or a full object
 	 * @return string UUID of the item
 	 */
-	findItemInRoom : function (lookString, room, player, hydrate)
+	findItemInRoom : function (items, lookString, room, player, hydrate)
 	{
 		hydrate = hydrate || false;
-		var thing = CommandUtil.parseDot(look_string, room.getItems(), function (item) {
+		var thing = CommandUtil.parseDot(lookString, room.getItems(), function (item) {
 			return items.get(item).hasKeyword(this.keyword, player.getLocale());
 		});
 
@@ -21,16 +21,16 @@ var CommandUtil = {
 	/**
 	 * Find an npc in a room based on the syntax
 	 *   things like: get 2.thing or look 6.thing or look thing
-	 * @param string look_string
+	 * @param string lookString
 	 * @param Room   room
 	 * @param Player player
 	 * @param boolean hydrade Whether to return the id or a full object
 	 * @return string UUID of the item
 	 */
-	findNpcInRoom : function (lookString, room, player, hydrate)
+	findNpcInRoom : function (npcs, lookString, room, player, hydrate)
 	{
 		hydrate = hydrate || false;
-		var thing = CommandUtil.parseDot(look_string, room.getNpcs(), function (id) {
+		var thing = CommandUtil.parseDot(lookString, room.getNpcs(), function (id) {
 			return npcs.get(id).hasKeyword(this.keyword, player.getLocale());
 		});
 
@@ -40,14 +40,14 @@ var CommandUtil = {
 	/**
 	 * Find an item in a room based on the syntax
 	 *   things like: get 2.thing or look 6.thing or look thing
-	 * @param string look_string
+	 * @param string lookString
 	 * @param object being This could be a player or NPC. Though most likely player
 	 * @return string UUID of the item
 	 */
 	findItemInInventory : function (lookString, being, hydrate)
 	{
 		hydrate = hydrate || false;
-		var thing = CommandUtil.parseDot(look_string, being.getInventory(), function (item) {
+		var thing = CommandUtil.parseDot(lookString, being.getInventory(), function (item) {
 			return item.hasKeyword(this.keyword, being.getLocale());
 		});
 
@@ -58,7 +58,7 @@ var CommandUtil = {
 	* Parse 3.blah item notation
 	* @param string arg    The actual 3.blah string
 	* @param Array objects The array of objects to search in
-	* @param Function filter_func Function to filter the list
+	* @param Function filterFunc Function to filter the list
 	* @return object
 	*/
 	parseDot : function (arg, objects, filterFunc)
@@ -73,7 +73,7 @@ var CommandUtil = {
 			multi = true
 		}
 
-		var found = objects.filter(filter_func, {
+		var found = objects.filter(filterFunc, {
 			keyword: keyword,
 			nth: nth
 		});

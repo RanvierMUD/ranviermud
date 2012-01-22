@@ -1,4 +1,4 @@
-var LevelUtils = require('../../src/levels').LevelUtils,
+var LevelUtil = require('../../src/levels').LevelUtil,
     Skills     = require('../../src/skills').Skills;
 exports.listeners = {
 	regen: function (l10n)
@@ -31,7 +31,7 @@ exports.listeners = {
 
 			this.sayL10n(l10n, 'EXPGAIN', experience);
 
-			var tnl = LevelUtils.expToLevel(this.getAttribute('level')) - this.getAttribute('experience');
+			var tnl = LevelUtil.expToLevel(this.getAttribute('level')) - this.getAttribute('experience');
 
 			if (experience >= tnl ) {
 				return this.emit('level');

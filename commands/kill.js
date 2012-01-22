@@ -5,7 +5,7 @@ exports.command = function (rooms, items, players, npcs, Commands)
 {
 	return function (args, player)
 	{
-		var npc = CommandUtil.findNpcInRoom(args, rooms.getAt(player.getLocation()), player, true);
+		var npc = CommandUtil.findNpcInRoom(npcs, args, rooms.getAt(player.getLocation()), player, true);
 		if (!npc) {
 			player.sayL10n(l10n, 'TARGET_NOT_FOUND');
 			return;
