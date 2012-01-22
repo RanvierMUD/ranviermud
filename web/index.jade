@@ -3,10 +3,28 @@ html
 		title Ranvier Web Builder
 		script(src='/js/ext/ext-all-debug.js')
 		script(src='/js/rwb.js')
+		script(src='/js/rwb/exitbuilder.js')
+		script(src='/js/rwb/roombuilder.js')
 		link(rel='stylesheet', href='/3rdparty/resources/css/ext-all-gray.css')
+		link(rel='stylesheet', href='/css/ext-extend.css')
 		script
-			Ext.onReady(function () {var rwb = new Builder({area: "#{area}"});});
+			Ext.onReady(function () {
+				Ext.create('Ext.container.Viewport', {
+					layout: 'border',
+					items: [{
+						region: 'north',
+						html: '<h1 class="x-panel-header">Welcome to the Ranvier Web Builder</h1>',
+						autoHeight: true,
+						border: false,
+						margins: '0 0 5 0',
+					},{
+						region: 'center',
+						xtype: 'panel',
+						items: [new RWBAreaGrid({area: "#{area}"})],
+						autoHeight: true,
+						border: false,
+					}]
+				});
+			});
 	body
-		p Welcome to the Ranvier Web Builder
-		div#target
 // vim: set syn=jade :

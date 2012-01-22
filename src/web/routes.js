@@ -28,7 +28,7 @@ var routes = {
 			}));
 		}
 	},
-	'/room/:room': function (players, npcs, rooms, items)
+	'/room/:room([0-9]+)': function (players, npcs, rooms, items)
 	{
 		return function (req, res)
 		{
@@ -36,7 +36,9 @@ var routes = {
 				return res.send(JSON.stringify({}));
 			}
 
-			return;
+			return res.send(JSON.stringify({
+				room: rooms.getAt(req.params.room).stringify()
+			}));
 		}
 	}
 };
