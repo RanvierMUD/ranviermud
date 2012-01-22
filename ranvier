@@ -273,6 +273,7 @@ var server_commands = {
 			util.log("RESTARTING...");
 			save();
 			server.close();
+			webserver.close();
 			players.each(function (p) { p.getSocket().end(); });
 			init(true);
 		}, time);
