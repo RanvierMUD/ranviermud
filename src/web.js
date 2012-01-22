@@ -20,7 +20,7 @@ exports.Web = {
 			items: items
 		});
 
-		app.listen(8080);
+		return app.listen(8080);
 	},
 	configure: function (config)
 	{
