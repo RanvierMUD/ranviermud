@@ -278,13 +278,13 @@ var server_commands = {
 		}, time);
 	}
 };
-
-process.on('SIGINT', function ()
-{
-	util.log("Shutting down - not so gracefully...");
-	process.exit(0);
-});
-
+//
+//process.on('SIGINT', function ()
+//{
+//	util.log("Shutting down - not so gracefully...");
+//	process.exit(0);
+//});
+//
 process.stdin.resume();
 process.stdin.on('data', function (data)
 {
