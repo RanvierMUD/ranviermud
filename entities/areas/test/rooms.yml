@@ -1,7 +1,11 @@
 -
-  title: 'Test'
+  title:
+    en: 'Test'
+    es: 'ES - Test'
   location: 1
-  description: "You are in the test room. there isn't much here"
+  description:
+    en: "You are in the test room. there isn't much here"
+    es: "ES-You are in the test room. there isn't much here"
   exits:
     -
       location: 2
@@ -13,9 +17,13 @@
         en: ' climbs up the ladder.'
         es: ' climbs up the ladder. ES'
 -
-  title: 'Plain room'
+  title:
+    en: 'Plain room'
+    es: 'ES - Plain room'
   location: 2
-  description: 'Not a lot going on here, just a plain room.'
+  description:
+    en: 'Not a lot going on here, just a plain room.'
+    es: 'ES - Not a lot going on here, just a plain room.'
   exits:
     -
       location: 1
