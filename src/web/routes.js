@@ -1,3 +1,4 @@
+var Data = require('../data').Data;
 var routes = {
 	'/': function (players, npcs, rooms, items)
 	{
@@ -28,17 +29,41 @@ var routes = {
 			}));
 		}
 	},
-	'/room/:room([0-9]+)': function (players, npcs, rooms, items)
-	{
-		return function (req, res)
+	'/room/:room([0-9]+)?': {
+		get: function (players, npcs, rooms, items)
 		{
-			if (!req.params.room) {
-				return res.send(JSON.stringify({}));
-			}
+			return function (req, res)
+			{
+				if (!req.params.room) {
+					return res.send(JSON.stringify({}));
+				}
 
-			return res.send(JSON.stringify({
-				room: rooms.getAt(req.params.room).stringify()
-			}));
+				return res.send(JSON.stringify(rooms.getAt(req.params.room).stringify()));
+			}
+		},
+		post: function (players, npcs, rooms, items)
+		{
+			return function (req, res)
+			{
+				if (!req.body.location) {
+					return res.send(JSON.stringify({
+						error: "No room given"
+					}));
+				}
+
+				var data = req.body;
+				var filename = rooms.getAt(data.location).filename;
+				var index    = rooms.getAt(data.location).file_index;
+				Data.writeData(filename, index, data, function (err) {
+					if (err) {
+						return res.send(JSON.stringify({
+							error: "No room given"
+						}));
+					}
+
+					res.send(data);
+				});
+			}
 		}
 	}
 };
@@ -46,9 +71,17 @@ var routes = {
 exports.configure = function (app, config)
 {
 	for (var route in routes) {
+		if (typeof routes[route] === 'function') {
 		app.get(route, routes[route](
 			config.players, config.npcs, config.rooms, config.items
 		));
+		} else {
+			for (var method in routes[route]) {
+				app[method](route, routes[route][method](
+					config.players, config.npcs, config.rooms, config.items
+				));
+			}
+		}
 	}
 };
 

@@ -15,7 +15,6 @@ var RWBExitBuilder = function (config)
 				name: 'location',
 				value: exit.location,
 				fieldLabel: 'Location',
-				ref: 'location'
 			}),
 		];
 
@@ -26,7 +25,7 @@ var RWBExitBuilder = function (config)
 				lm_fields.push(Ext.create('Ext.form.TextField', {
 					fieldLabel: locale,
 					value: exit.leave_message[locale],
-					ref: locale
+					name: 'leave_message.' + locale
 				}));
 			}
 			exitfields.push(Ext.create('Ext.form.FieldSet', {
@@ -44,26 +43,65 @@ var RWBExitBuilder = function (config)
 				Ext.create('Ext.button.Button', {
 					text: 'Delete',
 					handler: function () {
-						self.window.down("[ref=roomForm]").down("[ref='"+exit.direction+"']").destroy();
+						self.window.down("[ref=exitForm]").down("[ref='"+exit.direction+"']").destroy();
 					}
 				}),
 			]
 		});
+		exitfields.push({
+			xtype: 'hiddenfield',
+			name: 'direction',
+			value: exit.direction
+		});
 
 		exits.push(Ext.create('Ext.form.FieldSet', {
 			title: exit.direction,
-			ref: exit.direction,
+			ref: 'exitset',
 			items: exitfields,
 			collapsible: true,
 			padding: '10 10 10 10'
 		}))
 	});
 
+	self.exitform =  Ext.create('Ext.form.Panel', { items: exits, ref: 'exitForm' });
+
 	self.window = new Ext.create('Ext.window.Window', {
 		title: "Exits editor",
 		width: '80%',
 		height: '80%',
-		items: [ Ext.create('Ext.form.Panel', { items: exits, ref: 'roomForm' }) ]
+		items: [self.exitform ],
+		buttons: [
+			{
+				text: "Save",
+				handler: function () {
+					var exits = self.exitform.query("fieldset[ref=exitset]");
+					var exitvals = [];
+					for (var i in exits) {
+						var exit = exits[i];
+						var leave_message = {};
+						var cleanvals = {};
+
+						exit.query("field").forEach(function (field)
+						{
+							if (/^leave/.test(field.name)) {
+								leave_message[field.name.split('.')[1]] = field.getValue();
+								return;
+							}
+
+							cleanvals[field.name] = field.getValue();
+						});
+
+						if (Ext.Object.getSize(leave_message)) {
+							cleanvals.leave_message = leave_message;
+						}
+
+						exitvals.push(cleanvals);
+					}
+
+					config.handlers.afterSave(exitvals);
+				}
+			}
+		]
 	});
 
 	return self.window;

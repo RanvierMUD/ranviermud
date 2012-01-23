@@ -7,21 +7,12 @@ var RWBRoomBuilder = function (config)
 	}
 	self.window = null;
 
-	var roomStore = Ext.create('Ext.data.Store', {
-		model: 'Room',
-		proxy: {
-			type: 'ajax',
-			url : '/room/' + room.location,
-			reader: {
-				type: 'json',
-				root: 'room'
-			}
+	Room.load(room.location,
+	{
+		failure: function (record, op) {
 		},
-		autoLoad: true,
-		listeners: { load: function (store, records, success)
+		success: function (room)
 		{
-			var room = records[0];
-
 			var fields = [
 				Ext.create('Ext.form.field.Number', {
 					anchor: '100%',
@@ -36,6 +27,7 @@ var RWBRoomBuilder = function (config)
 			for (var locale in room.data.title) {
 				title_fields.push(Ext.create('Ext.form.TextField', {
 					fieldLabel: locale,
+					name: "title." + locale ,
 					value: room.data.title[locale],
 					ref: locale
 				}));
@@ -50,6 +42,7 @@ var RWBRoomBuilder = function (config)
 			for (var locale in room.data.description) {
 				desc_fields.push(Ext.create('Ext.form.TextField', {
 					fieldLabel: locale,
+					name: "description." + locale,
 					value: room.data.description[locale],
 					ref: locale
 				}));
@@ -77,7 +70,14 @@ var RWBRoomBuilder = function (config)
 						text: 'Edit',
 						handler: function () {
 							var exitbuilder = new RWBExitBuilder({
-								room: room
+								room: room,
+								handlers: {
+									afterSave: function (data) {
+										room.set('exits', data);
+										exitbuilder.close();
+	//									room.data.exits
+									}
+								}
 							});
 
 							exitbuilder.show();
@@ -91,11 +91,13 @@ var RWBRoomBuilder = function (config)
 				items: exitfields
 			}));
 
+			self.roomform = Ext.create('Ext.form.Panel', { items: fields, ref: 'roomForm' });
+
 			self.window = new Ext.create('Ext.window.Window', {
 				title: "Edit Room - " + room.get('location'),
 				width: '80%',
 				height: '80%',
-				items: [ Ext.create('Ext.form.Panel', { items: fields, ref: 'roomForm' }) ],
+				items: [ self.roomform ],
 				buttons: [
 					{
 						text: "Delete",
@@ -105,12 +107,48 @@ var RWBRoomBuilder = function (config)
 					{
 						text: "Save",
 						handler: function () {
+							var values = self.roomform.getValues();
+							var description = {};
+							var title = {};
+							var cleanvals = {};
+							for (var key in values) {
+								if (/^desc/.test(key)) {
+									description[key.split('.')[1]] = values[key];
+									continue;
+								}
+
+								if (/^title/.test(key)) {
+									title[key.split('.')[1]] = values[key];
+									continue;
+								}
+
+								cleanvals[key] = values[key];
+							}
+
+							cleanvals.exits = room.data.exits;
+							cleanvals.description = description;
+							cleanvals.title = title;
+
+							for (var i in cleanvals) {
+								room.set(i, cleanvals[i]);
+							}
+
+							room.save({
+								callback: function (records, op, success) {
+									if (!records.data.location) {
+										return Ext.Msg.alert("Failed to save room!");
+									}
+
+									Ext.Msg.alert("Room Saved!");
+									self.window.close();
+								}
+							});
 						}
 					}
 				]
 			});
 			self.window.show();
-		}}
+		}
 	});
 };
 

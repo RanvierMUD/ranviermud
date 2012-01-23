@@ -7,6 +7,16 @@ Ext.define('Room', {
 		{name: 'location', type: 'int'},
 		{name: 'area', type: 'string'},
 	],
+	proxy: {
+		type: 'rest',
+		url: 'room/',
+		reader: {
+			type: 'json'
+		},
+		writer: {
+			type: 'json'
+		}
+	}
 });
 
 Ext.define('Area', {

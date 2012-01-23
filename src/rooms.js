@@ -107,10 +107,10 @@ var Rooms = function () {
 
 						log("\t\tLoaded room " + room.location + '...');
 						room.area = area;
+						room.filename = room_file;
+						room.file_index = vnum;
 						room = new Room(room);
 						self.rooms[room.getLocation()] = room;
-
-
 					}
 				}
 			}
@@ -156,15 +156,19 @@ var Room = function (config)
 	// these are only set after load, not on construction and is an array of vnums
 	self.items = [];
 	self.npcs  = [];
+	self.filename = '';
+	self.file_index = null;
 
 
 	self.init = function (config)
 	{
 		self.title = config.title;
 		self.description = config.description;
-		self.location = config.location;
-		self.exits = config.exits || [];
-		self.area = config.area;
+		self.location    = config.location;
+		self.exits       = config.exits || [];
+		self.area        = config.area;
+		self.filename    = config.filename;
+		self.file_index  = config.file_index;
 		Data.loadListeners(config, l10n_dir, rooms_scripts_dir, Data.loadBehaviors(config, 'rooms/', self));
 	};
 
