@@ -12,6 +12,7 @@ exports.Web = {
 		app.set('view engine', 'jade');
 		app.set("view options", { layout: false });
 		app.use(express.static(__dirname + '/../web/static/'));
+		app.use(express.bodyParser());
 
 		routing.configure(app, {
 			players: players,
