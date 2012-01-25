@@ -1,4 +1,4 @@
-# NodeMUD
+# RanvierMUD
 NodeJS based MUD engine with full localization support
 
 ## Features
