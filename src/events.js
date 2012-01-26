@@ -72,7 +72,7 @@ var Events = {
 		 * Point of entry for the player. They aren't actually a player yet
 		 * @param Socket socket
 		 */
-		login : function(arg, stage, dontwelcome)
+		login : function(arg, stage, dontwelcome, name)
 		{
 			// dontwelcome is used to swallow telnet bullshit
 			dontwelcome = typeof dontwelcome ==-'undefined' ? false : dontwelcome;
@@ -130,12 +130,11 @@ var Events = {
 					}
 
 
-					next(arg, 'password', name);
+					next(arg, 'password', false, name);
 					return;
 				});
 				break;
 			case 'password':
-				var name = dontwelcome;
 				if (typeof password_attempts[name] === 'undefined') {
 					password_attempts[name] = 0;
 				}
@@ -150,9 +149,17 @@ var Events = {
 				}
 
 				
-				arg.write(L('PASSWORD'));
-				arg.once('data', function (pass) {
-					pass = crypto.createHash('md5').update(pass.toString().trim()).digest('hex');
+				if (!dontwelcome) {
+					arg.write(L('PASSWORD'));
+				}
+
+				arg.once('data', function (pass)
+				{
+					// Skip garbage
+					if (pass[0] === 0xFA) {
+						return next(arg, 'password', true, name);
+					}
+					pass = crypto.createHash('md5').update(pass.toString('').trim()).digest('hex');
 					if (pass !== Data.loadPlayer(name).password) {
 						arg.write(L('PASSWORD_FAIL') + "\r\n");
 						password_attempts[name] += 1;
