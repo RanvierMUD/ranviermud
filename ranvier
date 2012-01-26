@@ -24,10 +24,8 @@ var net = require('net'),
     Items    = require('./src/items').Items,
     Data     = require('./src/data').Data,
     Events   = require('./src/events').Events,
+	Plugins  = require('./src/plugins'),
     PlayerManager = require('./src/player_manager').PlayerManager,
-
-    // webserver stuffs
-    Web = require('./src/web').Web;
 
     // third party
     Localize  = require('localize'),
@@ -55,10 +53,7 @@ var locale  = argv.locale || 'en',
 	// Stuff for the server executable
 	l10n,
 	respawnint,
-	saveint,
-
-	// Stuff for the webserver
-	webserver;
+	saveint;
 
 /**
  * Do the dirty work
@@ -85,58 +80,60 @@ var init = function (restart_server)
 		rooms: rooms
 	});
 
-	Web.configure({
-		players: players,
-		items: items,
-		locale:  locale,
-		npcs: npcs,
-		rooms: rooms
-	});
+	if (restart_server) {
+		util.log("START - Starting server");
 
+		/**
+		* Effectively the 'main' game loop but not really because it's a REPL
+		*/
+		server = new telnet.Server(function (socket) {
+			socket.on('interrupt', function () {
+				socket.write("\n*interrupt*\n");
+			});
+
+			// Register all of the events
+			for (var event in Events.events) {
+				socket.on(event, Events.events[event]);
+			}
+
+			socket.write("Connecting...\n");
+			util.log("User connected...");
+			// @see: src/events.js - Events.events.login
+			socket.emit('login', socket);
+
+		});
+
+		// start the server
+		server.listen(port);
+
+
+		// save every 10 minutes
+		util.log("Setting autosave to " + save_interval + " minutes.");
+		clearInterval(saveint);
+		var saveint = setInterval(save, save_interval * 60000);
+
+		// respawn every 20 minutes, probably a better way to do this
+		util.log("Setting respawn to " + respawn_interval + " minutes.");
+		clearInterval(respawnint);
+		var respawnint = setInterval(load, respawn_interval * 60000);
+
+		Plugins.init(true, {
+			players: players,
+			items:   items,
+			locale:  locale,
+			npcs:    npcs,
+			rooms:   rooms,
+			server:  server
+		});
+
+	}
 
 	load(function (success) {
 		if (success) {
-			util.log("END - Loading entities");
-			if (restart_server) {
-				util.log("START - Starting server");
-
-				/**
-				* Effectively the 'main' game loop but not really because it's a REPL
-				*/
-				server = new telnet.Server(function (socket) {
-					socket.on('interrupt', function () {
-						socket.write("\n*interrupt*\n");
-					});
-
-					// Register all of the events
-					for (var event in Events.events) {
-						socket.on(event, Events.events[event]);
-					}
-
-					socket.write("Connecting...\n");
-					util.log("User connected...");
-					// @see: src/events.js - Events.events.login
-					socket.emit('login', socket);
-
-				});
-
-				// start the server
-				server.listen(port);
-
-				webserver = Web.init(express.createServer());
-
-			}
-
-			// save every 10 minutes
-			util.log("Setting autosave to " + save_interval + " minutes.");
-			var saveint = setInterval(save, save_interval * 60000);
-
-			// respawn every 20 minutes, probably a better way to do this
-			util.log("Setting respawn to " + respawn_interval + " minutes.");
-			// Respawn is disabled until I can find a better way...
-			var respawonint = setInterval(load, respawn_interval * 60000);
-
-			util.log("END - Starting server");
+			util.log("Server started...");
+			server.emit('startup');
+		} else {
+			process.exit(1);
 		}
 	});
 };
@@ -272,8 +269,8 @@ var server_commands = {
 		setTimeout(function () {
 			util.log("RESTARTING...");
 			save();
+			server.emit('shutdown');
 			server.close();
-			webserver.close();
 			players.each(function (p) { p.getSocket().end(); });
 			init(true);
 		}, time);
