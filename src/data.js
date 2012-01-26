@@ -1,7 +1,6 @@
 var fs   = require('fs'),
     path = require('path'),
     util = require('util'),
-    toyaml = require('./3rdparty/toYaml'),
     l10nHelper = require('./l10n');
 
 var data_path = __dirname + '/../data/';
@@ -102,20 +101,6 @@ var Data = {
 		}
 
 		return target;
-	},
-
-	/**
-	 * Write entity data to a file
-	 * @param string path  Full path to the file being written
-	 * @param string index Index of the data element being written
-	 * @param object data  Data in object form to be written
-	 * @param func   callback
-	 */
-	writeData: function (path, index, data, callback)
-	{
-		var loadedfile = require('js-yaml').load(fs.readFileSync(path).toString('utf8'));
-		loadedfile[index] = data;
-		fs.writeFile(path, toyaml.toYaml(loadedfile, {yamlCompatible:true, usePadding: false}).trim(), 'utf8', callback || function () {});
 	},
 };
 
