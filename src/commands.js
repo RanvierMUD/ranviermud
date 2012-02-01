@@ -120,10 +120,6 @@ var Commands = {
 	}
 };
 
-alias('l',   'look');
-alias('inv', 'inventory');
-alias('eq',  'equipment');
-alias('rem', 'remove');
 alias('exp', 'tnl');
 
 exports.Commands = Commands;
