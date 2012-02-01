@@ -225,17 +225,29 @@ var Events = {
 						// They typed a command that doesn't exist, check to see if there's
 						// an exit with that name in the room
 
-						var exit = Commands.room_exits(command, player);
-						if (exit === false) {
-							if (!(command in player.getSkills())) {
-								if (!(command in Channels)) {
-									player.say(command + " is not a valid command.");
-									result = true;
+						var found = false;
+						for (var cmd in Commands.player_commands) {
+							if (cmd.match(new RegExp("^" + command))) {
+								found = cmd;
+								break;
+							}
+						}
+
+						if (found !== false) {
+							result = Commands.player_commands[found](args, player);
+						} else {
+							var exit = Commands.room_exits(command, player);
+							if (exit === false) {
+								if (!(command in player.getSkills())) {
+									if (!(command in Channels)) {
+										player.say(command + " is not a valid command.");
+										result = true;
+									} else {
+										Channels[command](args, player, players);
+									}
 								} else {
-									Channels[command](args, player, players);
+									result = player.useSkill(command, player, args, rooms, npcs);
 								}
-							} else {
-								result = player.useSkill(command, player, args, rooms, npcs);
 							}
 						}
 					} else {
