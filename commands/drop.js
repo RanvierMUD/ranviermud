@@ -1,5 +1,6 @@
 var l10n_file = __dirname + '/../l10n/commands/drop.yml';
 var l10n = require('../src/l10n')(l10n_file);
+var CommandUtil = require('../src/command_util').CommandUtil;
 exports.command = function (rooms, items, players, npcs, Commands)
 {
 	return function (args, player)
@@ -17,7 +18,7 @@ exports.command = function (rooms, items, players, npcs, Commands)
 			return;
 		}
 
-		player.say(L('ITEM_DROP', item.getShortDesc(player.getLocale())), false);
+		player.sayL10n(l10n, 'ITEM_DROP', item.getShortDesc(player.getLocale()), false);
 		room.getNpcs().forEach(function (id) {
 			npcs.get(id).emit('playerDropItem', room, player, players, item);
 		});
