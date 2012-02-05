@@ -227,7 +227,13 @@ var Events = {
 
 						var found = false;
 						for (var cmd in Commands.player_commands) {
-							if (cmd.match(new RegExp("^" + command))) {
+							try {
+								var regex = new RegExp("^" + command);
+							}
+							catch(err) {
+								continue;
+							}
+							if (cmd.match(regex)) {
 								found = cmd;
 								break;
 							}
