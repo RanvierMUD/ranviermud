@@ -93,7 +93,13 @@ var Commands = {
 		}
 
 		var exits = room.getExits().filter(function (e) {
-			return e.direction.match(new RegExp("^" + exit));
+			try {
+				var regex = new RegExp("^" + exit);
+			}
+			catch(err) {
+				return false;
+			}
+			return e.direction.match(regex);
 		});
 
 		if (!exits.length) {
