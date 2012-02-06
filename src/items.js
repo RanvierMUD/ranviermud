@@ -64,7 +64,7 @@ var Items = function () {
 					}
 
 					// max load for items so we don't have 1000 items in a room due to respawn
-					if (self.load_count[object.vnum] && self.load_count[object.vnum] > object.load_max) {
+					if (self.load_count[object.vnum] && self.load_count[object.vnum] >= object.load_max) {
 						log("\t\tMaxload of " + object.load_max + " hit for object " + object.vnum);
 						return;
 					}
