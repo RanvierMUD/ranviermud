@@ -57,8 +57,8 @@ var Npcs = function () {
 						}
 					}
 
-					// max load for items so we don't have 1000 items in a room due to respawn
-					if (self.load_count[npc.vnum] && self.load_count[npc.vnum] > npc.load_max) {
+					// max load for npcs so we don't have 1000 npcs in a room due to respawn
+					if (self.load_count[npc.vnum] && self.load_count[npc.vnum] >= npc.load_max) {
 						log("\t\tMaxload of " + npc.load_max + " hit for npc " + npc.vnum);
 						return;
 					}
