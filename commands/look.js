@@ -59,19 +59,21 @@ exports.command = function (rooms, items, players, npcs, Commands)
 		// show all npcs in the room
 		room.getNpcs().forEach(function (id) {
 			var npc = npcs.get(id);
-			var color = 'cyan';
-			switch (true) {
-				case ((npc.getAttribute('level') - player.getAttribute('level')) > 3):
-					color = 'red';
-					break;
-				case ((npc.getAttribute('level') - player.getAttribute('level')) >= 1):
-					color = 'yellow';
-					break;
-				default:
-					color = 'green'
-					break;
+			if (npc) {
+				var color = 'cyan';
+				switch (true) {
+					case ((npc.getAttribute('level') - player.getAttribute('level')) > 3):
+						color = 'red';
+						break;
+					case ((npc.getAttribute('level') - player.getAttribute('level')) >= 1):
+						color = 'yellow';
+						break;
+					default:
+						color = 'green'
+						break;
+				}
+				player.say('<'+color+'>' + npcs.get(id).getShortDesc(player.getLocale()) + '</'+color+'>');
 			}
-			player.say('<'+color+'>' + npcs.get(id).getShortDesc(player.getLocale()) + '</'+color+'>');
 		});
 
 		player.write('[');
