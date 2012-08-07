@@ -77,10 +77,10 @@ exports.listeners = {
 		return function ()
 		{
 			// they died, move then back to the start... you can do whatever you want instead of this
-			self.setLocation(1);
-			self.emit('regen');
+			this.setLocation(1);
+			this.emit('regen');
 
-			self.setAttribute('experience', self.getAttribute('experience') - (self.getAttribute('experience') * 0.90));
+			this.setAttribute('experience', this.getAttribute('experience') - Math.ceil((this.getAttribute('experience') * 0.10));
 		}
 	},
 };
