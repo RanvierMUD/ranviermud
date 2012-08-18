@@ -80,7 +80,7 @@ exports.listeners = {
 			this.setLocation(1);
 			this.emit('regen');
 
-			this.setAttribute('experience', this.getAttribute('experience') - Math.ceil((this.getAttribute('experience') * 0.10));
+			this.setAttribute('experience', this.getAttribute('experience') - Math.ceil((this.getAttribute('experience') * 0.10)));
 		}
 	},
 };
