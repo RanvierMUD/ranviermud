@@ -38,7 +38,7 @@ var net = require('net'),
  */
 	// cmdline options
 var locale  = argv.locale || 'en',
-	port    = argv.port || 23,
+	port    = argv.port || 6250,
     verbose = !!argv.v,
 	save_interval    = isNaN(parseInt(argv.save, 10)) ? 10 : parseInt(argv.save, 10), // number of minutes between autosave ticks
 	respawn_interval = isNaN(parseInt(argv.respawn, 10)) ? 20 : parseInt(argv.respawn, 10), // "" between respawn tickets
@@ -149,27 +149,33 @@ init();
 /**
  * Logging the statistics
  */
-function dateToStr(dt) {
-	return 'D' + String(dt.getFullYear()) + '_' + String((dt.getMonth() + 1)) + '_' + String(dt.getDate());
-}
+
+// Helper function to create a valid key for JavaScript
+function dateToStr(dt) { return 'D' + String(dt.getFullYear()) + '_' + String((dt.getMonth() + 1)) + '_' + String(dt.getDate()); }
+
 function logging() {
-	var fs = require('fs');
-	var daily = {};
-	var current = new Array();
-	var dailyFile = '';
-	var currentFile = '';
+	var fs = require('fs'),
+		daily = {},
+		current = [],
+		dailyFile = '',
+		currentFile = '';
+
 	try {
 		dailyFile = fs.readFileSync('./stats/daily.counts', 'ascii');
 		if (dailyFile !== false) daily = JSON.parse(dailyFile);
 	} catch (err) { }
+
 	try {
 		currentFile = fs.readFileSync('./stats/current.counts', 'ascii');
 		if (currentFile !== false) current = JSON.parse(currentFile);
 	} catch (err) { }
+
 	if (current.length > 60) { current.shift(); }
+
 	var now = new Date();
 	var dateStr = dateToStr(now);
 	current.push({dt: now.getTime(), count: players.players.length});
+
 	if (Object.keys(daily).length == 0) {
 		daily = JSON.parse('{"' + dateStr + '":{"current":0,"high":0}}');
 	} else if (typeof(daily[dateStr]) == 'undefined') {
@@ -181,6 +187,7 @@ function logging() {
 		if (Object.keys(daily).length > 30) { delete daily[dateToStr(days30)]; }
 		util.log(JSON.stringify(daily));
 	}
+	
 	daily[dateStr].current = players.players.length;
 	daily[dateStr].high = ( daily[dateStr].high < daily[dateStr].current ? daily[dateStr].current : daily[dateStr].high );
 	fs.writeFileSync('./stats/daily.counts', JSON.stringify(daily), 'ascii');
