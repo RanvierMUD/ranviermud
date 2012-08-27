@@ -177,19 +177,20 @@ function logging() {
 	current.push({dt: now.getTime(), count: players.players.length});
 
 	if (Object.keys(daily).length == 0) {
-		daily = JSON.parse('{"' + dateStr + '":{"current":0,"high":0}}');
+		daily = JSON.parse('{"' + dateStr + '":{"current":0,"high":0,"hours":[]}}');
 	} else if (typeof(daily[dateStr]) == 'undefined') {
 		var days30 = now;
-		daily[dateStr] = { current: 0, high: 0 };
+		daily[dateStr] = { current: 0, high: 0, hours: [] };
 		days30.setDate(days30.getDate() - 30);
-		var test_ = { D2012_8_23: { current: 0, high: 0 } };
-		util.log("New Day. " + JSON.stringify(test_));
 		if (Object.keys(daily).length > 30) { delete daily[dateToStr(days30)]; }
 		util.log(JSON.stringify(daily));
 	}
 	
 	daily[dateStr].current = players.players.length;
 	daily[dateStr].high = ( daily[dateStr].high < daily[dateStr].current ? daily[dateStr].current : daily[dateStr].high );
+	if (typeof(daily[dateStr].hours) == 'undefined') { daily[dateStr].hours = []; }
+	if (typeof(daily[dateStr].hours[now.getHours()]) == 'undefined') { daily[dateStr].hours[now.getHours()] = 0; }
+	daily[dateStr].hours[now.getHours()] = ( daily[dateStr].hours[now.getHours()] < daily[dateStr].current ? daily[dateStr].current : daily[dateStr].hours[now.getHours()] );
 	fs.writeFileSync('./stats/daily.counts', JSON.stringify(daily), 'ascii');
 	fs.writeFileSync('./stats/current.counts', JSON.stringify(current), 'ascii');
 }
