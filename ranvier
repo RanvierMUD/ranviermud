@@ -38,7 +38,7 @@ var net = require('net'),
  */
 	// cmdline options
 var locale  = argv.locale || 'en',
-	port    = argv.port || 23,
+	port    = argv.port || 6250,
     verbose = !!argv.v,
 	save_interval    = isNaN(parseInt(argv.save, 10)) ? 10 : parseInt(argv.save, 10), // number of minutes between autosave ticks
 	respawn_interval = isNaN(parseInt(argv.respawn, 10)) ? 20 : parseInt(argv.respawn, 10), // "" between respawn tickets
@@ -116,6 +116,9 @@ var init = function (restart_server)
 		util.log("Setting respawn to " + respawn_interval + " minutes.");
 		clearInterval(respawnint);
 		var respawnint = setInterval(load, respawn_interval * 60000);
+		
+		clearInterval(loggingint);
+		var loggingint = setInterval(logging, 60000);
 
 		Plugins.init(true, {
 			players: players,
@@ -142,6 +145,55 @@ var init = function (restart_server)
 // START IT UP!
 init();
 
+
+/**
+ * Logging the statistics
+ */
+
+// Helper function to create a valid key for JavaScript
+function dateToStr(dt) { return 'D' + String(dt.getFullYear()) + '_' + String((dt.getMonth() + 1)) + '_' + String(dt.getDate()); }
+
+function logging() {
+	var fs = require('fs'),
+		daily = {},
+		current = [],
+		dailyFile = '',
+		currentFile = '';
+
+	try {
+		dailyFile = fs.readFileSync('./stats/daily.counts', 'ascii');
+		if (dailyFile !== false) daily = JSON.parse(dailyFile);
+	} catch (err) { }
+
+	try {
+		currentFile = fs.readFileSync('./stats/current.counts', 'ascii');
+		if (currentFile !== false) current = JSON.parse(currentFile);
+	} catch (err) { }
+
+	if (current.length > 60) { current.shift(); }
+
+	var now = new Date();
+	var dateStr = dateToStr(now);
+	current.push({dt: now.getTime(), count: players.players.length});
+
+	if (Object.keys(daily).length == 0) {
+		daily = JSON.parse('{"' + dateStr + '":{"current":0,"high":0,"hours":[]}}');
+	} else if (typeof(daily[dateStr]) == 'undefined') {
+		var days30 = now;
+		daily[dateStr] = { current: 0, high: 0, hours: [] };
+		days30.setDate(days30.getDate() - 30);
+		if (Object.keys(daily).length > 30) { delete daily[dateToStr(days30)]; }
+		util.log(JSON.stringify(daily));
+	}
+	
+	daily[dateStr].current = players.players.length;
+	daily[dateStr].high = ( daily[dateStr].high < daily[dateStr].current ? daily[dateStr].current : daily[dateStr].high );
+	if (typeof(daily[dateStr].hours) == 'undefined') { daily[dateStr].hours = []; }
+	if (typeof(daily[dateStr].hours[now.getHours()]) == 'undefined') { daily[dateStr].hours[now.getHours()] = 0; }
+	daily[dateStr].hours[now.getHours()] = ( daily[dateStr].hours[now.getHours()] < daily[dateStr].current ? daily[dateStr].current : daily[dateStr].hours[now.getHours()] );
+	fs.writeFileSync('./stats/daily.counts', JSON.stringify(daily), 'ascii');
+	fs.writeFileSync('./stats/current.counts', JSON.stringify(current), 'ascii');
+}
 
 /**
  * Save all connected players
