@@ -1,0 +1,6 @@
+WEAR:
+  en: "You put on the $[1]"
+  es: "ES-You wear $[1]"
+REMOVE:
+  en: "You remove $[1]"
+  es: "ES-You remove $[1]"
