@@ -12,48 +12,53 @@
  */
 
 
-    // built-ins
+	// built-ins
 var net = require('net'),
-    util = require('util'),
-    express = require('express'),
+	util = require('util'),
+	express = require('express'),
+	commander = require('commander'),
 
-    // local
-    Commands = require('./src/commands').Commands,
-    Rooms    = require('./src/rooms').Rooms,
-    Npcs     = require('./src/npcs').Npcs,
-    Items    = require('./src/items').Items,
-    Data     = require('./src/data').Data,
-    Events   = require('./src/events').Events,
+	// local
+	Commands = require('./src/commands').Commands,
+	Rooms    = require('./src/rooms').Rooms,
+	Npcs     = require('./src/npcs').Npcs,
+	Items    = require('./src/items').Items,
+	Data     = require('./src/data').Data,
+	Events   = require('./src/events').Events,
 	Plugins  = require('./src/plugins'),
-    PlayerManager = require('./src/player_manager').PlayerManager,
+	PlayerManager = require('./src/player_manager').PlayerManager,
 
-    // third party
-    Localize  = require('localize'),
-    argv = require('optimist').argv,
-    telnet = require('./src/3rdparty/telnet.js');
+	// third party
+	Localize  = require('localize'),
+	argv = require('optimist').argv,
+	telnet = require('./src/3rdparty/telnet.js');
 
 /**
  * These aren't really globals, they're only "global" to this file,
  * we'll pass them around via construction as needed
  */
-	// cmdline options
-var locale  = argv.locale || 'en',
-	port    = argv.port || 23,
-    verbose = !!argv.v,
-	save_interval    = isNaN(parseInt(argv.save, 10)) ? 10 : parseInt(argv.save, 10), // number of minutes between autosave ticks
-	respawn_interval = isNaN(parseInt(argv.respawn, 10)) ? 20 : parseInt(argv.respawn, 10), // "" between respawn tickets
 
 	//storage of main game entities
-	players,
+	var players,
 	rooms = new Rooms(),
 	items = new Items(),
 	npcs  = new Npcs(),
 	server,
-	
+
 	// Stuff for the server executable
 	l10n,
 	respawnint,
 	saveint;
+
+// cmdline options
+commander
+	.version('0.0.1') // todo: yank from package.json
+	.option('-s, --save [time]', 'Number of minutes between auto-save ticks [10]', 10)
+	.option('-r, --respawn [time]', 'Number of minutes between respawn tickets [20]', 20)
+	.option('-p, --port [portNumber]', 'Port to host telnet server [23]', 23)
+	.option('-l, --locale [lang]', 'Default locale for the server', 'en')
+	.option('-v, --verbose', 'Verbose console logging.')
+	.parse(process.argv);
 
 /**
  * Do the dirty work
@@ -69,13 +74,13 @@ var init = function (restart_server)
 		players: players,
 		items: items,
 		npcs: npcs,
-		locale: locale
+		locale: commander.locale
 	});
 
 	Events.configure({
 		players: players,
 		items: items,
-		locale:  locale,
+		locale:  commander.locale,
 		npcs: npcs,
 		rooms: rooms
 	});
@@ -104,23 +109,23 @@ var init = function (restart_server)
 		});
 
 		// start the server
-		server.listen(port);
+		server.listen(commander.port);
 
 
 		// save every 10 minutes
-		util.log("Setting autosave to " + save_interval + " minutes.");
+		util.log("Setting autosave to " + commander.save + " minutes.");
 		clearInterval(saveint);
-		var saveint = setInterval(save, save_interval * 60000);
+		saveint = setInterval(save, commander.save * 60000);
 
 		// respawn every 20 minutes, probably a better way to do this
-		util.log("Setting respawn to " + respawn_interval + " minutes.");
+		util.log("Setting respawn to " + commander.respawn + " minutes.");
 		clearInterval(respawnint);
-		var respawnint = setInterval(load, respawn_interval * 60000);
+		respawnint = setInterval(load, commander.respawn * 60000);
 
 		Plugins.init(true, {
 			players: players,
 			items:   items,
-			locale:  locale,
+			locale:  commander.locale,
 			npcs:    npcs,
 			rooms:   rooms,
 			server:  server
@@ -130,7 +135,7 @@ var init = function (restart_server)
 
 	load(function (success) {
 		if (success) {
-			util.log("Server started...");
+			util.log(util.format("Server started on port: %d %s", commander.port, '...' ));
 			server.emit('startup');
 		} else {
 			process.exit(1);
@@ -162,10 +167,10 @@ function save()
 function load(callback)
 {
 	util.log("Loading rooms...");
-	rooms.load(verbose, function () {
+	rooms.load(commander.verbose, function () {
 		util.log("Done.");
 		util.log("Loading items...");
-		items.load(verbose, function () {
+		items.load(commander.verbose, function () {
 			util.log("Done.");
 
 			util.log("Adding items to rooms...");
@@ -179,8 +184,8 @@ function load(callback)
 			});
 			util.log("Done.");
 
-			util.log("Loading npcs...")
-			npcs.load(verbose, function () {
+			util.log("Loading npcs...");
+			npcs.load(commander.verbose, function () {
 				util.log("Done.");
 
 				util.log("Adding npcs to rooms...");
@@ -197,7 +202,7 @@ function load(callback)
 					callback(true);
 				}
 			});
-		})
+		});
 	});
 }
 
@@ -279,8 +284,8 @@ var server_commands = {
 //
 //process.on('SIGINT', function ()
 //{
-//	util.log("Shutting down - not so gracefully...");
-//	process.exit(0);
+//  util.log("Shutting down - not so gracefully...");
+//  process.exit(0);
 //});
 //
 process.stdin.resume();
@@ -288,7 +293,7 @@ process.stdin.on('data', function (data)
 {
 	data = data.trim();
 	var command = data.split(' ')[0];
-	
+
 	if (!(command in server_commands)) {
 		console.log("That's not a real command...");
 		return;
