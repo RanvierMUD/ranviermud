@@ -10,9 +10,9 @@
         en: "A roughly worn leather helmet."
         es: "Leather. Hat."
     room: 1
-    script: "3-leather_helmet.js"
     behaviors: "wearable"
     attributes:
         defense: 1
+        wear_location: 'head'
     load_max: 4
 - *leather_helmet
