@@ -1,0 +1,18 @@
+- &leather_pants
+    vnum: 4
+    short_description:
+        en: "leather pants"
+        es: "ES-leather pants"
+    keywords:
+        en: [ "leather pants", "pants", "chaps" ]
+        es: [ "leather pants", "pants", "chaps" ]
+    description:
+        en: "A pair of sturdy leather pants."
+        es: "ES-A pair of sturdy leather pants."
+    room: 1
+    behaviors: "wearable"
+    attributes:
+        defense: 1
+        wear_location: 'legs'
+    load_max: 4
+- *leather_pants
