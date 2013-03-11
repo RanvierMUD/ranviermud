@@ -148,7 +148,7 @@ var Events = {
 					return false;
 				}
 
-				
+
 				if (!dontwelcome) {
 					arg.write(L('PASSWORD'));
 				}
@@ -249,7 +249,7 @@ var Events = {
 										player.say(command + " is not a valid command.");
 										result = true;
 									} else {
-										Channels[command](args, player, players);
+										Channels[command].use(args, player, players);
 									}
 								} else {
 									result = player.useSkill(command, player, args, rooms, npcs);
