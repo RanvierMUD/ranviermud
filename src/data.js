@@ -27,7 +27,7 @@ var Data = {
 	loadPlayer : function (name)
 	{
 		var playerpath = data_path + 'players/' + name + '.json';
-		if (!path.existsSync(playerpath)) {
+		if (!fs.existsSync(playerpath)) {
 			return false;
 		}
 
