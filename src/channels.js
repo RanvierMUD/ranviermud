@@ -23,5 +23,19 @@ exports.Channels = {
 			players.broadcast("<bold><magenta>[chat] " + player.getName() + ": " + args + "</magenta></bold>", player);
 			players.eachExcept(player, function (p) { p.prompt(); });
 		}
+	},
+
+	tell: {
+		name: 'tell',
+		description: 'Talk to a specific person',
+		use: function (args, player, players)
+		{
+			var nameEnd = args.indexOf(" ");
+			var target = args.substring(0,nameEnd);
+			var text = args.substring(nameEnd);
+			players.broadcastIf("<bold><magenta>" + player.getName() + " told you: " + text + "</magenta></bold>", function(p){return p.getName() === target});
+			player.say("<bold><magenta>You told " + target + ": " + text + "</magenta></bold>", player);
+			players.eachIf(function(p){ return p.getName() === player || p.getName() === target}, function (p) { p.prompt(); });
+		}
 	}
 };
