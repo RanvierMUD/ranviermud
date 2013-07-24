@@ -227,6 +227,59 @@ var PlayerManager = function ()
 		if (locale) l10n.setLocale(locale);
 	};
 
+	/**
+	 * Broadcast a message to all players in the same location as another player
+	 * @param string message
+	 * @param Player player
+	 */
+	self.broadcastAtIf = function (message, player, condition)
+	{
+		var list = [];
+		self.eachAt(player.getLocation(), function (p)
+		{
+			list.push(p);
+		});
+		list.forEach(function (p)
+		{
+			if (!condition(p)) return;
+			p.say("\n" + message);
+		});
+	};
+
+	/**
+	 * Broadcast a message localized to the individual player's locale
+	 * @param Player   player
+	 * @param Localize l10n
+	 * @param string   key
+	 * @param ...
+	 */
+	self.broadcastAtIfL10n = function (player, condition, l10n, key)
+	{
+		var locale = l10n.locale;
+		var args = [].slice.call(arguments).slice(3);
+
+		var list = [];
+		self.eachAt(player.getLocation(), function (p)
+		{
+			list.push(p);
+		});
+		list.forEach(function (p)
+		{
+			if (p.getLocale()) {
+				l10n.setLocale(p.getLocale());
+			}
+
+			if (!condition(p)) return;
+
+			for (var i = 0; i < args.length; i++) {
+				if (typeof args[i] === 'function') {
+					args[i] = args[i](p);
+				}
+			}
+			p.say("\n" + l10n.translate.apply(null, args));
+		});
+		if (locale) l10n.setLocale(locale);
+	};
 
 };
 

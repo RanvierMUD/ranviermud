@@ -4,6 +4,9 @@ ITEM_WORN:
 ITEM_DROP:
     en: "You drop $[1]."
     es: "ES-You drop $[1]."
+ITEM_DROP_WATCH:
+    en: "$[1] drops $[2]."
+    es: "ES-$[1] drops $[2]."
 ITEM_NOT_FOUND:
     en: "You don't see that here."
     es: "ES-You don't see that here."
