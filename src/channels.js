@@ -33,9 +33,15 @@ exports.Channels = {
 			var nameEnd = args.indexOf(" ");
 			var target = args.substring(0,nameEnd);
 			var text = args.substring(nameEnd);
-			players.broadcastIf("<bold><magenta>" + player.getName() + " told you: " + text + "</magenta></bold>", function(p){return p.getName() === target});
-			player.say("<bold><magenta>You told " + target + ": " + text + "</magenta></bold>", player);
-			players.eachIf(function(p){ return p.getName() === player || p.getName() === target}, function (p) { p.prompt(); });
+			var exists = players.some(function(p){ return p.getName() === target; });
+			if (exists){
+				players.broadcastIf("<bold><magenta>" + player.getName() + " told you: " + text + "</magenta></bold>", function(p){return p.getName() === target; });
+				player.say("<bold><magenta>You told " + target + ": " + text + "</magenta></bold>", player);
+			}
+			else {
+				player.say("<bold><magenta>" + target + " is not logged in.</magenta></bold>", player);
+			}
+			players.eachIf(function(p){ return p.getName() === player || p.getName() === target; }, function (p) { p.prompt(); });
 		}
 	}
 };
