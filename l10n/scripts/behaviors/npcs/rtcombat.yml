@@ -1,21 +1,28 @@
 WIN:
   en: "<bold><green>$[1] is dead!</green></bold>"
   es: "ES-<bold><green>$[1] is dead!</green></bold>"
+  fr: "<bold><green>$[1] est mort!</green></bold>"
 LOSE:
   en: "<bold><red>You were killed by $[1]</red></bold>"
   es: "ES-<bold><red>You were killed by $[1]</red></bold>"
+  fr: "ES-<bold><red>Tu as été tué par $[1]</red></bold>"
 DAMAGE_DONE:
   en: "<green>You deal $[2] damage to $[1]</green>"
   es: "ES-<green>You deal $[2] damage to $[1]</green>"
+  fr: "<green>Tu infliges $[2] de dégat sur $[1]</green>"
 DAMAGE_TAKEN:
   en: "<red>$[1] hits you for $[2] damage!</red>"
   es: "ES-<bold><red>$[1] hits you for $[2] damage!</red></bold>"
+  fr: "<red>$[1] prends $[2] de dégat!</red>"
 PLAYER_MISS:
   en: "<yellow>You miss.</yellow>"
   es: "ES-<yellow>You miss.</yellow>"
+  fr: "<yellow>Tu te foires.</yellow>"
 NPC_MISS:
   en: "<yellow>$[1] misses.</yellow>"
   es: "ES-<yellow>$[1] misses.</yellow>"
+  fr: "<yellow>$[1] rate.</yellow>"
 ATTACK:
   en: "You attack $[1] and they move to defend themselves."
   es: "ES-You attack $[1] and they move to defend themselves."
+  fr: "Tu attaque $[1] et ils essayent de se défendre."

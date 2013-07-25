@@ -1,14 +1,17 @@
 - &dagger
     vnum: 2
     short_description:
-        en: "a dagger"
-        es: "a main gauche"
+        en: "A dagger"
+        es: "A main gauche"
+        fr: "Une dague"
     keywords:
         en: [ "dagger", "short", "pointy" ]
         es: [ "gauche", "main", "dagger" ]
+        fr: [ "dague", "petite épé", "couteau" ]
     description:
         en: "A very point dagger. Edges are a bit dull though."
         es: "ES-A very point dagger. Edges are a bit dull though."
+        fr: "Une petite épé avec des bords un peu arondie."
     room: 1
     behaviors: "wieldable"
     attributes:

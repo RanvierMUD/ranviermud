@@ -1,10 +1,14 @@
 LEAVE:
     en: "$[1] leaves."
     es: "ES-$[1] leaves."
+    fr: "$[1] à quité"
 AMBIG_EXIT:
     en: "Which one? Be more specific."
     es: "ES-Which one? Be more specific."
+    fr: "Lequel ? Soit plus spécifique"
 MOVE_COMBAT:
     en: "Where do you think you're going in the middle of a fight?"
     es: "ES-Where do you think you're going in the middle of a fight?"
+    fr:	"Où est ce que tu crois pouvoir allé en pleine bataille ? "
 # vim: set ts=4 sw=4 et :
+# vim is poison, emacs is future

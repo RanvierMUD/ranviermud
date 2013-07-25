@@ -1,9 +1,12 @@
 ITEM_WORN:
     en: "You're wearing that, remove it first."
     es: "ES-You're wearing that, remove it first."
+    fr: "Tu porte déjà cela, retire le d'abord"
 ITEM_DROP:
     en: "You drop $[1]."
     es: "ES-You drop $[1]."
+    fr: "Tu as laché $[1]."
 ITEM_NOT_FOUND:
     en: "You don't see that here."
     es: "ES-You don't see that here."
+    fr: "Tu ne vois pas cela ici"

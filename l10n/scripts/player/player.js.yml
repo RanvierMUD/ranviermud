@@ -13,10 +13,21 @@ LEVELUP:
         You are now level $[1]
         You gained $[2] health and have been restored to full health.
         =============================================================</yellow></bold>
+    fr: |
+        <bold><yellow>
+        =============================================================
+        Tu gagne un level !
+        Tu es maintenant niveau $[1]
+        Tu as gagné $[2] en vie et tes point de vie sont au max
+        =============================================================</yellow></bold>
+
+
 
 EXPGAIN:
     en: "<bold><blue>You gain $[1] experience!</blue></bold>"
     es: "ES-<bold><blue>You gain $[1] experience!</blue></bold>"
+    fr: "<bold><blue>Tu gagne $[1] d'expérience!</blue></bold>"
 NEWSKILL:
     en: "<bold><yellow>You gained a new skill: $[1]!</yellow></bold>"
     es: "ES-<bold><yellow>You gained a new skill: $[1]!</yellow></bold>"
+    fr: "<bold><yellow>Tu as appris une nouvelle compétence: $[1]!</yellow></bold>"

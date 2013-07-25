@@ -2,9 +2,11 @@
   title: 
     en: 'Test'
     es: 'ES - Test'
+    fr: 'FR - Test'
   description: 
     en: 'You are in the test room. there isn''t much here'
     es: 'ES-You are in the test room. there isn''t much here'
+    fr: 'Vous êtes dans la room de teste. Il n''y a pas grand chose ici'
   exits: 
     - 
       location: 2
@@ -15,16 +17,19 @@
       leave_message: 
         en: ' climbs up the ladder.'
         es: ' climbs up the ladder. ES'
+        fr: ' monter à l''échelle.'
   location: 1
   area: 'test'
 - 
   title: 
     en: 'Plain room'
     es: 'ES - Plain room'
+    fr: 'Pièce vide'
   location: 2
   description: 
     en: 'Not a lot going on here, just a plain room.'
     es: 'ES - Not a lot going on here, just a plain room.'
+    fr: 'Pas grand chose à faire ici, c''est juste une pièce vide.'
   exits: 
     - 
       location: 1
@@ -33,11 +38,13 @@
   title: 
     en: 'Ladder'
     es: 'ES-Ladder'
+    fr: 'Echelle'
   location: 3
   script: '3.js'
   description: 
     en: 'You''re up a ladder, how silly.'
     es: 'ES - You''re up a ladder, how silly.'
+    fr: 'Tu es en haut de l''échelle, quel classe !'
   exits: 
     - 
       location: 1
@@ -45,3 +52,4 @@
       leave_message: 
         en: ' slides down the ladder.'
         es: ' slides down the ladder. ES'
+        fr: ' Décendre l''échelle.'

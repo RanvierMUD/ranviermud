@@ -1,3 +1,4 @@
 SLIDE:
   en: "<bold><cyan>$[1] shouts, \"Wheeeeeee!\"</bold></cyan>"
   es: "ES-<bold><cyan>$[1] shouts, \"Wheeeeeee!\"</bold></cyan>"
+  fr: "<bold><cyan>$[1] shouts, \"Wheeeeeee!\"</bold></cyan>"
