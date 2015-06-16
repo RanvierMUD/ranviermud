@@ -24,7 +24,7 @@ var Player = function(socket) {
 	// In combat is either false or an NPC vnum
 	self.in_combat = false;
 
-	// Attributes
+	// Attributes -- add more based on an rpg system
 	self.attributes = {
 		max_health: 100,
 		health : 100,
@@ -33,7 +33,7 @@ var Player = function(socket) {
 		'class': ''
 	};
 
-	// Anything affecting the player
+	// Anything affecting the player -- FIX TYPO
 	self.affects = {
 	};
 
@@ -73,7 +73,7 @@ var Player = function(socket) {
 	/**
 	 * Get currently applied affects
 	 * @param string aff
-	 * @return Array|Object
+	 * @return Array|Object -- TYPO
 	 */
 	self.getAffects = function (aff)
 	{
@@ -190,7 +190,7 @@ var Player = function(socket) {
 	 */
 	self.writeL10n = function (l10n, key)
 	{
-		var locale = l10n.locale;
+		var locale = l10n.locale; //l10n -- what does it even do?
 		if (self.getLocale()) {
 			l10n.setLocale(self.getLocale());
 		}
@@ -311,6 +311,7 @@ var Player = function(socket) {
 	{
 		var weapon = self.getEquipped('wield', true)
 		return weapon ? (weapon.getAttribute('speed') || 1) : 1;
+		//so the speed comes only from the weapon?
 	};
 
 	/**
