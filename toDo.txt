@@ -1,0 +1,24 @@
+Make it so there is a separate mob name for bark messages (short and no caps) and for the room description/list (capitalized)
+
+Add more classes, skills items, mobs.
+
+Add attributes related to items, armor, attack damage, to-hit probability.
+
+Add aliases for commands.
+
+Add aggressiveness to mobs (if similar or nearby mobs are attacked, on seeing player, etc.)
+
+Add conversation scripts for mobs.
+
+Add shopkeeping scripts for mobs.
+
+Add class- or stat- or skill- restrictions for items.
+
+Add stats.
+
+Look at how combat/leveling works and consider changing it.
+
+Come up with a good setting (steampunk? anachronistic fantasy/sci-fi?)
+
+
+
