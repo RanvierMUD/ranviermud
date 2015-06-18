@@ -45,7 +45,7 @@ var Player = function(socket) {
 	};
 
 	// Done after character creation and on level up
-	self.calculateStats = function() {
+	self.calculateAttributes = function() {
 		attr = self.attributes;
 		
 		attr[max_health] = ((attr[level] * 5) + (attr[strength] * 5) + (attr[willpower] * 3));
