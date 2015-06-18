@@ -40,6 +40,7 @@ var Player = function(socket) {
 		max_psion: 10,
 		psion: 1,
 		experience: 0,
+		fate: 1,
 		'class': ''
 	};
 
