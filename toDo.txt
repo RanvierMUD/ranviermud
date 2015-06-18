@@ -1,3 +1,17 @@
+QUESTIONS:
+Is it possible to use a script more than once (for example, have all weapons use the same script for wielding, have all armors use the same script?)
+
+What even is l10n?
+----Language localization.
+
+What even is .yml?
+Not a markup language, but a data language with outline formatting.
+
+
+BACKLOG:
+
+Create a trello board for all of this.
+
 Make it so there is a separate mob name for bark messages (short and no caps) and for the room description/list (capitalized)
 
 Add more classes, skills items, mobs.
