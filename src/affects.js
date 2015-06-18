@@ -1,4 +1,4 @@
-/**
+/** DANG TYPOS, FIXING THIS ONE WILL BREAK IT ALLLLLLLL
  * Put affects you want to reuse in this file
  */
 exports.Affects = {

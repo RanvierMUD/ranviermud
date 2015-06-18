@@ -1,28 +1,28 @@
-- &guard
+- &rat
   vnum: 1
   room: 2
   script: '1.js'
   keywords:
-    en: ['guard', 'guardsman']
+    en: ['rat', 'rodent']
     es: ['guardia', 'defensor']
   short_description:
-    en: 'A cityguard keeps watch, standing stoically'
-    es: 'Un guardia vigila, de pie estoicamente'
+    en: 'A large rodent'
+    es: ''
   description:
-    en: 'Dressed in militia regalia, the weathered guard eyes you carefully.'
-    es: 'ES-Dressed in militia regalia, the weathered guard eyes you carefully.'
+    en: 'This mangey rat scampers about, its whiskers twitching.'
+    es: ''
   behaviors: "rtcombat"
   attributes:
-    max_health: 80
-    health: 80
+    max_health: 20
+    health: 20
     speed: 2
-    damage: 7-16
-    level: 4
-    experience: 1000
+    damage: 1-8
+    level: 1
+    experience: 250
   load_max: 7
-- *guard
-- *guard
-- <<: *guard
+- *rat
+- *rat
+- <<: *rat
   room: 1
-- <<: *guard
+- <<: *rat
   room: 1

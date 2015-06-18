@@ -2,7 +2,7 @@ WELCOME:
     en: "<yellow>Welcome back, $[1]</yellow>"
     es: "ES-Welcome back, $[1]"
 NAME_PROMPT:
-    en: "What is your character's name: "
+    en: "What is your character's name? "
     es: "ES-What is your character's name: "
 INVALID_NAME:
     en: "Sorry, that's not a valid name."
