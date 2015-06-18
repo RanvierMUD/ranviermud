@@ -20,17 +20,38 @@ var Player = function(socket) {
 	self.password = null;
 	self.inventory = [];
 	self.equipment = {};
+	self.barkDesc = 'a person';
+	self.shortDesc = 'A nondescript person is here.';
+	self.longDesc = "There is really nothing remarkable about this person's features.";
+
 
 	// In combat is either false or an NPC vnum
 	self.in_combat = false;
 
 	// Attributes -- add more based on an rpg system
 	self.attributes = {
-		max_health: 100,
-		health : 100,
+		strength: 5,
+		speed: 5,
+		intelligence: 5,
+		willpower: 5,
 		level: 1,
+		max_health: 25
+		health: 20,
+		max_psion: 10,
+		psion: 1,
 		experience: 0,
 		'class': ''
+	};
+
+	// Done after character creation and on level up
+	self.calculateStats = function() {
+		attr = self.attributes;
+		
+		attr[max_health] = ((attr[level] * 5) + (attr[strength] * 5) + (attr[willpower] * 3));
+		attr[health] = attr[max_health];
+
+		attr[max_psion] = ((attr[level] * 2) + (attr[willpower] * 3) + (attr[willpower] * 2));
+		attr[psion] = attr[max_psion];
 	};
 
 	// Anything affecting the player -- FIX TYPO
