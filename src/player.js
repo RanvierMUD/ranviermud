@@ -35,7 +35,7 @@ var Player = function(socket) {
 		intelligence: 5,
 		willpower: 5,
 		level: 1,
-		max_health: 25
+		max_health: 25,
 		health: 20,
 		max_psion: 10,
 		psion: 1,
