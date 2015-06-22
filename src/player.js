@@ -34,6 +34,7 @@ var Player = function(socket) {
 		speed: 5,
 		intelligence: 5,
 		willpower: 5,
+		charisma: 5,
 		level: 1,
 		max_health: 25,
 		health: 20,
@@ -51,7 +52,7 @@ var Player = function(socket) {
 		attr.max_health = ((attr.level * 5) + (attr.strength * 5) + (attr.willpower * 3));
 		attr.health = attr.max_health;
 
-		attr.max_psion = ((attr.level * 2) + (attr.willpower * 3) + (attr.willpower * 2));
+		attr.max_psion = ((attr.level * 2) + (attr.willpower * 3) + (attr.intelligence * 2) + (attr.charisma));
 		attr.psion = attr.max_psion;
 	};
 
