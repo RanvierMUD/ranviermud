@@ -1,16 +1,16 @@
-- &leather_helmet
+- &leather_cap
     vnum: 3
     short_description:
-        en: "a leather helmet"
+        en: "a leather cap"
         es: "el helmet de leathero"
     keywords:
-        en: [ "leather helmet", "helmet", "helm" ]
+        en: [ "leather cap", "cap", "lc" ]
         es: [ "hat", "somberero" ]
     description:
-        en: "A roughly worn leather helmet."
+        en: "A roughly worn leather cap."
         es: "Leather. Hat."
     room: 1
-    script: "3-leather_helmet.js"
+    script: "3-leather_cap.js"
     behaviors: "wearable"
     attributes:
         defense: 1
