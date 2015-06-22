@@ -387,7 +387,7 @@ var Events = {
 				}
 				arg.getSocket().once('data', function (cls) {
 					cls = cls.toString().trim().toLowerCase();
-					var classes = {w: "warrior"};
+					var classes = {w: "warrior"}; // REFACTOR -- not DRY
 					if (!(cls in classes)) {
 						arg.sayL10n(l10n,'INVALID_CLASS');
 						return repeat();
@@ -398,6 +398,7 @@ var Events = {
 				break;
 			// 'done' assumes the argument passed to the event is a player, ...so always do that.
 			case 'done':
+				arg.calculateAttributes();
 				arg.setLocation(players.getDefaultLocation());
 				// create the pfile then send them on their way
 				arg.save(function () {

@@ -6,7 +6,7 @@
     en: ['rat', 'rodent']
     es: ['guardia', 'defensor']
   short_description:
-    en: 'A large rodent'
+    en: 'a large rodent'
     es: ''
   description:
     en: 'This mangey rat scampers about, its whiskers twitching.'
@@ -15,7 +15,7 @@
   attributes:
     max_health: 20
     health: 20
-    speed: 2
+    speed: 1.5
     damage: 1-8
     level: 1
     experience: 250
@@ -23,6 +23,6 @@
 - *rat
 - *rat
 - <<: *rat
-  room: 1
+  room: 3
 - <<: *rat
-  room: 1
+  room: 4
