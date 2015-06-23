@@ -9,7 +9,7 @@ exports.listeners = {
 			self.prompt();
 			var regen = setInterval(function () {
 				var health = self.getAttribute('health');
-				var regenerated = Math.floor(Math.random() * 19 + 1);
+				var regenerated = Math.floor(Math.random() * (this.getAttribute(willpower)) + 1);
 
 				regenerated = Math.min(self.getAttribute("'Maximum Health'"), health + regenerated);
 
