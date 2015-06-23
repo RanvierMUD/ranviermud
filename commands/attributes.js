@@ -9,7 +9,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 		console.log("displayed is " + displayed);
 		player.say("Attributes:")
 		for (attr in displayed) {
-			player.say(attr + ": " + displayed[attr]);
+			player.say(attr.toUpperCase() + ": " + displayed[attr]);
 		}
 	};
 };
