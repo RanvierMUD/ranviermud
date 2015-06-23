@@ -27,6 +27,7 @@
        en: ' heads towards the light.'
        es: ' heads towards the light.'
 -
+  title: "A ladder ascending from the cellar."
   location: 3
   description: "Attached to the wall here is a ladder leading upwards into a dimly-lit basement. Nearly the rest of this floor is covered in barrels, crates, or rats, with the exception of a thin, winding passageway to the southwest."
   exits:
