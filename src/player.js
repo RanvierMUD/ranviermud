@@ -50,10 +50,8 @@ var Player = function(socket) {
 		attr = self.attributes;
 		
 		attr.max_health = ((attr.level * 5) + (attr.strength * 5) + (attr.willpower * 3));
-		attr.health = attr.max_health;
 
 		attr.max_psion = ((attr.level * 2) + (attr.willpower * 3) + (attr.intelligence * 2) + (attr.charisma));
-		attr.psion = attr.max_psion;
 	};
 
 	// Anything affecting the player -- FIX TYPO

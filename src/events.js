@@ -194,6 +194,7 @@ var Events = {
 					inv.push(item);
 				});
 				player.setInventory(inv);
+				player.calculateAttributes();
 
 
 				Commands.player_commands.look(null, player);
