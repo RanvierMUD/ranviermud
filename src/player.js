@@ -36,10 +36,10 @@ var Player = function(socket) {
 		willpower: 5,
 		charisma: 5,
 		level: 1,
-		max_health: 25,
+		'Maximum Health': 25,
 		health: 20,
-		max_psion: 10,
-		psion: 1,
+		'Maximum Psion': 10,
+		psion: 4,
 		experience: 0,
 		fate: 1,
 		'class': ''
@@ -49,9 +49,9 @@ var Player = function(socket) {
 	self.calculateAttributes = function() {
 		attr = self.attributes;
 		
-		attr.max_health = ((attr.level * 5) + (attr.strength * 5) + (attr.willpower * 3));
+		attr['Maximum Health'] = ((attr.level * 5) + (attr.strength * 5) + (attr.willpower * 3));
 
-		attr.max_psion = ((attr.level * 2) + (attr.willpower * 3) + (attr.intelligence * 2) + (attr.charisma));
+		attr['Maximum Psion'] = ((attr.level * 2) + (attr.willpower * 2) + (attr.intelligence * 2) + (attr.charisma));
 	};
 
 	// Anything affecting the player -- FIX TYPO
