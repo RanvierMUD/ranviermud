@@ -14,9 +14,9 @@ var Player = function(socket) {
 	self.name     = '';
 	self.location = null;
 	self.locale   = null;
-	self.prompt_string = '%health/%max_healthHP>';
+	self.prompt_string = "%health/%'Maximum Health'HP>";
 	self.combat_prompt =
-	   "<bold>[%health/%max_healthHP] 0--{======> %target_name: [%target_health/%target_max_health]</bold>\r\n>";
+	   "<bold>[%health/%'Maximum Health'HP>] 0--{======> %target_name: [%target_health/%target_max_health]</bold>\r\n>";
 	self.password = null;
 	self.inventory = [];
 	self.equipment = {};

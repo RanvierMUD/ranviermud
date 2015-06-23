@@ -11,10 +11,10 @@ exports.listeners = {
 				var health = self.getAttribute('health');
 				var regenerated = Math.floor(Math.random() * 19 + 1);
 
-				regenerated = Math.min(self.getAttribute('max_health'), health + regenerated);
+				regenerated = Math.min(self.getAttribute("'Maximum Health'"), health + regenerated);
 
 				self.setAttribute('health', regenerated);
-				if (regenerated === self.getAttribute('max_health')) {
+				if (regenerated === self.getAttribute("'Maximum Health'")) {
 					clearInterval(regen);
 				}
 			}, 2000);
