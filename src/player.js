@@ -14,9 +14,9 @@ var Player = function(socket) {
 	self.name     = '';
 	self.location = null;
 	self.locale   = null;
-	self.prompt_string = "%health/%'Maximum Health'HP>";
+	self.prompt_string = "%health/%maxHP HP>";
 	self.combat_prompt =
-	   "<bold>[%health/%'Maximum Health'HP>] 0--{======> %target_name: [%target_health/%target_max_health]</bold>\r\n>";
+	   "<bold>[%health/%maxHP HP>] 0--{======> %target_name: [%target_health/%target_max_health]</bold>\r\n>";
 	self.password = null;
 	self.inventory = [];
 	self.equipment = {};
@@ -36,9 +36,9 @@ var Player = function(socket) {
 		willpower: 5,
 		charisma: 5,
 		level: 1,
-		'Maximum Health': 25,
+		maxHP: 25,
 		health: 20,
-		'Maximum Psion': 10,
+		maxPsion: 10,
 		psion: 4,
 		experience: 0,
 		fate: 1,
@@ -49,9 +49,9 @@ var Player = function(socket) {
 	self.calculateAttributes = function() {
 		attr = self.attributes;
 		
-		attr['Maximum Health'] = ((attr.level * 5) + (attr.strength * 5) + (attr.willpower * 3));
+		attr.maxHP = ((attr.level * 5) + (attr.strength * 5) + (attr.willpower * 3));
 
-		attr['Maximum Psion'] = ((attr.level * 2) + (attr.willpower * 2) + (attr.intelligence * 2) + (attr.charisma));
+		attr.maxPsion = ((attr.level * 2) + (attr.willpower * 2) + (attr.intelligence * 2) + (attr.charisma));
 	};
 
 	// Anything affecting the player -- FIX TYPO
