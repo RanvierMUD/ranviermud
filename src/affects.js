@@ -46,7 +46,7 @@ exports.Affects = {
 		}
 
 		return affect;
-	}
+	},
 
 	/**
 	 * Generic speed boost

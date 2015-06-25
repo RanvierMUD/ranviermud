@@ -33,7 +33,7 @@ exports.Skills = {
 				}));
 			}
 		}
-	}
+	},
 	defender: {
 		tackle: {
 			type: 'active',
