@@ -6,7 +6,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 		var displayed = {};
 		displayed = player.getAttributes();
 		console.log("displayed is " + displayed);
-		player.say("Attributes:")
+		player.say("Attributes:");
 		for (attr in displayed) {
 			player.say(attr.toUpperCase() + ": " + displayed[attr]);
 		}
