@@ -23,6 +23,6 @@
 - *rat
 - *rat
 - <<: *rat
-  room: 3
+  room: 2
 - <<: *rat
-  room: 4
+  room: 3

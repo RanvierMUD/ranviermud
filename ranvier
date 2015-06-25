@@ -177,6 +177,7 @@ function load(callback)
 			items.each(function (item) {
 				if (item.getRoom()) {
 					var room = rooms.getAt(item.getRoom());
+					util.log(room);
 					if (!room.hasItem(item.getUuid())) {
 						room.addItem(item.getUuid());
 					}

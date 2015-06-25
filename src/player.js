@@ -14,9 +14,9 @@ var Player = function(socket) {
 	self.name     = '';
 	self.location = null;
 	self.locale   = null;
-	self.prompt_string = '%health/%max_healthHP>';
+	self.prompt_string = "%health/%maxHP HP>";
 	self.combat_prompt =
-	   "<bold>[%health/%max_healthHP] 0--{======> %target_name: [%target_health/%target_max_health]</bold>\r\n>";
+	   "<bold>[%health/%maxHP HP>] 0--{======> %target_name: [%target_health/%target_max_health]</bold>\r\n>";
 	self.password = null;
 	self.inventory = [];
 	self.equipment = {};
@@ -36,10 +36,10 @@ var Player = function(socket) {
 		willpower: 5,
 		charisma: 5,
 		level: 1,
-		max_health: 25,
+		maxHP: 25,
 		health: 20,
-		max_psion: 10,
-		psion: 1,
+		maxPsion: 10,
+		psion: 4,
 		experience: 0,
 		fate: 1,
 		'class': ''
@@ -49,11 +49,9 @@ var Player = function(socket) {
 	self.calculateAttributes = function() {
 		attr = self.attributes;
 		
-		attr.max_health = ((attr.level * 5) + (attr.strength * 5) + (attr.willpower * 3));
-		attr.health = attr.max_health;
+		attr.maxHP = ((attr.level * 5) + (attr.strength * 5) + (attr.willpower * 3));
 
-		attr.max_psion = ((attr.level * 2) + (attr.willpower * 3) + (attr.intelligence * 2) + (attr.charisma));
-		attr.psion = attr.max_psion;
+		attr.maxPsion = ((attr.level * 2) + (attr.willpower * 2) + (attr.intelligence * 2) + (attr.charisma));
 	};
 
 	// Anything affecting the player -- FIX TYPO
@@ -75,6 +73,7 @@ var Player = function(socket) {
 	self.getSocket       = function () { return socket; };
 	self.getInventory    = function () { return self.inventory; };
 	self.getAttribute    = function (attr)  { return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
+	self.getAttributes   = function () { return self.attributes };
 	self.getSkills       = function (skill) { return typeof self.skills[skill] !== 'undefined'    ? self.skills[skill]    : self.skills; };
 	// Note, only retreives hash, not a real password
 	self.getPassword     = function () { return self.password; };
