@@ -25,12 +25,12 @@ exports.Skills = {
 			activate: function (player, args, rooms, npcs)
 			{
 				if (!player.isInCombat()) {
-					player.say(L(player.getLocale(), 'warrior', 'TACKLE_NOCOMBAT'));
+					player.say(L(player.getLocale(), 'defender', 'TACKLE_NOCOMBAT'));
 					return true;
 				}
 
 				if (player.getAffects('cooldown_tackle')) {
-					player.say(L(player.getLocale(), 'warrior', 'TACKLE_COOLDOWN'));
+					player.say(L(player.getLocale(), 'defender', 'TACKLE_COOLDOWN'));
 					return true;
 				}
 				
@@ -42,7 +42,7 @@ exports.Skills = {
 
 				var damage = Math.min(target.getAttribute('max_health'), Math.ceil(player.getDamage().max * .8));
 
-				player.say(L(player.getLocale(), 'warrior', 'TACKLE_DAMAGE', damage));
+				player.say(L(player.getLocale(), 'defender', 'TACKLE_DAMAGE', damage));
 				target.setAttribute('health', target.getAttribute('health') - damage);
 
 				if (!target.getAffects('slow')) {
@@ -52,7 +52,7 @@ exports.Skills = {
 						player: player,
 						target: target,
 						deactivate: function () {
-							player.say(L(player.getLocale(), 'warrior', 'TACKLE_RECOVER'));
+							player.say(L(player.getLocale(), 'defender', 'TACKLE_RECOVER'));
 						}
 					}));
 				}
@@ -61,7 +61,7 @@ exports.Skills = {
 				player.addAffect('cooldown_tackle', {
 					duration: 4,
 					deactivate: function () {
-						player.say(L(player.getLocale(), 'warrior', 'TACKLE_COOLDOWN_END'));
+						player.say(L(player.getLocale(), 'defender', 'TACKLE_COOLDOWN_END'));
 					}
 				});
 
