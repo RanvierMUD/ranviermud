@@ -15,6 +15,25 @@ var L = function (locale, cls, key /*, args... */)
 };
 
 exports.Skills = {
+	troublemaker: {
+		uncannyspeed: {
+			type: 'passive',
+			level: 5,
+			name: "Uncanny Speed",
+			description: "Your experience in combat has increased your reflexes. You feel yourself striking, parrying, and dodging faster than most of your opponents.",
+			activate: function (player)
+			{
+				if (player.getAffects('uncannyspeed')) {
+					player.removeAffect('uncannyspeed');
+				}
+				player.addAffect('uncannyspeed', Affects.speed_boost({
+					magnitude: 2,
+					player: player,
+					event: 'quit'
+				}));
+			}
+		}
+	},
 	defender: {
 		tackle: {
 			type: 'active',

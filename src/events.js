@@ -381,14 +381,20 @@ var Events = {
 				});
 				break;
 			case 'class':
-				var classes = {d: '[D]efender'};
+				var classes = {
+					d: '[D]efender',
+					t: '[T]roublemaker'
+				};
 				arg.sayL10n(l10n, 'CLASS_SELECT');
 				for (var r in classes) {
 					arg.say(classes[r]);
 				}
 				arg.getSocket().once('data', function (cls) {
 					cls = cls.toString().trim().toLowerCase();
-					var classes = {d: "defender"}; // REFACTOR -- not DRY
+					var classes = {
+					d: "defender",
+					t: "troublemaker"
+					}; // REFACTOR -- not DRY
 					if (!(cls in classes)) {
 						arg.sayL10n(l10n,'INVALID_CLASS');
 						return repeat();
