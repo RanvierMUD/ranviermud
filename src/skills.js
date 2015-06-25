@@ -15,13 +15,13 @@ var L = function (locale, cls, key /*, args... */)
 };
 
 exports.Skills = {
-	warrior: {
+	defender: {
 		tackle: {
 			type: 'active',
 			level: 2,
 			name: "Tackle",
-			description: "Tackle your opponent for 120% weapon damage. Target's attacks are slower for 5 seconds following the attack.",
-			cooldown: 4,
+			description: "Tackle your opponent for 80% weapon damage. Target's attacks are slower for 10 seconds following the attack.",
+			cooldown: 8,
 			activate: function (player, args, rooms, npcs)
 			{
 				if (!player.isInCombat()) {
@@ -40,15 +40,15 @@ exports.Skills = {
 					return true;
 				}
 
-				var damage = Math.min(target.getAttribute('max_health'), Math.ceil(player.getDamage().max * 1.2));
+				var damage = Math.min(target.getAttribute('max_health'), Math.ceil(player.getDamage().max * .8));
 
 				player.say(L(player.getLocale(), 'warrior', 'TACKLE_DAMAGE', damage));
 				target.setAttribute('health', target.getAttribute('health') - damage);
 
 				if (!target.getAffects('slow')) {
 					target.addAffect('slow', Affects.slow({
-						duration: 3,
-						magnitude: 1.5,
+						duration: 6,
+						magnitude: 2,
 						player: player,
 						target: target,
 						deactivate: function () {
@@ -72,14 +72,14 @@ exports.Skills = {
 			type: 'passive',
 			level: 5,
 			name: "Battle Hardened",
-			description: "Your experience in battle has made you more hardy. Max health is increased by 200",
+			description: "Your experience in battle has made you more hardy. Max health is increased by 100",
 			activate: function (player)
 			{
 				if (player.getAffects('battlehardened')) {
 					player.removeAffect('battlehardened');
 				}
 				player.addAffect('battlehardened', Affects.health_boost({
-					magnitude: 200,
+					magnitude: 100,
 					player: player,
 					event: 'quit'
 				}));
