@@ -47,4 +47,30 @@ exports.Affects = {
 
 		return affect;
 	}
+
+	/**
+	 * Generic speed boost
+	 */
+	health_boost: function (config)
+	{
+		var affect = {
+			activate: function () {
+				config.player.setAttribute('max_health', config.player.getAttribute('max_health') + config.magnitude);
+				config.player.setAttribute('health', config.player.getAttribute('max_health'));
+			},
+			deactivate: function () {
+				config.player.setAttribute('max_health', config.player.getAttribute('max_health') - config.magnitude);
+				config.player.setAttribute('health', config.player.getAttribute('max_health'));
+			}
+		};
+
+		if (config.duration) {
+			affect.duration = config.duration;
+		} else if (config.event) {
+			affect.event = config.event;
+		}
+
+		return affect;
+	}
+
 };
