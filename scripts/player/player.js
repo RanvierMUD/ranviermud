@@ -9,7 +9,7 @@ exports.listeners = {
 			self.prompt();
 			var regen = setInterval(function () {
 				var health = self.getAttribute('health');
-				var regenerated = Math.floor(Math.random() * (this.getAttribute(willpower)) + 1);
+				var regenerated = Math.floor(Math.random() * (self.getAttribute('willpower')) + 1);
 
 				regenerated = Math.min(self.getAttribute("maxHP"), health + regenerated);
 
@@ -45,7 +45,7 @@ exports.listeners = {
 		return function ()
 		{
 			var newlevel = this.getAttribute('level') + 1;
-			var health_gain = Math.ceil(this.getAttribute('max_health') * 1.05 + (this.getAttribute(willpower) + this.getAttribute(strength))/2);
+			var health_gain = Math.ceil(this.getAttribute('max_health') * 1.05 + (this.getAttribute('willpower') + this.getAttribute('strength'))/2);
 
 			this.sayL10n(l10n, 'LEVELUP', newlevel, health_gain - this.getAttribute("maxHP"));
 			this.setAttribute('level', newlevel);
