@@ -26,8 +26,8 @@ exports.Skills = {
 				if (player.getAffects('uncannyspeed')) {
 					player.removeAffect('uncannyspeed');
 				}
-				player.addAffect('uncannyspeed', Affects.health_boost({
-					magnitude: 100,
+				player.addAffect('uncannyspeed', Affects.speed_boost({
+					magnitude: 2,
 					player: player,
 					event: 'quit'
 				}));

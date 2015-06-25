@@ -30,12 +30,12 @@ exports.Affects = {
 	{
 		var affect = {
 			activate: function () {
-				config.player.setAttribute('max_health', config.player.getAttribute('max_health') + config.magnitude);
-				config.player.setAttribute('health', config.player.getAttribute('max_health'));
+				config.player.setAttribute('maxhp', config.player.getAttribute('maxhp') + config.magnitude);
+				config.player.setAttribute('health', config.player.getAttribute('maxhp'));
 			},
 			deactivate: function () {
-				config.player.setAttribute('max_health', config.player.getAttribute('max_health') - config.magnitude);
-				config.player.setAttribute('health', config.player.getAttribute('max_health'));
+				config.player.setAttribute('maxhp', config.player.getAttribute('maxhp') - config.magnitude);
+				config.player.setAttribute('health', config.player.getAttribute('maxhp'));
 			}
 		};
 
@@ -51,16 +51,14 @@ exports.Affects = {
 	/**
 	 * Generic speed boost
 	 */
-	health_boost: function (config)
+	speed_boost: function (config)
 	{
 		var affect = {
 			activate: function () {
-				config.player.setAttribute('max_health', config.player.getAttribute('max_health') + config.magnitude);
-				config.player.setAttribute('health', config.player.getAttribute('max_health'));
+				config.player.setAttribute('speed', config.player.getAttribute('speed') + config.magnitude);
 			},
 			deactivate: function () {
-				config.player.setAttribute('max_health', config.player.getAttribute('max_health') - config.magnitude);
-				config.player.setAttribute('health', config.player.getAttribute('max_health'));
+				config.player.setAttribute('speed', config.player.getAttribute('speed') - config.magnitude);
 			}
 		};
 
