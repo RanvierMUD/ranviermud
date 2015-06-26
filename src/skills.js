@@ -29,14 +29,14 @@ exports.Skills = {
 					return true;
 				}
 
-				if (player.getAffects('cooldown_stun')) {
-					player.say("You need to wait before invading your opponent's mind again.");
+				if (player.getAffects('cooldown_psionic')) {
+					player.say("You must wait to use your psionic powers again.");
 					return true;
 				}
 				
 				var target = player.isInCombat();
 				if (!target) {
-					player.say("Somehow you're in combat with a ghost");
+					player.say("Somehow you're in combat with a ghost!");
 					return true;
 				}
 
@@ -61,7 +61,7 @@ exports.Skills = {
 				player.addAffect('cooldown_psionic', {
 					duration: 2,
 					deactivate: function () {
-						player.say("You feel mentally re-charged.");
+						player.say("You feel mentally recharged.");
 					}
 				});
 
