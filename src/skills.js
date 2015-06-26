@@ -15,6 +15,7 @@ var L = function (locale, cls, key /*, args... */)
 };
 
 exports.Skills = {
+	
 	troublemaker: {
 		uncannyspeed: {
 			type: 'passive',
