@@ -15,7 +15,41 @@ var L = function (locale, cls, key /*, args... */)
 };
 
 exports.Skills = {
-	
+	mystic: {
+		stun: {
+
+		}
+		concentrate: {
+			type: 'active',
+			level: 5,
+			name: "Concentrate",
+			description: "Your experience in the mystic arts has improved your ability to block out distractions, allowing you to concentrate your mind and improve your psionic ability.",
+			cooldown: 8,
+			activate: function (player, args, rooms, npcs)
+			{
+				var boost = player.getAttribute('willpower'));
+				
+				// Doesn't stack
+				if (player.getAffects('psion_boost')) {
+						player.say("You are already concentrating.");
+						return true;
+					};
+				player.say("You focus intently.");
+				// Adds effect
+				player.addAffect('psion_boost', Affects.psion_boost({
+					duration: 8,
+					magnitude: boost;
+					player: player;
+					deactivate: function () {
+						player.say("You feel your concentration slipping back to normal.");
+						player.removeAffect('psion_boost');
+					}
+				}));
+
+				return true;
+			}
+		}
+	},
 	troublemaker: {
 		uncannyspeed: {
 			type: 'passive',
