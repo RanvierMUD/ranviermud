@@ -59,7 +59,7 @@ exports.Skills = {
 
 				// Slap a cooldown on the player
 				player.addAffect('cooldown_psionic', {
-					duration: 2,
+					duration: 3,
 					deactivate: function () {
 						player.say("You feel mentally recharged.");
 					}
@@ -76,7 +76,7 @@ exports.Skills = {
 			cooldown: 8,
 			activate: function (player, args, rooms, npcs)
 			{
-				var boost = player.getAttribute('willpower'));
+				var boost = player.getAttribute('willpower');
 				
 				// Doesn't stack
 				if (player.getAffects('psion_boost')) {
@@ -87,8 +87,8 @@ exports.Skills = {
 				// Adds effect
 				player.addAffect('psion_boost', Affects.psion_boost({
 					duration: 8,
-					magnitude: boost;
-					player: player;
+					magnitude: boost,
+					player: player,
 					deactivate: function () {
 						player.say("You feel your concentration slipping back to normal.");
 						player.removeAffect('psion_boost');

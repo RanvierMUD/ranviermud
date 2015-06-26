@@ -69,7 +69,7 @@ exports.Affects = {
 		}
 
 		return affect;
-	}
+	},
 
 		/**
 	 * Generic psion boost
