@@ -17,8 +17,57 @@ var L = function (locale, cls, key /*, args... */)
 exports.Skills = {
 	mystic: {
 		stun: {
+			type: 'active',
+			level: 2,
+			name: "Stun",
+			description: "You have the power to mentally incapacitate an opponent for a short period of time by worming into their mind. The psionic attack causes little harm, but fills the enemy with horror, temporarily paralyzing them.",
+			cooldown: 4,
+			activate: function (player, args, rooms, npcs)
+			{
+				if (!player.isInCombat()) {
+					player.say("You are not fighting anyone.");
+					return true;
+				}
 
-		}
+				if (player.getAffects('cooldown_stun')) {
+					player.say("You need to wait before invading your opponent's mind again.");
+					return true;
+				}
+				
+				var target = player.isInCombat();
+				if (!target) {
+					player.say("Somehow you're in combat with a ghost");
+					return true;
+				}
+
+				var slowed = Math.ceil(player.getAttribute('willpower')/2);
+
+				player.say("Your opponent reels in horror from your psionic attack.");
+				target.setAttribute('health', target.getAttribute('health') - 1);
+
+				if (!target.getAffects('slow')) {
+					target.addAffect('slow', Affects.slow({
+						duration: 6,
+						magnitude: slowed,
+						player: player,
+						target: target,
+						deactivate: function () {
+							player.say("Your opponent seems to regain their concentration.");
+						}
+					}));
+				}
+
+				// Slap a cooldown on the player
+				player.addAffect('cooldown_psionic', {
+					duration: 2,
+					deactivate: function () {
+						player.say("You feel mentally re-charged.");
+					}a
+				});
+
+				return true;
+			}
+		},
 		concentrate: {
 			type: 'active',
 			level: 5,
