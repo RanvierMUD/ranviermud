@@ -62,7 +62,7 @@ exports.Skills = {
 					duration: 2,
 					deactivate: function () {
 						player.say("You feel mentally re-charged.");
-					}a
+					}
 				});
 
 				return true;
