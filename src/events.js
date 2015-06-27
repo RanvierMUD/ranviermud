@@ -395,7 +395,7 @@ var Events = {
 					var classes = {
 					d: "defender",
 					t: "troublemaker",
-					m: 'mystic'
+					m: 'mystic E  '
 					}; // REFACTOR -- not DRY
 					if (!(cls in classes)) {
 						arg.sayL10n(l10n,'INVALID_CLASS');
