@@ -43,7 +43,7 @@ exports.Skills = {
                         return true;
                     }
 
-                    player.setAttribute('psion', player.getAttribute('psion' - cost);
+                    player.setAttribute('psion', player.getAttribute('psion' - cost));
 
                     var slowed = Math.ceil(player.getAttribute('willpower') / 2);
 
