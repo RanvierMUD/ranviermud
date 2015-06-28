@@ -30,12 +30,12 @@ exports.Affects = {
 	{
 		var affect = {
 			activate: function () {
-				config.player.setAttribute('maxhp', config.player.getAttribute('maxhp') + config.magnitude);
-				config.player.setAttribute('health', config.player.getAttribute('maxhp'));
+				config.player.setAttribute('maxHP', config.player.getAttribute('maxHP') + config.magnitude);
+				config.player.setAttribute('health', config.player.getAttribute('maxHP'));
 			},
 			deactivate: function () {
-				config.player.setAttribute('maxhp', config.player.getAttribute('maxhp') - config.magnitude);
-				config.player.setAttribute('health', config.player.getAttribute('maxhp'));
+				config.player.setAttribute('maxHP', config.player.getAttribute('maxHP') - config.magnitude);
+				config.player.setAttribute('health', config.player.getAttribute('maxHP'));
 			}
 		};
 
@@ -69,6 +69,31 @@ exports.Affects = {
 		}
 
 		return affect;
-	}
+	},
+
+		/**
+	 * Generic psion boost
+	 */
+	psion_boost: function (config)
+	{
+		var affect = {
+			activate: function () {
+				config.player.setAttribute('maxPsion', config.player.getAttribute('maxPsion') + config.magnitude);
+				config.player.setAttribute('psion', config.player.getAttribute('maxPsion'));
+			},
+			deactivate: function () {
+				config.player.setAttribute('maxPsion', config.player.getAttribute('maxPsion') - config.magnitude);
+				config.player.setAttribute('psion', config.player.getAttribute('maxPsion'));
+			}
+		};
+
+		if (config.duration) {
+			affect.duration = config.duration;
+		} else if (config.event) {
+			affect.event = config.event;
+		}
+
+		return affect;
+	},
 
 };

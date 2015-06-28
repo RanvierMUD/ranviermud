@@ -383,7 +383,8 @@ var Events = {
 			case 'class':
 				var classes = {
 					d: '[D]efender',
-					t: '[T]roublemaker'
+					t: '[T]roublemaker',
+					m: '[M]ystic'
 				};
 				arg.sayL10n(l10n, 'CLASS_SELECT');
 				for (var r in classes) {
@@ -393,7 +394,8 @@ var Events = {
 					cls = cls.toString().trim().toLowerCase();
 					var classes = {
 					d: "defender",
-					t: "troublemaker"
+					t: "troublemaker",
+					m: 'mystic E  '
 					}; // REFACTOR -- not DRY
 					if (!(cls in classes)) {
 						arg.sayL10n(l10n,'INVALID_CLASS');
