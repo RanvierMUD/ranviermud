@@ -1,6 +1,6 @@
 KILL_PACIFIST:
-    en: "They are a pacifist an will not fight."
-    es: "ES-They are a pacifist an will not fight."
+    en: "They are a pacifist and will not fight."
+    es: "ES-They are a pacifist and will not fight."
 TARGET_NOT_FOUND:
     en: "You don't see them here."
     es: "ES-You don't see them here."
