@@ -8,7 +8,7 @@
     leave_message: 
       en: ' carefully descends the ladder.'
       es: ' carefully descends the ladder.'
- -
+  -
     location: 5
     direction: 'south'
 - title: "A row of shelves"
@@ -31,6 +31,10 @@
   -
     location: 7
     direction: 'east'
+  - 
+    location: 8
+    direction: 'south'
+
 - title: "A pile of junk"
   location: 7
   description: "Tucked between two shelves is this pile of junk. Broken glass, chunks of wood, screws, giant rusted gears, rubber gloves, and several unidentifiable pieces of debris lay on the ground."
