@@ -38,4 +38,16 @@
   -
     location: 6
     direction: 'west'
+- title: "A row of shelves"
+  location: 8
+  description: "Around you are rows and rows of shelves containing mostly broken bottles. The creaking wooden floor is littered with broken glass and splintered wood. Light filters in through small, high, slitted windows that afford no real view of the outside world.\nThis row of shelves leads south towards a wooden staircase and north to an open trapdoor."
+  exits:
+  -
+    location: 6
+    direction: 'north'
+  -
+    location: 9
+    direction: 'south'
+
+
 
