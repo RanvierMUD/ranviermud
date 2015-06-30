@@ -55,6 +55,9 @@
   -
     location: 8
     direction: 'south'
+  -
+    location: 10
+    direction: 'up'
 
 
 
