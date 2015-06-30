@@ -1,6 +1,6 @@
 - &revenant_small
   vnum: 2
-  room: 4
+  room: 
   script: '2.js'
   keywords:
     en: ['revenant', 'rev', 'shambling', 'sham']
@@ -22,7 +22,7 @@
   load_max: 7
 - &revenant_large
   vnum: 3
-  room: 4
+  room: 
   script: '3.js'
   keywords:
     en: ['revenant', 'rev', 'hulking', 'hulk']
