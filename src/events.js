@@ -384,7 +384,8 @@ var Events = {
 				var classes = {
 					d: '[D]efender',
 					t: '[T]roublemaker',
-					m: '[M]ystic'
+					m: '[M]ystic',
+					n: 'Ti[n]kerer'
 				};
 				arg.sayL10n(l10n, 'CLASS_SELECT');
 				for (var r in classes) {
@@ -395,7 +396,8 @@ var Events = {
 					var classes = {
 					d: "defender",
 					t: "troublemaker",
-					m: 'mystic E  '
+					m: 'mystic',
+					n: 'tinkerer'
 					}; // REFACTOR -- not DRY
 					if (!(cls in classes)) {
 						arg.sayL10n(l10n,'INVALID_CLASS');

@@ -71,6 +71,29 @@ exports.Affects = {
 		return affect;
 	},
 
+	/**
+	 * Generic intelligence boost
+	 */
+	intelligence_boost: function (config)
+	{
+		var affect = {
+			activate: function () {
+				config.player.setAttribute('intelligence', config.player.getAttribute('intelligence') + config.magnitude);
+			},
+			deactivate: function () {
+				config.player.setAttribute('intelligence', config.player.getAttribute('intelligence') - config.magnitude);
+			}
+		};
+
+		if (config.duration) {
+			affect.duration = config.duration;
+		} else if (config.event) {
+			affect.event = config.event;
+		}
+
+		return affect;
+	},
+
 		/**
 	 * Generic psion boost
 	 */
