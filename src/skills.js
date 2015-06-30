@@ -14,6 +14,24 @@ var L = function(locale, cls, key /*, args... */ ) {
 };
 
 exports.Skills = {
+    tinkerer: {
+        shrewdness: {
+            type: 'passive',
+            level: 5,
+            name: "Shrewdness",
+            description: "Your tinkering has made you cleverer than most, allowing you greater success with your experiments. You're a smart one.",
+            activate: function(player) {
+                if (player.getAffects('shrewdness')) {
+                    player.removeAffect('shrewdness');
+                }
+                player.addAffect('shrewdness', Affects.intelligence_boost({
+                    magnitude: 2,
+                    player: player,
+                    event: 'quit'
+                }));
+            }
+        }
+    },
     mystic: {
         stun: {
             type: 'active',

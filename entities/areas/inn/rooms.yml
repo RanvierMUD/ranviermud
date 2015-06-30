@@ -1,0 +1,10 @@
+- title: "The top of the staircase to the cellar"
+  location: 10
+  description: "The small wooden staircase leads downwards into a crowded, musty cellar. You can exit into what must have once been the kitchen. A faint stench of rotten meats is wafting in, and above, a gaping hole in the caved-in ceiling exposes the cloudy sky."
+  exits:
+  -
+    location: 9
+    direction: 'down'
+  -
+    location: 11
+    direction: 'kitchen'
