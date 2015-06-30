@@ -193,7 +193,10 @@ function load(callback)
 				npcs.each(function (npc) {
 					if (npc.getRoom()) {
 						var room =rooms.getAt(npc.getRoom());
-						if (!room.hasNpc(npc.getUuid())) {
+						util.log(room);
+						util.log(npc);
+						if (!(room.hasNpc(npc.getUuid()))) {
+							console.log ("Success");
 							room.addNpc(npc.getUuid());
 						}
 					}
