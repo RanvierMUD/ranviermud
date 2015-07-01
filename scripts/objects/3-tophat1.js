@@ -1,5 +1,3 @@
-// 3-leather_helmet.js
-
 exports.listeners = {
     wear: function(l10n) {
         return function (location, player, players)

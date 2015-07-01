@@ -8,3 +8,22 @@
   -
     location: 11
     direction: 'kitchen'
+- title: "The kitchen"
+  location: 11
+  description: "This used to be a kitchen. The counters are covered in scratches and stains. An icebox, busted open, reeks of rotten food. A wood stove lies in disuse, ashes spilling onto the cold floor. Various implements are strewen about. Through a swinging door, nearly falling off its hinges, is the dining room. On the opposite side of the kitchen are stairs leading to the cellar."
+  exits:
+  -
+    location: 10
+    direction: 'stairs'
+  - 
+    location: 12
+    direction: 'dining room'
+- title: "The dining room"
+  location: 12
+  description: "The great table in the middle of this room lies split in half, chairs busted and strewn around it. Parts of what appear to be a human skeleton lay in one corner, while in another lay dozens of tankards, busted into small shards. On one end of the dining room is the kitchen, through a swinging door. On the opposite end is the exit to the streets of Ranvier. And through the splintered remains of a door are stairs leading upwards to the quarters."
+  exits:
+    -
+      location: 11
+      direction: 'kitchen'
+
+
