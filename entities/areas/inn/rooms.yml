@@ -25,5 +25,21 @@
     -
       location: 11
       direction: 'kitchen'
+    -
+      location: 14
+      direction: 'street'
+    - 
+      location: 13
+      direction: 'stairs'
+- title: "The winding staircase"
+  location: 13
+  description: "The splintered banister winds upwards to a hallway overlooking the dining room. You can see doors, most of them still intact, to individual sleeping quarters. At the bottom of the stairs is the dining room, and the exit.\n Many of the steps are broken, preventing your ascent."
+  exits:
+    -
+      location: 12
+      direction: 'dining room'
+
+
+
 
 
