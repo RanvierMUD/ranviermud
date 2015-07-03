@@ -71,7 +71,8 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 			return combat_end(true);
 		}
 
-		var damage = player.getDamage();
+		var str_bonus = Math.floor(player.getAttribute('strength') / 2);
+		var damage = player.getDamage() + str_bonus;
 		damage = Math.max(0, Math.min(npc_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min)))));
 
 		if (!damage) {
