@@ -36,7 +36,7 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 		var player_health  = player.getAttribute('health');
 		var damage = npc.getDamage();
-		damage = Math.min(player_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min))));
+		damage = Math.min(player_health, (damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min)))) - player.getAttribute('willpower');
 
 		if (!damage) {
 			if (weapon) {
