@@ -332,8 +332,8 @@ var Player = function(socket) {
 	self.getAttackSpeed = function ()
 	{
 		var weapon = self.getEquipped('wield', true)
-		return weapon ? (weapon.getAttribute('speed') || 1) : 1;
-		//so the speed comes only from the weapon?
+		return weapon ? (weapon.getAttribute('speed') - (self.getAttribute('speed') / 10) || 1) : 1.5 - (self.getAttribute('speed'))/10;
+		
 	};
 
 	/**
