@@ -332,7 +332,7 @@ var Player = function(socket) {
 	self.getAttackSpeed = function ()
 	{
 		var weapon = self.getEquipped('wield', true)
-		return weapon ? (weapon.getAttribute('speed')+self.getAttribute('speed') || 1) : self.getAttribute('speed');
+		return weapon ? (weapon.getAttribute('speed') - (self.getAttribute('speed') / 10) || 1) : 1.5 - (self.getAttribute('speed'))/10;
 		//does this make it faster or slower???? find out by looking at rtcombat...
 		//so the speed comes only from the weapon?
 	};
