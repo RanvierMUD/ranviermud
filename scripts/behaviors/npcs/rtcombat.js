@@ -18,8 +18,13 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 	// Get the weapon speed or just use a standard 1 sec counter
 	var player_speed = player.getAttackSpeed() * 1000;
+
+	if (player_speed < 100) { player_speed = 100 }
+
 	// Same for npcs
 	var npc_speed    = npc.getAttackSpeed() * 1000;
+
+	if (npc_speed < 100) { npc_speed = 100 }
 
 	var weapon = player.getEquipped('wield', true);
 
