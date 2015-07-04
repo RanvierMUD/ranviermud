@@ -1,0 +1,17 @@
+- &butcherknife
+    vnum: 2
+    short_description:
+        en: "a butcher's knife"
+        es: "a main gauche"
+    keywords:
+        en: [ "butcher", "knife"]
+        es: [ "gauche", "main", "dagger" ]
+    description:
+        en: "A lengthy cleaver. Though its blade has been dulled and chipped, it is still sharp enough to hack through flesh and sinew."
+        es: "ES-A lengthy cleaver. Though its blade has been dulled and chipped, it is still sharp enough to hack through flesh and sinew."
+    room: 11
+    behaviors: "wieldable"
+    attributes:
+        speed: 1.5
+        damage: 2-17
+    load_max: 2
