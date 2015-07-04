@@ -26,6 +26,11 @@
   room: 2
 - <<: *rat
   room: 3
+  - <<: *rat
+  room: 5
+- <<: *rat
+  room: 6
+- *rat
 - &roach
   vnum: 4
   room: 7
