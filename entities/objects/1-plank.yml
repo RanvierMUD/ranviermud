@@ -16,4 +16,6 @@
         speed: 2.7
         damage: 5-14
     load_max: 4
+- <<: *plank
+  room: 11
 
