@@ -361,7 +361,7 @@ var Player = function(socket) {
 	{
 		if (!npcToHitBonus)	{ npcToHitBonus = 1 }
 			
-		var dodgeChance = self.getAttribute('speed') * self.getAttribute('intelligence') + Math.floor(Math.random() * 10 - 5);
+		var dodgeChance = self.getAttribute('speed') * self.getAttribute('intelligence') + Math.floor(Math.random() * 10 - (10 + self.getAttribute('level')));
 		var hitChance = Math.floor(Math.random() * 100 + npcToHitBonus);
 
 		return (dodgeChance > hitChance);
