@@ -52,4 +52,25 @@
     level: 2
     experience: 350
   load_max: 7
+- &spider
+  vnum: 5
+  room: 14
+  keywords:
+    en: ['spider', 'spid', 'giant spider']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a giant spider'
+    es: 'spider'
+  description:
+    en: 'This spider has a body the size of your head; its thick furry legs legs are the size of small tree branches"
+    es: ''
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 30
+    health: 30
+    speed: 1.7
+    damage: 1-14
+    level: 3
+    experience: 400
+  load_max: 7
 
