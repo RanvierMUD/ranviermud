@@ -27,7 +27,7 @@
   room: 2
 - <<: *rat
   room: 3
-  - <<: *rat
+- <<: *rat
   room: 5
 - <<: *rat
   room: 6
