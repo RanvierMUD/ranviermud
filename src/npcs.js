@@ -160,10 +160,12 @@ var Npc = function (config)
 	self.attributes = {
 		max_health : 0,
 		health: 0,
-		level: 1
+		level: 1,
+		dodge: 0,
+		to_hit: 0,
 	};
 
-	// Anything affecting the player
+	// Anything affecting the npc
 	self.affects = {
 	};
 
@@ -178,7 +180,6 @@ var Npc = function (config)
 		self.description       = config.description || '';
 		self.room              = config.room        || null;
 		self.vnum              = config.vnum;
-		self.toHit 			   = config.to_hit		|| 1;
 
 		for (var i in config.attributes || {}) {
 			self.attributes[i] = config.attributes[i];
@@ -203,6 +204,7 @@ var Npc = function (config)
 	self.setContainer = function (uid) { self.container = uid; }
 	self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
 	self.removeAffect = function (aff) { delete self.affects[aff]; };
+	self.getDodg
 	/**#@-*/
 
 	/**

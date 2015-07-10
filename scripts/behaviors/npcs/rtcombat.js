@@ -79,10 +79,14 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 		var damage = player.getDamage();
 
+		var npc_dodge = npc.getDodge();
 
 		damage = Math.max(0, Math.min(npc_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min) + str_bonus)))); 
 
-		if (!damage) {
+		if (!damage)
+			damage = 1;
+
+		if () {
 			if (weapon) {
 				weapon.emit('miss', player);
 			}
