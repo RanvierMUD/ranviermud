@@ -20,6 +20,7 @@
     level: 3
     experience: 700
     to_hit: 13
+    dodge: 20
   load_max: 7
 - &revenant_large
   vnum: 3
@@ -43,4 +44,5 @@
     level: 5
     experience: 1000
     to_hit: 18
+    dodge: 15
   load_max: 7
