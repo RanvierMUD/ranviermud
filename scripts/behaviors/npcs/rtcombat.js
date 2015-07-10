@@ -77,16 +77,10 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 		var str_bonus = Math.floor(player.getAttribute('strength') / 2);
 
-		var damage = player.getDamage() + str_bonus;
+		var damage = player.getDamage();
 
-		// TESTING
 
-		
-		console.log("getDAMAGE IS "+damage);	
-		damage = Math.max(0, Math.min(npc_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min))))); 
-		// refactor this
-		console.log("actualDAMAGE IS "+damage);
-
+		damage = Math.max(0, Math.min(npc_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min) + str_bonus)))); 
 
 		if (!damage) {
 			if (weapon) {
