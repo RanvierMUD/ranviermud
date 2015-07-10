@@ -33,11 +33,11 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 		if (!player.isInCombat()) {
 			return;
 		}
-		var npcToHit = npc.getToHit();
+		var npc_to_hit = npc.getAttribute('to_hit');
 		var player_health  = player.getAttribute('health');
 		var damage = npc.getDamage();
 		damage = Math.min(player_health, (damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min)))) - (Math.floor(player.getAttribute('willpower')/3)));
-		var dodged = player.getDodge(npcToHit);
+		var dodged = player.getDodge(npc_to_hit);
 
 		if (damage <= 0) { damage = 1 } //every attack deals some damage unless the player parries/dodges
 
@@ -79,7 +79,7 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 		var damage = player.getDamage();
 
-		var npc_dodge = npc.getDodge();
+		var npc_dodge = npc.getAttribute('dodge'));
 
 		damage = Math.max(0, Math.min(npc_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min) + str_bonus)))); 
 

@@ -310,10 +310,6 @@ var Npc = function (config)
 		return {min: damage[0], max: damage[1]};
 	};
 
-	self.getToHit = function (){
-		return self.getAttribute('toHit');
-	}
-
 	self.init(config);
 };
 util.inherits(Npc, events.EventEmitter);
