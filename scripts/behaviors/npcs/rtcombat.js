@@ -81,12 +81,18 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 		var npc_dodge = npc.getAttribute('dodge'));
 
+		var to_hit = player.getAttribute('willpower') * player.getAttribute('speed') + player.getAttribute('intelligence') + player.getAttribute('level');
+
+		var dodged = (player.roll(1, to_hit) > npc_dodge);
+
 		damage = Math.max(0, Math.min(npc_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min) + str_bonus)))); 
+
+
 
 		if (!damage)
 			damage = 1;
 
-		if () {
+		if (dodged) {
 			if (weapon) {
 				weapon.emit('miss', player);
 			}
