@@ -204,7 +204,6 @@ var Npc = function (config)
 	self.setContainer = function (uid) { self.container = uid; }
 	self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
 	self.removeAffect = function (aff) { delete self.affects[aff]; };
-	self.getDodg
 	/**#@-*/
 
 	/**
