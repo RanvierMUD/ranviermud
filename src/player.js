@@ -350,6 +350,9 @@ var Player = function(socket) {
 				: base
 			)
 			: base;
+			console.log("----damage return from player is ");
+			console.log({min: damage[0], max: damage[1]})
+			console.log("----")
 		return {min: damage[0], max: damage[1]};
 	};
 
