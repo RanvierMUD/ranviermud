@@ -369,6 +369,24 @@ var Player = function(socket) {
 	}
 
 	/**
+	 * Rolls a die (for example, 2d6)
+	 * for use with skill-based checks and such.
+	 * You can set the number of dice, and the min and max number for each die as well as a bonus to be added after all dice are rolled. Min is optional and defaults to 1. Bonus is optional and defaults to 0.
+	 * @return number
+	 */
+	self.roll = function (dice, max, min, bonus)
+	{
+	  if (min === undefined) 
+	  	min = 1;
+
+	  if (bonus === undefined)
+	  	bonus = 0;
+
+	  return (dice * Math.floor(Math.random() * (max - min + 1)) + min) + bonus; 
+
+	};
+
+	/**
 	 * Turn the player into a JSON string for storage
 	 * @return string
 	 */
