@@ -154,6 +154,7 @@ var Npc = function (config)
 	self.vnum; // Not to be confused with its vnum
 	self.in_combat = false;
 	self.uuid = null;
+	self.toHit;
 
 	// attributes
 	self.attributes = {
@@ -177,6 +178,7 @@ var Npc = function (config)
 		self.description       = config.description || '';
 		self.room              = config.room        || null;
 		self.vnum              = config.vnum;
+		self.toHit 			   = config.to_hit		|| 1;
 
 		for (var i in config.attributes || {}) {
 			self.attributes[i] = config.attributes[i];
@@ -235,6 +237,8 @@ var Npc = function (config)
 		}, affect.duration * 1000);
 		self.affects[name] = 1;
 	};
+
+
 
 	/**
 	 * Get the description, localized if possible
@@ -304,6 +308,10 @@ var Npc = function (config)
 			: base
 		return {min: damage[0], max: damage[1]};
 	};
+
+	self.getToHit = function (){
+		return self.getAttribute('toHit');
+	}
 
 	self.init(config);
 };

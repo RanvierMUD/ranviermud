@@ -354,6 +354,21 @@ var Player = function(socket) {
 	};
 
 	/**
+	* Check to see if player dodges an attack
+	* @return bool
+	*/
+	self.getDodge = function (npcToHitBonus)
+	{
+		if (!npcToHitBonus)	{ npcToHitBonus = 1 }
+			
+		var dodgeChance = self.getAttribute('speed') * self.getAttribute('intelligence') + Math.floor(Math.random() * 10 - (10 + self.getAttribute('level')));
+		var hitChance = Math.floor(Math.random() * 100 + npcToHitBonus);
+
+		return (dodgeChance > hitChance);
+
+	}
+
+	/**
 	 * Turn the player into a JSON string for storage
 	 * @return string
 	 */

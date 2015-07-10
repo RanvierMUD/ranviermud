@@ -19,6 +19,7 @@
     damage: 1-8
     level: 1
     experience: 250
+    to_hit: 5
   load_max: 7
 - *rat
 - *rat
@@ -51,6 +52,7 @@
     damage: 2-12
     level: 2
     experience: 350
+    to_hit: 5
   load_max: 7
 - &spider
   vnum: 5
