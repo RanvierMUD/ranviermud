@@ -79,7 +79,7 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 		var damage = player.getDamage();
 
-		var npc_dodge = npc.getAttribute('dodge'));
+		var npc_dodge = npc.getAttribute('dodge');
 
 		var to_hit = player.getAttribute('willpower') * player.getAttribute('speed') + player.getAttribute('intelligence') + player.getAttribute('level');
 
