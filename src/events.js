@@ -413,7 +413,18 @@ var Events = {
 					next(arg, 'done');
 				});
 				break;
-			// 'done' assumes the argument passed to the event is a player, ...so always do that.
+			
+
+			case 'attr':
+				
+				//have a total amount of attribute points (25? 30?)
+				var attrPool = 25;
+				
+				// show all attributes and allow player to add to or deduct from each.
+				// when player choose an attribute, they are shown an explanation of what it does and they can set the amount if they have enough points in the pool.
+				// allow player to type 'done' to move on to next stage.
+
+				// 'done' assumes the argument passed to the event is a player, ...so always do that.
 			case 'done':
 				arg.calculateAttributes();
 				arg.setLocation(players.getDefaultLocation());
