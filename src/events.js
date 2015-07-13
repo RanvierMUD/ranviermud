@@ -336,7 +336,7 @@ var Events = {
 					arg = new Player(arg);
 					arg.setLocale('en');	//change this if you do l10n
 					next(arg, 'name');
-				});
+				//});
 				break;
 			case 'name':
 				arg.write(L('NAME_PROMPT'));
