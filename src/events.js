@@ -320,21 +320,21 @@ var Events = {
 				});
 				break;
 			case 'locale':
-				arg.write("What language would you like to play in? [English, Spanish] ");
-				arg.once('data', function (locale)
-				{
+				//arg.write("What language would you like to play in? [English, Spanish] ");
+				//arg.once('data', function (locale)
+				//{
 					var locales = {
 						english: 'en',
 						spanish: 'es'
 					};
-					locale = locale.toString().trim().toLowerCase();
-					if (!(locale in locales)) {
-						arg.write("Sorry, that's not a valid language.\r\n");
-						return repeat();
-					}
-
+				//	locale = locale.toString().trim().toLowerCase();
+				//	if (!(locale in locales)) {
+				//		arg.write("Sorry, that's not a valid language.\r\n");
+				//		return repeat();
+				//	}
+				//
 					arg = new Player(arg);
-					arg.setLocale(locales[locale]);
+					arg.setLocale('en');	//change this if you do l10n
 					next(arg, 'name');
 				});
 				break;
