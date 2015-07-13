@@ -275,7 +275,9 @@ var Events = {
 		 *   check:  See if they actually want to create a player or not
 		 *   locale: Get the language they want to play in so we can give them
 		 *           the rest of the creation process in their language
-		 *   name:   ... get there name
+		 *   name:   ... get their name
+		 *   password: 	get their password
+		 *	 class: 	get their class
 		 *   done:   This is always the end step, here we register them in with
 		 *           the rest of the logged in players and where they log in
 		 *
@@ -318,23 +320,23 @@ var Events = {
 				});
 				break;
 			case 'locale':
-				arg.write("What language would you like to play in? [English, Spanish] ");
-				arg.once('data', function (locale)
-				{
+				//arg.write("What language would you like to play in? [English, Spanish] ");
+				//arg.once('data', function (locale)
+				//{
 					var locales = {
 						english: 'en',
 						spanish: 'es'
 					};
-					locale = locale.toString().trim().toLowerCase();
-					if (!(locale in locales)) {
-						arg.write("Sorry, that's not a valid language.\r\n");
-						return repeat();
-					}
-
+				//	locale = locale.toString().trim().toLowerCase();
+				//	if (!(locale in locales)) {
+				//		arg.write("Sorry, that's not a valid language.\r\n");
+				//		return repeat();
+				//	}
+				//
 					arg = new Player(arg);
-					arg.setLocale(locales[locale]);
+					arg.setLocale('en');	//change this if you do l10n
 					next(arg, 'name');
-				});
+				//});
 				break;
 			case 'name':
 				arg.write(L('NAME_PROMPT'));
@@ -400,7 +402,11 @@ var Events = {
 					n: 'tinkerer'
 					}; // REFACTOR -- not DRY
 					if (!(cls in classes)) {
-						arg.sayL10n(l10n,'INVALID_CLASS');
+						if (cls === 'help'){
+							arg.say("Defender:\nThe Defender was in training to become a guardian of civilization before the crisis. They are strong and hardy, having skills that allow them to turn the tide of battle through physical force and smart manuevering. They are masters of melee combat and survival. \n \nTroublemaker:\nThe Troublemaker uses sleight of hand, personality, and dexterity to make a fool out of their marks. These folks have no formal training but have most likely grown up on the streets as pickpockets, entertainers, street businesspeople, or rogues. They are experts in tricking their opponents, and excel at ranged combat and stealth. \n \nMystic:\nThe Mystic is a scholar of the arcane art and has tapped into the psionic powers of their own mind, and their environs. They harness these powers to heal their allies and harm their opponents in unexpected ways. However, they are academics and as such, are a bit squishy.\n \nTinkerer:\nThe Tinkerer uses gadgets, machines, and steam power to enhance their natural abilities. They can fix anything, and turn a pile of junk into a working piece of equipment. They are brilliant, but not strong.");
+						}
+						else
+							arg.sayL10n(l10n,'INVALID_CLASS');
 						return repeat();
 					}
 					arg.setAttribute('class', classes[cls]);
