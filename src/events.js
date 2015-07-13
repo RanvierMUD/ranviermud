@@ -275,7 +275,9 @@ var Events = {
 		 *   check:  See if they actually want to create a player or not
 		 *   locale: Get the language they want to play in so we can give them
 		 *           the rest of the creation process in their language
-		 *   name:   ... get there name
+		 *   name:   ... get their name
+		 *   password: 	get their password
+		 *	 class: 	get their class
 		 *   done:   This is always the end step, here we register them in with
 		 *           the rest of the logged in players and where they log in
 		 *
