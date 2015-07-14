@@ -423,6 +423,7 @@ var Events = {
 				
 				// show all attributes and allow player to add to or deduct from each
 
+				/*
 				var attributes = {
 					s: {name: 'strength', value: 1},
 					p: {name: 'speed', value: 1},
@@ -430,6 +431,20 @@ var Events = {
 					w: {name: 'willpower', value: 1},
 					c: {name: 'charisma', value: 1}
 				};
+				*/
+
+				var attributes = {
+					s: '[S]trength',
+					p: 'S[p]eed',
+					i: '[I]ntelligence',
+					w: '[W]illpower',
+					c: '[C]harisma'
+				};
+
+				arg.say("Select an attribute. You will see an explanation of the attribute and you may add or subtract points.");
+				for (var a in attributes) {
+					arg.say(attributes[a]);
+				}
 
 				// when player chooses an attribute, they are shown an explanation of what it does and they can set the amount if they have enough points in the pool.
 				// allow player to type 'done' to move on to next stage.
