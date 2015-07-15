@@ -424,9 +424,22 @@ var Events = {
 
 				var done = false;
 
+				var attributes = {
+					s: {name: 'strength', value: 1, 
+						help: 'Strength determines your health and your damage output in melee combat.'},
+					p: {name: 'speed', value: 1,
+						help: 'Speed determines your attack speed, casting speed, and your chance to dodge an attack.'},
+					i: {name: 'intelligence', value: 1,
+						help: 'Intelligence determines your casting speed, psionic abilities, and your chance to dodge an attack.'},
+					w: {name: 'willpower', value: 1,
+						help: 'Willpower determines your health and your defenses.'},
+					c: {name: 'charisma', value: 1,
+						help: 'Charisma determines your psionic powers and helps when interacting with certain NPCs.'}
+				};
+
 				while(!done){
 
-					var attributes = {
+					var attributeMenu = {
 						s: '[S]trength',
 						p: 'S[p]eed',
 						i: '[I]ntelligence',
@@ -434,36 +447,29 @@ var Events = {
 						c: '[C]harisma'
 					};
 					arg.say("Select an attribute. You will see an explanation of the attribute and you may add or subtract points. Type 'done' when you are finished. You currently have " + attrPool + "points left to assign.");
-					for (var a in attributes) {
-						arg.say(attributes[a]);
+					for (var a in attributeMenu) {
+						arg.say(attributeMenu[a]);
 					}
+
+
 
 					// when player chooses an attribute, they are shown an explanation of what it does and they can set the amount if they have enough points in the pool.
 
 					arg.getSocket().once('data', function (attr) {
 						attr = attr.toString().trim().toLowerCase();
-						var attributes = {
-							s: {name: 'strength', value: 1, 
-								help: 'Strength determines your health and your damage output in melee combat.'},
-							p: {name: 'speed', value: 1,
-								help: 'Speed determines your attack speed, casting speed, and your chance to dodge an attack.'},
-							i: {name: 'intelligence', value: 1,
-								help: 'Intelligence determines your casting speed, psionic abilities, and your chance to dodge an attack.'},
-							w: {name: 'willpower', value: 1,
-								help: 'Willpower determines your health and your defenses.'},
-							c: {name: 'charisma', value: 1,
-								help: 'Charisma determines your psionic powers and helps when interacting with certain NPCs.'}
-						};
 					}; // REFACTOR -- not DRY
 
 					// allow player to type 'done' to move on to next stage.
 					if (!(attr in attributes)) {
 						if (attr === 'done'){
+							done = true;
 							next(arg, 'done');
 						}
 					else
-						{
-
+						{   
+							//say the selection, help info, and current value...
+							selection = attributes[attr];
+							arg.say(selection.name.toUpperCase() + ": " + selection.help + "\n\n Current value: " + selection.value + "\nPlease input the number of points you would like to assign to " + selection.name);
 						}
 					}
 				}
