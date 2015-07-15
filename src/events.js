@@ -410,7 +410,7 @@ var Events = {
 						return repeat();
 					}
 					arg.setAttribute('class', classes[cls]);
-					next(arg, 'done');
+					next(arg, 'attr');
 				});
 				break;
 			
@@ -440,24 +440,36 @@ var Events = {
 
 					// when player chooses an attribute, they are shown an explanation of what it does and they can set the amount if they have enough points in the pool.
 
-					arg.getSocket().once('data', function (cls) {
-						cls = cls.toString().trim().toLowerCase();
+					arg.getSocket().once('data', function (attr) {
+						attr = attr.toString().trim().toLowerCase();
 						var attributes = {
-							s: {name: 'strength', value: 1},
-							p: {name: 'speed', value: 1},
-							i: {name: 'intelligence', value: 1},
-							w: {name: 'willpower', value: 1},
-							c: {name: 'charisma', value: 1}
+							s: {name: 'strength', value: 1, 
+								help: 'Strength determines your health and your damage output in melee combat.'},
+							p: {name: 'speed', value: 1,
+								help: 'Speed determines your attack speed, casting speed, and your chance to dodge an attack.'},
+							i: {name: 'intelligence', value: 1,
+								help: 'Intelligence determines your casting speed, psionic abilities, and your chance to dodge an attack.'},
+							w: {name: 'willpower', value: 1,
+								help: 'Willpower determines your health and your defenses.'},
+							c: {name: 'charisma', value: 1,
+								help: 'Charisma determines your psionic powers and helps when interacting with certain NPCs.'}
 						};
 					}; // REFACTOR -- not DRY
-					if (!(cls in attr)) {
-						if (cls === 'help'){
+
+					// allow player to type 'done' to move on to next stage.
+					if (!(attr in attributes)) {
+						if (attr === 'done'){
+							next(arg, 'done');
+						}
+					else
+						{
+
 						}
 					}
 				}
 
 
-				// allow player to type 'done' to move on to next stage.
+				
 
 				// 'done' assumes the argument passed to the event is a player, ...so always do that.
 			case 'done':
