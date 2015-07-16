@@ -410,7 +410,7 @@ var Events = {
 						return repeat();
 					}
 					arg.setAttribute('class', classes[cls]);
-					next(arg, 'done');
+					next(arg, 'attr');
 				});
 				break;
 			
@@ -424,9 +424,22 @@ var Events = {
 
 				var done = false;
 
+				var attributes = {
+					s: {name: 'strength', value: 1, 
+						help: 'Strength determines your health and your damage output in melee combat.'},
+					p: {name: 'speed', value: 1,
+						help: 'Speed determines your attack speed, casting speed, and your chance to dodge an attack.'},
+					i: {name: 'intelligence', value: 1,
+						help: 'Intelligence determines your casting speed, psionic abilities, and your chance to dodge an attack.'},
+					w: {name: 'willpower', value: 1,
+						help: 'Willpower determines your health and your defenses.'},
+					c: {name: 'charisma', value: 1,
+						help: 'Charisma determines your psionic powers and helps when interacting with certain NPCs.'}
+				};
+
 				while(!done){
 
-					var attributes = {
+					var attributeMenu = {
 						s: '[S]trength',
 						p: 'S[p]eed',
 						i: '[I]ntelligence',
@@ -434,30 +447,54 @@ var Events = {
 						c: '[C]harisma'
 					};
 					arg.say("Select an attribute. You will see an explanation of the attribute and you may add or subtract points. Type 'done' when you are finished. You currently have " + attrPool + "points left to assign.");
-					for (var a in attributes) {
-						arg.say(attributes[a]);
+					for (var a in attributeMenu) {
+						arg.say(attributeMenu[a]);
 					}
+
+
 
 					// when player chooses an attribute, they are shown an explanation of what it does and they can set the amount if they have enough points in the pool.
 
-					arg.getSocket().once('data', function (cls) {
-						cls = cls.toString().trim().toLowerCase();
-						var attributes = {
-							s: {name: 'strength', value: 1},
-							p: {name: 'speed', value: 1},
-							i: {name: 'intelligence', value: 1},
-							w: {name: 'willpower', value: 1},
-							c: {name: 'charisma', value: 1}
-						};
+					arg.getSocket().once('data', function (attr) {
+						attr = attr.toString().trim().toLowerCase();
 					}; // REFACTOR -- not DRY
-					if (!(cls in attr)) {
-						if (cls === 'help'){
+
+					// allow player to type 'done' to move on to next stage.
+					if (!(attr in attributes)) {
+						if (attr === 'done'){
+							done = true;
+							next(arg, 'done');
+						}
+					else
+						{   
+
+							//say the selection, help info, and current value...
+							selection = attributes[attr];
+							arg.say(selection.name.toUpperCase() + ": " + selection.help + "\n Maximum value: 10\n Current value: " + selection.value + "\nPlease input the number of points you would like to assign to " + selection.name + " or type 'done' to head back to the attributes menu.");
+
+							//user inputs points or types done...
+							arg.getSocket().once('data', function (pts) {
+							
+							// if it is not a number, checks to see if they typed done, else it repeats this bit. 
+							if (parseInt(pts) == NaN){
+								pts = pts.toString().trim().toLowerCase();
+								
+								if (pts === 'done') {
+									next(arg, 'done');
+								} 
+								else 
+									arg.say("Invalid input.");
+									return repeat();
+							}
+
+
+
 						}
 					}
 				}
 
 
-				// allow player to type 'done' to move on to next stage.
+				
 
 				// 'done' assumes the argument passed to the event is a player, ...so always do that.
 			case 'done':
