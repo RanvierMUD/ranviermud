@@ -457,7 +457,7 @@ var Events = {
 
 					arg.getSocket().once('data', function (attr) {
 						attr = attr.toString().trim().toLowerCase();
-					}; // REFACTOR -- not DRY
+					}); // REFACTOR -- not DRY
 
 					// allow player to type 'done' to move on to next stage.
 					if (!(attr in attributes)) {
