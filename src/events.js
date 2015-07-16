@@ -486,12 +486,7 @@ var Events = {
 									arg.say("Invalid input.");
 									return repeat();
 							}
-
-
-
 						}
-					}
-				}
 
 
 				
