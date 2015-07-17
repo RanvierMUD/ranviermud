@@ -476,19 +476,27 @@ var Events = {
 							arg.getSocket().once('data', function (pts) {
 							
 							// if it is not a number, checks to see if they typed done, else it repeats this bit. 
+								console.log(pts);
 								if (parseInt(pts) == NaN){
 									pts = pts.toString().trim().toLowerCase();
 									
 									if (pts === 'done') {
+
+										// add a loop here to input every attribute into the player config
+
 										next(arg, 'done');
 									} 
 									else 
 										arg.say("Invalid input.");
 										return repeat();
-									}
 								}
+
+								pts = parseInt(pts);
+								console.log(pts);
+
+							}
 				break;
-				
+
 				// 'done' assumes the argument passed to the event is a player, ...so always do that.
 			case 'done':
 				arg.calculateAttributes();
