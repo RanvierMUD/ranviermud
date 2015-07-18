@@ -462,7 +462,9 @@ var Events = {
 					// allow player to type 'done' to move on to next stage.
 					if (!(attr in attributes)) {
 						if (attr === 'done'){
-							done = true;
+							
+							// add a loop here to input every attribute into the player config
+							done = true; // this might be better applied below *** 
 							next(arg, 'done');
 						}
 					else
@@ -482,8 +484,8 @@ var Events = {
 									
 									if (pts === 'done') {
 
-										// add a loop here to input every attribute into the player config
-
+										// ***
+										// somehow cache their final value
 										next(arg, 'done');
 									} 
 									else 
@@ -493,6 +495,24 @@ var Events = {
 
 								pts = parseInt(pts);
 								console.log(pts);
+								if (pts < 0 || pts > attrPool){
+									arg.say("Invalid input.");
+									return repeat();
+								}
+								if (pts < selection.value){
+									attrPool += selection.value - pts;
+									selection.value = pts;
+									// they are lowering the value, so the difference should go back into the pool.
+								}
+								else {
+
+									// refactor into function to be DRY
+									attrPool += selection.value - pts; 
+
+									// they are raising the value
+									selection.value = pts;
+								}
+
 
 							}
 				break;
