@@ -515,7 +515,8 @@ var Events = {
 
 
 							});
-
+						}
+					}
 				
 				break;
 
