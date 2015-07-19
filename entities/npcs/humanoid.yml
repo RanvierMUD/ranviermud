@@ -46,27 +46,27 @@
     to_hit: 18
     dodge: 15
   load_max: 7
-- &revenant_onearm
-  vnum: 6
-  room: 14
-  script: '6.js'
-  keywords:
-    en: ['revenant', 'one-armed', 'rev']
-    es: ['guardia', 'defensor']
-  short_description:
-    en: 'a one-armed revenant'
-    es: 'ES - raider'
-  description:
-    en: 'This former human drools and its eyes roll mindlessly in its skull. Its one arm dangles by its side, its other arm ending in a grisly stump just before the elbow.'
-    es: 'ES - revenant'
-  behaviors: "rtcombat"
-  attributes:
-    max_health: 65
-    health: 65
-    speed: 2.3
-    damage: 4-12
-    level: 4
-    experience: 800
-    to_hit: 10
-    dodge: 25
-  load_max: 7
+# - &revenant_onearm
+#   vnum: 6
+#   room: 14
+#   script: '6.js'
+#   keywords:
+#     en: ['revenant', 'one-armed', 'rev']
+#     es: ['guardia', 'defensor']
+#   short_description:
+#     en: 'a one-armed revenant'
+#     es: 'ES - raider'
+#   description:
+#     en: 'This former human drools and its eyes roll mindlessly in its skull. Its one arm dangles by its side, its other arm ending in a grisly stump just before the elbow.'
+#     es: 'ES - revenant'
+#   behaviors: "rtcombat"
+#   attributes:
+#     max_health: 65
+#     health: 65
+#     speed: 2.3
+#     damage: 4-12
+#     level: 4
+#     experience: 800
+#     to_hit: 10
+#     dodge: 25
+#   load_max: 7
