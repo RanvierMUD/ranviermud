@@ -437,7 +437,7 @@ var Events = {
 						help: 'Charisma determines your psionic powers and helps when interacting with certain NPCs.'}
 				};
 
-				while(!done){
+				//while(!done){
 
 					var attributeMenu = {
 						s: '[S]trength',
@@ -514,7 +514,9 @@ var Events = {
 								}
 
 
-							}
+							});
+
+				
 				break;
 
 				// 'done' assumes the argument passed to the event is a player, ...so always do that.
