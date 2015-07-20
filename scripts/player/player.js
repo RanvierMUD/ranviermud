@@ -9,7 +9,7 @@ exports.listeners = {
 			self.prompt();
 			var regen = setInterval(function () {
 				var health = self.getAttribute('health');
-				var regenerated = Math.floor(Math.random() * (self.getAttribute('willpower')) + 1);
+				var regenerated = self.roll(2, self.getAttribute('willpower'), 1, self.getAttribute('strength'));
 
 				regenerated = Math.min(self.getAttribute("maxHP"), health + regenerated);
 
@@ -17,7 +17,7 @@ exports.listeners = {
 				if (regenerated === self.getAttribute("maxHP")) {
 					clearInterval(regen);
 				}
-			}, 2000);
+			}, 10000);
 		}
 	},
 	experience: function (l10n)
