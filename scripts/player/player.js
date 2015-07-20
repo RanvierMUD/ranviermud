@@ -17,7 +17,7 @@ exports.listeners = {
 				if (regenerated === self.getAttribute("maxHP")) {
 					clearInterval(regen);
 				}
-			}, 2000);
+			}, 10000);
 		}
 	},
 	experience: function (l10n)
