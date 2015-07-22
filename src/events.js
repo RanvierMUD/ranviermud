@@ -458,7 +458,7 @@ var Events = {
 					var attr = arg.getSocket().once('data', function (attr) {
 						return attr.toString().trim().toLowerCase();
 					}); // REFACTOR -- not DRY
-
+					console.log (attr);
 					// allow player to type 'done' to move on to next stage.
 					if (!(attr in attributes)) {
 						if (attr === 'done'){
@@ -467,56 +467,59 @@ var Events = {
 							done = true; // this might be better applied below *** 
 							next(arg, 'done');
 						}
-					else
-						{   
 
-							//say the selection, help info, and current value...
-							selection = attributes[attr];
-							arg.say(selection.name.toUpperCase() + ": " + selection.help + "\n Maximum value: 10\n Current value: " + selection.value + "\nPlease input the number of points you would like to assign to " + selection.name + " or type 'done' to head back to the attributes menu.");
-
-							//user inputs points or types done...
-							arg.getSocket().once('data', function (pts) {
-							
-							// if it is not a number, checks to see if they typed done, else it repeats this bit. 
-								console.log(pts);
-								if (parseInt(pts) == NaN){
-									pts = pts.toString().trim().toLowerCase();
-									
-									if (pts === 'done') {
-
-										// ***
-										// somehow cache their final value
-										next(arg, 'done');
-									} 
-									else 
-										arg.say("Invalid input.");
-										return repeat();
-								}
-
-								pts = parseInt(pts);
-								console.log(pts);
-								if (pts < 0 || pts > attrPool){
-									arg.say("Invalid input.");
-									return repeat();
-								}
-								if (pts < selection.value){
-									attrPool += selection.value - pts;
-									selection.value = pts;
-									// they are lowering the value, so the difference should go back into the pool.
-								}
-								else {
-
-									// refactor into function to be DRY
-									attrPool += selection.value - pts; 
-
-									// they are raising the value
-									selection.value = pts;
-								}
-
-
-							});
+					else {
+							arg.say("Invalid input.");
+							return repeat();  
 						}
 					}
+							//say the selection, help info, and current value...
+						var selection = attributes[attr];
+						arg.say(selection.name.toUpperCase() + ": " + selection.help + "\n Maximum value: 10\n Current value: " + selection.value + "\nPlease input the number of points you would like to assign to " + selection.name + " or type 'done' to head back to the attributes menu.");
+
+						//user inputs points or types done...
+						arg.getSocket().once('data', function (pts) {
+						
+						// if it is not a number, checks to see if they typed done, else it repeats this bit. 
+							console.log(pts);
+							if (parseInt(pts) == NaN){
+								pts = pts.toString().trim().toLowerCase();
+								
+								if (pts === 'done') {
+
+									// ***
+									// somehow cache their final value
+									next(arg, 'done');
+								} 
+								else 
+									arg.say("Invalid input.");
+									return repeat();
+							}
+
+							pts = parseInt(pts);
+							console.log(pts);
+							if (pts < 0 || pts > attrPool){
+								arg.say("Invalid input.");
+								return repeat();
+							}
+							if (pts < selection.value){
+								attrPool += selection.value - pts;
+								selection.value = pts;
+								// they are lowering the value, so the difference should go back into the pool.
+							}
+							else {
+
+								// refactor into function to be DRY
+								attrPool += selection.value - pts; 
+
+								// they are raising the value
+								selection.value = pts;
+							}
+
+
+						});
+					}
+				}
 				
 				break;
 
