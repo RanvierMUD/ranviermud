@@ -446,7 +446,7 @@ var Events = {
 						w: '[W]illpower',
 						c: '[C]harisma'
 					};
-					arg.say("Select an attribute. You will see an explanation of the attribute and you may add or subtract points. Type 'done' when you are finished. You currently have " + attrPool + "points left to assign.");
+					arg.say("Select an attribute. You will see an explanation of the attribute and you may add or subtract points. Type 'done' when you are finished. You currently have " + attrPool + " points left to assign.");
 					for (var a in attributeMenu) {
 						arg.say(attributeMenu[a]);
 					}
