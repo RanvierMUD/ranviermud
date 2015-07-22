@@ -515,12 +515,7 @@ var Events = {
 								// they are raising the value
 								selection.value = pts;
 							}
-
-
 						});
-					}
-				}
-				
 				break;
 
 				// 'done' assumes the argument passed to the event is a player, ...so always do that.
