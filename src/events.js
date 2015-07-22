@@ -455,8 +455,8 @@ var Events = {
 
 					// when player chooses an attribute, they are shown an explanation of what it does and they can set the amount if they have enough points in the pool.
 
-					arg.getSocket().once('data', function (attr) {
-						attr = attr.toString().trim().toLowerCase();
+					var attr = arg.getSocket().once('data', function (attr) {
+						return attr.toString().trim().toLowerCase();
 					}); // REFACTOR -- not DRY
 
 					// allow player to type 'done' to move on to next stage.
