@@ -479,14 +479,15 @@ var Events = {
 
 						//user inputs points or types done...
 						arg.getSocket().once('data', function (pts) {
-						
+						console.log ('got points 1 -- ' + pts);
+
 						// if it is not a number, checks to see if they typed done, else it repeats this bit. 
 							console.log(pts);
 							if (parseInt(pts) == NaN){
 								pts = pts.toString().trim().toLowerCase();
-								
+								console.log ('checks for string');
 								if (pts === 'done') {
-
+									console.log ('done is incomplete, this is the oops')
 									// ***
 									// somehow cache their final value
 									next(arg, 'done');
@@ -495,7 +496,7 @@ var Events = {
 									arg.say("Invalid input.");
 									return repeat();
 							}
-
+							console.log('made it through if/then loop for string... are they not all strings?!?');
 							pts = parseInt(pts);
 							console.log(pts);
 							if (pts < 0 || pts > attrPool){
