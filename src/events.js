@@ -521,12 +521,13 @@ var Events = {
 								attrPool += selection.value - pts; 
 								console.log(selection + ' new value is ' + selection.value);
 								console.log('pool is now ' + attrPool);
-								
+
 								// they are raising the value
 								selection.value = pts;
 							}
 						});
 					});
+				// i think it needs to loop, until done, then be passed to 'done' -- that is why it hangs.
 				break;
 
 				// 'done' assumes the argument passed to the event is a player, ...so always do that.
