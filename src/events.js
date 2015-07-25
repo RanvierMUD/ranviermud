@@ -403,7 +403,9 @@ var Events = {
 					}; // REFACTOR -- not DRY
 					if (!(cls in classes)) {
 						if (cls === 'help'){
+							console.log("Help message sending...");
 							arg.say("Defender:\nThe Defender was in training to become a guardian of civilization before the crisis. They are strong and hardy, having skills that allow them to turn the tide of battle through physical force and smart manuevering. They are masters of melee combat and survival. \n \nTroublemaker:\nThe Troublemaker uses sleight of hand, personality, and dexterity to make a fool out of their marks. These folks have no formal training but have most likely grown up on the streets as pickpockets, entertainers, street businesspeople, or rogues. They are experts in tricking their opponents, and excel at ranged combat and stealth. \n \nMystic:\nThe Mystic is a scholar of the arcane art and has tapped into the psionic powers of their own mind, and their environs. They harness these powers to heal their allies and harm their opponents in unexpected ways. However, they are academics and as such, are a bit squishy.\n \nTinkerer:\nThe Tinkerer uses gadgets, machines, and steam power to enhance their natural abilities. They can fix anything, and turn a pile of junk into a working piece of equipment. They are brilliant, but not strong.");
+
 						}
 						else
 							arg.sayL10n(l10n,'INVALID_CLASS');
@@ -454,36 +456,39 @@ var Events = {
 
 
 					// when player chooses an attribute, they are shown an explanation of what it does and they can set the amount if they have enough points in the pool.
-
+					console.log('before attribute socket function...');
 					arg.getSocket().once('data', function (attr) {
+						console.log('in attribute socket function...');
 						attr = attr.toString().trim().toLowerCase();
-					 // REFACTOR -- not DRY
-					console.log (attr);
-					// allow player to type 'done' to move on to next stage.
-					if (!(attr in attributes)) {
-						if (attr === 'done'){
-							
-							// add a loop here to input every attribute into the player config
-							done = true; // this might be better applied below *** 
-							next(arg, 'done');
-						}
+					 	// REFACTOR -- not DRY
+						console.log (attr);
+						// allow player to type 'done' to move on to next stage.
+						if (!(attr in attributes)) {
+							if (attr === 'done'){
+								
+								// add a loop here to input every attribute into the player config
+								done = true; // this might be better applied below *** 
+								next(arg, 'done');
+							}
 
-					else {
-							arg.say("Invalid input.");
-							return repeat();  
+						else {
+								arg.say("Invalid input.");
+								return repeat();  
+							}
 						}
-					}
 							//say the selection, help info, and current value...
 						var selection = attributes[attr];
+						console.log('selection');
 						arg.say(selection.name.toUpperCase() + ": " + selection.help + "\n Maximum value: 10\n Current value: " + selection.value + "\nPlease input the number of points you would like to assign to " + selection.name + " or type 'done' to head back to the attributes menu.");
 
 						//user inputs points or types done...
 						arg.getSocket().once('data', function (pts) {
-						console.log ('got points 1 -- ' + pts);
+							console.log ('got points -- ' + pts);
 
 						// if it is not a number, checks to see if they typed done, else it repeats this bit. 
 							console.log(pts);
 							if (parseInt(pts) == NaN){
+								console.log('pts');
 								pts = pts.toString().trim().toLowerCase();
 								console.log ('checks for string');
 								if (pts === 'done') {
@@ -506,18 +511,23 @@ var Events = {
 							if (pts < selection.value){
 								attrPool += selection.value - pts;
 								selection.value = pts;
+								console.log(selection + ' new value is ' + selection.value);
+								console.log('pool is now ' + attrPool);
 								// they are lowering the value, so the difference should go back into the pool.
 							}
 							else {
 
 								// refactor into function to be DRY
 								attrPool += selection.value - pts; 
+								console.log(selection + ' new value is ' + selection.value);
+								console.log('pool is now ' + attrPool);
 
 								// they are raising the value
 								selection.value = pts;
 							}
 						});
 					});
+				// i think it needs to loop, until done, then be passed to 'done' -- that is why it hangs.
 				break;
 
 				// 'done' assumes the argument passed to the event is a player, ...so always do that.
