@@ -1,0 +1,88 @@
+- &shoggoth
+  vnum: 6
+  room: 14
+  keywords:
+    en: ['shoggoth', 'shog', 'shambling']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a shambling shoggoth'
+    es: 'spider'
+  description:
+    en: 'A shapeless congeries of protoplasmic bubbles.'
+    es: ''
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 300
+    health: 300
+    speed: 3.5
+    damage: 15-50
+    level: 13
+    experience: 1600
+    dodge: 10
+  load_max: 7
+- &ghoul
+  vnum: 7
+  room: 14
+  keywords:
+    en: ['ghoul', 'clawed', 'sharp']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a sharp-clawed ghoul'
+    es: 'spider'
+  description:
+    en: 'A colossal and nameless blasphemy with glaring red eyes. It approaches humanoid in some respects, but its facial features are more canine, and its limbs jut at odd angles. It appears bipedal, but hunched and slumped forward so its knife-like claws nearly drag on the ground.'
+    es: ''
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 100
+    health: 100
+    speed: .95
+    damage: 5-25
+    level: 10
+    experience: 1200
+    dodge: 30
+  load_max: 7
+- &fungoid
+  vnum: 8
+  room: 14
+  keywords:
+    en: ['fungoid', 'fungus', 'mi-go']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a winged fungoid'
+    es: 'spider'
+  description:
+    en: 'A pinkish thing about five feet long; with a crustaceous body bearing vast pairs of membraneous wings and several sets of articulated limbs, and with a sort of convoluted ellipsoid, covered with multitudes of very short antennae, where a head would ordinarily be.'
+    es: ''
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 150
+    health: 150
+    speed: 2
+    damage: 10-20
+    level: 10
+    experience: 1200
+    dodge: 10
+  load_max: 7
+- &night-gaunt
+  vnum: 9
+  room: 14
+  keywords:
+    en: ['night-gaunt', 'night', 'gaunt']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a night-gaunt'
+    es: 'spider'
+  description:
+    en: 'A shocking and uncouth black being with smooth, oily, whale-like skin, unpleasant horns that curve inward toward each other, bat-wings whose beating makes no sound, ugly prehensile paws, and barbed tails that lash needlessly and disquietingly. And worst of all, it makes no sound, and does not smile or frown, because it has no face at all to smile with, but only a suggestive blankness where a face ought to be.'
+    es: ''
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 120
+    health: 120
+    speed: .75
+    damage: 10-15
+    level: 11
+    experience: 1250
+    dodge: 39
+  load_max: 7

@@ -7,8 +7,10 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 		displayed = player.getAttributes();
 		console.log("displayed is " + displayed);
 		player.say("Attributes:");
+		player.say("===========");
 		for (attr in displayed) {
 			player.say(attr.toUpperCase() + ": " + displayed[attr]);
 		}
+		player.say("===========");
 	};
 };
