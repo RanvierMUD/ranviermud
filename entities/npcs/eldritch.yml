@@ -35,10 +35,32 @@
   behaviors: "rtcombat"
   attributes:
     max_health: 100
-    health: 300
+    health: 100
     speed: .95
     damage: 5-25
     level: 10
     experience: 1200
     dodge: 30
+  load_max: 7
+- &fungoid
+  vnum: 8
+  room: 14
+  keywords:
+    en: ['fungoid', 'fungus', 'mi-go']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a winged fungoid'
+    es: 'spider'
+  description:
+    en: 'A pinkish thing about five feet long; with a crustaceous body bearing vast pairs of membraneous wings and several sets of articulated limbs, and with a sort of convoluted ellipsoid, covered with multitudes of very short antennae, where a head would ordinarily be.'
+    es: ''
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 150
+    health: 150
+    speed: 2
+    damage: 10-23
+    level: 10
+    experience: 1200
+    dodge: 10
   load_max: 7
