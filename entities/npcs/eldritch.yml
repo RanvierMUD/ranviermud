@@ -64,3 +64,25 @@
     experience: 1200
     dodge: 10
   load_max: 7
+- &night-gaunt
+  vnum: 9
+  room: 14
+  keywords:
+    en: ['night-gaunt', 'night', 'gaunt']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a night-gaunt'
+    es: 'spider'
+  description:
+    en: 'A shocking and uncouth black being with smooth, oily, whale-like skin, unpleasant horns that curve inward toward each other, bat-wings whose beating makes no sound, ugly prehensile paws, and barbed tails that lash needlessly and disquietingly. And worst of all, it makes no sound, and does not smile or frown, because it has no face at all to smile with, but only a suggestive blankness where a face ought to be.'
+    es: ''
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 120
+    health: 120
+    speed: .75
+    damage: 10-15
+    level: 11
+    experience: 1250
+    dodge: 39
+  load_max: 7
