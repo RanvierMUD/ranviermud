@@ -59,7 +59,7 @@
     max_health: 150
     health: 150
     speed: 2
-    damage: 10-23
+    damage: 10-20
     level: 10
     experience: 1200
     dodge: 10
