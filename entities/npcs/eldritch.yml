@@ -1,1 +1,22 @@
-eldritch.yml
+- &shoggoth
+  vnum: 6
+  room: 14
+  keywords:
+    en: ['shoggoth', 'shog', 'shambling']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a shambling shoggoth'
+    es: 'spider'
+  description:
+    en: 'A shapeless congeries of protoplasmic bubbles'
+    es: ''
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 300
+    health: 300
+    speed: 3.5
+    damage: 10-25
+    level: 6
+    experience: 1200
+    dodge: 10
+  load_max: 7
