@@ -478,7 +478,9 @@ var Events = {
 						}
 							//say the selection, help info, and current value...
 						var selection = attributes[attr];
-						console.log('selection');
+						var done = false;
+						console.log('selection::', selection);
+						while(!done){
 						arg.say(selection.name.toUpperCase() + ": " + selection.help + "\n Maximum value: 10\n Current value: " + selection.value + "\nPlease input the number of points you would like to assign to " + selection.name + " or type 'done' to head back to the attributes menu.");
 
 						//user inputs points or types done...
@@ -495,7 +497,7 @@ var Events = {
 									console.log ('done is incomplete, this is the oops')
 									// ***
 									// somehow cache their final value
-									next(arg, 'done');
+									done = true;
 								} 
 								else 
 									arg.say("Invalid input.");
@@ -525,8 +527,12 @@ var Events = {
 								// they are raising the value
 								selection.value = pts;
 							}
+
 						});
-					});
+					}
+					//cache the results here somehow -- have an empty attr object made before the switch statement
+					return repeat();
+				});
 				// i think it needs to loop, until done, then be passed to 'done' -- that is why it hangs.
 				break;
 
