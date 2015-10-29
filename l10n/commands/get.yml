@@ -1,12 +1,16 @@
 GET_COMBAT:
   en: "You can do that while you're fighting."
   es: "ES-You can do that while you're fighting."
+  fr: "Tu peux faire cela quand tu te bas"
 CARRY_MAX:
   en: "You can't carry anymore."
   es: "ES-You can't carry anymore."
+  fr: "Tu ne peux plus rien porté"
 ITEM_NOT_FOUND:
     en: "You don't see that here."
     es: "ES-You don't see that here."
+    fr: "Tu ne vois pas ca là"
 ITEM_PICKUP:
     en: "You pick up $[1]."
     es: "ES-You pick up $[1]."
+    fr: "Tu porte [$1]."

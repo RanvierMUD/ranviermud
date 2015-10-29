@@ -1,6 +1,8 @@
 ITEM_NOT_EQUIPPED:
     en: "You're not wearing it but to keep from embarassing yourself you put it on then remove it."
     es: "ES-You're not wearing it but to keep from embarassing yourself you put it on then remove it."
+    fr: "Tu n'est pas équipé de ca. Pour t''en débarasser, met le sur toi d''abord avant de l'enlever"
 ITEM_NOT_FOUND:
     en: "You aren't wearing anything like that."
     es: "ES-You aren't wearing anything like that."
+    fr: "Tu ne porte pas cela"

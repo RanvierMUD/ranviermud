@@ -1,14 +1,17 @@
 - &longsword
     vnum: 1
     short_description:
-        en: "a longsword"
+        en: "A longsword"
         es: "A rapier"
+        fr: "Une longue épé"
     keywords:
         en: [ "longsword", "sword", "long" ]
         es: [ "rapier", "sword" ]
+        fr: [ "épé", "longue épé" ]
     description:
         en: "A fairly plain, although sharp, steel longsword."
         es: "Curved. Sword."
+        fr: "Une superbe épé de fer forge."
     room: 1
     script: "1-sword.js"
     behaviors: "wieldable"

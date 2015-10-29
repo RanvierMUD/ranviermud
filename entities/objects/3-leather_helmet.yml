@@ -1,14 +1,17 @@
 - &leather_helmet
     vnum: 3
     short_description:
-        en: "a leather helmet"
-        es: "el helmet de leathero"
+        en: "A leather helmet"
+        es: "El helmet de leathero"
+        fr: "Une capuche en peau"
     keywords:
         en: [ "leather helmet", "helmet", "helm" ]
         es: [ "hat", "somberero" ]
+        fr: [ "casque", "capuchon", "capuche", "casque"]
     description:
         en: "A roughly worn leather helmet."
         es: "Leather. Hat."
+        fr: "Un capuchon de peau pouvant faire office de casque."
     room: 1
     script: "3-leather_helmet.js"
     behaviors: "wearable"
