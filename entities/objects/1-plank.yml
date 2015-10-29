@@ -1,0 +1,21 @@
+- &plank
+    vnum: 1
+    short_description:
+        en: "a splintered plank"
+        es: "ES - a splintered plank"
+    keywords:
+        en: [ "plank", "splintered", "splintered plank" ]
+        es: [ "plank", "splintered", "splintered plank" ]
+    description:
+        en: "A heavy piece of wood, broken at one end."
+        es: "A heavy piece of wood, broken at one end."
+    room: 2
+    script: "1-plank.js"
+    behaviors: "wieldable"
+    attributes:
+        speed: 2.7
+        damage: 5-14
+    load_max: 4
+- <<: *plank
+  room: 11
+
