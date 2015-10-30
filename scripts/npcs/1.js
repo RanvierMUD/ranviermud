@@ -11,9 +11,9 @@ exports.listeners = {
 	},
 	playerDropItem: function (l10n)
 	{
-		return function (room, player)
+		return function (room, player, players)
 		{
-			player.sayL10n(l10n, 'PLAYER_DROP');
+			players.broadcastAtL10n(player, l10n, 'PLAYER_DROP');
 		}
 	},
 };

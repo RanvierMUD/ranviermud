@@ -19,6 +19,8 @@ exports.command = function (rooms, items, players, npcs, Commands)
 		}
 
 		player.sayL10n(l10n, 'ITEM_DROP', item.getShortDesc(player.getLocale()), false);
+		players.broadcastAtIfL10n(player, function(p){ return p.getName() !== player.getName(); }, l10n, 'ITEM_DROP_WATCH', player.getName(), item.getShortDesc(player.getLocale()));
+		//players.broadcastAtIf(player.getName() + " drops " + item.getShortDesc(player.getLocale()) + ".", player, function(p){ return p.getName() !== player.getName(); });
 		room.getNpcs().forEach(function (id) {
 			npcs.get(id).emit('playerDropItem', room, player, players, item);
 		});
