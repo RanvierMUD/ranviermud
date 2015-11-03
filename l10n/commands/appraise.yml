@@ -14,4 +14,4 @@ MISSING_INFORMATION:
 APPRAISE_COMBAT:
     en: "You can't do that in the middle of a fight!"
 TARGET_NOT_FOUND:
-    en: "Who?"
+    en: "You don't see them here."
