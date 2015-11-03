@@ -1,6 +1,6 @@
 ATTRIBUTES:
     en: "|| Attributes:" 
-    es: "|| Attributes:"
+    es: "|| Atributos:"
 MAX_HEALTH:
     en: "|| Maximum health: $[1]"
     es: "|| Maximum health: $[1]"
