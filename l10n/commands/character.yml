@@ -1,6 +1,18 @@
 ATTRIBUTES:
-    en: "Attributes" 
-    es: "Attributes"
-NAME:
-    en: "Name"
-    es: "Nombre"
+    en: "|| Attributes:" 
+    es: "|| Attributes:"
+MAX_HEALTH:
+    en: "|| Maximum health: $[1]"
+    es: "|| Maximum health: $[1]"
+LEVEL: 
+    en: "|| Level: $[1]"
+    es: "|| Level: $[1]"
+HEALTH:
+    en: "|| Health: $[1]"
+    es: "|| Health: $[1]"
+EXPERIENCE: 
+    en: "|| Experience: $[1]"
+    es: "|| Experience: $[1]"
+CLASS:
+    en: "|| Class: $[1]"
+    es: "|| Class: $[1]"
