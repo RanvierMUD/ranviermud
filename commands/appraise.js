@@ -6,15 +6,15 @@ exports.command = function (rooms, items, players, npcs, Commands)
 	
 	function getRelativeLevel(player, target){
 		var difference = player - target;
-		if (difference < -3){
+		if ( difference < -3 ){
 			return 'TARGET_MUCH_STRONGER';
-		} else if (difference < -1){
+		} else if ( difference < -1 ){
 			return 'TARGET_STRONGER';
-		} else if (difference > 3){
+		} else if ( difference > 3 ){
 			return 'TARGET_MUCH_WEAKER';
-		} else if (difference > 1){
+		} else if ( difference > 1 ){
 			return 'TARGET_WEAKER';
-		} else if (difference === 0){
+		} else if ( difference === 0 ){
 			return 'TARGET_SAME_LEVEL'
 		} else
 			return 'MISSING_INFORMATION'
