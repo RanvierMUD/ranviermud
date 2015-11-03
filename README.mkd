@@ -1,6 +1,13 @@
 # RanvierMUD
 NodeJS based MUD engine with full localization support
 
+## Contributing to this fork
+This fork aims to eventually turn the lightweight MUD engine Ranvier, developed by shawncplus, into a full-fledged game. The setting is, currently, a post-apocalyptic steampunk port town. That is probably a cliche, but I don't care. Right now, the master branch is working and has a fair amount of new content and features. However, I have a better understanding of the codebase now so it is in flux.
+
+There is also a development branch where I am working on rewriting some of the features to submit to the upstream project. At some point, the dev branch will be updated to include a lot more content. For the time being, it's bare since I am rewriting some features I'd already added.
+
+Please submit any PRs that are related to making this into a game to this project, preferably the master branch. Please submit any features based on enhancing the MUD engine itself to the shawncplus project.
+
 ## Features
 * Full localization for any strings displayed to the player after they log in. This isn't a common feature in MUDs so I'll explain it. Player A and Player B log in, play the same game and see a different language. Same items, npcs, rooms, etc, different language.
 * Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.
@@ -24,6 +31,8 @@ NodeJS based MUD engine with full localization support
     cd ranviermud
     npm install
     sudo ./ranvier -v --save=10 --respawn=10
+
+Connect to the server using `telnet 23`
     
 
 ## Documentation
