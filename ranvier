@@ -11,6 +11,7 @@
  *   --respawn Minutes between respawn
  */
 
+"use strict";
 
 	// built-ins
 var net = require('net'),
