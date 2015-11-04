@@ -9,15 +9,15 @@ exports.listeners = {
 			self.prompt();
 			var regen = setInterval(function () {
 				var health = self.getAttribute('health');
-				var regenerated = Math.floor(Math.random() * 19 + 1);
+				var regenerated = self.roll(2, self.getAttribute('willpower'), 1, self.getAttribute('strength'));
 
-				regenerated = Math.min(self.getAttribute('max_health'), health + regenerated);
+				regenerated = Math.min(self.getAttribute("maxHP"), health + regenerated);
 
 				self.setAttribute('health', regenerated);
-				if (regenerated === self.getAttribute('max_health')) {
+				if (regenerated === self.getAttribute("maxHP")) {
 					clearInterval(regen);
 				}
-			}, 2000);
+			}, 10000);
 		}
 	},
 	experience: function (l10n)
@@ -45,15 +45,15 @@ exports.listeners = {
 		return function ()
 		{
 			var newlevel = this.getAttribute('level') + 1;
-			var health_gain = Math.ceil(this.getAttribute('max_health') * 1.10);
+			var health_gain = Math.ceil(this.getAttribute('maxHP') * 1.05 + (this.getAttribute('willpower') + this.getAttribute('strength'))/2);
 
-			this.sayL10n(l10n, 'LEVELUP', newlevel, health_gain - this.getAttribute('max_health'));
+			this.sayL10n(l10n, 'LEVELUP', newlevel, health_gain - this.getAttribute("maxHP"));
 			this.setAttribute('level', newlevel);
 			this.setAttribute('experience', 0);
 
 			// do whatever you want to do here when a player levels up...
-			this.setAttribute('max_health', health_gain);
-			this.setAttribute('health', this.getAttribute('max_health'));
+			this.setAttribute("maxHP", health_gain);
+			this.setAttribute('health', this.getAttribute("maxHP"));
 
 			// Assign any new skills
 			var skills = Skills[this.getAttribute('class')];

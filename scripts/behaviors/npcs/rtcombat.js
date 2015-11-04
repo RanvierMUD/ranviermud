@@ -18,8 +18,13 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 	// Get the weapon speed or just use a standard 1 sec counter
 	var player_speed = player.getAttackSpeed() * 1000;
+
+	if (player_speed < 100) { player_speed = 100 }
+
 	// Same for npcs
 	var npc_speed    = npc.getAttackSpeed() * 1000;
+
+	if (npc_speed < 100) { npc_speed = 100 }
 
 	var weapon = player.getEquipped('wield', true);
 
@@ -28,15 +33,19 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 		if (!player.isInCombat()) {
 			return;
 		}
-
+		var npc_to_hit = npc.getAttribute('to_hit');
 		var player_health  = player.getAttribute('health');
 		var damage = npc.getDamage();
-		damage = Math.min(player_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min))));
+		damage = Math.min(player_health, (damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min)))) - (Math.floor(player.getAttribute('willpower')/3)));
+		var dodged = player.getDodge(npc_to_hit);
 
-		if (!damage) {
-			if (weapon) {
+		if (damage <= 0) { damage = 1 } //every attack deals some damage unless the player parries/dodges
+
+
+
+		if (weapon && dodged) {
 				weapon.emit('parry', player);
-			}
+		} else if (dodged) {
 			player.sayL10n(l10n, 'NPC_MISS', npc.getShortDesc(player.getLocale()), damage)
 		} else {
 			player.sayL10n(l10n, 'DAMAGE_TAKEN', npc.getShortDesc(player.getLocale()), damage)
@@ -66,10 +75,24 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 			return combat_end(true);
 		}
 
-		var damage = player.getDamage();
-		damage = Math.max(0, Math.min(npc_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min)))));
+		var str_bonus = Math.floor(player.getAttribute('strength') / 2);
 
-		if (!damage) {
+		var damage = player.getDamage();
+
+		var npc_dodge = npc.getAttribute('dodge');
+
+		var to_hit = player.getAttribute('willpower') * player.getAttribute('speed') + player.getAttribute('intelligence') + player.getAttribute('level');
+
+		var dodged = (player.roll(1, to_hit) > npc_dodge);
+
+		damage = Math.max(0, Math.min(npc_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min) + str_bonus)))); 
+
+
+
+		if (!damage)
+			damage = 1;
+
+		if (dodged) {
 			if (weapon) {
 				weapon.emit('miss', player);
 			}

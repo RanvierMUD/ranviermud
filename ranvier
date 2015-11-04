@@ -188,6 +188,7 @@ function load(callback)
 			items.each(function (item) {
 				if (item.getRoom()) {
 					var room = rooms.getAt(item.getRoom());
+					util.log(room);
 					if (!room.hasItem(item.getUuid())) {
 						room.addItem(item.getUuid());
 					}
@@ -203,7 +204,10 @@ function load(callback)
 				npcs.each(function (npc) {
 					if (npc.getRoom()) {
 						var room =rooms.getAt(npc.getRoom());
-						if (!room.hasNpc(npc.getUuid())) {
+						util.log(room);
+						util.log(npc);
+						if (!(room.hasNpc(npc.getUuid()))) {
+							console.log ("Success");
 							room.addNpc(npc.getUuid());
 						}
 					}
