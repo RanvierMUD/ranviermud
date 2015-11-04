@@ -38,7 +38,7 @@ var CommandUtil = {
 	},
 
 	/**
-	 * Find an item in a room based on the syntax
+	 * Find an item in inventory based on the syntax
 	 *   things like: get 2.thing or look 6.thing or look thing
 	 * @param string lookString
 	 * @param object being This could be a player or NPC. Though most likely player

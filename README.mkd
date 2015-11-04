@@ -24,7 +24,8 @@ NodeJS based MUD engine with full localization support
     cd ranviermud
     npm install
     sudo ./ranvier -v --save=10 --respawn=10
-    
+
+Connect to the server using `telnet localhost 23`gi
 
 ## Documentation
 Holy crap there is actually documentation and guides for this thing!

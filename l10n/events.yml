@@ -2,7 +2,7 @@ WELCOME:
     en: "<yellow>Welcome back, $[1]</yellow>"
     es: "ES-Welcome back, $[1]"
 NAME_PROMPT:
-    en: "What is your character's name: "
+    en: "What is your character's name? "
     es: "ES-What is your character's name: "
 INVALID_NAME:
     en: "Sorry, that's not a valid name."
@@ -26,7 +26,7 @@ EMPTY_PASS:
     en: "Well that's not very secure is it? Try again, champ."
     es: "ES-Well that's not very secure is it? Try again, champ."
 CLASS_SELECT:
-    en: "What class would you like to play? "
+    en: "What class would you like to play? Type 'help' for more information on each class. "
     es: "ES-What class would you like to play? "
 INVALID_CLASS:
     en: "Sorry, that's not a valid class."

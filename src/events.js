@@ -194,6 +194,7 @@ var Events = {
 					inv.push(item);
 				});
 				player.setInventory(inv);
+				player.calculateAttributes();
 
 
 				Commands.player_commands.look(null, player);
@@ -274,7 +275,9 @@ var Events = {
 		 *   check:  See if they actually want to create a player or not
 		 *   locale: Get the language they want to play in so we can give them
 		 *           the rest of the creation process in their language
-		 *   name:   ... get there name
+		 *   name:   ... get their name
+		 *   password: 	get their password
+		 *	 class: 	get their class
 		 *   done:   This is always the end step, here we register them in with
 		 *           the rest of the logged in players and where they log in
 		 *
@@ -317,23 +320,23 @@ var Events = {
 				});
 				break;
 			case 'locale':
-				arg.write("What language would you like to play in? [English, Spanish] ");
-				arg.once('data', function (locale)
-				{
+				//arg.write("What language would you like to play in? [English, Spanish] ");
+				//arg.once('data', function (locale)
+				//{
 					var locales = {
 						english: 'en',
 						spanish: 'es'
 					};
-					locale = locale.toString().trim().toLowerCase();
-					if (!(locale in locales)) {
-						arg.write("Sorry, that's not a valid language.\r\n");
-						return repeat();
-					}
-
+				//	locale = locale.toString().trim().toLowerCase();
+				//	if (!(locale in locales)) {
+				//		arg.write("Sorry, that's not a valid language.\r\n");
+				//		return repeat();
+				//	}
+				//
 					arg = new Player(arg);
-					arg.setLocale(locales[locale]);
+					arg.setLocale('en');	//change this if you do l10n
 					next(arg, 'name');
-				});
+				//});
 				break;
 			case 'name':
 				arg.write(L('NAME_PROMPT'));
@@ -380,24 +383,168 @@ var Events = {
 				});
 				break;
 			case 'class':
-				var classes = {w: '[W]arrior'};
+				var classes = {
+					d: '[D]efender',
+					t: '[T]roublemaker',
+					m: '[M]ystic',
+					n: 'Ti[n]kerer'
+				};
 				arg.sayL10n(l10n, 'CLASS_SELECT');
 				for (var r in classes) {
 					arg.say(classes[r]);
 				}
 				arg.getSocket().once('data', function (cls) {
 					cls = cls.toString().trim().toLowerCase();
-					var classes = {w: "warrior"};
+					var classes = {
+					d: "defender",
+					t: "troublemaker",
+					m: 'mystic',
+					n: 'tinkerer'
+					}; // REFACTOR -- not DRY
 					if (!(cls in classes)) {
-						arg.sayL10n(l10n,'INVALID_CLASS');
+						if (cls === 'help'){
+							console.log("Help message sending...");
+							arg.say("Defender:\nThe Defender was in training to become a guardian of civilization before the crisis. They are strong and hardy, having skills that allow them to turn the tide of battle through physical force and smart manuevering. They are masters of melee combat and survival. \n \nTroublemaker:\nThe Troublemaker uses sleight of hand, personality, and dexterity to make a fool out of their marks. These folks have no formal training but have most likely grown up on the streets as pickpockets, entertainers, street businesspeople, or rogues. They are experts in tricking their opponents, and excel at ranged combat and stealth. \n \nMystic:\nThe Mystic is a scholar of the arcane art and has tapped into the psionic powers of their own mind, and their environs. They harness these powers to heal their allies and harm their opponents in unexpected ways. However, they are academics and as such, are a bit squishy.\n \nTinkerer:\nThe Tinkerer uses gadgets, machines, and steam power to enhance their natural abilities. They can fix anything, and turn a pile of junk into a working piece of equipment. They are brilliant, but not strong.");
+
+						}
+						else
+							arg.sayL10n(l10n,'INVALID_CLASS');
 						return repeat();
 					}
 					arg.setAttribute('class', classes[cls]);
-					next(arg, 'done');
+					next(arg, 'attr');
 				});
 				break;
-			// 'done' assumes the argument passed to the event is a player, ...so always do that.
+			
+
+			case 'attr':
+				
+				//have a total amount of attribute points (25? 30?)
+				var attrPool = 25;
+				
+				// show all attributes and allow player to add to or deduct from each
+
+				var done = false;
+
+				var attributes = {
+					s: {name: 'strength', value: 1, 
+						help: 'Strength determines your health and your damage output in melee combat.'},
+					p: {name: 'speed', value: 1,
+						help: 'Speed determines your attack speed, casting speed, and your chance to dodge an attack.'},
+					i: {name: 'intelligence', value: 1,
+						help: 'Intelligence determines your casting speed, psionic abilities, and your chance to dodge an attack.'},
+					w: {name: 'willpower', value: 1,
+						help: 'Willpower determines your health and your defenses.'},
+					c: {name: 'charisma', value: 1,
+						help: 'Charisma determines your psionic powers and helps when interacting with certain NPCs.'}
+				};
+					// This can't be done with a "getSocket().once", or - to do so - needs a state machine. Removing this functionality for now
+					/*
+
+				//while(!done){
+
+					var attributeMenu = {
+						s: '[S]trength',
+						p: 'S[p]eed',
+						i: '[I]ntelligence',
+						w: '[W]illpower',
+						c: '[C]harisma'
+					};
+					arg.say("Select an attribute. You will see an explanation of the attribute and you may add or subtract points. Type 'done' when you are finished. You currently have " + attrPool + " points left to assign.");
+					for (var a in attributeMenu) {
+						arg.say(attributeMenu[a]);
+					}
+
+
+
+					// when player chooses an attribute, they are shown an explanation of what it does and they can set the amount if they have enough points in the pool.
+					console.log('before attribute socket function...');
+
+					arg.getSocket().once('data', function (attr) {
+						console.log('in attribute socket function...');
+						attr = attr.toString().trim().toLowerCase();
+					 	// REFACTOR -- not DRY
+						console.log (attr);
+						// allow player to type 'done' to move on to next stage.
+						if (!(attr in attributes)) {
+							if (attr === 'done'){
+								
+								// add a loop here to input every attribute into the player config
+								done = true; // this might be better applied below *** 
+								next(arg, 'done');
+							}
+
+						else {
+								arg.say("Invalid input.");
+								return repeat();  
+							}
+						}
+							//say the selection, help info, and current value...
+						var selection = attributes[attr];
+						var done = false;
+						console.log('selection::', selection);
+						while(!done){
+						arg.say(selection.name.toUpperCase() + ": " + selection.help + "\n Maximum value: 10\n Current value: " + selection.value + "\nPlease input the number of points you would like to assign to " + selection.name + " or type 'done' to head back to the attributes menu.");
+
+						//user inputs points or types done...
+						arg.getSocket().once('data', function (pts) {
+							console.log ('got points -- ' + pts);
+
+						// if it is not a number, checks to see if they typed done, else it repeats this bit. 
+							console.log(pts);
+							if (parseInt(pts) == NaN){
+								console.log('pts');
+								pts = pts.toString().trim().toLowerCase();
+								console.log ('checks for string');
+								if (pts === 'done') {
+									console.log ('done is incomplete, this is the oops')
+									// ***
+									// somehow cache their final value
+									done = true;
+								} 
+								else 
+									arg.say("Invalid input.");
+									return repeat();
+							}
+							console.log('made it through if/then loop for string... are they not all strings?!?');
+							pts = parseInt(pts);
+							console.log(pts);
+							if (pts < 0 || pts > attrPool){
+								arg.say("Invalid input.");
+								return repeat();
+							}
+							if (pts < selection.value){
+								attrPool += selection.value - pts;
+								selection.value = pts;
+								console.log(selection + ' new value is ' + selection.value);
+								console.log('pool is now ' + attrPool);
+								// they are lowering the value, so the difference should go back into the pool.
+							}
+							else {
+
+								// refactor into function to be DRY
+								attrPool += selection.value - pts; 
+								console.log(selection + ' new value is ' + selection.value);
+								console.log('pool is now ' + attrPool);
+
+								// they are raising the value
+								selection.value = pts;
+							}
+
+						});
+					}
+
+					//cache the results here somehow -- have an empty attr object made before the switch statement
+					return repeat();
+				});
+
+				// i think it needs to loop, until done, then be passed to 'done' -- that is why it hangs.
+				break;
+				*/
+
+				// 'done' assumes the argument passed to the event is a player, ...so always do that.
 			case 'done':
+				arg.calculateAttributes();
 				arg.setLocation(players.getDefaultLocation());
 				// create the pfile then send them on their way
 				arg.save(function () {

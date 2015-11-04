@@ -154,15 +154,18 @@ var Npc = function (config)
 	self.vnum; // Not to be confused with its vnum
 	self.in_combat = false;
 	self.uuid = null;
+	self.toHit;
 
 	// attributes
 	self.attributes = {
 		max_health : 0,
 		health: 0,
-		level: 1
+		level: 1,
+		dodge: 0,
+		to_hit: 0,
 	};
 
-	// Anything affecting the player
+	// Anything affecting the npc
 	self.affects = {
 	};
 
@@ -235,6 +238,8 @@ var Npc = function (config)
 		}, affect.duration * 1000);
 		self.affects[name] = 1;
 	};
+
+
 
 	/**
 	 * Get the description, localized if possible
