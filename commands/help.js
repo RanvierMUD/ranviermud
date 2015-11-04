@@ -13,11 +13,11 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     }
 
     if (commands[args]) {
-      player.sayL10n(l10n, args.toUpperCase();
+      player.sayL10n(l10n, args.toUpperCase());
       return;
     }
 
     player.sayL10n(l10n, 'NOT_FOUND');
-
+    return;
   };
 };
