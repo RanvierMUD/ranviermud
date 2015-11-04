@@ -10,3 +10,14 @@ GET:
     en: "Usage: \n  get (item name) \nor \n  get 2.(item name) to get the 2nd item of that same name \n\nThis will place the item in your inventory if it is in the same room as you.\nYou cannot get items while in combat."
 QUIT:
     en: "Usage: \n  quit\n\nThis saves and closes your connection to RanvierMUD.\nYou cannot quit while in combat."
+CHANNELS:
+    en: "Usage: \n  channels\n\nList all available channels and their description."
+INVENTORY:
+    en: "Usage: \n  inventory\n\nList all items in your character's inventory, including the amount of each item.\nThis does not show you the items your character has equipped."
+COMMANDS:
+    en: "Usage: \n  commands\n\nList all possible commands."
+EQUIPMENT:
+    en: "Usage: \n  equipment\n\nList all items that your character has equipped."
+KILL:
+    en: "Usage: \n  kill (NPC name) \nor \n  kill 2.(NPC name) to attack the 2nd NPC of that same name \n\nThis will cause your character to attempt to kill a non-player character (NPC).\nSome NPCs are pacifists and cannot be targeted."
+
