@@ -29,6 +29,5 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     }
     player.writeL10n(l10n, 'NOT_FOUND');
     return;
-
   };
 };
