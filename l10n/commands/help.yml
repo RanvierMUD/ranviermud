@@ -1,0 +1,42 @@
+HELP:
+    en: "Type 'commands' to see a list of possible commands.\nType 'help (command)'' to see more information about that command."
+NOT_FOUND:
+    en: "That command was not found in the helpfiles. \nType 'commands' to see a list of possible commands."
+NO_HELP_FILE:
+    en: "No helpfile was found for that command.\nPlease contact an admin."
+DROP:
+    en: "Usage: \n  drop (item name)\nor \n  drop 2.(item name) to drop the 2nd item of that same name \n\nThis will drop the item if it is found in your inventory. \nYou cannot drop items that are currently being worn."
+GET:
+    en: "Usage: \n  get (item name) \nor \n  get 2.(item name) to get the 2nd item of that same name \n\nThis will place the item in your inventory if it is in the same room as you.\nYou cannot get items while in combat."
+QUIT:
+    en: "Usage: \n  quit\n\nThis saves and closes your connection to RanvierMUD.\nYou cannot quit while in combat."
+CHANNELS:
+    en: "Usage: \n  channels\n\nList all available channels and their description."
+INVENTORY:
+    en: "Usage: \n  inventory\n\nList all items in your character's inventory, including the amount of each item.\nThis does not show you the items your character has equipped."
+COMMANDS:
+    en: "Usage: \n  commands\n\nList all possible commands."
+EQUIPMENT:
+    en: "Usage: \n  equipment\n\nList all items that your character has equipped."
+KILL:
+    en: "Usage: \n  kill (NPC name) \nor \n  kill 2.(NPC name) to attack the 2nd NPC of that same name \n\nThis will cause your character to attempt to kill a non-player character (NPC).\nSome NPCs are pacifists and cannot be targeted."
+REMOVE:
+    en: "Usage: \n  remove (item name) \nor \n  remove 2.(item name) to remove the 2nd item of that same name \n\nThis will remove an item that is equipped and place it in your inventory."
+WEAR:
+    en: "Usage: \n  wear (item name) \nor \n  wear 2.(item name) to wear the 2nd item of that same name \n\nThis will equip an item that is in your inventory, as long as it is wearable.\nFor weapons, use 'wield'."
+LOOK:
+    en: "Usage: \n  look\n\nThis will describe your character's current location.\n\nUsage: \n  look (thing)\nor\n  look 2.(thing) to look at the 2nd thing of the same name \n\nThis will describe a non-player character or item in the same room as you. \nIt can also be used to look at items in your inventory."
+SAVE:
+    en: "Usage: \n  save\n\nThis will save your character's progress. \nUsing 'quit' will save and then close your connection."
+SKILLS:
+    en: "Usage: \n  skills\n\nThis lists all skills available to your character, including a description and the cooldown time, if applicable."
+TNL:
+    en: "Usage: \n  tnl\n\nThis displays a bar of the amount of experience needed to gain your next level."
+EXP:
+    en: "Usage: \n  tnl\n\nThis displays a bar of the amount of experience needed to gain your next level."
+WHERE:
+    en: "Usage \n  where\n\nThis displays the name of your current location."
+WHO:
+    en: "Usage \n  who\n\nThis displays the name of each player who is online."
+WIELD:
+    en: "Usage: \n  wield (weapon)\n\n"
