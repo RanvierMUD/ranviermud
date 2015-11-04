@@ -3,7 +3,7 @@ var l10n = require('../src/l10n')(l10n_file);
 exports.command = function(rooms, items, players, npcs, Commands) {
   return function(args, player) {
     if (!args) {
-      player.sayL10n(l10n, 'USING_HELP');
+      player.writeL10n(l10n, 'USING_HELP');
       return;
     }
 
@@ -13,11 +13,11 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     }
 
     if (commands[args]) {
-      player.sayL10n(l10n, args.toUpperCase());
+      player.writeL10n(l10n, args.toUpperCase());
       return;
     }
 
-    player.sayL10n(l10n, 'NOT_FOUND');
+    player.writeL10n(l10n, 'NOT_FOUND');
     return;
   };
 };
