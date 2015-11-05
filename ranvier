@@ -29,7 +29,7 @@ var net = require('net'),
 	PlayerManager = require('./src/player_manager').PlayerManager,
 
 	// third party
-	Localize  = require('localize'),
+	Localize  = require('jall'),
 	argv = require('optimist').argv,
 	telnet = require('./src/3rdparty/telnet.js');
 
