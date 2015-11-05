@@ -184,7 +184,7 @@ var Events = {
 				players.addPlayer(player);
 
 				player.getSocket().on('close', function () { players.removePlayer(player);});
-				players.broadcastL10n(l10n, 'WELCOME', player.getName());
+				players.broadcastL10n(l10n, 'WELCOME_BACK', player.getName());
 
 				// Load the player's inventory (There's probably a better place to do this)
 				var inv = [];
@@ -405,6 +405,7 @@ var Events = {
 					arg.prompt();
 					arg.getSocket().emit('commands', arg);
 				});
+				players.broadcastL10n(l10n, 'WELCOME', player.getName());
 				break;
 
 			}
