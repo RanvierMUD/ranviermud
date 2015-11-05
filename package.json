@@ -8,7 +8,7 @@
 	"dependencies":{
 		"colorize":"",
 		"js-yaml":"",
-		"localize":"",
+		"jall":"",
 		"node-uuid":"",
 		"optimist":"",
 		"sprintf":"",

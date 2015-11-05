@@ -1,4 +1,4 @@
-var Localize = require('localize');
+var Localize = require('jall');
 /**
  * Helper to get a new localize object
  * @param string file
