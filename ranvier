@@ -221,6 +221,7 @@ function load(callback)
 // Not game stuff, this is for the server executable
 process.stdin.setEncoding('utf8');
 l10n = new Localize(require('js-yaml').load(require('fs').readFileSync(__dirname + '/l10n/server.yml').toString('utf8')), undefined, 'zz');
+l10n.throwOnMissingTranslation(false);
 
 /**
  * Commands that the server executable itself accepts
