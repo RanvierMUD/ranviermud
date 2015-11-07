@@ -28,8 +28,10 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       if (!thing) {
         players.eachIf(checkForOtherPlayers(p),
           function(p) {
+          	if (args === p.getName()){
             player.sayL10n(l10n, 'IN_ROOM', p.getName());
             player.say(p.getDescription());
+        }
           });
       }
 
