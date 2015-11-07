@@ -3,10 +3,6 @@ var l10n_file = __dirname + '/../l10n/commands/look.yml';
 var l10n = new require('localize')(require('js-yaml').load(require('fs').readFileSync(l10n_file).toString('utf8')), undefined, 'zz');
 exports.command = function(rooms, items, players, npcs, Commands) {
 
-  function checkForOtherPlayers(p) {
-    return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
-  };
-
   return function(args, player) {
     var room = rooms.getAt(player.getLocation());
     var locale = player.getLocale();
@@ -26,12 +22,16 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       }
 
       if (!thing) {
-        players.eachIf(checkForOtherPlayers(p),
+        players.eachIf(function(p) {
+            return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
+          },
           function(p) {
-          	if (args === p.getName()){
-            player.sayL10n(l10n, 'IN_ROOM', p.getName());
-            player.say(p.getDescription());
-        }
+            console.log("player found in same room ", p.getName());
+            if (args.toLowerCase() === p.getName().toLowerCase()) {
+              thing = p;
+              player.sayL10n(l10n, 'IN_ROOM', thing.getName());
+              player.say(thing.getDescription());
+            }
           });
       }
 
@@ -67,8 +67,9 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     player.say('');
 
     // display players in the same room
-    players.eachIf(
-      checkForOtherPlayers(p),
+    players.eachIf(function(p) {
+        return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
+      },
       function(p) {
         player.sayL10n(l10n, 'IN_ROOM', p.getName());
       });
