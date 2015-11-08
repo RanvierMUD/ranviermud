@@ -1,0 +1,4 @@
+DESCRIPTION_SET:
+    en: "Description set."
+NO_DESCRIPTION:
+    en: "Please enter a new description for your character. \nThe current description is: \n$[1]"
