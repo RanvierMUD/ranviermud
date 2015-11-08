@@ -13,7 +13,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
       if (!thing &&
         args.toLowerCase() === 'me' ||
-        args.toLowerCase() === 'self') {
+        args.toLowerCase() === 'self' ||
+        args.toLowerCase() === player.getName().toLowerCase()) {
         thing = player.getDescription();
         player.say(thing);
       }
