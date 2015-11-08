@@ -63,6 +63,7 @@ var Player = function(socket) {
 	self.setCombatPrompt = function (str)       { self.combat_prompt = str; }
 	self.setLocale       = function (locale)    { self.locale = locale; };
 	self.setName         = function (newname)   { self.name = newname; };
+	self.setDescription  = function (newdesc)	{self.description = newdesc; };
 	self.setLocation     = function (loc)       { self.location = loc; };
 	self.setPassword     = function (pass)      { self.password = crypto.createHash('md5').update(pass).digest('hex'); };
 	self.addItem         = function (item)      { self.inventory.push(item); };
