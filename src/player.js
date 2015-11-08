@@ -12,6 +12,7 @@ var l10n_dir         = __dirname + '/../l10n/scripts/player/';
 var Player = function(socket) {
 	var self = this;
 	self.name     = '';
+	self.description = '';
 	self.location = null;
 	self.locale   = null;
 	self.prompt_string = '%health/%max_healthHP>';
@@ -48,6 +49,7 @@ var Player = function(socket) {
 	self.getCombatPrompt = function () { return self.combat_prompt; };
 	self.getLocale       = function () { return self.locale; };
 	self.getName         = function () { return self.name; };
+	self.getDescription  = function () { return self.description; };
 	self.getLocation     = function () { return self.location; };
 	self.getSocket       = function () { return socket; };
 	self.getInventory    = function () { return self.inventory; };
@@ -60,6 +62,7 @@ var Player = function(socket) {
 	self.setCombatPrompt = function (str)       { self.combat_prompt = str; }
 	self.setLocale       = function (locale)    { self.locale = locale; };
 	self.setName         = function (newname)   { self.name = newname; };
+	self.setDescription  = function (newdesc)	{self.description = newdesc; };
 	self.setLocation     = function (loc)       { self.location = loc; };
 	self.setPassword     = function (pass)      { self.password = crypto.createHash('md5').update(pass).digest('hex'); };
 	self.addItem         = function (item)      { self.inventory.push(item); };
