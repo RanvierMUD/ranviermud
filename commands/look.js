@@ -11,17 +11,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       // Look at items in the room first
       var thing = CommandUtil.findItemInRoom(items, args, room, player, true);
 
-      function() isLookingAtSelf() {
-        return args.toLowerCase() === 'me' ||
-          args.toLowerCase() === 'self' ||
-          args.toLowerCase() === player.getName().toLowerCase()
-      };
-
-      if (!thing && isLookingAtSelf()) {
-        thing = player.getDescription();
-        player.say(thing);
-      }
-
       if (!thing) {
         // Then the inventory
         thing = CommandUtil.findItemInInventory(args, player, true);
@@ -30,6 +19,17 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       if (!thing) {
         // then for an NPC
         thing = CommandUtil.findNpcInRoom(npcs, args, room, player, true);
+      }
+
+      function isLookingAtSelf() {
+        return args.toLowerCase() === 'me' ||
+          args.toLowerCase() === 'self' ||
+          args.toLowerCase() === player.getName().toLowerCase()
+      };
+
+      if (!thing && isLookingAtSelf()) {
+        thing = player;
+        player.say(thing.getDescription());
       }
 
       if (!thing) {
@@ -79,7 +79,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     // display players in the same room
     players.eachIf(function(p) {
-        return otherPlayersInRoom();
+        return otherPlayersInRoom(p);
       },
       function(p) {
         player.sayL10n(l10n, 'IN_ROOM', p.getName());
@@ -119,7 +119,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     player.say(']');
 
     function otherPlayersInRoom(p) {
-      return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
+      if (p)
+        return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
     };
 
   }
