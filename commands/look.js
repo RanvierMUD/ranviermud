@@ -11,10 +11,13 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       // Look at items in the room first
       var thing = CommandUtil.findItemInRoom(items, args, room, player, true);
 
-      if (!thing &&
-        args.toLowerCase() === 'me' ||
-        args.toLowerCase() === 'self' ||
-        args.toLowerCase() === player.getName().toLowerCase()) {
+      function() isLookingAtSelf() {
+        return args.toLowerCase() === 'me' ||
+          args.toLowerCase() === 'self' ||
+          args.toLowerCase() === player.getName().toLowerCase()
+      };
+
+      if (!thing && isLookingAtSelf()) {
         thing = player.getDescription();
         player.say(thing);
       }
