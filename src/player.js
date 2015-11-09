@@ -281,7 +281,7 @@ var Player = function(socket) {
 	self.load = function (data)
 	{
 		self.name     = data.name;
-		self.description = data.description;
+		self.description = data.description || '';
 		self.location = data.location;
 		self.locale   = data.locale;
 		self.prompt_string = data.prompt_string;
