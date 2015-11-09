@@ -31,7 +31,8 @@ var Player = function(socket) {
 		health : 100,
 		level: 1,
 		experience: 0,
-		'class': ''
+		'class': '',
+		description: ''
 	};
 
 	// Anything affecting the player
@@ -49,7 +50,7 @@ var Player = function(socket) {
 	self.getCombatPrompt = function () { return self.combat_prompt; };
 	self.getLocale       = function () { return self.locale; };
 	self.getName         = function () { return self.name; };
-	self.getDescription  = function () { return self.description; };
+	self.getDescription  = function () { return self.attributes.description; };
 	self.getLocation     = function () { return self.location; };
 	self.getSocket       = function () { return socket; };
 	self.getInventory    = function () { return self.inventory; };
@@ -63,7 +64,7 @@ var Player = function(socket) {
 	self.setCombatPrompt = function (str)       { self.combat_prompt = str; }
 	self.setLocale       = function (locale)    { self.locale = locale; };
 	self.setName         = function (newname)   { self.name = newname; };
-	self.setDescription  = function (newdesc)	{ self.description = newdesc; };
+	self.setDescription  = function (newdesc)	{ self.attributes.description = newdesc; };
 	self.setLocation     = function (loc)       { self.location = loc; };
 	self.setPassword     = function (pass)      { self.password = crypto.createHash('md5').update(pass).digest('hex'); };
 	self.addItem         = function (item)      { self.inventory.push(item); };
@@ -281,7 +282,6 @@ var Player = function(socket) {
 	self.load = function (data)
 	{
 		self.name     = data.name;
-		self.description = data.description || '';
 		self.location = data.location;
 		self.locale   = data.locale;
 		self.prompt_string = data.prompt_string;
