@@ -40,3 +40,8 @@ WHO:
     en: "Usage \n  who\n\nThis displays the name of each player who is online."
 WIELD:
     en: "Usage: \n  wield (weapon)\n\n"
+DESCRIBE:
+    en: "Usage: \n  describe (description)\n\nThis allows you to set a new description for your character.\n\nUsage: \n  describe\n\nThis allows you to see your current description."
+APPRAISE: 
+    en: "Usage \n  appraise (NPC)\n\nThis allows you to see how you might match up to an NPC in a fight."
+
