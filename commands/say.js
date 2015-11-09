@@ -6,9 +6,10 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     if (args) {
       player.sayL10n(l10n, 'YOU_SAY', args);
       players.eachIf(function(p) {
-        otherPlayersInRoom(p);
+        return otherPlayersInRoom(p);
       }, function(p) {
-        p.sayL10n(l10n, 'THEY_SAY', player.getName(), args);
+        if (p.getName() != player.getName())
+          p.sayL10n(l10n, 'THEY_SAY', player.getName(), args);
       });
       return;
     }
