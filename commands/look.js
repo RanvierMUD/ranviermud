@@ -29,7 +29,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
       if (!thing && isLookingAtSelf()) {
         thing = player;
-        player.say(thing.getDescription());
       }
 
       if (!thing) {
