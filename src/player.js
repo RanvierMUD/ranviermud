@@ -63,7 +63,7 @@ var Player = function(socket) {
 	self.setCombatPrompt = function (str)       { self.combat_prompt = str; }
 	self.setLocale       = function (locale)    { self.locale = locale; };
 	self.setName         = function (newname)   { self.name = newname; };
-	self.setDescription  = function (newdesc)	{self.description = newdesc; };
+	self.setDescription  = function (newdesc)	{ self.description = newdesc; };
 	self.setLocation     = function (loc)       { self.location = loc; };
 	self.setPassword     = function (pass)      { self.password = crypto.createHash('md5').update(pass).digest('hex'); };
 	self.addItem         = function (item)      { self.inventory.push(item); };
@@ -281,6 +281,7 @@ var Player = function(socket) {
 	self.load = function (data)
 	{
 		self.name     = data.name;
+		self.description = data.description;
 		self.location = data.location;
 		self.locale   = data.locale;
 		self.prompt_string = data.prompt_string;
