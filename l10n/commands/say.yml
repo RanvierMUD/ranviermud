@@ -1,1 +1,6 @@
-say.yml
+NOTHING_SAID:
+    en: 'You say nothing. Type "say (message)" to be heard!'
+YOU_SAY:
+    en: 'You say, "$[1]"'
+THEY_SAY:
+    en: '$[1] says, "$[2]"' 
