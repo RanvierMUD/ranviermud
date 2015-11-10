@@ -70,7 +70,7 @@ var CommandUtil = {
 		if (/^\d+\./.test(keyword)) {
 			nth = parseInt(keyword.split('.')[0], 10);
 			keyword = keyword.split('.')[1];
-			multi = true
+			multi = true;
 		}
 
 		var found = objects.filter(filterFunc, {
