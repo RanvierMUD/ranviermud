@@ -6,15 +6,18 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     console.log(args);
     args = args.split(' ');
     console.log(args);
+    var target = args.shift();
+    var msg = args.join('');
+
     if (args.length > 1) {
-      player.sayL10n(l10n, 'YOU_WHISPER', args[0], args[1]);
+      player.sayL10n(l10n, 'YOU_WHISPER', target, msg);
       players.eachIf(function(p) {
         return otherPlayersInRoom(p);
       }, function(p) {
-        if (p.getName() == args[0])
-          p.sayL10n(l10n, 'THEY_WHISPER', player.getName(), args[1]);
+        if (p.getName() == target)
+          p.sayL10n(l10n, 'THEY_WHISPER', player.getName(), msg);
         else
-          p.sayL10n(l10n, 'OTHERS_WHISPER', player.getName(), args[0]);
+          p.sayL10n(l10n, 'OTHERS_WHISPER', player.getName(), target);
       });
       return;
     }
@@ -27,6 +30,5 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     if (p)
       return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
   };
-
 
 };
