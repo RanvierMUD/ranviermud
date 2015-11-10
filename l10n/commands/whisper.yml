@@ -5,4 +5,6 @@ THEY_WHISPER:
 NOTHING_SAID:
     en: 'Type "whisper (name) (message)" to whisper to another player in the room.'
 OTHERS_WHISPER:
-    en: '$[1] whispers something to $[2]'
+    en: '$[1] whispers something to $[2].'
+NO_TARGET_FOUND:
+    en: 'The player you are trying to whisper to is not here.'
