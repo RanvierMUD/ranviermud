@@ -1,0 +1,8 @@
+YOU_WHISPER:
+    en: 'You whisper to $[1], "$[2]"'
+THEY_WHISPER:
+    en: '$[1] whispers to you, "$[2]"'
+NOTHING_SAID:
+    en: 'Type "whisper (name) (message)" to whisper to another player in the room.'
+OTHERS_WHISPER:
+    en: '$[1] whispers something to $[2]'
