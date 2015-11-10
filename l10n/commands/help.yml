@@ -44,4 +44,5 @@ DESCRIBE:
     en: "Usage: \n  describe (description)\n\nThis allows you to set a new description for your character.\n\nUsage: \n  describe\n\nThis allows you to see your current description."
 APPRAISE: 
     en: "Usage \n  appraise (NPC)\n\nThis allows you to see how you might match up to an NPC in a fight."
-
+SAY:
+    en: "Usage \n  say (message)\n\nThis sends a message to all other players in the room."
