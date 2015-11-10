@@ -5,11 +5,11 @@ exports.command = function(rooms, items, players, npcs, Commands) {
   return function(args, player) {
     self = player.getName();
     if (args) {
-      player.say(self + args);
+      player.say(self + " " + args);
       players.eachIf(function(p) {
         return otherPlayersInRoom(p);
       }, function(p) {
-        p.say(self + args);
+        p.say(self + " " + args);
       });
       return;
     }
