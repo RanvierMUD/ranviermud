@@ -6,23 +6,25 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     console.log(args);
     args = args.split(' ');
     console.log(args);
-    var target = args.shift().toLowerCase();
+    var target = args.shift();
     var msg = args.join(' ');
     var targetFound = true;
 
     if (args.length > 0) {
       targetFound = false;
-      player.sayL10n(l10n, 'YOU_WHISPER', target, msg);
       players.eachIf(function(p) {
         return otherPlayersInRoom(p);
       }, function(p) {
-        if (p.getName().toLowerCase() == target) {
+        if (p.getName().toLowerCase() == target.toLowerCase()) {
           p.sayL10n(l10n, 'THEY_WHISPER', player.getName(), msg);
           targetFound = true;
         } else
           p.sayL10n(l10n, 'OTHERS_WHISPER', player.getName(), target);
       });
-      if (targetFound) return;
+      if (targetFound) {
+        player.sayL10n(l10n, 'YOU_WHISPER', target, msg);
+        return;
+      }
     }
 
     if (!targetFound)
