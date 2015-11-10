@@ -46,3 +46,5 @@ APPRAISE:
     en: "Usage \n  appraise (NPC)\n\nThis allows you to see how you might match up to an NPC in a fight."
 SAY:
     en: "Usage \n  say (message)\n\nThis sends a message to all other players in the room."
+WHISPER:
+    en: "Usage \n  whisper (player) (message)\n\nThis sends a message to a single player in the same room. \nOther players can see that you are whispering, but cannot hear the message."
