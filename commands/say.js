@@ -8,8 +8,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       players.eachIf(function(p) {
         return otherPlayersInRoom(p);
       }, function(p) {
-        if (p.getName() != player.getName())
-          p.sayL10n(l10n, 'THEY_SAY', player.getName(), args);
+        p.sayL10n(l10n, 'THEY_SAY', player.getName(), args);
       });
       return;
     }
