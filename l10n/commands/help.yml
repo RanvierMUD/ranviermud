@@ -48,4 +48,5 @@ SAY:
     en: "Usage \n  say (message)\n\nThis sends a message to all other players in the room."
 WHISPER:
     en: "Usage \n  whisper (player) (message)\n\nThis sends a message to a single player in the same room. \nOther players can see that you are whispering, but cannot hear the message."
-EMOTE: "Usage \n  emote (action)\n\nThis allows you to roleplay as your character performing the action.\nThis message will be shown to all other players in the room, so write it in third person.\n\nExample: `emote jumpes with joy` would display `Helga jumps with joy`."
+EMOTE: 
+    en: "Usage \n  emote (action)\n\nThis allows you to roleplay as your character performing the action.\nThis message will be shown to all other players in the room, so write it in third person.\n\nExample: `emote jumpes with joy` would display `Helga jumps with joy`."
