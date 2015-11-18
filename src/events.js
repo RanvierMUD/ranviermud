@@ -405,7 +405,7 @@ var Events = {
 					arg.prompt();
 					arg.getSocket().emit('commands', arg);
 				});
-				players.broadcastL10n(l10n, 'WELCOME', player.getName());
+				players.broadcastL10n(l10n, 'WELCOME', arg.getName());
 				break;
 
 			}
