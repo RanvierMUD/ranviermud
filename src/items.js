@@ -163,7 +163,7 @@ var Item = function (config)
 		self.container         = config.container   || null;
 		self.uuid              = config.uuid        || null;
 		self.vnum              = config.vnum;
-		self.script            = config.script;
+		self.script            = config.script      || '';
 		self.attributes        = config.attributes;
 
 		Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
