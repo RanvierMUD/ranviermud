@@ -2,9 +2,11 @@ var Data    = require('./data').Data,
     Skills  = require('./skills').Skills,
     crypto  = require('crypto'),
     ansi    = require('sty'),
-    util    = require('util');
-    events  = require('events');
+    util    = require('util'),
+    events  = require('events'),
+    CommandUtil = require('./command_util').CommandUtil;
 
+console.log(CommandUtil);
 
 var npcs_scripts_dir = __dirname + '/../scripts/player/';
 var l10n_dir         = __dirname + '/../l10n/scripts/player/';
@@ -50,6 +52,7 @@ var Player = function(socket) {
 	self.getLocale       = function () { return self.locale; };
 	self.getName         = function () { return self.name; };
 	self.getDescription  = function () { return self.description; };
+	self.getEquipment    = function () { return  };
 	self.getLocation     = function () { return self.location; };
 	self.getSocket       = function () { return socket; };
 	self.getInventory    = function () { return self.inventory; };
