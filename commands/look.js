@@ -7,6 +7,7 @@ exports.command = function (rooms, items, players, npcs, Commands) {
   return function (args, player) {
     var room = rooms.getAt(player.getLocation());
     var locale = player.getLocale();
+    var thingIsPlayer = false;
 
     if (args) {
       // Look at items in the room first
@@ -30,6 +31,7 @@ exports.command = function (rooms, items, players, npcs, Commands) {
 
       if (!thing && isLookingAtSelf()) {
         thing = player;
+        thingIsPlayer = true;
       }
 
       if (!thing) {
@@ -41,7 +43,7 @@ exports.command = function (rooms, items, players, npcs, Commands) {
               thing = p;
               player.sayL10n(l10n, 'IN_ROOM', thing.getName());
               player.say(thing.getDescription());
-              player.say(showPlayerEquipment(p, player));
+              thingIsPlayer = true;
               p.sayL10n(l10n, 'BEING_LOOKED_AT', player.getName());
             }
           });
@@ -64,6 +66,8 @@ exports.command = function (rooms, items, players, npcs, Commands) {
       }
 
       player.say(thing.getDescription(player.getLocale()));
+      if (thingIsPlayer) showPlayerEquipment(thing, player);
+
       return;
     }
 
@@ -125,14 +129,18 @@ exports.command = function (rooms, items, players, npcs, Commands) {
     };
 
     function showPlayerEquipment(playerTarget, playerLooking) {
+      console.log("Showing equipment...");
       var naked = true;
       var equipped = playerTarget.getEquipped();
+      console.log("Equipped:", equipped);
       for (var i in equipped) {
         var item = items.get(equipped[i]);
+        console.log("item: ", item);
+        console.log("item desc: ", item.getShortDesc(playerLooking.getLocale()))
         naked = false;
         playerLooking.say(sprintf("%-15s %s", "<" + i + ">", item.getShortDesc(playerLooking.getLocale())));
       }
-      if (naked) playerLooking.sayL10n(l10n, "NAKED"); 
+      if (naked) playerLooking.sayL10n(l10n, "NAKED");
     }
 
   }
