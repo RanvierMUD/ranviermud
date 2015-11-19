@@ -52,7 +52,6 @@ var Player = function(socket) {
 	self.getLocale       = function () { return self.locale; };
 	self.getName         = function () { return self.name; };
 	self.getDescription  = function () { return self.description; };
-	self.getEquipment    = function () { return  };
 	self.getLocation     = function () { return self.location; };
 	self.getSocket       = function () { return socket; };
 	self.getInventory    = function () { return self.inventory; };
