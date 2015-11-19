@@ -129,14 +129,10 @@ exports.command = function (rooms, items, players, npcs, Commands) {
     };
 
     function showPlayerEquipment(playerTarget, playerLooking) {
-      console.log("Showing equipment...");
       var naked = true;
       var equipped = playerTarget.getEquipped();
-      console.log("Equipped:", equipped);
       for (var i in equipped) {
         var item = items.get(equipped[i]);
-        console.log("item: ", item);
-        console.log("item desc: ", item.getShortDesc(playerLooking.getLocale()))
         naked = false;
         playerLooking.say(sprintf("%-15s %s", "<" + i + ">", item.getShortDesc(playerLooking.getLocale())));
       }
