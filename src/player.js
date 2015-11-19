@@ -3,11 +3,7 @@ var Data    = require('./data').Data,
     crypto  = require('crypto'),
     ansi    = require('sty'),
     util    = require('util'),
-    events  = require('events'),
-    CommandUtil = require('./command_util').CommandUtil;
-
-console.log(CommandUtil);
-
+    events  = require('events');
 var npcs_scripts_dir = __dirname + '/../scripts/player/';
 var l10n_dir         = __dirname + '/../l10n/scripts/player/';
 
