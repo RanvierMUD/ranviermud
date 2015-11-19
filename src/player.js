@@ -29,7 +29,8 @@ var Player = function(socket) {
 		health : 100,
 		level: 1,
 		experience: 0,
-		'class': ''
+		'class': '',
+		description: ''
 	};
 
 	// Anything affecting the player
@@ -47,11 +48,12 @@ var Player = function(socket) {
 	self.getCombatPrompt = function () { return self.combat_prompt; };
 	self.getLocale       = function () { return self.locale; };
 	self.getName         = function () { return self.name; };
-	self.getDescription  = function () { return self.description; };
+	self.getDescription  = function () { return self.attributes.description; };
 	self.getLocation     = function () { return self.location; };
 	self.getSocket       = function () { return socket; };
 	self.getInventory    = function () { return self.inventory; };
 	self.getAttribute    = function (attr)  { return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
+	self.getAttributes   = function () { return self.attributes || {} }
 	self.getSkills       = function (skill) { return typeof self.skills[skill] !== 'undefined'    ? self.skills[skill]    : self.skills; };
 	// Note, only retreives hash, not a real password
 	self.getPassword     = function () { return self.password; };
@@ -60,6 +62,7 @@ var Player = function(socket) {
 	self.setCombatPrompt = function (str)       { self.combat_prompt = str; }
 	self.setLocale       = function (locale)    { self.locale = locale; };
 	self.setName         = function (newname)   { self.name = newname; };
+	self.setDescription  = function (newdesc)	{ self.attributes.description = newdesc; };
 	self.setLocation     = function (loc)       { self.location = loc; };
 	self.setPassword     = function (pass)      { self.password = crypto.createHash('md5').update(pass).digest('hex'); };
 	self.addItem         = function (item)      { self.inventory.push(item); };
