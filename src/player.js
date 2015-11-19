@@ -2,16 +2,15 @@ var Data    = require('./data').Data,
     Skills  = require('./skills').Skills,
     crypto  = require('crypto'),
     ansi    = require('sty'),
-    util    = require('util');
+    util    = require('util'),
     events  = require('events');
-
-
 var npcs_scripts_dir = __dirname + '/../scripts/player/';
 var l10n_dir         = __dirname + '/../l10n/scripts/player/';
 
 var Player = function(socket) {
 	var self = this;
 	self.name     = '';
+	self.description = '';
 	self.location = null;
 	self.locale   = null;
 	self.prompt_string = '%health/%max_healthHP>';
@@ -48,6 +47,7 @@ var Player = function(socket) {
 	self.getCombatPrompt = function () { return self.combat_prompt; };
 	self.getLocale       = function () { return self.locale; };
 	self.getName         = function () { return self.name; };
+	self.getDescription  = function () { return self.description; };
 	self.getLocation     = function () { return self.location; };
 	self.getSocket       = function () { return socket; };
 	self.getInventory    = function () { return self.inventory; };
