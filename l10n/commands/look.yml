@@ -10,3 +10,5 @@ IN_ROOM:
 EXITS:
     en: "Exits"
     es: "ES-Exits"
+BEING_LOOKED_AT:
+    en: "$[1] is looking at you..."
