@@ -12,3 +12,5 @@ EXITS:
     es: "ES-Exits"
 BEING_LOOKED_AT:
     en: "$[1] is looking at you..."
+NAKED:
+    en: "They are not wearing anything!"

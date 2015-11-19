@@ -130,6 +130,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
               var item = items.get(equipped[i]);
               playerLooking.say(sprintf("%-15s %s", "<" + i + ">", item.getShortDesc(playerLooking.getLocale())));
                 }
+              } else {
+                playerLooking.say('NAKED');
               }
             }
 
