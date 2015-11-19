@@ -91,6 +91,7 @@ var CommandUtil = {
 
 		return item;
 	},
+
 };
 
 exports.CommandUtil = CommandUtil;

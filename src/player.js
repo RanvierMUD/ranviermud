@@ -2,10 +2,8 @@ var Data    = require('./data').Data,
     Skills  = require('./skills').Skills,
     crypto  = require('crypto'),
     ansi    = require('sty'),
-    util    = require('util');
+    util    = require('util'),
     events  = require('events');
-
-
 var npcs_scripts_dir = __dirname + '/../scripts/player/';
 var l10n_dir         = __dirname + '/../l10n/scripts/player/';
 
