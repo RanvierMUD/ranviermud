@@ -1,12 +1,15 @@
 var CommandUtil = require('../src/command_util').CommandUtil;
+var sprintf = require('sprintf').sprintf;
 var l10n_file = __dirname + '/../l10n/commands/look.yml';
 var l10n = new require('jall')(require('js-yaml').load(require('fs').readFileSync(l10n_file).toString('utf8')), undefined, 'zz');
 l10n.throwOnMissingTranslation(false);
+
 exports.command = function(rooms, items, players, npcs, Commands) {
 
-  return function(args, player) {
+  return function (args, player) {
     var room = rooms.getAt(player.getLocation());
     var locale = player.getLocale();
+    var thingIsPlayer = false;
 
     if (args) {
       // Look at items in the room first
@@ -30,18 +33,20 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
       if (!thing && isLookingAtSelf()) {
         thing = player;
+        thingIsPlayer = true;
       }
 
       if (!thing) {
-        players.eachIf(function(p) {
+        players.eachIf(function (p) {
             return otherPlayersInRoom(p);
           },
-          function(p) {
-            console.log("player found in same room ", p.getName());
+          function (p) {
             if (args.toLowerCase() === p.getName().toLowerCase()) {
               thing = p;
               player.sayL10n(l10n, 'IN_ROOM', thing.getName());
               player.say(thing.getDescription());
+              thingIsPlayer = true;
+              p.sayL10n(l10n, 'BEING_LOOKED_AT', player.getName());
             }
           });
       }
@@ -49,7 +54,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       if (!thing) {
         // then look at exits
         var exits = room.getExits();
-        exits.forEach(function(exit) {
+        exits.forEach(function (exit) {
           if (args.toLowerCase() === exit.direction) {
             thing = rooms.getAt(exit.location);
             player.say(thing.getTitle(locale));
@@ -63,6 +68,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       }
 
       player.say(thing.getDescription(player.getLocale()));
+      if (thingIsPlayer) showPlayerEquipment(thing, player);
+
       return;
     }
 
@@ -78,20 +85,20 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     player.say('');
 
     // display players in the same room
-    players.eachIf(function(p) {
+    players.eachIf(function (p) {
         return otherPlayersInRoom(p);
       },
-      function(p) {
+      function (p) {
         player.sayL10n(l10n, 'IN_ROOM', p.getName());
       });
 
     // show all the items in the rom
-    room.getItems().forEach(function(id) {
+    room.getItems().forEach(function (id) {
       player.say('<magenta>' + items.get(id).getShortDesc(player.getLocale()) + '</magenta>');
     });
 
     // show all npcs in the room
-    room.getNpcs().forEach(function(id) {
+    room.getNpcs().forEach(function (id) {
       var npc = npcs.get(id);
       if (npc) {
         var color = 'cyan';
@@ -113,7 +120,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     player.write('[');
     player.writeL10n(l10n, 'EXITS');
     player.write(': ');
-    room.getExits().forEach(function(exit) {
+    room.getExits().forEach(function (exit) {
       player.write(exit.direction + ' ');
     });
     player.say(']');
@@ -122,6 +129,17 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       if (p)
         return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
     };
+
+    function showPlayerEquipment(playerTarget, playerLooking) {
+      var naked = true;
+      var equipped = playerTarget.getEquipped();
+      for (var i in equipped) {
+        var item = items.get(equipped[i]);
+        naked = false;
+        playerLooking.say(sprintf("%-15s %s", "<" + i + ">", item.getShortDesc(playerLooking.getLocale())));
+      }
+      if (naked) playerLooking.sayL10n(l10n, "NAKED");
+    }
 
   }
 };
