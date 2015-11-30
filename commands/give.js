@@ -5,23 +5,30 @@ exports.command = function (rooms, items, players, npcs, Commands)
 {
 	return function (args, player)
 	{
-		// No giving stuff up in combat
+
+		// syntax 'give [target player] [item]'
+		// No giving stuff in combat
+
 		if (player.isInCombat()) {
 			player.sayL10n(l10n, 'GIVE_COMBAT');
 			return;
 		}
 
 		var room = rooms.getAt(player.getLocation());
-		if (player.getInventory().length >= 20) {
-			player.sayL10n(l10n, 'CARRY_MAX');
-			return;
-		}
+		args = args.split(' ');
 
-		var item = CommandUtil.findItemInRoom(items, args, room, player);
+		var item = CommandUtil.findItemInInventory(args[1], player, true);
 		if (!item) {
 			player.sayL10n(l10n, 'ITEM_NOT_FOUND');
 			return;
 		}
+
+		var target = players.eachIf(
+			//Find out if players are in the same room
+			,
+
+			//If they are, do all the stuff
+			)
 
 		item = items.get(item);
 
