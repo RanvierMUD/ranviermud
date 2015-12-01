@@ -12,3 +12,5 @@ GENERIC_ITEM_RECEIVED:
     en: "You receive an item from $[1]."
 PLAYER_NOT_FOUND:
     en: "That person is not here."
+NO_ITEM_OR_TARGET:
+    en: "Give what to whom?"
