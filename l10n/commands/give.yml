@@ -2,3 +2,7 @@ GIVE_COMBAT:
     en: "You cannot give an item to someone while in combat!"
 ITEM_NOT_FOUND:
     en: "That item was not found in your inventory."
+ITEM_GIVEN:
+    en: "You give $[1] to $[2]."
+ITEM_RECEIVED:
+    en: "You receive $[1] from $[2]."
