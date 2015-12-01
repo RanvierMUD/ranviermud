@@ -10,3 +10,5 @@ GENERIC_ITEM_GIVEN:
     en: "You give an item to $[1]."
 GENERIC_ITEM_RECEIVED:
     en: "You receive an item from $[1]."
+PLAYER_NOT_FOUND:
+    en: "That person is not here."
