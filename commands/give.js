@@ -12,24 +12,27 @@ exports.command = function (rooms, items, players, npcs, Commands) {
         var room = rooms.getAt(player.getLocation());
 
         args = args.split(' ');
-        var item = CommandUtil.findItemInInventory(args[1], player, true);
+        var item = CommandUtil.findItemInInventory(args[0], player, true);
 
         if (!item) {
             player.sayL10n(l10n, 'ITEM_NOT_FOUND');
             return;
         }
 
-        var target = players.eachIf(function (p) {
-            otherPlayersInRoom(p)
+        var targetPlayer = args[1].toLowerCase();
+        players.eachIf(function (p) {
+            return otherPlayersInRoom(p);
         }, function (p) {
-            giveItemToPlayer(player, p, item)
+            if (p.getName().toLowerCase() == targetPlayer) {
+                giveItemToPlayer(player, p, item);
+            }
         });
 
         function giveItemToPlayer(playerGiving, playerReceiving, item) {
             item = items.get(item);
 
-            playerGiving.sayL10n(l10n, 'ITEM_GIVEN', item.getShortDesc(player.getLocale()));
-            playerReceiving.sayL10n(l10n, 'ITEM_RECEIVED', item.getShortDesc(player.getLocale()));
+            playerGiving.sayL10n(l10n, 'ITEM_GIVEN', item.getShortDesc(playerGiving.getLocale()), playerReceiving.getName());
+            playerReceiving.sayL10n(l10n, 'ITEM_RECEIVED', item.getShortDesc(playerReceiving.getLocale()), playerGiving.getName());
 
             playerGiving.removeItem(item.getUuid());
             item.setInventory(playerReceiving.getName());
