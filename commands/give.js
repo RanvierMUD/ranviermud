@@ -19,6 +19,9 @@ exports.command = function (rooms, items, players, npcs, Commands) {
             return;
         }
 
+        console.log("original item", item);
+        console.log("item get", items.get(item));
+
         var targetPlayer = args[1].toLowerCase();
         players.eachIf(function (p) {
             return otherPlayersInRoom(p);
@@ -28,15 +31,22 @@ exports.command = function (rooms, items, players, npcs, Commands) {
             }
         });
 
-        function giveItemToPlayer(playerGiving, playerReceiving, item) {
-            item = items.get(item);
+        function giveItemToPlayer(playerGiving, playerReceiving, itemGiven) {
+        	console.log("player giving ", playerGiving);
+        	console.log("player receiving ", playerReceiving);
+        	console.log("item ", itemGiven);
+            try {
+                playerGiving.sayL10n(l10n, 'ITEM_GIVEN', itemGiven.getShortDesc(playerGiving.getLocale()), playerReceiving.getName());
+                playerReceiving.sayL10n(l10n, 'ITEM_RECEIVED', itemGiven.getShortDesc(playerReceiving.getLocale()), playerGiving.getName());
+            } catch (e) {
+            	console.log("ERROR WHEN GIVING AN ITEM --> ", e);
+            	playerGiving.sayL10n(l10n, 'GENERIC_ITEM_GIVEN', playerReceiving.getName());
+            	playerReceiving.sayL10n(l10n, 'GENERIC_ITEM_RECEIVED', playerGiving.getName());
+            }
 
-            playerGiving.sayL10n(l10n, 'ITEM_GIVEN', item.getShortDesc(playerGiving.getLocale()), playerReceiving.getName());
-            playerReceiving.sayL10n(l10n, 'ITEM_RECEIVED', item.getShortDesc(playerReceiving.getLocale()), playerGiving.getName());
-
-            playerGiving.removeItem(item.getUuid());
-            item.setInventory(playerReceiving.getName());
-            playerReceiving.addItem(item);
+            playerGiving.removeItem(itemGiven.getUuid());
+            itemGiven.setInventory(playerReceiving.getName());
+            playerReceiving.addItem(itemGiven);
         }
 
         function otherPlayersInRoom(p) {
