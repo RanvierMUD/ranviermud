@@ -1,0 +1,16 @@
+GIVE_COMBAT:
+    en: "You cannot give an item to someone while in combat!"
+ITEM_NOT_FOUND:
+    en: "That item was not found in your inventory."
+ITEM_GIVEN:
+    en: "You give $[1] to $[2]."
+ITEM_RECEIVED:
+    en: "You receive $[1] from $[2]."
+GENERIC_ITEM_GIVEN:
+    en: "You give an item to $[1]."
+GENERIC_ITEM_RECEIVED:
+    en: "You receive an item from $[1]."
+PLAYER_NOT_FOUND:
+    en: "That person is not here."
+NO_ITEM_OR_TARGET:
+    en: "Give what to whom?"
