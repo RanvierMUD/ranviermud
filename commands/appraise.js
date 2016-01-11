@@ -4,22 +4,6 @@ var l10n_file = __dirname + '/../l10n/commands/appraise.yml';
 var l10n = require('../src/l10n')(l10n_file);
 exports.command = function(rooms, items, players, npcs, Commands) {
 
-  function getRelativeLevel(player, target) {
-    var difference = player - target;
-    if (difference < -3) {
-      return 'TARGET_MUCH_STRONGER';
-    } else if (difference < -1) {
-      return 'TARGET_STRONGER';
-    } else if (difference > 3) {
-      return 'TARGET_MUCH_WEAKER';
-    } else if (difference > 1) {
-      return 'TARGET_WEAKER';
-    } else if (difference < 1) {
-      return 'TARGET_SAME_LEVEL';
-    } else
-      return 'MISSING_INFORMATION';
-  }
-
   return function(args, player) {
     if (player.isInCombat()) {
       player.sayL10n(l10n, 'APPRAISE_COMBAT');
@@ -27,9 +11,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     }
 
     var room = rooms.getAt(player.getLocation());
-    util.log(room);
     var target = CommandUtil.findNpcInRoom(npcs, args, room, player, true);
-    util.log(target);
+
     if (!target) {
       player.sayL10n(l10n, 'TARGET_NOT_FOUND');
       return;
@@ -48,4 +31,20 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     return;
 
   }
+
+    function getRelativeLevel(player, target) {
+      var difference = player - target;
+      if (difference < -3) {
+        return 'TARGET_MUCH_STRONGER';
+      } else if (difference < -1) {
+        return 'TARGET_STRONGER';
+      } else if (difference > 3) {
+        return 'TARGET_MUCH_WEAKER';
+      } else if (difference > 1) {
+        return 'TARGET_WEAKER';
+      } else if (difference < 1) {
+        return 'TARGET_SAME_LEVEL';
+      } else return 'MISSING_INFORMATION';
+    }
+
 };
