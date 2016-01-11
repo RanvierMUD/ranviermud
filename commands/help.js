@@ -24,6 +24,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       try {
         player.writeL10n(l10n, args.toUpperCase());
       } catch (err) {
+        var errMsg = "" + player.getName() + " attempted to get a helpfile for" + args + "and this happened: ";
+        util.log(errMsg, err);
         player.writeL10n(l10n, 'NO_HELP_FILE');
       } finally {
         hr();
