@@ -42,7 +42,7 @@ exports.command = function (rooms, items, players, npcs, Commands)
 		function getAllItems(room){
 			var items = room.getItems();
 			items.forEach(function(item){
-				if (!inventoryFull) pickUp(item);
+				if (!inventoryFull()) pickUp(item);
 				else player.sayL10n(l10n, 'CARRY_MAX');
 			});
 		}
