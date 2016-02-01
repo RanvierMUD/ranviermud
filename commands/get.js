@@ -19,7 +19,7 @@ exports.command = function (rooms, items, players, npcs, Commands)
 		}
 
 		if (args.toLowerCase() === "all") {
-			getAll();
+			getAllItems(room);
 			return;
 		}
 
@@ -28,11 +28,10 @@ exports.command = function (rooms, items, players, npcs, Commands)
 			player.sayL10n(l10n, 'ITEM_NOT_FOUND');
 			return;
 		}
-
-		item = items.get(item);
 		pickUp(item);
 
 		function pickUp(item){
+			item = items.get(item);
 			player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc(player.getLocale()));
 			item.setRoom(null);
 			item.setInventory(player.getName());
@@ -40,9 +39,9 @@ exports.command = function (rooms, items, players, npcs, Commands)
 			room.removeItem(item.getUuid());
 		}
 
-		function getAll(){
-			room.getItems().forEach(function(id){
-				items.get(id);
+		function getAllItems(room){
+			console.log(room.getItems);
+			room.getItems().forEach(function(item){
 				pickUp(item);
 			});
 		}
