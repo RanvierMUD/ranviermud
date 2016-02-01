@@ -12,8 +12,14 @@ exports.command = function (rooms, items, players, npcs, Commands)
 		}
 
 		var room = rooms.getAt(player.getLocation());
+
 		if (player.getInventory().length >= 20) {
 			player.sayL10n(l10n, 'CARRY_MAX');
+			return;
+		}
+
+		if (args.toLowerCase() === "all") {
+			getAll();
 			return;
 		}
 
@@ -24,11 +30,22 @@ exports.command = function (rooms, items, players, npcs, Commands)
 		}
 
 		item = items.get(item);
+		pickUp(item);
 
-		player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc(player.getLocale()));
-		item.setRoom(null);
-		item.setInventory(player.getName());
-		player.addItem(item);
-		room.removeItem(item.getUuid());
+		function pickUp(item){
+			player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc(player.getLocale()));
+			item.setRoom(null);
+			item.setInventory(player.getName());
+			player.addItem(item);
+			room.removeItem(item.getUuid());
+		}
+
+		function getAll(){
+			room.getItems().forEach(function(id){
+				items.get(id);
+				pickUp(item);
+			});
+		}
+
 	};
 };
