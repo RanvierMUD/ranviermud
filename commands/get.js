@@ -13,7 +13,7 @@ exports.command = function (rooms, items, players, npcs, Commands)
 
 		var room = rooms.getAt(player.getLocation());
 
-		if (player.getInventory().length >= 20) {
+		if (inventoryFull()) {
 			player.sayL10n(l10n, 'CARRY_MAX');
 			return;
 		}
@@ -40,10 +40,15 @@ exports.command = function (rooms, items, players, npcs, Commands)
 		}
 
 		function getAllItems(room){
-			console.log(room.getItems);
-			room.getItems().forEach(function(item){
-				pickUp(item);
+			var items = room.getItems();
+			items.forEach(function(item){
+				if (!inventoryFull) pickUp(item);
+				else player.sayL10n(l10n, 'CARRY_MAX');
 			});
+		}
+
+		function inventoryFull(){
+			return player.getInventory().length >= 20;
 		}
 
 	};
