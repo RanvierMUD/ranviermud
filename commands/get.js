@@ -12,8 +12,14 @@ exports.command = function (rooms, items, players, npcs, Commands)
 		}
 
 		var room = rooms.getAt(player.getLocation());
-		if (player.getInventory().length >= 20) {
+
+		if (inventoryFull()) {
 			player.sayL10n(l10n, 'CARRY_MAX');
+			return;
+		}
+
+		if (args.toLowerCase() === "all") {
+			getAllItems(room);
 			return;
 		}
 
@@ -22,13 +28,28 @@ exports.command = function (rooms, items, players, npcs, Commands)
 			player.sayL10n(l10n, 'ITEM_NOT_FOUND');
 			return;
 		}
+		pickUp(item);
 
-		item = items.get(item);
+		function pickUp(item){
+			item = items.get(item);
+			player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc(player.getLocale()));
+			item.setRoom(null);
+			item.setInventory(player.getName());
+			player.addItem(item);
+			room.removeItem(item.getUuid());
+		}
 
-		player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc(player.getLocale()));
-		item.setRoom(null);
-		item.setInventory(player.getName());
-		player.addItem(item);
-		room.removeItem(item.getUuid());
+		function getAllItems(room){
+			var items = room.getItems();
+			items.forEach(function(item){
+				if (!inventoryFull()) pickUp(item);
+				else player.sayL10n(l10n, 'CARRY_MAX');
+			});
+		}
+
+		function inventoryFull(){
+			return player.getInventory().length >= 20;
+		}
+
 	};
 };
