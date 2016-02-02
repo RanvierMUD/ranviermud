@@ -21,7 +21,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     return;
 
     function tellPlayer(p) {
-      if (recipient.toLowercase() !== player.getName().toLowercase())
+      if (recipient.toLowerCase() !== player.getName().toLowerCase())
         p.sayL10n(l10n, 'THEY_TELL', player.getName(), message);
       else
         player.sayL10n(l10n, 'CRAZY');
@@ -29,7 +29,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     function playerIsOnline(p) {
       if (p)
-        return (recipient.toLowercase() === p.getName().toLowercase());
+        return (recipient.toLowerCase() === p.getName().toLowerCase());
     };
 
   }
