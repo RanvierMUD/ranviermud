@@ -37,7 +37,10 @@ exports.command = function (rooms, items, players, npcs, Commands) {
             if (p.getName().toLowerCase() == targetPlayer) {
                 giveItemToPlayer(player, p, item);
                 targetFound = true;
+            } else {
+                p.sayL10n(l10n, 'GIVE_AUDIENCE', player, item, targetPlayer);
             }
+
         });
 
         if (!targetFound) {

@@ -14,3 +14,5 @@ PLAYER_NOT_FOUND:
     en: "That person is not here."
 NO_ITEM_OR_TARGET:
     en: "Give what to whom?"
+GIVE_AUDIENCE:
+    en: "$[1] gives $[2] to $[3]."
