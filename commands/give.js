@@ -38,7 +38,7 @@ exports.command = function (rooms, items, players, npcs, Commands) {
                 giveItemToPlayer(player, p, item);
                 targetFound = true;
             } else {
-                p.sayL10n(l10n, 'GIVE_AUDIENCE', player, item, targetPlayer);
+                p.sayL10n(l10n, 'GIVE_AUDIENCE', player.getName(), item.getShortDec(p.getLocale()), targetPlayer);
             }
 
         });
