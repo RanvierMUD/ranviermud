@@ -1,0 +1,6 @@
+YOU_TELL:
+  "You tell $[1] '$[2]'."
+NOTHING_TOLD:
+  "Some secrets are best kept to yourself..."
+THEY_TELL:
+  "$[1] tells you, '$[2]'."
