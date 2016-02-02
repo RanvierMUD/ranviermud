@@ -31,17 +31,14 @@ exports.command = function (rooms, items, players, npcs, Commands) {
 
         targetPlayer = targetPlayer.toLowerCase();
 
-        players.eachIf(function (p) {
-            return otherPlayersInRoom(p);
-        }, function (p) {
+        players.eachIf( otherPlayersInRoom, checkForTargetPlayer );
+
+        function checkForTargetPlayer(p) {
             if (p.getName().toLowerCase() == targetPlayer) {
                 giveItemToPlayer(player, p, item);
                 targetFound = true;
-            } else {
-                p.sayL10n(l10n, 'GIVE_AUDIENCE', player.getName(), item.getShortDec(p.getLocale()), targetPlayer);
-            }
-
-        });
+            } 
+        }
 
         if (!targetFound) {
             player.sayL10n(l10n, "PLAYER_NOT_FOUND");
@@ -49,7 +46,6 @@ exports.command = function (rooms, items, players, npcs, Commands) {
         }
 
         function giveItemToPlayer(playerGiving, playerReceiving, itemGiven) {
-
             try {
                 playerGiving.sayL10n(l10n, 'ITEM_GIVEN', itemGiven.getShortDesc(playerGiving.getLocale()), playerReceiving.getName());
                 playerReceiving.sayL10n(l10n, 'ITEM_RECEIVED', itemGiven.getShortDesc(playerReceiving.getLocale()), playerGiving.getName());
@@ -58,6 +54,13 @@ exports.command = function (rooms, items, players, npcs, Commands) {
                 playerGiving.sayL10n(l10n, 'GENERIC_ITEM_GIVEN', playerReceiving.getName());
                 playerReceiving.sayL10n(l10n, 'GENERIC_ITEM_RECEIVED', playerGiving.getName());
             }
+
+            players.eachIf( otherPlayersInRoom, displayToAudience ); 
+
+            function displayToAudience(p) {
+                if (p.getName().toLowerCase() !== targetPlayer) {
+                    p.sayL10n(l10n, 'GIVE_AUDIENCE', player.getName(), itemGiven.getShortDesc(p.getLocale()), targetPlayer);
+                }
 
             playerGiving.removeItem(itemGiven);
             itemGiven.setInventory(playerReceiving.getName());
