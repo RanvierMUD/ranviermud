@@ -21,7 +21,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     return;
 
     function tellPlayer(p) {
-      if (recipient.getName() !== player.getName())
+      if (recipient.toLowercase() !== player.getName().toLowercase())
         p.sayL10n(l10n, 'THEY_TELL', player.getName(), message);
     }
 
