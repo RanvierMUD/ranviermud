@@ -59,7 +59,7 @@ exports.command = function (rooms, items, players, npcs, Commands) {
 
             function displayToAudience(p) {
                 if (p.getName().toLowerCase() !== targetPlayer) {
-                    p.sayL10n(l10n, 'GIVE_AUDIENCE', player.getName(), itemGiven.getShortDesc(p.getLocale()), targetPlayer);
+                    p.sayL10n(l10n, 'GIVE_AUDIENCE', player.getName(), itemGiven.getShortDesc(p.getLocale()), capitalizeFirstLetter(targetPlayer));
                 }
             }
 
@@ -73,4 +73,9 @@ exports.command = function (rooms, items, players, npcs, Commands) {
                 return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
         };
     };
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
 };
