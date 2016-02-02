@@ -4,13 +4,14 @@ var CommandUtil = require('../src/command_util').CommandUtil;
 exports.command = function(rooms, items, players, npcs, Commands) {
   return function(args, player) {
 
-    var message = args.split('');
+    var message = args.split(' ');
     var recipient = message.shift();
-    
+    message = message.join(' ');
+
     if (recipient) {
       player.sayL10n(l10n, 'YOU_TELL', recipient, message);
       players.eachIf(
-        playerIsOnline, 
+        playerIsOnline,
         tellPlayer
       );
       return;
@@ -18,15 +19,18 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     player.sayL10n(l10n, 'NOTHING_TOLD');
     return;
-  }
-  function tellPlayer (p){
-  if (recipient.getName() !== player.getName()) 
-          p.sayL10n(l10n, 'THEY_TELL', player.getName(), message);
+
+    function tellPlayer(p) {
+      if (recipient.getName() !== player.getName())
+        p.sayL10n(l10n, 'THEY_TELL', player.getName(), message);
     }
 
-  function playerIsOnline(p) {
-    if (p)
-      return (recipient.getName() === p.getName());
-  };
+    function playerIsOnline(p) {
+      if (p)
+        return (recipient.getName() === p.getName());
+    };
+
+  }
+
 
 };
