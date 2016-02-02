@@ -3,25 +3,30 @@ var l10n = require('../src/l10n')(l10n_file);
 var CommandUtil = require('../src/command_util').CommandUtil;
 exports.command = function(rooms, items, players, npcs, Commands) {
   return function(args, player) {
-    if (args) {
-      player.sayL10n(l10n, 'YOU_SAY', args);
-      players.eachIf(function(p) {
-        return otherPlayersInRoom(p);
-      }, function(p) {
-        if (p.getName() != player.getName())
-          p.sayL10n(l10n, 'THEY_SAY', player.getName(), args);
-      });
+
+    var message = args.split('');
+    var recipient = message.shift();
+    
+    if (recipient) {
+      player.sayL10n(l10n, 'YOU_TELL', recipient, message);
+      players.eachIf(
+        playerIsOnline, 
+        tellPlayer
+      );
       return;
     }
 
-    player.sayL10n(l10n, 'NOTHING_SAID');
+    player.sayL10n(l10n, 'NOTHING_TOLD');
     return;
   }
+  function tellPlayer (p){
+  if (recipient.getName() !== player.getName()) 
+          p.sayL10n(l10n, 'THEY_TELL', player.getName(), message);
+    }
 
-  function otherPlayersInRoom(p) {
+  function playerIsOnline(p) {
     if (p)
-      return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
+      return (recipient.getName() === p.getName());
   };
-
 
 };
