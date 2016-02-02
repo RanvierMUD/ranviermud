@@ -8,8 +8,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     var recipient = message.shift();
     message = message.join(' ');
 
-    if (recipient) {
-      player.sayL10n(l10n, 'YOU_TELL', recipient, message);
+    if (recipient && message) {
       players.eachIf(
         playerIsOnline,
         tellPlayer
@@ -21,9 +20,10 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     return;
 
     function tellPlayer(p) {
-      if (recipient.toLowerCase() !== player.getName().toLowerCase())
+      if (recipient.toLowerCase() !== player.getName().toLowerCase()) {
+        player.sayL10n(l10n, 'YOU_TELL', recipient, message);
         p.sayL10n(l10n, 'THEY_TELL', player.getName(), message);
-      else
+      } else
         player.sayL10n(l10n, 'CRAZY');
     }
 
