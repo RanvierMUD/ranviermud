@@ -23,11 +23,13 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     function tellPlayer(p) {
       if (recipient.toLowercase() !== player.getName().toLowercase())
         p.sayL10n(l10n, 'THEY_TELL', player.getName(), message);
+      else
+        player.sayL10n(l10n, 'CRAZY');
     }
 
     function playerIsOnline(p) {
       if (p)
-        return (recipient.getName() === p.getName());
+        return (recipient.toLowercase() === p.getName().toLowercase());
     };
 
   }
