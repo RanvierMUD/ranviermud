@@ -7,7 +7,7 @@ NO_HELP_FILE:
 DROP:
     en: "Usage: \n  drop (item name)\nor \n  drop 2.(item name) to drop the 2nd item of that same name \n\nThis will drop the item if it is found in your inventory. \nYou cannot drop items that are currently being worn."
 GET:
-    en: "Usage: \n  get (item name) \nor \n  get 2.(item name) to get the 2nd item of that same name \n\nThis will place the item in your inventory if it is in the same room as you.\nYou cannot get items while in combat."
+    en: "Usage: \n  get (item name) \nor \n  get 2.(item name) to get the 2nd item of that same name \nor \n  get all \n\nThis will place the item in your inventory if it is in the same room as you.\nYou cannot get items while in combat."
 QUIT:
     en: "Usage: \n  quit\n\nThis saves and closes your connection to RanvierMUD.\nYou cannot quit while in combat."
 CHANNELS:
