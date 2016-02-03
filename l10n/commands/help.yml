@@ -52,3 +52,5 @@ EMOTE:
     en: "Usage \n  emote (action)\n\nThis allows you to roleplay as your character performing the action.\nThis message will be shown to all other players in the room, so write it in third person.\n\nExample: `emote jumpes with joy` would display `Helga jumps with joy`."
 GIVE:
     en: "Usage \n give (item) (player)\n\nThis gives the specified item in your inventory to another player's character.\nTheir character must be in the same room as you."
+TELL:
+    en: "Usage \n tell (player) (message)\n\nThis sends a private message to the player as long as they are online, even if they aren't in the same room."
