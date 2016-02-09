@@ -40,7 +40,7 @@ var gen_next = function(event) {
    * @param ...
    */
   return function(arg, nextstage) {
-    func = (arg instanceof Player ? arg.getSocket() : arg);
+    var func = (arg instanceof Player ? arg.getSocket() : arg);
     func.emit.apply(func, [event].concat([].slice.call(arguments)));
   }
 };
@@ -367,7 +367,6 @@ var Events = {
               arg.say('Please specify a gender, or [A]ndrogynous if you\'d prefer not to.');
               return repeat();
             }
-
             arg.setGender(gender);
             next(arg, 'done');
           });
