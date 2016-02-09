@@ -16,12 +16,12 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     player.sayL10n(l10n, 'NOTHING_SAID');
     return;
+
+    function otherPlayersInRoom(p) {
+      if (p)
+        return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
+    };
+
   }
-
-  function otherPlayersInRoom(p) {
-    if (p)
-      return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
-  };
-
 
 };
