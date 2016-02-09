@@ -356,12 +356,25 @@ var Events = {
 
             // setPassword handles hashing
             arg.setPassword(pass);
+            next(arg, 'gender');
+          });
+          break;
+        case 'gender':
+          arg.write('What is your character\'s gender?\n[F]emale\n[M]ale\n[A]ndrogynous\n');
+          arg.getSocket().once('data', function (gender) {
+            gender = gender.toString().toLowerCase();
+            if (!gender) {
+              arg.say('Please specify a gender, or [A]ndrogynous if you\'d prefer not to.');
+              return repeat();
+            }
+
+            arg.setGender(gender);
             next(arg, 'done');
           });
           break;
           // 'done' assumes the argument passed to the event is a player, ...so always do that.
         case 'done':
-        arg.setLocale("en");
+          arg.setLocale("en");
           arg.setLocation(players.getDefaultLocation());
           // create the pfile then send them on their way
           arg.save(function() {
