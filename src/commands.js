@@ -44,7 +44,6 @@ var Commands = {
 		items   = config.items;
 		npcs    = config.npcs;
 		util.log("Loading command l10n... ");
-		// set the "default" locale to zz so it'll never have default loaded and to always force load the English values
 		l10n = l10nHelper(l10n_file);
 		l10n.setLocale(config.locale);
 		util.log("Done");
