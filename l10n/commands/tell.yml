@@ -1,8 +1,0 @@
-YOU_TELL:
-  en: "You tell $[1] '$[2]'."
-NOTHING_TOLD:
-  en: "Some secrets are best kept to yourself..."
-THEY_TELL:
-  en: "$[1] tells you, '$[2]'."
-CRAZY:
-  en: "You stand around muttering to yourself."
