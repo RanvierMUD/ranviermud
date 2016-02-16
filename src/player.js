@@ -29,8 +29,7 @@ var Player = function(socket) {
 		health : 100,
 		level: 1,
 		experience: 0,
-		'class': '',
-		description: ''
+		description: 'A person.'
 	};
 
 	// Anything affecting the player
@@ -65,6 +64,7 @@ var Player = function(socket) {
 	self.setDescription  = function (newdesc)	{ self.attributes.description = newdesc; };
 	self.setLocation     = function (loc)       { self.location = loc; };
 	self.setPassword     = function (pass)      { self.password = crypto.createHash('md5').update(pass).digest('hex'); };
+	self.setGender       = function (gender)    { self.gender = gender.toUpperCase(); }
 	self.addItem         = function (item)      { self.inventory.push(item); };
 	self.removeItem      = function (item)      { self.inventory = self.inventory.filter(function (i) { return item !== i; }); };
 	self.setInventory    = function (inv)       { self.inventory = inv; };
@@ -354,7 +354,8 @@ var Player = function(socket) {
 			inventory: inv,
 			equipment: self.equipment,
 			attributes: self.attributes,
-			skills: self.skills
+			skills: self.skills,
+			gender: self.gender
 		});
 	};
 
