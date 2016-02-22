@@ -3,24 +3,24 @@ var l10n = require('../src/l10n')(l10n_file);
 var CommandUtil = require('../src/command_util').CommandUtil;
 exports.command = function(rooms, items, players, npcs, Commands) {
   return function(args, player) {
-    console.log(args);
     args = args.split(' ');
-    console.log(args);
+
     var target = args.shift();
     var msg = args.join(' ');
     var targetFound = true;
 
     if (args.length > 0) {
       targetFound = false;
-      players.eachIf(function(p) {
-        return otherPlayersInRoom(p);
-      }, function(p) {
-        if (p.getName().toLowerCase() == target.toLowerCase()) {
-          p.sayL10n(l10n, 'THEY_WHISPER', player.getName(), msg);
-          targetFound = true;
-        } else
-          p.sayL10n(l10n, 'OTHERS_WHISPER', player.getName(), target);
-      });
+      players.eachIf(
+        (target) => CommandUtil.otherPlayerInRoom(target, player),
+        (target) => {
+          if (target.getName().toLowerCase() === target.toLowerCase()) {
+            target.sayL10n(l10n, 'THEY_WHISPER', player.getName(), msg);
+            targetFound = true;
+          } else
+            target.sayL10n(l10n, 'OTHERS_WHISPER', player.getName(),
+              target);
+        });
       if (targetFound) {
         player.sayL10n(l10n, 'YOU_WHISPER', target, msg);
         return;
@@ -33,10 +33,5 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     return;
   }
-
-  function otherPlayersInRoom(p) {
-    if (p)
-      return (p.getName() !== player.getName() && p.getLocation() === player.getLocation());
-  };
 
 };
