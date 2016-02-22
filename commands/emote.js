@@ -6,21 +6,15 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     self = player.getName();
     if (args) {
       player.say(self + " " + args);
-      players.eachIf(function(p) {
-        return otherPlayersInRoom(p, self);
-      }, function(p) {
-        p.say(self + " " + args);
-      });
+      players.eachIf(
+        CommandUtil.otherPlayerInRoom.bind(null, player),
+        function(target) {
+          target.say(self + " " + args);
+        });
       return;
     }
     player.sayL10n(l10n, 'NOTHING_EMOTED');
     return;
   }
-
-  function otherPlayersInRoom(p, self) {
-    if (p)
-      return (p.getName().toLowerCase() !== self.toLowerCase() 
-        && p.getLocation() === player.getLocation());
-  };
 
 };
