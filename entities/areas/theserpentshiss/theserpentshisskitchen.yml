@@ -3,4 +3,15 @@
   location: 2
   description:
     en: "A range takes up most of the space in this kitchen. Much of the steel is corroded and appears slightly out of use. This is a rat's haven. There is a door leading to the taproom, and another to a dry storage room."
-  exits: 2
+  exits: 
+    -
+      location: 1
+      direction: 'out'
+      leave_message:
+        en: ' returns to the taproom.'
+    -
+      location: 8
+      direction: 'storage'
+      leave_message:
+        en: ' nudges a crate of rice aside as they enter the dry storage room.'
+
