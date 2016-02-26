@@ -47,7 +47,8 @@ exports.listeners = {
 			var newlevel = this.getAttribute('level') + 1;
 			var health_gain = Math.ceil(this.getAttribute('max_health') * 1.10);
 
-			this.sayL10n(l10n, 'LEVELUP', newlevel, health_gain - this.getAttribute('max_health'));
+			this.sayL10n(l10n, 'LEVELUP');
+			this.sayL10n(l10n, 'MUTAGEN_GAIN');
 			this.setAttribute('level', newlevel);
 			this.setAttribute('experience', 0);
 
