@@ -3,4 +3,7 @@
   location: 7
   description:
     en: 'This room is filled with a massive king-sized bed -- no, an emperor-sized bed. There is barely room to walk besides. The massive window is covered in a metal lattice. A hulking wooden door leads to the hallway.'
-  exits: 1
+  exits: 
+    -
+      location: 4
+      direction: 'out'

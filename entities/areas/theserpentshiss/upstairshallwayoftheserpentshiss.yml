@@ -3,4 +3,24 @@
   location: 4
   description:
     en: 'This hallway is painted in a sickly green shade, and the ceiling is papered over with a scale pattern. To the north are doors to two private rooms. On one is painted an adder, on the other a python. To the west, at the end of the hall, is a room painted with a cobra. To the east, a stairway leads down to the taproom.'
-  exits: 4
+  exits: 
+    -
+      location: 1
+      direction: 'down'
+      leave_message:
+        en: ' heads downstairs.'
+    -
+      location: 5
+      direction: 'adder'
+      leave_message:
+        en: ' disappears into the adder room.'
+    -
+      location: 6
+      direction: 'python'
+      leave_message:
+        en: ' disappears into the python room.'
+    -
+      location: 7
+      direction: 'cobra'
+      leave_message:
+        en: ' disappears into the cobra room.'

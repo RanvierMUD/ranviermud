@@ -3,4 +3,8 @@
   location: 5
   description:
     en: 'This room consists of a double bed, a trunk, and a small table, missing a leg. The small window to the outdoors is blocked with a curtain. A wooden door leads outside.'
-  exits: 1
+  exits: 
+    -
+      location: 4
+      direction: 'out'
+
