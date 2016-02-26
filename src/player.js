@@ -26,7 +26,13 @@ var Player = function(socket) {
 	// Attributes
 	self.attributes = {
 		max_health: 100,
-		health : 100,
+		health : 30,
+		max_sanity: 100,
+		sanity: 30,
+		stamina: 1,
+		willpower: 1,
+		quickness: 1,
+		cleverness: 1,
 		level: 1,
 		experience: 0,
 		description: 'A person.'
