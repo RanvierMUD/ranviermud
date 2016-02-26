@@ -5,7 +5,7 @@ LEVELUP:
         You feel your health returning.
         </yellow></bold>
 MUTAGEN_GAIN:
-    en: "<bold><red>You can feel something inside of you willing you to change, to... become.</bold></red>"
+    en: "<bold><red>You can feel something inside of you willing you to become something more.</bold></red>"
 EXPGAIN:
     en: "<bold><blue>You gain $[1] experience!</blue></bold>"
     es: "ES-<bold><blue>You gain $[1] experience!</blue></bold>"
