@@ -1,6 +1,6 @@
-title:
-  en: Oops
-location: 13
-description:
-  en: A nice place to be.
-exits: 1
+- title:
+    en: Oops
+  location: 13
+  description:
+    en: A nice place to be.
+  exits: 1
