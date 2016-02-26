@@ -18,3 +18,15 @@ CLASS:
     es: "|| Class: $[1]"
 DESCRIPTION:
     en: "|| Description: $[1]"
+MAX_SANITY:
+    en: "|| Maximum sanity: $[1]"
+SANITY: 
+    en: "|| Sanity: $[1]"
+STAMINA:
+    en: "|| Stamina: $[1]"
+QUICKNESS:
+    en: "|| Quickness: $[1]"
+CLEVERNESS:
+    en: "|| Cleverness: $[1]"
+WILLPOWER:
+    en: "|| Willpower: $[1]"
