@@ -152,7 +152,7 @@ var Item = function (config)
 	self.attributes = {};
 
 	self.init = function (config)
-	{
+	{	console.log("LOADING ", config);
 		self.short_description = config.short_description || '';
 		self.keywords          = config.keywords    || [];
 		self.description       = config.description || '';
@@ -165,8 +165,8 @@ var Item = function (config)
 		self.vnum              = config.vnum;
 		self.script            = config.script      || null;
 		self.attributes        = config.attributes;
-
-		Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
+		if (self !== null)
+		  Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
 	};
 
 	/**#@+

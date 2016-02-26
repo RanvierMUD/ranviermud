@@ -60,6 +60,7 @@ exports.listeners = {
 
 			// Assign any new skills
 			//TODO: Fix?
+			
 			// var skills = Skills[this.getAttribute('class')];
 			// for (var sk in skills) {
 			// 	var skill = skills[sk];
