@@ -1,6 +1,6 @@
-title:
-  en: "The Serpent's Cage"
-location: 11
-description:
-  en: 'The room of this floor, unlike the stone floors, is dirt. Posts are set in the dirt, remnants of a fence strewn on the ground along with rust-colored stains. "THE SERPENT S CA E" is spelled out in crimson stones on the wall to the north.'
-exits: 1
+- title:
+    en: "The Serpent's Cage"
+  location: 11
+  description:
+    en: 'The room of this floor, unlike the stone floors, is dirt. Posts are set in the dirt, remnants of a fence strewn on the ground along with rust-colored stains. "THE SERPENT S CA E" is spelled out in crimson stones on the wall to the north.'
+  exits: 1
