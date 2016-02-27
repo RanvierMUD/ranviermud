@@ -72,6 +72,8 @@ var Player = function(socket) {
 	self.setLocation     = function (loc)       { self.location = loc; };
 	self.setPassword     = function (pass)      { self.password = crypto.createHash('md5').update(pass).digest('hex'); };
 	self.setGender       = function (gender)    { self.gender = gender.toUpperCase(); }
+	self.getGender       = function () 
+		{ return self.gender; }
 	self.addItem         = function (item)      { self.inventory.push(item); };
 	self.removeItem      = function (item)      { self.inventory = self.inventory.filter(function (i) { return item !== i; }); };
 	self.setInventory    = function (inv)       { self.inventory = inv; };
