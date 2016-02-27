@@ -1,3 +1,4 @@
 node_modules
 data/players/*.json
 *.swp
+*sublime*
