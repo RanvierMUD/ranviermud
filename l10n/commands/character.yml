@@ -1,25 +1,16 @@
 ATTRIBUTES:
-    en: "|| Attributes:" 
-    es: "|| Atributos:"
-MAX_HEALTH:
-    en: "|| Maximum health: $[1]"
-    es: "|| Maximum health: $[1]"
+    en: "<yellow><bold>You reflect on your existence.</yellow></bold>"
 LEVEL: 
-    en: "|| Level: $[1]"
-    es: "|| Level: $[1]"
+    en: "<blue><bold>You are known as $[1].</blue></bold>"
 HEALTH:
-    en: "|| Health: $[1]"
-    es: "|| Health: $[1]"
+    en: "$[1]"
+CLASS:
+    en: "Error Town!"
 EXPERIENCE: 
     en: "|| Experience: $[1]"
     es: "|| Experience: $[1]"
-CLASS:
-    en: "|| Class: $[1]"
-    es: "|| Class: $[1]"
 DESCRIPTION:
     en: "|| Description: $[1]"
-MAX_SANITY:
-    en: "|| Maximum sanity: $[1]"
 SANITY: 
     en: "|| Sanity: $[1]"
 STAMINA:
