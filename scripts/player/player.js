@@ -45,8 +45,10 @@ exports.listeners = {
 		return function ()
 		{
 			var newlevel = this.getAttribute('level') + 1;
-			var mPoints = this.getAttribute('mutagens') + 1;
 			var health_gain = Math.ceil(this.getAttribute('max_health') * 1.10);
+			var mPoints = this.getAttribute('mutagens');
+			if (newlevel % 2 === 0) mPoints++;
+			
 
 			this.sayL10n(l10n, 'LEVELUP');
 			this.sayL10n(l10n, 'MUTAGEN_GAIN');
