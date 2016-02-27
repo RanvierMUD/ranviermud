@@ -35,6 +35,7 @@ var Player = function(socket) {
 		cleverness: 1,
 		level: 1,
 		experience: 0,
+		mutagens: 0,
 		description: 'A person.'
 	};
 

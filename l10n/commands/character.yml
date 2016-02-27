@@ -30,3 +30,5 @@ CLEVERNESS:
     en: "|| Cleverness: $[1]"
 WILLPOWER:
     en: "|| Willpower: $[1]"
+MUTAGENS:
+    en: "|| Mutagens: $[1]"
