@@ -9,24 +9,26 @@ function chooseRandomExit(room, rooms, player, players, npc) {
     if (isCoinFlip()) {
       var exits = room.getExits();
       var chosen = getRandomFromArr(exits);
-      var uid = npc.getUuid();
-      var chosenRoom = rooms.getAt(chosen.location);
+      if (!chosen.hasOwnProperty('mob_locked')) {
+        var uid = npc.getUuid();
+        var chosenRoom = rooms.getAt(chosen.location);
 
 
-      npc.setRoom(chosen.location);
-      chosenRoom.addNpc(uid);
-      room.removeNpc(uid);
+        npc.setRoom(chosen.location);
+        chosenRoom.addNpc(uid);
+        room.removeNpc(uid);
 
-      player.say(npc.getShortDesc(player.getLocale()) + getLeaveMessage(
-        player, chosen));
+        player.say(npc.getShortDesc(player.getLocale()) + getLeaveMessage(
+          player, chosen));
 
-      players.eachIf(
-        otherPlayers.bind(
-          null, player),
-        function(p) {
-          p.say(npc.getShortDesc(
-            p.getLocale()) + getLeaveMessage(p, chosen))
-        });
+        players.eachIf(
+          otherPlayers.bind(
+            null, player),
+          function(p) {
+            p.say(npc.getShortDesc(
+              p.getLocale()) + getLeaveMessage(p, chosen))
+          });
+      }
     }
   }
 }

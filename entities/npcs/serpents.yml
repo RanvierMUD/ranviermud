@@ -1,0 +1,21 @@
+- &serpent
+  vnum: 2
+  room: 6
+  script: '1.js'
+  keywords:
+    en: ['python']
+  short_description:
+    en: 'A lazy python'
+  description:
+    en: "The python slithers slowly across the ground, its forked tongue darting out of its mouth."
+  behaviors: "rtcombat,randommove"
+  attributes:
+    max_health: 25
+    health: 25
+    speed: 2.5
+    damage: 1-12
+    level: 1
+    experience: 180
+  load_max: 7
+- <<: *serpent
+  room: 11
