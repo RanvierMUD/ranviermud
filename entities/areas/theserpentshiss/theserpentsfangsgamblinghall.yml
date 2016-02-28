@@ -10,3 +10,4 @@
     -
       location: 11
       direction: 'private'
+      mob_locked: 'true'
