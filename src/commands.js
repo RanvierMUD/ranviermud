@@ -164,7 +164,7 @@ function move (exit, player)
 	// See example in scripts/npcs/1.js
 	room.getNpcs().forEach(function (id) {
 		var npc = npcs.get(id);
-		npc.emit('playerEnter', room, player, players, npc);
+		npc.emit('playerEnter', room, rooms, player, players, npc);
 	});
 
 	room.emit('playerEnter', player, players);
