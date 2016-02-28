@@ -110,7 +110,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
           if (percentage <= parseInt(tier)) {
             return '<' + color + '>You are ' + sanityStatus[tier] +
               '.</' + color + '>';
-          }
+          } //TODO: Dry this, too.
         }
       }
     }
@@ -126,36 +126,66 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         12: 'fierce'
       };
       var attrStr = 'strength and endurance are '
-      for (var tier in status) {
-        if (stamina < parseInt(tier)) {
-          return statusString(attrStr, status[tier], 'yellow');
-        }
-        return statusString(attrStr, 'unearthly savage', 'yellow');
-      }
+      evalStatus(stamina, attrStr, 'unearthly savage', 'yellow');
     }
 
     function getQuickness(quickness) {
+      var genderNoun = getGenderNoun(player.getGender());
       var status = {
-        2: 'a slug',
-        3: 'a sloth',
-        5: 'an old ' + getGenderNoun(player.getGender()),
-        7: 'an athlete',
-        8: 'a fox',
-        10: 'a leopard',
-        12: 'a cheetah'
+        1: 'a slug',
+        2: 'a sloth',
+        3: 'an old ' + gender,
+        5: 'an average ' + gender,
+        7: 'an athletic ' + gender,
+        10: 'a fox',
+        12: 'a leopard in the snow',
+        16: 'a cheetah'
       };
       var attrStr = 'quickness is comparable to '
+      evalStatus(quickness, status, attrStr, 'laser unicorns', 'blue');
+    }
 
-      for (var tier in status) {
-        if (quickness <= parseInt(tier)) {
-          return statusString(attrStr, status[tier], 'blue');
-        }
-        return statusString(attrStr, 'lasers', 'blue');
-      }
+    function getCleverness(cleverness) {
+      var status = {
+        1: 'foggy as a graveyard',
+        3: 'hazy',
+        5: 'mundane at best',
+        6: 'shrewd',
+        8: 'adept',
+        10: 'prodigious',
+        12: 'wizardly'
+      };
+      var attrStr = 'mental acuity is ';
+      evalStatus(cleverness, status, attrStr, 'coruscating', 'red');
+    }
+
+    function getWillpower(willpower) {
+      var status = {
+        1: 'sapped',
+        2: 'pitiful',
+        4: 'secure',
+        6: 'unbending iron',
+        8: 'an imposing force',
+        10: 'uncanny'
+      };
+      var attrStr = 'will is ';
+      evalStatus(willpower, status, attrStr, 'divine', 'bold');
     }
 
     // Helper functions
     //TODO: Extract to a util file if they'll be useful elsewhere.
+
+    function evalStatus(attr, status, attrStr,
+      defaultStr, color) {
+      for (var tier in status) {
+        if (attr <= parseInt(tier)) {
+          return statusString(attrStr, status[tier], color);
+        }
+        return statusString(attrStr,
+          default, color);
+      }
+    }
+
 
     function statusString(attrStr, attr, color) {
       return '<' + color + '>Your ' + attrStr + attr + '</' + color + '>';
