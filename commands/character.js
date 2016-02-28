@@ -77,7 +77,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         };
         var color = getStatusColor(percentage);
         for (var tier in healthStatus) {
-          if (percentage < tier) {
+          if (percentage <= parseInt(tier)) {
             return '<' + color + '>You are ' + healthStatus[tier] +
               '.</' + color + '>';
           }
@@ -90,7 +90,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         var percentage = Math.floor(sanity / maxSanity);
         var noun = getGenderNoun(player.getGender());
         var sanityStatus = {
-          0: '❤z☀a☆l☂t☻h☯o☭r',
+          0: '__❤z☀a☆l☂t☻h☯o☭r))<<',
           5: 'hanging by a thread',
           10: 'wondering where your marbles are',
           15: 'seeing unrealities',
@@ -104,10 +104,10 @@ exports.command = function(rooms, items, players, npcs, Commands) {
           95: 'quite stable',
           100: 'sharp as a knife'
         };
-        
+
         var color = getStatusColor(percentage);
         for (var tier in sanityStatus) {
-          if (percentage < tier) {
+          if (percentage <= parseInt(tier)) {
             return '<' + color + '>You are ' + sanityStatus[tier] +
               '.</' + color + '>';
           }
@@ -115,8 +115,51 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       }
     }
 
+    function getStamina(stamina) {
+      var status = {
+        2: 'pathetic',
+        3: 'weak',
+        5: 'mediocre',
+        7: 'steady',
+        8: 'athletic',
+        10: 'vigorous',
+        12: 'fierce'
+      };
+      var attrStr = 'strength and endurance are '
+      for (var tier in status) {
+        if (stamina < parseInt(tier)) {
+          return statusString(attrStr, status[tier], 'yellow');
+        }
+        return statusString(attrStr, 'unearthly savage', 'yellow');
+      }
+    }
+
+    function getQuickness(quickness) {
+      var status = {
+        2: 'a slug',
+        3: 'a sloth',
+        5: 'an old ' + getGenderNoun(player.getGender()),
+        7: 'an athlete',
+        8: 'a fox',
+        10: 'a leopard',
+        12: 'a cheetah'
+      };
+      var attrStr = 'quickness is comparable to '
+
+      for (var tier in status) {
+        if (quickness <= parseInt(tier)) {
+          return statusString(attrStr, status[tier], 'blue');
+        }
+        return statusString(attrStr, 'lasers', 'blue');
+      }
+    }
+
     // Helper functions
     //TODO: Extract to a util file if they'll be useful elsewhere.
+
+    function statusString(attrStr, attr, color) {
+      return '<' + color + '>Your ' + attrStr + attr + '</' + color + '>';
+    }
 
     function getGenderNoun(gender) {
       var nouns = {
