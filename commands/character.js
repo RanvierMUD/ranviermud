@@ -20,7 +20,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       var status = {
         level: getLevelText,
         health: getHealthText(maxHealth),
-        experience: getExp,
         class: function noop() {},
         sanity: getSanityText(maxSanity),
         stamina: getStamina,
@@ -30,7 +29,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         mutagens: getMutagens
       };
 
-      return status[attr](value);
+      return status[attr](value) || '';
     }
 
     function getLevelText(level) {
@@ -85,6 +84,39 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         }
       }
     }
+
+    function getSanityText(maxSanity) {
+      return function(sanity) {
+        var percentage = Math.floor(sanity / maxSanity);
+        var noun = getGenderNoun(player.getGender());
+        var sanityStatus = {
+          0: '❤z☀a☆l☂t☻h☯o☭r',
+          5: 'hanging by a thread',
+          10: 'wondering where your marbles are',
+          15: 'seeing unrealities',
+          25: 'perceiving the unperceivable',
+          35: 'feeling dysphoric',
+          50: 'stressed to breaking',
+          60: 'mentally unsound',
+          70: 'feeling stressed',
+          80: 'discontent',
+          90: 'mentally well',
+          95: 'quite stable',
+          100: 'sharp as a knife'
+        };
+        
+        var color = getStatusColor(percentage);
+        for (var tier in sanityStatus) {
+          if (percentage < tier) {
+            return '<' + color + '>You are ' + sanityStatus[tier] +
+              '.</' + color + '>';
+          }
+        }
+      }
+    }
+
+    // Helper functions
+    //TODO: Extract to a util file if they'll be useful elsewhere.
 
     function getGenderNoun(gender) {
       var nouns = {
