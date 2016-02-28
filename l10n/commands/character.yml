@@ -1,34 +1,24 @@
 ATTRIBUTES:
-    en: "|| Attributes:" 
-    es: "|| Atributos:"
-MAX_HEALTH:
-    en: "|| Maximum health: $[1]"
-    es: "|| Maximum health: $[1]"
+    en: "<yellow><bold>You reflect on your existence.</yellow></bold>"
 LEVEL: 
-    en: "|| Level: $[1]"
-    es: "|| Level: $[1]"
+    en: "<blue><bold>You are known as $[1].</blue></bold>"
 HEALTH:
-    en: "|| Health: $[1]"
-    es: "|| Health: $[1]"
-EXPERIENCE: 
-    en: "|| Experience: $[1]"
-    es: "|| Experience: $[1]"
+    en: "$[1]"
 CLASS:
-    en: "|| Class: $[1]"
-    es: "|| Class: $[1]"
+    en: "Error Town!"
+EXPERIENCE: 
+    en: "Error Town!"
 DESCRIPTION:
-    en: "|| Description: $[1]"
-MAX_SANITY:
-    en: "|| Maximum sanity: $[1]"
+    en: "In the mirror, you would see '$[1]'."
 SANITY: 
-    en: "|| Sanity: $[1]"
+    en: "$[1]"
 STAMINA:
-    en: "|| Stamina: $[1]"
+    en: "$[1]"
 QUICKNESS:
-    en: "|| Quickness: $[1]"
+    en: "$[1]"
 CLEVERNESS:
-    en: "|| Cleverness: $[1]"
+    en: "$[1]"
 WILLPOWER:
-    en: "|| Willpower: $[1]"
+    en: "$[1]"
 MUTAGENS:
-    en: "|| Mutagens: $[1]"
+    en: "You have $[1] chances to make yourself more than human."
