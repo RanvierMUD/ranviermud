@@ -8,7 +8,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     player.sayL10n(l10n, 'ATTRIBUTES');
 
     for (var attr in character) {
-      if (attr.indexOf('max') === -1 && attr !== experience) {
+      if (attr.indexOf('max') === -1 && attr !== 'experience') {
         player.sayL10n(l10n, attr.toUpperCase(), getStatusString(attr,
           character[attr], character));
       }
@@ -26,11 +26,11 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         willpower: getWillpower,
         quickness: getQuickness,
         cleverness: getCleverness,
-        mutagens: function getMutagens() {
-          return player.getAttribute('mutagens');
-        }
+        mutagens: function() {
+          return value; },
+        description: player.getDescription,
       };
-
+      console.log(attr);
       return status[attr](value) || '';
     }
 
@@ -127,12 +127,12 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         10: 'vigorous',
         12: 'fierce'
       };
-      var attrStr = 'strength and endurance are '
-      evalStatus(stamina, attrStr, 'unearthly savage', 'yellow');
+      var attrStr = 'strength and endurance are ';
+      return evalStatus(stamina, status, attrStr, 'unearthly savage', 'blue');
     }
 
     function getQuickness(quickness) {
-      var genderNoun = getGenderNoun(player.getGender());
+      var gender = getGenderNoun(player.getGender());
       var status = {
         1: 'a slug',
         2: 'a sloth',
@@ -144,7 +144,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         16: 'a cheetah'
       };
       var attrStr = 'quickness is comparable to '
-      evalStatus(quickness, status, attrStr, 'laser unicorns', 'blue');
+      return evalStatus(quickness, status, attrStr, 'laser unicorns', 'yellow');
     }
 
     function getCleverness(cleverness) {
@@ -158,7 +158,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         12: 'wizardly'
       };
       var attrStr = 'mental acuity is ';
-      evalStatus(cleverness, status, attrStr, 'coruscating', 'red');
+      return evalStatus(cleverness, status, attrStr, 'coruscating', 'red');
     }
 
     function getWillpower(willpower) {
@@ -171,7 +171,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         10: 'uncanny'
       };
       var attrStr = 'will is ';
-      evalStatus(willpower, status, attrStr, 'divine', 'bold');
+      return evalStatus(willpower, status, attrStr, 'divine', 'bold');
     }
 
     // Helper functions
@@ -179,12 +179,13 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     function evalStatus(attr, status, attrStr,
       defaultStr, color) {
+      console.log(arguments);
       for (var tier in status) {
         if (attr <= parseInt(tier)) {
           return statusString(attrStr, status[tier], color);
         }
         return statusString(attrStr,
-          default, color);
+          defaultStr, color);
       }
     }
 
