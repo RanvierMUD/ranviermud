@@ -16,7 +16,7 @@
     "yaml": "",
     "express": "",
     "jade": "",
-    "commander": ""
+    "commander": "",
     "chalk": "^1.1.1",
   },
   "devDependencies": {
