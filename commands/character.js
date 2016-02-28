@@ -61,7 +61,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     function getHealthText(maxHealth) {
       return function(health) {
-        var percentage = Math.floor(health / maxHealth);
+        var percentage = Math.floor((health / maxHealth) * 100);
         var noun = getGenderNoun(player.getGender());
         var healthStatus = {
           0: 'a dead ' + noun + ' walking',
@@ -90,7 +90,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     function getSanityText(maxSanity) {
       return function(sanity) {
-        var percentage = Math.floor(sanity / maxSanity);
+        var percentage = Math.floor((sanity / maxSanity) * 100);
         var noun = getGenderNoun(player.getGender());
         var sanityStatus = {
           0: '__❤z☀a☆l☂t☻h☯o☭r))<<',
