@@ -5,7 +5,7 @@
   keywords:
     en: ['rat']
   short_description:
-    en: 'A feral rat'
+    en: 'a feral rat'
   description:
     en: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
   behaviors: "rtcombat,randommove"
