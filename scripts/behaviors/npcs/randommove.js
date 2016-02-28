@@ -17,20 +17,26 @@ function chooseRandomExit(room, rooms, player, players, npc) {
       chosenRoom.addNpc(uid);
       room.removeNpc(uid);
 
-      player.say(npc.getShortDesc(player.getLocale()) + ' leaves.');
+      player.say(npc.getShortDesc(player.getLocale()) + getLeaveMessage(
+        player, chosen));
 
       players.eachIf(
         otherPlayers.bind(
           null, player),
         function(p) {
           p.say(npc.getShortDesc(
-            p.getLocale()) + ' leaves');
+            p.getLocale()) + getLeaveMessage(p, chosen))
         });
     }
   }
 }
 
 //TODO: Candidates for utilification.
+function getLeaveMessage(player, chosen) {
+  return chosen.leave_message[
+    player.getLocale()] || ' leaves.';
+}
+
 function isCoinFlip() {
   return Math.round(Math.random());
 }
