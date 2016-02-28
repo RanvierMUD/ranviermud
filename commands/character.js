@@ -27,7 +27,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         quickness: getQuickness,
         cleverness: getCleverness,
         mutagens: function() {
-          return value; },
+          return value;
+        },
         description: player.getDescription,
       };
       console.log(attr);
@@ -128,7 +129,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         12: 'fierce'
       };
       var attrStr = 'strength and endurance are ';
-      return evalStatus(stamina, status, attrStr, 'unearthly savage', 'blue');
+      return evalStatus(stamina, status, attrStr, 'unearthly savage',
+        'blue');
     }
 
     function getQuickness(quickness) {
@@ -144,7 +146,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         16: 'a cheetah'
       };
       var attrStr = 'quickness is comparable to '
-      return evalStatus(quickness, status, attrStr, 'laser unicorns', 'yellow');
+      return evalStatus(quickness, status, attrStr, 'laser unicorns',
+        'yellow');
     }
 
     function getCleverness(cleverness) {
@@ -191,7 +194,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
 
     function statusString(attrStr, attr, color) {
-      return '<' + color + '>Your ' + attrStr + attr + '</' + color + '>';
+      return '<' + color + '>Your ' + attrStr + attr + '.</' + color + '>';
     }
 
     function getGenderNoun(gender) {
@@ -200,7 +203,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         F: 'woman',
         A: 'person'
       };
-      return nouns[gender];
+      return nouns[gender] || nouns.A;
     }
 
     function getStatusColor(percentage) {
