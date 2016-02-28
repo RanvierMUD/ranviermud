@@ -26,7 +26,9 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         willpower: getWillpower,
         quickness: getQuickness,
         cleverness: getCleverness,
-        mutagens: getMutagens
+        mutagens: function getMutagens() {
+          return player.getAttribute('mutagens');
+        }
       };
 
       return status[attr](value) || '';

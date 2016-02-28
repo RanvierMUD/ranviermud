@@ -7,8 +7,7 @@ HEALTH:
 CLASS:
     en: "Error Town!"
 EXPERIENCE: 
-    en: "|| Experience: $[1]"
-    es: "|| Experience: $[1]"
+    en: "Error Town!"
 DESCRIPTION:
     en: "In the mirror, you would see '$[1]'."
 SANITY: 
