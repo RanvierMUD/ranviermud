@@ -16,10 +16,10 @@ SANITY:
 STAMINA:
     en: "$[1]"
 QUICKNESS:
-    en: "|| Quickness: $[1]"
+    en: "$[1]"
 CLEVERNESS:
-    en: "|| Cleverness: $[1]"
+    en: "$[1]"
 WILLPOWER:
-    en: "|| Willpower: $[1]"
+    en: "$[1]"
 MUTAGENS:
-    en: "|| Mutagens: $[1]"
+    en: "You have $[1] chances to make yourself more than human."
