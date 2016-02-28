@@ -1,11 +1,11 @@
 - &serpent
   vnum: 2
   room: 6
-  script: '1.js'
+  script: '2.js'
   keywords:
-    en: ['python']
+    en: ['python', 'snake', 'lazy', 'py']
   short_description:
-    en: 'A lazy python'
+    en: 'a lazy python'
   description:
     en: "The python slithers slowly across the ground, its forked tongue darting out of its mouth."
   behaviors: "rtcombat,randommove"
