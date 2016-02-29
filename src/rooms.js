@@ -73,9 +73,6 @@ var Rooms = function () {
 
 				// Load any room files
 				for (j in rooms) {
-					log("In file " + file);
-					log("Rooms are " + rooms);
-					log("Jiterator is " + j);
 					var room_file = file + '/' + rooms[j];
 					//skip the manifest or any directories
 					if (room_file.match(/manifest/)) continue;
@@ -84,7 +81,6 @@ var Rooms = function () {
 
 					// parse the room files
 					try {
-						log("Loading " + room_file);
 						var room_def = require('js-yaml').load(fs.readFileSync(room_file).toString('utf8'));
 					} catch (e) {
 						log("\t\tError loading room - " + room_file + ' - ' + e.message);
@@ -93,7 +89,6 @@ var Rooms = function () {
 
 					// create and load the rooms
 					for (var vnum in room_def) {
-						console.log(vnum);
 						var room = room_def[vnum];
 						var validate = ['title', 'description', 'location'];
 
