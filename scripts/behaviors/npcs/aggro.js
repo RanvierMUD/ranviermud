@@ -3,7 +3,8 @@ var LevelUtils = require("../../../src/levels").LevelUtils;
 exports.listeners = {
   playerEnter: function(l10n) {
     return function(room, rooms, player, players, npc) {
-      var npcs = require('../../../src/npcs');
+      var npcs = require('../../../src/npcs').Npcs;
+      console.log(npcs);
       var callback = function(success) {
         // cleanup here...
       }
