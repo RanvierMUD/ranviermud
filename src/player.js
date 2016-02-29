@@ -2,16 +2,15 @@ var Data    = require('./data').Data,
     Skills  = require('./skills').Skills,
     crypto  = require('crypto'),
     ansi    = require('sty'),
-    util    = require('util');
+    util    = require('util'),
     events  = require('events');
-
-
 var npcs_scripts_dir = __dirname + '/../scripts/player/';
 var l10n_dir         = __dirname + '/../l10n/scripts/player/';
 
 var Player = function(socket) {
 	var self = this;
 	self.name     = '';
+	self.description = '';
 	self.location = null;
 	self.locale   = null;
 	self.prompt_string = '%health/%max_healthHP>';
@@ -27,10 +26,17 @@ var Player = function(socket) {
 	// Attributes
 	self.attributes = {
 		max_health: 100,
-		health : 100,
+		health : 30,
+		max_sanity: 100,
+		sanity: 30,
+		stamina: 1,
+		willpower: 1,
+		quickness: 1,
+		cleverness: 1,
 		level: 1,
 		experience: 0,
-		'class': ''
+		mutagens: 0,
+		description: 'A person.'
 	};
 
 	// Anything affecting the player
@@ -48,10 +54,12 @@ var Player = function(socket) {
 	self.getCombatPrompt = function () { return self.combat_prompt; };
 	self.getLocale       = function () { return self.locale; };
 	self.getName         = function () { return self.name; };
+	self.getDescription  = function () { return self.attributes.description; };
 	self.getLocation     = function () { return self.location; };
 	self.getSocket       = function () { return socket; };
 	self.getInventory    = function () { return self.inventory; };
 	self.getAttribute    = function (attr)  { return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
+	self.getAttributes   = function () { return self.attributes || {} }
 	self.getSkills       = function (skill) { return typeof self.skills[skill] !== 'undefined'    ? self.skills[skill]    : self.skills; };
 	// Note, only retreives hash, not a real password
 	self.getPassword     = function () { return self.password; };
@@ -60,8 +68,12 @@ var Player = function(socket) {
 	self.setCombatPrompt = function (str)       { self.combat_prompt = str; }
 	self.setLocale       = function (locale)    { self.locale = locale; };
 	self.setName         = function (newname)   { self.name = newname; };
+	self.setDescription  = function (newdesc)	{ self.attributes.description = newdesc; };
 	self.setLocation     = function (loc)       { self.location = loc; };
 	self.setPassword     = function (pass)      { self.password = crypto.createHash('md5').update(pass).digest('hex'); };
+	self.setGender       = function (gender)    { self.gender = gender.toUpperCase(); }
+	self.getGender       = function () 
+		{ return self.gender; }
 	self.addItem         = function (item)      { self.inventory.push(item); };
 	self.removeItem      = function (item)      { self.inventory = self.inventory.filter(function (i) { return item !== i; }); };
 	self.setInventory    = function (inv)       { self.inventory = inv; };
@@ -351,7 +363,8 @@ var Player = function(socket) {
 			inventory: inv,
 			equipment: self.equipment,
 			attributes: self.attributes,
-			skills: self.skills
+			skills: self.skills,
+			gender: self.gender
 		});
 	};
 
