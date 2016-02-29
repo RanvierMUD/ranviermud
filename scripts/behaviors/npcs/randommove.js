@@ -35,8 +35,9 @@ function chooseRandomExit(room, rooms, player, players, npc) {
 
 //TODO: Candidates for utilification.
 function getLeaveMessage(player, chosen) {
-  return chosen.leave_message[
+  if (chosen) return chosen.leave_message[
     player.getLocale()] || ' leaves.';
+  return ' leaves';
 }
 
 function isCoinFlip() {

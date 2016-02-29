@@ -1,8 +1,12 @@
 var LevelUtils = require("../../../src/levels").LevelUtils;
-
+//TODO: Make more DRY since it is basically a copy/paste of much of the rtcombat behavior...
 exports.listeners = {
   playerEnter: function(l10n) {
-    return function(player, room, players, npcs, callback) {
+    return function(room, rooms, player, players, npc) {
+      var npcs = require('../../../src/npcs');
+      var callback = function(success) {
+        // cleanup here...
+      }
       initiate_combat(l10n, this, player, room, npcs, callback);
     }
   }
