@@ -8,7 +8,7 @@
     en: 'a hungry python'
   description:
     en: "The python slithers slowly across the ground, its forked tongue darting out of its mouth."
-  behaviors: "rtcombat,randommove,aggro"
+  behaviors: "rtcombat,aggro"
   attributes:
     max_health: 25
     health: 25
