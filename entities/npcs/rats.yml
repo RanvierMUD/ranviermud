@@ -23,3 +23,5 @@
   room: 1
 - <<: *rat
   room: 4
+- <<: *rat
+  room: 8
