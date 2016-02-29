@@ -5,10 +5,10 @@
   keywords:
     en: ['python', 'snake', 'lazy', 'py']
   short_description:
-    en: 'a lazy python'
+    en: 'a hungry python'
   description:
     en: "The python slithers slowly across the ground, its forked tongue darting out of its mouth."
-  behaviors: "rtcombat,randommove"
+  behaviors: "rtcombat,aggro"
   attributes:
     max_health: 25
     health: 25
