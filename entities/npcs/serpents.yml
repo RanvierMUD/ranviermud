@@ -3,7 +3,7 @@
   room: 6
   script: '2.js'
   keywords:
-    en: ['python', 'snake', 'lazy', 'py']
+    en: ['python', 'snake', 'hungry', 'py']
   short_description:
     en: 'a hungry python'
   attack: 
