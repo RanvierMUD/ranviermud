@@ -238,6 +238,8 @@ var Npc = function (config)
 		self.affects[name] = 1;
 	};
 
+	//TODO: dry-ify the following
+
 	/**
 	 * Get the description, localized if possible
 	 * @param string locale
