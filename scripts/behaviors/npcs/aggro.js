@@ -10,17 +10,19 @@ exports.listeners = {
 };
 
 function initiate_combat(l10n, npc, player, room, npcs, callback) {
+  var locale = player.getLocale();
   player.setInCombat(npc);
   npc.setInCombat(player.getName());
 
-  player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(player.getLocale()));
+  player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(locale));
 
-  // Get the weapon speed or just use a standard 1 sec counter
+  // Get the playerWeapon speed or just use a standard 1 sec counter
   var player_speed = player.getAttackSpeed() * 1000;
+  var playerWeapon = player.getEquipped('wield', true);
+
   // Same for npcs
   var npc_speed = npc.getAttackSpeed() * 1000;
-
-  var weapon = player.getEquipped('wield', true);
+  var npcWeapon = npcWeapon;
 
   var npc_combat = function() {
     if (!player.isInCombat()) return;
@@ -31,12 +33,11 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
       .random() * (damage.max - damage.min))));
 
     if (!damage) {
-      if (weapon) weapon.emit('parry', player);
-      player.sayL10n(l10n, 'NPC_MISS', npc.getShortDesc(player.getLocale()),
-        damage);
+      if (playerWeapon) playerWeapon.emit('parry', player);
+      player.sayL10n(l10n, 'NPC_MISS', npc.getShortDesc(locale));
     } else {
-      player.sayL10n(l10n, 'DAMAGE_TAKEN', npc.getShortDesc(player.getLocale()),
-        getDamageString(damage, player_health));
+      player.sayL10n(l10n, 'DAMAGE_TAKEN', npc.getShortDesc(locale),
+        getDamageString(damage, player_health), npcWeapon);
     }
 
 
@@ -47,7 +48,7 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
     }
 
     player.combatPrompt({
-      target_name: npc.getShortDesc(player.getLocale()),
+      target_name: npc.getShortDesc(locale),
       target_max_health: npc.getAttribute('max_health'),
       target_health: npc.getAttribute('health'),
     });
@@ -68,12 +69,12 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
       Math.random() * (damage.max - damage.min)))));
 
     if (!damage) {
-      if (weapon) weapon.emit('miss', player);
-      player.sayL10n(l10n, 'PLAYER_MISS', npc.getShortDesc(player.getLocale()),
+      if (playerWeapon) playerWeapon.emit('miss', player);
+      player.sayL10n(l10n, 'PLAYER_MISS', npc.getShortDesc(locale),
         damage)
     } else {
-      if (weapon) weapon.emit('hit', player);
-      player.sayL10n(l10n, 'DAMAGE_DONE', npc.getShortDesc(player.getLocale()), )
+      if (playerWeapon) playerWeapon.emit('hit', player);
+      player.sayL10n(l10n, 'DAMAGE_DONE', npc.getShortDesc(locale), getDamageString(damage, npc_health));
     }
 
     npc.setAttribute('health', npc_health - damage);
@@ -82,7 +83,7 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
     }
 
     player.combatPrompt({
-      target_name: npc.getShortDesc(player.getLocale()),
+      target_name: npc.getShortDesc(locale),
       target_max_health: npc.getAttribute('max_health'),
       target_health: npc.getAttribute('health'),
     });
@@ -119,7 +120,7 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
       player.emit('regen');
       room.removeNpc(npc.getUuid());
       npcs.destroy(npc);
-      player.sayL10n(l10n, 'WIN', npc.getShortDesc(player.getLocale()));
+      player.sayL10n(l10n, 'WIN', npc.getShortDesc(locale));
 
       // hand out experience
       var exp = npc.getAttribute('experience') !== false ?
@@ -128,7 +129,7 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
 
       player.emit('experience', exp);
     } else {
-      player.sayL10n(l10n, 'LOSE', npc.getShortDesc(player.getLocale()));
+      player.sayL10n(l10n, 'LOSE', npc.getShortDesc(locale));
       player.emit('die');
       npc.setAttribute('health', npc.getAttribute('max_health'));
     }
