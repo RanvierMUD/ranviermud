@@ -6,11 +6,17 @@ module.exports = {
   getGenderNoun: getGenderNoun
 };
 
-function getHealthText(maxHealth, player, npc, isPlayer) {
+function getHealthText(maxHealth, player, npc) {
   return function(health) {
-  	var locale = player.getLocale();
+    //TODO: extract some of these into helper functions?
+    var locale = player.getLocale();
+    var isPlayer = !npc;
     var percentage = Math.floor((health / maxHealth) * 100);
     var noun = isPlayer ? getGenderNoun(player.getGender()) : 'creature';
+    var nounPhrase = isPlayer ? 'You are ' : npc.getShortDesc(locale) +
+      ' is ';
+    var color = getStatusColor(percentage);
+
     var healthStatus = {
       0: 'a dead ' + noun + ' walking',
       5: 'hanging by a thread',
@@ -26,9 +32,7 @@ function getHealthText(maxHealth, player, npc, isPlayer) {
       95: 'in great health',
       100: 'in perfect health'
     };
-    var nounPhrase = isPlayer ? 'You are ' : npc.getShortDesc(locale) +
-      ' is ';
-    var color = getStatusColor(percentage);
+
     for (var tier in healthStatus) {
       if (percentage <= parseInt(tier)) {
         return '<' + color + '>' + nounPhrase + healthStatus[tier] +

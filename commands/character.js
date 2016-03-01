@@ -58,7 +58,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         }
       }
 
-      return "paragon";
+      return "the paragon";
     }
 
     function getSanityText(maxSanity) {
