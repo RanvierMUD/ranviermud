@@ -1,5 +1,6 @@
 var l10n_file = __dirname + '/../l10n/commands/character.yml';
 var l10n = require('../src/l10n')(l10n_file);
+var status = require('../src/status');
 exports.command = function(rooms, items, players, npcs, Commands) {
 
   return function(args, player) {
@@ -19,9 +20,9 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       var maxSanity = character.max_sanity;
       var status = {
         level: getLevelText,
-        health: getHealthText(maxHealth),
+        health: status.getHealthText(maxHealth, player),
         class: function noop() {},
-        sanity: getSanityText(maxSanity),
+        sanity: status.getSanityText(maxSanity, player),
         stamina: getStamina,
         willpower: getWillpower,
         quickness: getQuickness,
