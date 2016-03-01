@@ -27,7 +27,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         quickness: getQuickness,
         cleverness: getCleverness,
         mutagens: function() {
-          return value;
+          return value === 1 ? value + ' more time' : value +
+            ' more times';
         },
         description: player.getDescription,
       };
@@ -95,7 +96,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         var sanityStatus = {
           0: '__❤z☀a☆l☂t☻h☯o☭r))<<',
           5: 'hanging by a thread',
-          10: 'wondering where your marbles are',
+          10: 'nearing insanity',
           15: 'seeing unrealities',
           25: 'perceiving the unperceivable',
           35: 'feeling dysphoric',
@@ -152,7 +153,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     function getCleverness(cleverness) {
       var status = {
-        1: 'foggy as a graveyard',
+        1: 'foggy',
         3: 'hazy',
         5: 'mundane at best',
         6: 'shrewd',
