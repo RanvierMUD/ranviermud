@@ -13,7 +13,7 @@ var Player = function(socket) {
   self.description = '';
   self.location = null;
   self.locale = null;
-  self.prompt_string = '%health/%max_healthHP>';
+  self.prompt_string = '%health_condition/%sanity_condition>';
   //TODO: Change combat_prompt
   self.combat_prompt =
     "<bold>|| %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
