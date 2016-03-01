@@ -7,7 +7,7 @@
   short_description:
     en: 'a hungry python'
   attack: 
-    en: 'embrace'
+    en: 'scaly embrace'
   description:
     en: "The python slithers slowly across the ground, its forked tongue darting out of its mouth."
   behaviors: "rtcombat,aggro"
