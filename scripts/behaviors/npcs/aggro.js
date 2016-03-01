@@ -33,15 +33,14 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
       .random() * (damage.max - damage.min))));
 
     if (!damage) {
-      if (weapon) {
-        weapon.emit('parry', player);
-      }
+      if (weapon) weapon.emit('parry', player);
       player.sayL10n(l10n, 'NPC_MISS', npc.getShortDesc(player.getLocale()),
-        damage)
+        damage);
     } else {
       player.sayL10n(l10n, 'DAMAGE_TAKEN', npc.getShortDesc(player.getLocale()),
-        damage)
+        damage, getDamageString(damage, player_health));
     }
+
 
     player.setAttribute('health', player_health - damage);
     if (player_health <= damage) {
@@ -100,7 +99,26 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
 
   setTimeout(player_combat, player_speed);
 
+  function getDamageString(damage, health) {
+    var percentage = Math.round((damage / health) * 100);
+    var damageStrings = {
+      3: 'tickles',
+      5: 'scratchs',
+      8: 'grazes',
+      15: 'hits'
+      35: 'wounds',
+      50: 'devastates',
+      75: 'annihilates',
+      99: 'eviscerates'
+    };
 
+    for (var amt in damageStrings) {
+      if (percentage <= amt) {
+        return damageStrings[amt];
+      }
+      return 'slays';
+    }
+  }
 
   function combat_end(success) {
     player.setInCombat(false);
