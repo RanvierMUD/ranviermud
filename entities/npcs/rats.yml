@@ -7,7 +7,7 @@
   short_description:
     en: 'a feral rat'
   attack:
-    en: 'bite'
+    en: 'jagged fangs'
   description:
     en: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
   behaviors: "rtcombat,randommove"
