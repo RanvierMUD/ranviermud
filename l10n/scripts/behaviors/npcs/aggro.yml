@@ -17,4 +17,4 @@ NPC_MISS:
   en: "<yellow>$[1] misses.</yellow>"
   es: "ES-<yellow>$[1] misses.</yellow>"
 ATTACK:
-  en: "You are attacked by $[1]."
+  en: "<bold>You are attacked by $[1].</bold>"
