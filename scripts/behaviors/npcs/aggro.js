@@ -23,9 +23,7 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
   var weapon = player.getEquipped('wield', true);
 
   var npc_combat = function() {
-    if (!player.isInCombat()) {
-      return;
-    }
+    if (!player.isInCombat()) return;
 
     var player_health = player.getAttribute('health');
     var damage = npc.getDamage();
@@ -38,7 +36,7 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
         damage);
     } else {
       player.sayL10n(l10n, 'DAMAGE_TAKEN', npc.getShortDesc(player.getLocale()),
-        damage, getDamageString(damage, player_health));
+        getDamageString(damage, player_health));
     }
 
 
@@ -70,17 +68,12 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
       Math.random() * (damage.max - damage.min)))));
 
     if (!damage) {
-      if (weapon) {
-        weapon.emit('miss', player);
-      }
+      if (weapon) weapon.emit('miss', player);
       player.sayL10n(l10n, 'PLAYER_MISS', npc.getShortDesc(player.getLocale()),
         damage)
     } else {
-      if (weapon) {
-        weapon.emit('hit', player);
-      }
-      player.sayL10n(l10n, 'DAMAGE_DONE', npc.getShortDesc(player.getLocale()),
-        damage)
+      if (weapon) weapon.emit('hit', player);
+      player.sayL10n(l10n, 'DAMAGE_DONE', npc.getShortDesc(player.getLocale()), )
     }
 
     npc.setAttribute('health', npc_health - damage);
@@ -112,10 +105,9 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
       99: 'eviscerates'
     };
 
-    for (var amt in damageStrings) {
-      if (percentage <= amt) {
-        return damageStrings[amt];
-      }
+    for (var cutoff in damageStrings) {
+      if (percentage <= cutoff)
+        return damageStrings[cutoff];
       return 'slays';
     }
   }

@@ -148,7 +148,8 @@ var Npc = function (config)
 	var self = this;
 
 	self.keywords;
-	self.short_description
+	self.short_description;
+	self.attack;
 	self.description;
 	self.room; // Room that it's in (vnum)
 	self.vnum; // Not to be confused with its vnum
@@ -174,6 +175,7 @@ var Npc = function (config)
 	{
 		self.short_description = config.short_description || '';
 		self.keywords          = config.keywords    || [];
+		self.attack            = config.attack      || {en: 'strike'};
 		self.description       = config.description || '';
 		self.room              = config.room        || null;
 		self.vnum              = config.vnum;
@@ -246,6 +248,18 @@ var Npc = function (config)
 		return typeof self.description === 'string' ?
 			self.description :
 			(locale in self.description ? self.description[locale] : 'UNTRANSLATED - Contact an admin');
+	};
+
+	/**
+	 * Get the attack, localized if possible
+	 * @param string locale
+	 * @return string
+	 */
+	self.getDescription = function (locale)
+	{
+		return typeof self.attack === 'string' ?
+			self.attack :
+			(locale in self.attack ? self.attack[locale] : 'UNTRANSLATED - Contact an admin');
 	};
 
 	/**
