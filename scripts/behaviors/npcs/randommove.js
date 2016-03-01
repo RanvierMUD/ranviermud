@@ -19,14 +19,14 @@ function chooseRandomExit(room, rooms, player, players, npc) {
         room.removeNpc(uid);
 
         player.say(npc.getShortDesc(player.getLocale()) + getLeaveMessage(
-          player, chosen));
+          player, chosenRoom));
 
         players.eachIf(
           otherPlayers.bind(
             null, player),
           function(p) {
             p.say(npc.getShortDesc(
-              p.getLocale()) + getLeaveMessage(p, chosen))
+              p.getLocale()) + getLeaveMessage(p, chosenRoom))
           });
       }
     }
@@ -34,10 +34,11 @@ function chooseRandomExit(room, rooms, player, players, npc) {
 }
 
 //TODO: Candidates for utilification.
-function getLeaveMessage(player, chosen) {
-  if (chosen) return chosen.leave_message[
-    player.getLocale()] || ' leaves.';
-  return ' leaves';
+//TODO: Consider NPC only leave_messages
+function getLeaveMessage(player, chosenRoom) {
+  if (chosenRoom && chosenRoom.title) 
+    return ' leaves for ' + chosenRoom.title[player.getLocale()];
+  return ' leaves.'
 }
 
 function isCoinFlip() {

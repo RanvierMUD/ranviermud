@@ -21,4 +21,4 @@ CLEVERNESS:
 WILLPOWER:
     en: "$[1]"
 MUTAGENS:
-    en: "You have $[1] chances to make yourself more than human."
+    en: "You may alter yourself $[1]."
