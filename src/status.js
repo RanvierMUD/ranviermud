@@ -6,11 +6,11 @@ module.exports = {
   getGenderNoun: getGenderNoun
 };
 
-function getHealthText(maxHealth, entity) {
+function getHealthText(maxHealth, player, npc, isPlayer) {
   return function(health) {
+  	var locale = player.getLocale();
     var percentage = Math.floor((health / maxHealth) * 100);
-    var isPlayer = entity.toString() === '[object Player]';
-    var noun = isPlayer ? getGenderNoun(entity.getGender()) : 'creature';
+    var noun = isPlayer ? getGenderNoun(player.getGender()) : 'creature';
     var healthStatus = {
       0: 'a dead ' + noun + ' walking',
       5: 'hanging by a thread',
@@ -26,7 +26,7 @@ function getHealthText(maxHealth, entity) {
       95: 'in great health',
       100: 'in perfect health'
     };
-    var nounPhrase = isPlayer ? 'You are ' : entity.getShortDesc(locale) +
+    var nounPhrase = isPlayer ? 'You are ' : npc.getShortDesc(locale) +
       ' is ';
     var color = getStatusColor(percentage);
     for (var tier in healthStatus) {
@@ -38,11 +38,11 @@ function getHealthText(maxHealth, entity) {
   }
 }
 
-function getSanityText(maxSanity, isPlayer) {
+function getSanityText(maxSanity, player) {
   return function(sanity) {
     var percentage = Math.floor((sanity / maxSanity) * 100);
     var sanityStatus = {
-      0: 'CONSUMED by __❤z☀a☆l☂t☻h☯o☭r))<<',
+      0: 'consumed by thoughts of suicide',
       5: 'hanging by a thread',
       10: 'nearing insanity',
       15: 'seeing unrealities',

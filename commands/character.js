@@ -1,6 +1,6 @@
 var l10n_file = __dirname + '/../l10n/commands/character.yml';
 var l10n = require('../src/l10n')(l10n_file);
-var status = require('../src/status');
+var statusUtil = require('../src/status.js');
 exports.command = function(rooms, items, players, npcs, Commands) {
 
   return function(args, player) {
@@ -20,9 +20,9 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       var maxSanity = character.max_sanity;
       var status = {
         level: getLevelText,
-        health: status.getHealthText(maxHealth, player),
+        health: statusUtil.getHealthText(maxHealth, player, null, true),
         class: function noop() {},
-        sanity: status.getSanityText(maxSanity, player),
+        sanity: statusUtil.getSanityText(maxSanity, player),
         stamina: getStamina,
         willpower: getWillpower,
         quickness: getQuickness,
@@ -44,12 +44,12 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         13: 'an embittered survivor',
         15: 'an aimless wanderer',
         18: 'a purposeful wanderer',
-        20: 'a perseverer',
-        28: 'an outlaster',
-        35: 'an indweller',
-        42: 'a defier of death',
-        50: 'a reviver',
-        55: 'an undying fiend',
+        20: 'the perseverer',
+        28: 'the outlaster',
+        35: 'the indweller',
+        42: 'the defier of death',
+        50: 'the reviver',
+        55: 'the undying',
       };
 
       for (var tier in titles) {
@@ -59,35 +59,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       }
 
       return "paragon";
-    }
-
-    function getHealthText(maxHealth) {
-      return function(health) {
-        var percentage = Math.floor((health / maxHealth) * 100);
-        var noun = getGenderNoun(player.getGender());
-        var healthStatus = {
-          0: 'a dead ' + noun + ' walking',
-          5: 'hanging by a thread',
-          10: 'in excruciating pain',
-          15: 'wracked by pain',
-          25: 'maimed',
-          35: 'gravely wounded',
-          50: 'wounded',
-          60: 'in awful shape',
-          70: 'feeling poor',
-          80: 'in average health',
-          90: 'in good health',
-          95: 'in great health',
-          100: 'in perfect health'
-        };
-        var color = getStatusColor(percentage);
-        for (var tier in healthStatus) {
-          if (percentage <= parseInt(tier)) {
-            return '<' + color + '>You are ' + healthStatus[tier] +
-              '.</' + color + '>';
-          }
-        }
-      }
     }
 
     function getSanityText(maxSanity) {
