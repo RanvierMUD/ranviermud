@@ -5,11 +5,11 @@ LOSE:
   en: "<bold><red>You were killed by $[1]</red></bold>"
   es: "ES-<bold><red>You were killed by $[1]</red></bold>"
 DAMAGE_DONE:
-  en: "<green>You deal $[2] damage to $[1]</green>"
-  es: "ES-<green>You deal $[2] damage to $[1]</green>"
+  en: "<green>Your attack $[2] $[1]</green>"
+  es: "<green>Your attack $[2] $[1]</green>"
 DAMAGE_TAKEN:
-  en: "<red>$[1] hits you for $[2] damage!</red>"
-  es: "ES-<bold><red>$[1] hits you for $[2] damage!</red></bold>"
+  en: "<bold><red>$[1] $[2] you with their $[3]!</red></bold>"
+  es: "<red>$[1] $[2] you with their $[3]!</red>"
 PLAYER_MISS:
   en: "<yellow>You miss.</yellow>"
   es: "ES-<yellow>You miss.</yellow>"
