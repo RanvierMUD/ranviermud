@@ -1,4 +1,6 @@
 module.exports.initiate_combat = _initiate_combat;
+var LevelUtils = require("../../../src/levels").LevelUtils;
+
 
 function _initiate_combat(l10n, npc, player, room, npcs, callback) {
   var locale = player.getLocale();
