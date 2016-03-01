@@ -255,7 +255,7 @@ var Npc = function (config)
 	 * @param string locale
 	 * @return string
 	 */
-	self.getDescription = function (locale)
+	self.getAttack = function (locale)
 	{
 		return typeof self.attack === 'string' ?
 			self.attack :

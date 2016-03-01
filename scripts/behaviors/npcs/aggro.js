@@ -22,7 +22,7 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
 
   // Same for npcs
   var npc_speed = npc.getAttackSpeed() * 1000;
-  var npcWeapon = npcWeapon;
+  var npcWeapon = npc.getAttack(locale);
 
   var npc_combat = function() {
     if (!player.isInCombat()) return;
@@ -74,7 +74,8 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
         damage)
     } else {
       if (playerWeapon) playerWeapon.emit('hit', player);
-      player.sayL10n(l10n, 'DAMAGE_DONE', npc.getShortDesc(locale), getDamageString(damage, npc_health));
+      player.sayL10n(l10n, 'DAMAGE_DONE', npc.getShortDesc(locale),
+        getDamageString(damage, npc_health));
     }
 
     npc.setAttribute('health', npc_health - damage);
@@ -94,12 +95,15 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
   setTimeout(player_combat, player_speed);
 
   function getDamageString(damage, health) {
+    console.log(arguments);
     var percentage = Math.round((damage / health) * 100);
+    console.log('%:', percentage);
+
     var damageStrings = {
       3: 'tickles',
       5: 'scratchs',
       8: 'grazes',
-      15: 'hits'
+      15: 'hits',
       35: 'wounds',
       50: 'devastates',
       75: 'annihilates',
@@ -107,10 +111,12 @@ function initiate_combat(l10n, npc, player, room, npcs, callback) {
     };
 
     for (var cutoff in damageStrings) {
-      if (percentage <= cutoff)
+      if (percentage <= cutoff) {
+        console.log(cutoff);
         return damageStrings[cutoff];
-      return 'slays';
+      }
     }
+    return 'slays';
   }
 
   function combat_end(success) {
