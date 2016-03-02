@@ -1,4 +1,7 @@
-module.exports.initiate_combat = _initiate_combat;
+module.exports.initiate_combat = _initiate_combat;\
+//TODO: Add strings for sanity damage
+//TODO: Implement use of attributes besides damage in combat.
+//TODO: Impelment use of combat stance, etc. for strategery.
 
 var LevelUtils = require('./levels').LevelUtils;
 var statusUtils = require('./status');
