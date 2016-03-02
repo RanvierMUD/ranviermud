@@ -283,7 +283,6 @@ var Player = function(socket) {
     extra.health_condition = statusUtil.getHealthText(self.getAttribute('max_health'), self)(self.getAttribute('health'));
     extra.sanity_condition = statusUtil.getSanityText(self.getAttribute('max_sanity'), self)(self.getAttribute('sanity'));
 
-    console.log(extra);
     for (var data in extra) {
       pstring = pstring.replace("%" + data, extra[data]);
     }
