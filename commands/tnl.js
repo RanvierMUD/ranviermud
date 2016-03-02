@@ -12,8 +12,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       10: 'You have far to go before advancing again.',
       25: 'You have a journey ahead before advancing.',
       50: 'You feel that you have more to learn before advancing.',
-      75: 'You feel that you have learned much since you last advanced.',
-      101: 'You feel you are on the cusp of a breakthrough.'
+      75: 'You have learned much since you last advanced.',
+      101: 'You are on the cusp of a breakthrough...'
     };
 
     for (var tier in toLevelStatus) {
