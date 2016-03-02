@@ -1,5 +1,5 @@
 // A file of helper functions for getting player/npc status-related strings.
-//TODO: Dry this up and extract it as needed.
+//TODO: Dry this up more.
 module.exports = {
   getHealthText: getHealthText,
   getSanityText: getSanityText,
@@ -35,7 +35,6 @@ function getHealthText(maxHealth, player, npc) {
 
     for (var tier in healthStatus) {
       if (percentage <= parseInt(tier)) {
-        console.log("returning healthStatus", healthStatus[tier]);
         return '<' + color + '>' + nounPhrase + healthStatus[tier] +
           '.</' + color + '>';
       }
