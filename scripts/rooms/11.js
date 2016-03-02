@@ -1,6 +1,7 @@
 exports.listeners = {
   playerEnter: function(l10n) {
-    return function(room, rooms, player, players, npc) {
+    return function(player, players) {
+      console.log(arguments);
       var rand = getRand();
       if (rand === 3) {
         rand = getRand();
@@ -8,11 +9,6 @@ exports.listeners = {
           rand);
         player.sayL10n(l10n, 'DISCOMFORT');
       }
-    }
-  },
-  playerDropItem: function(l10n) {
-    return function(room, player) {
-      player.sayL10n(l10n, 'PLAYER_DROP');
     }
   },
 };
