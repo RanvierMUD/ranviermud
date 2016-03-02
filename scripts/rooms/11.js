@@ -1,12 +1,9 @@
 exports.listeners = {
   playerEnter: function(l10n) {
     return function(player, players) {
-      console.log(arguments);
-      var rand = getRand();
-      if (rand === 3) {
-        rand = getRand();
+      if (getRand() === 3) {
         player.setAttribute('sanity', player.getAttribute('sanity') -
-          rand);
+          getRand());
         player.sayL10n(l10n, 'DISCOMFORT');
       }
     }
