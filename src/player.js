@@ -6,6 +6,7 @@ var Data = require('./data').Data,
   events = require('events');
 var npcs_scripts_dir = __dirname + '/../scripts/player/';
 var l10n_dir = __dirname + '/../l10n/scripts/player/';
+var statusUtil = require('./status');
 
 var Player = function(socket) {
   var self = this;
@@ -13,8 +14,8 @@ var Player = function(socket) {
   self.description = '';
   self.location = null;
   self.locale = null;
-  self.prompt_string = '%health_condition/%sanity_condition>';
-  //TODO: Change combat_prompt
+  self.prompt_string =
+    '%health_condition <blue>||</blue> %sanity_condition\n<blue><bold>[ </bold></blue>';
   self.combat_prompt =
     "<bold>|| %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
   self.password = null;
@@ -276,13 +277,13 @@ var Player = function(socket) {
    * @param object extra Other data to show
    */
   self.prompt = function(extra) {
+    var pstring = self.getPrompt();
     extra = extra || {};
 
-    var pstring = self.getPrompt();
-    for (var attr in self.attributes) {
-      pstring = pstring.replace("%" + attr, self.attributes[attr]);
-    }
+    extra.health_condition = statusUtil.getHealthText(self.getAttribute('max_health'), self)(self.getAttribute('health'));
+    extra.sanity_condition = statusUtil.getSanityText(self.getAttribute('max_sanity'), self)(self.getAttribute('sanity'));
 
+    console.log(extra);
     for (var data in extra) {
       pstring = pstring.replace("%" + data, extra[data]);
     }
@@ -298,9 +299,6 @@ var Player = function(socket) {
     extra = extra || {};
 
     var pstring = self.getCombatPrompt();
-    // for (var attr in self.attributes) {
-    //   pstring = pstring.replace("%" + attr, self.attributes[attr]);
-    // }
 
     for (var data in extra) {
       pstring = pstring.replace("%" + data, extra[data]);

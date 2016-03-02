@@ -35,6 +35,7 @@ function getHealthText(maxHealth, player, npc) {
 
     for (var tier in healthStatus) {
       if (percentage <= parseInt(tier)) {
+        console.log("returning healthStatus", healthStatus[tier]);
         return '<' + color + '>' + nounPhrase + healthStatus[tier] +
           '.</' + color + '>';
       }
