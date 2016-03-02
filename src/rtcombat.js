@@ -34,6 +34,12 @@ function _initiate_combat(l10n, npc, player, room, npcs, callback) {
         getDamageString(damage, player_health), npcWeapon);
     }
 
+    var sanityDamage = npc.getSanityDamage();
+    var player_sanity = player.getAttribute('sanity');
+    if (sanityDamage) {
+      sanityDamage = Math.min(player_sanity, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min))));
+    }
+
 
     player.setAttribute('health', player_health - damage);
     if (player_health <= damage) {

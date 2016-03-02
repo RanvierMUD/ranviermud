@@ -309,8 +309,8 @@ var Npc = function (config)
 	};
 
 	/**
-	 * Get the damage a player can do
-	 * @return int
+	 * Get the damage an npc can do
+	 * @return obj {min: int, max: int}
 	 */
 	self.getDamage = function ()
 	{
@@ -319,6 +319,18 @@ var Npc = function (config)
 			self.getAttribute('damage').split('-').map(function (i) { return parseInt(i, 10); })
 			: base
 		return {min: damage[0], max: damage[1]};
+	};
+
+	/**
+	 * Get the damage to sanity an npc can do
+	 * @return obj {min: int, max: int} || false
+	 */
+	self.getSanityDamage = function ()
+	{
+		var damage = self.getAttribute('sanity_damage') ?
+			self.getAttribute('sanity_damage').split('-').map(function (i) { return parseInt(i, 10); })
+			: false;
+		return damage ? {min: damage[0], max: damage[1]} : false;
 	};
 
 	self.init(config);
