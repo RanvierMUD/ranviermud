@@ -6,18 +6,19 @@
     "url": "git://github.com/shawncplus/ranviermud.git"
   },
   "dependencies": {
+    "chalk": "^1.1.1",
     "colorize": "",
-    "js-yaml": "",
+    "commander": "",
+    "express": "",
+    "jade": "",
     "jall": "",
+    "js-yaml": "",
     "node-uuid": "",
     "optimist": "",
     "sprintf": "",
     "sty": "",
-    "yaml": "",
-    "express": "",
-    "jade": "",
-    "commander": "",
-    "chalk": "^1.1.1"
+    "wrap-ansi": "^2.0.0",
+    "yaml": ""
   },
   "devDependencies": {
     "gulp": "^3.9.1",
