@@ -2,7 +2,7 @@
     en: "The Serpent's Cage"
   location: 11
   description:
-    en: 'The room of this floor, unlike the stone floors, is dirt. Posts are set in the dirt, remnants of a fence strewn on the ground along with rust-colored stains. "THE SERPENT S CA E" is spelled out in crimson stones on the wall to the north.'
+    en: 'The room of this floor, unlike the rest of the tavern, is covered in dirt and straw. Much of the straw is rust-colored, stained. "THE SERPENT S CA E" is spelled out in crimson stones on the wall to the north. Broken glass is strewn about in the corners of the small room.'
   script: '11.js'
   exits: 
     -

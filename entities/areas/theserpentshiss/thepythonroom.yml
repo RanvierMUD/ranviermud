@@ -2,7 +2,7 @@
     en: The Python Room
   location: 6
   description:
-    en: 'This room has two small straw beds, two trunks, and a small desk. The two windows to the outdoor are covered in a mishmash of lace curtains. A door with rusting hinges leads outside.'
+    en: 'This room has two small straw beds, two trunks, and a small desk. The two windows to the outdoor are covered in a mishmash of lace curtains. A door with rusting hinges leads to the hall.'
   exits: 
     -
       location: 4
