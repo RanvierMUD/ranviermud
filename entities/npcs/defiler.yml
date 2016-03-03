@@ -12,11 +12,11 @@
     en: "a fat humanoid with a gaping maw where its neck should be, and sucking mouths in the palms of his hands."
   behaviors: "aggro,rtcombat"
   attributes:
-    max_health: 100
-    health: 100
-    speed: 2
-    damage: '4-30'
+    max_health: 10000
+    health: 10000
+    speed: 1
+    damage: '4-5'
     sanity_damage: '10-40' 
-    level: 8
+    level: 80
     experience: 1000
   load_max: 3

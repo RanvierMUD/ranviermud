@@ -26,8 +26,11 @@ function _initiate_combat(l10n, npc, player, room, npcs, callback) {
 
     var player_health = player.getAttribute('health');
     var damage = npc.getDamage();
-    damage = Math.min(player_health, damage.min + Math.max(0, Math.floor(Math
-      .random() * (damage.max - damage.min))));
+    var player_sanity = player.getAttribute('sanity');
+    var sanityDamage = npc.getSanityDamage();
+
+    damage = calcDamage(damage, player_health);
+    console.log("about to do damage");
 
     if (!damage) {
       if (playerWeapon) playerWeapon.emit('parry', player);
@@ -37,23 +40,18 @@ function _initiate_combat(l10n, npc, player, room, npcs, callback) {
         getDamageString(damage, player_health), npcWeapon);
     }
 
-    var player_sanity = player.getAttribute('sanity');
-    var sanityDamage = npc.getSanityDamage();
+    console.log("sanity damage ", sanityDamage);
 
     if (sanityDamage) {
-      sanityDamage = Math
-        .min(player_sanity, sanityDamage.min + Math
-          .max(0, Math
-            .floor(Math
-              .random() * (sanityDamage.max - sanityDamage.min))));
-
-      if (player_sanity <= sanityDamage) {
-        player.setAttribute('sanity', 1);
-        return combat_end(false);
-      }
-
+      sanityDamage = calcDamage(sanityDamage, player_sanity);
       console.log("Damage done was ", sanityDamage);
       player.setAttribute('sanity', player_sanity - sanityDamage);
+    }
+
+    if (player_sanity <= sanityDamage || player_health <= damage) {
+      player.setAttribute('health', 1);
+      player.setAttribute('sanity', 1);
+      return combat_end(false);
     }
 
     player.combatPrompt({
@@ -67,6 +65,11 @@ function _initiate_combat(l10n, npc, player, room, npcs, callback) {
 
     setTimeout(npc_combat, npc.getAttackSpeed() * 1000);
   };
+
+  function calcDamage(damage, attr) {
+    var range = damage.max - damage.min;
+    return Math.min(attr, damage.min + Math.max(0, Math.floor(Math.random() * (range))));
+  }
 
   setTimeout(npc_combat, npc_speed);
 
@@ -111,9 +114,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, callback) {
   setTimeout(player_combat, player_speed);
 
   function getDamageString(damage, health) {
-    console.log(arguments);
     var percentage = Math.round((damage / health) * 100);
-    console.log('%:', percentage);
 
     var damageStrings = {
       3: 'tickles',
@@ -128,7 +129,6 @@ function _initiate_combat(l10n, npc, player, room, npcs, callback) {
 
     for (var cutoff in damageStrings) {
       if (percentage <= cutoff) {
-        console.log(cutoff);
         return damageStrings[cutoff];
       }
     }
