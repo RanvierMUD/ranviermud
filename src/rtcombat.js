@@ -30,7 +30,6 @@ function _initiate_combat(l10n, npc, player, room, npcs, callback) {
     var sanityDamage = npc.getSanityDamage();
 
     damage = calcDamage(damage, player_health);
-    console.log("about to do damage");
 
     if (!damage) {
       if (playerWeapon) playerWeapon.emit('parry', player);
@@ -40,11 +39,8 @@ function _initiate_combat(l10n, npc, player, room, npcs, callback) {
         getDamageString(damage, player_health), npcWeapon);
     }
 
-    console.log("sanity damage ", sanityDamage);
-
     if (sanityDamage) {
       sanityDamage = calcDamage(sanityDamage, player_sanity);
-      console.log("Damage done was ", sanityDamage);
       player.setAttribute('sanity', player_sanity - sanityDamage);
     }
 
