@@ -1,4 +1,4 @@
-module.exports.initiate_combat = _initiate_combat;\
+module.exports.initiate_combat = _initiate_combat;
 //TODO: Add strings for sanity damage
 //TODO: Implement use of attributes besides damage in combat.
 //TODO: Impelment use of combat stance, etc. for strategery.
@@ -37,17 +37,23 @@ function _initiate_combat(l10n, npc, player, room, npcs, callback) {
         getDamageString(damage, player_health), npcWeapon);
     }
 
-    var sanityDamage = npc.getSanityDamage();
     var player_sanity = player.getAttribute('sanity');
+    var sanityDamage = npc.getSanityDamage();
+
     if (sanityDamage) {
-      sanityDamage = Math.min(player_sanity, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min))));
-    }
+      sanityDamage = Math
+        .min(player_sanity, damage.min + Math
+          .max(0, Math
+            .floor(Math
+              .random() * (damage.max - damage.min))));
 
+      if (player_sanity <= sanityDamage) {
+        player.setAttribute('sanity', 1);
+        return combat_end(false);
+      }
 
-    player.setAttribute('health', player_health - damage);
-    if (player_health <= damage) {
-      player.setAttribute('health', 1);
-      return combat_end(false);
+      console.log("Damage done was ", sanityDamage);
+      player.setAttribute('sanity', player_sanity - sanityDamage);
     }
 
     player.combatPrompt({
