@@ -68,6 +68,7 @@ function getSanityText(maxSanity, player) {
           '.</' + color + '>';
       } //TODO: Dry this, too.
     }
+    return '<' + color + '>You are feeling strange.</' + color + '>';
   }
 }
 
