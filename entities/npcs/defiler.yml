@@ -1,21 +1,21 @@
 - &defiler
   vnum: 3
   room: 10
-  script: '3.js'
+  #script: '3.js'
   keywords:
     en: ['defiler', 'def']
   short_description:
     en: 'a defiler'
   attack:
-    en: 'jagged fangs'
+    en: 'gnashing teeth'
   description:
-    en: "a fat humanoid with a gaping maw where its neck should be, and mouths in the palms of his hands."
+    en: "a fat humanoid with a gaping maw where its neck should be, and sucking mouths in the palms of his hands."
   behaviors: "aggro"
   attributes:
-    max_health: 10
-    health: 10
+    max_health: 100
+    health: 100
     speed: 2
-    damage: '4-33'
+    damage: '4-30'
     sanity_damage: '10-40' 
     level: 8
     experience: 1000
