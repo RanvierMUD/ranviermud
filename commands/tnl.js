@@ -1,5 +1,6 @@
 var sprintf = require('sprintf').sprintf;
 var LevelUtil = require('../src/levels').LevelUtil;
+
 exports.command = function(rooms, items, players, npcs, Commands) {
   return function(args, player) {
     var player_exp = player.getAttribute('experience');
