@@ -42,10 +42,10 @@ function _initiate_combat(l10n, npc, player, room, npcs, callback) {
 
     if (sanityDamage) {
       sanityDamage = Math
-        .min(player_sanity, damage.min + Math
+        .min(player_sanity, sanityDamage.min + Math
           .max(0, Math
             .floor(Math
-              .random() * (damage.max - damage.min))));
+              .random() * (sanityDamage.max - sanityDamage.min))));
 
       if (player_sanity <= sanityDamage) {
         player.setAttribute('sanity', 1);
