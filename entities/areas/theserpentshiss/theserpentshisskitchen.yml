@@ -6,7 +6,7 @@
   exits: 
     -
       location: 1
-      direction: 'out'
+      direction: 'taproom'
       leave_message:
         en: ' returns to the taproom.'
     -

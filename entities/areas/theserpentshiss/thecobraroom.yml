@@ -2,7 +2,7 @@
     en: The Cobra Room
   location: 7
   description:
-    en: 'This room is filled with a massive king-sized bed -- no, an emperor-sized bed. There is barely room to walk besides. The massive window is covered in a metal lattice. A hulking wooden door leads to the hallway.'
+    en: 'This room is filled with a massive king-sized bed -- no, an emperor-sized bed. There is barely room to walk besides. Someone or something has smashed several fist-sized holes in the east wall, exposing its innards. The massive window is covered in a metal lattice. A hulking wooden door leads to the hallway.'
   exits: 
     -
       location: 4
