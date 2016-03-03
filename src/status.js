@@ -61,13 +61,9 @@ function getSanityText(maxSanity, player) {
       100: 'sharp as a knife'
     };
 
-    console.log("Percentage ", percentage);
-
-
     var color = getStatusColor(percentage);
     for (var tier in sanityStatus) {
       if (percentage <= parseInt(tier)) {
-        console.log("Returning", sanityStatus[tier]);
         return '<' + color + '>You are ' + sanityStatus[tier] +
           '.</' + color + '>';
       } //TODO: Dry this, too.
