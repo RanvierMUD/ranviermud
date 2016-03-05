@@ -224,20 +224,39 @@ var Events = {
           var args = data.split(' ').slice(1).join(' ');
           // TODO: Implement a BASH like \command to force a command
           // if an exit shares a name
-          var directionAliases = {
-            'n': 'north',
-            'e': 'east',
-            's': 'south',
-            'w': 'west',
-            'u': 'up',
-            'd': 'down'
-          };
 
-          if (command in directionAliases || !(command in Commands.player_commands)) {
+
+          if (!(command in Commands.player_commands)) {
             // They typed a command that doesn't exist, check to see if there's
             // an exit with that name in the room
 
             var found = false;
+
+            var directions = {
+              'n': 'north',
+              'e': 'east',
+              's': 'south',
+              'w': 'west',
+              'u': 'up',
+              'd': 'down'
+            };
+
+            console.log("COMMAND IS ", command);
+            //TODO: Make more DRY.
+
+            if (command in directions) {
+              for (var alias in directions) {
+                console.log("Checking " + alias + " dir " + directions[
+                  alias]);
+                if (command.toLowerCase() === alias) {
+                  Commands.room_exits(directions[alias], player);
+                  player.prompt();
+                  player.getSocket().emit("commands", player);
+                  return;
+                }
+              }
+            }
+
             for (var cmd in Commands.player_commands) {
               try {
                 var regex = new RegExp("^" + command);
