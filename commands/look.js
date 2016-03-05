@@ -45,11 +45,10 @@ exports.command = function(rooms, items, players, npcs, Commands) {
           lookAtOther);
       }
 
-      function lookAtOther(p) { //FIXME: Desc is shown twice.
+      function lookAtOther(p) {
         if (args.toLowerCase() === p.getName().toLowerCase()) {
           thing = p;
           player.sayL10n(l10n, 'IN_ROOM', thing.getName());
-          player.say(thing.getDescription());
           thingIsPlayer = true;
           p.sayL10n(l10n, 'BEING_LOOKED_AT', player.getName());
         }
