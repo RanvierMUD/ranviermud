@@ -279,7 +279,7 @@ var Events = {
                     player.say(command + " is not a valid command.");
                     result = true;
                   } else {
-                    Channels[command].use(args, player, players);
+                    Channels[command].use(args, player, players, rooms);
                   }
                 } else {
                   result = player.useSkill(command, player, args, rooms,
