@@ -30,13 +30,14 @@ exports.Channels = {
 	yell: {
 		name: 'yell',
 		description: 'Yell to everyone in the same area',
-		use: function (args, player, players)
+		use: function (args, player, players, rooms)
 		{
 			var playerArea = rooms.getAt(player.getLocation()).getArea();
-			var vagueIdString = "a nearby " + getGenderNoun(player) + '\'s voice';
+			var vagueDesc = "a nearby " + getGenderNoun(player) + '\'s voice';
 			args = args.replace("\033", '').toUpperCase();
-			players.broadcastIf("<bold><red>[yelling] " + player.getName() + ": " + args + "</red></bold>", function(p){ return playerArea === rooms.getAt(p.getLocation()).getArea(); });
+			players.broadcastIf("<bold><red>[yelling] " + vagueDesc + ": " + args + "!</red></bold>", function(p){ return playerArea === rooms.getAt(p.getLocation()).getArea() && player !== p; });
 			players.eachExcept(player, function (p) { p.prompt(); });
+			player.say("<bold><red>You yell, \""+args+"!\"</red></bold>");
 		}
 	},
 
