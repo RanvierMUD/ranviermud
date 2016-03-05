@@ -4,6 +4,7 @@ exports.listeners = {
   playerEnter: chooseRandomExit
 };
 
+//FIXME: Occasionally causes crash because of undefined.
 function chooseRandomExit(room, rooms, player, players, npc) {
   return function(room, rooms, player, players, npc) {
     if (isCoinFlip()) {
@@ -12,7 +13,6 @@ function chooseRandomExit(room, rooms, player, players, npc) {
       if (!chosen.hasOwnProperty('mob_locked')) {
         var uid = npc.getUuid();
         var chosenRoom = rooms.getAt(chosen.location);
-
 
         npc.setRoom(chosen.location);
         chosenRoom.addNpc(uid);
@@ -33,13 +33,13 @@ function chooseRandomExit(room, rooms, player, players, npc) {
   }
 }
 
-//TODO: Candidates for utilification.
-//TODO: Consider NPC only leave_messages
 function getLeaveMessage(player, chosenRoom) {
   if (chosenRoom && chosenRoom.title) 
     return ' leaves for ' + chosenRoom.title[player.getLocale()];
   return ' leaves.'
 }
+
+//TODO: Candidates for utilification.
 
 function isCoinFlip() {
   return Math.round(Math.random());
