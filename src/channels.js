@@ -1,3 +1,5 @@
+var getGenderNoun = require('./status').getGenderNoun;
+
 exports.Channels = {
 	say: {
 		name: 'say',
@@ -21,6 +23,19 @@ exports.Channels = {
 		{
 			args = args.replace("\033", '');
 			players.broadcast("<bold><magenta>[chat] " + player.getName() + ": " + args + "</magenta></bold>", player);
+			players.eachExcept(player, function (p) { p.prompt(); });
+		}
+	},
+
+	yell: {
+		name: 'yell',
+		description: 'Yell to everyone in the same area',
+		use: function (args, player, players)
+		{
+			var playerArea = rooms.getAt(player.getLocation()).getArea();
+			var vagueIdString = "a nearby " + getGenderNoun(player) + '\'s voice';
+			args = args.replace("\033", '').toUpperCase();
+			players.broadcastIf("<bold><red>[yelling] " + player.getName() + ": " + args + "</red></bold>", function(p){ return playerArea === rooms.getAt(p.getLocation()).getArea(); });
 			players.eachExcept(player, function (p) { p.prompt(); });
 		}
 	},
