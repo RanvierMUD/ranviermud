@@ -74,7 +74,8 @@ var Events = {
      */
     login: function(arg, stage, dontwelcome, name) {
       // dontwelcome is used to swallow telnet bullshit
-      dontwelcome = typeof dontwelcome == -'undefined' ? false : dontwelcome;
+      dontwelcome = typeof dontwelcome == -'undefined' ? false :
+        dontwelcome;
       stage = stage || 'intro';
 
       if (arg instanceof Player) {
@@ -156,7 +157,8 @@ var Events = {
             if (pass[0] === 0xFA) {
               return next(arg, 'password', true, name);
             }
-            pass = crypto.createHash('md5').update(pass.toString('').trim()).digest('hex');
+            pass = crypto.createHash('md5').update(pass.toString('').trim())
+              .digest('hex');
             if (pass !== Data.loadPlayer(name).password) {
               arg.write(L('PASSWORD_FAIL') + "\r\n");
               password_attempts[name] += 1;
@@ -222,7 +224,14 @@ var Events = {
           var args = data.split(' ').slice(1).join(' ');
           // TODO: Implement a BASH like \command to force a command
           // if an exit shares a name
-          var directionAliases = ['n', 'e', 's', 'w', 'u', 'd'];
+          var directionAliases = {
+            'n': 'north',
+            'e': 'east',
+            's': 'south',
+            'w': 'west',
+            'u': 'up',
+            'd': 'down'
+          };
 
           if (command in directionAliases || !(command in Commands.player_commands)) {
             // They typed a command that doesn't exist, check to see if there's
@@ -254,7 +263,8 @@ var Events = {
                     Channels[command].use(args, player, players);
                   }
                 } else {
-                  result = player.useSkill(command, player, args, rooms, npcs);
+                  result = player.useSkill(command, player, args, rooms,
+                    npcs);
                 }
               }
             }
@@ -300,7 +310,9 @@ var Events = {
        */
       switch (stage) {
         case 'check':
-          arg.write("That player doesn't exist, would you like to create it? [y/n] ");
+          arg.write(
+            "That player doesn't exist, would you like to create it? [y/n] "
+          );
           arg.once('data', function(check) {
             check = check.toString().trim().toLowerCase();
             if (!/[yn]/.test(check)) {
@@ -343,7 +355,8 @@ var Events = {
             }
 
             // Always give them a name like Shawn instead of sHaWn
-            arg.setName(name[0].toUpperCase() + name.toLowerCase().substr(1));
+            arg.setName(name[0].toUpperCase() + name.toLowerCase().substr(
+              1));
             next(arg, 'password');
           });
           break;
@@ -362,11 +375,15 @@ var Events = {
           });
           break;
         case 'gender':
-          arg.write('What is your character\'s gender?\n[F]emale\n[M]ale\n[A]ndrogynous\n');
-          arg.getSocket().once('data', function (gender) {
+          arg.write(
+            'What is your character\'s gender?\n[F]emale\n[M]ale\n[A]ndrogynous\n'
+          );
+          arg.getSocket().once('data', function(gender) {
             gender = gender.toString().toLowerCase();
             if (!gender) {
-              arg.say('Please specify a gender, or [A]ndrogynous if you\'d prefer not to.');
+              arg.say(
+                'Please specify a gender, or [A]ndrogynous if you\'d prefer not to.'
+              );
               return repeat();
             }
             arg.setGender(gender);
