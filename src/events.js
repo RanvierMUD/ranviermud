@@ -222,7 +222,9 @@ var Events = {
           var args = data.split(' ').slice(1).join(' ');
           // TODO: Implement a BASH like \command to force a command
           // if an exit shares a name
-          if (!(command in Commands.player_commands)) {
+          var directionAliases = ['n', 'e', 's', 'w', 'u', 'd'];
+
+          if (command in directionAliases || !(command in Commands.player_commands)) {
             // They typed a command that doesn't exist, check to see if there's
             // an exit with that name in the room
 
