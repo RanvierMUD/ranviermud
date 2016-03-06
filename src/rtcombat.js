@@ -6,7 +6,7 @@ module.exports.initiate_combat = _initiate_combat;
 var LevelUtils = require('./levels').LevelUtils;
 var statusUtils = require('./status');
 
-function _initiate_combat(l10n, npc, player, room, npcs, callback) {
+function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   var locale = player.getLocale();
   player.setInCombat(npc);
   npc.setInCombat(player.getName());
