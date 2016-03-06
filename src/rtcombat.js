@@ -3,6 +3,7 @@ module.exports.initiate_combat = _initiate_combat;
 //TODO: Implement use of attributes besides damage in combat.
 //TODO: Impelment use of combat stance, etc. for strategery.
 //FIXME: DRY even more. Player and NPC combat are nearly the same thing.
+//FIXME: Combat doesn't really end if you die.
 
 var LevelUtils = require('./levels').LevelUtils;
 var statusUtils = require('./status');
@@ -26,7 +27,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   var npcWeapon = npc.getAttack(locale);
 
   var npc_combat = function() {
-    if (!player.isInCombat()) return;
+    if (!player.isInCombat() || !npc.isInCombat()) return;
 
     var player_health = player.getAttribute('health');
     var damage = npc.getDamage();
@@ -82,6 +83,8 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   setTimeout(npc_combat, npc_speed);
 
   var player_combat = function() {
+    if (!player.isInCombat() || !npc.isInCombat()) return;
+
     var npc_health = npc.getAttribute('health');
     if (npc_health <= 0) {
       return combat_end(true);

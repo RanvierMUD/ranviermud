@@ -8,6 +8,10 @@
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 3 | Implement use of attributes besides damage in combat.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 4 | Impelment use of combat stance, etc. for strategery.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
-| /Users/seanodonohue/myForks/ranviermud/src/status.js | 12 | extract some of these into helper functions?
 | /Users/seanodonohue/myForks/ranviermud/scripts/behaviors/npcs/randommove.js | 46 | Candidates for utilification.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 64 | Add better skill assignment event.
+
+### FIXMEs
+| Filename | line # | FIXME
+|:------|:------:|:------
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 5 | DRY even more. Player and NPC combat are nearly the same thing.
