@@ -218,7 +218,7 @@ var Events = {
       // Parse order is common direction shortcuts -> commands -> exits -> skills -> channels
       player.getSocket().once('data', function(data) {
         data = data.toString().trim();
-        
+
         var result;
         if (data) result = parseCommands(data);
         if (result !== false) commandPrompt();
@@ -242,7 +242,9 @@ var Events = {
         }
 
         function getCmd(cmd, args) {
-          return Commands.player_commands[cmd](args, player);
+          try {
+            return Commands.player_commands[cmd](args, player);
+          } catch (e) { console.log(e) }
         }
 
         function checkForDirectionAlias(command) {
