@@ -52,7 +52,7 @@ var net = require('net'),
 
 // cmdline options
 commander
-	.version('0.0.1') // todo: yank from package.json
+	.version('0.1.0') //TODO: yank from package.json
 	.option('-s, --save [time]', 'Number of minutes between auto-save ticks [10]', 10)
 	.option('-r, --respawn [time]', 'Number of minutes between respawn tickets [20]', 20)
 	.option('-p, --port [portNumber]', 'Port to host telnet server [23]', 23)
