@@ -171,6 +171,9 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     } else {
       player.sayL10n(l10n, 'LOSE', npc.getShortDesc(locale));
       player.emit('die');
+      broadcastExceptPlayer(player.getName() + ' collapses to the ground, the life fleeing their body before your eyes.');
+      // consider doing sanity damage to all other players in the room.
+      players.broadcastExcept(player, 'A horrible feeling gnaws at the pit of your stomach.');
       npc.setAttribute('health', npc.getAttribute('max_health'));
     }
     player.prompt();
