@@ -24,6 +24,8 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   var npc_combat = function() {
     if (!player.isInCombat()) return;
 
+    var pname = player.getName();
+    var mname = nps.getShortDesc();
     var player_health = player.getAttribute('health');
     var damage = npc.getDamage();
     var player_sanity = player.getAttribute('sanity');
@@ -31,12 +33,27 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
 
     damage = calcDamage(damage, player_health);
 
+    function broadcastExceptPlayer(msg) {
+      players.eachExcept(player, function(p) {
+        if (p.getLocation() === player.getLocation()) {
+          p.say(msg);
+        }
+      });
+    }
+
     if (!damage) {
       if (playerWeapon) playerWeapon.emit('parry', player);
       player.sayL10n(l10n, 'NPC_MISS', npc.getShortDesc(locale));
+      broadcastExceptPlayer('<bold>' + mname + ' attacks ' + pname +
+        'and misses!' + '</bold>');
+
     } else {
+      var damageStr = getDamageString(damage, player_health);
       player.sayL10n(l10n, 'DAMAGE_TAKEN', npc.getShortDesc(locale),
-        getDamageString(damage, player_health), npcWeapon);
+        damageStr, npcWeapon);
+      broadcastExceptPlayer('<bold><red>' + mname + ' attacks ' + pname +
+        'and ' + damageStr + ' them!' + '</red></bold>');
+
     }
 
     if (sanityDamage) {
@@ -64,7 +81,8 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
 
   function calcDamage(damage, attr) {
     var range = damage.max - damage.min;
-    return Math.min(attr, damage.min + Math.max(0, Math.floor(Math.random() * (range))));
+    return Math.min(attr, damage.min + Math.max(0, Math.floor(Math.random() * (
+      range))));
   }
 
   setTimeout(npc_combat, npc_speed);
@@ -82,11 +100,15 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     if (!damage) {
       if (playerWeapon) playerWeapon.emit('miss', player);
       player.sayL10n(l10n, 'PLAYER_MISS', npc.getShortDesc(locale),
-        damage)
+        damage);
+      broadcastExceptPlayer('<bold>' + pname + ' attacks ' + mname +
+        'and misses!' + '</bold>');
     } else {
+      var damageStr = getDamageString(damage, npc_health);
       if (playerWeapon) playerWeapon.emit('hit', player);
-      player.sayL10n(l10n, 'DAMAGE_DONE', npc.getShortDesc(locale),
-        getDamageString(damage, npc_health));
+      player.sayL10n(l10n, 'DAMAGE_DONE', npc.getShortDesc(locale), damageStr);
+      broadcastExceptPlayer('<bold><red>' + pname + ' attacks ' + mname +
+        'and ' + damageStr + ' them!' + '</red></bold>');
     }
 
     npc.setAttribute('health', npc_health - damage);
