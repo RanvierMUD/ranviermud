@@ -2,6 +2,7 @@ module.exports.initiate_combat = _initiate_combat;
 //TODO: Add strings for sanity damage
 //TODO: Implement use of attributes besides damage in combat.
 //TODO: Impelment use of combat stance, etc. for strategery.
+//FIXME: DRY even more. Player and NPC combat are nearly the same thing.
 
 var LevelUtils = require('./levels').LevelUtils;
 var statusUtils = require('./status');
@@ -12,6 +13,9 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   npc.setInCombat(player.getName());
 
   player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(locale));
+
+  var pname = player.getName();
+  var mname = npc.getShortDesc(locale);
 
   // Get the playerWeapon speed or just use a standard 1 sec counter
   var player_speed = player.getAttackSpeed() * 1000;
@@ -24,8 +28,6 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   var npc_combat = function() {
     if (!player.isInCombat()) return;
 
-    var pname = player.getName();
-    var mname = nps.getShortDesc();
     var player_health = player.getAttribute('health');
     var damage = npc.getDamage();
     var player_sanity = player.getAttribute('sanity');
@@ -33,26 +35,18 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
 
     damage = calcDamage(damage, player_health);
 
-    function broadcastExceptPlayer(msg) {
-      players.eachExcept(player, function(p) {
-        if (p.getLocation() === player.getLocation()) {
-          p.say(msg);
-        }
-      });
-    }
-
     if (!damage) {
       if (playerWeapon) playerWeapon.emit('parry', player);
       player.sayL10n(l10n, 'NPC_MISS', npc.getShortDesc(locale));
       broadcastExceptPlayer('<bold>' + mname + ' attacks ' + pname +
-        'and misses!' + '</bold>');
+        ' and misses!' + '</bold>');
 
     } else {
       var damageStr = getDamageString(damage, player_health);
       player.sayL10n(l10n, 'DAMAGE_TAKEN', npc.getShortDesc(locale),
         damageStr, npcWeapon);
       broadcastExceptPlayer('<bold><red>' + mname + ' attacks ' + pname +
-        'and ' + damageStr + ' them!' + '</red></bold>');
+        ' and ' + damageStr + ' them!' + '</red></bold>');
 
     }
 
@@ -102,13 +96,13 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
       player.sayL10n(l10n, 'PLAYER_MISS', npc.getShortDesc(locale),
         damage);
       broadcastExceptPlayer('<bold>' + pname + ' attacks ' + mname +
-        'and misses!' + '</bold>');
+        ' and misses!' + '</bold>');
     } else {
       var damageStr = getDamageString(damage, npc_health);
       if (playerWeapon) playerWeapon.emit('hit', player);
       player.sayL10n(l10n, 'DAMAGE_DONE', npc.getShortDesc(locale), damageStr);
       broadcastExceptPlayer('<bold><red>' + pname + ' attacks ' + mname +
-        'and ' + damageStr + ' them!' + '</red></bold>');
+        ' and ' + damageStr + ' them!' + '</red></bold>');
     }
 
     npc.setAttribute('health', npc_health - damage);
@@ -161,7 +155,8 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
       room.removeNpc(npc.getUuid());
       npcs.destroy(npc);
       player.sayL10n(l10n, 'WIN', npc.getShortDesc(locale));
-      broadcastExceptPlayer('<bold>' + npc.getShortDesc() + ' dies.</bold>');
+      broadcastExceptPlayer('<bold>' + npc.getShortDesc(locale) +
+        ' dies.</bold>');
       // hand out experience
       var exp = npc.getAttribute('experience') !== false ?
         npc.getAttribute('experience') : LevelUtils.mobExp(player.getAttribute(
@@ -171,12 +166,24 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     } else {
       player.sayL10n(l10n, 'LOSE', npc.getShortDesc(locale));
       player.emit('die');
-      broadcastExceptPlayer(player.getName() + ' collapses to the ground, the life fleeing their body before your eyes.');
+      broadcastExceptPlayer(player.getName() +
+        ' collapses to the ground, life fleeing their body before your eyes.'
+      );
       // consider doing sanity damage to all other players in the room.
-      players.broadcastExcept(player, 'A horrible feeling gnaws at the pit of your stomach.');
+      players.broadcastExcept(player,
+        'A horrible feeling gnaws at the pit of your stomach.');
       npc.setAttribute('health', npc.getAttribute('max_health'));
     }
     player.prompt();
     callback(success);
+  }
+
+  function broadcastExceptPlayer(msg) {
+    players.eachExcept(player, function(p) {
+      if (p.getLocation() === player.getLocation()) {
+        p.say(msg);
+        p.prompt();
+      }
+    });
   }
 }
