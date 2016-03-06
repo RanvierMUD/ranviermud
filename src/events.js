@@ -215,87 +215,96 @@ var Events = {
      * @param Player player
      */
     commands: function(player) {
-      // Parse order is commands -> exits -> skills -> channels
+      // Parse order is common direction shortcuts -> commands -> exits -> skills -> channels
       player.getSocket().once('data', function(data) {
         data = data.toString().trim();
+        
         var result;
-        if (data) {
+        if (data) result = parseCommands(data);
+        if (result !== false) commandPrompt();
+
+        // Methods
+
+        function parseCommands(data) {
           var command = data.split(' ').shift();
           var args = data.split(' ').slice(1).join(' ');
-          // TODO: Implement a BASH like \command to force a command
-          // if an exit shares a name
 
+          var found = false;
 
           if (!(command in Commands.player_commands)) {
-            // They typed a command that doesn't exist, check to see if there's
-            // an exit with that name in the room
 
-            var found = false;
+            found = checkForDirectionAlias(command);
+            if (!found) found = checkForCmd(command);
+            if (found) return getCmd(found);
+            else return checkForSkillsChannelsOrExit(command);
 
-            var directions = {
-              'n': 'north',
-              'e': 'east',
-              's': 'south',
-              'w': 'west',
-              'u': 'up',
-              'd': 'down'
-            };
+          } else return getCmd(command);
+        }
 
-            console.log("COMMAND IS ", command);
-            //TODO: Make more DRY.
+        function getCmd(cmd) {
+          return Commands.player_commands[cmd](args, player);
+        }
 
-            if (command in directions) {
-              for (var alias in directions) {
-                console.log("Checking " + alias + " dir " + directions[
-                  alias]);
-                if (command.toLowerCase() === alias) {
-                  Commands.room_exits(directions[alias], player);
-                  player.prompt();
-                  player.getSocket().emit("commands", player);
-                  return;
-                }
+        function checkForDirectionAlias(command) {
+          var directions = {
+            'n': 'north',
+            'e': 'east',
+            's': 'south',
+            'w': 'west',
+            'u': 'up',
+            'd': 'down'
+          };
+
+          if (command in directions) {
+            for (var alias in directions) {
+              if (command.toLowerCase() === alias) {
+                Commands.room_exits(directions[alias], player);
+                commandPrompt();
+                return;
               }
             }
-
-            for (var cmd in Commands.player_commands) {
-              try {
-                var regex = new RegExp("^" + command);
-              } catch (err) {
-                continue;
-              }
-              if (cmd.match(regex)) {
-                found = cmd;
-                break;
-              }
-            }
-
-            if (found !== false) {
-              result = Commands.player_commands[found](args, player);
-            } else {
-              var exit = Commands.room_exits(command, player);
-              if (exit === false) {
-                if (!(command in player.getSkills())) {
-                  if (!(command in Channels)) {
-                    player.say(command + " is not a valid command.");
-                    result = true;
-                  } else {
-                    Channels[command].use(args, player, players, rooms);
-                  }
-                } else {
-                  result = player.useSkill(command, player, args, rooms,
-                    npcs);
-                }
-              }
-            }
-          } else {
-            result = Commands.player_commands[command](args, player);
           }
         }
 
-        if (result !== false) {
+        function checkForCmd(command) {
+          for (var cmd in Commands.player_commands) {
+            try {
+              var regex = new RegExp("^" + command);
+            } catch (err) {
+              continue;
+            }
+            if (cmd.match(regex)) {
+              return cmd;
+            }
+          }
+        }
+
+        function checkForSkillsChannelsOrExit(command) {
+          var exit = Commands.room_exits(command, player);
+          if (exit === false) {
+            if (!(command in player.getSkills())) {
+              if (!(command in Channels)) {
+                player.say(command + " is not a valid command.");
+                return true;
+              } else {
+                Channels[command].use(args, player, players,
+                  rooms);
+                return true
+              }
+            } else {
+              player.useSkill(command, player, args,
+                rooms,
+                npcs);
+              return true;
+            }
+          }
+        }
+
+        function commandPrompt() {
           player.prompt();
           player.getSocket().emit("commands", player);
         }
+
       });
     },
 
