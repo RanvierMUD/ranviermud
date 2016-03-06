@@ -61,7 +61,7 @@ exports.listeners = {
 			this.setAttribute('health', this.getAttribute('max_health'));
 
 			// Assign any new skills
-			//TODO: Fix?
+			//TODO: Add better skill assignment event.
 			
 			// var skills = Skills[this.getAttribute('class')];
 			// for (var sk in skills) {

@@ -152,7 +152,7 @@ var Item = function (config)
 	self.attributes = {};
 
 	self.init = function (config)
-	{	console.log("LOADING ", config);
+	{
 		self.short_description = config.short_description || '';
 		self.keywords          = config.keywords    || [];
 		self.description       = config.description || '';
