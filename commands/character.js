@@ -33,7 +33,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         },
         description: player.getDescription,
       };
-      console.log(attr);
       return status[attr](value) || '';
     }
 
@@ -155,7 +154,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     function evalStatus(attr, status, attrStr,
       defaultStr, color) {
-      console.log(arguments);
       for (var tier in status) {
         if (attr <= parseInt(tier)) {
           return statusString(attrStr, status[tier], color);
