@@ -235,6 +235,8 @@ var Events = {
 
             found = checkForDirectionAlias(command);
             if (!found) found = checkForCmd(command);
+            else if (found === true) return;
+
             if (found) return getCmd(found, args);
             else return checkForSkillsChannelsOrExit(command, args);
 
@@ -261,7 +263,6 @@ var Events = {
             for (var alias in directions) {
               if (command.toLowerCase() === alias) {
                 Commands.room_exits(directions[alias], player);
-                commandPrompt();
                 return true;
               }
             }
