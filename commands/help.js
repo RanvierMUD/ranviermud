@@ -4,7 +4,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
   return function(args, player) {
 
     var hr = function() {
-      player.say("\n=======================");
+      player.say("\n<purple>=======================</purple>");
     };
     
     hr();

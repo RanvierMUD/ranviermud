@@ -1,17 +1,17 @@
 TARGET_MUCH_STRONGER:
-    en: "Not a chance."
+    en: "<red>Not a chance.</red>"
     es: "Es muy peligroso."
 TARGET_STRONGER:
-    en: "They look tough."
+    en: "<yellow>They look tough.</yellow>"
 TARGET_MUCH_WEAKER:
-    en: "Piece of cake."
+    en: "<purple>Piece of cake.</purple>"
 TARGET_WEAKER:
-    en: "They don't look so tough."
+    en: "<purple>They don't look so tough.</purple>"
 TARGET_SAME_LEVEL:
-    en: "You match up quite well."
+    en: "<bold>You match up quite well.</bold>"
 MISSING_INFORMATION:
-    en: "You're not so sure..."
+    en: "<bold>You're not so sure...</bold>"
 APPRAISE_COMBAT:
-    en: "You can't do that in the middle of a fight!"
+    en: "<bold>You can't do that in the middle of a fight!</bold>"
 TARGET_NOT_FOUND:
-    en: "You don't see them here."
+    en: "<bold>You don't see them here.</bold>"
