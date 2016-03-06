@@ -3,7 +3,8 @@
 module.exports = {
   getHealthText: getHealthText,
   getSanityText: getSanityText,
-  getGenderNoun: getGenderNoun
+  getGenderNoun: getGenderNoun,
+  getStatusColor: getStatusColor,
 };
 
 function getHealthText(maxHealth, player, npc) {
