@@ -19,7 +19,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   var mname = npc.getShortDesc(locale);
 
   // Get the playerWeapon speed or just use a standard 1 sec counter
-  var player_speed = player.getAttackSpeed() * 1000;
+  var player_speed = player.getAttackSpeed();
   var playerWeapon = player.getEquipped('wield', true);
 
   // Same for npcs
@@ -123,7 +123,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
         player)(player.getAttribute('health'))
     });
 
-    setTimeout(player_combat, player.getAttackSpeed());
+    setTimeout(player_combat, player_speed);
   };
 
   setTimeout(player_combat, player_speed);
