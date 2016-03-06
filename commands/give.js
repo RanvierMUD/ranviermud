@@ -32,7 +32,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     targetPlayer = targetPlayer.toLowerCase();
 
     players.eachIf(
-      CommandUtil.othePlayerInRoom.bind(null, player),
+      CommandUtil.otherPlayerInRoom.bind(null, player),
       checkForTarget
       );
 
@@ -49,7 +49,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     }
 
     function giveItemToPlayer(playerGiving, playerReceiving, itemGiven) {
-
       try {
         playerGiving.sayL10n(l10n, 'ITEM_GIVEN', itemGiven.getShortDesc(
           playerGiving.getLocale()), playerReceiving.getName());

@@ -3,13 +3,13 @@ GIVE_COMBAT:
 ITEM_NOT_FOUND:
     en: "That item was not found in your inventory."
 ITEM_GIVEN:
-    en: "You give $[1] to $[2]."
+    en: "<yellow>You give $[1] to $[2].</yellow>"
 ITEM_RECEIVED:
-    en: "You receive $[1] from $[2]."
+    en: "<yellow>You receive $[1] from $[2].</yellow>"
 GENERIC_ITEM_GIVEN:
-    en: "You give an item to $[1]."
+    en: "<yellow>You give an item to $[1].</yellow>"
 GENERIC_ITEM_RECEIVED:
-    en: "You receive an item from $[1]."
+    en: "<yellow>You receive an item from $[1].</yellow>"
 PLAYER_NOT_FOUND:
     en: "That person is not here."
 NO_ITEM_OR_TARGET:
