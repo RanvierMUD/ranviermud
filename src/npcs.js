@@ -330,7 +330,6 @@ var Npc = function (config)
 		var damage = self.getAttribute('sanity_damage') ?
 			self.getAttribute('sanity_damage').split('-').map(function (i) { return parseInt(i, 10); })
 			: false;
-		console.log(damage);
 		return damage ? {min: damage[0], max: damage[1]} : false;
 	};
 
