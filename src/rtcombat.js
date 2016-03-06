@@ -161,7 +161,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
       room.removeNpc(npc.getUuid());
       npcs.destroy(npc);
       player.sayL10n(l10n, 'WIN', npc.getShortDesc(locale));
-
+      broadcastExceptPlayer('<bold>' + npc.getShortDesc() + ' dies.</bold>');
       // hand out experience
       var exp = npc.getAttribute('experience') !== false ?
         npc.getAttribute('experience') : LevelUtils.mobExp(player.getAttribute(
