@@ -1,5 +1,5 @@
 var LevelUtil = require('../../src/levels').LevelUtil,
-    Skills     = require('../../src/skills').Skills;
+    Skills    = require('../../src/skills').Skills;
 exports.listeners = {
 	regen: function (l10n)
 	{
