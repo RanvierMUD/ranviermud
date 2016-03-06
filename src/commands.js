@@ -170,7 +170,7 @@ function move(exit, player) {
   });
 
   room.emit('playerEnter', player, players);
-  console.log("Player has moved to ", room);
+ 
   players.eachExcept(player, function(p) {
     if (p.getLocation() === player.getLocation()) {
       p.say(player.getName() + ' enters.')
