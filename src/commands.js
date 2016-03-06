@@ -139,10 +139,18 @@ function move(exit, player) {
   }
 
   // Send the room leave message
-  players.broadcastIf(exit.leave_message || L('LEAVE', player.getName()),
-    function(p) {
-      return p.getLocation() === player.getLocation && p != player;
-    });
+  players.eachExcept(player, function(p) {
+    if (p.getLocation() === player.getLocation()) {
+      try {
+        var leaveMessage = player.getName() + exit.leave_message[p.getLocale()] ||
+          null;
+        if (leaveMessage) p.say(leaveMessage);
+        else p.sayL10n(l10n, 'LEAVE', player.getName());
+      } catch (e) {
+        p.sayL10n(l10n, 'LEAVE', player.getName());
+      }
+    }
+  });
 
   players.eachExcept(player, function(p) {
     if (p.getLocation() === player.getLocation()) {
@@ -163,9 +171,9 @@ function move(exit, player) {
 
   room.emit('playerEnter', player, players);
   console.log("Player has moved to ", room);
-players.eachExcept(player, function(p) {
+  players.eachExcept(player, function(p) {
     if (p.getLocation() === player.getLocation()) {
-      p.say(player.getName() + ' enters.');
+      p.say(player.getName() + ' enters.')
     }
   });
 };
