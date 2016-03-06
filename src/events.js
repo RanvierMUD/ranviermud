@@ -235,13 +235,13 @@ var Events = {
 
             found = checkForDirectionAlias(command);
             if (!found) found = checkForCmd(command);
-            if (found) return getCmd(found);
-            else return checkForSkillsChannelsOrExit(command);
+            if (found) return getCmd(found, args);
+            else return checkForSkillsChannelsOrExit(command, args);
 
-          } else return getCmd(command);
+          } else return getCmd(command, args);
         }
 
-        function getCmd(cmd) {
+        function getCmd(cmd, args) {
           return Commands.player_commands[cmd](args, player);
         }
 
@@ -260,7 +260,7 @@ var Events = {
               if (command.toLowerCase() === alias) {
                 Commands.room_exits(directions[alias], player);
                 commandPrompt();
-                return;
+                return true;
               }
             }
           }
@@ -279,7 +279,7 @@ var Events = {
           }
         }
 
-        function checkForSkillsChannelsOrExit(command) {
+        function checkForSkillsChannelsOrExit(command, args) {
           var exit = Commands.room_exits(command, player);
           if (exit === false) {
             if (!(command in player.getSkills())) {
