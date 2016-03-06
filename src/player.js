@@ -344,10 +344,19 @@ var Player = function(socket) {
    * Get attack speed of a player
    * @return float
    */
+   //TODO: Return in number of ms. Use semi-randomness. Weapon speed and char quickness and cleverness(?) should have an effect on the speed. Perhaps roll 1d100 for each point of quickness and subtract that from the attack speed for a min of 100ms. Something like that.
   self.getAttackSpeed = function() {
-    var weapon = self.getEquipped('wield', true)
-    return weapon ? (weapon.getAttribute('speed') || 1) : 1;
+    var weapon = self.getEquipped('wield', true);
+    var minimum = 100;
+    var speedFactor = (weapon.getAttribute('speed') || 2);
+    var speedDice = (self.getAttribute('quickness') + self.getAttribute('cleverness'));
+
+    return Math.max(5000 - roll(speedDice, 100 / multiplier), minimum);
   };
+
+  function roll(dice, sides){
+    return dice * (Math.floor(sides * Math.random()) + 1);
+  }
 
   /**
    * Get the damage a player can do
@@ -355,7 +364,7 @@ var Player = function(socket) {
    */
   self.getDamage = function() {
     var weapon = self.getEquipped('wield', true)
-    var base = [1, 20];
+    var base = [1, self.getAttribute('stamina') + 1];
     var damage = weapon ?
       (weapon.getAttribute('damage') ?
         weapon.getAttribute('damage').split('-').map(function(i) {

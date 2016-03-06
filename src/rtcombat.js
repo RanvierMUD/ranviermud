@@ -123,7 +123,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
         player)(player.getAttribute('health'))
     });
 
-    setTimeout(player_combat, player.getAttackSpeed() * 1000);
+    setTimeout(player_combat, player.getAttackSpeed());
   };
 
   setTimeout(player_combat, player_speed);
