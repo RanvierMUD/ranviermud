@@ -3,7 +3,7 @@ module.exports.initiate_combat = _initiate_combat;
 //TODO: Implement use of attributes besides damage in combat.
 //TODO: Impelment use of combat stance, etc. for strategery.
 //FIXME: DRY even more. Player and NPC combat are nearly the same thing.
-//FIXME: Combat doesn't really end if you die.
+//FIXME: Combat ends when you die but yo get double prompted.
 
 var LevelUtils = require('./levels').LevelUtils;
 var statusUtils = require('./status');

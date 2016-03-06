@@ -15,3 +15,4 @@
 | Filename | line # | FIXME
 |:------|:------:|:------
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 5 | DRY even more. Player and NPC combat are nearly the same thing.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 6 | Combat ends when you die but yo get double prompted.
