@@ -3,15 +3,16 @@
 module.exports = {
   getHealthText: getHealthText,
   getSanityText: getSanityText,
-  getGenderNoun: getGenderNoun
+  getGenderNoun: getGenderNoun,
+  getStatusColor: getStatusColor,
+  getPercentage: getPercentage
 };
 
 function getHealthText(maxHealth, player, npc) {
   return function(health) {
-    //TODO: extract some of these into helper functions?
     var locale = player.getLocale();
     var isPlayer = !npc;
-    var percentage = Math.floor((health / maxHealth) * 100);
+    var percentage = getPercentage(health, maxHealth);
     var noun = isPlayer ? getGenderNoun(player.getGender()) : 'creature';
     var nounPhrase = isPlayer ? 'You are ' : npc.getShortDesc(locale) +
       ' is ';
@@ -44,7 +45,7 @@ function getHealthText(maxHealth, player, npc) {
 
 function getSanityText(maxSanity, player) {
   return function(sanity) {
-    var percentage = Math.floor((sanity / maxSanity) * 100);
+    var percentage = getPercentage(sanity, maxSanity);
     var sanityStatus = {
       0: 'consumed by thoughts of suicide',
       5: 'hanging by a thread',
@@ -83,4 +84,8 @@ function getGenderNoun(gender) {
 
 function getStatusColor(percentage) {
   return percentage > 50 ? 'green' : 'red'
+}
+
+function getPercentage(numerator, denominator){
+  return Math.floor((numerator / denominator) * 100);
 }

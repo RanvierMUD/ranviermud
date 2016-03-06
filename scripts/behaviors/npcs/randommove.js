@@ -4,7 +4,6 @@ exports.listeners = {
   playerEnter: chooseRandomExit
 };
 
-//FIXME: Occasionally causes crash because of undefined.
 function chooseRandomExit(room, rooms, player, players, npc) {
   return function(room, rooms, player, players, npc) {
     if (isCoinFlip()) {
@@ -14,27 +13,32 @@ function chooseRandomExit(room, rooms, player, players, npc) {
         var uid = npc.getUuid();
         var chosenRoom = rooms.getAt(chosen.location);
 
-        npc.setRoom(chosen.location);
-        chosenRoom.addNpc(uid);
-        room.removeNpc(uid);
+        try {
+          npc.setRoom(chosen.location);
+          chosenRoom.addNpc(uid);
+          room.removeNpc(uid);
 
-        player.say(npc.getShortDesc(player.getLocale()) + getLeaveMessage(
-          player, chosenRoom));
+          player.say(npc.getShortDesc(player.getLocale()) + getLeaveMessage(
+            player, chosenRoom));
 
-        players.eachIf(
-          otherPlayers.bind(
-            null, player),
-          function(p) {
-            p.say(npc.getShortDesc(
-              p.getLocale()) + getLeaveMessage(p, chosenRoom))
-          });
+          players.eachIf(
+            otherPlayers.bind(
+              null, player),
+            function(p) {
+              p.say(npc.getShortDesc(
+                p.getLocale()) + getLeaveMessage(p, chosenRoom))
+            });
+        } catch(e) {
+          console.log("EXCEPTION: ", e);
+          console.log("NPC: ", npc);
+        }
       }
     }
   }
 }
 
 function getLeaveMessage(player, chosenRoom) {
-  if (chosenRoom && chosenRoom.title) 
+  if (chosenRoom && chosenRoom.title)
     return ' leaves for ' + chosenRoom.title[player.getLocale()];
   return ' leaves.'
 }

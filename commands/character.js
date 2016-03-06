@@ -33,7 +33,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         },
         description: player.getDescription,
       };
-      console.log(attr);
       return status[attr](value) || '';
     }
 
@@ -61,35 +60,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       return "the paragon";
     }
 
-    function getSanityText(maxSanity) {
-      return function(sanity) {
-        var percentage = Math.floor((sanity / maxSanity) * 100);
-        var noun = getGenderNoun(player.getGender());
-        var sanityStatus = {
-          0: '__❤z☀a☆l☂t☻h☯o☭r))<<',
-          5: 'hanging by a thread',
-          10: 'nearing insanity',
-          15: 'seeing unrealities',
-          25: 'perceiving the unperceivable',
-          35: 'feeling dysphoric',
-          50: 'stressed to breaking',
-          60: 'mentally unsound',
-          70: 'feeling stressed',
-          80: 'discontent',
-          90: 'mentally well',
-          95: 'quite stable',
-          100: 'sharp as a knife'
-        };
-
-        var color = getStatusColor(percentage);
-        for (var tier in sanityStatus) {
-          if (percentage <= parseInt(tier)) {
-            return '<' + color + '>You are ' + sanityStatus[tier] +
-              '.</' + color + '>';
-          } //TODO: Dry this, too.
-        }
-      }
-    }
 
     function getStamina(stamina) {
       var status = {
@@ -107,7 +77,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     }
 
     function getQuickness(quickness) {
-      var gender = getGenderNoun(player.getGender());
+      var gender = statusUtil.getGenderNoun(player.getGender());
       var status = {
         1: 'a slug',
         2: 'a sloth',
@@ -151,11 +121,9 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     }
 
     // Helper functions
-    //TODO: Extract to a util file if they'll be useful elsewhere.
 
     function evalStatus(attr, status, attrStr,
       defaultStr, color) {
-      console.log(arguments);
       for (var tier in status) {
         if (attr <= parseInt(tier)) {
           return statusString(attrStr, status[tier], color);
@@ -168,19 +136,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     function statusString(attrStr, attr, color) {
       return '<' + color + '>Your ' + attrStr + attr + '.</' + color + '>';
-    }
-
-    function getGenderNoun(gender) {
-      var nouns = {
-        M: 'man',
-        F: 'woman',
-        A: 'person'
-      };
-      return nouns[gender] || nouns.A;
-    }
-
-    function getStatusColor(percentage) {
-      return percentage > 50 ? 'green' : 'red'
     }
 
   };
