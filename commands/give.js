@@ -20,7 +20,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     var room = rooms.getAt(player.getLocation());
 
     if (!item) {
-      player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+      player.sayL10n(l10n, 'ITEM_NOT_FOUND', args[0]);
       return;
     }
 
@@ -60,7 +60,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         playerReceiving.sayL10n(l10n, 'GENERIC_ITEM_RECEIVED', playerGiving
           .getName());
       }
-
       playerGiving.removeItem(itemGiven);
       itemGiven.setInventory(playerReceiving.getName());
       playerReceiving.addItem(itemGiven);
