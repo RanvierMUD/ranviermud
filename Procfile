@@ -1,1 +1,1 @@
-server: sudo ./ranvier -v --save=10 --respawn=10
+web: sudo ./ranvier -v --save=10 --respawn=10
