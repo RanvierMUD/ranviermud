@@ -7,3 +7,5 @@ ITEM_DROP:
 ITEM_NOT_FOUND:
     en: "You don't see that here."
     es: "ES-You don't see that here."
+OTHER_DROPS:
+    en: "$[1] drops $[2]."
