@@ -5,6 +5,9 @@
     "type": "git",
     "url": "git://github.com/shawncplus/ranviermud.git"
   },
+  "scripts": {
+    "start": "sudo ./ranvier -v --save=10 --respawn=10"
+    },
   "dependencies": {
     "chalk": "^1.1.1",
     "colorize": "",
