@@ -6,9 +6,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     var room = rooms.getAt(player.getLocation());
     var item = CommandUtil.findItemInInventory(args, player, true);
 
-    console.log(args);
-    console.log("found item: ", !!item);
-
     if (!item) {
       player.sayL10n(l10n, 'ITEM_NOT_FOUND');
       return;
@@ -22,6 +19,15 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         return;
       }
     }
+
+    //TODO: Make broadcast
+    players.eachIf(
+      (p) => CommandUtil.otherPlayerInRoom(p, player),
+      (p) => {
+        p.sayL10n(l10n, 'OTHER_DROPPED', player.getName(), item.getShortDesc(
+          p.getLocale()));
+        p.prompt();
+      });
 
     player.sayL10n(l10n, 'ITEM_DROP', item.getShortDesc(player.getLocale()),
       false);
