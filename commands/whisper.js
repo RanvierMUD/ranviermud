@@ -20,6 +20,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
           } else
             p.sayL10n(l10n, 'OTHERS_WHISPER', player.getName(),
               target);
+          p.prompt();
         });
       if (targetFound) {
         player.sayL10n(l10n, 'YOU_WHISPER', target, msg);
