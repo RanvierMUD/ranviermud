@@ -56,7 +56,9 @@ exports.command = function(rooms, items, players, npcs, Commands) {
           playerReceiving.getLocale()), playerGiving.getName());
       } catch (e) {
         console.log("Error when giving an item ", e);
-        console.log("playerReceiving: ",)
+        console.log("playerReceiving: ", playerReceiving.getName());
+        console.log("playerGiving: ", playerGiving.getName());
+        console.log("Item:", item);
         playerGiving.sayL10n(l10n, 'GENERIC_ITEM_GIVEN', playerReceiving.getName());
         playerReceiving.sayL10n(l10n, 'GENERIC_ITEM_RECEIVED', playerGiving
           .getName());
