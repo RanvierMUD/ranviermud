@@ -37,14 +37,14 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       );
 
     function checkForTarget(target) {
-        if (target.getName().toLowerCase() == targetPlayer) {
+        if (target.getName().toLowerCase() === targetPlayer) {
           giveItemToPlayer(player, target, item);
           targetFound = true;
         }
       }
 
     if (!targetFound) {
-      player.sayL10n(l10n, "PLAYER_NOT_FOUND");
+      player.sayL10n(l10n, "PLAYER_NOT_FOUND", targetPlayer);
       return;
     }
 
