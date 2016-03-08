@@ -26,6 +26,14 @@ exports.command = function (rooms, items, players, npcs, Commands) {
 			return;
 		}
 
+		players.eachIf(
+        (p) => CommandUtil.otherPlayerInRoom(p, player),
+        (p) => {
+          p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), items.get(wear).getShortDesc(
+            p.getLocale()));
+          p.prompt();
+        });
+
 		thing.emit('wear', thing.getAttribute('wear_location'), player, players);
 	};
 };
