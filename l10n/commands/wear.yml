@@ -9,3 +9,5 @@ NO_WEAR_LOCATION:
     es: "ES-You can't figure out how to put on the $[1]."
 OTHER_WEAR:
     en: "$[1] puts on $[2]."
+YOU_WEAR:
+    en: "You wear $[1]."
