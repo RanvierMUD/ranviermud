@@ -3,7 +3,7 @@
   room: 2
   script: '1.js'
   keywords:
-    en: ['rat']
+    en: ['rat', 'feral rat', 'feral']
   short_description:
     en: 'a feral rat'
   attack:
