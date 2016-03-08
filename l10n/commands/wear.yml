@@ -7,3 +7,5 @@ ITEM_NOT_FOUND:
 NO_WEAR_LOCATION:
     en: "You can't figure out how to put on the $[1]."
     es: "ES-You can't figure out how to put on the $[1]."
+OTHER_WEAR:
+    en: "$[1] puts on $[2]."
