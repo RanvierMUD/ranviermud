@@ -29,7 +29,7 @@ exports.command = function (rooms, items, players, npcs, Commands) {
 		players.eachIf(
         (p) => CommandUtil.otherPlayerInRoom(p, player),
         (p) => {
-          p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), items.get(wear).getShortDesc(
+          p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), thing.getShortDesc(
             p.getLocale()));
           p.prompt();
         });
