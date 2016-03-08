@@ -24,7 +24,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     players.eachIf(
       (p) => CommandUtil.otherPlayerInRoom(p, player),
       (p) => {
-        p.sayL10n(l10n, 'OTHER_DROPPED', player.getName(), item.getShortDesc(
+        p.sayL10n(l10n, 'OTHER_DROPS', player.getName(), item.getShortDesc(
           p.getLocale()));
         p.prompt();
       });
