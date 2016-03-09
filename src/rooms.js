@@ -106,7 +106,7 @@ var Rooms = function () {
 						}
 
 						log("\t\tLoaded room " + room.location + '...');
-						room.area = area;
+						room.area = room.area || area
 						room.filename = room_file;
 						room.file_index = vnum;
 						room = new Room(room);
