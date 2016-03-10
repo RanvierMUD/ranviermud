@@ -21,7 +21,9 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         return;
       }
     }
+
     player.unequip(thing);
-    
+    player.sayL10n(l10n, 'REMOVED', thing.getShortDesc(player.getLocale()));
+
   };
 };
