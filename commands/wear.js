@@ -16,12 +16,14 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     }
 
     if (!thing.getAttribute('wear_location')) {
+      console.log("No wear location.");
       player.sayL10n(l10n, 'NO_WEAR_LOCATION', thing.getShortDesc(player.getLocale()));
       return;
     }
 
     var wear = player.getEquipped(thing.getAttribute('wear_location'));
     if (wear) {
+      console.log("Cannot wear due to already wearing an item.");
       player.sayL10n(l10n, 'CANT_WEAR', items.get(wear).getShortDesc(player
         .getLocale()));
       return;
@@ -34,8 +36,10 @@ exports.command = function(rooms, items, players, npcs, Commands) {
           p.getLocale()));
         p.prompt();
       });
-
-    thing.emit('wear', thing.getAttribute('wear_location'), player, players);
+    
+    var location = thing.getAttribute('wear_location');
+    thing.emit('wear', location, player, players);
+    player.equip(location, thing);
     player.sayL10n(l10n, 'YOU_WEAR', thing.getShortDesc(player.getLocale()));
   };
 };

@@ -200,6 +200,8 @@ var Player = function(socket) {
    * @param Item   item
    */
   self.equip = function(wear_location, item) {
+    console.log(">>Equipping at ", wear_location);
+    console.log(item);
     self.equipment[wear_location] = item.getUuid();
     item.setEquipped(true);
   };
@@ -216,6 +218,7 @@ var Player = function(socket) {
         break;
       }
     }
+    // self.addItem(item);
     item.emit('remove', self);
   };
 
