@@ -4,3 +4,5 @@ ITEM_NOT_EQUIPPED:
 ITEM_NOT_FOUND:
     en: "You aren't wearing anything like that."
     es: "ES-You aren't wearing anything like that."
+REMOVED:
+    en: "You remove $[1]."
