@@ -95,7 +95,7 @@ var Rooms = function () {
 						var err = false;
 						for (var v in validate) {
 							if (!(validate[v] in room)) {
-								log("\t\tError loading room in file " + room + ' - no ' + validate[v] + ' specified');
+								log("\t\tError loading room in file " + room.location + ' - no ' + validate[v] + ' specified');
 								err = true;
 								break;
 							}
@@ -106,7 +106,7 @@ var Rooms = function () {
 						}
 
 						log("\t\tLoaded room " + room.location + '...');
-						room.area = area;
+						room.area = room.area || area
 						room.filename = room_file;
 						room.file_index = vnum;
 						room = new Room(room);

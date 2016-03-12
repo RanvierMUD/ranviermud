@@ -1,31 +1,43 @@
 var l10n_file = __dirname + '/../l10n/commands/drop.yml';
 var l10n = require('../src/l10n')(l10n_file);
 var CommandUtil = require('../src/command_util').CommandUtil;
-exports.command = function (rooms, items, players, npcs, Commands)
-{
-	return function (args, player)
-	{
-		var room = rooms.getAt(player.getLocation());
-		var item = CommandUtil.findItemInInventory(args, player, true);
+exports.command = function(rooms, items, players, npcs, Commands) {
+  return function(args, player) {
+    var room = rooms.getAt(player.getLocation());
+    var item = CommandUtil.findItemInInventory(args, player, true);
 
-		if (!item) {
-			player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-			return;
-		}
+    if (!item) {
+      player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+      return;
+    }
 
-		if (item.isEquipped()) {
-			player.sayL10n(l10n, 'ITEM_WORN');
-			return;
-		}
+    if (item.isEquipped()) {
+      item = CommandUtil.findItemInInventory('2.' + args, player, true) ||
+        item;
+      if (item.isEquipped()) {
+        player.sayL10n(l10n, 'ITEM_WORN');
+        return;
+      }
+    }
 
-		player.sayL10n(l10n, 'ITEM_DROP', item.getShortDesc(player.getLocale()), false);
-		room.getNpcs().forEach(function (id) {
-			npcs.get(id).emit('playerDropItem', room, player, players, item);
-		});
+    //TODO: Make broadcast
+    players.eachIf(
+      (p) => CommandUtil.otherPlayerInRoom(p, player),
+      (p) => {
+        p.sayL10n(l10n, 'OTHER_DROPS', player.getName(), item.getShortDesc(
+          p.getLocale()));
+        p.prompt();
+      });
 
-		player.removeItem(item);
-		room.addItem(item.getUuid());
-		item.setInventory(null);
-		item.setRoom(room.getLocation());
-	};
+    player.sayL10n(l10n, 'ITEM_DROP', item.getShortDesc(player.getLocale()),
+      false);
+    room.getNpcs().forEach(function(id) {
+      npcs.get(id).emit('playerDropItem', room, player, players, item);
+    });
+
+    player.removeItem(item);
+    room.addItem(item.getUuid());
+    item.setInventory(null);
+    item.setRoom(room.getLocation());
+  };
 };

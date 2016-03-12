@@ -1,5 +1,5 @@
 var LevelUtil = require('../../src/levels').LevelUtil,
-    Skills     = require('../../src/skills').Skills;
+    Skills    = require('../../src/skills').Skills;
 exports.listeners = {
 	regen: function (l10n)
 	{
@@ -46,9 +46,14 @@ exports.listeners = {
 		{
 			var newlevel = this.getAttribute('level') + 1;
 			var health_gain = Math.ceil(this.getAttribute('max_health') * 1.10);
+			var mPoints = this.getAttribute('mutagens');
+			if (newlevel % 2 === 0) mPoints++;
+			
 
-			this.sayL10n(l10n, 'LEVELUP', newlevel, health_gain - this.getAttribute('max_health'));
+			this.sayL10n(l10n, 'LEVELUP');
+			this.sayL10n(l10n, 'MUTAGEN_GAIN');
 			this.setAttribute('level', newlevel);
+			this.setAttribute('mutagens', mPoints);
 			this.setAttribute('experience', 0);
 
 			// do whatever you want to do here when a player levels up...
@@ -56,20 +61,22 @@ exports.listeners = {
 			this.setAttribute('health', this.getAttribute('max_health'));
 
 			// Assign any new skills
-			var skills = Skills[this.getAttribute('class')];
-			for (var sk in skills) {
-				var skill = skills[sk];
-				if (skill.level === this.getAttribute('level')) {
-					this.addSkill(sk, {
-						type: skill.type
-					});
-					this.sayL10n(l10n, 'NEWSKILL', skill.name);
+			//TODO: Add better skill assignment event.
+			
+			// var skills = Skills[this.getAttribute('class')];
+			// for (var sk in skills) {
+			// 	var skill = skills[sk];
+			// 	if (skill.level === this.getAttribute('level')) {
+			// 		this.addSkill(sk, {
+			// 			type: skill.type
+			// 		});
+			// 		this.sayL10n(l10n, 'NEWSKILL', skill.name);
 
-					if (skill.type === 'passive') {
-						this.useSkill(sk, this);
-					}
-				}
-			}
+			// 		if (skill.type === 'passive') {
+			// 			this.useSkill(sk, this);
+			// 		}
+			// 	}
+			// }
 		}
 	},
 	die: function (l10n)

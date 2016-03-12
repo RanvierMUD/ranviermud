@@ -20,7 +20,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     var room = rooms.getAt(player.getLocation());
 
     if (!item) {
-      player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+      player.sayL10n(l10n, 'ITEM_NOT_FOUND', args[0]);
       return;
     }
 
@@ -32,24 +32,23 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     targetPlayer = targetPlayer.toLowerCase();
 
     players.eachIf(
-      CommandUtil.othePlayerInRoom.bind(null, player),
+      CommandUtil.otherPlayerInRoom.bind(null, player),
       checkForTarget
       );
 
     function checkForTarget(target) {
-        if (target.getName().toLowerCase() == targetPlayer) {
+        if (target.getName().toLowerCase() === targetPlayer) {
           giveItemToPlayer(player, target, item);
           targetFound = true;
         }
       }
 
     if (!targetFound) {
-      player.sayL10n(l10n, "PLAYER_NOT_FOUND");
+      player.sayL10n(l10n, "PLAYER_NOT_FOUND", targetPlayer);
       return;
     }
 
     function giveItemToPlayer(playerGiving, playerReceiving, itemGiven) {
-
       try {
         playerGiving.sayL10n(l10n, 'ITEM_GIVEN', itemGiven.getShortDesc(
           playerGiving.getLocale()), playerReceiving.getName());
@@ -57,11 +56,13 @@ exports.command = function(rooms, items, players, npcs, Commands) {
           playerReceiving.getLocale()), playerGiving.getName());
       } catch (e) {
         console.log("Error when giving an item ", e);
+        console.log("playerReceiving: ", playerReceiving.getName());
+        console.log("playerGiving: ", playerGiving.getName());
+        console.log("Item:", item);
         playerGiving.sayL10n(l10n, 'GENERIC_ITEM_GIVEN', playerReceiving.getName());
         playerReceiving.sayL10n(l10n, 'GENERIC_ITEM_RECEIVED', playerGiving
           .getName());
       }
-
       playerGiving.removeItem(itemGiven);
       itemGiven.setInventory(playerReceiving.getName());
       playerReceiving.addItem(itemGiven);

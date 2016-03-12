@@ -1,19 +1,11 @@
 LEVELUP:
     en: |
         <bold><yellow>
-        =============================================================
-        You have gained a level!
-        You are now level $[1]
-        You gained $[2] health and have been restored to full health.
-        =============================================================</yellow></bold>
-    es: |
-        <bold><yellow>
-        =============================================================
-        ES-You have gained a level!
-        You are now level $[1]
-        You gained $[2] health and have been restored to full health.
-        =============================================================</yellow></bold>
-
+        You feel yourself grow more powerful.
+        You feel your health returning.
+        </yellow></bold>
+MUTAGEN_GAIN:
+    en: "<bold><red>You can feel something inside of you, willing you to become more.</bold></red>"
 EXPGAIN:
     en: "<bold><blue>You gain $[1] experience!</blue></bold>"
     es: "ES-<bold><blue>You gain $[1] experience!</blue></bold>"

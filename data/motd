@@ -1,3 +1,35 @@
-
-Insert MOTD here.
+                               "<+!.'``--'  `-                RANVIERMUD v0.0.1                   -
+                 "^` _:  `-.!,^~<>+r;="==++,_'`'.` ,;+:'   ::~:                                   `
+                  '- `+ '...,>>;,,,,,:+;|cYvcv?"^++*^' +>,~--`                                     
+            L,`-' ` .\=><>")/,""x=\)>s2f>~ .-.^/|}iv="< !:<~>+<<+^! .`'.+^  `  -`    `.'       `'.`
+         [         ;}</*rx1?vr?=rryJ$("|{(<!_+)_>:+|vviYvviivivvivl{i; '`r.-._   '    ` _ .'` `.'  
+           ^v4>\=;+=)1sfY]LTj](FtY]ntMCs[?=l);?11szv{v;xtv)^ .-` !;==?7}< *-- '    '` '`'-   -  .-`
+          <+vX1!/TT2es\\/zhbbE1#5SMkdM%$jxt6DqYLiir!;><<+>itvL|;v]L{^. :;]|;:  '  .       .. ' ' ``
+            'Fi>viy1i)VX$1i+/t<."n}`~iTzas2zwkyri<*((|+iv){aaVZevcv)\r*r>'v1<|*~` ' -`   -   .'' --
+        |xY>i})"ifc\j$L<-.^(?Y}T* -i), ~L28dor/]b\JJzF1i]]MO)ol  . ' ~ `'~^;T_!+>~ ''`!r|>  `'*>`  
+      `' 'toc?)vT{[4hJv;!=Ttr{livc1^'_<<~vvrkiczk5s}I\Fx=i\=?r("(vcJj{*<,!  /z^__`-`>/sev} '~|ZE[*r
+       ~^_)AovYY{?nU7\L1Yv_<r '         `~?ic1V1J6OaTcoJ0Ophqw2TE]i+><=_!  :-iv<!^)v"<)>~ -.^ihz|"\
+     '';?vjt3[tes]Zwv)<"itY{*/=;||i;><*>_ `'<,+i{c>1sa5jin1tC$by?+.`.-`-+{i|)"(ii(;<">-'.   .+FL1*;
+   ,r]|=C7Yznn3fiv4k-  v1?>i?+<v(;iv7lr*;/vvvr` yT<`~<~if3$fv_:iftTsyTii>  <)*"+\(?=(>;_.    -:^'- 
+'.|v"=LaV15i|zvT}TfkT]FC>  !vir+vsXVGLC%Yi_ !1F^aCrr--=((*;iC|(+<+',r/YYYci="\ic|>;>+''   `.:<"|/;!
+\]*+?o0EY**u6jyeossVi{4sz1i>v >T#/` t!)GoT7+";}vk+/i/t='`.' ,Tv'`<r_'- -:+>>^- !`      -.>+<*_:>>;;
+k~^/e8C!-.`<oYYZaJ1zCV6:  =lC^r3xl""1tC)iei|i)-Xv'';si^ +=<^` ` ' '<<>+,^!' :;=;_^^,,         -  .'
+\^;Tku'.`. `1v/Y5Vi;?}I| '``1,?s;,>iVvrc/1o{1i?Te\=(_3xi*`-.:,! ' +><+<>+r"">--'- . `,>|;)"/iii?.!/
+"r>zq_ '   -+7iioAfi(/7{li `crizrYt}dT1iYsw\r>>!~cyv?+>ff|<+,></vl+><;<>"" '' : '.-!>?ivi|*'-  \l/,
+^<+i0-.    ^vf<;)TLvuc\i1n;Y<}V!v' }Z? T-?Vi+. +/, `  `+/To]i|<<>~~.  >:           (v~  `-?|!==+-_+
+[*,=Z!. -'..`:i~=}}Yyviiivr*|ivCz<:'-~(}j\(kzl\r>`.  -`. `:;([T[r;!-:;r..-s ..'.-_1vr: ><+vi),.' ``
+u{<+)T`' -' (|"rxTjafy1LYvr><"toAv,< '  =+ 'vVT?_-'      . <~/"_*/}iTvr>+(x,>!_+,\Yv\?"*/"'=\:'`   
+Sfr:"rL!  _\r)yAUVIeFuLvv/">"+<vS4- +   ^*+!':ljy?,'  .    !< )i<>~. '^rTv);>;>>+v)v7`.'...]_`     
+)3f)<::"*{/>TXai`'>Vk9XF7uv<^(=+rv1'.'.-_<"><++~=Yf1i"^    <.``=12i)ii1v_ ' -`` ^?[;f^--'-`}^.     
+ :of";=*+*i}Yf>`  .+1ZkUA3yncivvi(vv[<r"< ^++_:+r*>\i[1zJyc*.. . ->*;^'-'' . '  '~</>['. ..`v|!    
+.- lIFte7i1?)^)+;<!  <e96%eT[|~(xxivY{:><<*"Y?/iv?*<^<<-'_(TFFi:-'-`_>+_r"r((\;. '` i1Y/+    '     
+` - "uuh9#TT"*ri\i+|~ .i#$Y*i)<:-,<>+<v=v}1Y3X9CEZyvi+<v<.-` .?FT:^,,:!+r?i]1TFji--.^}oaz.         
+ _^if>+Tp}{JVTv;v^<r/(ivJATvi{u3f?=+\xistfee0p808UOZ5VxT"):'`:><{$_:++r+*"/{yzxxCL.  |iGt-         
+[#Tji>TZ<.--<Jk2JzL*~+\c12Jflx1vir"=*)vcXA0mOqGMKMMMOUF2f[1(r/+> si1v\?xi=<!<|{eZ$;:v/n]_.'        
+i}'/>+zy!*"*<^/cTFozY?|(v}I{Yfvr?)>>>;iczMMs(=>=v1aqOOm9$aZIf1xvviK%FTl/""+> +cyF21evsi.`'.        
+t  "\<(v+!~+>=>)|14d$hs[{)"j\}Yt}iv+/|iv13>((+>*zIT[PU8%999kXi\zvTdmni(=+!^r*1oF}v)v4?             
+i .>Y"<x!>*vY[tfanZPM%bPwkX3n?3zajz+:_,`=Glxvo6Pn[xii5G8E6P5ewnev(~/v:;=>YicJ)/Yy#zr'              
+~ic*~fV4T\7kZUqAwIZU6MOObKh9hj+Cn1ii\<>)y9f=luP!~)<<}}awAh6PZSmPMqMEZkZ#Tr221I3X9#  .              
+v+<(r|3GOAp6Z4iv;<+~<\lZOqE90GC]xYTv)*ioSbfY|r|ic?*.rycZqq%69$k9MNN7<*;\)#(=iv}y9q>'`  -. .`-` . ' 
+Lv(7skEKMOMNt..- '`  `- PGdUG0p9S5zFv*izZOXC5Y\?}if#2JXI9KAqqqp$AbHFv<*]Ui+"vv7omqI+-`-. ''.   `'` 
 

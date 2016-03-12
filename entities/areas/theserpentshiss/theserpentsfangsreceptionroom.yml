@@ -1,0 +1,15 @@
+- title:
+    en: "The Serpent's Fangs Reception Room"
+  area: "The Serpent's Hiss"
+  location: 9
+  description:
+    en: On the eastern wall is a steel ladder leading up to a trap door. This room is small and painted a bright blood red. The ground is made of black stone. To the west through swinging doors is a large gambling hall.
+  exits: 
+    -
+      location: 8
+      direction: 'up'
+      leave_message:
+        en: ' climbs up the ladder and through the trapdoor. It slams shut behind them.'
+    -
+      location: 10
+      direction: 'hall'

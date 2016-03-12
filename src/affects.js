@@ -4,6 +4,8 @@
 exports.Affects = {
 	/**
 	 * Generic slow
+	 //TODO: Make into "generic attribute lowering effect"
+	 * config.target: thing being slowed
 	 */
 	slow: function (config)
 	{
@@ -25,6 +27,11 @@ exports.Affects = {
 	},
 	/**
 	 * Generic health boost
+	 //TODO: Make into "generic attribute boosting effect"
+	 * config.player: player whose health is boosted
+	 * config.magnituse: amt to boost health by
+	 * config.duration: (opt)amount of time to boost health
+	 * config.event: (opt)event to trigger health boost
 	 */
 	health_boost: function (config)
 	{

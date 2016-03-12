@@ -62,14 +62,16 @@ var Data = {
 	{
 		// Check to see if the target has scripts, if so load them
 		if ('script' in config) {
-			var listeners = require(scripts_dir + config.script).listeners;
-			// the localization file for the script will be l10n/scripts/<script name>.yml
-			// example: l10n/scripts/1.js.yml
-			var l10n_file = l10n_dir + config.script + '.yml';
-			var l10n = l10nHelper(l10n_file);
-			util.log('Loaded script file ' + l10n_file);
-			for (var listener in listeners) {
-				target.on(listener, listeners[listener](l10n));
+			if (config.script){
+				var listeners = require(scripts_dir + config.script).listeners;
+				// the localization file for the script will be l10n/scripts/<script name>.yml
+				// example: l10n/scripts/1.js.yml
+				var l10n_file = l10n_dir + config.script + '.yml';
+				var l10n = l10nHelper(l10n_file);
+				util.log('Loaded script file ' + l10n_file);
+				for (var listener in listeners) {
+					target.on(listener, listeners[listener](l10n));
+				}
 			}
 		}
 

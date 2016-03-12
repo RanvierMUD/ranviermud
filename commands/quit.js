@@ -5,7 +5,7 @@ exports.command = function (rooms, items, players, npcs, Commands)
 	return function (args, player)
 	{
 		if (player.isInCombat()) {
-			player.L10n(l10n, 'COMBAT_COMMAND_FAIL');
+			player.sayL10n(l10n, 'COMBAT_COMMAND_FAIL');
 			return;
 		}
 
