@@ -1,0 +1,13 @@
+- title:
+    en: "The Serpent's Cage"
+  area: "The Serpent's Hiss"
+  location: 11
+  description:
+    en: 'The room of this floor, unlike the rest of the tavern, is covered in dirt and straw. Much of the straw is rust-colored, stained. "THE SERPENT S CA E" is spelled out in crimson stones on the wall to the north. Broken glass is strewn about in the corners of the small room.'
+  script: '11.js'
+  exits: 
+    -
+      location: 10
+      direction: 'out'
+      mob_locked: 'true'
+

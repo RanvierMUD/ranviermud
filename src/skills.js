@@ -12,15 +12,16 @@ var L = function (locale, cls, key /*, args... */)
 	var l10n = l10ncache[cls+locale] || require('./l10n')(l10n_file);
 	l10n.setLocale(locale);
 	return l10n.translate.apply(null, [].slice.call(arguments).slice(2));
-};
+}; //TODO: Consider extracting into helper module for consistency. Might already be util.log
 
 exports.Skills = {
-	warrior: {
-		tackle: {
+	mental: {
+		stun: {
 			type: 'active',
-			level: 2,
-			name: "Tackle",
-			description: "Tackle your opponent for 120% weapon damage. Target's attacks are slower for 5 seconds following the attack.",
+			cost: 1,
+			// no prereqs
+			name: "Stun",
+			description: "Stun your opponent for sanity and physical. Target's attacks are slower for 5 seconds following the attack.",
 			cooldown: 4,
 			activate: function (player, args, rooms, npcs)
 			{
@@ -67,19 +68,23 @@ exports.Skills = {
 
 				return true;
 			}
-		},
-		battlehardened: {
+		} 
+	},
+	physical: {
+		leatherskin: {
 			type: 'passive',
-			level: 5,
-			name: "Battle Hardened",
-			description: "Your experience in battle has made you more hardy. Max health is increased by 200",
+			cost: 2,
+			// no prereqs
+			name: "Leatherskin",
+			description: "Your skin has become tougher, and you are better able to take physical damage.",
 			activate: function (player)
 			{
-				if (player.getAffects('battlehardened')) {
-					player.removeAffect('battlehardened');
+				if (player.getAffects('leatherskin')) {
+					player.removeAffect('leatherskin');
 				}
-				player.addAffect('battlehardened', Affects.health_boost({
-					magnitude: 200,
+				player.addAffect('leatherskin', Affects.health_boost({
+					magnitude: 50, 
+					//consider adding +1 to stamina
 					player: player,
 					event: 'quit'
 				}));

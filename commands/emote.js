@@ -16,5 +16,4 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     player.sayL10n(l10n, 'NOTHING_EMOTED');
     return;
   }
-
 };

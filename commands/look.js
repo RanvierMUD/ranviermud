@@ -49,7 +49,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         if (args.toLowerCase() === p.getName().toLowerCase()) {
           thing = p;
           player.sayL10n(l10n, 'IN_ROOM', thing.getName());
-          player.say(thing.getDescription());
           thingIsPlayer = true;
           p.sayL10n(l10n, 'BEING_LOOKED_AT', player.getName());
         }
@@ -89,9 +88,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     player.say('');
 
     // display players in the same room
-    players.eachIf(function(p) {
-        return otherPlayersInRoom(p);
-      },
+    players.eachIf(CommandUtil.otherPlayerInRoom.bind(null, player),
       function(p) {
         player.sayL10n(l10n, 'IN_ROOM', p.getName());
       });
@@ -132,12 +129,6 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       player.write(exit.direction + ' ');
     });
     player.say(']');
-
-    function otherPlayersInRoom(p) {
-      if (p)
-        return (p.getName() !== player.getName() && p.getLocation() ===
-          player.getLocation());
-    };
 
     function showPlayerEquipment(playerTarget, playerLooking) {
       var naked = true;

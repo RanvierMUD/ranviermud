@@ -1,0 +1,18 @@
+- title:
+    en: "The Serpent's Hiss Kitchen"
+  area: "The Serpent's Hiss"
+  location: 2
+  description:
+    en: "A row of ranges takes up most of the space in this kitchen. Much of the steel is corroded and everything appears disused. This is a rat's haven. There is a door leading to the taproom, and another to a dry storage room."
+  exits: 
+    -
+      location: 1
+      direction: 'taproom'
+      leave_message:
+        en: ' returns to the taproom.'
+    -
+      location: 8
+      direction: 'storage'
+      leave_message:
+        en: ' nudges a crate of rice aside as they enter the dry storage room.'
+

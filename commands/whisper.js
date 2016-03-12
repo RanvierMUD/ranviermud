@@ -13,13 +13,14 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       targetFound = false;
       players.eachIf(
         (target) => CommandUtil.otherPlayerInRoom(target, player),
-        (target) => {
-          if (target.getName().toLowerCase() === target.toLowerCase()) {
-            target.sayL10n(l10n, 'THEY_WHISPER', player.getName(), msg);
+        (p) => {
+          if (p.getName().toLowerCase() === target.toLowerCase()) {
+            p.sayL10n(l10n, 'THEY_WHISPER', player.getName(), msg);
             targetFound = true;
           } else
-            target.sayL10n(l10n, 'OTHERS_WHISPER', player.getName(),
+            p.sayL10n(l10n, 'OTHERS_WHISPER', player.getName(),
               target);
+          p.prompt();
         });
       if (targetFound) {
         player.sayL10n(l10n, 'YOU_WHISPER', target, msg);

@@ -10,3 +10,5 @@ ITEM_NOT_FOUND:
 ITEM_PICKUP:
     en: "You pick up $[1]."
     es: "ES-You pick up $[1]."
+OTHER_PICKUP:
+    en: "$[1] picks up $[2]."
