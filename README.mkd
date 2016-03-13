@@ -4,7 +4,7 @@ NodeJS based MUD engine with full localization support
 ## Development notes
 Included in this master branch is a stable version of [ranvier-gen](), in the plugins directory, for generating areas from the command line.
 
-See the [gamedev](https://github.com/seanohue/ranviermud/tree/gamedev) branch for a more developed world. The master branch will remain the 'lightweight' MUD framework branch and only common features will be backported to master.
+See the [gamedev](https://github.com/seanohue/ranviermud/tree/gamedev) branch for the latest features. The master branch will be the latest 'stable' release. The 'development' branch is the lightweight MUD engine branch for submitting PRs upstream.
 
 ## Features
 * Full localization for any strings displayed to the player after they log in. This isn't a common feature in MUDs so I'll explain it. Player A and Player B log in, play the same game and see a different language. Same items, npcs, rooms, etc, different language.
