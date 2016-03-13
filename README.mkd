@@ -21,7 +21,7 @@ See the [gamedev](https://github.com/seanohue/ranviermud/tree/gamedev) branch fo
 
 ## Requirements
 
-* NodeJS >= 0.6.2
+* NodeJS >= (whatever version supports ES6 fat arrow functions)
 
 ## Up and running
 
