@@ -300,12 +300,12 @@ var Npc = function (config)
 	};
 
 	/**
-	 * Get attack speed of a player
+	 * Get attack speed of an npc
 	 * @return float
 	 */
 	self.getAttackSpeed = function ()
 	{
-		return self.getAttribute('speed') || 1;
+		return self.getAttribute('speed') * 1000 || 1000;
 	};
 
 	/**
@@ -317,7 +317,7 @@ var Npc = function (config)
 		var base = [1, 20];
 		var damage = self.getAttribute('damage') ?
 			self.getAttribute('damage').split('-').map(function (i) { return parseInt(i, 10); })
-			: base
+			: base;
 		return {min: damage[0], max: damage[1]};
 	};
 
