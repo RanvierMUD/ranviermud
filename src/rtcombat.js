@@ -1,9 +1,9 @@
 module.exports.initiate_combat = _initiate_combat;
 //TODO: Add strings for sanity damage
 //TODO: Implement use of attributes besides damage in combat.
-//TODO: Impelment use of combat stance, etc. for strategery.
-//FIXME: DRY even more. Player and NPC combat are nearly the same thing.
-//FIXME: Combat ends when you die but yo get double prompted.
+// ^^ this should be done in the npc/player src files
+//TODO: Implement use of combat stance, etc. for strategery.
+//FIXME: Combat ends when you die but you get double prompted.
 
 var LevelUtils = require('./levels').LevelUtils;
 var statusUtils = require('./status');
@@ -76,7 +76,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     if (defender_sanity <= sanityDamage || defender_health <= damage) {
       defender.setAttribute('health', 1);
       defender.setAttribute('sanity', 1);
-      return combat_end(false);
+      return combat_end(a.isPlayer);
     }
 
     defender.combatPrompt({
