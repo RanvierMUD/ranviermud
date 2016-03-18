@@ -36,8 +36,6 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   function combatRound(attacker, defender, a, d) {
     if (!defender.isInCombat() || !attacker.isInCombat()) return;
 
-    console.log("attacker is ", a);
-
     var defender_health = defender.getAttribute('health');
     var damage = attacker.getDamage();
     var defender_sanity = defender.getAttribute('sanity');
@@ -144,7 +142,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
       );
       // consider doing sanity damage to all other players in the room.
       players.broadcastExcept(player,
-        'A horrible feeling gnaws at the pit of your stomach.');
+        '<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
       npc.setAttribute('health', npc.getAttribute('max_health'));
     }
     player.prompt();
