@@ -16,7 +16,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(locale));
 
   var p = {
-    isPlayer: true
+    isPlayer: true,
     name: player.getName(),
     speed: player.getAttackSpeed(),
     weapon: player.getEquipped('wield', true)
@@ -46,7 +46,8 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     damage = calcDamage(damage, defender_health);
 
     if (!damage) {
-      if (d.weapon && d.weapon typeof 'Object') d.weapon.emit('parry', defender);
+      if (d.weapon && typeof d.weapon == 'Object') d.weapon.emit('parry',
+        defender);
       if (a.isPlayer) player.sayL10n(l10n, 'PLAYER_MISS', npc.getShortDesc(
           locale),
         damage);
@@ -56,7 +57,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     } else {
       var damageStr = getDamageString(damage, defender_health);
 
-      if (d.weapon && d.weapon typeof 'Object') playerWeapon.emit('hit', player);
+      if (a.weapon && typeof a.weapon == 'Object') a.weapon.emit('hit', player);
       if (d.isPlayer)
         player.sayL10n(l10n, 'DAMAGE_TAKEN', a.name, damageStr, a.weapon);
       else player.sayL10n(l10n, 'DAMAGE_DONE', d.name,
