@@ -24,7 +24,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   var n = {
     name: npc.getShortDesc(locale),
     speed: npc.getAttackSpeed(),
-    weapon: getAttack(locale)
+    weapon: npc.getAttack(locale)
   };
 
   var npc_combat = combatRound.bind(null, npc, player, n, p);
@@ -41,7 +41,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     var defender_health = defender.getAttribute('health');
     var damage = attacker.getDamage();
     var defender_sanity = defender.getAttribute('sanity');
-    var sanityDamage = attacker.getSanityDamage();
+    var sanityDamage = a.isPlayer ? 0 : attacker.getSanityDamage();
 
     damage = calcDamage(damage, defender_health);
 
