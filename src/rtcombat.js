@@ -1,9 +1,9 @@
 module.exports.initiate_combat = _initiate_combat;
 //TODO: Add strings for sanity damage
 //TODO: Implement use of attributes besides damage in combat.
-//TODO: Impelment use of combat stance, etc. for strategery.
-//FIXME: DRY even more. Player and NPC combat are nearly the same thing.
-//FIXME: Combat ends when you die but yo get double prompted.
+// ^^ this should be done in the npc/player src files
+//TODO: Implement use of combat stance, etc. for strategery.
+//FIXME: Combat ends when you die but you get double prompted.
 
 var LevelUtils = require('./levels').LevelUtils;
 var statusUtils = require('./status');
@@ -15,118 +15,86 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
 
   player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(locale));
 
-  var pname = player.getName();
-  var mname = npc.getShortDesc(locale);
+  var p = {
+    isPlayer: true,
+    name: player.getName(),
+    speed: player.getAttackSpeed(),
+    weapon: player.getEquipped('wield', true)
+  };
+  var n = {
+    name: npc.getShortDesc(locale),
+    speed: npc.getAttackSpeed(),
+    weapon: npc.getAttack(locale)
+  };
 
-  // Get the playerWeapon speed or just use a standard 1 sec counter
-  var player_speed = player.getAttackSpeed();
-  var playerWeapon = player.getEquipped('wield', true);
+  var npc_combat = combatRound.bind(null, npc, player, n, p);
+  var player_combat = combatRound.bind(null, player, npc, p, n);
 
-  // Same for npcs
-  var npc_speed = npc.getAttackSpeed() * 1000;
-  var npcWeapon = npc.getAttack(locale);
+  setTimeout(npc_combat, n.speed);
+  setTimeout(player_combat, p.speed);
 
-  var npc_combat = function() {
-    if (!player.isInCombat() || !npc.isInCombat()) return;
+  function combatRound(attacker, defender, a, d) {
+    if (!defender.isInCombat() || !attacker.isInCombat()) return;
 
-    var player_health = player.getAttribute('health');
-    var damage = npc.getDamage();
-    var player_sanity = player.getAttribute('sanity');
-    var sanityDamage = npc.getSanityDamage();
+    var defender_health = defender.getAttribute('health');
+    var damage = attacker.getDamage();
+    var defender_sanity = defender.getAttribute('sanity');
+    var sanityDamage = a.isPlayer ? 0 : attacker.getSanityDamage();
 
-    damage = calcDamage(damage, player_health);
+    damage = calcDamage(damage, defender_health);
 
     if (!damage) {
-      if (playerWeapon) playerWeapon.emit('parry', player);
-      player.sayL10n(l10n, 'NPC_MISS', npc.getShortDesc(locale));
-      broadcastExceptPlayer('<bold>' + mname + ' attacks ' + pname +
+      if (d.weapon && typeof d.weapon == 'Object') d.weapon.emit('parry',
+        defender);
+      if (a.isPlayer) player.sayL10n(l10n, 'PLAYER_MISS', npc.getShortDesc(
+          locale),
+        damage);
+      else player.sayL10n(l10n, 'NPC_MISS', a.name);
+      broadcastExceptPlayer('<bold>' + a.name + ' attacks ' + d.name +
         ' and misses!' + '</bold>');
-
     } else {
-      var damageStr = getDamageString(damage, player_health);
-      player.sayL10n(l10n, 'DAMAGE_TAKEN', npc.getShortDesc(locale),
-        damageStr, npcWeapon);
-      broadcastExceptPlayer('<bold><red>' + mname + ' attacks ' + pname +
+      var damageStr = getDamageString(damage, defender_health);
+
+      if (a.weapon && typeof a.weapon == 'Object') a.weapon.emit('hit', player);
+      if (d.isPlayer)
+        player.sayL10n(l10n, 'DAMAGE_TAKEN', a.name, damageStr, a.weapon);
+      else player.sayL10n(l10n, 'DAMAGE_DONE', d.name,
+        damageStr);
+
+      broadcastExceptPlayer('<bold><red>' + a.name + ' attacks ' + d.name +
         ' and ' + damageStr + ' them!' + '</red></bold>');
 
     }
 
     if (sanityDamage) {
-      sanityDamage = calcDamage(sanityDamage, player_sanity);
-      player.setAttribute('sanity', player_sanity - sanityDamage);
+      sanityDamage = calcDamage(sanityDamage, defender_sanity);
+      defender.setAttribute('sanity', defender_sanity - sanityDamage);
     }
 
-    if (player_sanity <= sanityDamage || player_health <= damage) {
-      player.setAttribute('health', 1);
-      player.setAttribute('sanity', 1);
-      return combat_end(false);
+    if (defender_sanity <= sanityDamage || defender_health <= damage) {
+      defender.setAttribute('health', 1);
+      defender.setAttribute('sanity', 1);
+      return combat_end(a.isPlayer);
     }
 
-    player.combatPrompt({
+    defender.combatPrompt({
       target_condition: statusUtils.getHealthText(
         npc.getAttribute('max_health'),
-        player, npc)(npc.getAttribute('health')),
+        defender, npc)(npc.getAttribute('health')),
       player_condition: statusUtils.getHealthText(
         player.getAttribute('max_health'),
         player)(player.getAttribute('health'))
     });
 
-    setTimeout(npc_combat, npc.getAttackSpeed() * 1000);
-  };
+    setTimeout(npc_combat, attacker.getAttackSpeed() *
+      1000);
+  }
 
   function calcDamage(damage, attr) {
     var range = damage.max - damage.min;
     return Math.min(attr, damage.min + Math.max(0, Math.floor(Math.random() * (
       range))));
   }
-
-  setTimeout(npc_combat, npc_speed);
-
-  var player_combat = function() {
-    if (!player.isInCombat() || !npc.isInCombat()) return;
-
-    var npc_health = npc.getAttribute('health');
-    if (npc_health <= 0) {
-      return combat_end(true);
-    }
-
-    var damage = player.getDamage();
-    damage = Math.max(0, Math.min(npc_health, damage.min + Math.max(0, Math.floor(
-      Math.random() * (damage.max - damage.min)))));
-
-    if (!damage) {
-      if (playerWeapon) playerWeapon.emit('miss', player);
-      player.sayL10n(l10n, 'PLAYER_MISS', npc.getShortDesc(locale),
-        damage);
-      broadcastExceptPlayer('<bold>' + pname + ' attacks ' + mname +
-        ' and misses!' + '</bold>');
-    } else {
-      var damageStr = getDamageString(damage, npc_health);
-      if (playerWeapon) playerWeapon.emit('hit', player);
-      player.sayL10n(l10n, 'DAMAGE_DONE', npc.getShortDesc(locale), damageStr);
-      broadcastExceptPlayer('<bold><red>' + pname + ' attacks ' + mname +
-        ' and ' + damageStr + ' them!' + '</red></bold>');
-    }
-
-    npc.setAttribute('health', npc_health - damage);
-    if (npc_health <= damage) {
-      return combat_end(true);
-    }
-
-    player.combatPrompt({
-      target_condition: statusUtils.getHealthText(
-        npc.getAttribute('max_health'),
-        player, npc)(npc.getAttribute('health')),
-
-      player_condition: statusUtils.getHealthText(
-        player.getAttribute('max_health'),
-        player)(player.getAttribute('health'))
-    });
-
-    setTimeout(player_combat, player_speed);
-  };
-
-  setTimeout(player_combat, player_speed);
 
   function getDamageString(damage, health) {
     var percentage = Math.round((damage / health) * 100);
@@ -174,7 +142,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
       );
       // consider doing sanity damage to all other players in the room.
       players.broadcastExcept(player,
-        'A horrible feeling gnaws at the pit of your stomach.');
+        '<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
       npc.setAttribute('health', npc.getAttribute('max_health'));
     }
     player.prompt();
