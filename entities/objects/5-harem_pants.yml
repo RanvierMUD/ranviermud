@@ -1,0 +1,14 @@
+- &harem_pants
+    vnum: 5
+    short_description:
+        en: "harem pants"
+    keywords:
+        en: [ "harem pants", "pants", "harem" ]
+    description:
+        en: "A pair royal crimson harem pants with an elastic waist. The material appears smooth, with a subtle sheen."
+    room: 7
+    behaviors: "wearable"
+    attributes:
+        defense: 1
+        wear_location: 'legs'
+    load_max: 4
