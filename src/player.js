@@ -425,6 +425,31 @@ var Player = function(socket) {
       .call(arguments).slice(1));
   };
 
+  /**
+   * Helper to calculate physical damage
+   * @param int damage
+   * @param string location
+   */
+  self.damage = function(dmg, location) {
+    if (!dmg) return;
+    location = location || 'body';
+    return Math.max(1, dmg - calculateDefense(location));
+  }
+
+  function calculateDefense(location) {
+    var defense = player.getItemDefense(location);
+    if (location !== 'body')
+      defense += player.getItemDefense('body');
+    defense += self.getAttribute('stamina');
+    return defense;
+  }
+
+  function getItemDefense(location) {
+    var item = player.getEquipped(location, true);
+    if (item) return .getAttribute('defense')
+    return 0;
+  }
+  
   self.init();
 };
 
@@ -432,4 +457,4 @@ util.inherits(Player, events.EventEmitter);
 
 // Export the Player class so you can use it in
 // other files by using require("Player").Player
-exports.Player = Player;
+exports.Player = Pla
