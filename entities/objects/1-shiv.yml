@@ -1,7 +1,7 @@
 - &shiv
     vnum: 1
     short_description:
-        en: "a rusty shiv"
+        en: "rusty shiv"
     keywords:
         en: [ "shiv", "rusty", "shank" ]
     description:

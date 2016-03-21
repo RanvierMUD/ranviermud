@@ -1,7 +1,7 @@
 - &cleaver
     vnum: 2
     short_description:
-        en: "a meat cleaver"
+        en: "meat cleaver"
     keywords:
         en: [ "cleaver", "butcher" ]
     description:

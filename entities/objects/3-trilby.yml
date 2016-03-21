@@ -1,7 +1,7 @@
 - &trilby
     vnum: 3
     short_description:
-        en: "a worn trilby hat"
+        en: "rugged trilby hat"
     keywords:
         en: [ "trilby", "hat" ]
     description:
