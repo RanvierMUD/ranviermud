@@ -39,7 +39,7 @@ function chooseRandomExit(room, rooms, player, players, npc) {
 
 function getLeaveMessage(player, chosenRoom) {
   if (chosenRoom && chosenRoom.title)
-    return ' leaves for ' + chosenRoom.title[player.getLocale()];
+    return ' leaves for ' + chosenRoom.title[player.getLocale()] + '.';
   return ' leaves.'
 }
 

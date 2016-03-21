@@ -1,0 +1,14 @@
+- &butcher_apron
+    vnum: 6
+    short_description:
+        en: "leather butcher's apron"
+    keywords:
+        en: [ "butcher's apron", "butchers", "apron", "smock" ]
+    description:
+        en: "A dark leather apron, encrusted with stains from entrails and meat."
+    room: 2
+    behaviors: "wearable"
+    attributes:
+        defense: 3
+        wear_location: 'torso'
+    load_max: 4
