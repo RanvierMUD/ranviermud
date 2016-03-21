@@ -38,7 +38,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       });
     
     var location = thing.getAttribute('wear_location');
-    thing.emit('wear', location, player, players);
+    // thing.emit('wear', location, player, players);
     player.equip(location, thing);
     player.sayL10n(l10n, 'YOU_WEAR', thing.getShortDesc(player.getLocale()));
   };
