@@ -9,10 +9,9 @@
     description:
         en: "A pair of sturdy leather boots."
         es: "ES-A pair of sturdy leather boots."
-    room: 1
+    room: 5
     behaviors: "wearable"
     attributes:
         defense: 1
         wear_location: 'feet'
     load_max: 4
-- *leather_boots
