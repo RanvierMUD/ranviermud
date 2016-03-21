@@ -2,16 +2,13 @@
     vnum: 4
     short_description:
         en: "leather boots"
-        es: "ES-leather boots"
     keywords:
         en: [ "leather boots", "boots", "shoes" ]
-        es: [ "leather boots", "boots", "shoes" ]
     description:
         en: "A pair of sturdy leather boots."
-        es: "ES-A pair of sturdy leather boots."
     room: 5
     behaviors: "wearable"
     attributes:
-        defense: 1
+        defense: 3
         wear_location: 'feet'
     load_max: 4
