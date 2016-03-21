@@ -1,0 +1,15 @@
+- &shiv
+    vnum: 1
+    short_description:
+        en: "a rusty shiv"
+    keywords:
+        en: [ "shiv", "rusty", "shank" ]
+    description:
+        en: "A short, jagged metal shard, discolored with red corrosion."
+    room: 9
+    script: "1-sword.js"
+    behaviors: "wieldable"
+    attributes:
+        speed: 1.5
+        damage: 1-15
+    load_max: 4
