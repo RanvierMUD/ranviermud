@@ -18,6 +18,9 @@
     damage: 1-12
     level: 1
     experience: 180
+  defenses:
+    body: 1
+    head: -1
   load_max: 7
 - <<: *serpent
   room: 11

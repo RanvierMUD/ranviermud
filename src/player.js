@@ -437,19 +437,19 @@ var Player = function(socket) {
   }
 
   function calculateDefense(location) {
-    var defense = player.getItemDefense(location);
+    var defense = getItemDefense(location);
     if (location !== 'body')
-      defense += player.getItemDefense('body');
+      defense += getItemDefense('body');
     defense += self.getAttribute('stamina');
     return defense;
   }
 
   function getItemDefense(location) {
-    var item = player.getEquipped(location, true);
-    if (item) return .getAttribute('defense')
+    var item = self.getEquipped(location, true);
+    if (item) return item.getAttribute('defense')
     return 0;
   }
-  
+
   self.init();
 };
 
@@ -457,4 +457,4 @@ util.inherits(Player, events.EventEmitter);
 
 // Export the Player class so you can use it in
 // other files by using require("Player").Player
-exports.Player = Pla
+exports.Player = Player;
