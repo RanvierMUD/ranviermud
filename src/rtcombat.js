@@ -15,11 +15,14 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
 
   player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(locale));
 
+  var p_locations = ['legs', 'feet', 'torso', 'hands', 'head'];
+
   var p = {
     isPlayer: true,
     name: player.getName(),
     speed: player.getAttackSpeed(),
-    weapon: player.getEquipped('wield', true)
+    weapon: player.getEquipped('wield', true),
+    locations: p_locations
   };
   var n = {
     name: npc.getShortDesc(locale),
@@ -41,7 +44,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     var defender_sanity = defender.getAttribute('sanity');
     var sanityDamage = a.isPlayer ? 0 : attacker.getSanityDamage();
 
-    damage = calcDamage(damage, defender_health);
+    damage = defender.damage(calcRawDamage(damage, defender_health));
 
     if (!damage) {
       if (d.weapon && typeof d.weapon == 'Object') d.weapon.emit('parry',
@@ -67,7 +70,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     }
 
     if (sanityDamage) {
-      sanityDamage = calcDamage(sanityDamage, defender_sanity);
+      sanityDamage = calcRawDamage(sanityDamage, defender_sanity);
       defender.setAttribute('sanity', defender_sanity - sanityDamage);
     }
 
@@ -90,7 +93,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
       1000);
   }
 
-  function calcDamage(damage, attr) {
+  function calcRawDamage(damage, attr) {
     var range = damage.max - damage.min;
     return Math.min(attr, damage.min + Math.max(0, Math.floor(Math.random() * (
       range))));

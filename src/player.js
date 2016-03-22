@@ -441,6 +441,7 @@ var Player = function(socket) {
     if (location !== 'body')
       defense += getItemDefense('body');
     defense += self.getAttribute('stamina');
+    console.log(location + ' def: ' + defense);
     return defense;
   }
 
