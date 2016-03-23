@@ -95,7 +95,7 @@ var CommandUtil = {
     if (target)
       return (target.getName() !== player.getName() && target.getLocation() ===
         player.getLocation());
-  }
+  },
 
   isCoinFlip: isCoinFlip,
   getRandomFromArr: getRandomFromArr

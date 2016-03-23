@@ -6,7 +6,7 @@ module.exports.initiate_combat = _initiate_combat;
 //FIXME: Combat ends when you die but you get double prompted.
 
 var LevelUtils = require('./levels').LevelUtils;
-var CommandUtils = require('./command_util').CommandUtils;
+var CommandUtil = require('./command_util').CommandUtil;
 var statusUtils = require('./status');
 
 
@@ -46,8 +46,11 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     var damage = attacker.getDamage();
     var defender_sanity = defender.getAttribute('sanity');
     var sanityDamage = a.isPlayer ? 0 : attacker.getSanityDamage();
+    var hitLocation = d.isPlayer ? CommandUtil.getRandomFromArr(d.locations) : 'body';
 
-    damage = defender.damage(calcRawDamage(damage, defender_health));
+    if (d.isPlayer)
+
+    damage = defender.damage(calcRawDamage(damage, defender_health), hitLocation);
 
     if (!damage) {
       if (d.weapon && typeof d.weapon == 'Object') d.weapon.emit('parry',
