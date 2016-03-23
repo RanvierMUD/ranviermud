@@ -6,7 +6,9 @@ module.exports.initiate_combat = _initiate_combat;
 //FIXME: Combat ends when you die but you get double prompted.
 
 var LevelUtils = require('./levels').LevelUtils;
+var CommandUtils = require('./command_util').CommandUtils;
 var statusUtils = require('./status');
+
 
 function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   var locale = player.getLocale();
@@ -24,6 +26,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     weapon: player.getEquipped('wield', true),
     locations: p_locations
   };
+
   var n = {
     name: npc.getShortDesc(locale),
     speed: npc.getAttackSpeed(),

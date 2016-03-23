@@ -97,6 +97,17 @@ var CommandUtil = {
         player.getLocation());
   }
 
+  isCoinFlip: isCoinFlip,
+  getRandomFromArr: getRandomFromArr
+
 };
+
+function isCoinFlip() {
+  return Math.round(Math.random());
+}
+
+function getRandomFromArr(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
 exports.CommandUtil = CommandUtil;

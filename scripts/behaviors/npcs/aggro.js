@@ -12,7 +12,7 @@ exports.listeners = {
 
       function attack() {
         if (!player.isInCombat() && !npc.isInCombat()){
-          cancelInterval(attackInterval);
+          clearInterval(attackInterval);
           initiate_combat(l10n, this, player, room, npcs, players, callback);
         } else if (npc.isInCombat()) cancelInterval(attackInterval);
       }
