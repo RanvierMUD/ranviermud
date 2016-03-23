@@ -104,7 +104,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
 
     var damageStrings = {
       3: 'tickles',
-      5: 'scratchs',
+      5: 'scratches',
       8: 'grazes',
       15: 'hits',
       35: 'wounds',
