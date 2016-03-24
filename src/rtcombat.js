@@ -6,7 +6,9 @@ module.exports.initiate_combat = _initiate_combat;
 //FIXME: Combat ends when you die but you get double prompted.
 
 var LevelUtils = require('./levels').LevelUtils;
+var CommandUtil = require('./command_util').CommandUtil;
 var statusUtils = require('./status');
+
 
 function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   var locale = player.getLocale();
@@ -15,12 +17,16 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
 
   player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(locale));
 
+  var p_locations = ['legs', 'feet', 'torso', 'hands', 'head'];
+
   var p = {
     isPlayer: true,
     name: player.getName(),
     speed: player.getAttackSpeed(),
-    weapon: player.getEquipped('wield', true)
+    weapon: player.getEquipped('wield', true),
+    locations: p_locations
   };
+
   var n = {
     name: npc.getShortDesc(locale),
     speed: npc.getAttackSpeed(),
@@ -40,8 +46,11 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     var damage = attacker.getDamage();
     var defender_sanity = defender.getAttribute('sanity');
     var sanityDamage = a.isPlayer ? 0 : attacker.getSanityDamage();
+    var hitLocation = d.isPlayer ? CommandUtil.getRandomFromArr(d.locations) : 'body';
 
-    damage = calcDamage(damage, defender_health);
+    if (d.isPlayer)
+
+    damage = defender.damage(calcRawDamage(damage, defender_health), hitLocation);
 
     if (!damage) {
       if (d.weapon && typeof d.weapon == 'Object') d.weapon.emit('parry',
@@ -67,7 +76,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     }
 
     if (sanityDamage) {
-      sanityDamage = calcDamage(sanityDamage, defender_sanity);
+      sanityDamage = calcRawDamage(sanityDamage, defender_sanity);
       defender.setAttribute('sanity', defender_sanity - sanityDamage);
     }
 
@@ -90,7 +99,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
       1000);
   }
 
-  function calcDamage(damage, attr) {
+  function calcRawDamage(damage, attr) {
     var range = damage.max - damage.min;
     return Math.min(attr, damage.min + Math.max(0, Math.floor(Math.random() * (
       range))));
@@ -101,7 +110,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
 
     var damageStrings = {
       3: 'tickles',
-      5: 'scratchs',
+      5: 'scratches',
       8: 'grazes',
       15: 'hits',
       35: 'wounds',
