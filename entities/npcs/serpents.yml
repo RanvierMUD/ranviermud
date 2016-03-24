@@ -17,8 +17,7 @@
     health: 25
     speed: 2.5
     damage: 1-12
-    level: 1
-    experience: 180
+    level: 2
   defenses:
     body: 1
     head: -1

@@ -18,7 +18,6 @@
     speed: 2
     damage: 1-9
     level: 1
-    experience: 100
   load_max: 7
 - *rat
 - *rat
