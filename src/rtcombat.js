@@ -139,9 +139,12 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     }
 
     function combat_end(success) {
+        
         player.setInCombat(false);
         npc.setInCombat(false);
+        
         if (success) {
+        
             player.emit('regen');
             room.removeNpc(npc.getUuid());
             npcs.destroy(npc);
@@ -150,16 +153,17 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
                 ' dies.</bold>');
             // hand out experience
             var exp = npc.getAttribute('experience') !== false ?
-                npc.getAttribute('experience') : LevelUtils.mobExp(player.getAttribute(
-                    'level'));
+                npc.getAttribute('experience') : LevelUtils.mobExp(npc.getAttribute('level'));
 
             player.emit('experience', exp);
         } else {
+           
             player.sayL10n(l10n, 'LOSE', npc.getShortDesc(locale));
             player.emit('die');
             broadcastExceptPlayer(player.getName() +
                 ' collapses to the ground, life fleeing their body before your eyes.'
             );
+            
             // consider doing sanity damage to all other players in the room.
             players.broadcastExcept(player,
                 '<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
