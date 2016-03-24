@@ -30,7 +30,8 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
   var n = {
     name: npc.getShortDesc(locale),
     speed: npc.getAttackSpeed(),
-    weapon: npc.getAttack(locale)
+    weapon: npc.getAttack(locale),
+    target: npc.getTarget()
   };
 
   var npc_combat = combatRound.bind(null, npc, player, n, p);
