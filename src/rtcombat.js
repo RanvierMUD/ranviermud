@@ -10,6 +10,7 @@ var CommandUtil = require('./command_util').CommandUtil;
 var statusUtils = require('./status');
 
 
+
 function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     var locale = player.getLocale();
     player.setInCombat(npc);
@@ -164,10 +165,11 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
                 ' collapses to the ground, life fleeing their body before your eyes.'
             );
             
-            // consider doing sanity damage to all other players in the room.
+            //TODO: consider doing sanity damage to all other players in the room.
             players.broadcastExcept(player,
                 '<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
             npc.setAttribute('health', npc.getAttribute('max_health'));
+            player.broadcastToArea("The horrific scream of a dying " + statusUtils.getGenderNoun(player) + " echoes from nearby.");
         }
         player.prompt();
         callback(success);
@@ -176,6 +178,15 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     function broadcastExceptPlayer(msg) {
         players.eachExcept(player, function(p) {
             if (p.getLocation() === player.getLocation()) {
+                p.say(msg);
+                p.prompt();
+            }
+        });
+    }
+
+    function broadcastToArea(msg) {
+        players.eachExcept(player, function(p) {
+            if (p.getLocation().getArea() === player.getLocation().getArea()) {
                 p.say(msg);
                 p.prompt();
             }
