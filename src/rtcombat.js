@@ -178,6 +178,8 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
         callback(success);
     }
 
+    //TODO: More candidates for utilification, I suppose.
+
     function broadcastExceptPlayer(msg) {
         players.eachExcept(player, function(p) {
             if (p.getLocation() === player.getLocation()) {
