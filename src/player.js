@@ -41,6 +41,10 @@ var Player = function(socket) {
         description: 'A person.'
     };
 
+    self.preferences = {
+        target: 'body'
+    };
+
     // Anything affecting the player
     self.affects = {};
 
@@ -77,6 +81,10 @@ var Player = function(socket) {
     self.getAttribute = function(attr) {
         return typeof self.attributes[attr] !== 'undefined' ? self.attributes[
             attr] : false;
+    };
+    self.getPreference = function(pref) {
+        return typeof self.preferences[pref] !== 'undefined' ? self.preferences[
+            pref] : false;
     };
     self.getAttributes = function() {
         return self.attributes || {}
@@ -119,6 +127,7 @@ var Player = function(socket) {
     self.setInventory = function(inv) { self.inventory = inv; };
     self.setInCombat = function(combat) { self.in_combat = combat; };
     self.setAttribute = function(attr, val) { self.attributes[attr] = val; };
+    self.setPreference = function(pref, val) { self.preferences[pref] = val; };
     self.addSkill = function(name, skill) { self.skills[name] = skill; };
     /**#@-*/
 
