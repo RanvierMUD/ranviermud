@@ -5,7 +5,7 @@ module.exports.initiate_combat = _initiate_combat;
 //TODO: Implement use of combat stance, etc. for strategery.
 //FIXME: Combat ends when you die but you get double prompted.
 
-var LevelUtils = require('./levels').LevelUtils;
+var LevelUtil = require('./levels').LevelUtil;
 var CommandUtil = require('./command_util').CommandUtil;
 var statusUtils = require('./status');
 
@@ -28,7 +28,6 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
         weapon: player.getEquipped('wield', true),
         locations: p_locations,
         target: 'body',
-        attackRound: combatRound.bind(null, player, npc, p, n)
     };
 
     var n = {
@@ -36,12 +35,13 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
         speed: npc.getAttackSpeed(),
         weapon: npc.getAttack(locale),
         target: npc.getAttribute('target'),
-        attackRound: combatRound.bind(null, npc, player, n, p)
     };
 
     var player_combat = combatRound.bind(null, player, npc, p, n);
     var npc_combat = combatRound.bind(null, npc, player, n, p);
 
+    p.attackRound = player_combat;
+    n.attackRound = npc_combat;
 
     setTimeout(npc_combat, n.speed);
     setTimeout(player_combat, p.speed);
@@ -159,7 +159,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
                 ' dies.</bold>');
             // hand out experience
             var exp = npc.getAttribute('experience') !== false ?
-                npc.getAttribute('experience') : LevelUtils.mobExp(npc.getAttribute('level'));
+                npc.getAttribute('experience') : LevelUtil.mobExp(npc.getAttribute('level'));
 
             player.emit('experience', exp);
         } else {
