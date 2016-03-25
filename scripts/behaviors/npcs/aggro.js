@@ -6,7 +6,7 @@ exports.listeners = {
         var callback = function(success) {};
         return function(room, rooms, player, players, npc, npcs) {
             if (!player.isInCombat() && !npc.isInCombat())
-                initiate_combat(l10n, this, player, room, npcs, players, callback);
+                initiate_combat(l10n, this, player, room, npcs, players, rooms,callback);
         }
     }
 };
