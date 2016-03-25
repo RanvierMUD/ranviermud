@@ -11,7 +11,7 @@ var statusUtils = require('./status');
 
 
 
-function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
+function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callback) {
     var locale = player.getLocale();
     player.setInCombat(npc);
     npc.setInCombat(player.getName());
@@ -105,13 +105,15 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
                 player)(player.getAttribute('health'))
         });
 
+        broadcastToArea("The sounds of a nearby mortal struggle fill the air.");
+
         setTimeout(a.attackRound, a.speed);
     }
 
     function decideHitLocation(locations, target) {
         if (CommandUtil.isCoinFlip()) {
             return target;
-        } else return CommandUtil.getRandomFrommArr(locations);
+        } else return CommandUtil.getRandomFromArr(locations);
     }
 
     function calcRawDamage(damage, attr) {
@@ -191,7 +193,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
 
     function broadcastToArea(msg) {
         players.eachExcept(player, function(p) {
-            if (p.getLocation().getArea() === player.getLocation().getArea()) {
+            if (rooms.getAt(p.getLocation()).getArea() === rooms.getAt(player.getLocation()).getArea()) {
                 p.say(msg);
                 p.prompt();
             }
