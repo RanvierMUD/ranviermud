@@ -3,8 +3,8 @@ var l10n = require('../src/l10n')(l10n_file);
 exports.command = function(rooms, items, players, npcs, Commands) {
     return function(args, player) {
         var targets = {
-            torso: ['torso', 'chest', 'body', 'arms', 'stomach', 'gut', 'belly'],
-            head: ['head', 'face', 'eyes'],
+            torso: ['chest', 'body', 'arms', 'stomach', 'gut', 'belly', 'back'],
+            head: ['face', 'eyes', 'mouth'],
             hands: ['hand'],
             feet: ['foot'],
             legs: ['leg']
@@ -16,7 +16,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
                 return;
             } else {
                 for (var targetable in targets) {
-                    var found = targets[targetable].reduce(checkTargets, false);
+                    var found = targets[targetable].reduce(validTarget, false);
                     if (found) {
                         setTarget(targetable);
                         return;
@@ -28,7 +28,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         player.sayL10n(l10n, 'NO_TARGET', player.getDescription());
         return;
 
-        function checkTargets(previous, current, index, array) {
+        function validTarget(previous, current, index, array) {
             if (!previous) {
                 if (current) {
                     if (current === args.toLowerCase()) {
