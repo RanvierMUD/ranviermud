@@ -349,7 +349,6 @@ var Player = function(socket) {
    * Get attack speed of a player
    * @return float
    */
-  //TODO: Return in number of ms. Use semi-randomness. Weapon speed and char quickness and cleverness(?) should have an effect on the speed. Perhaps roll 1d100 for each point of quickness and subtract that from the attack speed for a min of 100ms. Something like that.
   self.getAttackSpeed = function() {
     var weapon = self.getEquipped('wield', true);
     var minimum = 100;
