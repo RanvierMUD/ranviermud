@@ -5,20 +5,21 @@ module.exports.initiate_combat = _initiate_combat;
 //TODO: Implement use of combat stance, etc. for strategery.
 //FIXME: Combat ends when you die but you get double prompted.
 
-var LevelUtils = require('./levels').LevelUtils;
+var LevelUtil = require('./levels').LevelUtil;
 var CommandUtil = require('./command_util').CommandUtil;
 var statusUtils = require('./status');
 
 
 
-function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
+function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callback) {
     var locale = player.getLocale();
     player.setInCombat(npc);
     npc.setInCombat(player.getName());
 
     player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(locale));
 
-    var p_locations = ['legs', 'feet', 'torso', 'hands', 'head'];
+    var p_locations = ['legs', 'fists', 'torso', 'hands', 'head'];
+
 
     var p = {
         isPlayer: true,
@@ -26,8 +27,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
         speed: player.getAttackSpeed(),
         weapon: player.getEquipped('wield', true),
         locations: p_locations,
-        target: 'body'
-        attackRound: combatRound.bind(null, player, npc, p, n);
+        target: 'body',
     };
 
     var n = {
@@ -35,8 +35,13 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
         speed: npc.getAttackSpeed(),
         weapon: npc.getAttack(locale),
         target: npc.getAttribute('target'),
-        attackRound: combatRound.bind(null, npc, player, n, p)
     };
+
+    var player_combat = combatRound.bind(null, player, npc, p, n);
+    var npc_combat = combatRound.bind(null, npc, player, n, p);
+
+    p.attackRound = player_combat;
+    n.attackRound = npc_combat;
 
     setTimeout(npc_combat, n.speed);
     setTimeout(player_combat, p.speed);
@@ -91,7 +96,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
             return combat_end(a.isPlayer);
         }
 
-        defender.combatPrompt({
+        player.combatPrompt({
             target_condition: statusUtils.getHealthText(
                 npc.getAttribute('max_health'),
                 defender, npc)(npc.getAttribute('health')),
@@ -100,13 +105,15 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
                 player)(player.getAttribute('health'))
         });
 
+        broadcastToArea("The sounds of a nearby mortal struggle fill the air.");
+
         setTimeout(a.attackRound, a.speed);
     }
 
-    function decideHitLocations(locations, target) {
+    function decideHitLocation(locations, target) {
         if (CommandUtil.isCoinFlip()) {
             return target;
-        } else return CommandUtil.getRandomFrommArr(locations);
+        } else return CommandUtil.getRandomFromArr(locations);
     }
 
     function calcRawDamage(damage, attr) {
@@ -152,7 +159,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
                 ' dies.</bold>');
             // hand out experience
             var exp = npc.getAttribute('experience') !== false ?
-                npc.getAttribute('experience') : LevelUtils.mobExp(npc.getAttribute('level'));
+                npc.getAttribute('experience') : LevelUtil.mobExp(npc.getAttribute('level'));
 
             player.emit('experience', exp);
         } else {
@@ -173,6 +180,8 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
         callback(success);
     }
 
+    //TODO: More candidates for utilification, I suppose.
+
     function broadcastExceptPlayer(msg) {
         players.eachExcept(player, function(p) {
             if (p.getLocation() === player.getLocation()) {
@@ -184,7 +193,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
 
     function broadcastToArea(msg) {
         players.eachExcept(player, function(p) {
-            if (p.getLocation().getArea() === player.getLocation().getArea()) {
+            if (rooms.getAt(p.getLocation()).getArea() === rooms.getAt(player.getLocation()).getArea()) {
                 p.say(msg);
                 p.prompt();
             }
