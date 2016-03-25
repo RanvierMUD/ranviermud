@@ -414,7 +414,8 @@ var Player = function(socket) {
             equipment: self.equipment,
             attributes: self.attributes,
             skills: self.skills,
-            gender: self.gender
+            gender: self.gender,
+            preferences: self.preferences
         });
     };
 
