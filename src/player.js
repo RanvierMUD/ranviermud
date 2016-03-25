@@ -432,7 +432,9 @@ var Player = function(socket) {
   self.damage = function(dmg, location) {
     if (!dmg) return;
     location = location || 'body';
-    return Math.max(1, dmg - calculateDefense(location));
+    damageDone = Math.max(1, dmg - calculateDefense(location));
+    self.setAttribute('health', Math.max(0, self.getAttribute('health') - damageDone));
+    return damageDone;
   }
 
   function calculateDefense(location) {
