@@ -96,7 +96,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
             return combat_end(a.isPlayer);
         }
 
-        defender.combatPrompt({
+        player.combatPrompt({
             target_condition: statusUtils.getHealthText(
                 npc.getAttribute('max_health'),
                 defender, npc)(npc.getAttribute('health')),
