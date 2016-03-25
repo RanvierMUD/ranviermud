@@ -27,17 +27,16 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
         weapon: player.getEquipped('wield', true),
         locations: p_locations,
         target: 'body'
+        attackRound: combatRound.bind(null, player, npc, p, n);
     };
 
     var n = {
         name: npc.getShortDesc(locale),
         speed: npc.getAttackSpeed(),
         weapon: npc.getAttack(locale),
-        target: npc.getAttribute('target');
+        target: npc.getAttribute('target'),
+        attackRound: combatRound.bind(null, npc, player, n, p)
     };
-
-    var npc_combat = combatRound.bind(null, npc, player, n, p);
-    var player_combat = combatRound.bind(null, player, npc, p, n);
 
     setTimeout(npc_combat, n.speed);
     setTimeout(player_combat, p.speed);
@@ -101,8 +100,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
                 player)(player.getAttribute('health'))
         });
 
-        setTimeout(npc_combat, attacker.getAttackSpeed() *
-            1000);
+        setTimeout(a.attackRound, a.speed);
     }
 
     function decideHitLocations(locations, target) {
@@ -140,12 +138,12 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
     }
 
     function combat_end(success) {
-        
+
         player.setInCombat(false);
         npc.setInCombat(false);
-        
+
         if (success) {
-        
+
             player.emit('regen');
             room.removeNpc(npc.getUuid());
             npcs.destroy(npc);
@@ -158,13 +156,13 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, callback) {
 
             player.emit('experience', exp);
         } else {
-           
+
             player.sayL10n(l10n, 'LOSE', npc.getShortDesc(locale));
             player.emit('die');
             broadcastExceptPlayer(player.getName() +
                 ' collapses to the ground, life fleeing their body before your eyes.'
             );
-            
+
             //TODO: consider doing sanity damage to all other players in the room.
             players.broadcastExcept(player,
                 '<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
