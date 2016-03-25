@@ -16,7 +16,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
                 return;
             } else {
                 for (var targetable in targets) {
-                    var found = targets[targetable].reduce(checkTargets(previous, current, index, array));
+                    var found = targets[targetable].reduce(checkTargets, false);
                     if (found) {
                         player.setPreference('target', targetable);
                         return;
