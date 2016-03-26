@@ -1,0 +1,4 @@
+NO_TARGET:
+  en: "Target where?"
+TARGET_SET:
+  en: "You will aim for the $[1] for now."
