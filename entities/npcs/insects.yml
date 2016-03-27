@@ -1,0 +1,31 @@
+- &roach
+  vnum: 1
+  room: 2
+  #script: '4.js'
+  keywords:
+    en: ['roach', 'cockroach', 'bug', 'cock']
+  short_description:
+    en: 'an oozing cockroach'
+  attack:
+    en: 'jittering mandibles'
+  description:
+    en: "The roach's hairy antennae probe the ground for morsels. Its quivering thorax seems to be dripping an inky green substance, leaving the floor crisscrossed with roach tracks."
+  behaviors: "rtcombat,randommove"
+  attributes:
+    target: 'feet'
+    max_health: 30
+    health: 20
+    speed: 6
+    damage: 1-2
+    level: 1
+    experience: 50
+  load_max: 17
+- *roach
+- <<: *roach
+  room: 3
+- <<: *roach
+  room: 10
+- <<: *roach
+  room: 8
+- <<: *roach
+  room: 5
