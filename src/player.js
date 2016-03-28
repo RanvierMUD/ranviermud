@@ -47,7 +47,8 @@ var Player = function(socket) {
 
   self.preferences = {
     target: 'body',
-    wimpy: 30
+    wimpy: 30,
+    stance: 'normal'
   };
 
   // Anything affecting the player
@@ -83,28 +84,38 @@ var Player = function(socket) {
   self.getInventory = function() {
     return self.inventory;
   };
+
   self.getAttribute = function(attr) {
     return typeof self.attributes[attr] !== 'undefined' ? self.attributes[
       attr] : false;
   };
+  self.getAttributes = function() {
+    return self.attributes || {}
+  }
+  
   self.getPreference = function(pref) {
     return typeof self.preferences[pref] !== 'undefined' ? self.preferences[
       pref] : false;
   };
-  self.getAttributes = function() {
-    return self.attributes || {}
-  }
+
   self.getSkills = function(skill) {
     return typeof self.skills[skill] !== 'undefined' ? self.skills[skill] :
       self.skills;
   };
+
   // Note, only retreives hash, not a real password
   self.getPassword = function() {
     return self.password;
   };
+
   self.isInCombat = function() {
     return self.in_combat;
   };
+
+  self.checkStance = function(str) {
+    return self.preferences.stance === str.toLowerCase();
+  };
+
   self.setPrompt = function(str) { self.prompt_string = str; }
   self.setCombatPrompt = function(str) { self.combat_prompt = str; }
   self.setLocale = function(locale) { self.locale = locale; };
@@ -113,6 +124,7 @@ var Player = function(socket) {
     self.attributes.description =
       newdesc;
   };
+
   self.setLocation = function(loc) { self.location = loc; };
   self.setPassword = function(pass) {
     self.password = crypto.createHash('md5')
