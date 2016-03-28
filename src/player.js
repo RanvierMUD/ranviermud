@@ -92,7 +92,7 @@ var Player = function(socket) {
   self.getAttributes = function() {
     return self.attributes || {}
   }
-  
+
   self.getPreference = function(pref) {
     return typeof self.preferences[pref] !== 'undefined' ? self.preferences[
       pref] : false;
@@ -391,6 +391,8 @@ var Player = function(socket) {
     var speed = Math.max(5000 - roll(speedDice, 100 / speedFactor), minimum);
     util.log("Player's speed is ", speed);
 
+    if (self.checkStance('precise')) speed = Math.round(speed * 1.5);
+
     return speed;
   };
 
@@ -405,6 +407,7 @@ var Player = function(socket) {
   self.getDamage = function() {
     var weapon = self.getEquipped('wield', true)
     var base = [1, self.getAttribute('stamina') + 1];
+
     var damage = weapon ?
       (weapon.getAttribute('damage') ?
         weapon.getAttribute('damage')
@@ -413,8 +416,20 @@ var Player = function(socket) {
           return parseInt(i, 10);
         }) : base
       ) : base;
+
+    damage = damage.map(d => d + addDamageBonus(d));
+
     return { min: damage[0], max: damage[1] };
   };
+
+  function addBerserkDamage(d) {
+     var stance = self.getPreference('stance');
+     var bonuses = {
+        'berserk': self.getAtribute('stamina') * self.getAttribute('quickness')
+        'cautious': -(Math.round(d / 2))
+     }
+     return bonus[stance] || 0;
+  }
 
   /**
    * Turn the player into a JSON string for storage
@@ -483,10 +498,14 @@ var Player = function(socket) {
 
   function soak(location) {
     var defense = armor(location);
+
     if (location !== 'body')
       defense += armor('body');
 
     defense += self.getAttribute('stamina');
+
+    if (self.checkStance('cautious')) defense += self.getAttribute('cleverness');
+    if (self.checkStance('berserk')) defense = Math.round(defense / 2);
 
     util.log(self.getName() + ' ' + location + ' def: ' + defense);
 
