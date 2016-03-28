@@ -209,6 +209,7 @@ var Npc = function (config)
 	self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
 	self.removeAffect = function (aff) { delete self.affects[aff]; };
 	self.getDefenses  = function () { return self.defenses; };
+	self.getLocations = function () { return Object.keys(self.defenses); };
 	/**#@-*/
 
 	/**
