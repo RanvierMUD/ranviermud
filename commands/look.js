@@ -3,6 +3,7 @@ var sprintf = require('sprintf').sprintf;
 var l10n_file = __dirname + '/../l10n/commands/look.yml';
 var l10n = new require('jall')(require('js-yaml').load(require('fs').readFileSync(
   l10n_file).toString('utf8')), undefined, 'zz');
+var wrap = require('wrap-ansi');
 l10n.throwOnMissingTranslation(false);
 
 exports.command = function(rooms, items, players, npcs, Commands) {
@@ -84,7 +85,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     // Render the room and its exits
     player.say(room.getTitle(player.getLocale()));
-    player.say(room.getDescription(player.getLocale()));
+    player.say(wrap(room.getDescription(player.getLocale()), 80));
     player.say('');
 
     // display players in the same room

@@ -1,6 +1,5 @@
 WIN:
-  en: "<bold><green>$[1] is dead!</green></bold>"
-  es: "ES-<bold><green>$[1] is dead!</green></bold>"
+  en: "<bold><green>$[1] is</green><red> dead.</red></bold>"
 LOSE:
   en: "<bold><red>You were killed by $[1].</red></bold>"
   es: "ES-<bold><red>You were killed by $[1].</red></bold>"

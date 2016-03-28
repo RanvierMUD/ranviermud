@@ -358,6 +358,8 @@ var Npc = function (config)
     location = location || 'body';
     damageDone = Math.max(1, dmg - calculateDefense(location));
     self.setAttribute('health', Math.max(0, self.getAttribute('health') - damageDone));
+    util.log('Damage done to ' + self.getShortDesc('en') + ': ' + damageDone);
+    
     return damageDone;
   };
 

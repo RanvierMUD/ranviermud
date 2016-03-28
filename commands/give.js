@@ -1,6 +1,8 @@
 var l10n_file = __dirname + '/../l10n/commands/give.yml';
 var l10n = require('../src/l10n')(l10n_file);
 var CommandUtil = require('../src/command_util').CommandUtil;
+var util= require('util');
+
 exports.command = function(rooms, items, players, npcs, Commands) {
   return function(args, player) {
     // syntax 'give [target player] [item]'
@@ -50,15 +52,16 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     function giveItemToPlayer(playerGiving, playerReceiving, itemGiven) {
       try {
+        util.log(playerReceiving.getName() + ' gets ', itemGiven.getShortDesc('en') + ' from ' + playerGiving.getName());
         playerGiving.sayL10n(l10n, 'ITEM_GIVEN', itemGiven.getShortDesc(
           playerGiving.getLocale()), playerReceiving.getName());
         playerReceiving.sayL10n(l10n, 'ITEM_RECEIVED', itemGiven.getShortDesc(
           playerReceiving.getLocale()), playerGiving.getName());
       } catch (e) {
-        console.log("Error when giving an item ", e);
-        console.log("playerReceiving: ", playerReceiving.getName());
-        console.log("playerGiving: ", playerGiving.getName());
-        console.log("Item:", item);
+        util.log("Error when giving an item ", e);
+        util.log("playerReceiving: ", playerReceiving.getName());
+        util.log("playerGiving: ", playerGiving.getName());
+        util.log("Item:", item);
         playerGiving.sayL10n(l10n, 'GENERIC_ITEM_GIVEN', playerReceiving.getName());
         playerReceiving.sayL10n(l10n, 'GENERIC_ITEM_RECEIVED', playerGiving
           .getName());

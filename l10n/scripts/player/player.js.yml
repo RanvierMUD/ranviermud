@@ -5,10 +5,15 @@ LEVELUP:
         You feel your health returning.
         </yellow></bold>
 MUTAGEN_GAIN:
-    en: "<bold><red>You can feel something inside of you, willing you to become more.</bold></red>"
+    en: |
+        <bold><red>
+        You can feel something 
+        willing you to become
+        </red> <blue>
+        more.
+        </blue></bold>
 EXPGAIN:
-    en: "<bold><blue>You gain $[1] experience!</blue></bold>"
-    es: "ES-<bold><blue>You gain $[1] experience!</blue></bold>"
+    en: "<bold><blue>You gain $[1] experience.</blue></bold>"
 NEWSKILL:
-    en: "<bold><yellow>You gained a new skill: $[1]!</yellow></bold>"
-    es: "ES-<bold><yellow>You gained a new skill: $[1]!</yellow></bold>"
+    en: "<bold><yellow>You gained a new feat: $[1].</yellow></bold>"
+    es: "ES-<bold><yellow>You gained a new feat: $[1].</yellow></bold>"
