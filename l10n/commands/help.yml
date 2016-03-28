@@ -66,3 +66,6 @@ WIMPY:
 FLEE:
    en: "Usage \n flee \n\nIf you are fighting, this will cause you to attempt to flee."
 
+STANCE:
+    en: "Usage \n stance (stance) \n\nOptions:\n`normal`: This has no major effect on your combat style.\n`berserk`: You do more damage at the cost of defense.\n`cautious`: You have higher defense at the cost of damage.\n`precise`: Your attacks always hit their target, and you defend \nwell against aimed strikes, at a cost to speed."
+
