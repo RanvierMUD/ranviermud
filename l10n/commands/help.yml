@@ -51,8 +51,18 @@ SAY:
 WHISPER:
     en: "Usage \n  whisper (player) (message)\n\nThis sends a message to a single player in the same room. \nOther players can see that you are whispering, but cannot hear the message."
 EMOTE: 
-    en: "Usage \n  emote (action)\n\nThis allows you to roleplay as your character performing the action.\nThis message will be shown to all other players in the room, so write it in third person.\n\nExample: `emote jumpes with joy` would display `Helga jumps with joy`."
+    en: "Usage \n  emote (action)\n\nThis allows you to roleplay as your character performing the action.\nThis message will be shown to all other players in the room, so write it in third person.\n\nExample: `emote jumps with joy` would display `Helga jumps with joy`."
 GIVE:
     en: "Usage \n give (item) (player)\n\nThis gives the specified item in your inventory to another player's character.\nTheir character must be in the same room as you."
 TELL:
     en: "Usage \n tell (player) (message)\n\nThis sends a private message to the player as long as they are online, even if they aren't in the same room."
+
+TARGET:
+    en: "Usage \n target (body part) \n\nThis lets the player decide where to aim their attack.\nExample: `target legs` to aim at your opponents' legs, while `target` will show your current target."
+
+WIMPY:
+    en: "Usage \n wimpy (percentage) \n\nThis lets the player decide when to flee combat. \nExample: `wimpy 50` will cause you to flee after losing half of your life.\n`wimpy` will show your current wimpiness preference."
+
+FLEE:
+   en: "Usage \n flee \n\nIf you are fighting, this will cause you to attempt to flee."
+
