@@ -123,6 +123,7 @@ var Commands = {
 alias('exp', 'tnl');
 
 exports.Commands = Commands;
+exports.Commands.move = move;
 
 /**
  * Move helper method

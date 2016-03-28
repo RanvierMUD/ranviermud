@@ -1,6 +1,7 @@
 var CommandUtil = require('../src/command_util').CommandUtil;
 var l10n_file = __dirname + '/../l10n/commands/remove.yml';
 var l10n = require('../src/l10n')(l10n_file);
+var util = require('util');
 exports.command = function(rooms, items, players, npcs, Commands) {
   return function(args, player) {
     var thing = CommandUtil.findItemInInventory(args.split(' ')[0], player,
@@ -15,7 +16,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       thing = CommandUtil.findItemInInventory(
         '2.' + args.split(' ')[0],
         player, true);
-      console.log(thing);
+
+      util.log(player.getName() + ' removing ' + thing.getShortDesc('en'));
       if (!thing || !thing.isEquipped()) {
         player.sayL10n(l10n, 'ITEM_NOT_EQUIPPED');
         return;

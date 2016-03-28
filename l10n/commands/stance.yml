@@ -1,0 +1,8 @@
+STANCE_SET:
+  en: 'You will now attack and defend in a $[1] fashion.'
+
+STANCE:
+  en: 'Currently, you are attacking and defending in a $[1] fashion.'
+
+OTHER_STANCE: 
+  en: '$[1] adopts a $[2] stance.'

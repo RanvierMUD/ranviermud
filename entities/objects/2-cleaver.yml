@@ -1,0 +1,15 @@
+- &cleaver
+    vnum: 2
+    short_description:
+        en: "meat cleaver"
+    keywords:
+        en: [ "cleaver", "meat" ]
+    description:
+        en: "A long, sharp, thick blade. Adept when used to sever meat from the bone."
+    room: 2
+    behaviors: "wieldable"
+    attributes:
+        speed: 2.5
+        damage: 5-21
+    load_max: 3
+

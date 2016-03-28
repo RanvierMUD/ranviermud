@@ -8,7 +8,7 @@ ITEM_NOT_FOUND:
     en: "You don't see that here."
     es: "ES-You don't see that here."
 ITEM_PICKUP:
-    en: "You pick up $[1]."
-    es: "ES-You pick up $[1]."
+    en: "You pick up the $[1]."
+    es: "ES-You pick up the $[1]."
 OTHER_PICKUP:
-    en: "$[1] picks up $[2]."
+    en: "$[1] picks up the $[2]."
