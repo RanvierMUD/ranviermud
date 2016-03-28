@@ -422,13 +422,14 @@ var Player = function(socket) {
     return { min: damage[0], max: damage[1] };
   };
 
-  function addBerserkDamage(d) {
+  function addDamageBonus(d) {
      var stance = self.getPreference('stance');
      var bonuses = {
-        'berserk': self.getAtribute('stamina') * self.getAttribute('quickness')
-        'cautious': -(Math.round(d / 2))
+        'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
+        'cautious': -(Math.round(d / 2)),
+        'precise': 1
      }
-     return bonus[stance] || 0;
+     return bonuses[stance] || 0;
   }
 
   /**
