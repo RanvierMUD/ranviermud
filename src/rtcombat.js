@@ -35,7 +35,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     speed: player.getAttackSpeed(),
     weapon: player.getEquipped('wield', true),
     locations: p_locations,
-    target: 'body',
+    target: player.getPreference('target') || 'body',
   };
 
   var n = {
