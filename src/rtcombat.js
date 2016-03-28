@@ -23,9 +23,10 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
 
   var p_locations = [
     'legs',
-    'fists',
+    'feet'
     'torso',
-    'hands', 'head'
+    'hands', 
+    'head'
     ];
 
   var p = {
