@@ -1,5 +1,5 @@
 WIMPY_SET:
-  en: 'You will flee combat when your health falls below $[1]%.'
+  en: 'Now you will flee combat when your health falls below $[1]%.'
 
-NO_WIMPY:
-  en: 'You must specify a percentage between 1 and 99.'
+WIMPY:
+  en: 'Currently, you will flee combat when your health falls below $[1]%.'
