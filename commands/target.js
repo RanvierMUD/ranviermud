@@ -25,7 +25,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
             }
         }
 
-        player.sayL10n(l10n, 'NO_TARGET', player.getDescription());
+        player.sayL10n(l10n, 'NO_TARGET', player.getPreference('target'));
         return;
 
         function validTarget(previous, current, index, array) {

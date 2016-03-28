@@ -11,7 +11,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
             return;
         }
 
-        player.sayL10n(l10n, 'NO_WIMPY');
+        player.sayL10n(l10n, 'WIMPY', player.getPreference('wimpy'));
         return;
     }
 };
