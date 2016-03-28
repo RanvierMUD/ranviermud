@@ -15,9 +15,9 @@
     target: 'feet'
     max_health: 10
     health: 10
-    speed: 2
+    speed: .3
     damage: 1-9
-    level: 1
+    level: 2
   load_max: 7
 - *rat
 - *rat

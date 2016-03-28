@@ -11,12 +11,12 @@
  *   --respawn Minutes between respawn
  */
 
-
 	// built-ins
 var net = require('net'),
 	util = require('util'),
 	express = require('express'),
 	commander = require('commander'),
+	wrap = require('wrap-ansi');
 
 	// local
 	Commands = require('./src/commands').Commands,

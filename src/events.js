@@ -1,13 +1,20 @@
 var crypto = require('crypto'),
   util = require('util'),
-  ansi = require('colorize').ansify,
+  ansi = require('colorize')
+  .ansify,
 
-  Commands = require('./commands').Commands,
-  Channels = require('./channels').Channels,
-  Data = require('./data').Data,
-  Item = require('./items').Item,
-  Player = require('./player').Player,
-  Skills = require('./skills').Skills,
+  Commands = require('./commands')
+  .Commands,
+  Channels = require('./channels')
+  .Channels,
+  Data = require('./data')
+  .Data,
+  Item = require('./items')
+  .Item,
+  Player = require('./player')
+  .Player,
+  Skills = require('./skills')
+  .Skills,
   l10nHelper = require('./l10n');
 
 
@@ -35,12 +42,12 @@ var password_attempts = {};
 var gen_next = function(event) {
   /**
    * Move to the next stage of a staged event
-   * @param Socket|Player arg       Either a Socket or Player on which emit() will be called
+   * @param Socket|Player socket       Either a Socket or Player on which emit() will be called
    * @param string        nextstage
    * @param ...
    */
-  return function(arg, nextstage) {
-    var func = (arg instanceof Player ? arg.getSocket() : arg);
+  return function(socket, nextstage) {
+    var func = (socket instanceof Player ? socket.getSocket() : socket);
     func.emit.apply(func, [event].concat([].slice.call(arguments)));
   }
 };
@@ -72,33 +79,34 @@ var Events = {
      * Point of entry for the player. They aren't actually a player yet
      * @param Socket socket
      */
-    login: function(arg, stage, dontwelcome, name) {
+    login: function login(socket, stage, dontwelcome, name) {
       // dontwelcome is used to swallow telnet bullshit
       dontwelcome = typeof dontwelcome == -'undefined' ? false :
         dontwelcome;
       stage = stage || 'intro';
 
-      if (arg instanceof Player) {
-        l10n.setLocale("en");
+      if (socket instanceof Player) {
+        l10n.setLocale('en');
       }
 
       var next = gen_next('login');
       var repeat = gen_repeat(arguments, next);
 
       switch (stage) {
+
         case 'intro':
           var motd = Data.loadMotd();
-          if (motd) {
-            arg.write(motd);
-          }
-          next(arg, 'login');
+          if (motd) socket.write(motd);
+          next(socket, 'login');
           break;
+
         case 'login':
           if (!dontwelcome) {
-            arg.write("Welcome, what is your name? ");
+            socket.write("Welcome, what is your name? ");
           }
 
-          arg.once('data', function(name) {
+          socket.once('data', function(name) {
+
             // swallow any data that's not from player input i.e., doesn't end with a newline
             // Windows can s@#* a d@#$
             var negot = false;
@@ -109,30 +117,34 @@ var Events = {
             }
 
             if (!negot) {
-              next(arg, 'login', true);
+              next(socket, 'login', true);
               return;
             }
 
-            var name = name.toString().trim();
+            var name = name.toString()
+              .trim();
             if (/[^a-z]/i.test(name) || !name) {
-              arg.write("That's not really your name, now is it?\r\n");
+              socket.write("That's not really your name, now is it?\r\n");
               return repeat();
             }
 
-            name = name[0].toUpperCase() + name.toLowerCase().substr(1);
+            name = name[0].toUpperCase() + name.toLowerCase()
+              .substr(1);
+
             var data = Data.loadPlayer(name);
 
             // That player doesn't exit so ask if them to create it
             if (!data) {
-              arg.emit('createPlayer', arg);
+              socket.emit('createPlayer', socket);
               return;
             }
 
 
-            next(arg, 'password', false, name);
+            next(socket, 'password', false, name);
             return;
           });
           break;
+
         case 'password':
           if (typeof password_attempts[name] === 'undefined') {
             password_attempts[name] = 0;
@@ -140,64 +152,76 @@ var Events = {
 
           // Boot and log any failed password attempts
           if (password_attempts[name] > 2) {
-            arg.write(L('PASSWORD_EXCEEDED') + "\r\n");
+            socket.write(L('PASSWORD_EXCEEDED') + "\r\n");
             password_attempts[name] = 0;
             util.log('Failed login - exceeded password attempts - ' + name);
-            arg.end();
+            socket.end();
             return false;
           }
 
 
           if (!dontwelcome) {
-            arg.write(L('PASSWORD'));
+            socket.write(L('PASSWORD'));
           }
 
-          arg.once('data', function(pass) {
+          socket.once('data', pass => {
             // Skip garbage
             if (pass[0] === 0xFA) {
-              return next(arg, 'password', true, name);
+              return next(socket, 'password', true, name);
             }
-            pass = crypto.createHash('md5').update(pass.toString('').trim())
+            
+            pass = crypto
+              .createHash('md5')
+              .update(pass.toString('').trim())
               .digest('hex');
+
             if (pass !== Data.loadPlayer(name).password) {
-              arg.write(L('PASSWORD_FAIL') + "\r\n");
+              util.log("Failed password attempt by ", socket)
+              socket.write(L('PASSWORD_FAIL') + "\r\n");
               password_attempts[name] += 1;
               return repeat();
             }
-            next(arg, 'done', name);
+            next(socket, 'done', name);
           });
           break;
+
+
         case 'done':
+          
           var name = dontwelcome;
-          // If there is a player connected with the same name boot them the heck off
-          if (players.some(function(p) {
-              return p.getName() === name;
-            })) {
-            players.eachIf(function(p) {
-              return p.getName() === name;
-            }, function(p) {
-              p.emit('quit');
-              p.say("Replaced.");
-              players.removePlayer(p, true);
+          var haveSameName = p => {
+            p.getName() === name;
+          }
+          var boot = players.some(haveSameName);
+
+          if (boot) {
+            players.eachIf(haveSameName, 
+              (p) => {
+                p.emit('quit');
+                p.say("Replaced.");
+                util.log("Replaced: ", p);
+                players.removePlayer(p, true);
             });
           }
 
-          player = new Player(arg);
+          player = new Player(socket);
           player.load(Data.loadPlayer(name));
           players.addPlayer(player);
 
-          player.getSocket().on('close', function() {
-            players.removePlayer(player);
-          });
+          player.getSocket()
+            .on('close', () => {
+              players.removePlayer(player);
+            });
           players.broadcastL10n(l10n, 'WELCOME_BACK', player.getName());
 
           // Load the player's inventory (There's probably a better place to do this)
           var inv = [];
-          player.getInventory().forEach(function(item) {
-            item = new Item(item);
-            items.addItem(item);
-            inv.push(item);
-          });
+          player.getInventory()
+            .forEach(function(item) {
+              item = new Item(item);
+              items.addItem(item);
+              inv.push(item);
+            });
           player.setInventory(inv);
 
 
@@ -205,7 +229,8 @@ var Events = {
           player.prompt();
 
           // All that shit done, let them play!
-          player.getSocket().emit("commands", player);
+          player.getSocket()
+            .emit("commands", player);
           break;
       };
     },
@@ -216,99 +241,105 @@ var Events = {
      */
     commands: function(player) {
       // Parse order is common direction shortcuts -> commands -> exits -> skills -> channels
-      player.getSocket().once('data', function(data) {
-        data = data.toString().trim();
+      player.getSocket()
+        .once('data', function(data) {
+          data = data.toString()
+            .trim();
 
-        var result;
-        if (data) result = parseCommands(data);
-        if (result !== false) commandPrompt();
+          var result;
+          if (data) result = parseCommands(data);
+          if (result !== false) commandPrompt();
 
-        // Methods
+          // Methods
 
-        function parseCommands(data) {
-          var command = data.split(' ').shift();
-          var args = data.split(' ').slice(1).join(' ');
+          function parseCommands(data) {
+            var command = data.split(' ')
+              .shift();
+            var args = data.split(' ')
+              .slice(1)
+              .join(' ');
 
-          var found = false;
+            var found = false;
 
-          if (!(command in Commands.player_commands)) {
+            if (!(command in Commands.player_commands)) {
 
-            found = checkForDirectionAlias(command);
-            if (!found) found = checkForCmd(command);
-            else if (found === true) return;
+              found = checkForDirectionAlias(command);
+              if (!found) found = checkForCmd(command);
+              else if (found === true) return;
 
-            if (found) return getCmd(found, args);
-            else return checkForSkillsChannelsOrExit(command, args);
+              if (found) return getCmd(found, args);
+              else return checkForSkillsChannelsOrExit(command, args);
 
-          } else return getCmd(command, args);
-        }
-
-        function getCmd(cmd, args) {
-          try {
-            return Commands.player_commands[cmd](args, player);
-          } catch (e) { console.log(e) }
-        }
-
-        function checkForDirectionAlias(command) {
-          var directions = {
-            'n': 'north',
-            'e': 'east',
-            's': 'south',
-            'w': 'west',
-            'u': 'up',
-            'd': 'down'
-          };
-
-          if (command in directions) {
-            for (var alias in directions) {
-              if (command.toLowerCase() === alias) {
-                Commands.room_exits(directions[alias], player);
-                return true;
-              }
-            }
+            } else return getCmd(command, args);
           }
-        }
 
-        function checkForCmd(command) {
-          for (var cmd in Commands.player_commands) {
+          function getCmd(cmd, args) {
             try {
-              var regex = new RegExp("^" + command);
-            } catch (err) {
-              continue;
-            }
-            if (cmd.match(regex)) {
-              return cmd;
-            }
+              return Commands.player_commands[cmd](args, player);
+            } catch (e) { util.log(e) }
           }
-        }
 
-        function checkForSkillsChannelsOrExit(command, args) {
-          var exit = Commands.room_exits(command, player);
-          if (exit === false) {
-            if (!(command in player.getSkills())) {
-              if (!(command in Channels)) {
-                player.say(command + " is not a valid command.");
-                return true;
-              } else {
-                Channels[command].use(args, player, players,
-                  rooms);
-                return true
+          function checkForDirectionAlias(command) {
+            var directions = {
+              'n': 'north',
+              'e': 'east',
+              's': 'south',
+              'w': 'west',
+              'u': 'up',
+              'd': 'down'
+            };
+
+            if (command in directions) {
+              for (var alias in directions) {
+                if (command.toLowerCase() === alias) {
+                  Commands.room_exits(directions[alias], player);
+                  return true;
+                }
               }
-            } else {
-              player.useSkill(command, player, args,
-                rooms,
-                npcs);
-              return true;
             }
           }
-        }
 
-        function commandPrompt() {
-          player.prompt();
-          player.getSocket().emit("commands", player);
-        }
+          function checkForCmd(command) {
+            for (var cmd in Commands.player_commands) {
+              try {
+                var regex = new RegExp("^" + command);
+              } catch (err) {
+                continue;
+              }
+              if (cmd.match(regex)) {
+                return cmd;
+              }
+            }
+          }
 
-      });
+          function checkForSkillsChannelsOrExit(command, args) {
+            var exit = Commands.room_exits(command, player);
+            if (exit === false) {
+              if (!(command in player.getSkills())) {
+                if (!(command in Channels)) {
+                  player.say(command + " is not a valid command.");
+                  return true;
+                } else {
+                  Channels[command].use(args, player, players,
+                    rooms);
+                  return true
+                }
+              } else {
+                player.useSkill(command, player, args,
+                  rooms,
+                  npcs);
+                return true;
+              }
+            }
+          }
+
+          function commandPrompt() {
+            player.prompt();
+            player.getSocket()
+              .emit("commands", player);
+          }
+
+        });
     },
 
     /**
@@ -325,10 +356,10 @@ var Events = {
      *                  the stage.
      * @param string stage See above
      */
-    createPlayer: function(arg, stage) {
+    createPlayer: function(socket, stage) {
       stage = stage || 'check';
 
-      if (arg instanceof Player) {
+      if (socket instanceof Player) {
         l10n.setLocale("en");
       }
 
@@ -341,97 +372,108 @@ var Events = {
        */
       switch (stage) {
         case 'check':
-          arg.write(
+          socket.write(
             "That player doesn't exist, would you like to create it? [y/n] "
           );
-          arg.once('data', function(check) {
-            check = check.toString().trim().toLowerCase();
+          socket.once('data', function(check) {
+            check = check.toString()
+              .trim()
+              .toLowerCase();
             if (!/[yn]/.test(check)) {
               return repeat();
             }
 
             if (check === 'n') {
-              arg.write("Goodbye!\r\n");
-              arg.end();
+              socket.write("Goodbye!\r\n");
+              socket.end();
               return false;
             }
 
-            next(arg, 'name');
+            next(socket, 'name');
           });
           break;
         case 'name':
-          arg = new Player(arg);
-          arg.write(L('NAME_PROMPT'));
-          arg.getSocket().once('data', function(name) {
-            name = name.toString().trim();
-            if (/\W/.test(name)) {
-              arg.say(L('INVALID_NAME'));
-              return repeat();
-            }
-
-            var player = false;
-            players.every(function(p) {
-              if (p.getName().toLowerCase() === name.toLowerCase()) {
-                player = true;
-                return false;
+          socket = new Player(socket);
+          socket.write(L('NAME_PROMPT'));
+          socket.getSocket()
+            .once('data', function(name) {
+              name = name.toString()
+                .trim();
+              if (/\W/.test(name)) {
+                socket.say(L('INVALID_NAME'));
+                return repeat();
               }
-              return true;
+
+              var player = false;
+              players.every(function(p) {
+                if (p.getName()
+                  .toLowerCase() === name.toLowerCase()) {
+                  player = true;
+                  return false;
+                }
+                return true;
+              });
+
+              player = player || Data.loadPlayer(name);
+
+              if (player) {
+                socket.say(L('NAME_TAKEN'));
+                return repeat();
+              }
+
+              // Always give them a name like Shawn instead of sHaWn
+              socket.setName(name[0].toUpperCase() + name.toLowerCase()
+                .substr(
+                  1));
+              next(socket, 'password');
             });
-
-            player = player || Data.loadPlayer(name);
-
-            if (player) {
-              arg.say(L('NAME_TAKEN'));
-              return repeat();
-            }
-
-            // Always give them a name like Shawn instead of sHaWn
-            arg.setName(name[0].toUpperCase() + name.toLowerCase().substr(
-              1));
-            next(arg, 'password');
-          });
           break;
         case 'password':
-          arg.write(L('PASSWORD'));
-          arg.getSocket().once('data', function(pass) {
-            pass = pass.toString().trim();
-            if (!pass) {
-              arg.sayL10n(l10n, 'EMPTY_PASS');
-              return repeat();
-            }
+          socket.write(L('PASSWORD'));
+          socket.getSocket()
+            .once('data', function(pass) {
+              pass = pass.toString()
+                .trim();
+              if (!pass) {
+                socket.sayL10n(l10n, 'EMPTY_PASS');
+                return repeat();
+              }
 
-            // setPassword handles hashing
-            arg.setPassword(pass);
-            next(arg, 'gender');
-          });
+              // setPassword handles hashing
+              socket.setPassword(pass);
+              next(socket, 'gender');
+            });
           break;
         case 'gender':
-          arg.write(
+          socket.write(
             'What is your character\'s gender?\n[F]emale\n[M]ale\n[A]ndrogynous\n'
           );
-          arg.getSocket().once('data', function(gender) {
-            gender = gender.toString().toLowerCase();
-            if (!gender) {
-              arg.say(
-                'Please specify a gender, or [A]ndrogynous if you\'d prefer not to.'
-              );
-              return repeat();
-            }
-            arg.setGender(gender);
-            next(arg, 'done');
-          });
+          socket.getSocket()
+            .once('data', function(gender) {
+              gender = gender.toString()
+                .toLowerCase();
+              if (!gender) {
+                socket.say(
+                  'Please specify a gender, or [A]ndrogynous if you\'d prefer not to.'
+                );
+                return repeat();
+              }
+              socket.setGender(gender);
+              next(socket, 'done');
+            });
           break;
           // 'done' assumes the argument passed to the event is a player, ...so always do that.
         case 'done':
-          arg.setLocale("en");
-          arg.setLocation(players.getDefaultLocation());
+          socket.setLocale("en");
+          socket.setLocation(players.getDefaultLocation());
           // create the pfile then send them on their way
-          arg.save(function() {
-            players.addPlayer(arg);
-            arg.prompt();
-            arg.getSocket().emit('commands', arg);
+          socket.save(function() {
+            players.addPlayer(socket);
+            socket.prompt();
+            socket.getSocket()
+              .emit('commands', socket);
           });
-          players.broadcastL10n(l10n, 'WELCOME', arg.getName());
+          players.broadcastL10n(l10n, 'WELCOME', socket.getName());
           break;
 
       }

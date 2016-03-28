@@ -13,14 +13,14 @@
   behaviors: "rtcombat,aggro"
   attributes:
     target: 'legs'
-    max_health: 25
-    health: 25
+    max_health: 60
+    health: 55
     speed: 2.5
-    damage: 1-12
-    level: 2
+    damage: 1-37
+    level: 4
   defenses:
     body: 1
-    head: -1
+    head: -4
   load_max: 7
 - <<: *serpent
   room: 11
