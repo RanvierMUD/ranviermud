@@ -472,7 +472,7 @@ var Player = function(socket) {
    * @param string skill
    */
   self.useSkill = function(skill /*, args... */ ) {
-    Skills[self.getAttribute('class')][skill].activate.apply(null, [].slice
+    Skills[skill].activate.apply(null, [].slice
       .call(arguments)
       .slice(1));
   };
@@ -482,9 +482,7 @@ var Player = function(socket) {
    * @param int damage
    * @param string location
    */
-  self.damage = _damage;
-
-  function _damage(dmg, location) {
+  self.damage = function (dmg, location) {
     if (!dmg) return;
     location = location || 'body';
 
@@ -492,6 +490,7 @@ var Player = function(socket) {
 
     self.setAttribute('health',
       Math.max(0, self.getAttribute('health') - damageDone));
+    
     util.log('Damage done to ' + self.getName() + ': ' + damageDone);
 
     return damageDone;
@@ -514,9 +513,10 @@ var Player = function(socket) {
   }
 
   function armor(location) {
+    var bonus = self.checkStance('precise') ? self.getAttribute('willpower') + self.getAttribute('stamina') : 0
     var item = self.getEquipped(location, true);
     if (item)
-      return item.getAttribute('defense')
+      return item.getAttribute('defense') * bonus;
     return 0;
   }
 
