@@ -12,12 +12,16 @@
     en: "The python slithers slowly across the ground, its forked tongue darting out of its mouth."
   behaviors: "rtcombat,aggro"
   attributes:
-    max_health: 25
-    health: 25
-    speed: 2.5
-    damage: 1-12
-    level: 1
-    experience: 180
+    target: 'legs'
+    max_health: 60
+    health: 55
+    speed: 3.5
+    damage: 1-37
+    level: 4
+  defenses:
+    body: 1
+    head: -4
+    torso: 1
   load_max: 7
 - <<: *serpent
   room: 11
