@@ -3,7 +3,9 @@ var Data = require('./data').Data,
     crypto = require('crypto'),
     ansi = require('sty'),
     util = require('util'),
-    events = require('events');
+    events = require('events'),
+    wrap = require('wrap-ansi');
+
 var npcs_scripts_dir = __dirname + '/../scripts/player/';
 var l10n_dir = __dirname + '/../l10n/scripts/player/';
 var statusUtil = require('./status');
@@ -209,9 +211,10 @@ var Player = function(socket) {
      * @param Item   item
      */
     self.equip = function(wear_location, item) {
-        console.log(">>Equipping at ", wear_location);
-        console.log(item);
+        util.log(">> Equipping at ", wear_location, item.getUuid);
+        
         self.equipment[wear_location] = item.getUuid();
+
         item.setEquipped(true);
     };
 
@@ -227,7 +230,6 @@ var Player = function(socket) {
                 break;
             }
         }
-        // self.addItem(item);
         item.emit('remove', self);
     };
 
@@ -237,6 +239,7 @@ var Player = function(socket) {
      */
     self.write = function(data, color) {
         color = color || true;
+        
         if (!color) ansi.disable();
         socket.write(ansi.parse(data));
         ansi.enable();
@@ -266,7 +269,7 @@ var Player = function(socket) {
     self.say = function(data, color) {
         color = color || true;
         if (!color) ansi.disable();
-        socket.write(ansi.parse(data) + "\r\n");
+        socket.write(ansi.parse(wrap(data), 40) + "\r\n");
         ansi.enable();
     };
 
@@ -383,7 +386,6 @@ var Player = function(socket) {
     self.getDamage = function() {
         var weapon = self.getEquipped('wield', true)
         var base = [1, self.getAttribute('stamina') + 1];
-        console.log(weapon);
         var damage = weapon ?
             (weapon.getAttribute('damage') ?
                 weapon.getAttribute('damage').split('-').map(function(i) {
@@ -441,26 +443,37 @@ var Player = function(socket) {
      * @param int damage
      * @param string location
      */
-    self.damage = function(dmg, location) {
+    self.damage = _damage;
+
+    function _damage(dmg, location) {
         if (!dmg) return;
         location = location || 'body';
-        damageDone = Math.max(1, dmg - calculateDefense(location));
-        self.setAttribute('health', Math.max(0, self.getAttribute('health') - damageDone));
+        
+        damageDone = Math.max(1, dmg - soak(location));
+        
+        self.setAttribute('health', 
+          Math.max(0, self.getAttribute('health') - damageDone));
+        util.log('Damage done to ' + self.getName() + ': ' + damageDone);
+        
         return damageDone;
-    }
+    };
 
-    function calculateDefense(location) {
-        var defense = getItemDefense(location);
+    function soak(location) {
+        var defense = armor(location);
         if (location !== 'body')
-            defense += getItemDefense('body');
+            defense += armor('body');
+        
         defense += self.getAttribute('stamina');
-        console.log(location + ' def: ' + defense);
+        
+        util.log(self.getName() + ' ' + location + ' def: ' + defense);
+        
         return defense;
     }
 
-    function getItemDefense(location) {
+    function armor(location) {
         var item = self.getEquipped(location, true);
-        if (item) return item.getAttribute('defense')
+        if (item) 
+          return item.getAttribute('defense')
         return 0;
     }
 

@@ -1,11 +1,12 @@
 var sprintf = require('sprintf').sprintf;
+var util = require('util');
 exports.command = function(rooms, items, players, npcs, Commands) {
   return function(args, player) {
     var equipped = player.getEquipped();
     for (var i in equipped) {
       var item = items.get(equipped[i]);
       if (!item) { 
-      	console.log("Something doesn't exist: ", equipped[i]); 
+      	util.log("Something doesn't exist: ", equipped[i]); 
       	delete equipped[i];
       }
 
