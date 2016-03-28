@@ -48,7 +48,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
 
   try {
     util.log("Combat begins between " + p.name + " and " + n.name);
-    util.log("Weapons are " + p.weapon.getShortDesc('en') + ' and ' + n.weapon);
+    util.log("Weapons are " + p.weapon + ' and ' + n.weapon);
     util.log("Speeds are " + p.speed + ' vs. ' + n.speed)
   } catch (e) { util.log(e); }
 
@@ -69,6 +69,11 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     var starting_health = defender.getAttribute('health');
     util.log(a.name + ' health: ' + attacker.getAttribute('health'));
     util.log(d.name + ' health: ' + defender.getAttribute('health'));
+
+    if (d.isPlayer && wimpy(starting_health)) {
+
+    }
+
 
     var damage = attacker.getDamage();
     var defender_sanity = defender.getAttribute('sanity');
@@ -158,8 +163,12 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     }
   }
 
+  function getPercentage(numerator, denominator) {
+    return Math.round((numerator / denominator) * 100);
+  }
+
   function getDamageString(damage, health) {
-    var percentage = Math.round((damage / health) * 100);
+    var percentage = getPercentage(damage, health);
 
     var damageStrings = {
       1: 'tickles',
@@ -219,6 +228,17 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     }
     player.prompt();
     callback(success);
+  }
+
+  function wimpy(health) {
+    var percentage = getPercentage(health, player.getAttribute('max_health'));
+    var wimpiness = player.getPreference('wimpy')
+    if (percentage < wimpiness) {
+      util.log("Player's wimpiness kicks in...");
+      util.log("Health: " + percentage + "% || Wimpiness: " + wimpiness + "%");
+      player.say('You panic and try to flee.');
+      Commands.player_commands.flee(null, player);
+    }
   }
 
   //TODO: More candidates for utilification, I suppose.

@@ -6,7 +6,7 @@ LOSE:
 DAMAGE_DONE:
   en: "<green>Your attack $[2] $[1]'s $[3].</green>"
 DAMAGE_TAKEN:
-  en: "<bold><red>$[1] $[2] you $[4] with their $[3].</red></bold>"
+  en: "<bold><red>$[1] $[2] your $[4] with their $[3].</red></bold>"
 PLAYER_MISS:
   en: "<yellow>You miss.</yellow>"
   es: "ES-<yellow>You miss.</yellow>"
