@@ -367,6 +367,7 @@ var Npc = function (config)
     var defense = self.getDefense(location);
     if (location !== 'body')
       defense += self.getDefense('body');
+    util.log(self.getShortDesc('en') + ' ' + location + ' def: ' + defense);
     return defense;
   }
 

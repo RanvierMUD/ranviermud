@@ -67,7 +67,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     var damage = attacker.getDamage();
     var defender_sanity = defender.getAttribute('sanity');
     var sanityDamage = a.isPlayer ? 0 : attacker.getSanityDamage();
-    var hitLocation = d.isPlayer ? decideHitLocation(d.locations, a.target) : 'body';
+    var hitLocation = decideHitLocation(d.locations, a.target);
 
 
     if (!damage) {
