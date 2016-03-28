@@ -9,7 +9,7 @@ var LevelUtil = require('./levels')
   .LevelUtil;
 var CommandUtil = require('./command_util')
   .CommandUtil;
-
+var util = require('util');
 var statusUtils = require('./status');
 
 
