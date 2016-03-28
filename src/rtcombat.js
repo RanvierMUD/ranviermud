@@ -44,6 +44,10 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     target: npc.getAttribute('target'),
   };
 
+  util.log("Combat begins between " + p.name + " and " + n.name);
+  util.log("Weapons are " + p.weapon.getShortDesc('en') + ' and ' + n.weapon);
+  util.log("Speeds are " + p.speed + ' vs. ' + n.speed);
+
   var player_combat = combatRound.bind(null, player, npc, p, n);
   var npc_combat = combatRound.bind(null, npc, player, n, p);
 
@@ -59,7 +63,6 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
       return;
 
 
-    var defender_health = defender.getAttribute('health');
     var damage = attacker.getDamage();
     var defender_sanity = defender.getAttribute('sanity');
     var sanityDamage = a.isPlayer ? 0 : attacker.getSanityDamage();
@@ -80,10 +83,11 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
       broadcastExceptPlayer(
         '<bold>' + a.name + ' attacks ' + d.name +
         ' and misses!' + '</bold>');
+      util.log(a.name + ' misses ' + d.name);
 
     } else {
 
-      damage = defender.damage(calcRawDamage(damage, defender_health), hitLocation);
+      damage = defender.damage(calcRawDamage(damage, defender.getAttribute('health')), hitLocation);
       var damageStr = getDamageString(damage, defender.getAttribute('health'));
 
       if (a.weapon && typeof a.weapon == 'Object')
@@ -104,7 +108,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
       defender.setAttribute('sanity', Math.max(defender_sanity - sanityDamage, 0));
     }
 
-    if (defender_health <= damage) {
+    if (defender.getAttribute('health') <= damage) {
       defender.setAttribute('health', 1);
       defender.setAttribute('sanity', 1);
       return combat_end(a.isPlayer);
@@ -134,9 +138,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     var range = damage.max - damage.min;
     with(Math) {
       return min(
-
         attr,
-
         damage.min + max(
           0,
           floor(random() * (range))
@@ -149,11 +151,12 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     var percentage = Math.round((damage / health) * 100);
 
     var damageStrings = {
-      1: 'tickles',
+      1: 'annoys',
       3: 'scratches',
       8: 'grazes',
       20: 'hits',
-      50: 'wounds',
+      35: 'wounds',
+      85: 'maims',
     };
 
     for (var cutoff in damageStrings) {
@@ -165,6 +168,8 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
   }
 
   function combat_end(success) {
+
+    util.log("*** Combat Over ***")
 
     player.setInCombat(false);
     npc.setInCombat(false);
@@ -181,12 +186,13 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
       // hand out experience
       var exp = npc.getAttribute('experience') !== false ?
         npc.getAttribute('experience') : LevelUtil.mobExp(npc.getAttribute('level'));
-
+      util.log("Player wins, exp gain: ", exp);
       player.emit('experience', exp);
     } else {
-
+      util.log("Player death: ", player.getName());
       player.sayL10n(l10n, 'LOSE', npc.getShortDesc(locale));
       player.emit('die');
+
       broadcastExceptPlayer(player.getName() +
         ' collapses to the ground, life fleeing their body before your eyes.'
       );
@@ -195,7 +201,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
       broadcastExceptPlayer('<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
       npc.setAttribute('health', npc.getAttribute('max_health'));
 
-      broadcastToArea('The horrific scream of a dying ' +
+      broadcastToArea('The gurgles of a dying ' +
         statusUtils.getGenderNoun(player) +
         ' echo from nearby.'
       );

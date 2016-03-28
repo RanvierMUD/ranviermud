@@ -453,7 +453,8 @@ var Player = function(socket) {
         
         self.setAttribute('health', 
           Math.max(0, self.getAttribute('health') - damageDone));
-
+        util.log('Damage done to ' + self.getName() + ': ' + damageDone);
+        
         return damageDone;
     };
 
@@ -464,7 +465,7 @@ var Player = function(socket) {
         
         defense += self.getAttribute('stamina');
         
-        util.log(self.getName() + location + ' def: ' + defense);
+        util.log(self.getName() + ' ' + location + ' def: ' + defense);
         
         return defense;
     }

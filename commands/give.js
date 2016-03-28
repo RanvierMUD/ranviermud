@@ -52,7 +52,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     function giveItemToPlayer(playerGiving, playerReceiving, itemGiven) {
       try {
-        util.log(playerReceiving.getName() + ' gets ', itemGiven.getShortDesc() + ' from ' + playerGiving.getName());
+        util.log(playerReceiving.getName() + ' gets ', itemGiven.getShortDesc('en') + ' from ' + playerGiving.getName());
         playerGiving.sayL10n(l10n, 'ITEM_GIVEN', itemGiven.getShortDesc(
           playerGiving.getLocale()), playerReceiving.getName());
         playerReceiving.sayL10n(l10n, 'ITEM_RECEIVED', itemGiven.getShortDesc(
