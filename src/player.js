@@ -1,9 +1,13 @@
-var Data = require('./data').Data,
-  Skills = require('./skills').Skills,
+var Data = require('./data')
+  .Data,
+  Skills = require('./skills')
+  .Skills,
   crypto = require('crypto'),
   ansi = require('sty'),
   util = require('util'),
-  events = require('events');
+  events = require('events'),
+  wrap = require('wrap-ansi');
+
 var npcs_scripts_dir = __dirname + '/../scripts/player/';
 var l10n_dir = __dirname + '/../l10n/scripts/player/';
 var statusUtil = require('./status');
@@ -41,6 +45,12 @@ var Player = function(socket) {
     description: 'A person.'
   };
 
+  self.preferences = {
+    target: 'body',
+    wimpy: 30,
+    stance: 'normal'
+  };
+
   // Anything affecting the player
   self.affects = {};
 
@@ -74,6 +84,7 @@ var Player = function(socket) {
   self.getInventory = function() {
     return self.inventory;
   };
+
   self.getAttribute = function(attr) {
     return typeof self.attributes[attr] !== 'undefined' ? self.attributes[
       attr] : false;
@@ -81,17 +92,30 @@ var Player = function(socket) {
   self.getAttributes = function() {
     return self.attributes || {}
   }
+
+  self.getPreference = function(pref) {
+    return typeof self.preferences[pref] !== 'undefined' ? self.preferences[
+      pref] : false;
+  };
+
   self.getSkills = function(skill) {
     return typeof self.skills[skill] !== 'undefined' ? self.skills[skill] :
       self.skills;
   };
+
   // Note, only retreives hash, not a real password
   self.getPassword = function() {
     return self.password;
   };
+
   self.isInCombat = function() {
     return self.in_combat;
   };
+
+  self.checkStance = function(str) {
+    return self.preferences.stance === str.toLowerCase();
+  };
+
   self.setPrompt = function(str) { self.prompt_string = str; }
   self.setCombatPrompt = function(str) { self.combat_prompt = str; }
   self.setLocale = function(locale) { self.locale = locale; };
@@ -100,10 +124,12 @@ var Player = function(socket) {
     self.attributes.description =
       newdesc;
   };
+
   self.setLocation = function(loc) { self.location = loc; };
   self.setPassword = function(pass) {
     self.password = crypto.createHash('md5')
-      .update(pass).digest('hex');
+      .update(pass)
+      .digest('hex');
   };
   self.setGender = function(gender) { self.gender = gender.toUpperCase(); }
   self.getGender = function() {
@@ -119,6 +145,7 @@ var Player = function(socket) {
   self.setInventory = function(inv) { self.inventory = inv; };
   self.setInCombat = function(combat) { self.in_combat = combat; };
   self.setAttribute = function(attr, val) { self.attributes[attr] = val; };
+  self.setPreference = function(pref, val) { self.preferences[pref] = val; };
   self.addSkill = function(name, skill) { self.skills[name] = skill; };
   /**#@-*/
 
@@ -187,9 +214,10 @@ var Player = function(socket) {
 
     hydrate = hydrate || false;
     if (hydrate) {
-      return self.getInventory().filter(function(i) {
-        return i.getUuid() === self.equipment[slot];
-      })[0];
+      return self.getInventory()
+        .filter(function(i) {
+          return i.getUuid() === self.equipment[slot];
+        })[0];
     }
     return self.equipment[slot];
   };
@@ -200,9 +228,10 @@ var Player = function(socket) {
    * @param Item   item
    */
   self.equip = function(wear_location, item) {
-    console.log(">>Equipping at ", wear_location);
-    console.log(item);
+    util.log(">> Equipping at ", wear_location, item.getUuid);
+
     self.equipment[wear_location] = item.getUuid();
+
     item.setEquipped(true);
   };
 
@@ -218,7 +247,6 @@ var Player = function(socket) {
         break;
       }
     }
-    // self.addItem(item);
     item.emit('remove', self);
   };
 
@@ -228,6 +256,7 @@ var Player = function(socket) {
    */
   self.write = function(data, color) {
     color = color || true;
+
     if (!color) ansi.disable();
     socket.write(ansi.parse(data));
     ansi.enable();
@@ -245,7 +274,8 @@ var Player = function(socket) {
       l10n.setLocale(self.getLocale());
     }
 
-    self.write(l10n.translate.apply(null, [].slice.call(arguments).slice(1)));
+    self.write(l10n.translate.apply(null, [].slice.call(arguments)
+      .slice(1)));
 
     if (locale) l10n.setLocale(locale);
   };
@@ -257,7 +287,7 @@ var Player = function(socket) {
   self.say = function(data, color) {
     color = color || true;
     if (!color) ansi.disable();
-    socket.write(ansi.parse(data) + "\r\n");
+    socket.write(ansi.parse(wrap(data), 40) + "\r\n");
     ansi.enable();
   };
 
@@ -271,7 +301,8 @@ var Player = function(socket) {
       l10n.setLocale(self.getLocale());
     }
 
-    self.say(l10n.translate.apply(null, [].slice.call(arguments).slice(1)));
+    self.say(l10n.translate.apply(null, [].slice.call(arguments)
+      .slice(1)));
     if (locale) l10n.setLocale(locale);
   };
 
@@ -349,16 +380,18 @@ var Player = function(socket) {
    * Get attack speed of a player
    * @return float
    */
-  //TODO: Return in number of ms. Use semi-randomness. Weapon speed and char quickness and cleverness(?) should have an effect on the speed. Perhaps roll 1d100 for each point of quickness and subtract that from the attack speed for a min of 100ms. Something like that.
   self.getAttackSpeed = function() {
     var weapon = self.getEquipped('wield', true);
     var minimum = 100;
-    var speedFactor = (weapon.getAttribute('speed') || 2);
+
+    var speedFactor = weapon ? weapon.getAttribute('speed') || 2 : 2;
     var speedDice = (self.getAttribute('quickness') + self.getAttribute(
       'cleverness'));
 
     var speed = Math.max(5000 - roll(speedDice, 100 / speedFactor), minimum);
-    console.log("Speed is ", speed);
+    util.log("Player's speed is ", speed);
+
+    if (self.checkStance('precise')) speed = Math.round(speed * 1.5);
 
     return speed;
   };
@@ -374,14 +407,30 @@ var Player = function(socket) {
   self.getDamage = function() {
     var weapon = self.getEquipped('wield', true)
     var base = [1, self.getAttribute('stamina') + 1];
+
     var damage = weapon ?
       (weapon.getAttribute('damage') ?
-        weapon.getAttribute('damage').split('-').map(function(i) {
+        weapon.getAttribute('damage')
+        .split('-')
+        .map(function(i) {
           return parseInt(i, 10);
         }) : base
       ) : base;
+
+    damage = damage.map(d => d + addDamageBonus(d));
+
     return { min: damage[0], max: damage[1] };
   };
+
+  function addDamageBonus(d) {
+     var stance = self.getPreference('stance');
+     var bonuses = {
+        'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
+        'cautious': -(Math.round(d / 2)),
+        'precise': 1
+     }
+     return bonuses[stance] || 0;
+  }
 
   /**
    * Turn the player into a JSON string for storage
@@ -389,9 +438,10 @@ var Player = function(socket) {
    */
   self.stringify = function() {
     var inv = [];
-    self.getInventory().forEach(function(item) {
-      inv.push(item.flatten());
-    });
+    self.getInventory()
+      .forEach(function(item) {
+        inv.push(item.flatten());
+      });
 
     return JSON.stringify({
       name: self.name,
@@ -404,7 +454,8 @@ var Player = function(socket) {
       equipment: self.equipment,
       attributes: self.attributes,
       skills: self.skills,
-      gender: self.gender
+      gender: self.gender,
+      preferences: self.preferences
     });
   };
 
@@ -421,9 +472,53 @@ var Player = function(socket) {
    * @param string skill
    */
   self.useSkill = function(skill /*, args... */ ) {
-    Skills[self.getAttribute('class')][skill].activate.apply(null, [].slice
-      .call(arguments).slice(1));
+    Skills[skill].activate.apply(null, [].slice
+      .call(arguments)
+      .slice(1));
   };
+
+  /**
+   * Helper to calculate physical damage
+   * @param int damage
+   * @param string location
+   */
+  self.damage = function (dmg, location) {
+    if (!dmg) return;
+    location = location || 'body';
+
+    damageDone = Math.max(1, dmg - soak(location));
+
+    self.setAttribute('health',
+      Math.max(0, self.getAttribute('health') - damageDone));
+    
+    util.log('Damage done to ' + self.getName() + ': ' + damageDone);
+
+    return damageDone;
+  };
+
+  function soak(location) {
+    var defense = armor(location);
+
+    if (location !== 'body')
+      defense += armor('body');
+
+    defense += self.getAttribute('stamina');
+
+    if (self.checkStance('cautious')) defense += self.getAttribute('cleverness');
+    if (self.checkStance('berserk')) defense = Math.round(defense / 2);
+
+    util.log(self.getName() + ' ' + location + ' def: ' + defense);
+
+    return defense;
+  }
+
+  function armor(location) {
+    var bonus = self.checkStance('precise') ? self.getAttribute('willpower') + self.getAttribute('stamina') : 0
+    var item = self.getEquipped(location, true);
+    if (item)
+      return item.getAttribute('defense') * bonus;
+    return 0;
+  }
 
   self.init();
 };
