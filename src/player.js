@@ -269,7 +269,7 @@ var Player = function(socket) {
     self.say = function(data, color) {
         color = color || true;
         if (!color) ansi.disable();
-        socket.write(ansi.parse(wrap(data)) + "\r\n");
+        socket.write(ansi.parse(wrap(data), 40) + "\r\n");
         ansi.enable();
     };
 
@@ -386,7 +386,6 @@ var Player = function(socket) {
     self.getDamage = function() {
         var weapon = self.getEquipped('wield', true)
         var base = [1, self.getAttribute('stamina') + 1];
-        console.log(weapon);
         var damage = weapon ?
             (weapon.getAttribute('damage') ?
                 weapon.getAttribute('damage').split('-').map(function(i) {
