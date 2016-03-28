@@ -7,7 +7,7 @@
     description:
         en: "A short, jagged metal shard, discolored with red corrosion."
     room: 9
-    script: "1-sword.js"
+    script: "1-shiv.js"
     behaviors: "wieldable"
     attributes:
         speed: 1.5

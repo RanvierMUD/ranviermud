@@ -209,6 +209,7 @@ var Npc = function (config)
 	self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
 	self.removeAffect = function (aff) { delete self.affects[aff]; };
 	self.getDefenses  = function () { return self.defenses; };
+	self.getLocations = function () { return Object.keys(self.defenses); };
 	/**#@-*/
 
 	/**
@@ -367,6 +368,7 @@ var Npc = function (config)
     var defense = self.getDefense(location);
     if (location !== 'body')
       defense += self.getDefense('body');
+    util.log(self.getShortDesc('en') + ' ' + location + ' def: ' + defense);
     return defense;
   }
 
