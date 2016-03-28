@@ -1,0 +1,4 @@
+NO_TARGET:
+  en: "Target where? You are currently targeting the $[1]."
+TARGET_SET:
+  en: "You will aim for the $[1] for now."

@@ -10,4 +10,4 @@ NO_WEAR_LOCATION:
 OTHER_WEAR:
     en: "$[1] puts on $[2]."
 YOU_WEAR:
-    en: "You wear $[1]."
+    en: "You wear the $[1]."

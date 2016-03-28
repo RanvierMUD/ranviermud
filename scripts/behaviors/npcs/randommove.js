@@ -1,4 +1,6 @@
-var otherPlayers = require('../../../src/command_util.js').CommandUtil.otherPlayerInRoom;
+var CommandUtil = require('../../../src/command_util.js')
+  .CommandUtil;
+
 
 exports.listeners = {
   playerEnter: chooseRandomExit
@@ -6,9 +8,9 @@ exports.listeners = {
 
 function chooseRandomExit(room, rooms, player, players, npc) {
   return function(room, rooms, player, players, npc) {
-    if (isCoinFlip()) {
+    if (CommandUtil.isCoinFlip()) {
       var exits = room.getExits();
-      var chosen = getRandomFromArr(exits);
+      var chosen = CommandUtil.getRandomFromArr(exits);
       if (!chosen.hasOwnProperty('mob_locked')) {
         var uid = npc.getUuid();
         var chosenRoom = rooms.getAt(chosen.location);
@@ -22,13 +24,11 @@ function chooseRandomExit(room, rooms, player, players, npc) {
             player, chosenRoom));
 
           players.eachIf(
-            otherPlayers.bind(
-              null, player),
-            function(p) {
-              p.say(npc.getShortDesc(
-                p.getLocale()) + getLeaveMessage(p, chosenRoom))
+            CommandUtil.otherPlayerInRoom.bind(null, player),
+            p => {
+              p.say(npc.getShortDesc(p.getLocale()) + getLeaveMessage(p, chosenRoom))
             });
-        } catch(e) {
+        } catch (e) {
           console.log("EXCEPTION: ", e);
           console.log("NPC: ", npc);
         }
@@ -39,16 +39,6 @@ function chooseRandomExit(room, rooms, player, players, npc) {
 
 function getLeaveMessage(player, chosenRoom) {
   if (chosenRoom && chosenRoom.title)
-    return ' leaves for ' + chosenRoom.title[player.getLocale()];
+    return ' leaves for ' + chosenRoom.title[player.getLocale()] + '.';
   return ' leaves.'
-}
-
-//TODO: Candidates for utilification.
-
-function isCoinFlip() {
-  return Math.round(Math.random());
-}
-
-function getRandomFromArr(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
 }

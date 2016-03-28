@@ -12,12 +12,16 @@
     en: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
   behaviors: "rtcombat,randommove"
   attributes:
+    target: 'feet'
     max_health: 10
     health: 10
-    speed: 2
+    speed: .45
     damage: 1-9
-    level: 1
-    experience: 100
+    level: 2
+  defenses: 
+    body: 1
+    head: -3
+    torso: 1
   load_max: 7
 - *rat
 - *rat

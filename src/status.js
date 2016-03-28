@@ -10,12 +10,11 @@ module.exports = {
 
 function getHealthText(maxHealth, player, npc) {
   return function(health) {
-    var locale = player.getLocale();
+    var locale = player ? player.getLocale() : 'en';
     var isPlayer = !npc;
     var percentage = getPercentage(health, maxHealth);
     var noun = isPlayer ? getGenderNoun(player.getGender()) : 'creature';
-    var nounPhrase = isPlayer ? 'You are ' : npc.getShortDesc(locale) +
-      ' is ';
+    var nounPhrase = isPlayer ? 'You are ' : npc.getShortDesc(locale) + ' is ';
     var color = getStatusColor(percentage);
 
     var healthStatus = {
@@ -28,10 +27,10 @@ function getHealthText(maxHealth, player, npc) {
       50: 'wounded',
       60: 'in awful shape',
       70: 'feeling poor',
-      80: 'in average health',
-      90: 'in good health',
+      80: 'in average physical health',
+      90: 'in good physical health',
       95: 'in great health',
-      100: 'in perfect health'
+      100: 'in perfect physical health'
     };
 
     for (var tier in healthStatus) {
@@ -47,12 +46,9 @@ function getSanityText(maxSanity, player) {
   return function(sanity) {
     var percentage = getPercentage(sanity, maxSanity);
     var sanityStatus = {
-      0: 'consumed by thoughts of suicide',
-      5: 'hanging by a thread',
+      0:  'consumed by madness',
       10: 'nearing insanity',
-      15: 'seeing unrealities',
-      25: 'perceiving the unperceivable',
-      35: 'feeling dysphoric',
+      15: 'feeling dysphoric',
       50: 'stressed to breaking',
       60: 'mentally unsound',
       70: 'feeling stressed',
@@ -67,7 +63,7 @@ function getSanityText(maxSanity, player) {
       if (percentage <= parseInt(tier)) {
         return '<' + color + '>You are ' + sanityStatus[tier] +
           '.</' + color + '>';
-      } //TODO: Dry this, too.
+      }
     }
     return '<' + color + '>You are feeling strange.</' + color + '>';
   }

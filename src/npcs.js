@@ -179,9 +179,14 @@ var Npc = function (config)
 		self.description       = config.description || '';
 		self.room              = config.room        || null;
 		self.vnum              = config.vnum;
+		self.defenses          = {};
 
 		for (var i in config.attributes || {}) {
 			self.attributes[i] = config.attributes[i];
+		}
+
+		for (var i in config.defenses || {}) {
+			self.defenses[i] = config.defenses[i];
 		}
 
 		Data.loadListeners(config, l10n_dir, npcs_scripts_dir, Data.loadBehaviors(config, 'npcs/', self));
@@ -203,6 +208,8 @@ var Npc = function (config)
 	self.setContainer = function (uid) { self.container = uid; }
 	self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
 	self.removeAffect = function (aff) { delete self.affects[aff]; };
+	self.getDefenses  = function () { return self.defenses; };
+	self.getLocations = function () { return Object.keys(self.defenses); };
 	/**#@-*/
 
 	/**
@@ -300,12 +307,12 @@ var Npc = function (config)
 	};
 
 	/**
-	 * Get attack speed of a player
+	 * Get attack speed of an npc
 	 * @return float
 	 */
 	self.getAttackSpeed = function ()
 	{
-		return self.getAttribute('speed') || 1;
+		return self.getAttribute('speed') * 1000 || 1000;
 	};
 
 	/**
@@ -317,7 +324,7 @@ var Npc = function (config)
 		var base = [1, 20];
 		var damage = self.getAttribute('damage') ?
 			self.getAttribute('damage').split('-').map(function (i) { return parseInt(i, 10); })
-			: base
+			: base;
 		return {min: damage[0], max: damage[1]};
 	};
 
@@ -332,6 +339,38 @@ var Npc = function (config)
 			: false;
 		return damage ? {min: damage[0], max: damage[1]} : false;
 	};
+
+	/** 
+	* Helper to get just one area's defense
+	* @param string location
+	*/
+	self.getDefense = function(location){
+		location = location || 'body';
+		return self.defenses[location] || 0;
+	};
+
+	/**
+   * Helper to calculate physical damage
+   * @param int damage
+   * @param string location
+   */
+  self.damage = function(dmg, location) {
+    if (!dmg) return;
+    location = location || 'body';
+    damageDone = Math.max(1, dmg - calculateDefense(location));
+    self.setAttribute('health', Math.max(0, self.getAttribute('health') - damageDone));
+    util.log('Damage done to ' + self.getShortDesc('en') + ': ' + damageDone);
+    
+    return damageDone;
+  };
+
+  function calculateDefense(location) {
+    var defense = self.getDefense(location);
+    if (location !== 'body')
+      defense += self.getDefense('body');
+    util.log(self.getShortDesc('en') + ' ' + location + ' def: ' + defense);
+    return defense;
+  }
 
 	self.init(config);
 };
