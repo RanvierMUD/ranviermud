@@ -14,9 +14,9 @@
   attributes:
     target: 'head'
     max_health: 100
-    health: 100
-    speed: 1
-    damage: '4-20'
+    health: 94
+    speed: 2
+    damage: '4-40'
     sanity_damage: '1-4' 
     level: 8
   load_max: 3
