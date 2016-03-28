@@ -70,15 +70,16 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     util.log(a.name + ' health: ' + attacker.getAttribute('health'));
     util.log(d.name + ' health: ' + defender.getAttribute('health'));
 
-    if (d.isPlayer && wimpy(starting_health)) {
-
-    }
-
+    if (d.isPlayer) checkWimpiness(starting_health);
 
     var damage = attacker.getDamage();
     var defender_sanity = defender.getAttribute('sanity');
     var sanityDamage = a.isPlayer ? 0 : attacker.getSanityDamage();
-    var hitLocation = decideHitLocation(d.locations, a.target);
+    var hitLocation = decideHitLocation(d.locations, a.target, isPrecise());
+
+    function isPrecise() {
+      return a.isPlayer ? attacker.checkStance('precise') : false;
+    }
 
 
     if (!damage) {
@@ -144,8 +145,8 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     setTimeout(a.attackRound, a.speed);
   }
 
-  function decideHitLocation(locations, target) {
-    if (CommandUtil.isCoinFlip()) {
+  function decideHitLocation(locations, target, precise) {
+    if (precise || CommandUtil.isCoinFlip()) {
       return target;
     } else return CommandUtil.getRandomFromArr(locations);
   }
@@ -230,7 +231,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     callback(success);
   }
 
-  function wimpy(health) {
+  function checkWimpiness(health) {
     var percentage = getPercentage(health, player.getAttribute('max_health'));
     var wimpiness = player.getPreference('wimpy')
     if (percentage < wimpiness) {

@@ -47,7 +47,8 @@ var Player = function(socket) {
 
   self.preferences = {
     target: 'body',
-    wimpy: 30
+    wimpy: 30,
+    stance: 'normal'
   };
 
   // Anything affecting the player
@@ -83,28 +84,38 @@ var Player = function(socket) {
   self.getInventory = function() {
     return self.inventory;
   };
+
   self.getAttribute = function(attr) {
     return typeof self.attributes[attr] !== 'undefined' ? self.attributes[
       attr] : false;
   };
+  self.getAttributes = function() {
+    return self.attributes || {}
+  }
+
   self.getPreference = function(pref) {
     return typeof self.preferences[pref] !== 'undefined' ? self.preferences[
       pref] : false;
   };
-  self.getAttributes = function() {
-    return self.attributes || {}
-  }
+
   self.getSkills = function(skill) {
     return typeof self.skills[skill] !== 'undefined' ? self.skills[skill] :
       self.skills;
   };
+
   // Note, only retreives hash, not a real password
   self.getPassword = function() {
     return self.password;
   };
+
   self.isInCombat = function() {
     return self.in_combat;
   };
+
+  self.checkStance = function(str) {
+    return self.preferences.stance === str.toLowerCase();
+  };
+
   self.setPrompt = function(str) { self.prompt_string = str; }
   self.setCombatPrompt = function(str) { self.combat_prompt = str; }
   self.setLocale = function(locale) { self.locale = locale; };
@@ -113,6 +124,7 @@ var Player = function(socket) {
     self.attributes.description =
       newdesc;
   };
+
   self.setLocation = function(loc) { self.location = loc; };
   self.setPassword = function(pass) {
     self.password = crypto.createHash('md5')
@@ -379,6 +391,8 @@ var Player = function(socket) {
     var speed = Math.max(5000 - roll(speedDice, 100 / speedFactor), minimum);
     util.log("Player's speed is ", speed);
 
+    if (self.checkStance('precise')) speed = Math.round(speed * 1.5);
+
     return speed;
   };
 
@@ -393,6 +407,7 @@ var Player = function(socket) {
   self.getDamage = function() {
     var weapon = self.getEquipped('wield', true)
     var base = [1, self.getAttribute('stamina') + 1];
+
     var damage = weapon ?
       (weapon.getAttribute('damage') ?
         weapon.getAttribute('damage')
@@ -401,8 +416,21 @@ var Player = function(socket) {
           return parseInt(i, 10);
         }) : base
       ) : base;
+
+    damage = damage.map(d => d + addDamageBonus(d));
+
     return { min: damage[0], max: damage[1] };
   };
+
+  function addDamageBonus(d) {
+     var stance = self.getPreference('stance');
+     var bonuses = {
+        'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
+        'cautious': -(Math.round(d / 2)),
+        'precise': 1
+     }
+     return bonuses[stance] || 0;
+  }
 
   /**
    * Turn the player into a JSON string for storage
@@ -444,7 +472,7 @@ var Player = function(socket) {
    * @param string skill
    */
   self.useSkill = function(skill /*, args... */ ) {
-    Skills[self.getAttribute('class')][skill].activate.apply(null, [].slice
+    Skills[skill].activate.apply(null, [].slice
       .call(arguments)
       .slice(1));
   };
@@ -454,9 +482,7 @@ var Player = function(socket) {
    * @param int damage
    * @param string location
    */
-  self.damage = _damage;
-
-  function _damage(dmg, location) {
+  self.damage = function (dmg, location) {
     if (!dmg) return;
     location = location || 'body';
 
@@ -464,6 +490,7 @@ var Player = function(socket) {
 
     self.setAttribute('health',
       Math.max(0, self.getAttribute('health') - damageDone));
+    
     util.log('Damage done to ' + self.getName() + ': ' + damageDone);
 
     return damageDone;
@@ -471,10 +498,14 @@ var Player = function(socket) {
 
   function soak(location) {
     var defense = armor(location);
+
     if (location !== 'body')
       defense += armor('body');
 
     defense += self.getAttribute('stamina');
+
+    if (self.checkStance('cautious')) defense += self.getAttribute('cleverness');
+    if (self.checkStance('berserk')) defense = Math.round(defense / 2);
 
     util.log(self.getName() + ' ' + location + ' def: ' + defense);
 
@@ -482,9 +513,10 @@ var Player = function(socket) {
   }
 
   function armor(location) {
+    var bonus = self.checkStance('precise') ? self.getAttribute('willpower') + self.getAttribute('stamina') : 0
     var item = self.getEquipped(location, true);
     if (item)
-      return item.getAttribute('defense')
+      return item.getAttribute('defense') * bonus;
     return 0;
   }
 
