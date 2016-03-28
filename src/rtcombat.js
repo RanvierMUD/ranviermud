@@ -48,7 +48,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
 
   try {
     util.log("Combat begins between " + p.name + " and " + n.name);
-    util.log("Weapons are " + p.weapon.getShortDesc('en') + ' and ' + n.weapon);
+    util.log("Weapons are " + p.weapon + ' and ' + n.weapon);
     util.log("Speeds are " + p.speed + ' vs. ' + n.speed)
   } catch (e) { util.log(e); }
 
@@ -232,8 +232,10 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
 
   function wimpy(health) {
     var percentage = getPercentage(health, player.getAttribute('max_health'));
-    if (percentage < player.getPreference('wimpy')) {
+    var wimpiness = player.getPreference('wimpy')
+    if (percentage < wimpiness) {
       util.log("Player's wimpiness kicks in...");
+      util.log("Health: " + percentage + "% || Wimpiness: " + wimpiness + "%");
       player.say('You panic and try to flee.');
       Commands.player_commands.flee(null, player);
     }

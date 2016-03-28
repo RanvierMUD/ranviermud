@@ -377,7 +377,7 @@ var Player = function(socket) {
       'cleverness'));
 
     var speed = Math.max(5000 - roll(speedDice, 100 / speedFactor), minimum);
-    console.log("Speed is ", speed);
+    util.log("Player's speed is ", speed);
 
     return speed;
   };

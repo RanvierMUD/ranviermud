@@ -1,4 +1,5 @@
-var CommandUtil = require('../../../src/command_util.js').CommandUtil;
+var CommandUtil = require('../../../src/command_util.js')
+  .CommandUtil;
 
 
 exports.listeners = {
@@ -23,13 +24,11 @@ function chooseRandomExit(room, rooms, player, players, npc) {
             player, chosenRoom));
 
           players.eachIf(
-            commandUtil.otherPlayerInRoom.bind(
-              null, player),
-            function(p) {
-              p.say(npc.getShortDesc(
-                p.getLocale()) + getLeaveMessage(p, chosenRoom))
+            CommandUtil.otherPlayerInRoom.bind(null, player),
+            p => {
+              p.say(npc.getShortDesc(p.getLocale()) + getLeaveMessage(p, chosenRoom))
             });
-        } catch(e) {
+        } catch (e) {
           console.log("EXCEPTION: ", e);
           console.log("NPC: ", npc);
         }
@@ -43,5 +42,3 @@ function getLeaveMessage(player, chosenRoom) {
     return ' leaves for ' + chosenRoom.title[player.getLocale()] + '.';
   return ' leaves.'
 }
-
-
