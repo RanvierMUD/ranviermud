@@ -25,7 +25,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     'legs',
     'feet',
     'torso',
-    'hands', 
+    'hands',
     'head'
     ];
 
@@ -46,9 +46,11 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     locations: npc.getLocations()
   };
 
-  util.log("Combat begins between " + p.name + " and " + n.name);
-  util.log("Weapons are " + p.weapon.getShortDesc('en') + ' and ' + n.weapon);
-  util.log("Speeds are " + p.speed + ' vs. ' + n.speed);
+  try {
+    util.log("Combat begins between " + p.name + " and " + n.name);
+    util.log("Weapons are " + p.weapon.getShortDesc('en') + ' and ' + n.weapon);
+    util.log("Speeds are " + p.speed + ' vs. ' + n.speed)
+  } catch (e) { util.log(e); }
 
   var player_combat = combatRound.bind(null, player, npc, p, n);
   var npc_combat = combatRound.bind(null, npc, player, n, p);
@@ -93,7 +95,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     } else {
 
       damage = defender.damage(
-        calcRawDamage(damage, defender.getAttribute('health')), 
+        calcRawDamage(damage, defender.getAttribute('health')),
         hitLocation);
 
       util.log('Targeted ' + a.target + ' and hit ' + hitLocation);
