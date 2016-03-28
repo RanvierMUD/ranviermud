@@ -78,7 +78,11 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     var damage = attacker.getDamage();
     var defender_sanity = defender.getAttribute('sanity');
     var sanityDamage = a.isPlayer ? 0 : attacker.getSanityDamage();
-    var hitLocation = decideHitLocation(d.locations, a.target);
+    var hitLocation = decideHitLocation(d.locations, a.target, isPrecise());
+
+    function isPrecise() {
+      return a.isPlayer ? attacker.checkStance('precise') : false;
+    }
 
 
     if (!damage) {
@@ -144,8 +148,8 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     setTimeout(a.attackRound, a.speed);
   }
 
-  function decideHitLocation(locations, target) {
-    if (CommandUtil.isCoinFlip()) {
+  function decideHitLocation(locations, target, precise) {
+    if (precise || CommandUtil.isCoinFlip()) {
       return target;
     } else return CommandUtil.getRandomFromArr(locations);
   }
