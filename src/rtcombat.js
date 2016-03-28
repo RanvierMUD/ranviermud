@@ -23,9 +23,9 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
 
   var p_locations = [
     'legs',
-    'feet'
+    'feet',
     'torso',
-    'hands', 
+    'hands',
     'head'
     ];
 
@@ -35,7 +35,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     speed: player.getAttackSpeed(),
     weapon: player.getEquipped('wield', true),
     locations: p_locations,
-    target: 'body',
+    target: player.getPreference('target') || 'body',
   };
 
   var n = {
@@ -43,11 +43,14 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     speed: npc.getAttackSpeed(),
     weapon: npc.getAttack(locale),
     target: npc.getAttribute('target'),
+    locations: npc.getLocations()
   };
 
-  util.log("Combat begins between " + p.name + " and " + n.name);
-  util.log("Weapons are " + p.weapon.getShortDesc('en') + ' and ' + n.weapon);
-  util.log("Speeds are " + p.speed + ' vs. ' + n.speed);
+  try {
+    util.log("Combat begins between " + p.name + " and " + n.name);
+    util.log("Weapons are " + p.weapon.getShortDesc('en') + ' and ' + n.weapon);
+    util.log("Speeds are " + p.speed + ' vs. ' + n.speed)
+  } catch (e) { util.log(e); }
 
   var player_combat = combatRound.bind(null, player, npc, p, n);
   var npc_combat = combatRound.bind(null, npc, player, n, p);
@@ -63,11 +66,14 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     if (!defender.isInCombat() || !attacker.isInCombat())
       return;
 
+    var starting_health = defender.getAttribute('health');
+    util.log(a.name + ' health: ' + attacker.getAttribute('health'));
+    util.log(d.name + ' health: ' + defender.getAttribute('health'));
 
     var damage = attacker.getDamage();
     var defender_sanity = defender.getAttribute('sanity');
     var sanityDamage = a.isPlayer ? 0 : attacker.getSanityDamage();
-    var hitLocation = d.isPlayer ? decideHitLocation(d.locations, a.target) : 'body';
+    var hitLocation = decideHitLocation(d.locations, a.target);
 
 
     if (!damage) {
@@ -88,16 +94,20 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
 
     } else {
 
-      damage = defender.damage(calcRawDamage(damage, defender.getAttribute('health')), hitLocation);
+      damage = defender.damage(
+        calcRawDamage(damage, defender.getAttribute('health')),
+        hitLocation);
+
+      util.log('Targeted ' + a.target + ' and hit ' + hitLocation);
       var damageStr = getDamageString(damage, defender.getAttribute('health'));
 
       if (a.weapon && typeof a.weapon == 'Object')
         a.weapon.emit('hit', player);
 
       if (d.isPlayer)
-        player.sayL10n(l10n, 'DAMAGE_TAKEN', a.name, damageStr, a.weapon);
+        player.sayL10n(l10n, 'DAMAGE_TAKEN', a.name, damageStr, a.weapon, hitLocation);
 
-      else player.sayL10n(l10n, 'DAMAGE_DONE', d.name, damageStr);
+      else player.sayL10n(l10n, 'DAMAGE_DONE', d.name, damageStr, hitLocation);
 
       broadcastExceptPlayer('<bold><red>' + a.name + ' attacks ' + d.name +
         ' and ' + damageStr + ' them!' + '</red></bold>');
@@ -109,7 +119,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
       defender.setAttribute('sanity', Math.max(defender_sanity - sanityDamage, 0));
     }
 
-    if (defender.getAttribute('health') <= damage) {
+    if (starting_health <= damage) {
       defender.setAttribute('health', 1);
       defender.setAttribute('sanity', 1);
       return combat_end(a.isPlayer);
@@ -152,7 +162,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     var percentage = Math.round((damage / health) * 100);
 
     var damageStrings = {
-      1: 'annoys',
+      1: 'tickles',
       3: 'scratches',
       8: 'grazes',
       20: 'hits',
