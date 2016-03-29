@@ -34,7 +34,7 @@ exports.listeners = {
 function getRand() {
   return Math
     .floor(Math
-      .random() * 5) + 1);
+      .random() * 5) + 1;
 }
 
 function seeDisturbance(player, players) {
