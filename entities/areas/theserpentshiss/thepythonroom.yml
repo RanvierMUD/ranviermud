@@ -8,3 +8,6 @@
     -
       location: 4
       direction: 'out'
+      door: 
+        locked: 'python key'
+        mob_locked: 'true'
