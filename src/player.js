@@ -89,6 +89,7 @@ var Player = function(socket) {
   };
 
   // To keep track of which rooms players have been in.
+  // returns bool isNotFirstTime
   self.explore = function(vnum) {
     if (self.explored.indexOf(vnum) === -1) {
       self.explored.push(vnum);
