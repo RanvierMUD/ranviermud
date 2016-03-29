@@ -9,5 +9,5 @@
       location: 4
       direction: 'out'
       door: 
-        locked: 'Python Room key'
+        locked: 7
         mob_locked: 'true'
