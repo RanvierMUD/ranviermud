@@ -93,7 +93,10 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     // Render the room and its exits
     player.say(room.getTitle(locale));
-    if (hasExplored === true) {
+
+    var descPreference = player.getPreference('roomdescs');
+
+    if ((hasExplored === true && !descPreference === 'verbose') || descPreference === 'short') {
       player.say(wrap(room.getShortDesc(locale), 80))
     } else {
       player.say(wrap(room.getDescription(locale), 80));
