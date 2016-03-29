@@ -124,8 +124,10 @@ var Commands = {
   }
 };
 
-alias('exp', 'tnl');
-alias('take', 'get');
+//FIXME: Alias is borked, at the very least it doesn't inject the player 
+// for commands dependent on the player.
+// alias('exp', 'tnl');
+// alias('take', 'get');
 
 exports.Commands = Commands;
 exports.Commands.move = move;
