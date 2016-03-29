@@ -48,7 +48,8 @@ var Player = function(socket) {
   self.preferences = {
     target: 'body',
     wimpy: 30,
-    stance: 'normal'
+    stance: 'normal',
+    roomdescs: 'default' //default = verbose 1st time, short after.
   };
 
   self.explored = [];
