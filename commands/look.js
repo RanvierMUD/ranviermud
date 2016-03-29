@@ -14,7 +14,7 @@ l10n.throwOnMissingTranslation(false);
 
 exports.command = function(rooms, items, players, npcs, Commands) {
 
-  return function(args, player, isFirstVisit) {
+  return function(args, player, hasExplored) {
     var room = rooms.getAt(player.getLocation());
     var locale = player.getLocale();
     var thingIsPlayer = false;
@@ -93,10 +93,10 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     // Render the room and its exits
     player.say(room.getTitle(locale));
-    if (isFirstVisit || !room.getShortDesc(locale)) {
-      player.say(wrap(room.getDescription(locale), 80));
-    } else {
+    if (hasExplored === true) {
       player.say(wrap(room.getShortDesc(locale), 80))
+    } else {
+      player.say(wrap(room.getDescription(locale), 80));
     }
     player.say('');
 

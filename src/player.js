@@ -92,10 +92,10 @@ var Player = function(socket) {
     if (self.explored.indexOf(vnum) === -1) {
       self.explored.push(vnum);
       util.log(player.getName() + ' explored room #' + vnum + ' for the first time.');
-      return true;
+      return fale;
     }
     util.log(player.getName() + ' moves to room #' + vnum);
-    return false;
+    return true;
   };
 
   self.getAttribute = function(attr) {
