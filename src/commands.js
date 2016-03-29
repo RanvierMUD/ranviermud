@@ -163,6 +163,9 @@ function move(exit, player) {
   // Force a re-look of the room
   Commands.player_commands.look(null, player);
 
+  // Add room to list of explored rooms
+  player.explore(room.getLocation());
+
   // Trigger the playerEnter event
   // See example in scripts/npcs/1.js
   room.getNpcs().forEach(function(id) {
