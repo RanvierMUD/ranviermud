@@ -164,6 +164,8 @@ var Room = function (config)
 	{
 		self.title = config.title;
 		self.description = config.description;
+		self.short_desc  = config.short_desc || config.description;
+		self.dark_desc   = config.dark_desc  || config.description;
 		self.location    = config.location;
 		self.exits       = config.exits || [];
 		self.area        = config.area;
@@ -189,6 +191,14 @@ var Room = function (config)
 			self.description :
 			(locale in self.description ? self.description[locale] : 'UNTRANSLATED - Contact an admin');
 	};
+
+	self.getShortDesc = function(locale){
+		return typeof self.short_desc === 'string' ?
+			self.short_desc :
+			(locale in self.short_desc ? self.short_desc[locale] : 
+				(locale in self.description ? self.description[locale] : self.description)
+			);
+		};
 
 	/**
 	 * Get the title, localized if possible
@@ -282,7 +292,9 @@ var Room = function (config)
 			description: self.getDescription('en'),
 			exits: self.exits,
 			location: self.location,
-			area: self.area
+			area: self.area,
+			short_desc: self.short_desc,
+			dark_desc: self.dark_desc
 		};
 	};
 
@@ -297,7 +309,9 @@ var Room = function (config)
 			description: self.description,
 			exits: self.exits,
 			location: self.location,
-			area: self.area
+			area: self.area,
+			short_desc: self.short_desc,
+			dark_desc: self.dark_desc
 		};
 	};
 
