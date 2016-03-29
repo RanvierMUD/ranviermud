@@ -9,4 +9,11 @@ MOVE_COMBAT:
     es: "ES-Where do you think you're going in the middle of a fight?"
 LOCKED:
     en: "You need something to unlock it."
+OTHER_LOCKED:
+    en: "$[1] tries to open a locked door and fails."
+UNLOCKED:
+    en: "You unlock it with the $[1]."
+OTHER_UNLOCKED:
+    en: "$[1] unlocks the door using the $[2]."
+
 # vim: set ts=4 sw=4 et :
