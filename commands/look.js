@@ -9,6 +9,7 @@ var l10n = new require('jall')(require('js-yaml')
       l10n_file)
     .toString('utf8')), undefined, 'zz');
 var wrap = require('wrap-ansi');
+var util = require('util');
 l10n.throwOnMissingTranslation(false);
 
 exports.command = function(rooms, items, players, npcs, Commands) {
