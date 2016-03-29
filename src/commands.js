@@ -133,6 +133,10 @@ exports.Commands.move = move;
 function move(exit, player) {
   rooms.getAt(player.getLocation()).emit('playerLeave', player, players);
 
+  if ('door' in exit && 'locked' in exit.door) {
+    player.sayL10n(l10n, 'LOCKED');
+  }
+
   var room = rooms.getAt(exit.location);
   if (!room) {
     player.sayL10n(l10n, 'LIMBO');
