@@ -99,8 +99,8 @@ var Player = function(socket) {
   };
 
   self.getAttribute = function(attr) {
-    return typeof self.attributes[attr] !== 'undefined' ? self.attributes[
-      attr] : false;
+    return typeof self.attributes[attr] !== 'undefined' ?
+      self.attributes[attr] : false;
   };
   self.getAttributes = function() {
     return self.attributes || {}
