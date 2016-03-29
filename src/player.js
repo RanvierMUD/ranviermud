@@ -51,6 +51,8 @@ var Player = function(socket) {
     stance: 'normal'
   };
 
+  self.explored = [];
+
   // Anything affecting the player
   self.affects = {};
 
@@ -83,6 +85,16 @@ var Player = function(socket) {
   };
   self.getInventory = function() {
     return self.inventory;
+  };
+
+  // To keep track of which rooms players have been in.
+  self.explore = function(vnum) {
+    if (self.explored.indexOf(vnum) > -1) {
+      self.explored.push(vnum);
+      return true;
+    }
+
+    return false;
   };
 
   self.getAttribute = function(attr) {
@@ -359,6 +371,9 @@ var Player = function(socket) {
     self.equipment = data.equipment || {};
     self.attributes = data.attributes;
     self.skills = data.skills;
+    self.preferences = data.preferences || {};
+    self.explored = data.explored || [];
+
     // Activate any passive skills the player has
     for (var skill in self.skills) {
       if (Skills[self.getAttribute('class')][skill].type === 'passive') {
@@ -423,13 +438,13 @@ var Player = function(socket) {
   };
 
   function addDamageBonus(d) {
-     var stance = self.getPreference('stance');
-     var bonuses = {
-        'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
-        'cautious': -(Math.round(d / 2)),
-        'precise': 1
-     }
-     return bonuses[stance] || 0;
+    var stance = self.getPreference('stance');
+    var bonuses = {
+      'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
+      'cautious': -(Math.round(d / 2)),
+      'precise': 1
+    }
+    return bonuses[stance] || 0;
   }
 
   /**
@@ -438,6 +453,7 @@ var Player = function(socket) {
    */
   self.stringify = function() {
     var inv = [];
+
     self.getInventory()
       .forEach(function(item) {
         inv.push(item.flatten());
@@ -455,7 +471,8 @@ var Player = function(socket) {
       attributes: self.attributes,
       skills: self.skills,
       gender: self.gender,
-      preferences: self.preferences
+      preferences: self.preferences,
+      explored: self.explored
     });
   };
 
@@ -482,7 +499,7 @@ var Player = function(socket) {
    * @param int damage
    * @param string location
    */
-  self.damage = function (dmg, location) {
+  self.damage = function(dmg, location) {
     if (!dmg) return;
     location = location || 'body';
 
@@ -490,7 +507,7 @@ var Player = function(socket) {
 
     self.setAttribute('health',
       Math.max(0, self.getAttribute('health') - damageDone));
-    
+
     util.log('Damage done to ' + self.getName() + ': ' + damageDone);
 
     return damageDone;
