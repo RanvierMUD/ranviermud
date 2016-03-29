@@ -5,10 +5,6 @@ var l10n = require('../src/l10n')(l10n_file);
 exports.command = function(rooms, items, players, npcs, Commands) {
 
   return function(args, player) {
-    if (player.isInCombat()) {
-      player.sayL10n(l10n, 'APPRAISE_COMBAT');
-      return;
-    }
 
     var room = rooms.getAt(player.getLocation());
     var target = CommandUtil.findNpcInRoom(npcs, args, room, player, true);

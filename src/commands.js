@@ -2,7 +2,6 @@ var util = require('util'),
   ansi = require('sty')
   .parse,
   fs = require('fs'),
-
   CommandUtil = require('./command_util')
   .CommandUtil;
 l10nHelper = require('./l10n');
@@ -55,7 +54,7 @@ var Commands = {
      * @param ...
      * @return string
      */
-    L = function(text) {
+    L = text => {
       return ansi(l10n.translate.apply(null, [].slice.call(arguments)));
     };
 
@@ -126,6 +125,7 @@ var Commands = {
 };
 
 alias('exp', 'tnl');
+alias('take', 'get');
 
 exports.Commands = Commands;
 exports.Commands.move = move;
@@ -175,7 +175,7 @@ function move(exit, player) {
       }
     });
 
-  players.eachExcept(player, function(p) {
+  players.eachExcept(player, p => {
     if (p.getLocation() === player.getLocation()) {
       p.prompt();
     }
@@ -192,16 +192,16 @@ function move(exit, player) {
   // Trigger the playerEnter event
   // See example in scripts/npcs/1.js
   room.getNpcs()
-    .forEach(function(id) {
+    .forEach(id => {
       var npc = npcs.get(id);
       npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
     });
 
   room.emit('playerEnter', player, players);
 
-  players.eachExcept(player, function(p) {
+  players.eachExcept(player, p => {
     if (p.getLocation() === player.getLocation()) {
-      p.say(player.getName() + ' enters.')
+      p.say(player.getName() + ' enters.');
     }
   });
 };
@@ -212,7 +212,7 @@ function move(exit, player) {
  * @param string target name of the command
  */
 function alias(name, target) {
-  Commands.player_commands[name] = function() {
+  Commands.player_commands[name] = () => {
     Commands.player_commands[target].apply(null, [].slice.call(arguments))
   };
 };
