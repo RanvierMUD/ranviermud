@@ -18,6 +18,9 @@
     -
       location: 6
       direction: 'python'
+      door: 
+        locked: 'python key'
+        mob_locked: 'true'
       leave_message:
         en: ' disappears into the python room.'
     -
