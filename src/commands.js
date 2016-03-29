@@ -60,7 +60,7 @@ var Commands = {
 
 
     // Load external commands
-    fs.readdir(commands_dir, function(err, files) {
+    fs.readdir(commands_dir, (err, files) => {
       // Load any npc files
       for (j in files) {
         var command_file = commands_dir + files[j];
@@ -119,6 +119,7 @@ var Commands = {
 
     return true;
   },
+
   setLocale: function(locale) {
     l10n.setLocale(locale);
   }
