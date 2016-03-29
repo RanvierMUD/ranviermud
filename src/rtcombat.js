@@ -1,9 +1,5 @@
 module.exports.initiate_combat = _initiate_combat;
 //TODO: Add strings for sanity damage
-//TODO: Implement use of attributes besides damage in combat.
-// ^^ this should be done in the npc/player src files
-//TODO: Implement use of combat stance, etc. for strategery.
-//FIXME: Combat ends when you die but you get double prompted.
 
 var LevelUtil = require('./levels')
   .LevelUtil;
