@@ -60,21 +60,20 @@ var Commands = {
 
 
     // Load external commands
-    fs.readdir(commands_dir, (err, files) => {
-      // Load any npc files
-      for (j in files) {
-        var command_file = commands_dir + files[j];
-        if (!fs.statSync(command_file)
-          .isFile()) continue;
-        if (!command_file.match(/js$/)) continue;
+    fs.readdir(commands_dir,
+      (err, files) => {
+        for (j in files) {
+          var command_file = commands_dir + files[j];
+          if (!fs.statSync(command_file)
+            .isFile()) continue;
+          if (!command_file.match(/js$/)) continue;
 
-        var command_name = files[j].split('.')[0];
+          var command_name = files[j].split('.')[0];
 
-        Commands.player_commands[command_name] = require(command_file)
-          .command(
-            rooms, items, players, npcs, Commands);
-      }
-    });
+          Commands.player_commands[command_name] = require(command_file)
+            .command(rooms, items, players, npcs, Commands);
+        }
+      });
   },
 
   /**
@@ -85,14 +84,14 @@ var Commands = {
    * @param Player player
    * @return boolean
    */
-  room_exits: function(exit, player) {
+  room_exits: (exit, player) => {
     var room = rooms.getAt(player.getLocation());
     if (!room) {
       return false;
     }
 
     var exits = room.getExits()
-      .filter(function(e) {
+      .filter( e => {
         try {
           var regex = new RegExp("^" + exit);
         } catch (err) {
