@@ -93,7 +93,7 @@ var Player = function(socket) {
     if (self.explored.indexOf(vnum) === -1) {
       self.explored.push(vnum);
       util.log(player.getName() + ' explored room #' + vnum + ' for the first time.');
-      return fale;
+      return false;
     }
     util.log(player.getName() + ' moves to room #' + vnum);
     return true;
