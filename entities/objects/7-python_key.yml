@@ -1,7 +1,7 @@
 - &python_key
     vnum: 7
     short_description:
-        en: "Python room key"
+        en: "python key"
     keywords:
         en: [ "python", "py", "python key", "key" ]
     description:
