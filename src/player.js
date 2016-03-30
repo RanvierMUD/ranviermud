@@ -105,7 +105,7 @@ var Player = function(socket) {
     bonus = bonus || 1;
     difficulty = difficulty || 1;
 
-    var chance = (Math.rand() * bonus);
+    var chance = (Math.random() * bonus);
     var spotted = (self.getAttribute('cleverness') + chance >= difficulty);
     
     util.log("Spot check success: ", spotted);

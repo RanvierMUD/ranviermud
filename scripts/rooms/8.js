@@ -16,8 +16,6 @@ exports.listeners = {
         'sacks'
       ];
 
-      util.log(arguments);
-
       var valid = poi.indexOf(args) > -1;
 
       if (valid && player.spot(3, 1)) {
