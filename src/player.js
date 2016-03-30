@@ -89,6 +89,7 @@ var Player = function(socket) {
   };
 
   // To keep track of which rooms players have been in.
+  // returns bool isNotFirstTime
   self.explore = function(vnum) {
     if (self.explored.indexOf(vnum) === -1) {
       self.explored.push(vnum);
@@ -98,6 +99,18 @@ var Player = function(socket) {
     util.log(player.getName() + ' moves to room #' + vnum);
     return true;
   };
+
+  // For doing spot checks when using examine or trying to ID an item.
+  self.spot = function(difficulty, bonus) {
+    bonus = bonus || 1;
+    difficulty = difficulty || 1;
+
+    var chance = (Math.random() * bonus);
+    var spotted = (self.getAttribute('cleverness') + chance >= difficulty);
+    
+    util.log("Spot check success: ", spotted);
+    return spotted;
+  }
 
   self.getAttribute = function(attr) {
     return typeof self.attributes[attr] !== 'undefined' ?
