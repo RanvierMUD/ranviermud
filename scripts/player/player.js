@@ -1,93 +1,86 @@
 var LevelUtil = require('../../src/levels').LevelUtil,
-    Skills    = require('../../src/skills').Skills;
+  Skills = require('../../src/skills').Skills;
 exports.listeners = {
-	regen: function (l10n)
-	{
-		return function ()
-		{
-			var self = this;
-			self.prompt();
-			var regen = setInterval(function () {
-				var health = self.getAttribute('health');
-				var regenerated = Math.floor(Math.random() * self.getAttribute('stamina') + 1);
+  regen: function(l10n) {
+    return function(bonus) {
+    	bonus = bonus || 1;
+      var self = this;
+      self.prompt();
+      var regen = setInterval(() => {
+        var health = self.getAttribute('health');
+        var regenerated = Math.floor(Math.random() * self.getAttribute('stamina') + bonus);
 
-				regenerated = Math.min(self.getAttribute('max_health'), health + regenerated);
+        regenerated = Math.min(self.getAttribute('max_health'), health + regenerated);
 
-				self.setAttribute('health', regenerated);
-				if (regenerated === self.getAttribute('max_health')) {
-					clearInterval(regen);
-				}
-			}, 2000);
-		}
-	},
-	experience: function (l10n)
-	{
-		return function (experience)
-		{
-			// max level 60
-			if (this.getAttribute('level') >= 60) {
-				return;
-			}
+        self.setAttribute('health', regenerated);
+        if (regenerated === self.getAttribute('max_health')) {
+          clearInterval(regen);
+        }
+      }, 2000);
+    }
+  },
+  experience: function(l10n) {
+    return function(experience) {
+      // max level 60
+      if (this.getAttribute('level') >= 60) {
+        return;
+      }
 
-			this.sayL10n(l10n, 'EXPGAIN', experience);
+      this.sayL10n(l10n, 'EXPGAIN', experience);
 
-			var tnl = LevelUtil.expToLevel(this.getAttribute('level')) - this.getAttribute('experience');
+      var tnl = LevelUtil.expToLevel(this.getAttribute('level')) - this.getAttribute('experience');
 
-			if (experience >= tnl ) {
-				return this.emit('level');
-			}
+      if (experience >= tnl) {
+        return this.emit('level');
+      }
 
-			this.setAttribute('experience', this.getAttribute('experience') + experience);
-		}
-	},
-	level: function (l10n)
-	{
-		return function ()
-		{
-			var newlevel = this.getAttribute('level') + 1;
-			var health_gain = Math.ceil(this.getAttribute('max_health') * 1.10);
-			var mPoints = this.getAttribute('mutagens');
-			if (newlevel % 2 === 0) mPoints++;
-			
+      this.setAttribute('experience', this.getAttribute('experience') + experience);
+    }
+  },
+  level: function(l10n) {
+    return function() {
+      var newlevel = this.getAttribute('level') + 1;
+      var health_gain = Math.ceil(this.getAttribute('max_health') * 1.10);
+      var mPoints = this.getAttribute('mutagens');
+      if (newlevel % 2 === 0) mPoints++;
 
-			this.sayL10n(l10n, 'LEVELUP');
-			this.sayL10n(l10n, 'MUTAGEN_GAIN');
-			this.setAttribute('level', newlevel);
-			this.setAttribute('mutagens', mPoints);
-			this.setAttribute('experience', 0);
 
-			// do whatever you want to do here when a player levels up...
-			this.setAttribute('max_health', health_gain);
-			this.setAttribute('health', this.getAttribute('max_health'));
+      this.sayL10n(l10n, 'LEVELUP');
+      this.sayL10n(l10n, 'MUTAGEN_GAIN');
+      this.setAttribute('level', newlevel);
+      this.setAttribute('mutagens', mPoints);
+      this.setAttribute('experience', 0);
 
-			// Assign any new skills
-			//TODO: Add better skill assignment event.
-			
-			// var skills = Skills[this.getAttribute('class')];
-			// for (var sk in skills) {
-			// 	var skill = skills[sk];
-			// 	if (skill.level === this.getAttribute('level')) {
-			// 		this.addSkill(sk, {
-			// 			type: skill.type
-			// 		});
-			// 		this.sayL10n(l10n, 'NEWSKILL', skill.name);
+      // do whatever you want to do here when a player levels up...
+      this.setAttribute('max_health', health_gain);
+      this.setAttribute('health', this.getAttribute('max_health'));
 
-			// 		if (skill.type === 'passive') {
-			// 			this.useSkill(sk, this);
-			// 		}
-			// 	}
-			// }
-		}
-	},
-	die: function (l10n)
-	{
-		return function ()
-		{
-			// they died, move then back to the start... you can do whatever you want instead of this
-			this.setLocation(1);
-			this.emit('regen');
+      // Assign any new skills
+      //TODO: Add better skill assignment event.
 
-			this.setAttribute('experience', this.getAttribute('experience') - Math.ceil((this.getAttribute('experience') * 0.10)));
-		}
-	},
+      // var skills = Skills[this.getAttribute('class')];
+      // for (var sk in skills) {
+      // 	var skill = skills[sk];
+      // 	if (skill.level === this.getAttribute('level')) {
+      // 		this.addSkill(sk, {
+      // 			type: skill.type
+      // 		});
+      // 		this.sayL10n(l10n, 'NEWSKILL', skill.name);
+
+      // 		if (skill.type === 'passive') {
+      // 			this.useSkill(sk, this);
+      // 		}
+      // 	}
+      // }
+    }
+  },
+  die: function(l10n) {
+    return function() {
+      // they died, move then back to the start... you can do whatever you want instead of this
+      this.setLocation(1);
+      this.emit('regen');
+
+      this.setAttribute('experience', this.getAttribute('experience') - Math.ceil((this.getAttribute('experience') * 0.10)));
+    }
+  },
 };
