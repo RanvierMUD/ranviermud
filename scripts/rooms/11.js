@@ -26,7 +26,7 @@ exports.listeners = {
       if (poi.indexOf(args.toLowerCase()) > -1) {
         seeDisturbance(player, players);
         if (!player.explore('noticed bloodstains in cage')) {
-          player.emit('experience', 30);
+          player.emit('experience', 100);
         }
       }
     };

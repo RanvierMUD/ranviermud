@@ -1,0 +1,5 @@
+FOUND_FOOD:
+  en: 'You find some food to eat and cut away the moldy bits.'
+
+OTHER_FOUND_FOOD:
+  en: '$[1] finds some food to eat, scraping away the moldy bits first.'
