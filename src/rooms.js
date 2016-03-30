@@ -16,9 +16,11 @@ var Rooms = function() {
   self.load = function(verbose, callback) {
     verbose = verbose || false;
     var log = function(message) {
-      if (verbose) util.log(message); };
+      if (verbose) util.log(message);
+    };
     var debug = function(message) {
-      if (verbose) util.debug(message); };
+      if (verbose) util.debug(message);
+    };
 
     // Load all the areas into th game
     fs.readdir(rooms_dir, function(err, files) {
@@ -178,15 +180,20 @@ var Room = function(config) {
   };
 
   self.getLocation = function() {
-    return self.location; };
+    return self.location;
+  };
   self.getArea = function() {
-    return self.area; };
+    return self.area;
+  };
   self.getExits = function() {
-    return self.exits; };
+    return self.exits;
+  };
   self.getItems = function() {
-    return self.items; };
+    return self.items;
+  };
   self.getNpcs = function() {
-    return self.npcs; };
+    return self.npcs;
+  };
 
   /**
    * Get the description, localized if possible
@@ -201,11 +208,19 @@ var Room = function(config) {
 
   self.getShortDesc = function(locale) {
     return typeof self.short_desc === 'string' ?
-      self.short_desc :
-      (locale in self.short_desc ? self.short_desc[locale] :
+      self.dark_desc :
+      (locale in self.dark_desc ? self.dark_desc[locale] :
         (locale in self.description ? self.description[locale] : self.description)
       );
   };
+
+  self.getDarkDesc = function(locale) {
+    return typeof self.dark_desc === 'string' ?
+      self.short_desc :
+      (locale in self.dark_desc ? self.dark_desc[locale] :
+        (locale in self.description ? self.description[locale] : self.description)
+      );
+  }
 
   /**
    * Get the title, localized if possible
@@ -244,7 +259,8 @@ var Room = function(config) {
    */
   self.removeItem = function(uid) {
     self.items = self.items.filter(function(i) {
-      return i !== uid; });
+      return i !== uid;
+    });
   };
 
   /**

@@ -111,6 +111,10 @@ function getRandomFromArr(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+/*
+ *  Returns a boolean. Day and night cycle switches every real-life hour.
+ */
+
 function isDaytime() {
   var command = data.split(' ')[0];
   var time = new Date().getHours();

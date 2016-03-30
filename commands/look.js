@@ -96,11 +96,20 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     var descPreference = player.getPreference('roomdescs');
 
-    if ((hasExplored === true && !descPreference === 'verbose') || descPreference === 'short') {
-      player.say(wrap(room.getShortDesc(locale), 80))
+    if (CommandUtil.isDaytime()) {
+
+      var showShortByDefault = (hasExplored === true && !descPreference === 'verbose');
+
+      if (showShortByDefault || descPreference === 'short') {
+        player.say(wrap(room.getShortDesc(locale), 80));
+      } else {
+        player.say(wrap(room.getDescription(locale), 80));
+      }
+      
     } else {
-      player.say(wrap(room.getDescription(locale), 80));
+      player.say(wrap(room.getDarkDesc(locale), 80));
     }
+
     player.say('');
 
     // display players in the same room
