@@ -3,3 +3,6 @@ FOUND_FOOD:
 
 OTHER_FOUND_FOOD:
   en: '$[1] finds some food to eat, scraping away the moldy bits first.'
+
+NOT_FOUND:
+  en: 'You find nothing edible.'

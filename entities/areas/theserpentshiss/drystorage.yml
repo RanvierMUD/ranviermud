@@ -4,8 +4,7 @@
   location: 8
   description:
     en: "This dusty room is plain, besides the crates and sacks of rotting food filling every corner. The paint is peeling off the walls in long strips. On the east side of the room is a locked cellar door. On the west side of the room is a half-open door leading to the kitchen."
-    script: '8.js'
-
+  script: '8.js'
   exits: 
     -
       location: 2
