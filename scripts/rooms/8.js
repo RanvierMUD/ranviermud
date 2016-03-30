@@ -15,11 +15,8 @@ exports.listeners = {
         'food'
       ];
 
-      if (poi.indexOf(args.toLowerCase()) > -1) {
+      if (poi.indexOf(args.toLowerCase()) > -1 && getRand() > 3) {
         findFood(player, players);
-        if (!player.explore('found food')) {
-          player.emit('experience', 100);
-        }
       }
     };
   }
@@ -29,10 +26,11 @@ exports.listeners = {
 function getRand() {
   return Math
     .floor(Math
-      .random() * 5) + 5;
+      .random() * 5) + 1;
 }
 
-function seeDisturbance(player, players) {
+function findFood(player, players) {
+
   player.setAttribute('health', player.getAttribute('health') +
     getRand());
   player.sayL10n(l10n, 'FOUND_FOOD');
