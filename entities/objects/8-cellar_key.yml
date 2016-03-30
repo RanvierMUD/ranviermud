@@ -1,0 +1,10 @@
+- &cellar_key
+    vnum: 8
+    short_description:
+        en: "cellar key"
+    keywords:
+        en: [ "cellar", "cell", "cellar key", "key" ]
+    description:
+        en: "A large brass key."
+    room: 7
+    load_max: 1
