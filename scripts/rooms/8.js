@@ -22,7 +22,7 @@ exports.listeners = {
         findFood(player, players);
       } else {
         player.sayL10n(l10n, 'NOT_FOUND');
-        players.eachIf(p => CommandUtil.otherPlayerInRoom(p),
+        players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
           p => { p.sayL10n(l10n, 'OTHER_NOT_FOUND', player.getName()); });
       }
     };
@@ -32,13 +32,13 @@ exports.listeners = {
 
 function findFood(player, players) {
 
-  player.emit('regen');
+  player.emit('regen', 2);
   player.sayL10n(l10n, 'FOUND_FOOD');
-  players.eachIf(p => CommandUtil.otherPlayerInRoom(p),
+  players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
     p => {
       p.sayL10n(l10n, 'OTHER_FOUND_FOOD', player.getName());
       player.sayL10n(l10n, 'SHARE_FOOD', p.getName());
-      p.emit('regen');
+      p.emit('regen', 2);
     });
 
 }
