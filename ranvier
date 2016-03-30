@@ -304,7 +304,6 @@ process.stdin.resume();
 process.stdin.on('data', function (data)
 {
 	data = data.trim();
-	var command = data.split(' ')[0];
 
 	if (!(command in server_commands)) {
 		console.log("That's not a real command...");
