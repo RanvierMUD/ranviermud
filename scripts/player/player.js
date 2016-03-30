@@ -1,24 +1,30 @@
 var LevelUtil = require('../../src/levels').LevelUtil,
   Skills = require('../../src/skills').Skills;
 exports.listeners = {
+
   regen: function(l10n) {
     return function(bonus) {
     	bonus = bonus || 1;
+
+    	var regenInterval = 2000;
       var self = this;
       self.prompt();
+
       var regen = setInterval(() => {
         var health = self.getAttribute('health');
         var regenerated = Math.floor(Math.random() * self.getAttribute('stamina') + bonus);
-
         regenerated = Math.min(self.getAttribute('max_health'), health + regenerated);
 
         self.setAttribute('health', regenerated);
+
         if (regenerated === self.getAttribute('max_health')) {
           clearInterval(regen);
+
         }
-      }, 2000);
+      }, regenInterval);
     }
   },
+
   experience: function(l10n) {
     return function(experience) {
       // max level 60
