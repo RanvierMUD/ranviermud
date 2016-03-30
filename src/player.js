@@ -100,6 +100,18 @@ var Player = function(socket) {
     return true;
   };
 
+  // For doing spot checks when using examine or trying to ID an item.
+  self.spot = function(difficulty, bonus) {
+    bonus = bonus || 1;
+    difficulty = difficulty || 1;
+
+    var chance = (Math.rand() * bonus);
+    var spotted = (self.getAttribute('cleverness') + chance >= difficulty);
+    
+    util.log("Spot check success: ", spotted);
+    return spotted;
+  }
+
   self.getAttribute = function(attr) {
     return typeof self.attributes[attr] !== 'undefined' ?
       self.attributes[attr] : false;

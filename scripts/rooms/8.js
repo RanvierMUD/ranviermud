@@ -5,34 +5,34 @@ var l10n = require('../../src/l10n')(l10n_file);
 
 exports.listeners = {
 
-  //TODO: Use cleverness stat for spot checks such as this.
   examine: l10n => {
     return (args, player, players) => {
       var poi = [
         'crates',
         'boxes',
         'bags',
-        'food'
+        'food',
+        'sack',
+        'sacks'
       ];
 
-      if (poi.indexOf(args.toLowerCase()) > -1 && getRand() > 3) {
+      util.log(arguments);
+
+      var valid = poi.indexOf(args) > -1;
+
+      if (valid && player.spot(3, 1)) {
         findFood(player, players);
+      } else {
+        player.sayL10n(l10n, 'NOT_FOUND');
       }
     };
   }
 
 };
 
-function getRand() {
-  return Math
-    .floor(Math
-      .random() * 5) + 1;
-}
-
 function findFood(player, players) {
 
-  player.setAttribute('health', player.getAttribute('health') +
-    getRand());
+  player.emit('regen');
   player.sayL10n(l10n, 'FOUND_FOOD');
   players.eachIf(p => CommandUtil.otherPlayerInRoom(p),
     p => { p.sayL10n(l10n, 'OTHER_FOUND_FOOD', player.getName()); });
