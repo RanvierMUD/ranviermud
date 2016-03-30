@@ -98,7 +98,8 @@ var CommandUtil = {
   },
 
   isCoinFlip: isCoinFlip,
-  getRandomFromArr: getRandomFromArr
+  getRandomFromArr: getRandomFromArr,
+  isDaytime: isDaytime
 
 };
 
@@ -108,6 +109,13 @@ function isCoinFlip() {
 
 function getRandomFromArr(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function isDaytime() {
+  var command = data.split(' ')[0];
+  var time = new Date().getHours();
+  var daytime = time % 2;
+  return !!daytime;
 }
 
 exports.CommandUtil = CommandUtil;
