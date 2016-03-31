@@ -26,7 +26,9 @@ var net = require('net'),
 	Data     = require('./src/data').Data,
 	Events   = require('./src/events').Events,
 	Plugins  = require('./src/plugins'),
+
 	PlayerManager = require('./src/player_manager').PlayerManager,
+	CommandUtil = require('./src/command_util').CommandUtil,
 
 	// third party
 	Localize  = require('jall'),
@@ -288,7 +290,7 @@ var server_commands = {
 			save();
 			server.emit('shutdown');
 			server.close();
-			players.each(function (p) { p.getSocket().end(); });
+			players.each( p => { p.getSocket().end(); });
 			init(true);
 		}, time);
 	}
@@ -301,9 +303,25 @@ var server_commands = {
 //});
 //
 process.stdin.resume();
+
+// handle global-ish time-based events
+var wasDaytime = CommandUtil.isDaytime();
+
+setInterval(tick , 5000);
+function tick(){
+	var changeTime = wasDaytime !== CommandUtil.isDaytime();
+	if (changeTime) {
+		players.each( p => p.emit('changeTime', wasDaytime, rooms));
+		wasDaytime = !wasDaytime;
+		util.log("The times, they are a-changin'...");
+	}
+
+}
+
 process.stdin.on('data', function (data)
 {
 	data = data.trim();
+	var command = data.split(' ')[0];
 
 	if (!(command in server_commands)) {
 		console.log("That's not a real command...");
