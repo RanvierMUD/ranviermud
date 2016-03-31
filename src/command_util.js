@@ -1,3 +1,5 @@
+var util = require('util');
+
 var CommandUtil = {
   /**
    * Find an item in a room based on the syntax
@@ -98,7 +100,8 @@ var CommandUtil = {
   },
 
   isCoinFlip: isCoinFlip,
-  getRandomFromArr: getRandomFromArr
+  getRandomFromArr: getRandomFromArr,
+  isDaytime: isDaytime
 
 };
 
@@ -108,6 +111,18 @@ function isCoinFlip() {
 
 function getRandomFromArr(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+/*
+ *  Returns a boolean. Day and night cycle switches every real-life hour.
+ */
+
+function isDaytime() {
+  var time = new Date().getHours();
+  var daytime = time % 2;
+  util.log("Time is " + time + "... is it daytime? " + !!daytime);
+
+  return !!daytime;
 }
 
 exports.CommandUtil = CommandUtil;
