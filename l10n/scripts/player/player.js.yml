@@ -17,3 +17,13 @@ EXPGAIN:
 NEWSKILL:
     en: "<bold><yellow>You gained a new feat: $[1].</yellow></bold>"
     es: "ES-<bold><yellow>You gained a new feat: $[1].</yellow></bold>"
+SUN_SETTING:
+    en: "<yellow>The sun begins to set, spilling hues of yellow and orange across the distant sky.</yellow>"
+SUN_SET:
+    en: "<blue>Darkness takes over as the sun disappears behind the horizon.</blue>"
+
+SUN_RISING:
+    en: "<yellow>Rays of sunshine appear beyond the horizon.</yellow>"
+
+SUN_UP:
+    en: "<bold><yellow>The sun begins its trek across the sky.</yellow></bold>"

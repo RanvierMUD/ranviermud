@@ -1,12 +1,14 @@
 var LevelUtil = require('../../src/levels').LevelUtil,
-  Skills = require('../../src/skills').Skills;
+  Skills = require('../../src/skills').Skills,
+  CommandUtil = require('../../src/command_util').CommandUtil;
+
 exports.listeners = {
 
   regen: function(l10n) {
     return function(bonus) {
-    	bonus = bonus || 1;
+      bonus = bonus || 1;
 
-    	var regenInterval = 2000;
+      var regenInterval = 2000;
       var self = this;
       self.prompt();
 
@@ -80,7 +82,7 @@ exports.listeners = {
       // }
     }
   },
-  
+
   die: function(l10n) {
     return function() {
       // they died, move then back to the start... you can do whatever you want instead of this
@@ -90,4 +92,25 @@ exports.listeners = {
       this.setAttribute('experience', this.getAttribute('experience') - Math.ceil((this.getAttribute('experience') * 0.10)));
     }
   },
+
+  changeTime: function(l10n) {
+    return function(wasDaytime, rooms) {
+      var playerIsOutside = rooms.getAt(this.getLocation()).biome === 'outdoors';
+
+      if (playerIsOutside) {
+        if (wasDaytime) {
+          this.sayL10n(l10n, "SUN_SETTING");
+          setTimeout(() => { this.sayL10n(l10n, "SUN_SET") }, 5000);
+        } else {
+          this.sayL10n(l10n, "SUN_RISING");
+          setTimeout(() => { this.sayL10n(l10n, "SUN_UP") }, 5000);
+        }
+      } else if (wasDaytime) {
+        this.sayL10n(l10n, "SUN_SETTING_INDOORS");
+      } else {
+      	this.sayL10n(l10n, "SUN_UP_INDOORS");
+      }
+
+    }
+  }
 };

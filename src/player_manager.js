@@ -43,7 +43,7 @@ var PlayerManager = function ()
 	 */
 	self.every = function (callback)
 	{
-		self.players.every(callback);
+		return self.players.every(callback);
 	};
 
 	/**
