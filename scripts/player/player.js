@@ -68,17 +68,17 @@ exports.listeners = {
 
       // var skills = Skills[this.getAttribute('class')];
       // for (var sk in skills) {
-      // 	var skill = skills[sk];
-      // 	if (skill.level === this.getAttribute('level')) {
-      // 		this.addSkill(sk, {
-      // 			type: skill.type
-      // 		});
-      // 		this.sayL10n(l10n, 'NEWSKILL', skill.name);
+      //  var skill = skills[sk];
+      //  if (skill.level === this.getAttribute('level')) {
+      //    this.addSkill(sk, {
+      //      type: skill.type
+      //    });
+      //    this.sayL10n(l10n, 'NEWSKILL', skill.name);
 
-      // 		if (skill.type === 'passive') {
-      // 			this.useSkill(sk, this);
-      // 		}
-      // 	}
+      //    if (skill.type === 'passive') {
+      //      this.useSkill(sk, this);
+      //    }
+      //  }
       // }
     }
   },
@@ -98,17 +98,20 @@ exports.listeners = {
       var playerIsOutside = rooms.getAt(this.getLocation()).biome === 'outdoors';
 
       if (playerIsOutside) {
+
         if (wasDaytime) {
           this.sayL10n(l10n, "SUN_SETTING");
           setTimeout(() => { this.sayL10n(l10n, "SUN_SET") }, 5000);
+
         } else {
           this.sayL10n(l10n, "SUN_RISING");
           setTimeout(() => { this.sayL10n(l10n, "SUN_UP") }, 5000);
         }
+
       } else if (wasDaytime) {
         this.sayL10n(l10n, "SUN_SETTING_INDOORS");
       } else {
-      	this.sayL10n(l10n, "SUN_UP_INDOORS");
+        this.sayL10n(l10n, "SUN_UP_INDOORS");
       }
 
     }
