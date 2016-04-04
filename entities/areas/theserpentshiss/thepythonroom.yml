@@ -4,6 +4,10 @@
   location: 6
   description:
     en: 'This room has two small straw beds, two trunks, and a small desk. The two windows to the outdoor are covered in a mishmash of lace curtains. A door with rusting hinges leads to the hall.'
+  dark_desc:
+    en: 'It is quite dark. Dark shapes in the corners suggest small beds and other furniture. A small amount of light creeps in through the door to the hallway.'
+  short_desc:
+    en: 'This room is filled with small, modest furnishings. The only way out is the way you came in.'
   exits: 
     -
       location: 4

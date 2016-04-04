@@ -7,7 +7,7 @@
     dark_desc:
       en: 'It is quite dark. A dark shape suggests a huge bed in the middle of the room. A small amount of light creeps in under the door to the hallway.'
     short_desc:
-      en: 'This room is filled with an enormous bed. One wall is pocked wit holes. The only way out is the way you came in.'
+      en: 'This room is filled with an enormous bed. One wall is pocked with holes. The only way out is the way you came in.'
   exits: 
     -
       location: 4
