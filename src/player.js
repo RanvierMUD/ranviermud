@@ -328,8 +328,8 @@ var Player = function(socket) {
       l10n.setLocale(self.getLocale());
     }
 
-    self.say(l10n.translate.apply(null, [].slice.call(arguments)
-      .slice(1)));
+    self.say(wrap(l10n.translate.apply(null, [].slice.call(arguments)
+      .slice(1))));
     if (locale) l10n.setLocale(locale);
   };
 

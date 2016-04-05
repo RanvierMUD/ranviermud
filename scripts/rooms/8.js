@@ -16,7 +16,7 @@ exports.listeners = {
         'sacks'
       ];
 
-      var valid = poi.indexOf(args) > -1;
+      var valid = poi.indexOf(args.toLowerCase()) > -1;
 
       if (valid && player.spot(3, 1)) {
         findFood(player, players);

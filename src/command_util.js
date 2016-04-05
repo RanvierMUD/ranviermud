@@ -7,7 +7,7 @@ var CommandUtil = {
    * @param string lookString
    * @param Room   room
    * @param Player player
-   * @param boolean hydrade Whether to return the id or a full object
+   * @param boolean hydrate Whether to return the id or a full object
    * @return string UUID of the item
    */
   findItemInRoom: function(items, lookString, room, player, hydrate) {
