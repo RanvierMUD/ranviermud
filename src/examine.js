@@ -18,13 +18,14 @@ var util = require('util');
 module.exports.examine = (args, player, players, config) => {
 
   // Check to make sure config is valid.
-  if (!config.poi) {
+  if (!config.poi || !config.found) {
     util.log("Invalid config for examine event: ", config);
     return;
   }
 
   // Set defaults as needed.
   config.foundAtNight = config.foundAtNight || config.found;
+  config.nothingFound = config.nothingFound || nothingFound;
 
   var valid = config.poi.indexOf(args.toLowerCase()) > -1;
 
@@ -33,4 +34,10 @@ module.exports.examine = (args, player, players, config) => {
   } else if (valid) {
     config.foundAtNight()
   } else config.nothingFound()
+}
+
+function nothingFound() {
+  player.say('You find nothing of interest.');
+  players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
+    p => { p.say(player.getName() + ' seems to be searching for... something.'); });
 }
