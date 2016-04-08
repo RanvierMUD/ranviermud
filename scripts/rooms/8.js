@@ -7,27 +7,20 @@ exports.listeners = {
 
   examine: l10n => {
     return (args, player, players) => {
-      var poi = [
-        'crates',
-        'boxes',
-        'bags',
-        'food',
-        'sack',
-        'sacks'
-      ];
-
-      var valid = poi.indexOf(args.toLowerCase()) > -1;
-
-      if (valid && player.spot(3, 1)) {
-        findFood(player, players);
-      } else {
-        player.sayL10n(l10n, 'NOT_FOUND');
-        players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
-          p => { p.sayL10n(l10n, 'OTHER_NOT_FOUND', player.getName()); });
-      }
+      var config = {
+        poi: [
+            'crates',
+            'boxes',
+            'bags',
+            'food',
+            'sack',
+            'sacks'
+          ],
+        found: findFood.bind(null, player, players),
+        check: player.spot.bind(null, 3, 1)
+      };
     };
   }
-
 };
 
 function findFood(player, players) {
