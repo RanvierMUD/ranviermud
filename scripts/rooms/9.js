@@ -11,12 +11,12 @@ exports.listeners = {
 
       var config = {
         poi: [
-        'cubby',
-        'belongings',
-        'cub',
-        'shelves',
-        'cubbies'
-      ],
+          'cubby',
+          'belongings',
+          'cub',
+          'shelves',
+          'cubbies'
+        ],
         found: findNote.bind(null, player, players),
         nothingFound: nothingFound,
         check: player.spot.bind(null, 5, 1)
@@ -32,9 +32,12 @@ exports.listeners = {
 
       function findNote(player, players) {
         var rand = CommandUtil.isCoinFlip();
-        if (!player.explore('foundnote_' + rand)) {
-          player.sayL10n(l10n, 'NOTE_FOUND_' + rand);
+        var alreadyFound = player.explore('foundnote_' + rand);
+
+        if (!alreadyFound) {
           player.emit('experience', 150);
+
+          player.sayL10n(l10n, 'NOTE_FOUND_' + rand);
           players.eachIf(
             p => CommandUtil.otherPlayerInRoom(player, p),
             p => {

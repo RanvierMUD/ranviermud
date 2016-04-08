@@ -9,29 +9,34 @@ exports.listeners = {
   examine: l10n => {
     return (args, player, players) => {
 
-      var poi = [
-        "windows",
-        "window",
-        "curtains",
-        "outside",
-        "outdoors"
-      ];
+      var config = {
+        poi: [
+          "windows",
+          "window",
+          "curtains",
+          "outside",
+          "outdoors"
+        ],
+        found: lookOutside,
+        nothingFound: nothingFound
+      };
 
-      var valid = poi.indexOf(args.toLowerCase()) > -1;
 
-      if (valid && CommandUtil.isDaytime()) {
-        player.say();
-        players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
-          p => { p.sayL10n(l10n, 'OTHER_LOOKING', player.getName()); });
-      } else if (valid) {
-        player.sayL10n(l10n, 'DARKNESS');
-      } else nothingFound()
-
-      function nothingFound() {
-        player.sayL10n(l10n, 'NOT_FOUND');
-        players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
-          p => { p.sayL10n(l10n, 'OTHER_NOT_FOUND', player.getName()); });
+      function lookOutside() {
+        if (CommandUtil.isDaytime()) {
+          player.say();
+          players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
+            p => { p.sayL10n(l10n, 'OTHER_LOOKING', player.getName()); });
+        } else
+          player.sayL10n(l10n, 'DARKNESS');
       }
-    };
-  },
+    }
+
+    function nothingFound() {
+      player.sayL10n(l10n, 'NOT_FOUND');
+      players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
+        p => { p.sayL10n(l10n, 'OTHER_NOT_FOUND', player.getName()); });
+    }
+  };
+},
 };
