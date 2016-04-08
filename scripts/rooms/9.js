@@ -2,23 +2,27 @@ var CommandUtil = require('../../src/command_util')
   .CommandUtil;
 var l10n_file = __dirname + '/../../l10n/scripts/rooms/9.js.yml';
 var l10n = require('../../src/l10n')(l10n_file);
+var examiner = require('../../src/examine').examine
 
 exports.listeners = {
 
   examine: l10n => {
     return (args, player, players) => {
-      var poi = [
+
+      var config = {
+        poi: [
         'cubby',
         'belongings',
         'cub',
-        'shelves'
-      ];
+        'shelves',
+        'cubbies'
+      ],
+        found: findNote.bind(null, player, players),
+        nothingFound: nothingFound,
+        check: player.spot.bind(null, 5, 1)
+      };
 
-      var valid = poi.indexOf(args.toLowerCase()) > -1;
-
-      if (valid && player.spot(5, 1)) {
-        findNote(player, players);
-      } else nothingFound();
+      return examiner(args, player, players, config);
 
       function nothingFound() {
         player.sayL10n(l10n, 'NOT_FOUND');

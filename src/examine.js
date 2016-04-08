@@ -15,6 +15,7 @@
  */
 
 var util = require('util');
+
 module.exports.examine = (args, player, players, config) => {
 
   // Check to make sure config is valid.
@@ -23,17 +24,16 @@ module.exports.examine = (args, player, players, config) => {
     return;
   }
 
+
   // Set defaults as needed.
-  config.foundAtNight = config.foundAtNight || config.found;
   config.nothingFound = config.nothingFound || nothingFound;
+  config.check = config.check || () => true;
+
 
   var valid = config.poi.indexOf(args.toLowerCase()) > -1;
 
-  if (valid && CommandUtil.isDaytime()) {
-    config.found();
-  } else if (valid) {
-    config.foundAtNight()
-  } else config.nothingFound()
+  valid && config.check() ? config.found() : config.nothingFound();
+
 }
 
 function nothingFound() {
