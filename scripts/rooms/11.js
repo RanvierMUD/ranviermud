@@ -2,12 +2,13 @@ var CommandUtil = require('../../src/command_util')
   .CommandUtil;
 var l10n_file = __dirname + '/../../l10n/scripts/rooms/11.js.yml';
 var l10n = require('../../src/l10n')(l10n_file);
+var examiner = require('../../src/examine').examine;
 
 exports.listeners = {
 
   examine: l10n => {
     return (args, player, players) => {
-      var config: {
+      var config = {
         poi: [
           'ground',
           'floor',
@@ -19,6 +20,8 @@ exports.listeners = {
         check: player.spot.bind(null, 3, 1)
       }
     };
+  
+    return examiner(args, player, players, config);
   },
 
 };

@@ -2,7 +2,7 @@ var CommandUtil = require('../../src/command_util')
   .CommandUtil;
 var l10n_file = __dirname + '/../../l10n/scripts/rooms/9.js.yml';
 var l10n = require('../../src/l10n')(l10n_file);
-var examiner = require('../../src/examine').examine
+var examiner = require('../../src/examine').examine;
 
 exports.listeners = {
 
