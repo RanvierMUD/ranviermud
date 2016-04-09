@@ -24,7 +24,9 @@ module.exports.examine = (args, player, players, config) => {
     return;
   }
 
-
+  console.log("In examine module: ", args);
+  console.log(player.getName());
+  console.log(config);
   // Set defaults as needed.
   config.nothingFound = config.nothingFound || nothingFound;
   config.check = config.check || () => true;
