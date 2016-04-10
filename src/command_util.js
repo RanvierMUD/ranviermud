@@ -120,7 +120,6 @@ function getRandomFromArr(arr) {
 function isDaytime() {
   var time = new Date().getHours();
   var daytime = time % 2;
-  util.log("Time is " + time + "... is it daytime? " + !!daytime);
 
   return !!daytime;
 }
