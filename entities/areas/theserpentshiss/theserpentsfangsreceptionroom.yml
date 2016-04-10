@@ -2,8 +2,11 @@
     en: "The Serpent's Fangs Reception Room"
   area: "The Serpent's Hiss"
   location: 9
+  script: '9.js'
   description:
-    en: On the eastern wall is a steel ladder leading up to a trap door. This room is small and painted a bright blood red. The ground is made of black stone. To the west through swinging doors is a large gambling hall.
+    en: "On the eastern wall is a steel ladder leading up to a trap door. This room is small and painted a bright blood red. The ground is made of black stone. Some wooden cubbies are lined up against one wall, some with doors, others without. To the west through swinging doors is a large gambling hall."
+  short_desc:
+    en: "This small black and red room has one wall lined with lockers. A ladder lead upstairs and a door leads west into a large hall filled with card tables."
   exits: 
     -
       location: 8
