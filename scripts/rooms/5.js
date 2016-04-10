@@ -32,7 +32,7 @@ exports.listeners = {
 
       function lookOutside() {
         if (CommandUtil.isDaytime()) {
-          player.say();
+          player.sayL10n(l10n, 'WALL');
           players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
             p => { p.sayL10n(l10n, 'OTHER_LOOKING', player.getName()); });
         } else

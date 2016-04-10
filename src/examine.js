@@ -18,21 +18,25 @@ var util = require('util');
 
 module.exports.examine = (args, player, players, config) => {
 
+  args = args.toLowerCase();
   // Check to make sure config is valid.
   if (!config.poi || !config.found) {
     util.log("Invalid config for examine event: ", config);
     return;
   }
 
-  console.log("In examine module: ", args);
-  console.log(player.getName());
-  console.log(config);
   // Set defaults as needed.
   config.nothingFound = config.nothingFound || nothingFound;
   config.check = config.check || () => true;
 
+  // Handle POI as an object.
+  if (!config.poi.length && args in config.poi) {
+    if (config.check()) config.poi[args]();
+    else config.nothingFound();
+    return;
+  }
 
-  var valid = config.poi.indexOf(args.toLowerCase()) > -1;
+  var valid = config.poi.indexOf(args) > -1;
 
   valid && config.check() ? config.found() : config.nothingFound();
 
