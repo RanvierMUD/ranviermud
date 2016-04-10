@@ -2,6 +2,7 @@
     en: "The Serpent's Hiss Taproom"
   area: "The Serpent's Hiss"
   location: 1
+  script: '1.js'
   description:
     en: "Bronzed metal stools, some missing their legs and others tipped over entirely, line the bar of the taproom, opposite its entrance. Behind the counter loom enormous steel vats, hooked by all manner of hoses to a nest of taps in the center of the bar, taps festooned with serpent's heads representing all manner of subspecies. Enormous lanterns hang from the rafters, an eerie glow emanating from within. The walls are adorned in peeling ogee wallpaper in hues of crimson and gold. Behind the bar is the kitchen area. To the northeast are the stairs leading up to the private rooms. To the south is the exit. To the southeast is a private booth shrouded by a ragged velvet portiere in royal crimson."
   short_desc: 
