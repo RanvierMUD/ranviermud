@@ -7,7 +7,7 @@ var CommandUtil = {
    * @param string lookString
    * @param Room   room
    * @param Player player
-   * @param boolean hydrade Whether to return the id or a full object
+   * @param boolean hydrate Whether to return the id or a full object
    * @return string UUID of the item
    */
   findItemInRoom: function(items, lookString, room, player, hydrate) {
@@ -120,7 +120,6 @@ function getRandomFromArr(arr) {
 function isDaytime() {
   var time = new Date().getHours();
   var daytime = time % 2;
-  util.log("Time is " + time + "... is it daytime? " + !!daytime);
 
   return !!daytime;
 }

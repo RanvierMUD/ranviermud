@@ -2,8 +2,13 @@
     en: The Adder Room
   area: "The Serpent's Hiss"
   location: 5
+  script: '5.js'
   description:
-    en: 'This room consists of a double bed, a trunk, and a small table, missing a leg. There is a small hole in the ceiling surrounded by ruddy stains. The small window to the outdoors is blocked with a curtain. A wooden door leads outside.'
+    en: 'This room consists of a double bed, a trunk, and a small table, missing a leg. There is a small hole in the ceiling surrounded by ruddy stains. The small window to the outdoors is blocked with a heavy curtain. A wooden door leads outside.'
+  short_desc:
+    en: 'A large double room, which has seen better times. You can head back to the hallway.'
+  dark_desc:
+    en: 'You can barely make out anything. A dark shape suggests a double bed in the middle of the room. A small amount of light creeps in under the door to the hallway.'
   exits: 
     -
       location: 4
