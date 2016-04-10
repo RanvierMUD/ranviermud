@@ -3,7 +3,7 @@
  *
  * config object:
  *
- *  poi : An array or object with points of interest.
+ *  poi : An array or object with Points Of Interest.
  *    It can be an array of strings or an object with strings as the keys and
  *    functions as the values.
  * 
@@ -20,7 +20,7 @@ module.exports.examine = (args, player, players, config) => {
 
   args = args.toLowerCase();
   // Check to make sure config is valid.
-  if (!config.poi || !config.found) {
+  if (!config.poi || (!config.found && config.poi.length)) {
     util.log("Invalid config for examine event: ", config);
     return;
   }
@@ -30,8 +30,8 @@ module.exports.examine = (args, player, players, config) => {
   config.check = config.check || () => true;
 
   // Handle POI as an object.
-  if (!config.poi.length && args in config.poi) {
-    if (config.check()) config.poi[args]();
+  if (!config.poi.length && config.check()) {
+    if (args in config.poi) config.poi[args]();
     else config.nothingFound();
     return;
   }
