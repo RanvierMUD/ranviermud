@@ -68,4 +68,8 @@ FLEE:
 
 STANCE:
     en: "Usage \n stance (stance) \n\nOptions:\n`normal`: This has no major effect on your combat style.\n`berserk`: You do more damage at the cost of defense.\n`cautious`: You have higher defense at the cost of damage.\n`precise`: Your attacks always hit their target, and you defend \nwell against aimed strikes, at a cost to speed."
+ROOMDESCS:
+    en: "Usage \n roomdesc (preference) \n\nOptions:\n`default`: Show a verbose description the first time you enter a room, or when using the `look` command. Otherwise, show the short description.\n`short`: Always show the short description unless you use the look command.\n`verbose` Always show the verbose description."
+EXAMINE:
+    en: "Usage \n examine (point of interest) \n\nExamine items in your environment to learn more. Investigate your surroundings thoroughly and you may be surprised."
 
