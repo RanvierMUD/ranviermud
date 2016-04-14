@@ -3,9 +3,10 @@ var CommandUtil = require('../../../src/command_util.js')
 
 
 exports.listeners = {
-  tick: chooseRandomExit
+  playerEnter: chooseRandomExit
 };
 
+//TODO: Extract into module so scatter can use it to and stuff will be dry.
 function chooseRandomExit(room, rooms, player, players, npc) {
   return function(room, rooms, player, players, npc) {
     if (CommandUtil.isCoinFlip()) {
