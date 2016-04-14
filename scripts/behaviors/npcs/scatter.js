@@ -8,7 +8,7 @@ exports.listeners = {
 
 //TODO: Extract into module so scatter can use it to and stuff will be dry.
 function chooseRandomExit(room, rooms, player, players, npc) {
-  return function(room, rooms, player, players, npc) {
+  return (room, rooms, player, players, npc) => {
     if (CommandUtil.isCoinFlip()) {
       var exits = room.getExits();
       var chosen = CommandUtil.getRandomFromArr(exits);
