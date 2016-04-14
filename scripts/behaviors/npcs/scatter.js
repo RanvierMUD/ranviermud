@@ -1,14 +1,14 @@
-'use strict';
 var CommandUtil = require('../../../src/command_util.js')
   .CommandUtil;
 
 
 exports.listeners = {
-  tick: chooseRandomExit
+  playerEnter: chooseRandomExit
 };
 
+//TODO: Extract into module so scatter can use it to and stuff will be dry.
 function chooseRandomExit(room, rooms, player, players, npc) {
-  return function(room, rooms, player, players, npc) {
+  return (room, rooms, player, players, npc) => {
     if (CommandUtil.isCoinFlip()) {
       var exits = room.getExits();
       var chosen = CommandUtil.getRandomFromArr(exits);
@@ -21,11 +21,8 @@ function chooseRandomExit(room, rooms, player, players, npc) {
           chosenRoom.addNpc(uid);
           room.removeNpc(uid);
 
-          if (player){
-            let locale = player.getLocale();
-            let msg = getLeaveMessage(player, chosenRoom);
-            player.say(npc.getShortDesc(locale) + msg);
-          }
+          player.say(npc.getShortDesc(player.getLocale()) + getLeaveMessage(
+            player, chosenRoom));
 
           players.eachIf(
             CommandUtil.otherPlayerInRoom.bind(null, player),
