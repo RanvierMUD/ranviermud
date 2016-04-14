@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+'use strict';
 /**
  * Main file, use this to run the server:
  * node ranvier [options]
@@ -16,7 +17,7 @@ var net = require('net'),
 	util = require('util'),
 	express = require('express'),
 	commander = require('commander'),
-	wrap = require('wrap-ansi');
+	wrap = require('wrap-ansi'),
 
 	// local
 	Commands = require('./src/commands').Commands,
@@ -28,12 +29,12 @@ var net = require('net'),
 	Plugins  = require('./src/plugins'),
 
 	PlayerManager = require('./src/player_manager').PlayerManager,
-	CommandUtil = require('./src/command_util').CommandUtil,
+	CommandUtil   = require('./src/command_util').CommandUtil,
 
 	// third party
 	Localize  = require('jall'),
-	argv = require('optimist').argv,
-	telnet = require('./src/3rdparty/telnet.js');
+	argv      = require('optimist').argv,
+	telnet    = require('./src/3rdparty/telnet.js');
 
 /**
  * These aren't really globals, they're only "global" to this file,
@@ -308,14 +309,17 @@ process.stdin.resume();
 var wasDaytime = CommandUtil.isDaytime();
 
 setInterval(tick , 5000);
-function tick(){
-	var changeTime = wasDaytime !== CommandUtil.isDaytime();
+function tick() {
+	let changeTime = wasDaytime !== CommandUtil.isDaytime();
 	if (changeTime) {
 		players.each( p => p.emit('changeTime', wasDaytime, rooms));
 		wasDaytime = !wasDaytime;
 		util.log("The times, they are a-changin'...");
 	}
-
+	npcs.each( npc => {
+		let room = rooms.getAt(npc.getRoom());
+		npc.emit('tick', room, rooms, null, players, npc);
+	});
 }
 
 process.stdin.on('data', function (data)
