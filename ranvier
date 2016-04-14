@@ -308,14 +308,14 @@ process.stdin.resume();
 var wasDaytime = CommandUtil.isDaytime();
 
 setInterval(tick , 5000);
-function tick(){
+function tick() {
 	var changeTime = wasDaytime !== CommandUtil.isDaytime();
 	if (changeTime) {
 		players.each( p => p.emit('changeTime', wasDaytime, rooms));
 		wasDaytime = !wasDaytime;
 		util.log("The times, they are a-changin'...");
 	}
-
+	npcs.emit('tick');
 }
 
 process.stdin.on('data', function (data)

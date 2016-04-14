@@ -70,6 +70,7 @@ var Commands = {
 
           var command_name = files[j].split('.')[0];
 
+          //TODO: Add admin commands prefaced with @
           Commands.player_commands[command_name] = require(command_file)
             .command(rooms, items, players, npcs, Commands);
         }
@@ -124,7 +125,7 @@ var Commands = {
   }
 };
 
-//FIXME: Alias is borked, at the very least it doesn't inject the player 
+//FIXME: Alias is borked, at the very least it doesn't inject the player
 // for commands dependent on the player.
 // alias('exp', 'tnl');
 // alias('take', 'get');
