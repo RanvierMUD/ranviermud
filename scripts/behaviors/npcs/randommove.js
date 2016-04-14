@@ -1,3 +1,4 @@
+'use strict';
 var CommandUtil = require('../../../src/command_util.js')
   .CommandUtil;
 
@@ -20,8 +21,11 @@ function chooseRandomExit(room, rooms, player, players, npc) {
           chosenRoom.addNpc(uid);
           room.removeNpc(uid);
 
-          player.say(npc.getShortDesc(player.getLocale()) + getLeaveMessage(
-            player, chosenRoom));
+          if (player){
+            let locale = player.getLocale();
+            let msg = getLeaveMessage(player, chosenRoom);
+            player.say(npc.getShortDesc(locale) + msg);
+          }
 
           players.eachIf(
             CommandUtil.otherPlayerInRoom.bind(null, player),
