@@ -55,7 +55,7 @@ var Player = function(socket) {
   self.explored = [];
 
   // Anything affecting the player
-  self.affects = {};
+  self.effects = {};
 
   // Skills the players has
   self.skills = {};
@@ -107,7 +107,7 @@ var Player = function(socket) {
 
     var chance = (Math.random() * bonus);
     var spotted = (self.getAttribute('cleverness') + chance >= difficulty);
-    
+
     util.log("Spot check success: ", spotted);
     return spotted;
   }
@@ -177,16 +177,16 @@ var Player = function(socket) {
   /**#@-*/
 
   /**
-   * Get currently applied affects
+   * Get currently applied effects
    * @param string aff
    * @return Array|Object
    */
-  self.getAffects = function(aff) {
+  self.getEffects = function(aff) {
     if (aff) {
-      return typeof self.affects[aff] !== 'undefined' ? self.affects[aff] :
+      return typeof self.effects[aff] !== 'undefined' ? self.effects[aff] :
         false;
     }
-    return self.affects;
+    return self.effects;
   };
 
   /**
@@ -212,16 +212,16 @@ var Player = function(socket) {
     } else if (affect.event) {
       self.on(affect.event, deact);
     }
-    self.affects[name] = affect;
+    self.effects[name] = affect;
   };
 
   self.removeAffect = function(aff) {
-    if (self.affects[aff].event) {
-      self.removeListener(self.affects[aff].event, self.affects[aff].deactivate);
+    if (self.effects[aff].event) {
+      self.removeListener(self.effects[aff].event, self.effects[aff].deactivate);
     } else {
-      clearTimeout(self.affects[aff].timer);
+      clearTimeout(self.effects[aff].timer);
     }
-    delete self.affects[aff];
+    delete self.effects[aff];
   };
 
   /**
