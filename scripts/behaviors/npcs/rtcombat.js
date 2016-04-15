@@ -1,5 +1,5 @@
-var LevelUtils = require("../../../src/levels").LevelUtils;
-var initiate_combat = require("../../../src/rtcombat").initiate_combat;
+let LevelUtils = require("../../../src/levels").LevelUtils;
+let initiate_combat = require("../../../src/rtcombat").initiate_combat;
 
 exports.listeners = {
   combat: function(l10n) {
