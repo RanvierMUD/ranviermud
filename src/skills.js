@@ -1,4 +1,4 @@
-var Affects = require('./affects.js').Affects;
+var Effects = require('./effects.js').Effects;
 
 var l10n_dir = __dirname + '/../l10n/skills/';
 var l10ncache = {};
@@ -7,8 +7,7 @@ var l10ncache = {};
  * @return string
  */
 
-//TODO: Consider extracting into helper module for consistency. Might already be util.log
-//FIXME: Is this what needs  to be used for wrapping, too?
+//FIXME: This entire skill system, lulz.
 
 var L = function(locale, cls, key /*, args... */ ) {
   var l10n_file = l10n_dir + cls + '.yml';
@@ -31,7 +30,7 @@ exports.Skills = {
           return true;
         }
 
-        if (player.getAffects('cooldown_tackle')) {
+        if (player.getEffects('cooldown_tackle')) {
           player.say(L(player.getLocale(), 'warrior', 'TACKLE_COOLDOWN'));
           return true;
         }
@@ -47,8 +46,8 @@ exports.Skills = {
         player.say(L(player.getLocale(), 'warrior', 'TACKLE_DAMAGE', damage));
         target.setAttribute('health', target.getAttribute('health') - damage);
 
-        if (!target.getAffects('slow')) {
-          target.addAffect('slow', Affects.slow({
+        if (!target.getEffects('slow')) {
+          target.addAffect('slow', Effects.slow({
             duration: 3,
             magnitude: 1.5,
             player: player,
@@ -79,10 +78,10 @@ exports.Skills = {
       name: "Leatherskin",
       description: "Your skin has become tougher, and you are better able to take physical damage.",
       activate: function(player) {
-        if (player.getAffects('leatherskin')) {
-          player.removeAffect('leatherskin');
+        if (player.getEffects('leatherskin')) {
+          player.removeEffect('leatherskin');
         }
-        player.addAffect('leatherskin', Affects.health_boost({
+        player.addEffect('leatherskin', Effects.health_boost({
           magnitude: 50,
           //consider adding +1 to stamina
           player: player,
