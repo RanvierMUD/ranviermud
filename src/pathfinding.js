@@ -1,28 +1,31 @@
-var CommandUtil = require('../../../src/command_util.js')
+var CommandUtil = require('./command_util.js')
   .CommandUtil;
 module.exports.chooseRandomExit = _chooseRandomExit;
 
 function _chooseRandomExit(room, rooms, player, players, npc) {
   return (room, rooms, player, players, npc) => {
     if (CommandUtil.isCoinFlip()) {
-      var exits = room.getExits();
-      var chosen = CommandUtil.getRandomFromArr(exits);
+      let exits = room.getExits();
+      let chosen = CommandUtil.getRandomFromArr(exits);
       if (!chosen.hasOwnProperty('mob_locked')) {
-        var uid = npc.getUuid();
-        var chosenRoom = rooms.getAt(chosen.location);
+        let uid = npc.getUuid();
+        let chosenRoom = rooms.getAt(chosen.location);
 
         try {
           npc.setRoom(chosen.location);
           chosenRoom.addNpc(uid);
           room.removeNpc(uid);
-
-          player.say(npc.getShortDesc(player.getLocale()) + getLeaveMessage(
-            player, chosenRoom));
-
+          if (player){
+            let locale = player.getLocale();
+            let msg = getLeaveMessage(player, chosenRoom);
+            player.say(npc.getShortDesc(locale) + msg);
+          }
           players.eachIf(
-            CommandUtil.otherPlayerInRoom.bind(null, player),
+            CommandUtil.otherPlayerInRoom.bind(null, player || npc),
             p => {
-              p.say(npc.getShortDesc(p.getLocale()) + getLeaveMessage(p, chosenRoom))
+              let locale = p.getLocale();
+              let msg = getLeaveMessage(p, chosenRoom);
+              p.say(npc.getShortDesc(locale) + msg);
             });
         } catch (e) {
           console.log("EXCEPTION: ", e);
