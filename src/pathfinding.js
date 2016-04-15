@@ -1,6 +1,10 @@
-var CommandUtil = require('./command_util.js')
+'use strict';
+const CommandUtil = require('./command_util.js')
   .CommandUtil;
-module.exports.chooseRandomExit = _chooseRandomExit;
+
+module.exports = {
+    chooseRandomExit: _chooseRandomExit,
+  };
 
 function _chooseRandomExit(room, rooms, player, players, npc) {
   return (room, rooms, player, players, npc) => {
