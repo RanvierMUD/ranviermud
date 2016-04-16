@@ -1,3 +1,4 @@
+'use strict';
 const LevelUtils = require("../../../src/levels").LevelUtils;
 const initiate_combat = require("../../../src/rtcombat").initiate_combat;
 

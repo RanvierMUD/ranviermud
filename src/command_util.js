@@ -3,20 +3,15 @@ const util = require('util');
 
 const CommandUtil = {
 
-  findItemInRoom: _findItemInRoom,
+  findItemInRoom:      _findItemInRoom,
   findItemInInventory: _findItemInInventory,
-  findNpcInRoom: _findNpcInRoom,
-  otherPlayerInRoom: inSameRoom,
-  inSameRoom: inSameRoom,
-  isDaytime: _isDaytime,
-
-  //TODO: Make a randomUtils module:
-  isCoinFlip: _isCoinFlip,
-  getRandomFromArr: _getRandomFromArr,
-  parseDot: _parseDot,
+  findNpcInRoom:       _findNpcInRoom,
+  otherPlayerInRoom:   _inSameRoom,
+  inSameRoom:          _inSameRoom,
+  isDaytime:           _isDaytime,
+  parseDot:            _parseDot,
 
 };
-
 
 
 /**
@@ -24,7 +19,7 @@ const CommandUtil = {
  * @param Player     target
  * @return boolean   True if they are in the same room, else false.
  */
-function inSameRoom(entity, target) {
+function _inSameRoom(entity, target) {
   if (target) {
     if (entity.getName) { // Handle players
       let notSameName = target.getName() !== entity.getName();
@@ -37,26 +32,6 @@ function inSameRoom(entity, target) {
 }
 
 
-
-/**
- * @return 0 or 1
- */
-function _isCoinFlip() {
-  return Math.round(Math.random());
-}
-
-
-
-/**
- * @param Array arr
- * @return * from arr
- */
-function _getRandomFromArr(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-
-
 /**
  * @return boolean isDaytime
  */
@@ -66,7 +41,6 @@ function _isDaytime() {
 
   return !!daytime;
 }
-
 
 
 /**
@@ -89,7 +63,6 @@ function _findItemInRoom(items, lookString, room, player, hydrate) {
 }
 
 
-
 /**
  * Find an npc in a room based on the syntax
  *   things like: get 2.thing or look 6.thing or look thing
@@ -110,7 +83,6 @@ function _findNpcInRoom(npcs, lookString, room, player, hydrate) {
 }
 
 
-
 /**
  * Find an item in inventory based on the syntax
  *   things like: get 2.thing or look 6.thing or look thing
@@ -127,7 +99,6 @@ function _findItemInInventory(lookString, being, hydrate) {
 
   return thing ? (hydrate ? thing : thing.getUuid()) : false;
 }
-
 
 
 /**

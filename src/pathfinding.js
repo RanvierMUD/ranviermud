@@ -1,6 +1,7 @@
 'use strict';
 const CommandUtil = require('./command_util.js')
   .CommandUtil;
+const Random = require('./random.js').Random;
 
 module.exports = {
     chooseRandomExit: _chooseRandomExit,
@@ -8,9 +9,9 @@ module.exports = {
 
 function _chooseRandomExit(room, rooms, player, players, npc) {
   return (room, rooms, player, players, npc) => {
-    if (CommandUtil.isCoinFlip()) {
+    if (Random.coinFlip()) {
       let exits = room.getExits();
-      let chosen = CommandUtil.getRandomFromArr(exits);
+      let chosen = Random.fromArray(exits);
       if (!chosen.hasOwnProperty('mob_locked')) {
         let uid = npc.getUuid();
         let chosenRoom = rooms.getAt(chosen.location);
