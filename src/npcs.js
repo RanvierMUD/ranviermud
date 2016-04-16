@@ -163,8 +163,8 @@ var Npc = function (config)
 		level: 1
 	};
 
-	// Anything affecting the player
-	self.affects = {
+	// Anything affecting the NPC
+	self.effects = {
 	};
 
 	/**
@@ -207,22 +207,22 @@ var Npc = function (config)
 	self.setInCombat  = function (combat) { self.in_combat = combat; }
 	self.setContainer = function (uid) { self.container = uid; }
 	self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
-	self.removeAffect = function (aff) { delete self.affects[aff]; };
+	self.removeAffect = function (aff) { delete self.effects[aff]; };
 	self.getDefenses  = function () { return self.defenses; };
 	self.getLocations = function () { return Object.keys(self.defenses); };
 	/**#@-*/
 
 	/**
-	 * Get currently applied affects
+	 * Get currently applied effects
 	 * @param string aff
 	 * @return Array|Object
 	 */
-	self.getAffects = function (aff)
+	self.getEffects = function (aff)
 	{
 		if (aff) {
-			return typeof self.affects[aff] !== 'undefined' ? self.affects[aff] : false;
+			return typeof self.effects[aff] !== 'undefined' ? self.effects[aff] : false;
 		}
-		return self.affects;
+		return self.effects;
 	};
 
 	/**
@@ -242,7 +242,7 @@ var Npc = function (config)
 			}
 			self.removeAffect(name);
 		}, affect.duration * 1000);
-		self.affects[name] = 1;
+		self.effects[name] = 1;
 	};
 
 	//TODO: dry-ify the following
@@ -340,7 +340,7 @@ var Npc = function (config)
 		return damage ? {min: damage[0], max: damage[1]} : false;
 	};
 
-	/** 
+	/**
 	* Helper to get just one area's defense
 	* @param string location
 	*/
@@ -360,7 +360,7 @@ var Npc = function (config)
     damageDone = Math.max(1, dmg - calculateDefense(location));
     self.setAttribute('health', Math.max(0, self.getAttribute('health') - damageDone));
     util.log('Damage done to ' + self.getShortDesc('en') + ': ' + damageDone);
-    
+
     return damageDone;
   };
 

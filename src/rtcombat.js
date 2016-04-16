@@ -1,6 +1,6 @@
 module.exports.initiate_combat = _initiate_combat;
 //TODO: Add strings for sanity damage
-
+var Random = require('./random.js').Random;
 var LevelUtil = require('./levels')
   .LevelUtil;
 var CommandUtil = require('./command_util')
@@ -142,7 +142,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
   }
 
   function decideHitLocation(locations, target, precise) {
-    if (precise || CommandUtil.isCoinFlip()) {
+    if (precise || Random.coinFlip()) {
       return target;
     } else return CommandUtil.getRandomFromArr(locations);
   }
@@ -205,7 +205,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
         npc.getAttribute('experience') : LevelUtil.mobExp(npc.getAttribute('level'));
       util.log("Player wins, exp gain: ", exp);
       player.emit('experience', exp);
-    
+
     } else {
       util.log("Player death: ", player.getName());
       player.sayL10n(l10n, 'LOSE', npc.getShortDesc(locale));

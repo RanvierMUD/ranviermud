@@ -1,15 +1,17 @@
-var CommandUtil = require('../../src/command_util')
+'use strict';
+const CommandUtil = require('../../src/command_util')
   .CommandUtil;
-var l10n_file = __dirname + '/../../l10n/scripts/rooms/9.js.yml';
-var l10n = require('../../src/l10n')(l10n_file);
-var examiner = require('../../src/examine').examine;
+const Random = require('../../src/random').Random;
+const l10n_file = __dirname + '/../../l10n/scripts/rooms/9.js.yml';
+const l10n = require('../../src/l10n')(l10n_file);
+const examiner = require('../../src/examine').examine;
 
 exports.listeners = {
 
   examine: l10n => {
     return (args, player, players) => {
 
-      var config = {
+      const config = {
         poi: [
           'cubby',
           'belongings',
@@ -31,8 +33,8 @@ exports.listeners = {
       }
 
       function findNote(player, players) {
-        var rand = CommandUtil.isCoinFlip();
-        var alreadyFound = player.explore('foundnote_' + rand);
+        let rand = Random.coinFlip();
+        let alreadyFound = player.explore('foundnote_' + rand);
 
         if (!alreadyFound) {
           player.emit('experience', 150);
