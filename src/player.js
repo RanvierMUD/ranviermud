@@ -73,6 +73,7 @@ var Player = function PlayerConstructor(socket) {
   self.getSocket = () => socket;
   self.getInventory = () => self.inventory;
   self.getAttributes = () => self.attributes || {};
+  self.getGender = () => self.gender;
 
   self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
     self.attributes[attr] : false;
@@ -95,31 +96,26 @@ var Player = function PlayerConstructor(socket) {
     self.attributes.description =
       newdesc;
 
-  self.setLocation = function(loc) { self.location = loc; };
-  self.setPassword = function(pass) {
-    self.password = crypto.createHash('md5')
+  self.setLocation = loc => self.location = loc;
+  self.setPassword = pass =>
+    self.password = crypto
+      .createHash('md5')
       .update(pass)
       .digest('hex');
+
+  self.setGender = gender => self.gender = gender.toUpperCase();
+  self.addItem = item => self.inventory.push(item);
+  self.removeItem = item => {
+    self.inventory = self.inventory.filter(i => item !== i);
   };
-  self.setGender = function(gender) { self.gender = gender.toUpperCase(); }
-  self.getGender = function() {
-    return self.gender;
-  }
-  self.addItem = function(item) { self.inventory.push(item); };
-  self.removeItem = function(item) {
-    self.inventory = self.inventory.filter(
-      function(i) {
-        return item !== i;
-      });
-  };
-  self.setInventory = function(inv) { self.inventory = inv; };
-  self.setInCombat = function(combat) { self.in_combat = combat; };
-  self.setAttribute = function(attr, val) { self.attributes[attr] = val; };
-  self.setPreference = function(pref, val) { self.preferences[pref] = val; };
-  self.addSkill = function(name, skill) { self.skills[name] = skill; };
+  self.setInventory = inv => self.inventory = inv;
+  self.setInCombat = combatant => self.in_combat = combatant;
+  self.setAttribute = (attr, val) => self.attributes[attr] = val;
+  self.setPreference = (pref, val) => self.preferences[pref] = val;
+  self.addSkill = (name, skill) => self.skills[name] = skill;
+  self.checkStance = stance => self.preferences.stance === stance.toLowerCase();
   /**#@-*/
 
-  self.checkStance = stance => self.preferences.stance === stance.toLowerCase();
 
   /**
   * To keep track of which rooms the player has already explored.
