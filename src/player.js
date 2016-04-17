@@ -1,4 +1,5 @@
-var Data = require('./data')
+'use strict';
+const Data = require('./data')
   .Data,
   Skills = require('./skills')
   .Skills,
@@ -8,11 +9,11 @@ var Data = require('./data')
   events = require('events'),
   wrap = require('wrap-ansi');
 
-var npcs_scripts_dir = __dirname + '/../scripts/player/';
-var l10n_dir = __dirname + '/../l10n/scripts/player/';
-var statusUtil = require('./status');
+const npcs_scripts_dir = __dirname + '/../scripts/player/';
+const l10n_dir = __dirname + '/../l10n/scripts/player/';
+const statusUtil = require('./status');
 
-var Player = function(socket) {
+var Player = function PlayerConstructor(socket) {
   var self = this;
   self.name = '';
   self.description = '';
@@ -63,94 +64,36 @@ var Player = function(socket) {
   /**#@+
    * Mutators
    */
-  self.getPrompt = function() {
-    return self.prompt_string;
-  };
-  self.getCombatPrompt = function() {
-    return self.combat_prompt;
-  };
-  self.getLocale = function() {
-    return self.locale;
-  };
-  self.getName = function() {
-    return self.name;
-  };
-  self.getDescription = function() {
-    return self.attributes.description;
-  };
-  self.getLocation = function() {
-    return self.location;
-  };
-  self.getSocket = function() {
-    return socket;
-  };
-  self.getInventory = function() {
-    return self.inventory;
-  };
+  self.getPrompt = () => self.prompt_string;
+  self.getCombatPrompt = () => self.combat_prompt;
+  self.getLocale = () => self.locale;
+  self.getName = () => self.name;
+  self.getDescription = () => self.attributes.description;
+  self.getLocation = () => self.location;
+  self.getSocket = () => socket;
+  self.getInventory = () => self.inventory;
+  self.getAttributes = () => self.attributes || {};
 
-  // To keep track of which rooms players have been in.
-  // returns bool isNotFirstTime
-  self.explore = function(vnum) {
-    if (self.explored.indexOf(vnum) === -1) {
-      self.explored.push(vnum);
-      util.log(player.getName() + ' explored room #' + vnum + ' for the first time.');
-      return false;
-    }
-    util.log(player.getName() + ' moves to room #' + vnum);
-    return true;
-  };
+  self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
+    self.attributes[attr] : false;
 
-  // For doing spot checks when using examine or trying to ID an item.
-  self.spot = function(difficulty, bonus) {
-    bonus = bonus || 1;
-    difficulty = difficulty || 1;
+  self.getPreference = pref => typeof self.preferences[pref] !== 'undefined' ?
+    self.preferences[pref] : false;
 
-    var chance = (Math.random() * bonus);
-    var spotted = (self.getAttribute('cleverness') + chance >= difficulty);
-
-    util.log("Spot check success: ", spotted);
-    return spotted;
-  }
-
-  self.getAttribute = function(attr) {
-    return typeof self.attributes[attr] !== 'undefined' ?
-      self.attributes[attr] : false;
-  };
-  self.getAttributes = function() {
-    return self.attributes || {}
-  }
-
-  self.getPreference = function(pref) {
-    return typeof self.preferences[pref] !== 'undefined' ? self.preferences[
-      pref] : false;
-  };
-
-  self.getSkills = function(skill) {
-    return typeof self.skills[skill] !== 'undefined' ? self.skills[skill] :
+  self.getSkills = skill =>
+    typeof self.skills[skill] !== 'undefined' ? self.skills[skill] :
       self.skills;
-  };
 
-  // Note, only retreives hash, not a real password
-  self.getPassword = function() {
-    return self.password;
-  };
+  self.getPassword = () => self.password; // Returns hash.
+  self.isInCombat = () => self.in_combat;
 
-  self.isInCombat = function() {
-    return self.in_combat;
-  };
-
-  self.checkStance = function(str) {
-    return self.preferences.stance === str.toLowerCase();
-  };
-
-  self.setPrompt = function(str) { self.prompt_string = str; }
-  self.setCombatPrompt = function(str) { self.combat_prompt = str; }
-  self.setLocale = function(locale) { self.locale = locale; };
-  self.setName = function(newname) { self.name = newname; };
-  self.setDescription = function(newdesc) {
+  self.setPrompt = str => self.prompt_string = str;
+  self.setCombatPrompt = str => self.combat_prompt = str;
+  self.setLocale = locale => self.locale = locale;
+  self.setName = newname self.name = newname;
+  self.setDescription = newdesc =>
     self.attributes.description =
       newdesc;
-  };
 
   self.setLocation = function(loc) { self.location = loc; };
   self.setPassword = function(pass) {
@@ -175,6 +118,40 @@ var Player = function(socket) {
   self.setPreference = function(pref, val) { self.preferences[pref] = val; };
   self.addSkill = function(name, skill) { self.skills[name] = skill; };
   /**#@-*/
+
+  self.checkStance = stance => self.preferences.stance === stance.toLowerCase();
+
+  /**
+  * To keep track of which rooms the player has already explored.
+  * @param int Vnum of room explored...
+  * @return boolean True if they have already been there. Otherwise false.
+  */
+  self.explore = vnum => {
+    if (self.explored.indexOf(vnum) === -1) {
+      self.explored.push(vnum);
+      util.log(player.getName() + ' explored room #' + vnum + ' for the first time.');
+      return false;
+    }
+    util.log(player.getName() + ' moves to room #' + vnum);
+    return true;
+  };
+
+  /**
+  * Spot checks
+  * @param int Difficulty -- What they need to beat with their roll
+  * @param int Bonus -- The bonus they get on their roll
+  * @return boolean Success
+  */
+  self.spot = (difficulty, bonus) => {
+    bonus = bonus || 1;
+    difficulty = difficulty || 1;
+
+    let chance = (Math.random() * bonus);
+    let spotted = (self.getAttribute('cleverness') + chance >= difficulty);
+
+    util.log("Spot check success: ", spotted);
+    return spotted;
+  }
 
   /**
    * Get currently applied effects
