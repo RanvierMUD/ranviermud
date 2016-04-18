@@ -151,50 +151,50 @@ var Player = function PlayerConstructor(socket) {
 
   /**
    * Get currently applied effects
-   * @param string aff
+   * @param string eff
    * @return Array|Object
    */
-  self.getEffects = function(aff) {
-    if (aff) {
-      return typeof self.effects[aff] !== 'undefined' ? self.effects[aff] :
+  self.getEffects = eff => {
+    if (eff) {
+      return typeof self.effects[eff] !== 'undefined' ? self.effects[eff] :
         false;
     }
     return self.effects;
   };
 
   /**
-   * Add, activate and set a timer for an affect
+   * Add, activate and set a timer for an effect
    * @param string name
-   * @param object affect
+   * @param object effect
    */
-  self.addAffect = function(name, affect) {
+  self.addEffect = (name, effect) => {
     if (affect.activate) {
-      affect.activate();
+      effect.activate();
     }
 
-    var deact = function() {
-      if (affect.deactivate) {
-        affect.deactivate();
+    let deact = function() {
+      if (effect.deactivate) {
+        effect.deactivate();
         self.prompt();
       }
       self.removeAffect(name);
     };
 
-    if (affect.duration) {
-      affect.timer = setTimeout(deact, affect.duration * 1000);
-    } else if (affect.event) {
-      self.on(affect.event, deact);
+    if (effect.duration) {
+      effect.timer = setTimeout(deact, effect.duration * 1000);
+    } else if (effect.event) {
+      self.on(effect.event, deact);
     }
-    self.effects[name] = affect;
+    self.effects[name] = effect;
   };
 
-  self.removeAffect = function(aff) {
-    if (self.effects[aff].event) {
-      self.removeListener(self.effects[aff].event, self.effects[aff].deactivate);
+  self.removeEffect = eff => {
+    if (self.effects[eff].event) {
+      self.removeListener(self.effects[eff].event, self.effects[eff].deactivate);
     } else {
-      clearTimeout(self.effects[aff].timer);
+      clearTimeout(self.effects[eff].timer);
     }
-    delete self.effects[aff];
+    self.effects[eff] = null;
   };
 
   /**
@@ -203,7 +203,7 @@ var Player = function PlayerConstructor(socket) {
    * @param boolean hydrate Return an actual item or just the uuid
    * @return string|Item
    */
-  self.getEquipped = function(slot, hydrate) {
+  self.getEquipped = (slot, hydrate) => {
     if (!slot) {
       return self.equipment;
     }
@@ -215,9 +215,7 @@ var Player = function PlayerConstructor(socket) {
     hydrate = hydrate || false;
     if (hydrate) {
       return self.getInventory()
-        .filter(function(i) {
-          return i.getUuid() === self.equipment[slot];
-        })[0];
+        .filter(i => i.getUuid() === self.equipment[slot])[0];
     }
     return self.equipment[slot];
   };
@@ -227,11 +225,8 @@ var Player = function PlayerConstructor(socket) {
    * @param string wear_location The location this item is worn
    * @param Item   item
    */
-  self.equip = function(wear_location, item) {
-    util.log(">> Equipping at ", wear_location, item.getUuid);
-
+  self.equip = (wear_location, item) => {
     self.equipment[wear_location] = item.getUuid();
-
     item.setEquipped(true);
   };
 
@@ -239,11 +234,11 @@ var Player = function PlayerConstructor(socket) {
    * "unequip" an item
    * @param Item   item
    */
-  self.unequip = function(item) {
+  self.unequip = item => {
     item.setEquipped(false);
     for (var i in self.equipment) {
-      if (self.equipment[i] === item.getUuid()) {
-        delete self.equipment[i];
+      if (self.equipment[slot] === item.getUuid()) {
+        self.equipment[slot] = null;
         break;
       }
     }
@@ -254,7 +249,7 @@ var Player = function PlayerConstructor(socket) {
    * Write to a player's socket
    * @param string data Stuff to write
    */
-  self.write = function(data, color) {
+  self.write = (data, color) => {
     color = color || true;
 
     if (!color) ansi.disable();
@@ -266,10 +261,9 @@ var Player = function PlayerConstructor(socket) {
    * Write based on player's locale
    * @param Localize l10n
    * @param string   key
-   * @param ...
    */
-  self.writeL10n = function(l10n, key) {
-    var locale = l10n.locale;
+  self.writeL10n = (l10n, key) => {
+    let locale = l10n.locale;
     if (self.getLocale()) {
       l10n.setLocale(self.getLocale());
     }
@@ -284,7 +278,7 @@ var Player = function PlayerConstructor(socket) {
    * write() + newline
    * @see self.write
    */
-  self.say = function(data, color) {
+  self.say = (data, color) => {
     color = color || true;
     if (!color) ansi.disable();
     socket.write(ansi.parse(wrap(data), 40) + "\r\n");
@@ -295,8 +289,8 @@ var Player = function PlayerConstructor(socket) {
    * writeL10n() + newline
    * @see self.writeL10n
    */
-  self.sayL10n = function(l10n, key) {
-    var locale = l10n.locale;
+  self.sayL10n = (l10n, key) => {
+    let locale = l10n.locale;
     if (self.getLocale()) {
       l10n.setLocale(self.getLocale());
     }
@@ -310,8 +304,8 @@ var Player = function PlayerConstructor(socket) {
    * Display the configured prompt to the player
    * @param object extra Other data to show
    */
-  self.prompt = function(extra) {
-    var pstring = self.getPrompt();
+  self.prompt = extra => {
+    let pstring = self.getPrompt();
     extra = extra || {};
 
     extra.health_condition = statusUtil.getHealthText(self.getAttribute(
@@ -319,7 +313,7 @@ var Player = function PlayerConstructor(socket) {
     extra.sanity_condition = statusUtil.getSanityText(self.getAttribute(
       'max_sanity'), self)(self.getAttribute('sanity'));
 
-    for (var data in extra) {
+    for (let data in extra) {
       pstring = pstring.replace("%" + data, extra[data]);
     }
 
@@ -330,12 +324,12 @@ var Player = function PlayerConstructor(socket) {
   /**
    * @see self.prompt
    */
-  self.combatPrompt = function(extra) {
+  self.combatPrompt = extra => {
     extra = extra || {};
 
-    var pstring = self.getCombatPrompt();
+    let pstring = self.getCombatPrompt();
 
-    for (var data in extra) {
+    for (let data in extra) {
       pstring = pstring.replace("%" + data, extra[data]);
     }
 
@@ -349,7 +343,7 @@ var Player = function PlayerConstructor(socket) {
    * of this stuff when we create a player, so make a separate method for it
    * @param object data Object should have all the things a player needs. Like spinach.
    */
-  self.load = function(data) {
+  self.load = data => {
     self.name = data.name;
     self.location = data.location;
     self.locale = data.locale;
@@ -363,7 +357,8 @@ var Player = function PlayerConstructor(socket) {
     self.explored = data.explored || [];
 
     // Activate any passive skills the player has
-    for (var skill in self.skills) {
+    //TODO: Change this once skills are revised.
+    for (let skill in self.skills) {
       if (Skills[self.getAttribute('class')][skill].type === 'passive') {
         self.useSkill(skill, self);
       }
@@ -375,30 +370,34 @@ var Player = function PlayerConstructor(socket) {
    * Save the player... who'da thunk it.
    * @param function callback
    */
-  self.save = function(callback) {
+  self.save = callback => {
     Data.savePlayer(self, callback);
   };
 
   /**
    * Get attack speed of a player
-   * @return float
+   * @return float milliseconds between attacks
    */
-  self.getAttackSpeed = function() {
-    var weapon = self.getEquipped('wield', true);
-    var minimum = 100;
+  self.getAttackSpeed = () => {
+    let weapon = self.getEquipped('wield', true);
+    let minimum = 100;
 
-    var speedFactor = weapon ? weapon.getAttribute('speed') || 2 : 2;
-    var speedDice = (self.getAttribute('quickness') + self.getAttribute(
+    let speedFactor = weapon ? weapon.getAttribute('speed') || 2 : 2;
+    let speedDice = (self.getAttribute('quickness') + self.getAttribute(
       'cleverness'));
 
-    var speed = Math.max(5000 - roll(speedDice, 100 / speedFactor), minimum);
+    let speedRoll = 5000 - roll(speedDice, 100 / speedFactor);
+
+    let speed = Math.max(speedRoll, minimum);
     util.log("Player's speed is ", speed);
 
     if (self.checkStance('precise')) speed = Math.round(speed * 1.5);
+    if (self.checkStance('berserk')) speed = Math.round(speed * .75);
 
     return speed;
   };
 
+  //TODO: Extract to random module.
   function roll(dice, sides) {
     return dice * (Math.floor(sides * Math.random()) + 1);
   }
@@ -407,27 +406,27 @@ var Player = function PlayerConstructor(socket) {
    * Get the damage a player can do
    * @return int
    */
-  self.getDamage = function() {
-    var weapon = self.getEquipped('wield', true)
-    var base = [1, self.getAttribute('stamina') + 1];
+  self.getDamage = () => {
+    let weapon = self.getEquipped('wield', true)
+    let base = [1, self.getAttribute('stamina') + 1];
 
-    var damage = weapon ?
+    let damage = weapon ?
       (weapon.getAttribute('damage') ?
         weapon.getAttribute('damage')
         .split('-')
-        .map(function(i) {
-          return parseInt(i, 10);
+        .map(dmg => {
+          return parseInt(dmg, 10);
         }) : base
       ) : base;
 
-    damage = damage.map(d => d + addDamageBonus(d));
+    damage = damage.map(dmg => dmg + addDamageBonus(dmg));
 
     return { min: damage[0], max: damage[1] };
   };
 
   function addDamageBonus(d) {
-    var stance = self.getPreference('stance');
-    var bonuses = {
+    let stance = self.getPreference('stance');
+    let bonuses = {
       'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
       'cautious': -(Math.round(d / 2)),
       'precise': 1
@@ -439,11 +438,11 @@ var Player = function PlayerConstructor(socket) {
    * Turn the player into a JSON string for storage
    * @return string
    */
-  self.stringify = function() {
-    var inv = [];
+  self.stringify = () => {
+    let inv = [];
 
     self.getInventory()
-      .forEach(function(item) {
+      .forEach(item => {
         inv.push(item.flatten());
       });
 
@@ -467,7 +466,7 @@ var Player = function PlayerConstructor(socket) {
   /**
    * Players will have some defined events so load them on creation
    */
-  self.init = function() {
+  self.init = () => {
     Data.loadListeners({ script: "player.js" }, l10n_dir, npcs_scripts_dir,
       self);
   };
