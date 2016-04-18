@@ -91,7 +91,7 @@ var Player = function PlayerConstructor(socket) {
   self.setPrompt = str => self.prompt_string = str;
   self.setCombatPrompt = str => self.combat_prompt = str;
   self.setLocale = locale => self.locale = locale;
-  self.setName = newname self.name = newname;
+  self.setName = newname => self.name = newname;
   self.setDescription = newdesc =>
     self.attributes.description =
       newdesc;
@@ -474,8 +474,9 @@ var Player = function PlayerConstructor(socket) {
   /**
    * Helper to activate skills
    * @param string skill
+   * @param [string] arguments
    */
-  self.useSkill = function(skill /*, args... */ ) {
+  self.useSkill = (skill /*, args... */ ) => {
     Skills[skill].activate.apply(null, [].slice
       .call(arguments)
       .slice(1));
@@ -486,11 +487,11 @@ var Player = function PlayerConstructor(socket) {
    * @param int damage
    * @param string location
    */
-  self.damage = function(dmg, location) {
+  self.damage = (dmg, location) => {
     if (!dmg) return;
     location = location || 'body';
 
-    damageDone = Math.max(1, dmg - soak(location));
+    let damageDone = Math.max(1, dmg - soak(location));
 
     self.setAttribute('health',
       Math.max(0, self.getAttribute('health') - damageDone));
@@ -501,7 +502,7 @@ var Player = function PlayerConstructor(socket) {
   };
 
   function soak(location) {
-    var defense = armor(location);
+    let defense = armor(location);
 
     if (location !== 'body')
       defense += armor('body');
@@ -517,8 +518,8 @@ var Player = function PlayerConstructor(socket) {
   }
 
   function armor(location) {
-    var bonus = self.checkStance('precise') ? self.getAttribute('willpower') + self.getAttribute('stamina') : 0
-    var item = self.getEquipped(location, true);
+    let bonus = self.checkStance('precise') ? self.getAttribute('willpower') + self.getAttribute('stamina') : 0
+    let item = self.getEquipped(location, true);
     if (item)
       return item.getAttribute('defense') * bonus;
     return 0;
