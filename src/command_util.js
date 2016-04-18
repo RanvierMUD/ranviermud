@@ -8,8 +8,11 @@ const CommandUtil = {
   findNpcInRoom:       _findNpcInRoom,
   otherPlayerInRoom:   _inSameRoom,
   inSameRoom:          _inSameRoom,
-  isDaytime:           _isDaytime,
   parseDot:            _parseDot,
+
+  //TODO: Extract into time module
+  isDaytime:           _isDaytime,
+
 
 };
 
