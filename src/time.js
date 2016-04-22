@@ -69,7 +69,7 @@ function emitWeather(weather, rooms, players) {
     .map(room => room.getLocation());
 
   const playersOutside = players
-    .some(player => outdoors.includes(player.getLocation()));
+    .filter(player => outdoors.includes(player.getLocation()));
 
   let message = colorTags[0] + weather + colorTags[1];
   playersOutside.forEach(player => player.say(message));

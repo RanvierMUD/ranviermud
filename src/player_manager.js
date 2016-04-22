@@ -56,13 +56,20 @@ var PlayerManager = function ()
 	};
 
 	/**
-	 * Return an array of players who meet the condition.
-	 * @param Callback callback
+	 * Return true if any players meet the condition.
+	 * @param Condition condition
 	 */
 	self.some = function (condition)
 	{
 		return self.players.some(condition);
 	};
+
+	/**
+	 * Return array of players who meet the condition
+	 * @param condition
+	 * @return [players]
+	 */
+	 self.filter = condition => self.players.filter(condition);
 
 	/**
 	 * Execute a function on all players except one
