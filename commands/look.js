@@ -10,6 +10,7 @@ var l10n = new require('jall')(require('js-yaml')
     .toString('utf8')), undefined, 'zz');
 var wrap = require('wrap-ansi');
 var util = require('util');
+var Time = require('../src/time').Time;
 l10n.throwOnMissingTranslation(false);
 
 exports.command = function(rooms, items, players, npcs, Commands) {
@@ -96,7 +97,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     var descPreference = player.getPreference('roomdescs');
 
-    if (CommandUtil.isDaytime()) {
+    if (Time.isDay()) {
 
       var showShortByDefault = (hasExplored === true && !descPreference === 'verbose');
 
@@ -105,7 +106,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       } else {
         player.say(wrap(room.getDescription(locale), 80));
       }
-      
+
     } else {
       player.say(wrap(room.getDarkDesc(locale), 80));
     }
