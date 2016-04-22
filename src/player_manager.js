@@ -56,12 +56,12 @@ var PlayerManager = function ()
 	};
 
 	/**
-	 * Execute a function on all players
+	 * Return an array of players who meet the condition.
 	 * @param Callback callback
 	 */
-	self.some = function (callback)
+	self.some = function (condition)
 	{
-		return self.players.some(callback);
+		return self.players.some(condition);
 	};
 
 	/**
