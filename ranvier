@@ -310,9 +310,9 @@ var wasDaytime = CommandUtil.isDaytime();
 
 setInterval(tick , 5000);
 function tick() {
-	let changeTime = wasDaytime !== CommandUtil.isDaytime();
-	if (changeTime) {
-		players.each( p => p.emit('changeTime', wasDaytime, rooms));
+	let timeChange = wasDaytime !== CommandUtil.isDaytime();
+	if (timeChange) {
+		players.each( p => p.emit('timeChange', wasDaytime, rooms));
 		wasDaytime = !wasDaytime;
 		util.log("The times, they are a-changin'...");
 	}
