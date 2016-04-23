@@ -263,7 +263,7 @@ var Player = function PlayerConstructor(socket) {
    * @param Localize l10n
    * @param string   key
    */
-  self.writeL10n = (l10n, key) => {
+  self.writeL10n = function (l10n, key) {
     let locale = l10n.locale;
     if (self.getLocale()) {
       l10n.setLocale(self.getLocale());
@@ -474,7 +474,7 @@ var Player = function PlayerConstructor(socket) {
    * @param string skill
    * @param [string] arguments
    */
-  self.useSkill = (skill /*, args... */ ) => {
+  self.useSkill = function (skill /*, args... */ ) {
     Skills[skill].activate.apply(null, [].slice
       .call(arguments)
       .slice(1));
