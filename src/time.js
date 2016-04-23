@@ -31,11 +31,10 @@ function _isNight() { return !_isDay(); }
  * @return string Weather message for player.
  */
 
- const weather = {
-   'day': ['stuff happens.'],
-   'night': ['stuff happens at night.'],
-   }
- };
+const weather = {
+  'day': ['stuff happens.'],
+  'night': ['stuff happens at night.'],
+};
 
 /**
  * Will semi-randomly emit weather events to all outdoors rooms.
