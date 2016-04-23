@@ -7,7 +7,8 @@ const Data = require('./data')
   ansi = require('sty'),
   util = require('util'),
   events = require('events'),
-  wrap = require('wrap-ansi');
+  wrap = require('wrap-ansi'),
+  Random = require('./random').Random;
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
 const l10n_dir = __dirname + '/../l10n/scripts/player/';
@@ -142,6 +143,7 @@ var Player = function PlayerConstructor(socket) {
     bonus = bonus || 1;
     difficulty = difficulty || 1;
 
+    //TODO: Consider using Random.roll instead.
     let chance = (Math.random() * bonus);
     let spotted = (self.getAttribute('cleverness') + chance >= difficulty);
 
@@ -386,7 +388,7 @@ var Player = function PlayerConstructor(socket) {
     let speedDice = (self.getAttribute('quickness') + self.getAttribute(
       'cleverness'));
 
-    let speedRoll = 5000 - roll(speedDice, 100 / speedFactor);
+    let speedRoll = 5000 - Random.roll(speedDice, 100 / speedFactor);
 
     let speed = Math.max(speedRoll, minimum);
     util.log("Player's speed is ", speed);
@@ -397,10 +399,7 @@ var Player = function PlayerConstructor(socket) {
     return speed;
   };
 
-  //TODO: Extract to random module.
-  function roll(dice, sides) {
-    return dice * (Math.floor(sides * Math.random()) + 1);
-  }
+
 
   /**
    * Get the damage a player can do

@@ -30,6 +30,7 @@ var net = require('net'),
 
 	PlayerManager = require('./src/player_manager').PlayerManager,
 	CommandUtil   = require('./src/command_util').CommandUtil,
+	Time          = require('./src/time').Time,
 
 	// third party
 	Localize  = require('jall'),
@@ -230,10 +231,11 @@ l10n.throwOnMissingTranslation(false);
  * Commands that the server executable itself accepts
  */
 var server_commands = {
+	save: save,
 	/**
 	 * Hotboot, AKA do everything involved with a restart but keep players connected
 	 */
-	hotboot : function (args)
+	hotboot: function (args)
 	{
 		args = args ? args.split(' ') : [];
 		var warn = args[0] && args[0] === 'warn';
@@ -306,20 +308,25 @@ var server_commands = {
 process.stdin.resume();
 
 // handle global-ish time-based events
-var wasDaytime = CommandUtil.isDaytime();
+var wasDaytime = Time.isDay();
 
 setInterval(tick , 5000);
 function tick() {
-	let changeTime = wasDaytime !== CommandUtil.isDaytime();
-	if (changeTime) {
-		players.each( p => p.emit('changeTime', wasDaytime, rooms));
+	let timeChange = wasDaytime !== Time.isDay();
+
+	if (timeChange) {
+		players.each( p => p.emit('timeChange', wasDaytime, rooms));
 		wasDaytime = !wasDaytime;
 		util.log("The times, they are a-changin'...");
 	}
+
 	npcs.each( npc => {
 		let room = rooms.getAt(npc.getRoom());
 		npc.emit('tick', room, rooms, null, players, npc);
 	});
+
+	let weatherHappened = Time.checkWeather(rooms, players);
+	if (weatherHappened) util.log("WEATHER REPORT: " + weatherHappened);
 }
 
 process.stdin.on('data', function (data)
@@ -332,6 +339,8 @@ process.stdin.on('data', function (data)
 		return;
 	}
 
-	server_commands[command](data.split(' ').slice(1).join(' '));
+	let args = data.split(' ').slice(1).join(' ');
+
+	server_commands[command](args);
 });
 // vim: set syn=javascript :
