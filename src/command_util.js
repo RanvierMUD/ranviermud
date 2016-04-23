@@ -10,10 +10,6 @@ const CommandUtil = {
   inSameRoom:          _inSameRoom,
   parseDot:            _parseDot,
 
-  //TODO: Extract into time module
-  isDaytime:           _isDaytime,
-
-
 };
 
 
@@ -32,17 +28,6 @@ function _inSameRoom(entity, target) {
       return entity.getRoom() === target.getLocation();
     }
   }
-}
-
-
-/**
- * @return boolean isDaytime
- */
-function _isDaytime() {
-  const time = new Date().getHours();
-  const daytime = time % 2;
-
-  return !!daytime;
 }
 
 

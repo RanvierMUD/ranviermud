@@ -10,6 +10,7 @@ var l10n = new require('jall')(require('js-yaml')
     .toString('utf8')), undefined, 'zz');
 var wrap = require('wrap-ansi');
 var util = require('util');
+var Time = require('../src/time').Time;
 l10n.throwOnMissingTranslation(false);
 
 exports.command = function(rooms, items, players, npcs, Commands) {
@@ -19,7 +20,10 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     var locale = player.getLocale();
     var thingIsPlayer = false;
 
+
     if (args) {
+      args = args.toLowerCase();
+
       // Look at items in the room first
       var thing = CommandUtil.findItemInRoom(items, args, room, player,
         true);
@@ -41,10 +45,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
 
       function isLookingAtSelf() {
-        return args.toLowerCase() === 'me' ||
-          args.toLowerCase() === 'self' ||
-          args.toLowerCase() === player.getName()
-          .toLowerCase()
+        var me = ['me', 'self', player.getName().toLowerCase()];
+        return me.includes(args);
       };
 
       if (!thing) {
@@ -54,8 +56,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       }
 
       function lookAtOther(p) {
-        if (args.toLowerCase() === p.getName()
-          .toLowerCase()) {
+        if (args === p.getName().toLowerCase()) {
           thing = p;
           player.sayL10n(l10n, 'IN_ROOM', thing.getName());
           thingIsPlayer = true;
@@ -67,7 +68,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         // then look at exits
         var exits = room.getExits();
         exits.forEach(exit => {
-          if (args.toLowerCase() === exit.direction) {
+          if (args === exit.direction) {
             thing = rooms.getAt(exit.location);
             player.say(thing.getTitle(locale));
           }
@@ -96,7 +97,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     var descPreference = player.getPreference('roomdescs');
 
-    if (CommandUtil.isDaytime()) {
+    if (Time.isDay()) {
 
       var showShortByDefault = (hasExplored === true && !descPreference === 'verbose');
 
@@ -105,7 +106,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       } else {
         player.say(wrap(room.getDescription(locale), 80));
       }
-      
+
     } else {
       player.say(wrap(room.getDarkDesc(locale), 80));
     }
@@ -121,9 +122,9 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     // show all the items in the rom
     room.getItems()
       .forEach(id => {
-        player.say('<magenta>' + items.get(id)
-          .getShortDesc(locale) +
-          '</magenta>');
+        player.say('<magenta>'
+        + items.get(id).getShortDesc(locale)
+        + '</magenta>');
       });
 
     // show all npcs in the room
@@ -150,8 +151,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       });
 
     player.write('[');
-    player.writeL10n(l10n, 'EXITS');
-    player.write(': ');
+    player.write('<cyan>Obvious exits: </cyan>');
     room.getExits()
       .forEach(function(exit) {
         player.write(exit.direction + ' ');
