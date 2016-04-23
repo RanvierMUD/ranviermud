@@ -46,7 +46,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
       function isLookingAtSelf() {
         var me = ['me', 'self', player.getName().toLowerCase()];
-        return me.includes(args);
+        return me.indexOf(args) !== -1;
       };
 
       if (!thing) {
