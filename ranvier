@@ -313,15 +313,20 @@ var wasDaytime = Time.isDay();
 setInterval(tick , 5000);
 function tick() {
 	let timeChange = wasDaytime !== Time.isDay();
+
 	if (timeChange) {
 		players.each( p => p.emit('timeChange', wasDaytime, rooms));
 		wasDaytime = !wasDaytime;
 		util.log("The times, they are a-changin'...");
 	}
+
 	npcs.each( npc => {
 		let room = rooms.getAt(npc.getRoom());
 		npc.emit('tick', room, rooms, null, players, npc);
 	});
+
+	let weatherHappened = Time.checkWeather(rooms, players);
+	if (weatherHappened) util.log("WEATHER REPORT: " + weatherHappened);
 }
 
 process.stdin.on('data', function (data)
@@ -334,6 +339,8 @@ process.stdin.on('data', function (data)
 		return;
 	}
 
-	server_commands[command](data.split(' ').slice(1).join(' '));
+	let args = data.split(' ').slice(1).join(' ');
+
+	server_commands[command](args);
 });
 // vim: set syn=javascript :

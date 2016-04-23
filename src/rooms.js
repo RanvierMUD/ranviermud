@@ -1,3 +1,4 @@
+'use strict';
 var fs = require('fs'),
   util = require('util'),
   events = require('events'),
@@ -29,7 +30,7 @@ var Rooms = function() {
         return;
       }
 
-      for (i in files) {
+      for (let i in files) {
         var file = rooms_dir + files[i];
         if (!fs.statSync(file)
           .isDirectory()) continue;
@@ -140,6 +141,19 @@ var Rooms = function() {
   };
 
   /**
+   * Filter rooms and return array of those meeting the criteria.
+   * @param condition
+   * @return array of rooms
+   */
+  self.filter = condition => {
+    let _rooms = [];
+    for (let room in self.rooms) {
+      _rooms.push(room);
+    }
+    return _rooms.filter(condition) || [];
+  };
+
+  /**
    * Get an area
    * @param string area
    * @return object
@@ -197,6 +211,7 @@ var Room = function(config) {
     return self.npcs;
   };
 
+  //FIXME:
   self.getBiome = () => self.biome;
 
   /**
