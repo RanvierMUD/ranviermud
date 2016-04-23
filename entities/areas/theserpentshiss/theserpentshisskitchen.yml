@@ -1,5 +1,5 @@
 - title:
-    en: "The Serpent's Hiss Kitchen"
+    en: "the kitchen"
   area: "The Serpent's Hiss"
   location: 2
   description:
@@ -8,7 +8,7 @@
     en: "This room is filled with old and rusty culinary equipment. Two sets of swinging doors lead to the taproom and a storage room."
   dark_desc:
     en: "The dim glow from the taproom spills in and reflects off the crooked angles of the stovetops. Red eyes watch you from forgotten nooks and crannies."
-  exits: 
+  exits:
     -
       location: 1
       direction: 'taproom'
@@ -19,4 +19,3 @@
       direction: 'storage'
       leave_message:
         en: ' nudges a crate of rice aside as they enter the dry storage room.'
-

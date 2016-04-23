@@ -1,10 +1,10 @@
 - title:
-    en: "Upstairs Hallway of The Serpent's Hiss"
+    en: "the upstairs hallway of the Serpent's Hiss"
   area: "The Serpent's Hiss"
   location: 4
   description:
     en: 'This hallway is painted in a sickly green shade, mottled with time, and the ceiling is papered over with a scale pattern. To the north are doors to two private rooms. On one is painted an adder, on the other a python. To the west, at the end of the hall, is a door painted with a cobra. To the east, a stairway leads down to the taproom.'
-  exits: 
+  exits:
     -
       location: 1
       direction: 'down'
@@ -18,7 +18,7 @@
     -
       location: 6
       direction: 'python'
-      door: 
+      door:
         locked: 'python key'
         mob_locked: 'true'
       leave_message:

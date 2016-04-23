@@ -93,7 +93,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     }
 
     // Render the room and its exits
-    player.say(room.getTitle(locale));
+    player.say(room.getArea() + ': ' + room.getTitle(locale));
 
     var descPreference = player.getPreference('roomdescs');
 

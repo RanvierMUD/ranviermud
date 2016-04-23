@@ -67,7 +67,7 @@ var Player = function PlayerConstructor(socket) {
    */
   self.getPrompt = () => self.prompt_string;
   self.getCombatPrompt = () => self.combat_prompt;
-  self.getLocale = () => {console.log(self.locale); return self.locale;};
+  self.getLocale = () => self.locale;
   self.getName = () => self.name;
   self.getDescription = () => self.attributes.description;
   self.getLocation = () => self.location;
