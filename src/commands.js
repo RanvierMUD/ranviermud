@@ -125,10 +125,10 @@ var Commands = {
   }
 };
 
-//FIXME: Alias is borked, at the very least it doesn't inject the player
-// for commands dependent on the player.
-// alias('exp', 'tnl');
-// alias('take', 'get');
+alias('exp', 'tnl');
+alias('take', 'get');
+alias('consider', 'appraise');
+alias('me', 'emote');
 
 exports.Commands = Commands;
 exports.Commands.move = move;
@@ -215,7 +215,7 @@ function move(exit, player) {
  * @param string target name of the command
  */
 function alias(name, target) {
-  Commands.player_commands[name] = () => {
+  Commands.player_commands[name] = function() {
     Commands.player_commands[target].apply(null, [].slice.call(arguments))
   };
 };
