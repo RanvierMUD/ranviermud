@@ -4,7 +4,7 @@ TARGET_MUCH_STRONGER:
 TARGET_STRONGER:
     en: "They look tough."
 TARGET_MUCH_WEAKER:
-    en: "Piece of cake."
+    en: "Easy prey."
 TARGET_WEAKER:
     en: "They don't look so tough."
 TARGET_SAME_LEVEL:
@@ -12,6 +12,6 @@ TARGET_SAME_LEVEL:
 MISSING_INFORMATION:
     en: "You're not so sure..."
 APPRAISE_COMBAT:
-    en: "You can't do that in the middle of a fight!"
+    en: "Too late for that, you're fighting already."
 TARGET_NOT_FOUND:
     en: "You don't see them here."

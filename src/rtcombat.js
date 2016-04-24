@@ -144,7 +144,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
   function decideHitLocation(locations, target, precise) {
     if (precise || Random.coinFlip()) {
       return target;
-    } else return CommandUtil.getRandomFromArr(locations);
+    } else return Random.fromArray(locations);
   }
 
   function calcRawDamage(damage, attr) {

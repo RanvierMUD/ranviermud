@@ -34,7 +34,7 @@ function _isNight() {
  * @return boolean WeatherHappened | string Weather that happened.
  */
 function _checkWeather(rooms, players) {
-  const shouldEmitWeather = Random.roll() >= 18;
+  const shouldEmitWeather = Random.roll(1, 100) >= 98;
 
   if (shouldEmitWeather) {
     const cycle = _isDay() ? 'day' : 'night';
@@ -53,8 +53,8 @@ function _checkWeather(rooms, players) {
  */
 function selectWeather(cycle, rooms, players) {
   const weather = {
-    'day': ['stuff happens.'],
-    'night': ['stuff happens at night.'],
+    'day': ['The clouds part for a second.', 'Rain spatters against the ground.'],
+    'night': ['It is raining.', 'Thunder crackles in the distance.'],
   };
   const weatherEvent = Random.fromArray(weather[cycle]);
   return emitWeather(weatherEvent, rooms, players);
