@@ -7,7 +7,7 @@ var CommandUtil = require('./command_util')
   .CommandUtil;
 var util = require('util');
 var statusUtils = require('./status');
-
+var Commands = require('./commands').Commands;
 
 
 function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callback) {
@@ -136,7 +136,15 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
         player, false)(player.getAttribute('health'))
     });
 
-    broadcastToArea("The sounds of a nearby struggle fill the air.");
+    var nearbyFight = [
+      "The sounds of a nearby struggle fill the air.",
+      "From the sound of it, a mortal struggle is happening nearby.",
+      "A cry from nearby! What could it be?",
+      "The sounds of a clash echo nearby.",
+      "You hear the sounds of flesh being rent, but you cannot tell from where."
+    ];
+
+    broadcastToArea(Random.fromArray(nearbyFight));
 
     setTimeout(a.attackRound, a.speed);
   }
