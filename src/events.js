@@ -194,7 +194,7 @@ var Events = {
 
           if (boot) {
             players.eachIf(haveSameName,
-              (p) => {
+              p => {
                 p.say("Replaced.");
                 p.emit('quit');
                 util.log("Replaced: ", p.getName());
