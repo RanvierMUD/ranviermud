@@ -39,14 +39,14 @@ var password_attempts = {};
  * @param string stage
  * @param object firstarg Override for the default arg
  */
-var gen_next = function(event) {
+var gen_next = function (event) {
   /**
    * Move to the next stage of a staged event
    * @param Socket|Player socket       Either a Socket or Player on which emit() will be called
    * @param string        nextstage
    * @param ...
    */
-  return function(socket, nextstage) {
+  return function (socket, nextstage) {
     var func = (socket instanceof Player ? socket.getSocket() : socket);
     func.emit.apply(func, [event].concat([].slice.call(arguments)));
   }
@@ -57,8 +57,8 @@ var gen_next = function(event) {
  * @param Array repeat_args
  * @return function
  */
-var gen_repeat = function(repeat_args, next) {
-  return function() {
+var gen_repeat = function (repeat_args, next) {
+  return function () {
     next.apply(null, [].slice.call(repeat_args))
   };
 };
@@ -80,6 +80,7 @@ var Events = {
      * @param Socket socket
      */
     login: function login(socket, stage, dontwelcome, name) {
+
       // dontwelcome is used to swallow telnet bullshit
       dontwelcome = typeof dontwelcome == -'undefined' ? false :
         dontwelcome;
@@ -105,7 +106,7 @@ var Events = {
             socket.write("Welcome, what is your name? ");
           }
 
-          socket.once('data', function(name) {
+          socket.once('data', function (name) {
 
             // swallow any data that's not from player input i.e., doesn't end with a newline
             // Windows can s@#* a d@#$
@@ -169,7 +170,7 @@ var Events = {
             if (pass[0] === 0xFA) {
               return next(socket, 'password', true, name);
             }
-            
+
             pass = crypto
               .createHash('md5')
               .update(pass.toString('').trim())
@@ -187,21 +188,18 @@ var Events = {
 
 
         case 'done':
-          
           var name = dontwelcome;
-          var haveSameName = p => {
-            p.getName() === name;
-          }
+          var haveSameName = p => p.getName().toLowerCase() === name.toLowerCase();
           var boot = players.some(haveSameName);
 
           if (boot) {
-            players.eachIf(haveSameName, 
-              (p) => {
-                p.emit('quit');
+            players.eachIf(haveSameName,
+              p => {
                 p.say("Replaced.");
-                util.log("Replaced: ", p);
+                p.emit('quit');
+                util.log("Replaced: ", p.getName());
                 players.removePlayer(p, true);
-            });
+              });
           }
 
           player = new Player(socket);
@@ -217,7 +215,7 @@ var Events = {
           // Load the player's inventory (There's probably a better place to do this)
           var inv = [];
           player.getInventory()
-            .forEach(function(item) {
+            .forEach(function (item) {
               item = new Item(item);
               items.addItem(item);
               inv.push(item);
@@ -239,10 +237,10 @@ var Events = {
      * Command loop
      * @param Player player
      */
-    commands: function(player) {
+    commands: function (player) {
       // Parse order is common direction shortcuts -> commands -> exits -> skills -> channels
       player.getSocket()
-        .once('data', function(data) {
+        .once('data', function (data) {
           data = data.toString()
             .trim();
 
@@ -356,7 +354,7 @@ var Events = {
      *                  the stage.
      * @param string stage See above
      */
-    createPlayer: function(socket, stage) {
+    createPlayer: function (socket, stage) {
       stage = stage || 'check';
 
       if (socket instanceof Player) {
@@ -375,7 +373,7 @@ var Events = {
           socket.write(
             "That player doesn't exist, would you like to create it? [y/n] "
           );
-          socket.once('data', function(check) {
+          socket.once('data', function (check) {
             check = check.toString()
               .trim()
               .toLowerCase();
@@ -396,7 +394,7 @@ var Events = {
           socket = new Player(socket);
           socket.write(L('NAME_PROMPT'));
           socket.getSocket()
-            .once('data', function(name) {
+            .once('data', function (name) {
               name = name.toString()
                 .trim();
               if (/\W/.test(name)) {
@@ -405,7 +403,7 @@ var Events = {
               }
 
               var player = false;
-              players.every(function(p) {
+              players.every(function (p) {
                 if (p.getName()
                   .toLowerCase() === name.toLowerCase()) {
                   player = true;
@@ -431,7 +429,7 @@ var Events = {
         case 'password':
           socket.write(L('PASSWORD'));
           socket.getSocket()
-            .once('data', function(pass) {
+            .once('data', function (pass) {
               pass = pass.toString()
                 .trim();
               if (!pass) {
@@ -449,7 +447,7 @@ var Events = {
             'What is your character\'s gender?\n[F]emale\n[M]ale\n[A]ndrogynous\n'
           );
           socket.getSocket()
-            .once('data', function(gender) {
+            .once('data', function (gender) {
               gender = gender.toString()
                 .toLowerCase();
               if (!gender) {
@@ -467,7 +465,7 @@ var Events = {
           socket.setLocale("en");
           socket.setLocation(players.getDefaultLocation());
           // create the pfile then send them on their way
-          socket.save(function() {
+          socket.save(function () {
             players.addPlayer(socket);
             socket.prompt();
             socket.getSocket()
@@ -479,7 +477,7 @@ var Events = {
       }
     }
   },
-  configure: function(config) {
+  configure: function (config) {
     players = players || config.players;
     items = items || config.items;
     rooms = rooms || config.rooms;
@@ -497,7 +495,7 @@ var Events = {
      * @param ...
      * @return string
      */
-    L = function(text) {
+    L = function (text) {
       return ansi(l10n.translate.apply(null, [].slice.call(arguments)));
     };
   }

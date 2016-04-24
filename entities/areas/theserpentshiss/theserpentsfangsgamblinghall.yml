@@ -1,10 +1,10 @@
 - title:
-    en: "The Serpent's Fangs Gambling Hall"
+    en: "the Serpent's Fangs gambling hall"
   area: "The Serpent's Hiss"
   location: 10
   description:
     en: "Above your head are the thick wooden joists supporting the taproom's floor. A chandelier hangs from them, covered in small glowing orbs that fill the room with a deep orange light. Red rugs are strewn haphazardly, as are half-broken card tables and a roulette wheel that has been knocked half off of its table. To the east is the reception area. To the north is a private room with a painting of a cobra and a python locked in mortal battle on its doors."
-  exits: 
+  exits:
     -
       location: 9
       direction: 'reception'

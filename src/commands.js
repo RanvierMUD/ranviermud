@@ -125,10 +125,10 @@ var Commands = {
   }
 };
 
-//FIXME: Alias is borked, at the very least it doesn't inject the player
-// for commands dependent on the player.
-// alias('exp', 'tnl');
-// alias('take', 'get');
+alias('exp', 'tnl');
+alias('take', 'get');
+alias('consider', 'appraise');
+alias('me', 'emote');
 
 exports.Commands = Commands;
 exports.Commands.move = move;
@@ -169,19 +169,19 @@ function move(exit, player) {
       if (p.getLocation() === player.getLocation()) {
         try {
           var leaveMessage = player.getName() + exit.leave_message[p.getLocale()] ||
-            null;
-          if (leaveMessage) p.say(leaveMessage);
-          else p.sayL10n(l10n, 'LEAVE', player.getName());
+            ' leaves.';
+          p.say(leaveMessage);
         } catch (e) {
           p.sayL10n(l10n, 'LEAVE', player.getName());
         }
       }
     });
 
-  players.eachExcept(player, p => {
-    if (p.getLocation() === player.getLocation()) {
-      p.prompt();
-    }
+  players.eachExcept(player,
+    p => {
+      if (p.getLocation() === player.getLocation()) {
+        p.prompt();
+      }
   });
 
   player.setLocation(exit.location);
@@ -215,7 +215,7 @@ function move(exit, player) {
  * @param string target name of the command
  */
 function alias(name, target) {
-  Commands.player_commands[name] = () => {
+  Commands.player_commands[name] = function() {
     Commands.player_commands[target].apply(null, [].slice.call(arguments))
   };
 };

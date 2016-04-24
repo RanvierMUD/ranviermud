@@ -1,5 +1,5 @@
 - title:
-    en: "The Serpent's Cage"
+    en: "the cage-like room in the corner"
   area: "The Serpent's Hiss"
   location: 11
   description:
@@ -9,9 +9,8 @@
   dark_desc:
     en: 'You can barely make out anything, but you can tell that the ground in here is not the wood flooring of the rest of the speakeasy, as it gives way easily under your feet.'
   script: '11.js'
-  exits: 
+  exits:
     -
       location: 10
       direction: 'out'
       mob_locked: 'true'
-

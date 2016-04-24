@@ -1,5 +1,5 @@
 - title:
-    en: Dry Storage
+    en: the dry storage room behind the kitchen
   area: "The Serpent's Hiss"
   location: 8
   description:
@@ -9,14 +9,14 @@
   dark_desc:
     en: "It's too dark in here to see much. It smells quite musty, though."
   script: '8.js'
-  exits: 
+  exits:
     -
       location: 2
       direction: 'kitchen'
     -
       location: 9
       direction: 'cellar'
-      door: 
+      door:
         locked: 'cellar key'
         mob_locked: 'true'
       leave_message:

@@ -1,5 +1,5 @@
 - title:
-    en: The Python Room
+    en: the Python room
   area: "The Serpent's Hiss"
   location: 6
   description:
@@ -8,10 +8,10 @@
     en: 'It is quite dark. Dark shapes in the corners suggest small beds and other furniture. A small amount of light creeps in through the door to the hallway.'
   short_desc:
     en: 'This room is filled with small, modest furnishings. The only way out is the way you came in.'
-  exits: 
+  exits:
     -
       location: 4
       direction: 'out'
-      door: 
+      door:
         locked: 'python key'
         mob_locked: 'true'
