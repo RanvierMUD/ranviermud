@@ -71,18 +71,18 @@ exports.Channels = {
 		use: (args, player, players) =>
 		{
 			var nameEnd = args.indexOf(" ");
-			var target = args.substring(0,nameEnd);
+			var target = args.substring(0,nameEnd).toLowerCase();
 			var text = args.substring(nameEnd);
-			var exists = players.some(p => p.getName() === target);
+			var exists = players.some(p => p.getName().toLowerCase() === target);
 			var name = player.getName();
 			if (exists) {
 				players.broadcastIf("<bold><magenta>" + player.getName() + " told you: " + text + "</magenta></bold>",
-					p => p.getName() === target);
+					p => p.getName().toLowerCase() === target);
 				player.say("<bold><magenta>You told " + target + ": " + text + "</magenta></bold>", player);
 			} else {
 				player.say("<bold><magenta>" + target + " is not logged in.</magenta></bold>", player);
 			}
-			players.eachIf( p => p.getName() === name || p.getName() === target,
+			players.eachIf( p => p.getName() === name || p.getName().toLowerCase() === target,
 			 p => p.prompt());
 		}
 	}
