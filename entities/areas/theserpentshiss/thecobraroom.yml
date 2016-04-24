@@ -1,5 +1,5 @@
 - title:
-    en: The Cobra Room
+    en: the Cobra room
   area: "The Serpent's Hiss"
   location: 7
   description:
@@ -8,7 +8,7 @@
       en: 'It is quite dark. A dark shape suggests a huge bed in the middle of the room. A small amount of light creeps in under the door to the hallway.'
     short_desc:
       en: 'This room is filled with an enormous bed. One wall is pocked with holes. The only way out is the way you came in.'
-  exits: 
+  exits:
     -
       location: 4
       direction: 'out'
