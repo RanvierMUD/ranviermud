@@ -1,7 +1,7 @@
 /**
- * Put affects you want to reuse in this file
+ * Put effects you want to reuse in this file
  */
-exports.Affects = {
+exports.Effects = {
 	/**
 	 * Generic slow
 	 //TODO: Make into "generic attribute lowering effect"

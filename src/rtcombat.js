@@ -1,17 +1,13 @@
 module.exports.initiate_combat = _initiate_combat;
 //TODO: Add strings for sanity damage
-//TODO: Implement use of attributes besides damage in combat.
-// ^^ this should be done in the npc/player src files
-//TODO: Implement use of combat stance, etc. for strategery.
-//FIXME: Combat ends when you die but you get double prompted.
-
+var Random = require('./random.js').Random;
 var LevelUtil = require('./levels')
   .LevelUtil;
 var CommandUtil = require('./command_util')
   .CommandUtil;
 var util = require('util');
 var statusUtils = require('./status');
-
+var Commands = require('./commands').Commands;
 
 
 function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callback) {
@@ -140,15 +136,23 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
         player, false)(player.getAttribute('health'))
     });
 
-    broadcastToArea("The sounds of a nearby struggle fill the air.");
+    var nearbyFight = [
+      "The sounds of a nearby struggle fill the air.",
+      "From the sound of it, a mortal struggle is happening nearby.",
+      "A cry from nearby! What could it be?",
+      "The sounds of a clash echo nearby.",
+      "You hear the sounds of flesh being rent, but you cannot tell from where."
+    ];
+
+    broadcastToArea(Random.fromArray(nearbyFight));
 
     setTimeout(a.attackRound, a.speed);
   }
 
   function decideHitLocation(locations, target, precise) {
-    if (precise || CommandUtil.isCoinFlip()) {
+    if (precise || Random.coinFlip()) {
       return target;
-    } else return CommandUtil.getRandomFromArr(locations);
+    } else return Random.fromArray(locations);
   }
 
   function calcRawDamage(damage, attr) {
@@ -209,6 +213,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
         npc.getAttribute('experience') : LevelUtil.mobExp(npc.getAttribute('level'));
       util.log("Player wins, exp gain: ", exp);
       player.emit('experience', exp);
+
     } else {
       util.log("Player death: ", player.getName());
       player.sayL10n(l10n, 'LOSE', npc.getShortDesc(locale));

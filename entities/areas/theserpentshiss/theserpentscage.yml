@@ -1,13 +1,16 @@
 - title:
-    en: "The Serpent's Cage"
+    en: "the cage-like room in the corner"
   area: "The Serpent's Hiss"
   location: 11
   description:
     en: 'The room of this floor, unlike the rest of the tavern, is covered in dirt and straw. Much of the straw is rust-colored, stained. "THE SERPENT S CA E" is spelled out in crimson stones on the wall to the north. Broken glass is strewn about in the corners of the small room.'
+  short_desc:
+    en: 'The floor of this dark, filthy back room is covered in broken glass, stones, and rust-colored stains.'
+  dark_desc:
+    en: 'You can barely make out anything, but you can tell that the ground in here is not the wood flooring of the rest of the speakeasy, as it gives way easily under your feet.'
   script: '11.js'
-  exits: 
+  exits:
     -
       location: 10
       direction: 'out'
       mob_locked: 'true'
-
