@@ -1,5 +1,5 @@
 // wear.js
-
+var util = require('util');
 var CommandUtil = require('../src/command_util').CommandUtil;
 var l10n_file = __dirname + '/../l10n/commands/wear.yml';
 var l10n = require('../src/l10n')(l10n_file);
@@ -16,22 +16,22 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     }
 
     if (!thing.getAttribute('wear_location')) {
-      console.log("No wear location.");
+      util.log("No wear location.");
       player.sayL10n(l10n, 'NO_WEAR_LOCATION', thing.getShortDesc(player.getLocale()));
       return;
     }
 
     var wear = player.getEquipped(thing.getAttribute('wear_location'));
     if (wear) {
-      console.log("Cannot wear due to already wearing an item.");
+      util.log("Cannot wear due to already wearing an item.");
       player.sayL10n(l10n, 'CANT_WEAR', items.get(wear).getShortDesc(player
         .getLocale()));
       return;
     }
 
     players.eachIf(
-      (p) => CommandUtil.otherPlayerInRoom(p, player),
-      (p) => {
+      p => CommandUtil.otherPlayerInRoom(p, player),
+      p => {
         p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), thing.getShortDesc(
           p.getLocale()));
         p.prompt();

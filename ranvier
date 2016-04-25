@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+'use strict';
 /**
  * Main file, use this to run the server:
  * node ranvier [options]
@@ -16,7 +17,7 @@ var net = require('net'),
 	util = require('util'),
 	express = require('express'),
 	commander = require('commander'),
-	wrap = require('wrap-ansi');
+	wrap = require('wrap-ansi'),
 
 	// local
 	Commands = require('./src/commands').Commands,
@@ -26,12 +27,15 @@ var net = require('net'),
 	Data     = require('./src/data').Data,
 	Events   = require('./src/events').Events,
 	Plugins  = require('./src/plugins'),
+
 	PlayerManager = require('./src/player_manager').PlayerManager,
+	CommandUtil   = require('./src/command_util').CommandUtil,
+	Time          = require('./src/time').Time,
 
 	// third party
 	Localize  = require('jall'),
-	argv = require('optimist').argv,
-	telnet = require('./src/3rdparty/telnet.js');
+	argv      = require('optimist').argv,
+	telnet    = require('./src/3rdparty/telnet.js');
 
 /**
  * These aren't really globals, they're only "global" to this file,
@@ -52,7 +56,7 @@ var net = require('net'),
 
 // cmdline options
 commander
-	.version('0.1.0') //TODO: yank from package.json
+	.version('0.2.1') //TODO: yank from package.json
 	.option('-s, --save [time]', 'Number of minutes between auto-save ticks [10]', 10)
 	.option('-r, --respawn [time]', 'Number of minutes between respawn tickets [20]', 20)
 	.option('-p, --port [portNumber]', 'Port to host telnet server [23]', 23)
@@ -227,10 +231,11 @@ l10n.throwOnMissingTranslation(false);
  * Commands that the server executable itself accepts
  */
 var server_commands = {
+	save: save,
 	/**
 	 * Hotboot, AKA do everything involved with a restart but keep players connected
 	 */
-	hotboot : function (args)
+	hotboot: function (args)
 	{
 		args = args ? args.split(' ') : [];
 		var warn = args[0] && args[0] === 'warn';
@@ -288,7 +293,7 @@ var server_commands = {
 			save();
 			server.emit('shutdown');
 			server.close();
-			players.each(function (p) { p.getSocket().end(); });
+			players.each( p => { p.getSocket().end(); });
 			init(true);
 		}, time);
 	}
@@ -301,6 +306,29 @@ var server_commands = {
 //});
 //
 process.stdin.resume();
+
+// handle global-ish time-based events
+var wasDaytime = Time.isDay();
+
+setInterval(tick , 5000);
+function tick() {
+	let timeChange = wasDaytime !== Time.isDay();
+
+	if (timeChange) {
+		players.each( p => p.emit('timeChange', wasDaytime, rooms));
+		wasDaytime = !wasDaytime;
+		util.log("The times, they are a-changin'...");
+	}
+
+	npcs.each( npc => {
+		let room = rooms.getAt(npc.getRoom());
+		npc.emit('tick', room, rooms, null, players, npc);
+	});
+
+	let weatherHappened = Time.checkWeather(rooms, players);
+	if (weatherHappened) util.log("WEATHER REPORT: " + weatherHappened);
+}
+
 process.stdin.on('data', function (data)
 {
 	data = data.trim();
@@ -311,6 +339,8 @@ process.stdin.on('data', function (data)
 		return;
 	}
 
-	server_commands[command](data.split(' ').slice(1).join(' '));
+	let args = data.split(' ').slice(1).join(' ');
+
+	server_commands[command](args);
 });
 // vim: set syn=javascript :
