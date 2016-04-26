@@ -16,11 +16,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return;
     }
 
+    const locale = player.getLocale() || 'en';
     const targetLevel = target.getAttribute('level') || null;
     const playerLevel = player.getAttribute('level') || null;
-    const targetName = target.getShortDesc() || null;
+    const targetName = target.getShortDesc(locale) || null;
 
     if (targetLevel && playerLevel && targetName) {
+      util.log(player.getName() + ' is considering ' + targetName + '.');
       player.sayL10n(l10n, getRelativeLevel(playerLevel, targetLevel), targetName);
       return;
     }
