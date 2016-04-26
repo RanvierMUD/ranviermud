@@ -35,12 +35,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function getLevelText(level) {
-      var titles = {
-        3: 'a novice',
-        8: 'a survivor',
-        13: 'an embittered survivor',
-        15: 'an aimless wanderer',
-        18: 'a purposeful wanderer',
+      const titles = {
+        3: ['a novice', 'a neonate'],
+        8: ['a survivor', 'a surveyor'],
+        13: ['an embittered survivor', 'the subject of hushed whispers'],
+        15: ['an aimless wanderer', 'a hoarder of truths', 'a conquerer of horrors'],
+        18: ['a purposeful wanderer', 'a distiller of fates', 'a hopeful figure amidst tragedy'],
         20: 'the perseverer',
         28: 'the outlaster',
         35: 'the indweller',
@@ -49,18 +49,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         55: 'the undying',
       };
 
-      for (var tier in titles) {
-        if (level < parseInt(tier)) {
-          return titles[tier];
-        }
-      }
+      const default = "the paragon";
+      return evalStatus(level, titles, 'reputation precedes you as ', default);
 
-      return "the paragon";
     }
 
 
     function getStamina(stamina) {
-      var status = {
+      const status = {
         2: 'pathetic',
         3: 'weak',
         5: 'mediocre',
@@ -69,16 +65,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         10: 'vigorous',
         12: 'fierce'
       };
-      var attrStr = 'strength and endurance are ';
-      return evalStatus(stamina, status, attrStr, 'unearthly savage',
+      const attrStr = 'strength and endurance are ';
+      const default = 'unearthly savage';
+      return evalStatus(stamina, status, attrStr, default,
         'blue');
     }
 
     function getQuickness(quickness) {
-      var gender = statusUtil.getGenderNoun(player.getGender());
-      var status = {
-        1: 'a slug',
-        2: 'a sloth',
+      const gender = statusUtil.getGenderNoun(player.getGender());
+      const status = {
+        1: 'sluggish',
+        2: 'slothlike',
         3: 'an old ' + gender,
         5: 'an average ' + gender,
         7: 'an athletic ' + gender,
@@ -86,13 +83,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         12: 'a leopard in the snow',
         16: 'a cheetah'
       };
-      var attrStr = 'quickness is comparable to '
+      const attrStr = 'quickness is '
       return evalStatus(quickness, status, attrStr, 'laser unicorns',
         'yellow');
     }
 
     function getCleverness(cleverness) {
-      var status = {
+      const status = {
         1: 'foggy',
         3: 'hazy',
         5: 'mundane at best',
@@ -101,12 +98,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         10: 'prodigious',
         12: 'wizardly'
       };
-      var attrStr = 'mental acuity is ';
+      const attrStr = 'mental acuity is ';
       return evalStatus(cleverness, status, attrStr, 'coruscating', 'red');
     }
 
     function getWillpower(willpower) {
-      var status = {
+      const status = {
         1: 'sapped',
         2: 'pitiful',
         4: 'secure',
@@ -114,20 +111,28 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         8: 'an imposing force',
         10: 'uncanny'
       };
-      var attrStr = 'will is ';
+      const attrStr = 'will is ';
+
       return evalStatus(willpower, status, attrStr, 'divine', 'bold');
     }
 
     // Helper functions
 
+
+
     function evalStatus(attr, status, attrStr,
       defaultStr, color) {
-      for (var tier in status) {
-        if (attr <= parseInt(tier)) {
+      color = color || 'magenta';
+      for (let tier in status) {
+        if (attr <= parseInt(tier, 10)) {
+          const isArrayOfStrings = status[tier].length && status[tier][0].length;
+          if (isArrayOfStrings) {
+            const choice = Random.fromArray(status[tier]);
+            return statusString(attrStr, choice, color);
+          }
           return statusString(attrStr, status[tier], color);
         }
-        return statusString(attrStr,
-          defaultStr, color);
+        return statusString(attrStr, defaultStr, color);
       }
     }
 
