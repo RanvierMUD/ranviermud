@@ -1,14 +1,15 @@
-var l10n_file = __dirname + '/../l10n/commands/character.yml';
-var l10n = require('../src/l10n')(l10n_file);
-var statusUtil = require('../src/status.js');
-exports.command = function(rooms, items, players, npcs, Commands) {
+const l10n_file = __dirname + '/../l10n/commands/character.yml';
+const l10n = require('../src/l10n')(l10n_file);
+const statusUtil = require('../src/status.js');
+const Random = require('../src/random.js').Random;
+exports.command = (rooms, items, players, npcs, Commands) => {
 
-  return function(args, player) {
+  return (args, player) => {
 
-    var character = player.getAttributes() || {};
+    const character = player.getAttributes() || {};
     player.sayL10n(l10n, 'ATTRIBUTES');
 
-    for (var attr in character) {
+    for (let attr in character) {
       if (attr.indexOf('max') === -1 && attr !== 'experience') {
         player.sayL10n(l10n, attr.toUpperCase(), getStatusString(attr,
           character[attr], character));
@@ -16,21 +17,18 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     }
 
     function getStatusString(attr, value, character) {
-      var maxHealth = character.max_health;
-      var maxSanity = character.max_sanity;
-      var status = {
-        level: getLevelText,
-        health: statusUtil.getHealthText(maxHealth, player, null, true),
-        class: function noop() {},
-        sanity: statusUtil.getSanityText(maxSanity, player),
-        stamina: getStamina,
-        willpower: getWillpower,
-        quickness: getQuickness,
-        cleverness: getCleverness,
-        mutagens: function() {
-          return value === 1 ? value + ' more time' : value +
-            ' more times';
-        },
+      const maxHealth = character.max_health;
+      const maxSanity = character.max_sanity;
+      const status = {
+        level:       getLevelText,
+        health:      statusUtil.getHealthText(maxHealth, player, null, true),
+        class:       () => {},
+        sanity:      statusUtil.getSanityText(maxSanity, player),
+        stamina:     getStamina,
+        willpower:   getWillpower,
+        quickness:   getQuickness,
+        cleverness:  getCleverness,
+        mutagens:    value => value === 1 ? value + ' more time' : value + ' more times',
         description: player.getDescription,
       };
       return status[attr](value) || '';
