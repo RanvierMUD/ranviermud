@@ -1,3 +1,4 @@
+'use strict';
 const l10n_file = __dirname + '/../l10n/commands/character.yml';
 const l10n = require('../src/l10n')(l10n_file);
 const statusUtil = require('../src/status.js');
@@ -49,8 +50,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         55: 'the undying',
       };
 
-      const default = "the paragon";
-      return evalStatus(level, titles, 'reputation precedes you as ', default);
+      const topTier = "the paragon";
+      const attrStr = 'reputation precedes you as ';
+      return evalStatus(level, titles, attrStr, topTier);
 
     }
 
@@ -66,8 +68,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         12: 'fierce'
       };
       const attrStr = 'strength and endurance are ';
-      const default = 'unearthly savage';
-      return evalStatus(stamina, status, attrStr, default,
+      const topTier = 'unearthly savage';
+      return evalStatus(stamina, status, attrStr, topTier,
         'blue');
     }
 
@@ -76,15 +78,16 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const status = {
         1: 'sluggish',
         2: 'slothlike',
-        3: 'an old ' + gender,
-        5: 'an average ' + gender,
-        7: 'an athletic ' + gender,
-        10: 'a fox',
-        12: 'a leopard in the snow',
-        16: 'a cheetah'
+        3: 'like an old ' + gender,
+        5: 'like an average ' + gender,
+        7: 'like an athletic ' + gender,
+        10: 'foxlike',
+        12: 'catlike',
+        16: 'like a cheetah'
       };
-      const attrStr = 'quickness is '
-      return evalStatus(quickness, status, attrStr, 'laser unicorns',
+      const attrStr = 'quickness is ';
+      const topTier = 'laser unicorns';
+      return evalStatus(quickness, status, attrStr, topTier,
         'yellow');
     }
 
@@ -99,7 +102,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         12: 'wizardly'
       };
       const attrStr = 'mental acuity is ';
-      return evalStatus(cleverness, status, attrStr, 'coruscating', 'red');
+      const topTier = 'coruscating';
+      return evalStatus(cleverness, status, attrStr, topTier, 'red');
     }
 
     function getWillpower(willpower) {
@@ -112,24 +116,24 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         10: 'uncanny'
       };
       const attrStr = 'will is ';
-
-      return evalStatus(willpower, status, attrStr, 'divine', 'bold');
+      const topTier = 'divine';
+      return evalStatus(willpower, status, attrStr, topTier, 'bold');
     }
 
     // Helper functions
 
-
-
-    function evalStatus(attr, status, attrStr,
-      defaultStr, color) {
+    function evalStatus(attr, status, attrStr, defaultStr, color) {
       color = color || 'magenta';
+
       for (let tier in status) {
         if (attr <= parseInt(tier, 10)) {
+
           const isArrayOfStrings = status[tier].length && status[tier][0].length;
           if (isArrayOfStrings) {
             const choice = Random.fromArray(status[tier]);
             return statusString(attrStr, choice, color);
           }
+
           return statusString(attrStr, status[tier], color);
         }
         return statusString(attrStr, defaultStr, color);

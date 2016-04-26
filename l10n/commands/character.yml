@@ -1,16 +1,16 @@
 ATTRIBUTES:
     en: "<yellow><bold>You reflect on your existence.</yellow></bold>"
-LEVEL: 
-    en: "<blue><bold>You are known as $[1].</blue></bold>"
+LEVEL:
+    en: "<bold>$[1]</bold>"
 HEALTH:
     en: "$[1]"
 CLASS:
     en: "Error Town!"
-EXPERIENCE: 
+EXPERIENCE:
     en: "Error Town!"
 DESCRIPTION:
     en: "In the mirror, you would see '$[1]'."
-SANITY: 
+SANITY:
     en: "$[1]"
 STAMINA:
     en: "$[1]"
