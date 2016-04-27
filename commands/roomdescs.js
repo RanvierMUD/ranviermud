@@ -1,14 +1,16 @@
-var l10n_file = __dirname + '/../l10n/commands/roomdescs.yml';
-var l10n = require('../src/l10n')(l10n_file);
-var Command_Util = require('../src/command_util')
+'use strict';
+const l10n_file = __dirname + '/../l10n/commands/roomdescs.yml';
+const l10n = require('../src/l10n')(l10n_file);
+const Command_Util = require('../src/command_util')
   .CommandUtil;
+const util = require('util');
 
-exports.command = function(rooms, items, players, npcs, Commands) {
-  return function(args, player) {
+exports.command = (rooms, items, players, npcs, Commands) => {
+  return (args, player) => {
 
-    var option = args.split(' ')[0].toLowerCase();
+    const option = args.split(' ')[0].toLowerCase();
 
-    var options = [
+    const options = [
       'default',
       'verbose',
       'short'
