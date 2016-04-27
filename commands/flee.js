@@ -30,6 +30,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       player.setInCombat(false);
 
       player.sayL10n(l10n, 'FLEE_SUCCEED');
+      util.log(player.getName() + " fled successfully.");
       move(exit, player);
       return;
     }
