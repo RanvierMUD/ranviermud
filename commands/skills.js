@@ -1,23 +1,33 @@
-var Skills = require('../src/skills').Skills;
-var l10n_file = __dirname + '/../l10n/commands/skills.yml';
-var l10n = require('../src/l10n')(l10n_file);
+'use strict';
+const Skills = require('../src/skills').Skills;
+const l10n_file = __dirname + '/../l10n/commands/skills.yml';
+const l10n = require('../src/l10n')(l10n_file);
 
-exports.command = function(rooms, items, players, npcs, Commands) {
-  return function(args, player) {
-    var skills = player.getSkills();
-    for (var sk in skills) {
-      var skill = Skills[player.getAttribute('class')][sk];
-      player.say("<yellow>" + skill.name + "</yellow>");
+exports.command = (rooms, items, players, npcs, Commands) => {
+  return (args, player) => {
+    /*
+    const skills = player.getSkills();
 
-      player.write("  ");
-      player.sayL10n(l10n, "SKILL_DESC", skill.description);
-      if (typeof skill.cooldown !== "undefined") {
+    //FIXME: Probably won't work because skills are borked.
+    for (let realm in skills) { // Physical or mental
+      player.say("<magenta>" + realm.toUpperCase() + "</magenta>");
+
+      for (let skill of Skills[realm]) {
+        player.say("<yellow>" + skill.name + "</yellow>");
         player.write("  ");
-        player.sayL10n(l10n, "SKILL_COOLDOWN", skill.cooldown);
+        player.sayL10n(l10n, "SKILL_DESC", skill.description);
+
+        if (typeof skill.cooldown !== "undefined") {
+          player.write("  ");
+          player.sayL10n(l10n, "SKILL_COOLDOWN", skill.cooldown);
+        }
+
+        player.say("");
+        return;
       }
-      player.say("");
-      return;
     }
+    */
     player.sayL10n(l10n, "NO_SKILLS");
+
   };
 };

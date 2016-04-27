@@ -1,14 +1,15 @@
-var l10n_file = __dirname + '/../l10n/commands/stance.yml';
-var l10n = require('../src/l10n')(l10n_file);
-var Command_Util = require('../src/command_util')
+const l10n_file = __dirname + '/../l10n/commands/stance.yml';
+const l10n = require('../src/l10n')(l10n_file);
+const Command_Util = require('../src/command_util')
   .CommandUtil;
+const util = require('util');
 
-exports.command = function(rooms, items, players, npcs, Commands) {
-  return function(args, player) {
+exports.command = (rooms, items, players, npcs, Commands) => {
+  return (args, player) => {
 
-    var stance = args.split(' ')[0].toLowerCase();
+    const stance = args.split(' ')[0].toLowerCase();
 
-    var stances = [
+    const stances = [
       'cautious',
       'normal',
       'berserk',
@@ -19,10 +20,9 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       player.setPreference('stance', stance);
       player.sayL10n(l10n, 'STANCE_SET', stance);
       players.eachIf(
-        CommandUtil.otherPlayerInRoom,
-        p => {
-          p.sayL10n('OTHER_STANCE', player.getName(), stance);
-        });
+        p => CommandUtil.otherPlayerInRoom(player, p),
+        p => p.sayL10n('OTHER_STANCE', player.getName(), stance)
+      );
       return;
     }
 
