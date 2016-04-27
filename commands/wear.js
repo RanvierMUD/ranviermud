@@ -1,11 +1,11 @@
-// wear.js
-var util = require('util');
-var CommandUtil = require('../src/command_util').CommandUtil;
-var l10n_file = __dirname + '/../l10n/commands/wear.yml';
-var l10n = require('../src/l10n')(l10n_file);
+'use strict';
+const util = require('util');
+const CommandUtil = require('../src/command_util').CommandUtil;
+const l10n_file = __dirname + '/../l10n/commands/wear.yml';
+const l10n = require('../src/l10n')(l10n_file);
 
-exports.command = function(rooms, items, players, npcs, Commands) {
-  return function(args, player) {
+exports.command = (rooms, items, players, npcs, Commands) => {
+  return (args, player) => {
     var cmds = args.split(' ');
 
     var thing = cmds[0];
@@ -36,9 +36,10 @@ exports.command = function(rooms, items, players, npcs, Commands) {
           p.getLocale()));
         p.prompt();
       });
-    
+
     var location = thing.getAttribute('wear_location');
     // thing.emit('wear', location, player, players);
+    //FIXME: Emitting wear does not always work. Perhaps due to items lackign scripts.
     player.equip(location, thing);
     player.sayL10n(l10n, 'YOU_WEAR', thing.getShortDesc(player.getLocale()));
   };
