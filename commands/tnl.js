@@ -1,15 +1,17 @@
-var sprintf = require('sprintf').sprintf;
-var LevelUtil = require('../src/levels').LevelUtil;
+'use strict';
+const sprintf = require('sprintf').sprintf;
+const LevelUtil = require('../src/levels').LevelUtil;
 
-exports.command = function(rooms, items, players, npcs, Commands) {
-  return function(args, player) {
-    var player_exp = player.getAttribute('experience');
-    var tolevel = LevelUtil.expToLevel(player.getAttribute('level'));
-    var percentage = (player_exp / tolevel) * 100;
-    var color = 'blue';
-    var msg = '...';
+exports.command = (rooms, items, players, npcs, Commands) => {
+  return (args, player) => {
+    const player_exp = player.getAttribute('experience');
+    const tolevel = LevelUtil.expToLevel(player.getAttribute('level'));
+    const percentage = (player_exp / tolevel) * 100;
+    const color = 'blue';
+    let msg = '...';
 
-    var toLevelStatus = {
+    //FIXME: What? 101% of to next level is possible?
+    const toLevelStatus = {
       10: 'You have far to go before advancing again.',
       25: 'You have a journey ahead before advancing.',
       50: 'You feel that you have more to learn before advancing.',
@@ -17,7 +19,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       101: 'You are on the cusp of a breakthrough...'
     };
 
-    for (var tier in toLevelStatus) {
+    for (let tier in toLevelStatus) {
       if (percentage <= parseInt(tier)) {
         msg = '<' + color + '>' + toLevelStatus[tier] +
           '.</' + color + '>';
