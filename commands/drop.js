@@ -1,10 +1,12 @@
-var l10n_file = __dirname + '/../l10n/commands/drop.yml';
-var l10n = require('../src/l10n')(l10n_file);
-var CommandUtil = require('../src/command_util').CommandUtil;
-exports.command = function(rooms, items, players, npcs, Commands) {
-  return function(args, player) {
-    var room = rooms.getAt(player.getLocation());
-    var item = CommandUtil.findItemInInventory(args, player, true);
+'use strict';
+const l10n_file = __dirname + '/../l10n/commands/drop.yml';
+const l10n = require('../src/l10n')(l10n_file);
+const CommandUtil = require('../src/command_util').CommandUtil;
+exports.command = (rooms, items, players, npcs, Commands) => {
+  return (args, player) => {
+    const room = rooms.getAt(player.getLocation());
+
+    let item = CommandUtil.findItemInInventory(args, player, true);
 
     if (!item) {
       player.sayL10n(l10n, 'ITEM_NOT_FOUND');
@@ -20,19 +22,23 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       }
     }
 
-    //TODO: Make broadcast
+    let playerName = player.getName();
+
     players.eachIf(
-      (p) => CommandUtil.otherPlayerInRoom(p, player),
-      (p) => {
-        p.sayL10n(l10n, 'OTHER_DROPS', player.getName(), item.getShortDesc(
+      p => CommandUtil.otherPlayerInRoom(p, player),
+      p => {
+        p.sayL10n(l10n, 'OTHER_DROPS', playerName, item.getShortDesc(
           p.getLocale()));
         p.prompt();
       });
 
-    player.sayL10n(l10n, 'ITEM_DROP', item.getShortDesc(player.getLocale()),
-      false);
-    room.getNpcs().forEach(function(id) {
-      npcs.get(id).emit('playerDropItem', room, player, players, item);
+    let itemName = item.getShortDesc(player.getLocale());
+    player.sayL10n(l10n, 'ITEM_DROP', itemName, false);
+    util.log(playerName + " drops " + itemName + " at " + room.getLocation() + ".");
+
+    room.getNpcs().forEach( id => {
+      let npc = npcs.get(id);
+      npc.emit('playerDropItem', room, player, players, item);
     });
 
     player.removeItem(item);
