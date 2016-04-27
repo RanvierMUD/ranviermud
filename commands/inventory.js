@@ -7,6 +7,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     player.sayL10n(l10n, 'INV');
 
+    util.log(player.getName() + '\'s inventory: ');
+
     // See how many of an item a player has so we can do stuff like (2) apple
     const itemCounts = {};
     const inventory = player.getInventory();
@@ -21,13 +23,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     inventory.forEach(item => {
         const vnum = item.getVnum();
         if (!(vnum in displayed) && !item.isEquipped()) {
-          displayed[vnum] = 1;
-          player.say((itemCounts[vnum] > 1 ? '(' + itemCounts[vnum] + ') ' : '') + item.getShortDesc(player.getLocale()));
+          displayed[vnum] = true;
+          let amount = itemCounts[vnum];
+          let prefix = amount > 1 ? '(' + amount + ') ' : '';
+          util.log(prefix + item.getShortDesc('en'));
+          player.say(prefix + item.getShortDesc(player.getLocale()));
         }
       });
 
-      util.log(player.getName() + '\'s inventory: ');
-      util.log(displayed);
 
       if (!Object.keys(displayed).length){
       	player.sayL10n(l10n, 'EMPTY');
