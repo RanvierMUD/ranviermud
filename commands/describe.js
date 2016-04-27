@@ -1,6 +1,7 @@
 'use strict';
 const l10n_file = __dirname + '/../l10n/commands/describe.yml';
 const l10n = require('../src/l10n')(l10n_file);
+const util = require('util');
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
   	if (args) {
