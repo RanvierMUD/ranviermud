@@ -81,6 +81,8 @@ var Events = {
      */
     login: function login(socket, stage, dontwelcome, name) {
 
+      util.log("Login event detected... ", stage);
+
       // dontwelcome is used to swallow telnet bullshit
       dontwelcome = typeof dontwelcome == -'undefined' ? false :
         dontwelcome;
@@ -471,6 +473,7 @@ var Events = {
             socket.getSocket()
               .emit('commands', socket);
           });
+          util.log("A NEW CHALLENGER APPROACHES: ", socket);
           players.broadcastL10n(l10n, 'WELCOME', socket.getName());
           break;
 

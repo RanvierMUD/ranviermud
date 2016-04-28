@@ -86,6 +86,7 @@ var Commands = {
    * @return boolean
    */
   room_exits: (exit, player) => {
+
     var room = rooms.getAt(player.getLocation());
     if (!room) {
       return false;
@@ -96,6 +97,7 @@ var Commands = {
         try {
           var regex = new RegExp("^" + exit);
         } catch (err) {
+          util.log(player.getName() + ' entered bogus command: ', exit);
           return false;
         }
         return e.direction.match(regex);
