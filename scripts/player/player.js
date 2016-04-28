@@ -1,6 +1,7 @@
 var LevelUtil = require('../../src/levels').LevelUtil,
   Skills = require('../../src/skills').Skills,
-  CommandUtil = require('../../src/command_util').CommandUtil;
+  CommandUtil = require('../../src/command_util').CommandUtil,
+  util = require('util');
 
 exports.listeners = {
 
@@ -16,7 +17,7 @@ exports.listeners = {
         var health = self.getAttribute('health');
         var regenerated = Math.floor(Math.random() * self.getAttribute('stamina') + bonus);
         regenerated = Math.min(self.getAttribute('max_health'), health + regenerated);
-
+        util.log(self.getName() + ' has regenerated up to ' + regenerated + ' health.');
         self.setAttribute('health', regenerated);
 
         if (regenerated === self.getAttribute('max_health')) {
@@ -34,6 +35,7 @@ exports.listeners = {
         return;
       }
 
+      util.log(this.getName() + ' has gained ' + experience + ' XP.');
       this.sayL10n(l10n, 'EXPGAIN', experience);
 
       var tnl = LevelUtil.expToLevel(this.getAttribute('level')) - this.getAttribute('experience');
@@ -52,6 +54,8 @@ exports.listeners = {
       var mPoints = this.getAttribute('mutagens');
       if (newlevel % 2 === 0) mPoints++;
 
+      var name = this.getName();
+      util.log(name + ' is now level ' + newlevel);
 
       this.sayL10n(l10n, 'LEVELUP');
       this.sayL10n(l10n, 'MUTAGEN_GAIN');
@@ -62,7 +66,7 @@ exports.listeners = {
       // do whatever you want to do here when a player levels up...
       this.setAttribute('max_health', health_gain);
       this.setAttribute('health', this.getAttribute('max_health'));
-
+      util.log(name + ' now has ' + health_gain + ' max health.');
       // Assign any new skills
       //TODO: Add better skill assignment event.
 
@@ -83,12 +87,14 @@ exports.listeners = {
     }
   },
 
+  //TODO: Permadeath, add it.
+
   die: function(l10n) {
     return function() {
       // they died, move then back to the start... you can do whatever you want instead of this
       this.setLocation(1);
       this.emit('regen');
-
+      util.log(this.getName() + ' died.');
       this.setAttribute('experience', this.getAttribute('experience') - Math.ceil((this.getAttribute('experience') * 0.10)));
     }
   },
