@@ -68,7 +68,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         8: ['vigorous', 'savage', 'interminable'],
         10: ['fierce', 'interminable']
       };
-      const attrStr = 'endurance is';
+      const attrStr = 'endurance is ';
       const topTier = 'unearthly';
       return evalStatus(stamina, status, attrStr, topTier,
         'blue');
@@ -84,7 +84,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         8: ['fleet foxes', 'those of nimble acrobats'],
         10: 'those of a wild cat stalking its prey'
       };
-      const attrStr = 'movements resemble';
+      const attrStr = 'movements resemble ';
       const topTier = 'a flash of light';
       return evalStatus(quickness, status, attrStr, topTier,
         'yellow');
