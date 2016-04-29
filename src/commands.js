@@ -139,6 +139,7 @@ exports.Commands.move = move;
  * Move helper method
  * @param object exit See the Room class for details
  * @param Player player
+ * @returns bool Moved (false if the move fails)
  */
 function move(exit, player) {
   rooms.getAt(player.getLocation())
@@ -151,7 +152,7 @@ function move(exit, player) {
       player.sayL10n(l10n, 'LOCKED');
       players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
         p => p.sayL10n(l10n, 'OTHER_LOCKED', player.getName()));
-      return;
+      return false;
     }
 
     player.sayL10n(l10n, 'UNLOCKED', key);
@@ -162,7 +163,7 @@ function move(exit, player) {
   var room = rooms.getAt(exit.location);
   if (!room) {
     player.sayL10n(l10n, 'LIMBO');
-    return;
+    return true;
   }
 
   // Send the room leave message
@@ -204,11 +205,15 @@ function move(exit, player) {
 
   room.emit('playerEnter', player, players);
 
+
   players.eachExcept(player, p => {
     if (p.getLocation() === player.getLocation()) {
       p.say(player.getName() + ' enters.');
     }
   });
+
+  return true;
+
 };
 
 /**
