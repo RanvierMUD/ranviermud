@@ -1,10 +1,11 @@
+'use strict';
 var util = require('util'),
   ansi = require('sty')
   .parse,
   fs = require('fs'),
   CommandUtil = require('./command_util')
-  .CommandUtil;
-l10nHelper = require('./l10n');
+  .CommandUtil,
+  l10nHelper = require('./l10n');
 var rooms = null;
 var players = null;
 var items = null;
@@ -62,7 +63,7 @@ var Commands = {
     // Load external commands
     fs.readdir(commands_dir,
       (err, files) => {
-        for (j in files) {
+        for (let j in files) {
           var command_file = commands_dir + files[j];
           if (!fs.statSync(command_file)
             .isFile()) continue;
@@ -149,11 +150,14 @@ function move(exit, player) {
     var key = exit.door.locked;
 
     if (!CommandUtil.findItemInInventory(key, player)) {
-      const roomTitle = rooms.getAt(exit.location).getTitle();
+      let roomTitle = rooms.getAt(exit.location).getTitle(player.getLocale());
       player.sayL10n(l10n, 'LOCKED', roomTitle);
       players.eachIf(
         p => CommandUtil.otherPlayerInRoom(player, p),
-        p => p.sayL10n(l10n, 'OTHER_LOCKED', player.getName(), roomTitle));
+        p => {
+          let roomTitle = rooms.getAt(exit.location).getTitle(p.getLocale());
+          p.sayL10n(l10n, 'OTHER_LOCKED', player.getName(), roomTitle);
+        });
       return false;
     }
 
