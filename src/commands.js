@@ -149,14 +149,17 @@ function move(exit, player) {
     var key = exit.door.locked;
 
     if (!CommandUtil.findItemInInventory(key, player)) {
-      player.sayL10n(l10n, 'LOCKED');
-      players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
+      const roomTitle = rooms.getAt(exit.location).getTitle();
+      player.sayL10n(l10n, 'LOCKED', roomTitle);
+      players.eachIf(
+        p => CommandUtil.otherPlayerInRoom(player, p),
         p => p.sayL10n(l10n, 'OTHER_LOCKED', player.getName()));
       return false;
     }
 
     player.sayL10n(l10n, 'UNLOCKED', key);
-    players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
+    players.eachIf(
+      p => CommandUtil.otherPlayerInRoom(player, p),
       p => p.sayL10n(l10n, 'OTHER_UNLOCKED', player.getName(), key));
   }
 
@@ -167,7 +170,8 @@ function move(exit, player) {
   }
 
   // Send the room leave message
-  players.eachExcept(player,
+  players.eachExcept(
+    player,
     p => {
       if (p.getLocation() === player.getLocation()) {
         try {
@@ -180,7 +184,8 @@ function move(exit, player) {
       }
     });
 
-  players.eachExcept(player,
+  players.eachExcept(
+    player,
     p => {
       if (p.getLocation() === player.getLocation()) {
         p.prompt();
@@ -197,19 +202,20 @@ function move(exit, player) {
 
   // Trigger the playerEnter event
   // See example in scripts/npcs/1.js
-  room.getNpcs()
-    .forEach(id => {
-      var npc = npcs.get(id);
-      npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
-    });
+  room.getNpcs().forEach(id => {
+    var npc = npcs.get(id);
+    npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
+  });
 
   room.emit('playerEnter', player, players);
 
-
-  players.eachExcept(player, p => {
-    if (p.getLocation() === player.getLocation()) {
-      p.say(player.getName() + ' enters.');
-    }
+  // Broadcast player entrance to new room.
+  players.eachExcept(
+    player,
+    p => {
+      if (p.getLocation() === player.getLocation()) {
+        p.say(player.getName() + ' enters.');
+      }
   });
 
   return true;
