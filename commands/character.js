@@ -11,7 +11,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     player.sayL10n(l10n, 'ATTRIBUTES');
 
     for (let attr in character) {
-      if (attr.indexOf('max') === -1 && attr !== 'experience') {
+      var shouldDisplay = attr.indexOf('max') === -1 && attr !== 'experience';
+      var hasMutagens = !(attr === 'mutagens' && !character[attr]);
+      if (shouldDisplay && hasMutagens) {
         player.sayL10n(l10n, attr.toUpperCase(), getStatusString(attr,
           character[attr], character));
       }
@@ -30,6 +32,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         quickness:   getQuickness,
         cleverness:  getCleverness,
         mutagens:    value => value === 1 ? value + ' more time' : value + ' more times',
+        skills:      () => {}, //TODO: Add training text.
         description: player.getDescription,
       };
       return status[attr](value) || '';
@@ -59,16 +62,16 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function getStamina(stamina) {
       const status = {
-        2: 'pathetic',
-        3: 'weak',
-        5: 'mediocre',
-        7: 'steady',
-        8: 'athletic',
-        10: 'vigorous',
-        12: 'fierce'
+        1: ['pathetic', 'meager', 'corpselike'],
+        2: ['weak', 'sorry', 'meager', 'frail'],
+        3: ['mediocre', 'below average', 'weak', 'short-lived', 'easily broken'],
+        5: ['steady', 'average'],
+        7: ['athletic', 'impressive', 'long-lasting'],
+        8: ['vigorous', 'savage', 'interminable'],
+        10: ['fierce', 'interminable']
       };
-      const attrStr = 'strength and endurance are ';
-      const topTier = 'unearthly savage';
+      const attrStr = 'endurance is ';
+      const topTier = 'unearthly';
       return evalStatus(stamina, status, attrStr, topTier,
         'blue');
     }
@@ -76,29 +79,27 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function getQuickness(quickness) {
       const gender = statusUtil.getGenderNoun(player.getGender());
       const status = {
-        1: 'sluggish',
-        2: 'slothlike',
-        3: 'like an old ' + gender,
-        5: 'like an average ' + gender,
-        7: 'like an athletic ' + gender,
-        10: 'foxlike',
-        12: 'catlike',
-        16: 'like a cheetah'
+        1: ['slugs crawling', 'a sloth\'s napping', 'a maimed duck', 'those of a three-legged cat'],
+        3: ['those of an old ' + gender, 'awkward lovemaking', 'an awkward puppy'],
+        5: ['those of an average ' + gender, 'a flowing stream'],
+        7: ['those of an athletic ' + gender, 'graceful dancing'],
+        8: ['fleet foxes', 'those of nimble acrobats'],
+        10: 'those of a wild cat stalking its prey'
       };
-      const attrStr = 'quickness is ';
-      const topTier = 'laser unicorns';
+      const attrStr = 'movements resemble ';
+      const topTier = 'a flash of light';
       return evalStatus(quickness, status, attrStr, topTier,
         'yellow');
     }
 
     function getCleverness(cleverness) {
       const status = {
-        1: 'foggy',
-        3: 'hazy',
-        5: 'mundane at best',
-        6: 'shrewd',
-        8: 'adept',
-        10: 'prodigious',
+        1: ['foggy', 'murky'],
+        3: ['hazy', 'bogged down'],
+        5: ['mundane at best', 'average', 'mediocre', 'unimpressive'],
+        6: ['shrewd', 'bright', 'clear'],
+        8: ['adept', 'impressive'],
+        10: ['prodigious', 'genius-level'],
         12: 'wizardly'
       };
       const attrStr = 'mental acuity is ';
@@ -108,10 +109,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function getWillpower(willpower) {
       const status = {
-        1: 'sapped',
-        2: 'pitiful',
-        4: 'secure',
-        6: 'unbending iron',
+        1: ['sapped', 'broken'],
+        2: ['pitiful', 'bent', 'brittle'],
+        4: ['secure', 'unbent'],
+        6: ['iron', 'unyielding'],
         8: 'an imposing force',
         10: 'uncanny'
       };
@@ -128,16 +129,16 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       for (let tier in status) {
         if (attr <= parseInt(tier, 10)) {
 
-          const isArrayOfStrings = status[tier].length && status[tier][0].length;
+          const isArrayOfStrings = status[tier].length && status[tier][0].length > 1;
           if (isArrayOfStrings) {
             const choice = Random.fromArray(status[tier]);
             return statusString(attrStr, choice, color);
           }
-
           return statusString(attrStr, status[tier], color);
         }
-        return statusString(attrStr, defaultStr, color);
       }
+
+      return statusString(attrStr, defaultStr, color);
     }
 
 
