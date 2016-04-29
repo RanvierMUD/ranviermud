@@ -109,7 +109,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const status = {
         1: ['sapped', 'broken'],
         2: ['pitiful', 'bent', 'brittle'],
-        4: ['secure', 'undent']
+        4: ['secure', 'unbent'],
         6: ['iron', 'unyielding'],
         8: 'an imposing force',
         10: 'uncanny'
