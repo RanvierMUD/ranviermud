@@ -1,10 +1,11 @@
+'use strict';
 var util = require('util'),
   ansi = require('sty')
   .parse,
   fs = require('fs'),
   CommandUtil = require('./command_util')
-  .CommandUtil;
-l10nHelper = require('./l10n');
+  .CommandUtil,
+  l10nHelper = require('./l10n');
 var rooms = null;
 var players = null;
 var items = null;
@@ -62,7 +63,7 @@ var Commands = {
     // Load external commands
     fs.readdir(commands_dir,
       (err, files) => {
-        for (j in files) {
+        for (let j in files) {
           var command_file = commands_dir + files[j];
           if (!fs.statSync(command_file)
             .isFile()) continue;
@@ -139,6 +140,7 @@ exports.Commands.move = move;
  * Move helper method
  * @param object exit See the Room class for details
  * @param Player player
+ * @returns bool Moved (false if the move fails)
  */
 function move(exit, player) {
   rooms.getAt(player.getLocation())
@@ -148,25 +150,32 @@ function move(exit, player) {
     var key = exit.door.locked;
 
     if (!CommandUtil.findItemInInventory(key, player)) {
-      player.sayL10n(l10n, 'LOCKED');
-      players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
-        p => p.sayL10n(l10n, 'OTHER_LOCKED', player.getName()));
-      return;
+      let roomTitle = rooms.getAt(exit.location).getTitle(player.getLocale());
+      player.sayL10n(l10n, 'LOCKED', roomTitle);
+      players.eachIf(
+        p => CommandUtil.otherPlayerInRoom(player, p),
+        p => {
+          let roomTitle = rooms.getAt(exit.location).getTitle(p.getLocale());
+          p.sayL10n(l10n, 'OTHER_LOCKED', player.getName(), roomTitle);
+        });
+      return false;
     }
 
     player.sayL10n(l10n, 'UNLOCKED', key);
-    players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
+    players.eachIf(
+      p => CommandUtil.otherPlayerInRoom(player, p),
       p => p.sayL10n(l10n, 'OTHER_UNLOCKED', player.getName(), key));
   }
 
   var room = rooms.getAt(exit.location);
   if (!room) {
     player.sayL10n(l10n, 'LIMBO');
-    return;
+    return true;
   }
 
   // Send the room leave message
-  players.eachExcept(player,
+  players.eachExcept(
+    player,
     p => {
       if (p.getLocation() === player.getLocation()) {
         try {
@@ -179,7 +188,8 @@ function move(exit, player) {
       }
     });
 
-  players.eachExcept(player,
+  players.eachExcept(
+    player,
     p => {
       if (p.getLocation() === player.getLocation()) {
         p.prompt();
@@ -196,19 +206,24 @@ function move(exit, player) {
 
   // Trigger the playerEnter event
   // See example in scripts/npcs/1.js
-  room.getNpcs()
-    .forEach(id => {
-      var npc = npcs.get(id);
-      npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
-    });
+  room.getNpcs().forEach(id => {
+    var npc = npcs.get(id);
+    npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
+  });
 
   room.emit('playerEnter', player, players);
 
-  players.eachExcept(player, p => {
-    if (p.getLocation() === player.getLocation()) {
-      p.say(player.getName() + ' enters.');
-    }
+  // Broadcast player entrance to new room.
+  players.eachExcept(
+    player,
+    p => {
+      if (p.getLocation() === player.getLocation()) {
+        p.say(player.getName() + ' enters.');
+      }
   });
+
+  return true;
+
 };
 
 /**

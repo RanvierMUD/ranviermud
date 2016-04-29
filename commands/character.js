@@ -11,8 +11,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     player.sayL10n(l10n, 'ATTRIBUTES');
 
     for (let attr in character) {
-      var shouldDisplay = attr.indexOf('max') === -1 && attr !== 'experience';
-      var hasMutagens = !(attr === 'mutagens' && !character[attr]);
+      const shouldDisplay = attr.indexOf('max') === -1 && attr !== 'experience';
+      const hasMutagens = !(attr === 'mutagens' && !character[attr]);
+
       if (shouldDisplay && hasMutagens) {
         player.sayL10n(l10n, attr.toUpperCase(), getStatusString(attr,
           character[attr], character));
