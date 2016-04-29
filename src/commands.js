@@ -153,7 +153,7 @@ function move(exit, player) {
       player.sayL10n(l10n, 'LOCKED', roomTitle);
       players.eachIf(
         p => CommandUtil.otherPlayerInRoom(player, p),
-        p => p.sayL10n(l10n, 'OTHER_LOCKED', player.getName()));
+        p => p.sayL10n(l10n, 'OTHER_LOCKED', player.getName(), roomTitle));
       return false;
     }
 
