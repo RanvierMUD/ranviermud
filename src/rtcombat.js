@@ -259,10 +259,13 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
   }
 
   function broadcastToArea(msg) {
-    players.eachExcept(player, function(p) {
-      if (rooms.getAt(p.getLocation())
-        .getArea() === rooms.getAt(player.getLocation())
-        .getArea()) {
+    players.eachExcept(player, p => {
+      const otherRoom = rooms.getAt(p.getLocation());
+      const playerRoom = rooms.getAt(player.getLocation());
+      const sameArea = otherRoom.getArea() === playerRoom.getArea();
+      const notSameRoom = otherRoom !== playerRoom;
+      
+      if (sameArea && notSameRoom) {
         p.say(msg);
         p.prompt();
       }
