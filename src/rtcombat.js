@@ -23,7 +23,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     'torso',
     'hands',
     'head'
-    ];
+  ];
 
   var p = {
     isPlayer: true,
@@ -194,7 +194,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
 
   function combat_end(success) {
 
-    util.log("*** Combat Over ***")
+    util.log("*** Combat Over ***");
 
     player.setInCombat(false);
     npc.setInCombat(false);

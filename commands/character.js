@@ -77,9 +77,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function getQuickness(quickness) {
       const gender = statusUtil.getGenderNoun(player.getGender());
       const status = {
-        1: ['slugs crawling', 'a sloth\'s napping'],
-        3: ['those of an old ' + gender, 'a maimed duck', 'those of a three-legged cat'],
-        5: ['those of an average ' + gender, 'awkward lovemaking', 'an awkward puppy'],
+        1: ['slugs crawling', 'a sloth\'s napping', 'a maimed duck', 'those of a three-legged cat'],
+        3: ['those of an old ' + gender, 'awkward lovemaking', 'an awkward puppy'],
+        5: ['those of an average ' + gender, 'a flowing stream'],
         7: ['those of an athletic ' + gender, 'graceful dancing'],
         8: ['fleet foxes', 'those of nimble acrobats'],
         10: 'those of a wild cat stalking its prey'
@@ -127,16 +127,16 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       for (let tier in status) {
         if (attr <= parseInt(tier, 10)) {
 
-          const isArrayOfStrings = status[tier].length && status[tier][0].length;
+          const isArrayOfStrings = status[tier].length && status[tier][0].length > 1;
           if (isArrayOfStrings) {
             const choice = Random.fromArray(status[tier]);
             return statusString(attrStr, choice, color);
           }
-
           return statusString(attrStr, status[tier], color);
         }
-        return statusString(attrStr, defaultStr, color);
       }
+
+      return statusString(attrStr, defaultStr, color);
     }
 
 
