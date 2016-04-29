@@ -15,10 +15,10 @@
     target: 'feet'
     max_health: 10
     health: 10
-    speed: .45
+    speed: .75
     damage: 1-9
     level: 2
-  defenses: 
+  defenses:
     body: 1
     head: -3
     torso: 1
