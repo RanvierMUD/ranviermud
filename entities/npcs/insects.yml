@@ -13,8 +13,8 @@
   behaviors: "rtcombat,randommove"
   attributes:
     target: 'feet'
-    max_health: 30
-    health: 20
+    max_health: 15
+    health: 15
     speed: 1
     damage: 1-2
     level: 1

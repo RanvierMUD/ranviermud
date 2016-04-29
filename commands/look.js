@@ -155,7 +155,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       });
 
     player.write('[');
-    player.write('<cyan>Obvious exits: </cyan>');
+    player.write('<yellow><bold>Obvious exits: </yellow></bold>');
     room.getExits()
       .forEach(function(exit) {
         player.write(exit.direction + ' ');
