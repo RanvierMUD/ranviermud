@@ -23,7 +23,7 @@ exports.Skills = {
     name: "Lockpick",
     description: "Your ability to pick or force open locked doors or containers.",
     attribute: "cleverness",
-    activate: () => { util.log("Activated lockpick."); };
+    activate: () => { util.log("Activated lockpick."); },
   }
 };
 
