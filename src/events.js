@@ -289,15 +289,13 @@ var Events = {
               'd': 'down'
             };
 
-            if (command in directions) {
-              for (var alias in directions) {
-                if (command.toLowerCase() === alias) {
-                  Commands.room_exits(directions[alias], player);
-                  return true;
-                }
-              }
+            if (command.toLowerCase() in directions) {
+              const exit = directions[command.toLowerCase()];
+              Commands.room_exits(exit, player);
+              return true;
             }
           }
+
 
           function checkForCmd(command) {
             for (var cmd in Commands.player_commands) {
@@ -314,6 +312,8 @@ var Events = {
 
           function checkForSkillsChannelsOrExit(command, args) {
             var exit = Commands.room_exits(command, player);
+
+            //TODO: Refactor as to not rely on negative conditionals as much?
             if (exit === false) {
               if (!(command in player.getSkills())) {
                 if (!(command in Channels)) {

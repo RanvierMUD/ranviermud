@@ -475,9 +475,8 @@ var Player = function PlayerConstructor(socket) {
    * @param [string] arguments
    */
   self.useSkill = function (skill /*, args... */ ) {
-    Skills[skill].activate.apply(null, [].slice
-      .call(arguments)
-      .slice(1));
+    const args = [].slice.call(arguments).slice(1)
+    Skills[skill].activate.apply(null, args);
   };
 
   /**
