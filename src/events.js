@@ -268,7 +268,7 @@ var Events = {
               else if (found === true) return;
 
               if (found) return getCmd(found, args);
-              else return checkForSkillsChannelsOrExit(command, args);
+              else return checkForSpecializedCommand(command, args);
 
             } else return getCmd(command, args);
           }
@@ -310,24 +310,23 @@ var Events = {
             }
           }
 
-          function checkForSkillsChannelsOrExit(command, args) {
+          // Handles skills, feats, exits
+          function checkForSpecializedCommand(command, args) {
             var exit = Commands.room_exits(command, player);
 
             //TODO: Refactor as to not rely on negative conditionals as much?
             if (exit === false) {
-              if (!(command in player.getSkills())) {
+              var isSpecialAbility = (command in player.getSkills() || command in player.getFeats());
+              if (!isSpecialAbility) {
                 if (!(command in Channels)) {
                   player.say(command + " is not a valid command.");
                   return true;
                 } else {
-                  Channels[command].use(args, player, players,
-                    rooms);
+                  Channels[command].use(args, player, players, rooms);
                   return true
                 }
               } else {
-                player.useSkill(command, player, args,
-                  rooms,
-                  npcs);
+                player.useSkill(command, player, args, rooms, npcs);
                 return true;
               }
             }

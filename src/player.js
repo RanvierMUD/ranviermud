@@ -8,7 +8,8 @@ const Data = require('./data')
   util = require('util'),
   events = require('events'),
   wrap = require('wrap-ansi'),
-  Random = require('./random').Random;
+  Random = require('./random').Random,
+  Feats = require('./feats').Feats;
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
 const l10n_dir = __dirname + '/../l10n/scripts/player/';
@@ -354,15 +355,16 @@ var Player = function PlayerConstructor(socket) {
     self.equipment = data.equipment || {};
     self.attributes = data.attributes;
     self.skills = data.skills;
+    self.feats = data.feats || {};
     self.preferences = data.preferences || {};
     self.explored = data.explored || [];
 
     // Activate any passive skills the player has
     //TODO: Change this once skills are revised.
-    for (let skill in self.skills) {
-      let skillType = Skills[skill].type;
-      if (skillType === 'passive') {
-        self.useSkill(skill, self);
+    for (let feat in self.feats) {
+      let featType = Feats[feat].type;
+      if (featType === 'passive') {
+        self.useSkill(feat, self);
       }
     }
 
@@ -456,6 +458,7 @@ var Player = function PlayerConstructor(socket) {
       equipment: self.equipment,
       attributes: self.attributes,
       skills: self.skills,
+      feats: self.feats,
       gender: self.gender,
       preferences: self.preferences,
       explored: self.explored
