@@ -268,7 +268,7 @@ var Events = {
               else if (found === true) return;
 
               if (found) return getCmd(found, args);
-              else return checkForSkillsChannelsOrExit(command, args);
+              else return checkForSpecializedCommand(command, args);
 
             } else return getCmd(command, args);
           }
@@ -289,15 +289,13 @@ var Events = {
               'd': 'down'
             };
 
-            if (command in directions) {
-              for (var alias in directions) {
-                if (command.toLowerCase() === alias) {
-                  Commands.room_exits(directions[alias], player);
-                  return true;
-                }
-              }
+            if (command.toLowerCase() in directions) {
+              const exit = directions[command.toLowerCase()];
+              Commands.room_exits(exit, player);
+              return true;
             }
           }
+
 
           function checkForCmd(command) {
             for (var cmd in Commands.player_commands) {
@@ -312,22 +310,23 @@ var Events = {
             }
           }
 
-          function checkForSkillsChannelsOrExit(command, args) {
+          // Handles skills, feats, exits
+          function checkForSpecializedCommand(command, args) {
             var exit = Commands.room_exits(command, player);
+
+            //TODO: Refactor as to not rely on negative conditionals as much?
             if (exit === false) {
-              if (!(command in player.getSkills())) {
+              var isSpecialAbility = (command in player.getSkills() || command in player.getFeats());
+              if (!isSpecialAbility) {
                 if (!(command in Channels)) {
                   player.say(command + " is not a valid command.");
                   return true;
                 } else {
-                  Channels[command].use(args, player, players,
-                    rooms);
+                  Channels[command].use(args, player, players, rooms);
                   return true
                 }
               } else {
-                player.useSkill(command, player, args,
-                  rooms,
-                  npcs);
+                player.useSkill(command, player, args, rooms, npcs);
                 return true;
               }
             }
