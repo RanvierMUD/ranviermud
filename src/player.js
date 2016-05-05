@@ -360,7 +360,8 @@ var Player = function PlayerConstructor(socket) {
     // Activate any passive skills the player has
     //TODO: Change this once skills are revised.
     for (let skill in self.skills) {
-      if (Skills[self.getAttribute('class')][skill].type === 'passive') {
+      let skillType = Skills[skill].type;
+      if (skillType === 'passive') {
         self.useSkill(skill, self);
       }
     }
@@ -478,6 +479,8 @@ var Player = function PlayerConstructor(socket) {
     const args = [].slice.call(arguments).slice(1)
     Skills[skill].activate.apply(null, args);
   };
+
+
 
   /**
    * Helper to calculate physical damage
