@@ -26,23 +26,3 @@ exports.Skills = {
     activate: () => { util.log("Activated lockpick."); },
   }
 };
-
-// physical: {
-//   leatherskin: {
-//     type: 'passive',
-//     cost: 2,
-//     // no prereqs
-//     name: "Leatherskin",
-//     description: "Your skin has become tougher, and you are better able to take physical damage.",
-//     activate: function(player) {
-//       if (player.getEffects('leatherskin')) {
-//         player.removeEffect('leatherskin');
-//       }
-//       player.addEffect('leatherskin', Effects.health_boost({
-//         magnitude: 50,
-//         //consider adding +1 to stamina
-//         player: player,
-//         event: 'quit'
-//       }));
-//     }
-//   }
