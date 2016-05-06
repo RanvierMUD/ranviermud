@@ -89,24 +89,6 @@ exports.Effects = {
    * [config.duration]: amount of time to boost health
    * [config.event]: event to trigger health boost
    */
-  health_boost: function (config) {
-    var affect = {
-      activate: function () {
-        config.player.setAttribute('max_health', config.player.getAttribute('max_health') + config.magnitude);
-        config.player.setAttribute('health', config.player.getAttribute('max_health'));
-      },
-      deactivate: function () {
-        config.player.setAttribute('max_health', config.player.getAttribute('max_health') - config.magnitude);
-        config.player.setAttribute('health', config.player.getAttribute('max_health'));
-      }
-    };
+  health_boost:  config => buffWithMax('health', config),
 
-    if (config.duration) {
-      affect.duration = config.duration;
-    } else if (config.event) {
-      affect.event = config.event;
-    }
-
-    return affect;
-  }
 };
