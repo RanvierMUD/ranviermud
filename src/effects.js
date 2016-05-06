@@ -2,7 +2,8 @@
 const util = require('util');
 
 /**
- * Put effects you want to reuse in this file
+ * Reusable helper functions and defaults for effects.
+ * Pass in the attribute/whatever else changes, along with the config.
  */
 
 const defaultDuration = 10 * 1000;
@@ -13,10 +14,14 @@ const debuff = (attribute, config) => {
 };
 
 const buff = (attribute, config) => {
+	util.log('Buffing ' + attribute + ': ', config);
 	const original = config.target.getAttribute(attribute);
 	return {
 		duration: config.duration || defaultDuration,
-		activate: () => config.target.setAttribute(attribute, original + config.magnitude);
+		activate: () => {
+			config.target.setAttribute(attribute, original + config.magnitude);
+			if (config.activate) { config.activate(); }
+		},
 		deactivate: () => {
 			if (config.target) {
 				config.target.setAttribute(attribute, original);
@@ -27,6 +32,8 @@ const buff = (attribute, config) => {
 };
 
 const buffWithMax = (attribute, config) => {
+	util.log('Buffing ' + attribute + ': ', config);
+
 	const max = 'max_' + attribute;
 	const original = config.player.getAttribute(attribute);
 	const originalMax = config.player.getAttribute(max);
@@ -39,17 +46,23 @@ const buffWithMax = (attribute, config) => {
 		deactivate: () => {
 			config.player.setAttribute(max, originalMax);
 			config.player.setAttribute(attribute, Math.min(originalMax, config.player.getAttribute(attribute)));
+			if (config.deactivate) { config.deactivate(); }
 		},
 		duration: config.duration || defaultDuration,
 		event: config.event
+
 	};
 };
 
 const multiply = (attribute, config) => {
+	util.log('Multiplying ' + attribute + ': ', config);
 	const original = config.target.getAttribute(attribute);
 	return {
 		duration: config.duration || defaultDuration,
-		activate: () => config.target.setAttribute(attribute, original * config.magnitude);
+		activate: () => {
+			config.target.setAttribute(attribute, original * config.magnitude);
+			if (config.activate) { config.activate(); }
+		},
 		deactivate: () => {
 			if (config.target) {
 				config.target.setAttribute(attribute, original);
@@ -60,17 +73,21 @@ const multiply = (attribute, config) => {
 };
 
 exports.Effects = {
-    /**
-     * Generic slow
-     */
-  slow: config => multiply('speed', config),
   /**
-   * Generic health boost
-   //TODO: Make into "generic attribute boosting effect"
-   * config.player: player whose health is boosted
-   * config.magnitude: amt to boost health by
-   * config.duration: (opt)amount of time to boost health
-   * config.event: (opt)event to trigger health boost
+   * Slow
+	 * config.target: NPC to slow
+	 * config.magnitude: amount to slow npc by (.5 would be half)
+	 * [config.duration]: amount to slow npc for
+	 * [config.deactivate]: function to execute after duration is over
+   */
+  slow: config => multiply('speed', config),
+
+  /**
+   * Health boost
+	 * config.player: player whose health is boosted
+   * config.magnitude: amount to boost health by
+   * [config.duration]: amount of time to boost health
+   * [config.event]: event to trigger health boost
    */
   health_boost: function (config) {
     var affect = {
