@@ -1,57 +1,94 @@
+'use strict';
+const util = require('util');
+
 /**
- * Put effects you want to reuse in this file
+ * Reusable helper functions and defaults for effects.
+ * Pass in the attribute/whatever else changes, along with the config.
  */
-exports.Effects = {
-	/**
-	 * Generic slow
-	 //TODO: Make into "generic attribute lowering effect"
-	 * config.target: thing being slowed
-	 */
-	slow: function (config)
-	{
-		var original_speed = config.target.getAttribute('speed');
-		return {
-			activate: function () {
-				config.target.setAttribute('speed', original_speed * config.magnitude);
-			},
-			deactivate : function () {
-				if (config.target && config.target.isInCombat()) {
-					config.target.setAttribute('speed', original_speed);
-					if (config.deactivate) {
-						config.deactivate();
-					}
-				}
-			},
-			duration: config.duration
-		}
-	},
-	/**
-	 * Generic health boost
-	 //TODO: Make into "generic attribute boosting effect"
-	 * config.player: player whose health is boosted
-	 * config.magnituse: amt to boost health by
-	 * config.duration: (opt)amount of time to boost health
-	 * config.event: (opt)event to trigger health boost
-	 */
-	health_boost: function (config)
-	{
-		var affect = {
-			activate: function () {
-				config.player.setAttribute('max_health', config.player.getAttribute('max_health') + config.magnitude);
-				config.player.setAttribute('health', config.player.getAttribute('max_health'));
-			},
-			deactivate: function () {
-				config.player.setAttribute('max_health', config.player.getAttribute('max_health') - config.magnitude);
-				config.player.setAttribute('health', config.player.getAttribute('max_health'));
+
+const defaultDuration = 10 * 1000;
+
+const debuff = (attribute, config) => {
+	config.magnitude = -config.magnitude;
+	return buff(attribute, config);
+};
+
+const buff = (attribute, config) => {
+	util.log('Buffing ' + attribute + ': ', config);
+	const original = config.target.getAttribute(attribute);
+	return {
+		duration: config.duration || defaultDuration,
+		activate: () => {
+			config.target.setAttribute(attribute, original + config.magnitude);
+			if (config.activate) { config.activate(); }
+		},
+		deactivate: () => {
+			if (config.target) {
+				config.target.setAttribute(attribute, original);
+				if (config.deactivate) { config.deactivate(); }
 			}
-		};
-
-		if (config.duration) {
-			affect.duration = config.duration;
-		} else if (config.event) {
-			affect.event = config.event;
 		}
+	};
+};
 
-		return affect;
-	}
+const buffWithMax = (attribute, config) => {
+	util.log('Buffing ' + attribute + ': ', config);
+
+	const max = 'max_' + attribute;
+	const original = config.player.getAttribute(attribute);
+	const originalMax = config.player.getAttribute(max);
+
+	return {
+		activate: () => {
+			config.player.setAttribute(max, originalMax + config.magnitude);
+			config.player.setAttribute(attribute, original + config.magnitude);
+		},
+		deactivate: () => {
+			config.player.setAttribute(max, originalMax);
+			config.player.setAttribute(attribute, Math.min(originalMax, config.player.getAttribute(attribute)));
+			if (config.deactivate) { config.deactivate(); }
+		},
+		duration: config.duration || defaultDuration,
+		event: config.event
+
+	};
+};
+
+const multiply = (attribute, config) => {
+	util.log('Multiplying ' + attribute + ': ', config);
+	const original = config.target.getAttribute(attribute);
+	return {
+		duration: config.duration || defaultDuration,
+		activate: () => {
+			config.target.setAttribute(attribute, original * config.magnitude);
+			if (config.activate) { config.activate(); }
+		},
+		deactivate: () => {
+			if (config.target) {
+				config.target.setAttribute(attribute, original);
+				if (config.deactivate) { config.deactivate(); }
+			}
+		}
+	};
+};
+
+exports.Effects = {
+  /**
+   * Slow
+	 * config.target: NPC to slow
+	 * config.magnitude: amount to slow npc by (.5 would be half)
+	 * [config.duration]: amount to slow npc for
+	 * [config.deactivate]: function to execute after duration is over
+   */
+  slow: config => multiply('speed', config),
+
+  /**
+   * Health boost
+	 * config.player: player whose health is boosted
+   * config.magnitude: amount to boost health by
+   * [config.duration]: amount of time to boost health
+   * [config.event]: event to trigger health boost
+   */
+  health_boost:  config => buffWithMax('health', config),
+
 };
