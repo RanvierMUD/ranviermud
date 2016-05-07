@@ -1,12 +1,13 @@
 'use strict';
 const getGenderNoun = require('./status').getGenderNoun;
+const newLine = new RegExp('\\n');  
 
 exports.Channels = {
 	say: {
 		name: 'say',
 		description: 'Talk to those around you',
 		use: (args, player, players) => {
-			args = args.replace("\033", '');
+			args = args.replace(newLine, '');
 			players.broadcastAt("<bold><cyan>" + player.getName() + "</cyan></bold> says '" + args + "'", player);
 			players.eachExcept(player, p => {
 				if (p.getLocation() === player.getLocation()) {
@@ -20,7 +21,7 @@ exports.Channels = {
 		name: 'chat',
 		description: 'Talk to everyone online',
 		use: (args, player, players) => {
-			args = args.replace("\033", '');
+			args = args.replace(newLine, '');
 			players.broadcast("<bold><magenta>[chat] " + player.getName() + ": " + args + "</magenta></bold>", player);
 			players.eachExcept(player, p => p.prompt());
 		}
@@ -30,7 +31,7 @@ exports.Channels = {
 		name: 'yell',
 		description: 'Yell to everyone in the same area',
 		use: (args, player, players, rooms) => {
-			args = args.replace("\033", '').toUpperCase();
+			args = args.replace(newLine, '').toUpperCase();
 
 			const playerRoom = rooms.getAt(player.getLocation());
 			const playerArea = playerRoom.getArea();
