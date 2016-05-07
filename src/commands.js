@@ -97,8 +97,9 @@ const Commands = {
 
     const exits = room.getExits()
       .filter( e => {
+        let regex;
         try {
-          const regex = new RegExp("^" + exit);
+          regex = new RegExp("^" + exit);
         } catch (err) {
           util.log(player.getName() + ' entered bogus command: ', exit);
           return false;
