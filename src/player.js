@@ -87,6 +87,10 @@ var Player = function PlayerConstructor(socket) {
     typeof self.skills[skill] !== 'undefined' ? self.skills[skill] :
       self.skills;
 
+    self.getFeats = feat =>
+      typeof self.feats[feat] !== 'undefined' ? self.feats[feat] :
+        self.feats;
+
   self.getPassword = () => self.password; // Returns hash.
   self.isInCombat = () => self.in_combat;
 
@@ -479,6 +483,10 @@ var Player = function PlayerConstructor(socket) {
    * @param [string] arguments
    */
   self.useSkill = function (skill /*, args... */ ) {
+    if (!Skills[skill]) {
+      util.log("skill not found: ", skill);
+      return;
+    }
     const args = [].slice.call(arguments).slice(1)
     Skills[skill].activate.apply(null, args);
   };
