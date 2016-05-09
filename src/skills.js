@@ -20,6 +20,7 @@ const L = function(locale, cls, key /*, args... */ ) {
 
 // For activate functions:
 // Command event passes in player, args, rooms, npcs.
+// TODO: Find a way to broadcast skill use to players in room.
 
 exports.Skills = {
 
@@ -31,6 +32,7 @@ exports.Skills = {
     attribute: "cleverness",
     activate: (player, target, rooms, npcs) => {
       if (target) {
+        util.log(player.getName() + ' is trying to pick a lock...');
         const room = rooms.getAt(player.getLocation());
         const exits = room.getExits();
         const possibleTargets = exits
@@ -51,6 +53,7 @@ exports.Skills = {
               exit.door.locked = false;
               move(exit, player, true);
             } else {
+              util.log(player.getName() + " fails to pick lock.");
               player.say("<red>You fail to unlock the door.</red>");
               return;
             }
