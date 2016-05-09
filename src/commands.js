@@ -121,7 +121,7 @@ const Commands = {
       return;
     }
 
-    move(exits.pop(), player, players);
+    move(exits.pop(), player);
 
     return true;
   },
@@ -152,7 +152,7 @@ function move(exit, player) {
   rooms.getAt(player.getLocation())
     .emit('playerLeave', player, players);
 
-  if ('door' in exit && 'locked' in exit.door) {
+  if ('door' in exit && exit.door.locked) {
     var key = exit.door.locked;
 
     if (!CommandUtil.findItemInInventory(key, player)) {
@@ -169,6 +169,7 @@ function move(exit, player) {
       return false;
     }
 
+    exit.door.locked = false;
     player.sayL10n(l10n, 'UNLOCKED', key);
     players.eachIf(
       p => CommandUtil.otherPlayerInRoom(player, p),

@@ -97,6 +97,10 @@ function _findItemInInventory(lookString, being, hydrate) {
  * @return object
  */
 function _parseDot(arg, objects, filterFunc) {
+  if (!arg) {
+    util.log(arguments);
+    return;
+  }
   let keyword = arg.split(' ')[0];
   let multi = false;
   let nth = null;
