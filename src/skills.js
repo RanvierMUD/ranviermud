@@ -34,23 +34,24 @@ exports.Skills = {
         const room = rooms.getAt(player.getLocation());
         const exits = room.getExits();
         const possibleTargets = exits
-          .filter(e => e.direction === target.toLowerCase());
+          .filter(e => e.direction.indexOf(target.toLowerCase()) > -1);
 
-        if (possibleTargets.length === 1) {
+        if (possibleTargets && possibleTargets.length === 1) {
           const exit = possibleTargets[0];
           const isDoor = exit.hasOwnProperty('door');
           const isLocked = isDoor && exit.door.locked;
 
           if (isLocked) {
             player.say("<yellow>You attempt to unlock the door...</yellow>");
-            const lockpicking = player.getSkills('lockpick');
+            const lockpicking = player.getSkills('pick');
             const challenge = parseInt(exit.door.difficulty || 10, 10);
 
             if (lockpicking > challenge){
-              player.say("You unlock the door!");
-              move(exit, player);
+              player.say("<bold><cyan>You unlock the door!<cyan></bold>");
+              exit.door.locked = false;
+              move(exit, player, true);
             } else {
-              player.say("You fail to unlock the door.");
+              player.say("<red>You fail to unlock the door.</red>");
               return;
             }
           } else if (isDoor) {
