@@ -316,8 +316,10 @@ var Events = {
 
             //TODO: Refactor as to not rely on negative conditionals as much?
             if (exit === false) {
-              var isSpecialAbility = (command in player.getSkills() || command in player.getFeats());
-              if (!isSpecialAbility) {
+              var isSkill = command in player.getSkills();
+              var isFeat = command in player.getFeats();
+
+              if (!isSkill && !isFeat) {
                 if (!(command in Channels)) {
                   player.say(command + " is not a valid command.");
                   return true;
@@ -326,7 +328,8 @@ var Events = {
                   return true
                 }
               } else {
-                player.useSkill(command, player, args, rooms, npcs);
+                var use = isSkill ? player.useSkill : player.useFeat;
+                use(command, player, args, rooms, npcs);
                 return true;
               }
             }

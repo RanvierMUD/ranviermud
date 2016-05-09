@@ -83,13 +83,11 @@ var Player = function PlayerConstructor(socket) {
   self.getPreference = pref => typeof self.preferences[pref] !== 'undefined' ?
     self.preferences[pref] : false;
 
-  self.getSkills = skill =>
-    typeof self.skills[skill] !== 'undefined' ? self.skills[skill] :
-      self.skills;
+  self.getSkills = skill => typeof self.skills[skill] !== 'undefined' ?
+    self.skills[skill] : self.skills;
 
-    self.getFeats = feat =>
-      typeof self.feats[feat] !== 'undefined' ? self.feats[feat] :
-        self.feats;
+  self.getFeats = feat => typeof self.feats[feat] !== 'undefined' ?
+    self.feats[feat] : self.feats;
 
   self.getPassword = () => self.password; // Returns hash.
   self.isInCombat = () => self.in_combat;
@@ -175,7 +173,7 @@ var Player = function PlayerConstructor(socket) {
    * @param object effect
    */
   self.addEffect = (name, effect) => {
-    if (affect.activate) {
+    if (effect.activate) {
       effect.activate();
     }
 
@@ -184,7 +182,7 @@ var Player = function PlayerConstructor(socket) {
         effect.deactivate();
         self.prompt();
       }
-      self.removeAffect(name);
+      self.removeEffect(name);
     };
 
     if (effect.duration) {
@@ -368,7 +366,7 @@ var Player = function PlayerConstructor(socket) {
     for (let feat in self.feats) {
       let featType = Feats[feat].type;
       if (featType === 'passive') {
-        self.useSkill(feat, self);
+        self.useFeat(feat, self);
       }
     }
 
@@ -478,9 +476,10 @@ var Player = function PlayerConstructor(socket) {
   };
 
   /**
-   * Helper to activate skills
-   * @param string skill
+   * Helpers to activate skills or feats
+   * @param string skill/feat
    * @param [string] arguments
+   * Command event passes in player, args, rooms, npcs.
    */
   self.useSkill = function (skill /*, args... */ ) {
     if (!Skills[skill]) {
@@ -489,6 +488,15 @@ var Player = function PlayerConstructor(socket) {
     }
     const args = [].slice.call(arguments).slice(1)
     Skills[skill].activate.apply(null, args);
+  };
+
+  self.useFeat = function (feat /*, args... */ ) {
+    if (!Feats[feat]) {
+      util.log("feat not found: ", feat);
+      return;
+    }
+    const args = [].slice.call(arguments).slice(1)
+    Feats[feat].activate.apply(null, args);
   };
 
 
