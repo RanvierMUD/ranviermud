@@ -22,6 +22,8 @@ var L = function (locale, cls, key /*, args... */ ) {
 
 // For activate functions:
 // Command event passes in player, args, rooms, npcs.
+// TODO: Find a way to broadcast feat use to players in same room/area.
+
 
 exports.Feats = {
 
