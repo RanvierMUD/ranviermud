@@ -20,14 +20,18 @@ var L = function (locale, cls, key /*, args... */ ) {
   return l10n.translate.apply(null, [].slice.call(arguments).slice(2));
 };
 
+// For activate functions:
+// Command event passes in player, args, rooms, npcs.
+
 exports.Feats = {
 
+  /// Passive feats
   leatherskin: {
     type: 'passive',
     cost: 2,
     prereqs: {
       'stamina': 2,
-      'willpower': 2
+      'willpower': 2,
     },
     name: "Leatherskin",
     description: "Your skin has become tougher, and you are better able to take physical damage.",
@@ -41,6 +45,7 @@ exports.Feats = {
         player: player,
         event: 'quit'
       }));
+      player.say('Your skin hardens.');
     }
   }
 };
