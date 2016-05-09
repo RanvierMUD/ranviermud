@@ -44,7 +44,7 @@ exports.Skills = {
           if (isLocked) {
             player.say("<yellow>You attempt to unlock the door...</yellow>");
             const lockpicking = player.getSkills('lockpick');
-            const challenge = parseInt(exit.door.locked)
+            const challenge = parseInt(exit.door.difficulty || 10, 10);
 
             if (lockpicking > challenge){
               player.say("You unlock the door!");
