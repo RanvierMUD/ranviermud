@@ -329,7 +329,7 @@ var Events = {
                 }
               } else {
                 var use = isSkill ? player.useSkill : player.useFeat;
-                use(command, player, args, rooms, npcs);
+                use(command, player, args, rooms, npcs, players);
                 return true;
               }
             }

@@ -2,15 +2,15 @@
 const Effects = require('./effects.js').Effects;
 const util = require('util');
 const move = require('./commands').Commands.move;
-
+const CommandUtil = require('./command_util').CommandUtil;
 
 const l10n_dir = __dirname + '/../l10n/skills/';
 let l10ncache = {};
+
 /**
  * Localization helper
  * @return string
  */
-
 const L = function(locale, cls, key /*, args... */ ) {
   var l10n_file = l10n_dir + cls + '.yml';
   var l10n = l10ncache[cls + locale] || require('./l10n')(l10n_file);
@@ -19,8 +19,7 @@ const L = function(locale, cls, key /*, args... */ ) {
 };
 
 // For activate functions:
-// Command event passes in player, args, rooms, npcs.
-// TODO: Find a way to broadcast skill use to players in room.
+// Command event passes in player, args, rooms, npcs, players.
 
 exports.Skills = {
 
@@ -30,13 +29,15 @@ exports.Skills = {
     name: "Lockpick",
     description: "Your ability to pick or force open locked doors or containers.",
     attribute: "cleverness",
-    activate: (player, target, rooms, npcs) => {
+    activate: (player, target, rooms, npcs, players) => {
       if (target) {
-        util.log(player.getName() + ' is trying to pick a lock...');
         const room = rooms.getAt(player.getLocation());
         const exits = room.getExits();
+        const name = player.getName();
         const possibleTargets = exits
           .filter(e => e.direction.indexOf(target.toLowerCase()) > -1);
+
+        util.log(name + ' is trying to pick a lock...');
 
         if (possibleTargets && possibleTargets.length === 1) {
           const exit = possibleTargets[0];
@@ -47,14 +48,23 @@ exports.Skills = {
             player.say("<yellow>You attempt to unlock the door...</yellow>");
             const lockpicking = player.getSkills('pick');
             const challenge = parseInt(exit.door.difficulty || 10, 10);
+            const getExitDesc = locale => rooms.getAt(exit.location).getTitle(locale);
 
             if (lockpicking > challenge){
               player.say("<bold><cyan>You unlock the door!<cyan></bold>");
+              players.eachIf(
+                p => CommandUtil.inSameRoom(player, p),
+                p => p.say(name + ' swiftly picks the lock to ' + getExitDesc(p.getLocale()) + '.')
+              );
               exit.door.locked = false;
               move(exit, player, true);
             } else {
-              util.log(player.getName() + " fails to pick lock.");
+              util.log(name + " fails to pick lock.");
               player.say("<red>You fail to unlock the door.</red>");
+              players.eachIf(
+                p => CommandUtil.inSameRoom(player, p),
+                p => p.say(name + ' tries to unlock the door to ' + getExitDesc(p.getLocale()) +', but fails to pick it.')
+              );
               return;
             }
           } else if (isDoor) {
