@@ -33,6 +33,7 @@ exports.Feats = {
     prereqs: {
       'stamina': 2,
       'willpower': 2,
+      'level': 2,
     },
     name: "Leatherskin",
     description: "Your skin has become tougher, and you are better able to take physical damage.",
