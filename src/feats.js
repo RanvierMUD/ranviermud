@@ -21,7 +21,8 @@ var L = function (locale, cls, key /*, args... */ ) {
 };
 
 // For activate functions:
-// Command event passes in player, args, rooms, npcs.
+// Command event passes in player, args, rooms, npcs, players.
+
 
 exports.Feats = {
 
