@@ -41,5 +41,3 @@ function purchaseFeat(player, feat) {
   player.gainFeat(feat);
   if (feat.type === 'passive') { feat.activate(player); }
 }
-
-//TODO: Extract into command_util.js
