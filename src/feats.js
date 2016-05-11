@@ -36,6 +36,7 @@ exports.Feats = {
       'level': 2,
     },
     name: "Leatherskin",
+    id: "leatherskin",
     description: "Your skin has become tougher, and you are better able to take physical damage.",
     activate: player => {
       util.log(player.getName() + ' activates Leatherskin.');

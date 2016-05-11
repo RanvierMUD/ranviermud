@@ -364,8 +364,9 @@ var Player = function PlayerConstructor(socket) {
     self.explored = data.explored || [];
 
     // Activate any passive skills the player has
-    //TODO: Change this once skills are revised.
+    //TODO: Probably a better way to do this than toLowerCase.
     for (let feat in self.feats) {
+      feat = feat.toLowerCase();
       let featType = Feats[feat].type;
       if (featType === 'passive') {
         self.useFeat(feat, self);
