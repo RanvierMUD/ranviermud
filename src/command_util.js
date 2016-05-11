@@ -139,6 +139,7 @@ function _parseDot(arg, objects, filterFunc) {
  * @return  bool True if they meet all conditions and can afford the feat.
  */
 function _meetsPrerequisites(player, feat) {
+  util.log('checking');
   if (!feat.prereqs && !feat.cost) { return true; }
   const attributes = player.getAttributes();
 
