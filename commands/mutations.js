@@ -6,12 +6,10 @@ const util = require('util');
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     const playerFeats = player.getFeats() || {};
-    util.log(Object.keys(playerFeats));
     let ownFeats = [];
     let availableFeats = [];
 
     for (let feat in Feats) {
-      util.log(availableFeats, ownFeats);
       const available = CommandUtil.meetsPrerequisites(player, Feats[feat]);
       const owned = Feats[feat].name in playerFeats;
 
