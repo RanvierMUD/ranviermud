@@ -6,8 +6,9 @@ var LevelUtil = require('../../src/levels').LevelUtil,
 
 exports.listeners = {
 
-  regen: l10n => {
-    return bonus => {
+  // Function wrappers needed to access "this" (Player obj)
+  regen: function(l10n) {
+    return function(bonus) {
       bonus = bonus || 1;
       const self = this;
       const regenInterval = 2000;
@@ -29,8 +30,8 @@ exports.listeners = {
     }
   },
 
-  experience: l10n => {
-    return experience => {
+  experience: function(l10n) {
+    return function(experience) {
 
       const maxLevel = 60;
       if (this.getAttribute('level') >= maxLevel) {
@@ -51,32 +52,33 @@ exports.listeners = {
   },
 
   level: function(l10n) {
+    const self = this;
     return () => {
-      const name = this.getName();
-      const newlevel = this.getAttribute('level') + 1;
-      const healthGain = Math.ceil(this.getAttribute('max_health') * 1.10);
-      const mPoints = this.getAttribute('mutagens');
+      const name = self.getName();
+      const newlevel = self.getAttribute('level') + 1;
+      const healthGain = Math.ceil(self.getAttribute('max_health') * 1.10);
+      const mPoints = self.getAttribute('mutagens');
 
       if (newlevel % 2 === 0) { mPoints++; }
 
       util.log(name + ' is now level ' + newlevel);
 
-      this.sayL10n(l10n, 'LEVELUP');
-      this.sayL10n(l10n, 'MUTAGEN_GAIN');
-      this.setAttribute('level', newlevel);
-      this.setAttribute('mutagens', mPoints);
-      this.setAttribute('experience', 0);
+      self.sayL10n(l10n, 'LEVELUP');
+      self.sayL10n(l10n, 'MUTAGEN_GAIN');
+      self.setAttribute('level', newlevel);
+      self.setAttribute('mutagens', mPoints);
+      self.setAttribute('experience', 0);
 
       // Do whatever you want to do here when a player levels up...
-      this.setAttribute('max_health', healthGain);
-      this.setAttribute('health', this.getAttribute('max_health'));
+      self.setAttribute('max_health', healthGain);
+      self.setAttribute('health', self.getAttribute('max_health'));
       util.log(name + ' now has ' + healthGain + ' max health.');
 
       // Add points for skills
       const skillGain = LevelUtil.getTrainingTime(newLevel);
-      const newTrainingTime = this.getTraining('time') + skillGain;
+      const newTrainingTime = self.getTraining('time') + skillGain;
       util.log(name + ' can train x', newTrainingTime);
-      this.setTraining('time', newTrainingTime);
+      self.setTraining('time', newTrainingTime);
     }
   },
 

@@ -29,6 +29,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }, {'other': []});
 
     for (let type in sortedSkills){
+      player.say("");
       if (sortedSkills[type].length) {
         player.say("<bold><cyan>" + type.toUpperCase() + "</bold></cyan>");
         player.say("");
