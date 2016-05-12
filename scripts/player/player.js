@@ -74,9 +74,9 @@ exports.listeners = {
 
       // Add points for skills
       const skillGain = LevelUtil.getTrainingTime(newLevel);
-      const newTrainingTime = this.getTraining() + skillGain;
+      const newTrainingTime = this.getTraining('time') + skillGain;
       util.log(name + ' can train x', newTrainingTime);
-      this.setTraining(newTrainingTime);
+      this.setTraining('time', newTrainingTime);
     }
   },
 
