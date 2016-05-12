@@ -2,32 +2,58 @@
 const Skills = require('../src/skills').Skills;
 const l10n_file = __dirname + '/../l10n/commands/skills.yml';
 const l10n = require('../src/l10n')(l10n_file);
+const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
-    /*
-    const skills = player.getSkills();
+    const playerSkills = player.getSkills();
 
-    //FIXME: Probably won't work because skills are borked.
-    for (let realm in skills) { // Physical or mental
-      player.say("<magenta>" + realm.toUpperCase() + "</magenta>");
+    const sortedSkills = Object.keys(Skills)
+      .reduce((accumulated, key) => {
+        util.log(accumulated);
+        util.log(key);
 
-      for (let skill of Skills[realm]) {
-        player.say("<yellow>" + skill.name + "</yellow>");
-        player.write("  ");
-        player.sayL10n(l10n, "SKILL_DESC", skill.description);
+        const skill = Skills[key];
+        const attrs = [
+          'quickness', 'stamina',
+          'cleverness', 'willpower'
+        ];
 
-        if (typeof skill.cooldown !== "undefined") {
-          player.write("  ");
-          player.sayL10n(l10n, "SKILL_COOLDOWN", skill.cooldown);
+        if (attrs.indexOf(skill.attribute) > -1) {
+          if (skill.attribute in accumulated) {
+            accumulated[skill.attribute].push(skill);
+          } else {
+            accumulated[skill.attribute] = [skill];
+          }
+        } else {
+          accumulated.other.push(skill);
         }
+        return accumulated;
+      }, {'other': []});
 
+
+    util.log('sorted', sortedSkills);
+
+    for (let type in sortedSkills){
+      if (sortedSkills[type].length) {
+        player.say("<bold><cyan>" + type.toUpperCase() + "</bold></cyan>");
         player.say("");
-        return;
+        sortedSkills[type].forEach(skill => {
+          player.say("<yellow>" + skill.name + "</yellow>");
+          player.write("  ");
+          player.say(skill.description);
+          player.write("  ");
+          player.say(getSkillLevelDesc(playerSkills[skill.id]));
+          player.say(" ");
+        });
       }
     }
-    */
-    player.sayL10n(l10n, "NO_SKILLS");
+
+    if (!Object.keys(sortedSkills).length) { player.sayL10n(l10n, 'NO_SKILLS'); }
 
   };
 };
+
+function getSkillLevelDesc(skillLevel) {
+  return '<magenta>' + skillLevel + '</magenta>';
+}
