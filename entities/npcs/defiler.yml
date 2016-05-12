@@ -9,14 +9,15 @@
   attack:
     en: 'gnashing teeth'
   description:
-    en: "a fat humanoid with a gaping maw where its neck should be, and sucking mouths in the palms of his hands."
+    en: "a fat humanoid with a gaping maw where its neck should be,
+    and sucking mouths in the palms of its hands."
   behaviors: "aggro,rtcombat"
   attributes:
     target: 'head'
     max_health: 100
-    health: 94
-    speed: 2
+    health: 100
+    speed: 6
     damage: '4-40'
-    sanity_damage: '1-4' 
+    sanity_damage: '1-4'
     level: 8
   load_max: 3
