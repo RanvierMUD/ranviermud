@@ -13,17 +13,17 @@
   behaviors: "rtcombat,randommove"
   attributes:
     target: 'feet'
-    max_health: 15
-    health: 15
-    speed: 1
+    max_health: 4
+    health: 4
+    speed: 4
     damage: 1-2
     level: 1
   defenses:
     body: 3
     torso: 3
-    head: 1
-    legs: 2
-    arms: 2
+    head: -1
+    legs: 5
+    arms: 5
   load_max: 17
 - *roach
 - <<: *roach

@@ -63,7 +63,9 @@ function _findItemInRoom(items, lookString, room, player, hydrate) {
 function _findNpcInRoom(npcs, lookString, room, player, hydrate) {
   hydrate = hydrate || false;
   let thing = CommandUtil.parseDot(lookString, room.getNpcs(),
-    id => npcs.get(id).hasKeyword(this.keyword, player.getLocale())
+    function (id) {
+      return npcs.get(id).hasKeyword(this.keyword, player.getLocale());
+    }
   );
 
   return thing ? (hydrate ? npcs.get(thing) : thing) : false;
@@ -80,8 +82,9 @@ function _findNpcInRoom(npcs, lookString, room, player, hydrate) {
 function _findItemInInventory(lookString, being, hydrate) {
   hydrate = hydrate || false;
   let thing = CommandUtil.parseDot(lookString, being.getInventory(),
-    item => item.hasKeyword(this.keyword, being.getLocale())
-    );
+    function (item) {
+      return item.hasKeyword(this.keyword, being.getLocale());
+    });
 
   return thing ? (hydrate ? thing : thing.getUuid()) : false;
 }
