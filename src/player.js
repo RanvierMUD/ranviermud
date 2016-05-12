@@ -63,6 +63,9 @@ var Player = function PlayerConstructor(socket) {
   // Skills the players has
   self.skills = {};
 
+  // Training data
+  self.training = { time: 0 };
+
   /**#@+
    * Mutators
    */
@@ -119,6 +122,11 @@ var Player = function PlayerConstructor(socket) {
   self.setAttribute = (attr, val) => self.attributes[attr] = val;
   self.setPreference = (pref, val) => self.preferences[pref] = val;
   self.addSkill = (name, skill) => self.skills[name] = skill;
+
+  // Used to set up skill training business.
+  self.setTraining = (key, value) => self.training[key] = value;
+  self.getTraining = key => key ? self.training[key] : self.training || {};
+
   self.checkStance = stance => self.preferences.stance === stance.toLowerCase();
   /**#@-*/
 
@@ -362,6 +370,7 @@ var Player = function PlayerConstructor(socket) {
     self.feats = data.feats || {};
     self.preferences = data.preferences || {};
     self.explored = data.explored || [];
+    self.training = data.training || { time: 0 };
 
     // Activate any passive skills the player has
     //TODO: Probably a better way to do this than toLowerCase.
@@ -475,7 +484,8 @@ var Player = function PlayerConstructor(socket) {
       feats: self.feats,
       gender: self.gender,
       preferences: self.preferences,
-      explored: self.explored
+      explored: self.explored,
+      training: self.training,
     });
   };
 
