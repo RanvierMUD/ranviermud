@@ -373,6 +373,15 @@ var Player = function PlayerConstructor(socket) {
       }
     }
 
+    // If the player is new, or skills have been added, initialize them to level 1.
+    for (let skill in Skills) {
+      skill = Skills[skill];
+      if (!self.skills[skill.id]) {
+        util.log("Initializing skill ", skill.id);
+        self.skills[skill.id] = 1;
+      }
+    }
+
   };
 
   /**
