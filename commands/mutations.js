@@ -1,6 +1,6 @@
 'use strict';
 const Feats = require('../src/feats').Feats;
-const CommandUtil = require('../src/command_util').CommandUtil;
+const meetsPrerequisites = require('../src/feats').meetsPrerequisites;
 const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
@@ -11,7 +11,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     let availableFeats = [];
 
     for (let feat in Feats) {
-      const available = CommandUtil.meetsPrerequisites(player, Feats[feat]);
+      const available = meetsPrerequisites(player, Feats[feat]);
       const owned = Feats[feat].name in playerFeats;
 
       if (available && !owned) { availableFeats.push(Feats[feat]); }

@@ -52,3 +52,29 @@ exports.Feats = {
     }
   }
 };
+
+exports.meetsPrerequisites = _meetsPrerequisites;
+
+/**
+ * Does the player meet the prereqs for the feat, including cost?
+ * @param  Player
+ * @param  Feat
+ * @return  bool True if they meet all conditions and can afford the feat.
+ */
+function _meetsPrerequisites(player, feat) {
+  if (!feat.prereqs && !feat.cost) { return true; }
+  const attributes = player.getAttributes();
+
+  for (let attr in feat.prereqs || {}) {
+    let req = feat.prereqs[attr];
+    let stat = attributes[attr];
+
+    let meets = req <= stat;
+    util.log(player.getName() + '\'s ' + attr + ': ' + stat + ' vs. ' + req);
+
+    if (!meets) { return false; }
+  }
+
+  const isAffordable = feat.cost && attributes.mutagens >= feat.cost;
+  return isAffordable;
+}

@@ -19,7 +19,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 			return;
 		}
 
-		util.log(player.getName() + ' wields ' + item.getShortDesc('en'));
+		util.log(player.getName() + ' wields ' + thing.getShortDesc('en'));
 		thing.emit('wield', 'wield', player, players);
 	};
 };
