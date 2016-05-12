@@ -10,9 +10,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const sortedSkills = Object.keys(Skills)
       .reduce((accumulated, key) => {
-        util.log(accumulated);
-        util.log(key);
-
         const skill = Skills[key];
         const attrs = [
           'quickness', 'stamina',
@@ -30,9 +27,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         }
         return accumulated;
       }, {'other': []});
-
-
-    util.log('sorted', sortedSkills);
 
     for (let type in sortedSkills){
       if (sortedSkills[type].length) {
@@ -54,6 +48,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   };
 };
 
+//TODO: Make this more descriptive?
 function getSkillLevelDesc(skillLevel) {
   return '<magenta>' + skillLevel + '</magenta>';
 }
