@@ -1,21 +1,25 @@
+'use strict';
+const Effects = require('./effects.js').Effects;
+const util = require('util');
+
+const l10n_dir = __dirname + '/../l10n/skills/';
+const l10ncache = {};
+
 /*
  * Feats -- in-game stylized as 'mutations' or whatever.
  */
 
-var Effects = require('./effects.js').Effects;
-var util = require('util');
 
-var l10n_dir = __dirname + '/../l10n/skills/';
-var l10ncache = {};
 /**
  * Localization helper
  * @return string
  */
 
 
-var L = function (locale, cls, key /*, args... */ ) {
-  var l10n_file = l10n_dir + cls + '.yml';
-  var l10n = l10ncache[cls + locale] || require('./l10n')(l10n_file);
+const L = function (locale, cls, key /*, args... */ ) {
+  const l10n_file = l10n_dir + cls + '.yml';
+  const l10n = l10ncache[cls + locale] || require('./l10n')(l10n_file);
+
   l10n.setLocale(locale);
   return l10n.translate.apply(null, [].slice.call(arguments).slice(2));
 };
