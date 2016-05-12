@@ -25,9 +25,10 @@ exports.Skills = {
 
   //// Cleverness-related skills.
   pick: {
+    id: "pick",
     cost: 2,
     name: "Lockpick",
-    description: "Your ability to pick or force open locked doors or containers.",
+    description: "Your ability to illicitly open locked doors or containers.",
     attribute: "cleverness",
     activate: (player, target, rooms, npcs, players) => {
       if (target) {
@@ -46,7 +47,7 @@ exports.Skills = {
 
           if (isLocked) {
             player.say("<yellow>You attempt to unlock the door...</yellow>");
-            const lockpicking = player.getSkills('pick');
+            const lockpicking = player.getSkills('pick') + player.getAttribute('cleverness');
             const challenge = parseInt(exit.door.difficulty || 10, 10);
             const getExitDesc = locale => rooms.getAt(exit.location).getTitle(locale);
 
