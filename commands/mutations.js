@@ -6,6 +6,7 @@ const util = require('util');
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     const playerFeats = player.getFeats() || {};
+
     let ownFeats = [];
     let availableFeats = [];
 
