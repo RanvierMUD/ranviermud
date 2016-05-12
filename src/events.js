@@ -482,6 +482,7 @@ var Events = {
       }
     }
   },
+  
   configure: function (config) {
     players = players || config.players;
     items = items || config.items;
