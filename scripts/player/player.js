@@ -96,8 +96,8 @@ exports.listeners = {
     }
   },
 
-  changeTime: l10n => {
-    return (wasDaytime, rooms) => {
+  changeTime: function(l10n) {
+    return function (wasDaytime, rooms) {
       const playerIsOutside = rooms.getAt(this.getLocation()).biome === 'outdoors';
 
       if (playerIsOutside) {
