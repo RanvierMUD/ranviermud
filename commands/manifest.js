@@ -1,6 +1,6 @@
 'use strict';
-const CommandUtil = require('../src/command_util').CommandUtil;
 const Feats = require('../src/feats').Feats;
+const meetsPrerequisites = require('../src/feats').meetsPrerequisites;
 const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
@@ -16,7 +16,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       if (featToManifest in Feats) {
         const feat = Feats[featToManifest];
 
-        if (CommandUtil.meetsPrerequisites(player, feat)) {
+        if (meetsPrerequisites(player, feat)) {
           player.say('You manifest ' + feat.name.toLowerCase() + '.');
           util.log(player.getName() + ' manifests ' + feat.name);
 
