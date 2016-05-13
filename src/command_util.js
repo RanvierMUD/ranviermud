@@ -9,7 +9,6 @@ const CommandUtil = {
   otherPlayerInRoom:   _inSameRoom,
   inSameRoom:          _inSameRoom,
   parseDot:            _parseDot,
-  meetsPrerequisites:  _meetsPrerequisites,
 
 };
 
@@ -45,7 +44,8 @@ function _findItemInRoom(items, lookString, room, player, hydrate) {
   hydrate = hydrate || false;
   let thing = CommandUtil.parseDot(lookString, room.getItems(), function(
     item) {
-    return items.get(item).hasKeyword(this.keyword, player.getLocale());
+    let found = items.get(item);
+    return found && found.hasKeyword(this.keyword, player.getLocale());
   });
 
   return thing ? (hydrate ? items.get(thing) : thing) : false;
@@ -58,15 +58,17 @@ function _findItemInRoom(items, lookString, room, player, hydrate) {
  * @param string lookString
  * @param Room   room
  * @param Player player
- * @param boolean hydrade Whether to return the id or a full object
+ * @param boolean hydrate Whether to return the id or a full object
  * @return string UUID of the item
  */
 function _findNpcInRoom(npcs, lookString, room, player, hydrate) {
   hydrate = hydrate || false;
-  let thing = CommandUtil.parseDot(lookString, room.getNpcs(), function(
-    id) {
-    return npcs.get(id).hasKeyword(this.keyword, player.getLocale());
-  });
+  let thing = CommandUtil.parseDot(lookString, room.getNpcs(),
+    function (id) {
+      let npc = npcs.get(id);
+      return npc && npc.hasKeyword(this.keyword, player.getLocale());
+    }
+  );
 
   return thing ? (hydrate ? npcs.get(thing) : thing) : false;
 }
@@ -82,8 +84,8 @@ function _findNpcInRoom(npcs, lookString, room, player, hydrate) {
 function _findItemInInventory(lookString, being, hydrate) {
   hydrate = hydrate || false;
   let thing = CommandUtil.parseDot(lookString, being.getInventory(),
-    function(item) {
-      return item.hasKeyword(this.keyword, being.getLocale());
+    function (item) {
+      return item && item.hasKeyword(this.keyword, being.getLocale());
     });
 
   return thing ? (hydrate ? thing : thing.getUuid()) : false;
@@ -130,30 +132,6 @@ function _parseDot(arg, objects, filterFunc) {
   }
 
   return item;
-}
-
-/**
- * Does the player meet the prereqs for the feat, including cost?
- * @param  Player
- * @param  Feat
- * @return  bool True if they meet all conditions and can afford the feat.
- */
-function _meetsPrerequisites(player, feat) {
-  if (!feat.prereqs && !feat.cost) { return true; }
-  const attributes = player.getAttributes();
-
-  for (let attr in feat.prereqs || {}) {
-    let req = feat.prereqs[attr];
-    let stat = attributes[attr];
-
-    let meets = req <= stat;
-    util.log(player.getName() + '\'s ' + attr + ': ' + stat + ' vs. ' + req);
-
-    if (!meets) { return false; }
-  }
-
-  const isAffordable = feat.cost && attributes.mutagens >= feat.cost;
-  return isAffordable;
 }
 
 

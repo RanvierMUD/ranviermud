@@ -58,6 +58,13 @@ const diff = level => {
  */
 const mob_exp = level => 45 + (5 * level);
 
+/**
+ * Get the amount of 'hours' a PC can train skills after levelup
+ * @param int Player level
+ * @return number of times they may train skills.
+ */
+const training = level => Math.floor(level / 4 + 1);
+
 
 /**
  * Helper to get the amount of experience a player needs to level
@@ -70,4 +77,5 @@ const level_exp_formula = level =>
 exports.LevelUtil = {
 	expToLevel: level_exp_formula,
 	mobExp: mob_exp,
+	getTrainingTime: training,
 };

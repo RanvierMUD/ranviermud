@@ -1,21 +1,25 @@
+'use strict';
+const Effects = require('./effects.js').Effects;
+const util = require('util');
+
+const l10n_dir = __dirname + '/../l10n/skills/';
+const l10ncache = {};
+
 /*
  * Feats -- in-game stylized as 'mutations' or whatever.
  */
 
-var Effects = require('./effects.js').Effects;
-var util = require('util');
 
-var l10n_dir = __dirname + '/../l10n/skills/';
-var l10ncache = {};
 /**
  * Localization helper
  * @return string
  */
 
 
-var L = function (locale, cls, key /*, args... */ ) {
-  var l10n_file = l10n_dir + cls + '.yml';
-  var l10n = l10ncache[cls + locale] || require('./l10n')(l10n_file);
+const L = function (locale, cls, key /*, args... */ ) {
+  const l10n_file = l10n_dir + cls + '.yml';
+  const l10n = l10ncache[cls + locale] || require('./l10n')(l10n_file);
+
   l10n.setLocale(locale);
   return l10n.translate.apply(null, [].slice.call(arguments).slice(2));
 };
@@ -52,3 +56,29 @@ exports.Feats = {
     }
   }
 };
+
+exports.meetsPrerequisites = _meetsPrerequisites;
+
+/**
+ * Does the player meet the prereqs for the feat, including cost?
+ * @param  Player
+ * @param  Feat
+ * @return  bool True if they meet all conditions and can afford the feat.
+ */
+function _meetsPrerequisites(player, feat) {
+  if (!feat.prereqs && !feat.cost) { return true; }
+  const attributes = player.getAttributes();
+
+  for (let attr in feat.prereqs || {}) {
+    let req = feat.prereqs[attr];
+    let stat = attributes[attr];
+
+    let meets = req <= stat;
+    util.log(player.getName() + '\'s ' + attr + ': ' + stat + ' vs. ' + req);
+
+    if (!meets) { return false; }
+  }
+
+  const isAffordable = feat.cost && attributes.mutagens >= feat.cost;
+  return isAffordable;
+}
