@@ -54,18 +54,21 @@ exports.listeners = {
   level: function(l10n) {
     return function() {
       const name = this.getName();
-      const newlevel = this.getAttribute('level') + 1;
+      const newLevel = this.getAttribute('level') + 1;
       const healthGain = Math.ceil(this.getAttribute('max_health') * 1.10);
-      const mPoints = this.getAttribute('mutagens');
 
-      if (newlevel % 2 === 0) { mPoints++; }
+      let mutationPoints = this.getAttribute('mutagens');
 
-      util.log(name + ' is now level ' + newlevel);
+      if (newLevel % 2 === 0) {
+        mutationPoints++;
+        this.setAttribute('mutagens', mutationPoints);
+      }
+
+      util.log(name + ' is now level ' + newLevel);
 
       this.sayL10n(l10n, 'LEVELUP');
       this.sayL10n(l10n, 'MUTAGEN_GAIN');
-      this.setAttribute('level', newlevel);
-      this.setAttribute('mutagens', mPoints);
+      this.setAttribute('level', newLevel);
       this.setAttribute('experience', 0);
 
       // Do whatever you want to do here when a player levels up...
