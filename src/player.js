@@ -34,17 +34,22 @@ var Player = function PlayerConstructor(socket) {
 
   // Attributes
   self.attributes = {
+
     max_health: 100,
     health: 90,
     max_sanity: 100,
     sanity: 70,
+
     stamina: 1,
     willpower: 1,
     quickness: 1,
     cleverness: 1,
+
     level: 1,
     experience: 0,
     mutagens: 0,
+
+    //TODO: Generated descs.
     description: 'A person.'
   };
 
