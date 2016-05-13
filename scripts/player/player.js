@@ -103,11 +103,11 @@ exports.listeners = {
       if (playerIsOutside) {
         if (wasDaytime) {
           this.sayL10n(l10n, "SUN_SETTING");
-          setTimeout(() => { this.sayL10n(l10n, "SUN_SET") }, 5000);
+          setTimeout(() => this.sayL10n(l10n, "SUN_SET"), 5000);
 
         } else {
           this.sayL10n(l10n, "SUN_RISING");
-          setTimeout(() => { this.sayL10n(l10n, "SUN_UP") }, 5000);
+          setTimeout(() => this.sayL10n(l10n, "SUN_UP"), 5000);
         }
 
       } else if (wasDaytime) {
