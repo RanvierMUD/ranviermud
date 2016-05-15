@@ -222,9 +222,10 @@ var Events = {
               //TODO: Consider saving player here as well, and stuff.
               players.removePlayer(player);
             });
-            
+
           players.broadcastL10n(l10n, 'WELCOME_BACK', player.getName());
 
+          //TODO: Have load in player file?
           // Load the player's inventory (There's probably a better place to do this)
           var inv = [];
           player.getInventory()
