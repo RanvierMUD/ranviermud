@@ -210,14 +210,25 @@ var Events = {
 
           player.getSocket()
             .on('close', () => {
+              player.setTraining('beginTraining', Date.now());
+
+              if (!player.isInCombat()) {
+                util.log(player.getName() + ' has gone linkdead.');
+                player.save(() => players.removePlayer(player, true));
+              } else {
+                util.log(player.getName() + ' socket closed during combat!!!');
+              }
+
+              //TODO: Consider saving player here as well, and stuff.
               players.removePlayer(player);
             });
+            
           players.broadcastL10n(l10n, 'WELCOME_BACK', player.getName());
 
           // Load the player's inventory (There's probably a better place to do this)
           var inv = [];
           player.getInventory()
-            .forEach(function (item) {
+            .forEach(item => {
               item = new Item(item);
               items.addItem(item);
               inv.push(item);
@@ -226,6 +237,7 @@ var Events = {
 
 
           Commands.player_commands.look(null, player);
+          player.checkTraining();
           player.prompt();
 
           // All that shit done, let them play!
@@ -482,7 +494,7 @@ var Events = {
       }
     }
   },
-  
+
   configure: function (config) {
     players = players || config.players;
     items = items || config.items;
