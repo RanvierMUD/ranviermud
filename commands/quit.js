@@ -13,9 +13,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 			return;
 		}
 
+		player.setTraining('beginTraining', Date.now());
+
+		player.save(() => players.removePlayer(player, true));
+
 		util.log(playerName + ' has quit.');
 		player.emit('quit');
-		player.save(() => players.removePlayer(player, true));
+
 		return false; //TODO: Why? Consider returning true if they do quit, otherwise false.
 	};
 };
