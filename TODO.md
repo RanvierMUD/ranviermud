@@ -3,7 +3,8 @@
 |:------|:------:|:------
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 76 | Add admin commands prefaced with @
 | /Users/seanodonohue/myForks/ranviermud/src/events.js | 222 | Consider saving player here as well, and stuff.
-| /Users/seanodonohue/myForks/ranviermud/src/events.js | 329 | Refactor as to not rely on negative conditionals as much?
+| /Users/seanodonohue/myForks/ranviermud/src/events.js | 228 | Have load in player file?
+| /Users/seanodonohue/myForks/ranviermud/src/events.js | 330 | Refactor as to not rely on negative conditionals as much?
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 248 | dry-ify the following
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 52 | Generated descs.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 216 | Consider using Random.roll instead.
