@@ -94,6 +94,9 @@ var Player = function PlayerConstructor(socket) {
   self.getSkills = skill => typeof self.skills[skill] !== 'undefined' ?
     self.skills[skill] : self.skills;
 
+  self.setSkill = (skill, level) => self.skills[skill] = level;
+  self.incrementSkill = skill => self.setSkill(skill, self.skills[skill] + 1);
+
   self.getFeats = feat => typeof self.feats[feat] !== 'undefined' ?
     self.feats[feat] : self.feats;
 
@@ -131,6 +134,55 @@ var Player = function PlayerConstructor(socket) {
   // Used to set up skill training business.
   self.setTraining = (key, value) => self.training[key] = value;
   self.getTraining = key => key ? self.training[key] : self.training || {};
+
+  self.checkTraining = () => {
+    const beginning = self.training.beginTraining;
+
+    if (!beginning) { return; }
+
+    let queuedTraining = [];
+    for (const queued in self.training) {
+      if (queued !== 'time' && queued !== 'beginTraining') {
+        queuedTraining.push(self.training[queued]);
+        util.log(queuedTraining);
+      }
+    }
+
+    if (!queuedTraining.length) { return; }
+    queuedTraining.sort((x, y) => x.cost - y.cost);
+
+    let trainingTime = Date.now() - beginning;
+
+    player.say("");
+
+    for (let i = 0; i < queuedTraining.length; i++) {
+      let session = queuedTraining[i];
+
+      if (trainingTime >= session.duration) {
+        trainingTime -= session.duration;
+
+        self.setSkill(session.id, session.newLevel);
+        self.say('<bold>' + session.message + '</bold>');
+        delete self.training[session.id];
+
+      } else {
+        delete self.training[session.id];
+        self.say(
+          '<bold><yellow>You were able to spend some time training ' +
+          session.skill +
+          ', but did not make any breakthroughs.</yellow></bold>'
+        );
+
+        session.duration -= trainingTime;
+        self.setTraining(session.id, session);
+
+        break;
+      }
+    }
+
+    delete self.training.beginTraining;
+    self.say('<bold>Thus completes your training, for now.</bold>');
+  };
 
   self.checkStance = stance => self.preferences.stance === stance.toLowerCase();
   /**#@-*/
