@@ -17,6 +17,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const skillName = Skills[skill].name.toLowerCase();
       util.log(targetSkill);
       if (skillName === targetSkill) {
+        const id = Skills[skill].id;
+        if (player.getSkills(id) >= 10) {
+          player.say('You have already mastered ' + skillName + '.');
+          return;
+        }
+
+        if (player.getTraining[id]) {
+          player.say('You are already planning to train ' + skillName + '.');
+          return;
+        }
+
         util.log(player.getName() + ' is training ' + targetSkill);
         return addSkillToQueue(Skills[skill], player);
       }
