@@ -13,14 +13,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     if (targetSkill === 'clear') { return player.clearTraining(); }
 
-    // Check for train none or train clear. Gets back training time.
-    const skillCap = 10;
 
     for (let skill in Skills) {
       const skillName = Skills[skill].name.toLowerCase();
-      util.log(targetSkill);
+
       if (skillName === targetSkill) {
         const id = Skills[skill].id;
+        const skillCap = 10;
 
         if (player.getSkills(id) >= skillCap) {
           player.say('You have already mastered ' + skillName + '.');
