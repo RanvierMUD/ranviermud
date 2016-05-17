@@ -28,7 +28,8 @@ exports.Skills = {
     id: "pick",
     cost: 2,
     name: "Lockpick",
-    description: "Your ability to illicitly open locked doors or containers. \nUsage: `pick [exit]`",
+    description: "Your ability to illicitly open locked doors or containers. \n" +
+    "    Usage: `pick [exit]`",
     attribute: "cleverness",
     activate: (player, target, rooms, npcs, players) => {
       if (target) {
