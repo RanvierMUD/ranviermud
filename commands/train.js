@@ -11,16 +11,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     let targetSkill = args.split(' ')[0].toLowerCase();
 
-    if (targetSkill === 'clear') { return player.clearTraining(); }
+    if (targetSkill === 'clear') {
+      return player.clearTraining();
+    }
 
-    // Check for train none or train clear. Gets back training time.
-    const skillCap = 10;
 
     for (let skill in Skills) {
       const skillName = Skills[skill].name.toLowerCase();
-      util.log(targetSkill);
+
       if (skillName === targetSkill) {
         const id = Skills[skill].id;
+        const skillCap = 10;
 
         if (player.getSkills(id) >= skillCap) {
           player.say('You have already mastered ' + skillName + '.');
@@ -49,8 +50,32 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
 function displayTrainingQueue(player) {
   const training = player.getTraining();
-  for (let key in training){
-    player.say (key + ': ' + training[key]);
+  const displayMap = {
+    'time': 'Hours of training time left',
+    'newLevel': 'Hours to train skill for',
+    'duration': 'Hours remaining in session'
+  }
+  for (let skill in training) {
+    if (skill in displayMap) {
+      player.say(displayMap[skill] + ': ' + training[skill]);
+    } else {
+      util.log(skill);
+
+      if (skill !== 'beginTraining') {
+
+        player.say('\n<yellow>' + Skills[skill].name + '</yellow>');
+
+        for (let sessionDetail in training[skill]) {
+          if (sessionDetail in displayMap) {
+            let stat = training[skill][sessionDetail];
+            if (sessionDetail === 'duration') {
+              stat = Math.ceil(stat / (60 * 60 * 1000));
+            }
+            player.say(displayMap[sessionDetail] + ': ' + stat)
+          }
+        }
+      }
+    }
   }
 }
 
