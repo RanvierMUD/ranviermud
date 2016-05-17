@@ -184,6 +184,23 @@ var Player = function PlayerConstructor(socket) {
     self.say('<bold>Thus completes your training, for now.</bold>');
   };
 
+  self.clearTraining = () => {
+    for (const queued in self.training) {
+      if (queued !== 'time' && queued !== 'beginTraining') {
+        const session = self.training[queued];
+        const time = self.getTraining('time');
+        self.setTraining('time', time + session.newLevel);
+        delete self.training[queued];
+      }
+    }
+
+    if (self.training.beginTraining) {
+      delete self.training.beginTraining;
+    }
+
+    player.say('You decide to change your training regimen.');
+  };
+
   self.checkStance = stance => self.preferences.stance === stance.toLowerCase();
   /**#@-*/
 
