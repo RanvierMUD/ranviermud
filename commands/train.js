@@ -11,6 +11,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     let targetSkill = args.split(' ')[0].toLowerCase();
 
+    if (targetSkill === 'clear') { return player.clearTraining(); }
+
     // Check for train none or train clear. Gets back training time.
     const skillCap = 10;
 
