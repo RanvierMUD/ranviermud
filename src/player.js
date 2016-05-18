@@ -270,7 +270,7 @@ var Player = function PlayerConstructor(socket) {
     };
 
     if (effect.duration) {
-      effect.timer = setTimeout(deact, effect.duration * 1000);
+      effect.timer = setTimeout(deact, effect.duration);
     } else if (effect.event) {
       self.on(effect.event, deact);
     }

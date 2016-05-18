@@ -210,6 +210,7 @@ var Npc = function (config)
 	self.removeAffect = function (aff) { delete self.effects[aff]; };
 	self.getDefenses  = function () { return self.defenses; };
 	self.getLocations = function () { return Object.keys(self.defenses); };
+  self.isPacifist   = () => !self.listeners('combat').length; 
 	/**#@-*/
 
 	/**

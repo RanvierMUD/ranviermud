@@ -12,7 +12,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
             player.sayL10n(l10n, 'TARGET_NOT_FOUND');
             return;
         }
-        if (!npc.listeners('combat').length) {
+        if (npc.isPacifist()) {
             player.sayL10n(l10n, 'KILL_PACIFIST');
             return;
         }
