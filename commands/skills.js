@@ -8,7 +8,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     const playerSkills = player.getSkills();
 
-    const sortedSkills = Object.keys(Skills)
+    const sortedSkills = Object
+      .keys(Skills)
       .reduce((skillCategories, key) => {
         const skill = Skills[key];
         const attrs = [
