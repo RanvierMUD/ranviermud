@@ -12,7 +12,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     for (let feat in Feats) {
       const available = meetsPrerequisites(player, Feats[feat]);
-      const owned = Feats[feat].name in playerFeats;
+      const owned = Feats[feat].id in playerFeats;
       util.log(feat);
       util.log(owned);
       util.log(available);

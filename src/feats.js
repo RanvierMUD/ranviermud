@@ -81,7 +81,8 @@ exports.Feats = {
       });
 
       if (combatant && !charming) {
-        npcs.get(combatant).setInCombat(false);
+        player.say('<bold>' + combatant.getShortDesc(player.getLocale()) + ' stops fighting you.</bold>');
+        combatant.setInCombat(false);
         player.setInCombat(false);
         turnOnCharm();
       } else if (!charming) {
