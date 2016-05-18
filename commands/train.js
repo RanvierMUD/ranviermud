@@ -59,10 +59,8 @@ function displayTrainingQueue(player) {
     if (skill in displayMap) {
       player.say(displayMap[skill] + ': ' + training[skill]);
     } else {
-      util.log(skill);
 
       if (skill !== 'beginTraining') {
-
         player.say('\n<yellow>' + Skills[skill].name + '</yellow>');
 
         for (let sessionDetail in training[skill]) {
