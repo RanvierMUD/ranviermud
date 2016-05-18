@@ -33,7 +33,7 @@ exports.Feats = {
   /// Passive feats
   leatherskin: {
     type: 'passive',
-    cost: 2,
+    cost: 1,
     prereqs: {
       'stamina': 2,
       'willpower': 2,
@@ -53,6 +53,42 @@ exports.Feats = {
         event: 'quit'
       }));
       player.say('Your skin hardens.');
+    }
+  },
+
+  /// Active feats
+  charm: {
+    type: 'active',
+    cost: 2,
+    prereqs: {
+      'willpower': 4,
+      'cleverness': 2,
+      'level': 5,
+    },
+    //TODO: Cooldown?
+    name: 'Charm',
+    id: 'charm',
+    description: 'You are able to calm violent creatures and stop them from attacking you.',
+    activate: (player, args, rooms, npcs, players) => {
+      util.log(player.getName() + ' activates Charm.');
+      const combatant = player.isInCombat();
+      const charming = player.getEffects('charming');
+
+      const turnOnCharm = () => player.addEffect('charming', {
+        duration: 30 * 1000,
+        deactivate: () => player.say('<yellow>You are no longer radiating calm and peace.</yellow>'),
+        activate: () => player.say('<magenta>You radiate a calming, peaceful aura.</magenta>')
+      });
+
+      if (combatant && !charming) {
+        npcs.get(combatant).setInCombat(false);
+        player.setInCombat(false);
+        turnOnCharm();
+      } else if (!charming) {
+        turnOnCharm();
+      } else {
+        player.say('You are already quite charming, really.');
+      }
     }
   }
 };
