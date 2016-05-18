@@ -100,7 +100,7 @@ var Player = function PlayerConstructor(socket) {
   self.getFeats = feat => typeof self.feats[feat] !== 'undefined' ?
     self.feats[feat] : self.feats;
 
-  self.gainFeat = feat => self.feats[feat.name] = feat;
+  self.gainFeat = feat => self.feats[feat.id] = feat;
 
   self.getPassword = () => self.password; // Returns hash.
   self.isInCombat = () => self.in_combat;
@@ -270,7 +270,7 @@ var Player = function PlayerConstructor(socket) {
     };
 
     if (effect.duration) {
-      effect.timer = setTimeout(deact, effect.duration * 1000);
+      effect.timer = setTimeout(deact, effect.duration);
     } else if (effect.event) {
       self.on(effect.event, deact);
     }
@@ -587,7 +587,7 @@ var Player = function PlayerConstructor(socket) {
   };
 
   self.useFeat = function (feat /*, args... */ ) {
-    if (!Feats[feat]) {
+    if (!Feats[feat.toLowerCase()]) {
       util.log("feat not found: ", feat);
       return;
     }
