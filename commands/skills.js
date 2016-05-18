@@ -9,31 +9,32 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const playerSkills = player.getSkills();
 
     const sortedSkills = Object.keys(Skills)
-      .reduce((accumulated, key) => {
+      .reduce((skillCategories, key) => {
         const skill = Skills[key];
         const attrs = [
           'quickness', 'stamina',
           'cleverness', 'willpower'
         ];
+        const attr = skill.attribute;
 
-        if (attrs.indexOf(skill.attribute) > -1) {
-          if (skill.attribute in accumulated) {
-            accumulated[skill.attribute].push(skill);
+        if (attrs.indexOf(attr) > -1) {
+          if (attr in skillCategories) {
+            skillCategories[attr].push(skill);
           } else {
-            accumulated[skill.attribute] = [skill];
+            skillCategories[attr] = [skill];
           }
         } else {
-          accumulated.other.push(skill);
+          skillCategories.other.push(skill);
         }
-        return accumulated;
-      }, {'other': []});
+        return skillCategories;
+      }, {});
 
-    for (let type in sortedSkills){
+    for (let attr in sortedSkills){
       player.say("");
-      if (sortedSkills[type].length) {
-        player.say("<bold><cyan>" + type.toUpperCase() + "</bold></cyan>");
+      if (sortedSkills[attr].length) {
+        player.say("<bold><cyan>" + attr.toUpperCase() + "</bold></cyan>");
         player.say("");
-        sortedSkills[type].forEach(skill => {
+        sortedSkills[attr].forEach(skill => {
           player.say("<yellow>" + skill.name + "</yellow>");
           player.write("  ");
           player.say(skill.description);
@@ -49,7 +50,18 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   };
 };
 
-//TODO: Make this more descriptive?
 function getSkillLevelDesc(skillLevel) {
-  return '<magenta>' + skillLevel + '</magenta>';
+  canst descs = {
+    1: 'Unskilled',
+    2: 'Novice',
+    3: 'Dabbling',
+    4: 'Apprentice',
+    5: 'Intermediate',
+    6: 'Skilled',
+    7: 'Professional',
+    8: 'Adept',
+    9: 'Expert',
+    10: 'Master',
+  };
+  return '<magenta>' + descs[skillLevel] + '</magenta>';
 }
