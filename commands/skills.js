@@ -36,10 +36,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         player.say("");
         sortedSkills[attr].forEach(skill => {
           player.say("<yellow>" + skill.name + "</yellow>");
-          player.write("  ");
-          player.say(skill.description);
-          player.write("  ");
+          player.write(" ")
           player.say(getSkillLevelDesc(playerSkills[skill.id]));
+          player.write("  ");
+          player.say("<bold>" + skill.description + "</bold>");
+          player.write("  ");
+          player.say('<bold>Usage: </bold>' + skill.usage);
           player.say(" ");
         });
       }
@@ -51,7 +53,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 };
 
 function getSkillLevelDesc(skillLevel) {
-  canst descs = {
+  const descs = {
     1: 'Unskilled',
     2: 'Novice',
     3: 'Dabbling',
@@ -63,5 +65,5 @@ function getSkillLevelDesc(skillLevel) {
     9: 'Expert',
     10: 'Master',
   };
-  return '<magenta>' + descs[skillLevel] + '</magenta>';
+  return '<magenta>' + descs[skillLevel] || 'Wizard' + '</magenta>';
 }
