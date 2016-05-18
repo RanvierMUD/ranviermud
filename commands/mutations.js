@@ -13,9 +13,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     for (let feat in Feats) {
       const available = meetsPrerequisites(player, Feats[feat]);
       const owned = Feats[feat].name in playerFeats;
+      util.log(feat);
+      util.log(owned);
+      util.log(available);
 
-      if (available && !owned) { availableFeats.push(Feats[feat]); }
       if (owned) { ownFeats.push(Feats[feat]); }
+      else if (available) { availableFeats.push(Feats[feat]); }
     }
 
     if (!availableFeats.length && !ownFeats.length) {
@@ -38,7 +41,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     if (availableFeats.length) {
       player.say('<bold><red>Potential mutations:</red></bold>');
       player.say('')
-      ownFeats.forEach(feat => {
+      availableFeats.forEach(feat => {
         player.say('<magenta><bold>   ' + feat.name + '</bold></magenta>');
         player.say('<yellow>' + feat.description + '</yellow>');
         player.say('<yellow>Type: ' + feat.type.toUpperCase() + '</yellow>');
