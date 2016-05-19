@@ -80,7 +80,7 @@ const multiply = (attribute, config) => {
 	};
 };
 
-exports.Effects = {
+const Effects = {
   /**
    * Slow
 	 * config.target: NPC to slow
@@ -112,4 +112,11 @@ exports.Effects = {
    */
   health_boost:  config => buffWithMax('health', config),
 
+	fortify: config => {
+		if (!config.target) { config.target = config.player; }
+		return buff('stamina', config);
+	},
+
 };
+
+exports.Effects = Effects;
