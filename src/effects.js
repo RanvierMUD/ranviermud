@@ -117,26 +117,6 @@ const Effects = {
 		return buff('stamina', config);
 	},
 
-
-
-	// /**
-	// * Ironskin
-	// * +100 health stacked w/ +50 from leatherskin prereq
-	// * +2 stamina, 1/2 quickness
-	// */
-	//
-	// ironskin: config => {
-	// 	// Effects.health_boost(config);
-	// 	// Effects.haste({
-	// 	// 	magnitude: .5,
-	// 	// 	player: config.player,
-	// 	// })
-	// 	// Effects.fortify({
-	// 	// 	magnitude: 2,
-	// 	// 	player: config.player,
-	// 	// });
-	// }
-
 };
 
 exports.Effects = Effects;
