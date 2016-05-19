@@ -30,6 +30,7 @@ const L = function (locale, cls, key /*, args... */ ) {
 
 exports.Feats = {
 
+
   /// Passive feats
   leatherskin: {
     type: 'passive',
@@ -53,6 +54,51 @@ exports.Feats = {
         event: 'quit'
       }));
       player.say('Your skin hardens.');
+    }
+  },
+
+  ironskin: {
+    type: 'passive',
+    cost: 2,
+    prereqs: {
+      'stamina': 3,
+      'willpower': 2,
+      'level': 5,
+      feats: ['leatherskin'],
+    },
+    name: 'Ironskin',
+    id: 'ironskin',
+    description: 'Your skin hardens further, into a layer of heavy metallic chitin.',
+    activate: player => {
+      util.log(player.getName() + ' activates Ironskin.');
+
+      if (player.getEffects('ironskin0')) {
+        player.removeEffect('ironskin0');
+        player.removeEffect('ironskin1');
+        player.removeEffect('ironskin2');
+      }
+
+      const ironSkinEffects = [
+        Effects.health_boost({
+          magnitude: 100,
+          player: player,
+          target: player,
+        }),
+        Effects.haste({
+          magnitude: .5,
+          player: player,
+        }),
+        Effects.fortify({
+          magnitude: 2,
+          player: player,
+        })
+      ];
+
+      ironSkinEffects.forEach((effect, i) => {
+          player.addEffect('ironskin' + i, effect);
+      });
+
+      player.say('<cyan><bold>Clank.</bold></cyan>');
     }
   },
 
@@ -106,11 +152,14 @@ function _meetsPrerequisites(player, feat) {
   if (!feat.prereqs && !feat.cost) { return true; }
   const attributes = player.getAttributes();
 
-  for (let attr in feat.prereqs || {}) {
-    let req = feat.prereqs[attr];
-    let stat = attributes[attr];
+  for (const attr in feat.prereqs || {}) {
+    if (attr === 'feats') {
+      return meetsFeatPrerequisites(player, feat.prereqs.feats);
+    }
+    const req = feat.prereqs[attr];
+    const stat = attributes[attr];
 
-    let meets = req <= stat;
+    const meets = req <= stat;
     util.log(player.getName() + '\'s ' + attr + ': ' + stat + ' vs. ' + req);
 
     if (!meets) { return false; }
@@ -118,4 +167,9 @@ function _meetsPrerequisites(player, feat) {
 
   const isAffordable = feat.cost && attributes.mutagens >= feat.cost;
   return isAffordable;
+}
+
+function meetsFeatPrerequisites(player, featList) {
+  const featsOwned = player.getFeats();
+  return featList.filter(feat => feat in featsOwned).length > 0;
 }
