@@ -234,7 +234,7 @@ function move(exit, player) {
 
   return true;
 
-};
+}
 
 /**
  * Alias commands
@@ -244,5 +244,5 @@ function move(exit, player) {
 function alias(name, target) {
   Commands.player_commands[name] = function() {
     Commands.player_commands[target].apply(null, [].slice.call(arguments))
-  };
-};
+  }
+}

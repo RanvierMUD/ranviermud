@@ -9,6 +9,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       player.say("<yellow>" + channel.name + "</yellow>");
       player.write("  ");
       player.say("<magenta>" + channel.description + "</magenta>");
-    };
+    }
   };
 };
