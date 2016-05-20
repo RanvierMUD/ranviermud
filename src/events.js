@@ -245,7 +245,7 @@ var Events = {
           player.getSocket()
             .emit("commands", player);
           break;
-      };
+      }
     },
 
     /**

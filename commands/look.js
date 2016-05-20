@@ -49,7 +49,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       function isLookingAtSelf() {
         const me = ['me', 'self', player.getName().toLowerCase()];
         return me.indexOf(args) !== -1;
-      };
+      }
 
       // Then other players
       if (!thing) {

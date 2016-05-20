@@ -22,6 +22,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
         function cleanup(success) {
             // cleanup here...
-        };
+        }
     };
 };
