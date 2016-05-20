@@ -15,20 +15,30 @@ var paths = {
   ],
 };
 
+const report = {
+  ignore: 0,
+  warn: 1,
+  error: 2,
+};
+
 var options = {
   todo: {
     absolute: true
   },
   lint: {
     rules: {
-      'no-reserved-keys': 0,
-      'no-cond-assign': 1,
-      'no-dupe-args': 1,
-      'no-dupe-keys': 1,
-      'no-duplicate-case': 1,
-      'no-extra-semi': 1,
-      'no-func-assign': 1,
-      'no-sparse-arrays': 1,
+      'no-reserved-keys':  report.ignore,
+
+      'no-cond-assign':    report.warn,
+      'no-dupe-args':      report.warn,
+      'no-dupe-keys':      report.warn,
+      'no-duplicate-case': report.warn,
+      'no-extra-semi':     report.warn,
+      'no-func-assign':    report.warn,
+      'no-sparse-arrays':  report.warn,
+
+      'no-unreachable':    report.error,
+
     },
     parserOptions: {
       'ecmaVersion': 6,
