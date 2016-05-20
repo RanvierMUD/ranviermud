@@ -22,7 +22,7 @@ var crypto = require('crypto'),
  * Localization
  */
 var l10n = null;
-var l10n_file = __dirname + '/../l10n/events.yml';
+var l10nFile = __dirname + '/../l10n/events.yml';
 // shortcut for l10n.translate
 var L = null;
 
@@ -245,7 +245,7 @@ var Events = {
           player.getSocket()
             .emit("commands", player);
           break;
-      };
+      }
     },
 
     /**
@@ -503,7 +503,7 @@ var Events = {
     npcs = npcs || config.npcs;
     if (!l10n) {
       util.log("Loading event l10n... ");
-      l10n = l10nHelper(l10n_file);
+      l10n = l10nHelper(l10nFile);
       util.log("Done");
     }
     l10n.setLocale(config.locale);

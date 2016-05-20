@@ -11,8 +11,15 @@ var paths = {
     './src/**/*.js',
     './scripts/**/*.js',
     './scripts/**/**/*.js',
-    './commands/*.js'
+    './commands/*.js',
+    './src/!3rdparty/*.js'
   ],
+};
+
+const report = {
+  ignore: 0,
+  warn: 1,
+  error: 2,
 };
 
 var options = {
@@ -21,7 +28,22 @@ var options = {
   },
   lint: {
     rules: {
-      'no-reserved-keys': 0,
+      'no-reserved-keys':  report.ignore,
+
+      'no-cond-assign':    report.warn,
+      'no-dupe-args':      report.warn,
+      'no-dupe-keys':      report.warn,
+      'no-duplicate-case': report.warn,
+      'no-extra-semi':     report.warn,
+      'no-func-assign':    report.warn,
+      'no-sparse-arrays':  report.warn,
+      'yoda':              report.warn,
+      'camelcase':         report.warn,
+
+      'use-isnan':         report.error,
+      'valid-typeof':      report.error,
+      'no-unreachable':    report.error,
+
     },
     parserOptions: {
       'ecmaVersion': 6,
