@@ -48,14 +48,14 @@ function _chooseRandomExit(chance) {
             chosenRoom.addNpc(uid);
             room.removeNpc(uid);
 
-            players.eachIf(
-              CommandUtil.otherPlayerInRoom.bind(null, npc),
+            const npcInRoomWithPlayer = CommandUtil.inSameRoom.bind(null, npc);
+
+            players.eachIf(npcInRoomWithPlayer,
               p => {
                 const locale = p.getLocale();
                 const msg = getEntryMessage();
                 p.say(npc.getShortDesc(locale) + msg);
-              }
-            )
+              });
           } catch (e) {
             console.log("EXCEPTION: ", e);
             console.log("NPC: ", npc);
