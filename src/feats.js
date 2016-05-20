@@ -17,8 +17,8 @@ const l10ncache = {};
 
 
 const L = function (locale, cls, key /*, args... */ ) {
-  const l10n_file = l10n_dir + cls + '.yml';
-  const l10n = l10ncache[cls + locale] || require('./l10n')(l10n_file);
+  const l10nFile = l10n_dir + cls + '.yml';
+  const l10n = l10ncache[cls + locale] || require('./l10n')(l10nFile);
 
   l10n.setLocale(locale);
   return l10n.translate.apply(null, [].slice.call(arguments).slice(2));

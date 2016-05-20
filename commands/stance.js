@@ -1,5 +1,5 @@
-const l10n_file = __dirname + '/../l10n/commands/stance.yml';
-const l10n = require('../src/l10n')(l10n_file);
+const l10nFile = __dirname + '/../l10n/commands/stance.yml';
+const l10n = require('../src/l10n')(l10nFile);
 const Command_Util = require('../src/command_util')
   .CommandUtil;
 const util = require('util');
