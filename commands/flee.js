@@ -3,9 +3,9 @@ const CommandUtil = require('../src/command_util')
   .CommandUtil;
 const Random = require('../src/random').Random;
 const move = require('../src/commands').Commands.move;
-const l10n_file = __dirname + '/../l10n/commands/flee.yml';
+const l10nFile = __dirname + '/../l10n/commands/flee.yml';
 const util = require('util');
-const l10n = require('../src/l10n')(l10n_file);
+const l10n = require('../src/l10n')(l10nFile);
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {

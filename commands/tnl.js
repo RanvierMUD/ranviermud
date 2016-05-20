@@ -5,14 +5,14 @@ const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
-    const player_exp = player.getAttribute('experience');
+    const playerExp = player.getAttribute('experience');
     const tolevel = LevelUtil.expToLevel(player.getAttribute('level'));
-    const percentage = parseInt((player_exp / tolevel) * 100, 10);
+    const percentage = parseInt((playerExp / tolevel) * 100, 10);
     const color = 'blue';
 
     let msg = '...';
 
-    util.log(player.getName() + ' experience: ' + player_exp + ' To Level: ', tolevel, ' ');
+    util.log(player.getName() + ' experience: ' + playerExp + ' To Level: ', tolevel, ' ');
     util.log('%' + percentage + ' tnl.');
 
     const toLevelStatus = {

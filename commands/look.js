@@ -3,11 +3,11 @@ const CommandUtil = require('../src/command_util')
   .CommandUtil;
 const sprintf = require('sprintf')
   .sprintf;
-const l10n_file = __dirname + '/../l10n/commands/look.yml';
+const l10nFile = __dirname + '/../l10n/commands/look.yml';
 const l10n = new require('jall')(require('js-yaml')
   .load(require('fs')
     .readFileSync(
-      l10n_file)
+      l10nFile)
     .toString('utf8')), undefined, 'zz');
 const wrap = require('wrap-ansi');
 const util = require('util');
@@ -49,7 +49,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       function isLookingAtSelf() {
         const me = ['me', 'self', player.getName().toLowerCase()];
         return me.indexOf(args) !== -1;
-      };
+      }
 
       // Then other players
       if (!thing) {

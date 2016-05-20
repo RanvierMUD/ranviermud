@@ -30,7 +30,7 @@ var Player = function PlayerConstructor(socket) {
   self.equipment = {};
 
   // In combat is either false or an NPC vnum
-  self.in_combat = false;
+  self.inCombat = false;
 
   // Attributes
   self.attributes = {
@@ -103,7 +103,7 @@ var Player = function PlayerConstructor(socket) {
   self.gainFeat = feat => self.feats[feat.id] = feat;
 
   self.getPassword = () => self.password; // Returns hash.
-  self.isInCombat = () => self.in_combat;
+  self.isInCombat = () => self.inCombat;
 
   self.setPrompt = str => self.prompt_string = str;
   self.setCombatPrompt = str => self.combat_prompt = str;
@@ -126,7 +126,7 @@ var Player = function PlayerConstructor(socket) {
     self.inventory = self.inventory.filter(i => item !== i);
   };
   self.setInventory = inv => self.inventory = inv;
-  self.setInCombat = combatant => self.in_combat = combatant;
+  self.setInCombat = combatant => self.inCombat = combatant;
   self.setAttribute = (attr, val) => self.attributes[attr] = val;
   self.setPreference = (pref, val) => self.preferences[pref] = val;
   self.addSkill = (name, skill) => self.skills[name] = skill;
@@ -311,11 +311,11 @@ var Player = function PlayerConstructor(socket) {
 
   /**
    * "equip" an item
-   * @param string wear_location The location this item is worn
+   * @param string wearLocation The location this item is worn
    * @param Item   item
    */
-  self.equip = (wear_location, item) => {
-    self.equipment[wear_location] = item.getUuid();
+  self.equip = (wearLocation, item) => {
+    self.equipment[wearLocation] = item.getUuid();
     item.setEquipped(true);
   };
 

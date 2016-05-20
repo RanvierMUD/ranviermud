@@ -24,7 +24,7 @@
     head: -1
     legs: 5
     arms: 5
-  load_max: 17
+  load_max: 9
 - *roach
 - <<: *roach
   room: 3

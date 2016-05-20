@@ -1,8 +1,8 @@
 'use strict';
 const util = require('util');
 const CommandUtil = require('../src/command_util').CommandUtil;
-const l10n_file = __dirname + '/../l10n/commands/wear.yml';
-const l10n = require('../src/l10n')(l10n_file);
+const l10nFile = __dirname + '/../l10n/commands/wear.yml';
+const l10n = require('../src/l10n')(l10nFile);
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
@@ -15,13 +15,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return;
     }
 
-    if (!thing.getAttribute('wear_location')) {
-      util.log("No wear location.");
+    if (!thing.getAttribute('wearLocation')) {
+      util.log("No wear location:" , JSON.stringify(thing));
       player.sayL10n(l10n, 'NO_WEAR_LOCATION', thing.getShortDesc(player.getLocale()));
       return;
     }
 
-    var wear = player.getEquipped(thing.getAttribute('wear_location'));
+    var wear = player.getEquipped(thing.getAttribute('wearLocation'));
     if (wear) {
       util.log("Cannot wear due to already wearing an item.");
       player.sayL10n(l10n, 'CANT_WEAR', items.get(wear).getShortDesc(player
@@ -37,7 +37,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         p.prompt();
       });
 
-    var location = thing.getAttribute('wear_location');
+    var location = thing.getAttribute('wearLocation');
     // thing.emit('wear', location, player, players);
     //FIXME: Emitting wear does not always work. Perhaps due to items lackign scripts.
     player.equip(location, thing);

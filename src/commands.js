@@ -17,7 +17,7 @@ let npcs = null;
  * Localization
  */
 let l10n = null;
-const l10n_file = __dirname + '/../l10n/commands.yml';
+const l10nFile = __dirname + '/../l10n/commands.yml';
 // shortcut for l10n.translate
 let L = null;
 
@@ -47,7 +47,7 @@ const Commands = {
     items = config.items;
     npcs = config.npcs;
     util.log("Loading command l10n... ");
-    l10n = l10nHelper(l10n_file);
+    l10n = l10nHelper(l10nFile);
     l10n.setLocale(config.locale);
     util.log("Done");
 
@@ -234,7 +234,7 @@ function move(exit, player) {
 
   return true;
 
-};
+}
 
 /**
  * Alias commands
@@ -244,5 +244,5 @@ function move(exit, player) {
 function alias(name, target) {
   Commands.player_commands[name] = function() {
     Commands.player_commands[target].apply(null, [].slice.call(arguments))
-  };
-};
+  }
+}

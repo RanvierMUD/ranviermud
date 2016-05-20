@@ -1,6 +1,6 @@
 'use strict';
-const l10n_file = __dirname + '/../l10n/commands/character.yml';
-const l10n = require('../src/l10n')(l10n_file);
+const l10nFile = __dirname + '/../l10n/commands/character.yml';
+const l10n = require('../src/l10n')(l10nFile);
 const statusUtil = require('../src/status.js');
 const Random = require('../src/random.js').Random;
 exports.command = (rooms, items, players, npcs, Commands) => {
