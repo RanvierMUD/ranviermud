@@ -3,7 +3,7 @@ var PlayerManager = function ()
 	var self = this;
 	self.players = [];
 	// this is the default vnum
-	self.default_location = 1;
+	self.defaultLocation = 1;
 
 	/**
 	 * Get the default location for a player (this is used when they are first created)
@@ -11,7 +11,7 @@ var PlayerManager = function ()
 	 */
 	self.getDefaultLocation = function ()
 	{
-		return self.default_location;
+		return self.defaultLocation;
 	};
 
 	/**

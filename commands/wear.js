@@ -15,13 +15,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return;
     }
 
-    if (!thing.getAttribute('wear_location')) {
+    if (!thing.getAttribute('wearLocation')) {
       util.log("No wear location.");
       player.sayL10n(l10n, 'NO_WEAR_LOCATION', thing.getShortDesc(player.getLocale()));
       return;
     }
 
-    var wear = player.getEquipped(thing.getAttribute('wear_location'));
+    var wear = player.getEquipped(thing.getAttribute('wearLocation'));
     if (wear) {
       util.log("Cannot wear due to already wearing an item.");
       player.sayL10n(l10n, 'CANT_WEAR', items.get(wear).getShortDesc(player
@@ -37,7 +37,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         p.prompt();
       });
 
-    var location = thing.getAttribute('wear_location');
+    var location = thing.getAttribute('wearLocation');
     // thing.emit('wear', location, player, players);
     //FIXME: Emitting wear does not always work. Perhaps due to items lackign scripts.
     player.equip(location, thing);

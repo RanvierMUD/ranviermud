@@ -153,7 +153,7 @@ var Npc = function (config)
 	self.description;
 	self.room; // Room that it's in (vnum)
 	self.vnum; // Not to be confused with its vnum
-	self.in_combat = false;
+	self.inCombat = false;
 	self.uuid = null;
 
 	// attributes
@@ -197,14 +197,14 @@ var Npc = function (config)
 	 */
 	self.getVnum      = function () { return self.vnum; };
 	self.getInv       = function () { return self.inventory; };
-	self.isInCombat   = function () { return self.in_combat; };
+	self.isInCombat   = function () { return self.inCombat; };
 	self.getRoom      = function () { return self.room; };
 	self.getUuid      = function () { return self.uuid; };
 	self.getAttribute = function (attr) { return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
 	self.setUuid      = function (uid) { self.uuid = uid; };
 	self.setRoom      = function (room) { self.room = room; };
 	self.setInventory = function (identifier) { self.inventory = identifier; }
-	self.setInCombat  = function (combat) { self.in_combat = combat; }
+	self.setInCombat  = function (combat) { self.inCombat = combat; }
 	self.setContainer = function (uid) { self.container = uid; }
 	self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
 	self.removeAffect = function (aff) { delete self.effects[aff]; };
