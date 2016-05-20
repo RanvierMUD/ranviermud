@@ -15,6 +15,8 @@ function _chooseRandomExit(chance) {
   return () => {
     return (room, rooms, player, players, npc) => {
 
+      if (npc.isInCombat()) { return; }
+
       chance = chance || 10 // Roll to beat on 1d20
 
       if (chance < Random.roll()) {
