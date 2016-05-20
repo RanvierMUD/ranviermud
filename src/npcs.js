@@ -207,10 +207,10 @@ var Npc = function (config)
 	self.setInCombat  = function (combat) { self.in_combat = combat; }
 	self.setContainer = function (uid) { self.container = uid; }
 	self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
-	self.removeAffect = function (aff) { delete self.effects[aff]; };
+	self.removeEffect = function (aff) { delete self.effects[aff]; };
 	self.getDefenses  = function () { return self.defenses; };
 	self.getLocations = function () { return Object.keys(self.defenses); };
-  self.isPacifist   = () => !self.listeners('combat').length; 
+  self.isPacifist   = () => !self.listeners('combat').length;
 	/**#@-*/
 
 	/**
@@ -231,18 +231,18 @@ var Npc = function (config)
 	 * @param string name
 	 * @param object affect
 	 */
-	self.addAffect = function (name, affect)
+	self.addEffect = function (name, effect)
 	{
-		if (affect.activate) {
-			affect.activate();
+		if (effect.activate) {
+			effect.activate();
 		}
 
 		setTimeout(function () {
-			if (affect.deactivate) {
-				affect.deactivate();
+			if (effect.deactivate) {
+				effect.deactivate();
 			}
-			self.removeAffect(name);
-		}, affect.duration * 1000);
+			self.removeEffect(name);
+		}, effect.duration * 1000);
 		self.effects[name] = 1;
 	};
 
