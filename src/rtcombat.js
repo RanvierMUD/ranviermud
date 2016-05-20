@@ -80,7 +80,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
 
     if (!damage) {
 
-      if (d.weapon && typeof d.weapon == 'Object')
+      if (d.weapon && typeof d.weapon == 'object')
         d.weapon.emit('parry', defender);
 
       if (a.isPlayer)
@@ -103,7 +103,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
       util.log('Targeted ' + a.target + ' and hit ' + hitLocation);
       var damageStr = getDamageString(damage, defender.getAttribute('health'));
 
-      if (a.weapon && typeof a.weapon == 'Object')
+      if (a.weapon && typeof a.weapon == 'object')
         a.weapon.emit('hit', player);
 
       if (d.isPlayer)
@@ -264,7 +264,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
       const playerRoom = rooms.getAt(player.getLocation());
       const sameArea = otherRoom.getArea() === playerRoom.getArea();
       const notSameRoom = otherRoom !== playerRoom;
-      
+
       if (sameArea && notSameRoom) {
         p.say(msg);
         p.prompt();
