@@ -137,7 +137,53 @@ exports.Feats = {
         player.say('You are already quite charming, really.');
       }
     }
-  }
+  },
+
+  stun: {
+    type: 'active',
+    cost: 1,
+    prereqs: {
+      'willpower': 2,
+      'level': 2
+    },
+    id: 'stun',
+    name: 'Stun',
+    description: 'Use your will to temporarily daze an opponent, slowing their reaction time.',
+    activate: (player, args, rooms, npcs, players) => {
+      util.log(player.getName() + ' activates Charm.');
+      const combatant = player.isInCombat();
+
+      if (!combatant) {
+        player.say('You have no target to stun.');
+        return;
+      }
+
+      const stunning = player.getEffects('stunning') || combatant.getEffects('stunned');
+
+      if (stunning) {
+        player.say('You must wait before doing that again.');
+        return;
+      }
+
+      const cooldown = 15 * 1000;
+      combatant.addEffect('stunned', {
+        duration: 5 * 1000,
+        deactivate: () => {
+          player.say('<yellow>Your opponent is no longer stunned.</yellow>')
+          setTimeout(player.removeEffect.bind(null, 'stunning'), cooldown);
+        },
+        activate: () => {
+          player.say('<magenta>You concentrate on stifling your opponent.</magenta>');
+
+          player.addEffect('stunning', Effects.slow({
+            target: combatant,
+            magnitude: 1.5,
+          }));
+        }
+      });
+    }
+  },
+
 };
 
 exports.meetsPrerequisites = _meetsPrerequisites;
