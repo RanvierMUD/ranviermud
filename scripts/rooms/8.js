@@ -1,7 +1,7 @@
 var CommandUtil = require('../../src/command_util')
   .CommandUtil;
-var l10n_file = __dirname + '/../../l10n/scripts/rooms/8.js.yml';
-var l10n = require('../../src/l10n')(l10n_file);
+var l10nFile = __dirname + '/../../l10n/scripts/rooms/8.js.yml';
+var l10n = require('../../src/l10n')(l10nFile);
 var examiner = require('../../src/examine').examine;
 
 
