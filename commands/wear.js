@@ -16,7 +16,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     if (!thing.getAttribute('wearLocation')) {
-      util.log("No wear location.");
+      util.log("No wear location:" , JSON.stringify(thing));
       player.sayL10n(l10n, 'NO_WEAR_LOCATION', thing.getShortDesc(player.getLocale()));
       return;
     }
