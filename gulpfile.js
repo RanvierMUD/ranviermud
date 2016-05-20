@@ -22,6 +22,13 @@ var options = {
   lint: {
     rules: {
       'no-reserved-keys': 0,
+      'no-cond-assign': 1,
+      'no-dupe-args': 1,
+      'no-dupe-keys': 1,
+      'no-duplicate-case': 1,
+      'no-extra-semi': 1,
+      'no-func-assign': 1,
+      'no-sparse-arrays': 1,
     },
     parserOptions: {
       'ecmaVersion': 6,
