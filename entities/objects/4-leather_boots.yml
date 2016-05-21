@@ -10,5 +10,5 @@
     behaviors: "wearable"
     attributes:
         defense: 3
-        wear_location: 'feet'
+        wearLocation: 'feet'
     load_max: 4

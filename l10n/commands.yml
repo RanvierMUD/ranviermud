@@ -8,9 +8,9 @@ MOVE_COMBAT:
     en: "Where do you think you're going in the middle of a fight?"
     es: "ES-Where do you think you're going in the middle of a fight?"
 LOCKED:
-    en: "You need something to unlock it."
+    en: "You try to go to $[1] but need something to unlock it."
 OTHER_LOCKED:
-    en: "$[1] tries to open a locked door and fails."
+    en: "$[1] tries to open a locked door to $[2] and fails."
 UNLOCKED:
     en: "You unlock it with the $[1]."
 OTHER_UNLOCKED:

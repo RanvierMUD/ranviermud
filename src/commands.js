@@ -1,31 +1,34 @@
-var util = require('util'),
+'use strict';
+const util = require('util'),
   ansi = require('sty')
   .parse,
   fs = require('fs'),
   CommandUtil = require('./command_util')
-  .CommandUtil;
-l10nHelper = require('./l10n');
-var rooms = null;
-var players = null;
-var items = null;
-var npcs = null;
+  .CommandUtil,
+  l10nHelper = require('./l10n');
+
+// "Globals" to be specified later during config.
+let rooms = null;
+let players = null;
+let items = null;
+let npcs = null;
 
 /**
  * Localization
  */
-var l10n = null;
-var l10n_file = __dirname + '/../l10n/commands.yml';
+let l10n = null;
+const l10nFile = __dirname + '/../l10n/commands.yml';
 // shortcut for l10n.translate
-var L = null;
+let L = null;
 
-var commands_dir = __dirname + '/../commands/';
+const commands_dir = __dirname + '/../commands/';
 
 /**
  * Commands a player can execute go here
  * Each command takes two arguments: a _string_ which is everything the user
  * typed after the command itself, and then the player that typed it.
  */
-var Commands = {
+const Commands = {
   player_commands: {},
 
   /**
@@ -44,7 +47,7 @@ var Commands = {
     items = config.items;
     npcs = config.npcs;
     util.log("Loading command l10n... ");
-    l10n = l10nHelper(l10n_file);
+    l10n = l10nHelper(l10nFile);
     l10n.setLocale(config.locale);
     util.log("Done");
 
@@ -62,13 +65,13 @@ var Commands = {
     // Load external commands
     fs.readdir(commands_dir,
       (err, files) => {
-        for (j in files) {
-          var command_file = commands_dir + files[j];
+        for (let j in files) {
+          let command_file = commands_dir + files[j];
           if (!fs.statSync(command_file)
             .isFile()) continue;
           if (!command_file.match(/js$/)) continue;
 
-          var command_name = files[j].split('.')[0];
+          let command_name = files[j].split('.')[0];
 
           //TODO: Add admin commands prefaced with @
           Commands.player_commands[command_name] = require(command_file)
@@ -86,16 +89,19 @@ var Commands = {
    * @return boolean
    */
   room_exits: (exit, player) => {
-    var room = rooms.getAt(player.getLocation());
+
+    const room = rooms.getAt(player.getLocation());
     if (!room) {
       return false;
     }
 
-    var exits = room.getExits()
+    const exits = room.getExits()
       .filter( e => {
+        let regex;
         try {
-          var regex = new RegExp("^" + exit);
+          regex = new RegExp("^" + exit);
         } catch (err) {
+          util.log(player.getName() + ' entered bogus command: ', exit);
           return false;
         }
         return e.direction.match(regex);
@@ -115,15 +121,17 @@ var Commands = {
       return;
     }
 
-    move(exits.pop(), player, players);
+    move(exits.pop(), player);
 
     return true;
   },
 
-  setLocale: function(locale) {
-    l10n.setLocale(locale);
-  }
+  setLocale: locale => l10n.setLocale(locale),
 };
+
+/*
+ * Best be settin' aliases here, yo.
+ */
 
 alias('exp', 'tnl');
 alias('take', 'get');
@@ -137,38 +145,50 @@ exports.Commands.move = move;
  * Move helper method
  * @param object exit See the Room class for details
  * @param Player player
+ * @returns bool Moved (false if the move fails)
  */
 function move(exit, player) {
+
   rooms.getAt(player.getLocation())
     .emit('playerLeave', player, players);
 
-  if ('door' in exit && 'locked' in exit.door) {
+  if ('door' in exit && exit.door.locked) {
     var key = exit.door.locked;
 
     if (!CommandUtil.findItemInInventory(key, player)) {
-      player.sayL10n(l10n, 'LOCKED');
-      players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
-        p => p.sayL10n(l10n, 'OTHER_LOCKED', player.getName()));
-      return;
+
+      let roomTitle = rooms.getAt(exit.location).getTitle(player.getLocale());
+
+      player.sayL10n(l10n, 'LOCKED', roomTitle);
+      players.eachIf(
+        p => CommandUtil.otherPlayerInRoom(player, p),
+        p => {
+          let roomTitle = rooms.getAt(exit.location).getTitle(p.getLocale());
+          p.sayL10n(l10n, 'OTHER_LOCKED', player.getName(), roomTitle);
+        });
+      return false;
     }
 
+    exit.door.locked = false;
     player.sayL10n(l10n, 'UNLOCKED', key);
-    players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
+    players.eachIf(
+      p => CommandUtil.otherPlayerInRoom(player, p),
       p => p.sayL10n(l10n, 'OTHER_UNLOCKED', player.getName(), key));
   }
 
-  var room = rooms.getAt(exit.location);
+  const room = rooms.getAt(exit.location);
   if (!room) {
     player.sayL10n(l10n, 'LIMBO');
-    return;
+    return true;
   }
 
   // Send the room leave message
-  players.eachExcept(player,
+  players.eachExcept(
+    player,
     p => {
       if (p.getLocation() === player.getLocation()) {
         try {
-          var leaveMessage = player.getName() + exit.leave_message[p.getLocale()] ||
+          const leaveMessage = player.getName() + exit.leave_message[p.getLocale()] ||
             ' leaves.';
           p.say(leaveMessage);
         } catch (e) {
@@ -177,7 +197,8 @@ function move(exit, player) {
       }
     });
 
-  players.eachExcept(player,
+  players.eachExcept(
+    player,
     p => {
       if (p.getLocation() === player.getLocation()) {
         p.prompt();
@@ -187,27 +208,33 @@ function move(exit, player) {
   player.setLocation(exit.location);
 
   // Add room to list of explored rooms
-  var hasExplored = player.explore(room.getLocation());
+  const hasExplored = player.explore(room.getLocation());
 
   // Force a re-look of the room
   Commands.player_commands.look(null, player, hasExplored);
 
   // Trigger the playerEnter event
   // See example in scripts/npcs/1.js
-  room.getNpcs()
-    .forEach(id => {
-      var npc = npcs.get(id);
-      npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
-    });
+  room.getNpcs().forEach(id => {
+    var npc = npcs.get(id);
+    if (!npc) { return; }
+    npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
+  });
 
   room.emit('playerEnter', player, players);
 
-  players.eachExcept(player, p => {
-    if (p.getLocation() === player.getLocation()) {
-      p.say(player.getName() + ' enters.');
-    }
+  // Broadcast player entrance to new room.
+  players.eachExcept(
+    player,
+    p => {
+      if (p.getLocation() === player.getLocation()) {
+        p.say(player.getName() + ' enters.');
+      }
   });
-};
+
+  return true;
+
+}
 
 /**
  * Alias commands
@@ -217,5 +244,5 @@ function move(exit, player) {
 function alias(name, target) {
   Commands.player_commands[name] = function() {
     Commands.player_commands[target].apply(null, [].slice.call(arguments))
-  };
-};
+  }
+}

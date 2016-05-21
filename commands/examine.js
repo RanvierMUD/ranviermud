@@ -1,19 +1,20 @@
-var l10n_file = __dirname + '/../l10n/commands/examine.yml';
-var l10n = require('../src/l10n')(l10n_file);
-var CommandUtil = require('../src/command_util')
+'use strict';
+const l10nFile = __dirname + '/../l10n/commands/examine.yml';
+const l10n = require('../src/l10n')(l10nFile);
+const CommandUtil = require('../src/command_util')
   .CommandUtil;
-var util = require('util');
+const util = require('util');
 
-exports.command = function(rooms, items, players, npcs, Commands) {
+exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     if (args) {
       args = args.trim().toLowerCase();
+      const room = rooms.getAt(player.getLocation());
 
       util.log(player.getName() + ' is searching for ' + args);
-      util.log('in ' + rooms.getAt(player.getLocation()).getTitle('en'));
+      util.log('  in ' + room.getTitle('en'));
 
-      rooms.getAt(player.getLocation())
-        .emit('examine', args.trim(), player, players);
+      room.emit('examine', args, player, players);
       return;
     }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * For reducing boilerplate on examine listeners.
  *
  * config object:
@@ -6,11 +6,11 @@
  *  poi : An array or object with Points Of Interest.
  *    It can be an array of strings or an object with strings as the keys and
  *    functions as the values.
- * 
- *  action: Needed if poi is an array of strings,   
- *    It is the function to run if the POI is found. 
- * 
- *  (optional) notFound: Function to run if the POI is 
+ *
+ *  action: Needed if poi is an array of strings,
+ *    It is the function to run if the POI is found.
+ *
+ *  (optional) notFound: Function to run if the POI is
  *    not found. A default is provided.
  */
 
@@ -26,13 +26,14 @@ module.exports.examine = (args, player, players, config) => {
   }
 
   // Set defaults as needed.
+  const defaultCheck = check => true;
   config.nothingFound = config.nothingFound || nothingFound;
-  config.check = config.check || () => true;
+  config.check = config.check || defaultCheck;
 
   // Handle POI as an object.
   if (!config.poi.length && config.check()) {
-    if (args in config.poi) config.poi[args]();
-    else config.nothingFound();
+    if (args in config.poi) { config.poi[args](); }
+    else { config.nothingFound(); }
     return;
   }
 

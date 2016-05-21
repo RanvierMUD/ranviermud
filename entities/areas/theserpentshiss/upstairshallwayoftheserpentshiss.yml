@@ -20,6 +20,7 @@
       direction: 'python'
       door:
         locked: 'python key'
+        difficulty: 15
         mob_locked: 'true'
       leave_message:
         en: ' disappears into the python room.'

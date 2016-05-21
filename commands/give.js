@@ -1,11 +1,11 @@
 'use strict';
-const l10n_file = __dirname + '/../l10n/commands/give.yml';
-const l10n = require('../src/l10n')(l10n_file);
+const l10nFile = __dirname + '/../l10n/commands/give.yml';
+const l10n = require('../src/l10n')(l10nFile);
 const CommandUtil = require('../src/command_util').CommandUtil;
 const util = require('util');
 
-exports.command = function(rooms, items, players, npcs, Commands) {
-  return function(args, player) {
+exports.command = (rooms, items, players, npcs, Commands) => {
+  return (args, player) => {
 
     // syntax 'give [item] [player]'
     if (player.isInCombat()) {
@@ -13,7 +13,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       return;
     }
 
-    args = args.split(' ');
+    args = args.toLowerCase().split(' ');
 
     if (!args.length) {
       player.sayL10n(l10n, 'NO_ITEM_OR_TARGET');
@@ -21,13 +21,13 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     }
 
     let to = args.indexOf('to');
-    if (to > -1) util.log(args.splice(to));
+    if (to > -1) args.splice(to, 1);
     util.log(args);
 
-    var item = CommandUtil.findItemInInventory(args[0], player, true);
-    var targetPlayer = args[1];
-    var targetFound = false;
-    var room = rooms.getAt(player.getLocation());
+    const item = CommandUtil.findItemInInventory(args[0], player, true);
+    const room = rooms.getAt(player.getLocation());
+    let targetPlayer = args[1];
+    let targetFound  = false;
 
     if (!item) {
       player.sayL10n(l10n, 'ITEM_NOT_FOUND', args[0]);
@@ -69,7 +69,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         util.log("Error when giving an item ", e);
         util.log("playerReceiving: ", playerReceiving.getName());
         util.log("playerGiving: ", playerGiving.getName());
-        util.log("Item:", item);
+        util.log("Item: ", item);
+
         playerGiving.sayL10n(l10n, 'GENERIC_ITEM_GIVEN', playerReceiving.getName());
         playerReceiving.sayL10n(l10n, 'GENERIC_ITEM_RECEIVED', playerGiving
           .getName());

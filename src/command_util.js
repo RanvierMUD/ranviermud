@@ -44,7 +44,8 @@ function _findItemInRoom(items, lookString, room, player, hydrate) {
   hydrate = hydrate || false;
   let thing = CommandUtil.parseDot(lookString, room.getItems(), function(
     item) {
-    return items.get(item).hasKeyword(this.keyword, player.getLocale());
+    let found = items.get(item);
+    return found && found.hasKeyword(this.keyword, player.getLocale());
   });
 
   return thing ? (hydrate ? items.get(thing) : thing) : false;
@@ -57,15 +58,17 @@ function _findItemInRoom(items, lookString, room, player, hydrate) {
  * @param string lookString
  * @param Room   room
  * @param Player player
- * @param boolean hydrade Whether to return the id or a full object
+ * @param boolean hydrate Whether to return the id or a full object
  * @return string UUID of the item
  */
 function _findNpcInRoom(npcs, lookString, room, player, hydrate) {
   hydrate = hydrate || false;
-  let thing = CommandUtil.parseDot(lookString, room.getNpcs(), function(
-    id) {
-    return npcs.get(id).hasKeyword(this.keyword, player.getLocale());
-  });
+  let thing = CommandUtil.parseDot(lookString, room.getNpcs(),
+    function (id) {
+      let npc = npcs.get(id);
+      return npc && npc.hasKeyword(this.keyword, player.getLocale());
+    }
+  );
 
   return thing ? (hydrate ? npcs.get(thing) : thing) : false;
 }
@@ -81,8 +84,8 @@ function _findNpcInRoom(npcs, lookString, room, player, hydrate) {
 function _findItemInInventory(lookString, being, hydrate) {
   hydrate = hydrate || false;
   let thing = CommandUtil.parseDot(lookString, being.getInventory(),
-    function(item) {
-      return item.hasKeyword(this.keyword, being.getLocale());
+    function (item) {
+      return item && item.hasKeyword(this.keyword, being.getLocale());
     });
 
   return thing ? (hydrate ? thing : thing.getUuid()) : false;
@@ -97,6 +100,10 @@ function _findItemInInventory(lookString, being, hydrate) {
  * @return object
  */
 function _parseDot(arg, objects, filterFunc) {
+  if (!arg) {
+    util.log(arguments);
+    return;
+  }
   let keyword = arg.split(' ')[0];
   let multi = false;
   let nth = null;
@@ -126,5 +133,6 @@ function _parseDot(arg, objects, filterFunc) {
 
   return item;
 }
+
 
 exports.CommandUtil = CommandUtil;

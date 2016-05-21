@@ -39,15 +39,15 @@ var Rooms = function() {
         var rooms = fs.readdirSync(file);
 
         // Check for an area manifest
-        var has_manifest = false;
-        for (j in rooms) {
+        var hasManifest = false;
+        for (let j in rooms) {
           if (rooms[j].match(/manifest.yml/)) {
-            has_manifest = true;
+            hasManifest = true;
             break;
           }
         }
 
-        if (!has_manifest) {
+        if (!hasManifest) {
           log("\tFailed to load area - " + file + ' - No manifest');
           return;
         }
@@ -79,7 +79,7 @@ var Rooms = function() {
         }
 
         // Load any room files
-        for (j in rooms) {
+        for (let j in rooms) {
           var room_file = file + '/' + rooms[j];
           //skip the manifest or any directories
           if (room_file.match(/manifest/)) continue;

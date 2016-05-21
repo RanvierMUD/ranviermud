@@ -10,5 +10,6 @@
     behaviors: "wearable"
     attributes:
         defense: 3
-        wear_location: 'torso'
+        wearLocation: 'torso'
     load_max: 4
+wea

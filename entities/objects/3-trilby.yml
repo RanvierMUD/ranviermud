@@ -10,5 +10,5 @@
     behaviors: "wearable"
     attributes:
         defense: 1
-        wear_location: 'head'
+        wearLocation: 'head'
     load_max: 4
