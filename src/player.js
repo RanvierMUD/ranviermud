@@ -1,4 +1,5 @@
-var Data = require('./data')
+'use strict';
+const Data = require('./data')
   .Data,
   Skills = require('./skills')
   .Skills,
@@ -6,13 +7,15 @@ var Data = require('./data')
   ansi = require('sty'),
   util = require('util'),
   events = require('events'),
-  wrap = require('wrap-ansi');
+  wrap = require('wrap-ansi'),
+  Random = require('./random').Random,
+  Feats = require('./feats').Feats;
 
-var npcs_scripts_dir = __dirname + '/../scripts/player/';
-var l10n_dir = __dirname + '/../l10n/scripts/player/';
-var statusUtil = require('./status');
+const npcs_scripts_dir = __dirname + '/../scripts/player/';
+const l10n_dir = __dirname + '/../l10n/scripts/player/';
+const statusUtil = require('./status');
 
-var Player = function(socket) {
+var Player = function PlayerConstructor(socket) {
   var self = this;
   self.name = '';
   self.description = '';
@@ -27,174 +30,260 @@ var Player = function(socket) {
   self.equipment = {};
 
   // In combat is either false or an NPC vnum
-  self.in_combat = false;
+  self.inCombat = false;
 
   // Attributes
   self.attributes = {
+
     max_health: 100,
-    health: 30,
+    health: 90,
     max_sanity: 100,
-    sanity: 30,
+    sanity: 70,
+
     stamina: 1,
     willpower: 1,
     quickness: 1,
     cleverness: 1,
+
     level: 1,
     experience: 0,
     mutagens: 0,
+
+    //TODO: Generated descs.
     description: 'A person.'
   };
 
   self.preferences = {
     target: 'body',
     wimpy: 30,
-    stance: 'normal'
+    stance: 'normal',
+    roomdescs: 'default' //default = verbose 1st time, short after.
   };
 
+  self.explored = [];
+
   // Anything affecting the player
-  self.affects = {};
+  self.effects = {};
 
   // Skills the players has
   self.skills = {};
 
+  // Training data
+  self.training = { time: 0 };
+
   /**#@+
    * Mutators
    */
-  self.getPrompt = function() {
-    return self.prompt_string;
-  };
-  self.getCombatPrompt = function() {
-    return self.combat_prompt;
-  };
-  self.getLocale = function() {
-    return self.locale;
-  };
-  self.getName = function() {
-    return self.name;
-  };
-  self.getDescription = function() {
-    return self.attributes.description;
-  };
-  self.getLocation = function() {
-    return self.location;
-  };
-  self.getSocket = function() {
-    return socket;
-  };
-  self.getInventory = function() {
-    return self.inventory;
-  };
+  self.getPrompt = () => self.prompt_string;
+  self.getCombatPrompt = () => self.combat_prompt;
+  self.getLocale = () => self.locale;
+  self.getName = () => self.name;
+  self.getDescription = () => self.attributes.description;
+  self.getLocation = () => self.location;
+  self.getSocket = () => socket;
+  self.getInventory = () => self.inventory;
+  self.getAttributes = () => self.attributes || {};
+  self.getGender = () => self.gender;
 
-  self.getAttribute = function(attr) {
-    return typeof self.attributes[attr] !== 'undefined' ? self.attributes[
-      attr] : false;
-  };
-  self.getAttributes = function() {
-    return self.attributes || {}
-  }
+  self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
+    self.attributes[attr] : false;
 
-  self.getPreference = function(pref) {
-    return typeof self.preferences[pref] !== 'undefined' ? self.preferences[
-      pref] : false;
-  };
+  self.getPreference = pref => typeof self.preferences[pref] !== 'undefined' ?
+    self.preferences[pref] : false;
 
-  self.getSkills = function(skill) {
-    return typeof self.skills[skill] !== 'undefined' ? self.skills[skill] :
-      self.skills;
-  };
+  self.getSkills = skill => typeof self.skills[skill] !== 'undefined' ?
+    self.skills[skill] : self.skills;
 
-  // Note, only retreives hash, not a real password
-  self.getPassword = function() {
-    return self.password;
-  };
+  self.setSkill = (skill, level) => self.skills[skill] = level;
+  self.incrementSkill = skill => self.setSkill(skill, self.skills[skill] + 1);
 
-  self.isInCombat = function() {
-    return self.in_combat;
-  };
+  self.getFeats = feat => typeof self.feats[feat] !== 'undefined' ?
+    self.feats[feat] : self.feats;
 
-  self.checkStance = function(str) {
-    return self.preferences.stance === str.toLowerCase();
-  };
+  self.gainFeat = feat => self.feats[feat.id] = feat;
 
-  self.setPrompt = function(str) { self.prompt_string = str; }
-  self.setCombatPrompt = function(str) { self.combat_prompt = str; }
-  self.setLocale = function(locale) { self.locale = locale; };
-  self.setName = function(newname) { self.name = newname; };
-  self.setDescription = function(newdesc) {
+  self.getPassword = () => self.password; // Returns hash.
+  self.isInCombat = () => self.inCombat;
+
+  self.setPrompt = str => self.prompt_string = str;
+  self.setCombatPrompt = str => self.combat_prompt = str;
+  self.setLocale = locale => self.locale = locale;
+  self.setName = newname => self.name = newname;
+  self.setDescription = newdesc =>
     self.attributes.description =
       newdesc;
-  };
 
-  self.setLocation = function(loc) { self.location = loc; };
-  self.setPassword = function(pass) {
-    self.password = crypto.createHash('md5')
+  self.setLocation = loc => self.location = loc;
+  self.setPassword = pass =>
+    self.password = crypto
+      .createHash('md5')
       .update(pass)
       .digest('hex');
+
+  self.setGender = gender => self.gender = gender.toUpperCase();
+  self.addItem = item => self.inventory.push(item);
+  self.removeItem = item => {
+    self.inventory = self.inventory.filter(i => item !== i);
   };
-  self.setGender = function(gender) { self.gender = gender.toUpperCase(); }
-  self.getGender = function() {
-    return self.gender;
-  }
-  self.addItem = function(item) { self.inventory.push(item); };
-  self.removeItem = function(item) {
-    self.inventory = self.inventory.filter(
-      function(i) {
-        return item !== i;
-      });
+  self.setInventory = inv => self.inventory = inv;
+  self.setInCombat = combatant => self.inCombat = combatant;
+  self.setAttribute = (attr, val) => self.attributes[attr] = val;
+  self.setPreference = (pref, val) => self.preferences[pref] = val;
+  self.addSkill = (name, skill) => self.skills[name] = skill;
+
+  // Used to set up skill training business.
+  self.setTraining = (key, value) => self.training[key] = value;
+  self.getTraining = key => key ? self.training[key] : self.training || {};
+
+  self.checkTraining = () => {
+    const beginning = self.training.beginTraining;
+
+    if (!beginning) { return; }
+
+    let queuedTraining = [];
+    for (const queued in self.training) {
+      if (queued !== 'time' && queued !== 'beginTraining') {
+        queuedTraining.push(self.training[queued]);
+        util.log(queuedTraining);
+      }
+    }
+
+    if (!queuedTraining.length) { return; }
+    queuedTraining.sort((x, y) => x.cost - y.cost);
+
+    let trainingTime = Date.now() - beginning;
+
+    player.say("");
+
+    for (let i = 0; i < queuedTraining.length; i++) {
+      let session = queuedTraining[i];
+
+      if (trainingTime >= session.duration) {
+        trainingTime -= session.duration;
+
+        self.setSkill(session.id, session.newLevel);
+        self.say('<bold>' + session.message + '</bold>');
+        delete self.training[session.id];
+
+      } else {
+        delete self.training[session.id];
+        self.say(
+          '<bold><yellow>You were able to spend some time training ' +
+          session.skill +
+          ', but did not make any breakthroughs.</yellow></bold>'
+        );
+
+        session.duration -= trainingTime;
+        self.setTraining(session.id, session);
+
+        break;
+      }
+    }
+
+    delete self.training.beginTraining;
+    self.say('<bold>Thus completes your training, for now.</bold>');
   };
-  self.setInventory = function(inv) { self.inventory = inv; };
-  self.setInCombat = function(combat) { self.in_combat = combat; };
-  self.setAttribute = function(attr, val) { self.attributes[attr] = val; };
-  self.setPreference = function(pref, val) { self.preferences[pref] = val; };
-  self.addSkill = function(name, skill) { self.skills[name] = skill; };
+
+  self.clearTraining = () => {
+    for (const queued in self.training) {
+      if (queued !== 'time' && queued !== 'beginTraining') {
+        const session = self.training[queued];
+        const time = self.getTraining('time');
+        self.setTraining('time', time + session.newLevel);
+        delete self.training[queued];
+      }
+    }
+
+    if (self.training.beginTraining) {
+      delete self.training.beginTraining;
+    }
+
+    player.say('You decide to change your training regimen.');
+  };
+
+  self.checkStance = stance => self.preferences.stance === stance.toLowerCase();
   /**#@-*/
 
+
   /**
-   * Get currently applied affects
-   * @param string aff
+  * To keep track of which rooms the player has already explored.
+  * @param int Vnum of room explored...
+  * @return boolean True if they have already been there. Otherwise false.
+  */
+  self.explore = vnum => {
+    if (self.explored.indexOf(vnum) === -1) {
+      self.explored.push(vnum);
+      util.log(player.getName() + ' explored room #' + vnum + ' for the first time.');
+      return false;
+    }
+    util.log(player.getName() + ' moves to room #' + vnum);
+    return true;
+  };
+
+  /**
+  * Spot checks
+  * @param int Difficulty -- What they need to beat with their roll
+  * @param int Bonus -- The bonus they get on their roll
+  * @return boolean Success
+  */
+  self.spot = (difficulty, bonus) => {
+    bonus = bonus || 1;
+    difficulty = difficulty || 1;
+
+    //TODO: Consider using Random.roll instead.
+    let chance = (Math.random() * bonus);
+    let spotted = (self.getAttribute('cleverness') + chance >= difficulty);
+
+    util.log("Spot check success: ", spotted);
+    return spotted;
+  }
+
+  /**
+   * Get currently applied effects
+   * @param string eff
    * @return Array|Object
    */
-  self.getAffects = function(aff) {
-    if (aff) {
-      return typeof self.affects[aff] !== 'undefined' ? self.affects[aff] :
+  self.getEffects = eff => {
+    if (eff) {
+      return typeof self.effects[eff] !== 'undefined' ? self.effects[eff] :
         false;
     }
-    return self.affects;
+    return self.effects;
   };
 
   /**
-   * Add, activate and set a timer for an affect
+   * Add, activate and set a timer for an effect
    * @param string name
-   * @param object affect
+   * @param object effect
    */
-  self.addAffect = function(name, affect) {
-    if (affect.activate) {
-      affect.activate();
+  self.addEffect = (name, effect) => {
+    if (effect.activate) {
+      effect.activate();
     }
 
-    var deact = function() {
-      if (affect.deactivate) {
-        affect.deactivate();
+    let deact = function() {
+      if (effect.deactivate) {
+        effect.deactivate();
         self.prompt();
       }
-      self.removeAffect(name);
+      self.removeEffect(name);
     };
 
-    if (affect.duration) {
-      affect.timer = setTimeout(deact, affect.duration * 1000);
-    } else if (affect.event) {
-      self.on(affect.event, deact);
+    if (effect.duration) {
+      effect.timer = setTimeout(deact, effect.duration);
+    } else if (effect.event) {
+      self.on(effect.event, deact);
     }
-    self.affects[name] = affect;
+    self.effects[name] = effect;
   };
 
-  self.removeAffect = function(aff) {
-    if (self.affects[aff].event) {
-      self.removeListener(self.affects[aff].event, self.affects[aff].deactivate);
+  self.removeEffect = eff => {
+    if (self.effects[eff].event) {
+      self.removeListener(self.effects[eff].event, self.effects[eff].deactivate);
     } else {
-      clearTimeout(self.affects[aff].timer);
+      clearTimeout(self.effects[eff].timer);
     }
-    delete self.affects[aff];
+    self.effects[eff] = null;
   };
 
   /**
@@ -203,7 +292,7 @@ var Player = function(socket) {
    * @param boolean hydrate Return an actual item or just the uuid
    * @return string|Item
    */
-  self.getEquipped = function(slot, hydrate) {
+  self.getEquipped = (slot, hydrate) => {
     if (!slot) {
       return self.equipment;
     }
@@ -215,23 +304,18 @@ var Player = function(socket) {
     hydrate = hydrate || false;
     if (hydrate) {
       return self.getInventory()
-        .filter(function(i) {
-          return i.getUuid() === self.equipment[slot];
-        })[0];
+        .filter(i => i.getUuid() === self.equipment[slot])[0];
     }
     return self.equipment[slot];
   };
 
   /**
    * "equip" an item
-   * @param string wear_location The location this item is worn
+   * @param string wearLocation The location this item is worn
    * @param Item   item
    */
-  self.equip = function(wear_location, item) {
-    util.log(">> Equipping at ", wear_location, item.getUuid);
-
-    self.equipment[wear_location] = item.getUuid();
-
+  self.equip = (wearLocation, item) => {
+    self.equipment[wearLocation] = item.getUuid();
     item.setEquipped(true);
   };
 
@@ -239,11 +323,11 @@ var Player = function(socket) {
    * "unequip" an item
    * @param Item   item
    */
-  self.unequip = function(item) {
+  self.unequip = item => {
     item.setEquipped(false);
     for (var i in self.equipment) {
-      if (self.equipment[i] === item.getUuid()) {
-        delete self.equipment[i];
+      if (self.equipment[slot] === item.getUuid()) {
+        self.equipment[slot] = null;
         break;
       }
     }
@@ -254,9 +338,8 @@ var Player = function(socket) {
    * Write to a player's socket
    * @param string data Stuff to write
    */
-  self.write = function(data, color) {
+  self.write = (data, color) => {
     color = color || true;
-
     if (!color) ansi.disable();
     socket.write(ansi.parse(data));
     ansi.enable();
@@ -266,10 +349,9 @@ var Player = function(socket) {
    * Write based on player's locale
    * @param Localize l10n
    * @param string   key
-   * @param ...
    */
-  self.writeL10n = function(l10n, key) {
-    var locale = l10n.locale;
+  self.writeL10n = function (l10n, key) {
+    let locale = l10n.locale;
     if (self.getLocale()) {
       l10n.setLocale(self.getLocale());
     }
@@ -284,7 +366,7 @@ var Player = function(socket) {
    * write() + newline
    * @see self.write
    */
-  self.say = function(data, color) {
+  self.say = (data, color) => {
     color = color || true;
     if (!color) ansi.disable();
     socket.write(ansi.parse(wrap(data), 40) + "\r\n");
@@ -295,14 +377,14 @@ var Player = function(socket) {
    * writeL10n() + newline
    * @see self.writeL10n
    */
-  self.sayL10n = function(l10n, key) {
-    var locale = l10n.locale;
+  self.sayL10n = function (l10n, key) {
+    let locale = l10n.locale;
     if (self.getLocale()) {
       l10n.setLocale(self.getLocale());
     }
 
-    self.say(l10n.translate.apply(null, [].slice.call(arguments)
-      .slice(1)));
+    let translated = l10n.translate.apply(null, [].slice.call(arguments).slice(1));
+    self.say(translated, true);
     if (locale) l10n.setLocale(locale);
   };
 
@@ -310,8 +392,8 @@ var Player = function(socket) {
    * Display the configured prompt to the player
    * @param object extra Other data to show
    */
-  self.prompt = function(extra) {
-    var pstring = self.getPrompt();
+  self.prompt = extra => {
+    let pstring = self.getPrompt();
     extra = extra || {};
 
     extra.health_condition = statusUtil.getHealthText(self.getAttribute(
@@ -319,7 +401,7 @@ var Player = function(socket) {
     extra.sanity_condition = statusUtil.getSanityText(self.getAttribute(
       'max_sanity'), self)(self.getAttribute('sanity'));
 
-    for (var data in extra) {
+    for (let data in extra) {
       pstring = pstring.replace("%" + data, extra[data]);
     }
 
@@ -330,12 +412,12 @@ var Player = function(socket) {
   /**
    * @see self.prompt
    */
-  self.combatPrompt = function(extra) {
+  self.combatPrompt = extra => {
     extra = extra || {};
 
-    var pstring = self.getCombatPrompt();
+    let pstring = self.getCombatPrompt();
 
-    for (var data in extra) {
+    for (let data in extra) {
       pstring = pstring.replace("%" + data, extra[data]);
     }
 
@@ -349,7 +431,7 @@ var Player = function(socket) {
    * of this stuff when we create a player, so make a separate method for it
    * @param object data Object should have all the things a player needs. Like spinach.
    */
-  self.load = function(data) {
+  self.load = data => {
     self.name = data.name;
     self.location = data.location;
     self.locale = data.locale;
@@ -359,10 +441,27 @@ var Player = function(socket) {
     self.equipment = data.equipment || {};
     self.attributes = data.attributes;
     self.skills = data.skills;
+    self.feats = data.feats || {};
+    self.preferences = data.preferences || {};
+    self.explored = data.explored || [];
+    self.training = data.training || { time: 0 };
+
     // Activate any passive skills the player has
-    for (var skill in self.skills) {
-      if (Skills[self.getAttribute('class')][skill].type === 'passive') {
-        self.useSkill(skill, self);
+    //TODO: Probably a better way to do this than toLowerCase.
+    for (let feat in self.feats) {
+      feat = feat.toLowerCase();
+      let featType = Feats[feat].type;
+      if (featType === 'passive') {
+        self.useFeat(feat, self);
+      }
+    }
+
+    // If the player is new, or skills have been added, initialize them to level 1.
+    for (let skill in Skills) {
+      skill = Skills[skill];
+      if (!self.skills[skill.id]) {
+        util.log("Initializing skill ", skill.id);
+        self.skills[skill.id] = 1;
       }
     }
 
@@ -372,74 +471,76 @@ var Player = function(socket) {
    * Save the player... who'da thunk it.
    * @param function callback
    */
-  self.save = function(callback) {
+  self.save = callback => {
     Data.savePlayer(self, callback);
   };
 
   /**
    * Get attack speed of a player
-   * @return float
+   * @return float milliseconds between attacks
    */
-  self.getAttackSpeed = function() {
-    var weapon = self.getEquipped('wield', true);
-    var minimum = 100;
+  self.getAttackSpeed = () => {
+    let weapon = self.getEquipped('wield', true);
+    let minimum = 100;
 
-    var speedFactor = weapon ? weapon.getAttribute('speed') || 2 : 2;
-    var speedDice = (self.getAttribute('quickness') + self.getAttribute(
+    let speedFactor = weapon ? weapon.getAttribute('speed') || 2 : 2;
+    let speedDice = (self.getAttribute('quickness') + self.getAttribute(
       'cleverness'));
 
-    var speed = Math.max(5000 - roll(speedDice, 100 / speedFactor), minimum);
+    let speedRoll = 5000 - Random.roll(speedDice, 100 / speedFactor);
+
+    let speed = Math.max(speedRoll, minimum);
     util.log("Player's speed is ", speed);
 
     if (self.checkStance('precise')) speed = Math.round(speed * 1.5);
+    if (self.checkStance('berserk')) speed = Math.round(speed * .75);
 
     return speed;
   };
 
-  function roll(dice, sides) {
-    return dice * (Math.floor(sides * Math.random()) + 1);
-  }
+
 
   /**
    * Get the damage a player can do
    * @return int
    */
-  self.getDamage = function() {
-    var weapon = self.getEquipped('wield', true)
-    var base = [1, self.getAttribute('stamina') + 1];
+  self.getDamage = () => {
+    let weapon = self.getEquipped('wield', true)
+    let base = [1, self.getAttribute('stamina') + 1];
 
-    var damage = weapon ?
+    let damage = weapon ?
       (weapon.getAttribute('damage') ?
         weapon.getAttribute('damage')
         .split('-')
-        .map(function(i) {
-          return parseInt(i, 10);
+        .map(dmg => {
+          return parseInt(dmg, 10);
         }) : base
       ) : base;
 
-    damage = damage.map(d => d + addDamageBonus(d));
+    damage = damage.map(dmg => dmg + addDamageBonus(dmg));
 
     return { min: damage[0], max: damage[1] };
   };
 
   function addDamageBonus(d) {
-     var stance = self.getPreference('stance');
-     var bonuses = {
-        'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
-        'cautious': -(Math.round(d / 2)),
-        'precise': 1
-     }
-     return bonuses[stance] || 0;
+    let stance = self.getPreference('stance');
+    let bonuses = {
+      'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
+      'cautious': -(Math.round(d / 2)),
+      'precise': 1
+    }
+    return bonuses[stance] || 0;
   }
 
   /**
    * Turn the player into a JSON string for storage
    * @return string
    */
-  self.stringify = function() {
-    var inv = [];
+  self.stringify = () => {
+    let inv = [];
+
     self.getInventory()
-      .forEach(function(item) {
+      .forEach(item => {
         inv.push(item.flatten());
       });
 
@@ -454,50 +555,69 @@ var Player = function(socket) {
       equipment: self.equipment,
       attributes: self.attributes,
       skills: self.skills,
+      feats: self.feats,
       gender: self.gender,
-      preferences: self.preferences
+      preferences: self.preferences,
+      explored: self.explored,
+      training: self.training,
     });
   };
 
   /**
    * Players will have some defined events so load them on creation
    */
-  self.init = function() {
+  self.init = () => {
     Data.loadListeners({ script: "player.js" }, l10n_dir, npcs_scripts_dir,
       self);
   };
 
   /**
-   * Helper to activate skills
-   * @param string skill
+   * Helpers to activate skills or feats
+   * @param string skill/feat
+   * @param [string] arguments
+   * Command event passes in player, args, rooms, npcs.
    */
-  self.useSkill = function(skill /*, args... */ ) {
-    Skills[skill].activate.apply(null, [].slice
-      .call(arguments)
-      .slice(1));
+  self.useSkill = function (skill /*, args... */ ) {
+    if (!Skills[skill]) {
+      util.log("skill not found: ", skill);
+      return;
+    }
+    const args = [].slice.call(arguments).slice(1)
+    Skills[skill].activate.apply(null, args);
   };
+
+  self.useFeat = function (feat /*, args... */ ) {
+    if (!Feats[feat.toLowerCase()]) {
+      util.log("feat not found: ", feat);
+      return;
+    }
+    const args = [].slice.call(arguments).slice(1)
+    Feats[feat].activate.apply(null, args);
+  };
+
+
 
   /**
    * Helper to calculate physical damage
    * @param int damage
    * @param string location
    */
-  self.damage = function (dmg, location) {
+  self.damage = (dmg, location) => {
     if (!dmg) return;
     location = location || 'body';
 
-    damageDone = Math.max(1, dmg - soak(location));
+    let damageDone = Math.max(1, dmg - soak(location));
 
     self.setAttribute('health',
       Math.max(0, self.getAttribute('health') - damageDone));
-    
+
     util.log('Damage done to ' + self.getName() + ': ' + damageDone);
 
     return damageDone;
   };
 
   function soak(location) {
-    var defense = armor(location);
+    let defense = armor(location);
 
     if (location !== 'body')
       defense += armor('body');
@@ -513,8 +633,8 @@ var Player = function(socket) {
   }
 
   function armor(location) {
-    var bonus = self.checkStance('precise') ? self.getAttribute('willpower') + self.getAttribute('stamina') : 0
-    var item = self.getEquipped(location, true);
+    let bonus = self.checkStance('precise') ? self.getAttribute('willpower') + self.getAttribute('stamina') : 0
+    let item = self.getEquipped(location, true);
     if (item)
       return item.getAttribute('defense') * bonus;
     return 0;

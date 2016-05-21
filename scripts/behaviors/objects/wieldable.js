@@ -1,39 +1,31 @@
 exports.listeners = {
-	wield: function (l10n)
-	{
-		return function (location, player, players)
-		{
+	wield: (l10n) => {
+		return (location, player, players) => {
+			location = location || body;
 			player.sayL10n(l10n, 'WIELD', this.getShortDesc(player.getLocale()));
 			player.equip(location, this);
+			//TODO: broadcast to other players in room
 		}
 	},
-	remove: function (l10n)
-	{
-		return function (player)
-		{
+	remove: (l10n) => {
+		return (player) => {
 			player.sayL10n(l10n, 'REMOVE', this.getShortDesc(player.getLocale()));
 		}
 	},
-	hit: function (l10n)
-	{
-		return function (player)
-		{
+	hit: (l10n) => {
+		return (player) => {
 			player.sayL10n(l10n, 'HIT', this.getShortDesc(player.getLocale()));
 		}
 	},
-	miss: function (l10n)
+	miss: (l10n) =>
 	{
-		return function (player)
-		{
+		return (player) => {
 			player.sayL10n(l10n, 'MISS');
 		}
 	},
-	parry: function (l10n)
-	{
-		return function (player)
-		{
+	parry: (l10n) => {
+		return (player) => {
 			player.sayL10n(l10n, 'PARRY');
 		}
 	},
 };
-

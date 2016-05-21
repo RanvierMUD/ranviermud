@@ -1,15 +1,42 @@
+var CommandUtil = require('../../src/command_util')
+  .CommandUtil;
+var l10nFile = __dirname + '/../../l10n/scripts/rooms/11.js.yml';
+var l10n = require('../../src/l10n')(l10nFile);
+var examiner = require('../../src/examine').examine;
+
 exports.listeners = {
-  playerEnter: function(l10n) {
-    return function(player, players) {
-      if (getRand() === 3) {
-        player.setAttribute('sanity', player.getAttribute('sanity') -
-          getRand());
-        player.sayL10n(l10n, 'DISCOMFORT');
+
+  examine: l10n => {
+    return (args, player, players) => {
+      var config = {
+        poi: [
+          'ground',
+          'floor',
+          'stains',
+          'blood',
+          'rust'
+        ],
+        found: seeDisturbance.bind(null, player, players),
+        check: player.spot.bind(null, 3, 1)
       }
-    }
+
+      return examiner(args, player, players, config);
+    };
   },
 };
 
-function getRand() {
-  return Math.floor(Math.random() * 5 + 1);
+function seeDisturbance(player, players) {
+  var alreadyFound = player
+    .explore('noticed bloodstains in cage');
+
+  if (!alreadyFound) {
+    player.emit('experience', 100);
+  }
+
+  var sanity = player.getAttribute('sanity') - 5;
+  player.setAttribute('sanity', sanity);
+
+  player.sayL10n(l10n, 'DISCOMFORT');
+  players.eachIf(p => CommandUtil.inSameRoom(p, player),
+    p => { p.sayL10n(l10n, 'OTHER_DISCOMFORT'); });
 }

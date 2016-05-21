@@ -1,25 +1,30 @@
-var l10n_file = __dirname + '/../l10n/commands/whisper.yml';
-var l10n = require('../src/l10n')(l10n_file);
-var CommandUtil = require('../src/command_util').CommandUtil;
-exports.command = function(rooms, items, players, npcs, Commands) {
-  return function(args, player) {
+'use strict';
+//TODO: Refactor to be a channel.
+const l10nFile = __dirname + '/../l10n/commands/whisper.yml';
+const l10n = require('../src/l10n')(l10nFile);
+const CommandUtil = require('../src/command_util').CommandUtil;
+const util = require('util');
+
+exports.command = (rooms, items, players, npcs, Commands) => {
+  return (args, player) => {
     args = args.split(' ');
 
-    var target = args.shift();
-    var msg = args.join(' ');
-    var targetFound = true;
+    const target = args.shift();
+    const msg = args.join(' ');
+    const playerName = player.getName();
+    let targetFound = true;
 
     if (args.length > 0) {
       targetFound = false;
       players.eachIf(
-        (target) => CommandUtil.otherPlayerInRoom(target, player),
-        (p) => {
+        p => CommandUtil.otherPlayerInRoom(p, player),
+        p => {
           if (p.getName().toLowerCase() === target.toLowerCase()) {
-            p.sayL10n(l10n, 'THEY_WHISPER', player.getName(), msg);
+            p.sayL10n(l10n, 'THEY_WHISPER', playerName, msg);
             targetFound = true;
-          } else
-            p.sayL10n(l10n, 'OTHERS_WHISPER', player.getName(),
-              target);
+          } else {
+            p.sayL10n(l10n, 'OTHERS_WHISPER', playerName, target);
+          }
           p.prompt();
         });
       if (targetFound) {
@@ -28,11 +33,12 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       }
     }
 
-    if (!targetFound)
+    if (!targetFound) {
       player.sayL10n(l10n, 'NO_TARGET_FOUND');
+      return;
+    }
+
     player.sayL10n(l10n, 'NOTHING_SAID');
 
-    return;
   }
-
 };

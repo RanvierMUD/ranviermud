@@ -153,7 +153,7 @@ var Npc = function (config)
 	self.description;
 	self.room; // Room that it's in (vnum)
 	self.vnum; // Not to be confused with its vnum
-	self.in_combat = false;
+	self.inCombat = false;
 	self.uuid = null;
 
 	// attributes
@@ -163,8 +163,8 @@ var Npc = function (config)
 		level: 1
 	};
 
-	// Anything affecting the player
-	self.affects = {
+	// Anything affecting the NPC
+	self.effects = {
 	};
 
 	/**
@@ -197,32 +197,33 @@ var Npc = function (config)
 	 */
 	self.getVnum      = function () { return self.vnum; };
 	self.getInv       = function () { return self.inventory; };
-	self.isInCombat   = function () { return self.in_combat; };
+	self.isInCombat   = function () { return self.inCombat; };
 	self.getRoom      = function () { return self.room; };
 	self.getUuid      = function () { return self.uuid; };
 	self.getAttribute = function (attr) { return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
 	self.setUuid      = function (uid) { self.uuid = uid; };
 	self.setRoom      = function (room) { self.room = room; };
 	self.setInventory = function (identifier) { self.inventory = identifier; }
-	self.setInCombat  = function (combat) { self.in_combat = combat; }
+	self.setInCombat  = function (combat) { self.inCombat = combat; }
 	self.setContainer = function (uid) { self.container = uid; }
 	self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
-	self.removeAffect = function (aff) { delete self.affects[aff]; };
+	self.removeEffect = function (aff) { delete self.effects[aff]; };
 	self.getDefenses  = function () { return self.defenses; };
 	self.getLocations = function () { return Object.keys(self.defenses); };
+  self.isPacifist   = () => !self.listeners('combat').length;
 	/**#@-*/
 
 	/**
-	 * Get currently applied affects
+	 * Get currently applied effects
 	 * @param string aff
 	 * @return Array|Object
 	 */
-	self.getAffects = function (aff)
+	self.getEffects = function (aff)
 	{
 		if (aff) {
-			return typeof self.affects[aff] !== 'undefined' ? self.affects[aff] : false;
+			return typeof self.effects[aff] !== 'undefined' ? self.effects[aff] : false;
 		}
-		return self.affects;
+		return self.effects;
 	};
 
 	/**
@@ -230,19 +231,19 @@ var Npc = function (config)
 	 * @param string name
 	 * @param object affect
 	 */
-	self.addAffect = function (name, affect)
+	self.addEffect = function (name, effect)
 	{
-		if (affect.activate) {
-			affect.activate();
+		if (effect.activate) {
+			effect.activate();
 		}
 
 		setTimeout(function () {
-			if (affect.deactivate) {
-				affect.deactivate();
+			if (effect.deactivate) {
+				effect.deactivate();
 			}
-			self.removeAffect(name);
-		}, affect.duration * 1000);
-		self.affects[name] = 1;
+			self.removeEffect(name);
+		}, effect.duration * 1000);
+		self.effects[name] = 1;
 	};
 
 	//TODO: dry-ify the following
@@ -340,7 +341,7 @@ var Npc = function (config)
 		return damage ? {min: damage[0], max: damage[1]} : false;
 	};
 
-	/** 
+	/**
 	* Helper to get just one area's defense
 	* @param string location
 	*/
@@ -360,7 +361,7 @@ var Npc = function (config)
     damageDone = Math.max(1, dmg - calculateDefense(location));
     self.setAttribute('health', Math.max(0, self.getAttribute('health') - damageDone));
     util.log('Damage done to ' + self.getShortDesc('en') + ': ' + damageDone);
-    
+
     return damageDone;
   };
 
