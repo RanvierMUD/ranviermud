@@ -1,4 +1,4 @@
-module.exports.initiate_combat = _initiate_combat;
+module.exports.initCombat = _initCombat;
 //TODO: Add strings for sanity damage
 var Random = require('./random.js').Random;
 var LevelUtil = require('./levels')
@@ -10,27 +10,27 @@ var statusUtils = require('./status');
 var Commands = require('./commands').Commands;
 
 
-function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callback) {
+function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
   var locale = player.getLocale();
   player.setInCombat(npc);
   npc.setInCombat(player.getName());
 
   player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(locale));
 
-  var p_locations = [
+  var playerBodyParts = [
     'legs',
     'feet',
     'torso',
     'hands',
     'head'
-    ];
+  ];
 
   var p = {
     isPlayer: true,
     name: player.getName(),
     speed: player.getAttackSpeed(),
     weapon: player.getEquipped('wield', true),
-    locations: p_locations,
+    locations: playerBodyParts,
     target: player.getPreference('target') || 'body',
   };
 
@@ -48,14 +48,14 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
     util.log("Speeds are " + p.speed + ' vs. ' + n.speed)
   } catch (e) { util.log(e); }
 
-  var player_combat = combatRound.bind(null, player, npc, p, n);
-  var npc_combat = combatRound.bind(null, npc, player, n, p);
+  var playerCombat = combatRound.bind(null, player, npc, p, n);
+  var npcCombat = combatRound.bind(null, npc, player, n, p);
 
-  p.attackRound = player_combat;
-  n.attackRound = npc_combat;
+  p.attackRound = playerCombat;
+  n.attackRound = npcCombat;
 
-  setTimeout(npc_combat, n.speed);
-  setTimeout(player_combat, p.speed);
+  setTimeout(npcCombat, n.speed);
+  setTimeout(playerCombat, p.speed);
 
   function combatRound(attacker, defender, a, d) {
 
@@ -80,7 +80,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
 
     if (!damage) {
 
-      if (d.weapon && typeof d.weapon == 'Object')
+      if (d.weapon && typeof d.weapon == 'object')
         d.weapon.emit('parry', defender);
 
       if (a.isPlayer)
@@ -103,7 +103,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
       util.log('Targeted ' + a.target + ' and hit ' + hitLocation);
       var damageStr = getDamageString(damage, defender.getAttribute('health'));
 
-      if (a.weapon && typeof a.weapon == 'Object')
+      if (a.weapon && typeof a.weapon == 'object')
         a.weapon.emit('hit', player);
 
       if (d.isPlayer)
@@ -194,7 +194,7 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
 
   function combat_end(success) {
 
-    util.log("*** Combat Over ***")
+    util.log("*** Combat Over ***");
 
     player.setInCombat(false);
     npc.setInCombat(false);
@@ -259,10 +259,13 @@ function _initiate_combat(l10n, npc, player, room, npcs, players, rooms, callbac
   }
 
   function broadcastToArea(msg) {
-    players.eachExcept(player, function(p) {
-      if (rooms.getAt(p.getLocation())
-        .getArea() === rooms.getAt(player.getLocation())
-        .getArea()) {
+    players.eachExcept(player, p => {
+      const otherRoom = rooms.getAt(p.getLocation());
+      const playerRoom = rooms.getAt(player.getLocation());
+      const sameArea = otherRoom.getArea() === playerRoom.getArea();
+      const notSameRoom = otherRoom !== playerRoom;
+
+      if (sameArea && notSameRoom) {
         p.say(msg);
         p.prompt();
       }

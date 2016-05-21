@@ -8,7 +8,8 @@ const Data = require('./data')
   util = require('util'),
   events = require('events'),
   wrap = require('wrap-ansi'),
-  Random = require('./random').Random;
+  Random = require('./random').Random,
+  Feats = require('./feats').Feats;
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
 const l10n_dir = __dirname + '/../l10n/scripts/player/';
@@ -29,21 +30,26 @@ var Player = function PlayerConstructor(socket) {
   self.equipment = {};
 
   // In combat is either false or an NPC vnum
-  self.in_combat = false;
+  self.inCombat = false;
 
   // Attributes
   self.attributes = {
+
     max_health: 100,
-    health: 30,
+    health: 90,
     max_sanity: 100,
-    sanity: 30,
+    sanity: 70,
+
     stamina: 1,
     willpower: 1,
     quickness: 1,
     cleverness: 1,
+
     level: 1,
     experience: 0,
     mutagens: 0,
+
+    //TODO: Generated descs.
     description: 'A person.'
   };
 
@@ -61,6 +67,9 @@ var Player = function PlayerConstructor(socket) {
 
   // Skills the players has
   self.skills = {};
+
+  // Training data
+  self.training = { time: 0 };
 
   /**#@+
    * Mutators
@@ -82,12 +91,19 @@ var Player = function PlayerConstructor(socket) {
   self.getPreference = pref => typeof self.preferences[pref] !== 'undefined' ?
     self.preferences[pref] : false;
 
-  self.getSkills = skill =>
-    typeof self.skills[skill] !== 'undefined' ? self.skills[skill] :
-      self.skills;
+  self.getSkills = skill => typeof self.skills[skill] !== 'undefined' ?
+    self.skills[skill] : self.skills;
+
+  self.setSkill = (skill, level) => self.skills[skill] = level;
+  self.incrementSkill = skill => self.setSkill(skill, self.skills[skill] + 1);
+
+  self.getFeats = feat => typeof self.feats[feat] !== 'undefined' ?
+    self.feats[feat] : self.feats;
+
+  self.gainFeat = feat => self.feats[feat.id] = feat;
 
   self.getPassword = () => self.password; // Returns hash.
-  self.isInCombat = () => self.in_combat;
+  self.isInCombat = () => self.inCombat;
 
   self.setPrompt = str => self.prompt_string = str;
   self.setCombatPrompt = str => self.combat_prompt = str;
@@ -110,10 +126,81 @@ var Player = function PlayerConstructor(socket) {
     self.inventory = self.inventory.filter(i => item !== i);
   };
   self.setInventory = inv => self.inventory = inv;
-  self.setInCombat = combatant => self.in_combat = combatant;
+  self.setInCombat = combatant => self.inCombat = combatant;
   self.setAttribute = (attr, val) => self.attributes[attr] = val;
   self.setPreference = (pref, val) => self.preferences[pref] = val;
   self.addSkill = (name, skill) => self.skills[name] = skill;
+
+  // Used to set up skill training business.
+  self.setTraining = (key, value) => self.training[key] = value;
+  self.getTraining = key => key ? self.training[key] : self.training || {};
+
+  self.checkTraining = () => {
+    const beginning = self.training.beginTraining;
+
+    if (!beginning) { return; }
+
+    let queuedTraining = [];
+    for (const queued in self.training) {
+      if (queued !== 'time' && queued !== 'beginTraining') {
+        queuedTraining.push(self.training[queued]);
+        util.log(queuedTraining);
+      }
+    }
+
+    if (!queuedTraining.length) { return; }
+    queuedTraining.sort((x, y) => x.cost - y.cost);
+
+    let trainingTime = Date.now() - beginning;
+
+    player.say("");
+
+    for (let i = 0; i < queuedTraining.length; i++) {
+      let session = queuedTraining[i];
+
+      if (trainingTime >= session.duration) {
+        trainingTime -= session.duration;
+
+        self.setSkill(session.id, session.newLevel);
+        self.say('<bold>' + session.message + '</bold>');
+        delete self.training[session.id];
+
+      } else {
+        delete self.training[session.id];
+        self.say(
+          '<bold><yellow>You were able to spend some time training ' +
+          session.skill +
+          ', but did not make any breakthroughs.</yellow></bold>'
+        );
+
+        session.duration -= trainingTime;
+        self.setTraining(session.id, session);
+
+        break;
+      }
+    }
+
+    delete self.training.beginTraining;
+    self.say('<bold>Thus completes your training, for now.</bold>');
+  };
+
+  self.clearTraining = () => {
+    for (const queued in self.training) {
+      if (queued !== 'time' && queued !== 'beginTraining') {
+        const session = self.training[queued];
+        const time = self.getTraining('time');
+        self.setTraining('time', time + session.newLevel);
+        delete self.training[queued];
+      }
+    }
+
+    if (self.training.beginTraining) {
+      delete self.training.beginTraining;
+    }
+
+    player.say('You decide to change your training regimen.');
+  };
+
   self.checkStance = stance => self.preferences.stance === stance.toLowerCase();
   /**#@-*/
 
@@ -170,7 +257,7 @@ var Player = function PlayerConstructor(socket) {
    * @param object effect
    */
   self.addEffect = (name, effect) => {
-    if (affect.activate) {
+    if (effect.activate) {
       effect.activate();
     }
 
@@ -179,11 +266,11 @@ var Player = function PlayerConstructor(socket) {
         effect.deactivate();
         self.prompt();
       }
-      self.removeAffect(name);
+      self.removeEffect(name);
     };
 
     if (effect.duration) {
-      effect.timer = setTimeout(deact, effect.duration * 1000);
+      effect.timer = setTimeout(deact, effect.duration);
     } else if (effect.event) {
       self.on(effect.event, deact);
     }
@@ -224,11 +311,11 @@ var Player = function PlayerConstructor(socket) {
 
   /**
    * "equip" an item
-   * @param string wear_location The location this item is worn
+   * @param string wearLocation The location this item is worn
    * @param Item   item
    */
-  self.equip = (wear_location, item) => {
-    self.equipment[wear_location] = item.getUuid();
+  self.equip = (wearLocation, item) => {
+    self.equipment[wearLocation] = item.getUuid();
     item.setEquipped(true);
   };
 
@@ -354,14 +441,27 @@ var Player = function PlayerConstructor(socket) {
     self.equipment = data.equipment || {};
     self.attributes = data.attributes;
     self.skills = data.skills;
+    self.feats = data.feats || {};
     self.preferences = data.preferences || {};
     self.explored = data.explored || [];
+    self.training = data.training || { time: 0 };
 
     // Activate any passive skills the player has
-    //TODO: Change this once skills are revised.
-    for (let skill in self.skills) {
-      if (Skills[self.getAttribute('class')][skill].type === 'passive') {
-        self.useSkill(skill, self);
+    //TODO: Probably a better way to do this than toLowerCase.
+    for (let feat in self.feats) {
+      feat = feat.toLowerCase();
+      let featType = Feats[feat].type;
+      if (featType === 'passive') {
+        self.useFeat(feat, self);
+      }
+    }
+
+    // If the player is new, or skills have been added, initialize them to level 1.
+    for (let skill in Skills) {
+      skill = Skills[skill];
+      if (!self.skills[skill.id]) {
+        util.log("Initializing skill ", skill.id);
+        self.skills[skill.id] = 1;
       }
     }
 
@@ -455,9 +555,11 @@ var Player = function PlayerConstructor(socket) {
       equipment: self.equipment,
       attributes: self.attributes,
       skills: self.skills,
+      feats: self.feats,
       gender: self.gender,
       preferences: self.preferences,
-      explored: self.explored
+      explored: self.explored,
+      training: self.training,
     });
   };
 
@@ -470,15 +572,30 @@ var Player = function PlayerConstructor(socket) {
   };
 
   /**
-   * Helper to activate skills
-   * @param string skill
+   * Helpers to activate skills or feats
+   * @param string skill/feat
    * @param [string] arguments
+   * Command event passes in player, args, rooms, npcs.
    */
   self.useSkill = function (skill /*, args... */ ) {
-    Skills[skill].activate.apply(null, [].slice
-      .call(arguments)
-      .slice(1));
+    if (!Skills[skill]) {
+      util.log("skill not found: ", skill);
+      return;
+    }
+    const args = [].slice.call(arguments).slice(1)
+    Skills[skill].activate.apply(null, args);
   };
+
+  self.useFeat = function (feat /*, args... */ ) {
+    if (!Feats[feat.toLowerCase()]) {
+      util.log("feat not found: ", feat);
+      return;
+    }
+    const args = [].slice.call(arguments).slice(1)
+    Feats[feat].activate.apply(null, args);
+  };
+
+
 
   /**
    * Helper to calculate physical damage

@@ -1,31 +1,33 @@
-var CommandUtil = require('../src/command_util')
+'use strict';
+const CommandUtil = require('../src/command_util')
   .CommandUtil;
-var sprintf = require('sprintf')
+const sprintf = require('sprintf')
   .sprintf;
-var l10n_file = __dirname + '/../l10n/commands/look.yml';
-var l10n = new require('jall')(require('js-yaml')
+const l10nFile = __dirname + '/../l10n/commands/look.yml';
+const l10n = new require('jall')(require('js-yaml')
   .load(require('fs')
     .readFileSync(
-      l10n_file)
+      l10nFile)
     .toString('utf8')), undefined, 'zz');
-var wrap = require('wrap-ansi');
-var util = require('util');
-var Time = require('../src/time').Time;
+const wrap = require('wrap-ansi');
+const util = require('util');
+const Time = require('../src/time').Time;
+
 l10n.throwOnMissingTranslation(false);
 
-exports.command = function(rooms, items, players, npcs, Commands) {
+exports.command = (rooms, items, players, npcs, Commands) => {
 
-  return function(args, player, hasExplored) {
-    var room = rooms.getAt(player.getLocation());
-    var locale = player.getLocale();
-    var thingIsPlayer = false;
+  return (args, player, hasExplored) => {
+    const room = rooms.getAt(player.getLocation());
+    const locale = player.getLocale();
 
+    let thingIsPlayer = false;
 
     if (args) {
       args = args.toLowerCase();
 
       // Look at items in the room first
-      var thing = CommandUtil.findItemInRoom(items, args, room, player,
+      let thing = CommandUtil.findItemInRoom(items, args, room, player,
         true);
 
       if (!thing) {
@@ -34,21 +36,22 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       }
 
       if (!thing) {
-        // then for an NPC
+        // Then for an NPC
         thing = CommandUtil.findNpcInRoom(npcs, args, room, player, true);
       }
 
+      // Then the player themselves
       if (!thing && isLookingAtSelf()) {
         thing = player;
         thingIsPlayer = true;
       }
 
-
       function isLookingAtSelf() {
-        var me = ['me', 'self', player.getName().toLowerCase()];
+        const me = ['me', 'self', player.getName().toLowerCase()];
         return me.indexOf(args) !== -1;
-      };
+      }
 
+      // Then other players
       if (!thing) {
         players.eachIf(
           CommandUtil.otherPlayerInRoom.bind(null, player),
@@ -64,9 +67,11 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         }
       }
 
+
+      // Then look at exits
+      //TODO: Improve based on player stats/skills?
       if (!thing) {
-        // then look at exits
-        var exits = room.getExits();
+        const exits = room.getExits();
         exits.forEach(exit => {
           if (args === exit.direction) {
             thing = rooms.getAt(exit.location);
@@ -86,20 +91,20 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       return;
     }
 
-
     if (!room) {
       player.sayL10n(l10n, 'LIMBO');
+      util.log(player.getName() + ' is in limbo.');
       return;
     }
 
     // Render the room and its exits
     player.say(room.getArea() + ': ' + room.getTitle(locale));
 
-    var descPreference = player.getPreference('roomdescs');
+    const descPreference = player.getPreference('roomdescs');
 
     if (Time.isDay()) {
 
-      var showShortByDefault = (hasExplored === true && !descPreference === 'verbose');
+      const showShortByDefault = (hasExplored === true && !descPreference === 'verbose');
 
       if (showShortByDefault || descPreference === 'short') {
         player.say(wrap(room.getShortDesc(locale), 80));
@@ -115,9 +120,8 @@ exports.command = function(rooms, items, players, npcs, Commands) {
 
     // display players in the same room
     players.eachIf(CommandUtil.otherPlayerInRoom.bind(null, player),
-      p => {
-        player.sayL10n(l10n, 'IN_ROOM', p.getName());
-      });
+      p => player.sayL10n(l10n, 'IN_ROOM', p.getName())
+    );
 
     // show all the items in the rom
     room.getItems()
@@ -151,7 +155,7 @@ exports.command = function(rooms, items, players, npcs, Commands) {
       });
 
     player.write('[');
-    player.write('<cyan>Obvious exits: </cyan>');
+    player.write('<yellow><bold>Obvious exits: </yellow></bold>');
     room.getExits()
       .forEach(function(exit) {
         player.write(exit.direction + ' ');

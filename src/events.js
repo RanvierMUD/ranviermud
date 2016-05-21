@@ -22,7 +22,7 @@ var crypto = require('crypto'),
  * Localization
  */
 var l10n = null;
-var l10n_file = __dirname + '/../l10n/events.yml';
+var l10nFile = __dirname + '/../l10n/events.yml';
 // shortcut for l10n.translate
 var L = null;
 
@@ -80,6 +80,8 @@ var Events = {
      * @param Socket socket
      */
     login: function login(socket, stage, dontwelcome, name) {
+
+      util.log("Login event detected... ", stage);
 
       // dontwelcome is used to swallow telnet bullshit
       dontwelcome = typeof dontwelcome == -'undefined' ? false :
@@ -208,14 +210,26 @@ var Events = {
 
           player.getSocket()
             .on('close', () => {
+              player.setTraining('beginTraining', Date.now());
+
+              if (!player.isInCombat()) {
+                util.log(player.getName() + ' has gone linkdead.');
+                player.save(() => players.removePlayer(player, true));
+              } else {
+                util.log(player.getName() + ' socket closed during combat!!!');
+              }
+
+              //TODO: Consider saving player here as well, and stuff.
               players.removePlayer(player);
             });
+
           players.broadcastL10n(l10n, 'WELCOME_BACK', player.getName());
 
+          //TODO: Have load in player file?
           // Load the player's inventory (There's probably a better place to do this)
           var inv = [];
           player.getInventory()
-            .forEach(function (item) {
+            .forEach(item => {
               item = new Item(item);
               items.addItem(item);
               inv.push(item);
@@ -224,13 +238,14 @@ var Events = {
 
 
           Commands.player_commands.look(null, player);
+          player.checkTraining();
           player.prompt();
 
           // All that shit done, let them play!
           player.getSocket()
             .emit("commands", player);
           break;
-      };
+      }
     },
 
     /**
@@ -266,7 +281,7 @@ var Events = {
               else if (found === true) return;
 
               if (found) return getCmd(found, args);
-              else return checkForSkillsChannelsOrExit(command, args);
+              else return checkForSpecializedCommand(command, args);
 
             } else return getCmd(command, args);
           }
@@ -287,15 +302,13 @@ var Events = {
               'd': 'down'
             };
 
-            if (command in directions) {
-              for (var alias in directions) {
-                if (command.toLowerCase() === alias) {
-                  Commands.room_exits(directions[alias], player);
-                  return true;
-                }
-              }
+            if (command.toLowerCase() in directions) {
+              const exit = directions[command.toLowerCase()];
+              Commands.room_exits(exit, player);
+              return true;
             }
           }
+
 
           function checkForCmd(command) {
             for (var cmd in Commands.player_commands) {
@@ -310,22 +323,26 @@ var Events = {
             }
           }
 
-          function checkForSkillsChannelsOrExit(command, args) {
+          // Handles skills, feats, exits
+          function checkForSpecializedCommand(command, args) {
             var exit = Commands.room_exits(command, player);
+
+            //TODO: Refactor as to not rely on negative conditionals as much?
             if (exit === false) {
-              if (!(command in player.getSkills())) {
+              var isSkill = command in player.getSkills();
+              var isFeat = command in player.getFeats();
+
+              if (!isSkill && !isFeat) {
                 if (!(command in Channels)) {
                   player.say(command + " is not a valid command.");
                   return true;
                 } else {
-                  Channels[command].use(args, player, players,
-                    rooms);
+                  Channels[command].use(args, player, players, rooms);
                   return true
                 }
               } else {
-                player.useSkill(command, player, args,
-                  rooms,
-                  npcs);
+                var use = isSkill ? player.useSkill : player.useFeat;
+                use(command, player, args, rooms, npcs, players);
                 return true;
               }
             }
@@ -471,12 +488,14 @@ var Events = {
             socket.getSocket()
               .emit('commands', socket);
           });
+          util.log("A NEW CHALLENGER APPROACHES: ", socket);
           players.broadcastL10n(l10n, 'WELCOME', socket.getName());
           break;
 
       }
     }
   },
+
   configure: function (config) {
     players = players || config.players;
     items = items || config.items;
@@ -484,7 +503,7 @@ var Events = {
     npcs = npcs || config.npcs;
     if (!l10n) {
       util.log("Loading event l10n... ");
-      l10n = l10nHelper(l10n_file);
+      l10n = l10nHelper(l10nFile);
       util.log("Done");
     }
     l10n.setLocale(config.locale);
