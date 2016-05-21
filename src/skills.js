@@ -1,94 +1,92 @@
-var Affects  = require('./affects.js').Affects;
+'use strict';
+const Effects = require('./effects.js').Effects;
+const util = require('util');
+const move = require('./commands').Commands.move;
+const CommandUtil = require('./command_util').CommandUtil;
 
-var l10n_dir = __dirname + '/../l10n/skills/';
-var l10ncache = {};
+const l10n_dir = __dirname + '/../l10n/skills/';
+let l10ncache = {};
+
 /**
  * Localization helper
  * @return string
  */
-var L = function (locale, cls, key /*, args... */)
-{
-	var l10n_file = l10n_dir + cls + '.yml';
-	var l10n = l10ncache[cls+locale] || require('./l10n')(l10n_file);
-	l10n.setLocale(locale);
-	return l10n.translate.apply(null, [].slice.call(arguments).slice(2));
-}; //TODO: Consider extracting into helper module for consistency. Might already be util.log
+const L = function(locale, cls, key /*, args... */ ) {
+  var l10nFile = l10n_dir + cls + '.yml';
+  var l10n = l10ncache[cls + locale] || require('./l10n')(l10nFile);
+  l10n.setLocale(locale);
+  return l10n.translate.apply(null, [].slice.call(arguments).slice(2));
+};
+
+// For activate functions:
+// Command event passes in player, args, rooms, npcs, players.
 
 exports.Skills = {
-	mental: {
-		stun: {
-			type: 'active',
-			cost: 1,
-			// no prereqs
-			name: "Stun",
-			description: "Stun your opponent for sanity and physical. Target's attacks are slower for 5 seconds following the attack.",
-			cooldown: 4,
-			activate: function (player, args, rooms, npcs)
-			{
-				if (!player.isInCombat()) {
-					player.say(L(player.getLocale(), 'warrior', 'TACKLE_NOCOMBAT'));
-					return true;
-				}
 
-				if (player.getAffects('cooldown_tackle')) {
-					player.say(L(player.getLocale(), 'warrior', 'TACKLE_COOLDOWN'));
-					return true;
-				}
-				
-				var target = player.isInCombat();
-				if (!target) {
-					player.say("Somehow you're in combat with a ghost");
-					return true;
-				}
+  //// Cleverness-related skills.
+  pick: {
+    id: "pick",
+    cost: 2,
+    name: "Lockpick",
+    description: "Your ability to illicitly open locked doors or containers.",
+    usage: "`pick [exit]`",
+    attribute: "cleverness",
+    activate: (player, target, rooms, npcs, players) => {
+      if (target) {
+        const room = rooms.getAt(player.getLocation());
+        const exits = room.getExits();
+        const name = player.getName();
+        const possibleTargets = exits
+          .filter(e => e.direction.indexOf(target.toLowerCase()) > -1);
 
-				var damage = Math.min(target.getAttribute('max_health'), Math.ceil(player.getDamage().max * 1.2));
+        util.log(name + ' is trying to pick a lock...');
 
-				player.say(L(player.getLocale(), 'warrior', 'TACKLE_DAMAGE', damage));
-				target.setAttribute('health', target.getAttribute('health') - damage);
+        if (possibleTargets && possibleTargets.length === 1) {
+          const exit = possibleTargets[0];
+          const isDoor = exit.hasOwnProperty('door');
+          const isLocked = isDoor && exit.door.locked;
 
-				if (!target.getAffects('slow')) {
-					target.addAffect('slow', Affects.slow({
-						duration: 3,
-						magnitude: 1.5,
-						player: player,
-						target: target,
-						deactivate: function () {
-							player.say(L(player.getLocale(), 'warrior', 'TACKLE_RECOVER'));
-						}
-					}));
-				}
+          if (isLocked) {
+            player.say("<yellow>You attempt to unlock the door...</yellow>");
+            const lockpicking = player.getSkills('pick') + player.getAttribute('cleverness');
+            const challenge = parseInt(exit.door.difficulty || 10, 10);
+            const getExitDesc = locale => rooms.getAt(exit.location).getTitle(locale);
 
-				// Slap a cooldown on the player
-				player.addAffect('cooldown_tackle', {
-					duration: 4,
-					deactivate: function () {
-						player.say(L(player.getLocale(), 'warrior', 'TACKLE_COOLDOWN_END'));
-					}
-				});
-
-				return true;
-			}
-		} 
-	},
-	physical: {
-		leatherskin: {
-			type: 'passive',
-			cost: 2,
-			// no prereqs
-			name: "Leatherskin",
-			description: "Your skin has become tougher, and you are better able to take physical damage.",
-			activate: function (player)
-			{
-				if (player.getAffects('leatherskin')) {
-					player.removeAffect('leatherskin');
-				}
-				player.addAffect('leatherskin', Affects.health_boost({
-					magnitude: 50, 
-					//consider adding +1 to stamina
-					player: player,
-					event: 'quit'
-				}));
-			}
-		}
-	}
+            if (lockpicking > challenge){
+              player.say("<bold><cyan>You unlock the door!<cyan></bold>");
+              players.eachIf(
+                p => CommandUtil.inSameRoom(player, p),
+                p => p.say(name + ' swiftly picks the lock to ' + getExitDesc(p.getLocale()) + '.')
+              );
+              exit.door.locked = false;
+              move(exit, player, true);
+            } else {
+              util.log(name + " fails to pick lock.");
+              player.say("<red>You fail to unlock the door.</red>");
+              players.eachIf(
+                p => CommandUtil.inSameRoom(player, p),
+                p => p.say(name + ' tries to unlock the door to ' + getExitDesc(p.getLocale()) +', but fails to pick it.')
+              );
+              return;
+            }
+          } else if (isDoor) {
+            player.say("That door is not locked.");
+            return;
+          } else {
+            player.say("There is no door in that direction.");
+            return;
+          }
+        } else if (possibleTarget.length) {
+          player.say("Which door's lock do you want to pick?");
+          return;
+        } else {
+          player.say("There doesn't seem to be an exit in that direction, much less a lock to pick.");
+          return;
+        }
+      } else {
+        player.say("Which door's lock do you want to pick?");
+        return;
+      }
+    },
+  }
 };

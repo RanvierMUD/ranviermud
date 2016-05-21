@@ -22,7 +22,7 @@ var crypto = require('crypto'),
  * Localization
  */
 var l10n = null;
-var l10n_file = __dirname + '/../l10n/events.yml';
+var l10nFile = __dirname + '/../l10n/events.yml';
 // shortcut for l10n.translate
 var L = null;
 
@@ -39,14 +39,14 @@ var password_attempts = {};
  * @param string stage
  * @param object firstarg Override for the default arg
  */
-var gen_next = function(event) {
+var gen_next = function (event) {
   /**
    * Move to the next stage of a staged event
    * @param Socket|Player socket       Either a Socket or Player on which emit() will be called
    * @param string        nextstage
    * @param ...
    */
-  return function(socket, nextstage) {
+  return function (socket, nextstage) {
     var func = (socket instanceof Player ? socket.getSocket() : socket);
     func.emit.apply(func, [event].concat([].slice.call(arguments)));
   }
@@ -57,8 +57,8 @@ var gen_next = function(event) {
  * @param Array repeat_args
  * @return function
  */
-var gen_repeat = function(repeat_args, next) {
-  return function() {
+var gen_repeat = function (repeat_args, next) {
+  return function () {
     next.apply(null, [].slice.call(repeat_args))
   };
 };
@@ -80,6 +80,9 @@ var Events = {
      * @param Socket socket
      */
     login: function login(socket, stage, dontwelcome, name) {
+
+      util.log("Login event detected... ", stage);
+
       // dontwelcome is used to swallow telnet bullshit
       dontwelcome = typeof dontwelcome == -'undefined' ? false :
         dontwelcome;
@@ -105,7 +108,7 @@ var Events = {
             socket.write("Welcome, what is your name? ");
           }
 
-          socket.once('data', function(name) {
+          socket.once('data', function (name) {
 
             // swallow any data that's not from player input i.e., doesn't end with a newline
             // Windows can s@#* a d@#$
@@ -169,7 +172,7 @@ var Events = {
             if (pass[0] === 0xFA) {
               return next(socket, 'password', true, name);
             }
-            
+
             pass = crypto
               .createHash('md5')
               .update(pass.toString('').trim())
@@ -187,21 +190,18 @@ var Events = {
 
 
         case 'done':
-          
           var name = dontwelcome;
-          var haveSameName = p => {
-            p.getName() === name;
-          }
+          var haveSameName = p => p.getName().toLowerCase() === name.toLowerCase();
           var boot = players.some(haveSameName);
 
           if (boot) {
-            players.eachIf(haveSameName, 
-              (p) => {
-                p.emit('quit');
+            players.eachIf(haveSameName,
+              p => {
                 p.say("Replaced.");
-                util.log("Replaced: ", p);
+                p.emit('quit');
+                util.log("Replaced: ", p.getName());
                 players.removePlayer(p, true);
-            });
+              });
           }
 
           player = new Player(socket);
@@ -210,14 +210,26 @@ var Events = {
 
           player.getSocket()
             .on('close', () => {
+              player.setTraining('beginTraining', Date.now());
+
+              if (!player.isInCombat()) {
+                util.log(player.getName() + ' has gone linkdead.');
+                player.save(() => players.removePlayer(player, true));
+              } else {
+                util.log(player.getName() + ' socket closed during combat!!!');
+              }
+
+              //TODO: Consider saving player here as well, and stuff.
               players.removePlayer(player);
             });
+
           players.broadcastL10n(l10n, 'WELCOME_BACK', player.getName());
 
+          //TODO: Have load in player file?
           // Load the player's inventory (There's probably a better place to do this)
           var inv = [];
           player.getInventory()
-            .forEach(function(item) {
+            .forEach(item => {
               item = new Item(item);
               items.addItem(item);
               inv.push(item);
@@ -226,23 +238,24 @@ var Events = {
 
 
           Commands.player_commands.look(null, player);
+          player.checkTraining();
           player.prompt();
 
           // All that shit done, let them play!
           player.getSocket()
             .emit("commands", player);
           break;
-      };
+      }
     },
 
     /**
      * Command loop
      * @param Player player
      */
-    commands: function(player) {
+    commands: function (player) {
       // Parse order is common direction shortcuts -> commands -> exits -> skills -> channels
       player.getSocket()
-        .once('data', function(data) {
+        .once('data', function (data) {
           data = data.toString()
             .trim();
 
@@ -268,7 +281,7 @@ var Events = {
               else if (found === true) return;
 
               if (found) return getCmd(found, args);
-              else return checkForSkillsChannelsOrExit(command, args);
+              else return checkForSpecializedCommand(command, args);
 
             } else return getCmd(command, args);
           }
@@ -289,15 +302,13 @@ var Events = {
               'd': 'down'
             };
 
-            if (command in directions) {
-              for (var alias in directions) {
-                if (command.toLowerCase() === alias) {
-                  Commands.room_exits(directions[alias], player);
-                  return true;
-                }
-              }
+            if (command.toLowerCase() in directions) {
+              const exit = directions[command.toLowerCase()];
+              Commands.room_exits(exit, player);
+              return true;
             }
           }
+
 
           function checkForCmd(command) {
             for (var cmd in Commands.player_commands) {
@@ -312,22 +323,26 @@ var Events = {
             }
           }
 
-          function checkForSkillsChannelsOrExit(command, args) {
+          // Handles skills, feats, exits
+          function checkForSpecializedCommand(command, args) {
             var exit = Commands.room_exits(command, player);
+
+            //TODO: Refactor as to not rely on negative conditionals as much?
             if (exit === false) {
-              if (!(command in player.getSkills())) {
+              var isSkill = command in player.getSkills();
+              var isFeat = command in player.getFeats();
+
+              if (!isSkill && !isFeat) {
                 if (!(command in Channels)) {
                   player.say(command + " is not a valid command.");
                   return true;
                 } else {
-                  Channels[command].use(args, player, players,
-                    rooms);
+                  Channels[command].use(args, player, players, rooms);
                   return true
                 }
               } else {
-                player.useSkill(command, player, args,
-                  rooms,
-                  npcs);
+                var use = isSkill ? player.useSkill : player.useFeat;
+                use(command, player, args, rooms, npcs, players);
                 return true;
               }
             }
@@ -356,7 +371,7 @@ var Events = {
      *                  the stage.
      * @param string stage See above
      */
-    createPlayer: function(socket, stage) {
+    createPlayer: function (socket, stage) {
       stage = stage || 'check';
 
       if (socket instanceof Player) {
@@ -375,7 +390,7 @@ var Events = {
           socket.write(
             "That player doesn't exist, would you like to create it? [y/n] "
           );
-          socket.once('data', function(check) {
+          socket.once('data', function (check) {
             check = check.toString()
               .trim()
               .toLowerCase();
@@ -396,7 +411,7 @@ var Events = {
           socket = new Player(socket);
           socket.write(L('NAME_PROMPT'));
           socket.getSocket()
-            .once('data', function(name) {
+            .once('data', function (name) {
               name = name.toString()
                 .trim();
               if (/\W/.test(name)) {
@@ -405,7 +420,7 @@ var Events = {
               }
 
               var player = false;
-              players.every(function(p) {
+              players.every(function (p) {
                 if (p.getName()
                   .toLowerCase() === name.toLowerCase()) {
                   player = true;
@@ -431,7 +446,7 @@ var Events = {
         case 'password':
           socket.write(L('PASSWORD'));
           socket.getSocket()
-            .once('data', function(pass) {
+            .once('data', function (pass) {
               pass = pass.toString()
                 .trim();
               if (!pass) {
@@ -449,7 +464,7 @@ var Events = {
             'What is your character\'s gender?\n[F]emale\n[M]ale\n[A]ndrogynous\n'
           );
           socket.getSocket()
-            .once('data', function(gender) {
+            .once('data', function (gender) {
               gender = gender.toString()
                 .toLowerCase();
               if (!gender) {
@@ -467,26 +482,28 @@ var Events = {
           socket.setLocale("en");
           socket.setLocation(players.getDefaultLocation());
           // create the pfile then send them on their way
-          socket.save(function() {
+          socket.save(function () {
             players.addPlayer(socket);
             socket.prompt();
             socket.getSocket()
               .emit('commands', socket);
           });
+          util.log("A NEW CHALLENGER APPROACHES: ", socket);
           players.broadcastL10n(l10n, 'WELCOME', socket.getName());
           break;
 
       }
     }
   },
-  configure: function(config) {
+
+  configure: function (config) {
     players = players || config.players;
     items = items || config.items;
     rooms = rooms || config.rooms;
     npcs = npcs || config.npcs;
     if (!l10n) {
       util.log("Loading event l10n... ");
-      l10n = l10nHelper(l10n_file);
+      l10n = l10nHelper(l10nFile);
       util.log("Done");
     }
     l10n.setLocale(config.locale);
@@ -497,7 +514,7 @@ var Events = {
      * @param ...
      * @return string
      */
-    L = function(text) {
+    L = function (text) {
       return ansi(l10n.translate.apply(null, [].slice.call(arguments)));
     };
   }

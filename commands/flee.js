@@ -1,13 +1,14 @@
-var CommandUtil = require('../src/command_util')
+'use strict';
+const CommandUtil = require('../src/command_util')
   .CommandUtil;
-var move = require('../src/commands')
-  .Commands.move;
-var l10n_file = __dirname + '/../l10n/commands/flee.yml';
-var util = require('util');
-var l10n = require('../src/l10n')(l10n_file);
+const Random = require('../src/random').Random;
+const move = require('../src/commands').Commands.move;
+const l10nFile = __dirname + '/../l10n/commands/flee.yml';
+const util = require('util');
+const l10n = require('../src/l10n')(l10nFile);
 
-exports.command = function(rooms, items, players, npcs, Commands) {
-  return function(args, player) {
+exports.command = (rooms, items, players, npcs, Commands) => {
+  return (args, player) => {
 
     if (!player.isInCombat()) {
       player.sayL10n(l10n, "NO_FIGHT");
@@ -17,18 +18,17 @@ exports.command = function(rooms, items, players, npcs, Commands) {
     util.log(player.getName() + ' is trying to flee.');
     util.log(player.isInCombat().getShortDesc('en'));
 
-    var opponent = npcs.get(player.isInCombat().getUuid());
-    var fleed = CommandUtil.isCoinFlip();
-    var exit = CommandUtil.getRandomFromArr(
-      rooms.getAt(player.getLocation())
-      .getExits());
+    const opponent = npcs.get(player.isInCombat().getUuid());
+    const fleed = Random.coinFlip();
+    const room = rooms.getAt(player.getLocation());
+    const exit = Random.fromArray(room.getExits());
 
-    if (fleed) {
+    if (fleed && move(exit, player)) {
       opponent.setInCombat(false);
       player.setInCombat(false);
-      
+
       player.sayL10n(l10n, 'FLEE_SUCCEED');
-      move(exit, player);
+      util.log(player.getName() + " fled successfully.");
       return;
     }
 

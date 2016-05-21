@@ -1,48 +1,51 @@
-var l10n_file = __dirname + '/../l10n/commands/character.yml';
-var l10n = require('../src/l10n')(l10n_file);
-var statusUtil = require('../src/status.js');
-exports.command = function(rooms, items, players, npcs, Commands) {
+'use strict';
+const l10nFile = __dirname + '/../l10n/commands/character.yml';
+const l10n = require('../src/l10n')(l10nFile);
+const statusUtil = require('../src/status.js');
+const Random = require('../src/random.js').Random;
+exports.command = (rooms, items, players, npcs, Commands) => {
 
-  return function(args, player) {
+  return (args, player) => {
 
-    var character = player.getAttributes() || {};
+    const character = player.getAttributes() || {};
     player.sayL10n(l10n, 'ATTRIBUTES');
 
-    for (var attr in character) {
-      if (attr.indexOf('max') === -1 && attr !== 'experience') {
+    for (let attr in character) {
+      const shouldDisplay = attr.indexOf('max') === -1 && attr !== 'experience';
+      const hasMutagens = !(attr === 'mutagens' && !character[attr]);
+
+      if (shouldDisplay && hasMutagens) {
         player.sayL10n(l10n, attr.toUpperCase(), getStatusString(attr,
           character[attr], character));
       }
     }
 
     function getStatusString(attr, value, character) {
-      var maxHealth = character.max_health;
-      var maxSanity = character.max_sanity;
-      var status = {
-        level: getLevelText,
-        health: statusUtil.getHealthText(maxHealth, player, null, true),
-        class: function noop() {},
-        sanity: statusUtil.getSanityText(maxSanity, player),
-        stamina: getStamina,
-        willpower: getWillpower,
-        quickness: getQuickness,
-        cleverness: getCleverness,
-        mutagens: function() {
-          return value === 1 ? value + ' more time' : value +
-            ' more times';
-        },
+      const maxHealth = character.max_health;
+      const maxSanity = character.max_sanity;
+      const status = {
+        level:       getLevelText,
+        health:      statusUtil.getHealthText(maxHealth, player, null, true),
+        class:       () => {},
+        sanity:      statusUtil.getSanityText(maxSanity, player),
+        stamina:     getStamina,
+        willpower:   getWillpower,
+        quickness:   getQuickness,
+        cleverness:  getCleverness,
+        mutagens:    value => value === 1 ? value + ' more time' : value + ' more times',
+        skills:      () => {}, //TODO: Add training text.
         description: player.getDescription,
       };
       return status[attr](value) || '';
     }
 
     function getLevelText(level) {
-      var titles = {
-        3: 'a novice',
-        8: 'a survivor',
-        13: 'an embittered survivor',
-        15: 'an aimless wanderer',
-        18: 'a purposeful wanderer',
+      const titles = {
+        3: ['a novice', 'a neonate'],
+        8: ['a survivor', 'a surveyor'],
+        13: ['an embittered survivor', 'the subject of hushed whispers'],
+        15: ['an aimless wanderer', 'a hoarder of truths', 'a conquerer of horrors'],
+        18: ['a purposeful wanderer', 'a distiller of fates', 'a hopeful figure amidst tragedy'],
         20: 'the perseverer',
         28: 'the outlaster',
         35: 'the indweller',
@@ -51,86 +54,92 @@ exports.command = function(rooms, items, players, npcs, Commands) {
         55: 'the undying',
       };
 
-      for (var tier in titles) {
-        if (level < parseInt(tier)) {
-          return titles[tier];
-        }
-      }
+      const topTier = "the paragon";
+      const attrStr = 'reputation precedes you as ';
+      return evalStatus(level, titles, attrStr, topTier);
 
-      return "the paragon";
     }
 
 
     function getStamina(stamina) {
-      var status = {
-        2: 'pathetic',
-        3: 'weak',
-        5: 'mediocre',
-        7: 'steady',
-        8: 'athletic',
-        10: 'vigorous',
-        12: 'fierce'
+      const status = {
+        1: ['pathetic', 'meager', 'corpselike'],
+        2: ['weak', 'sorry', 'meager', 'frail'],
+        3: ['mediocre', 'below average', 'weak', 'short-lived', 'easily broken'],
+        5: ['steady', 'average'],
+        7: ['athletic', 'impressive', 'long-lasting'],
+        8: ['vigorous', 'savage', 'interminable'],
+        10: ['fierce', 'interminable']
       };
-      var attrStr = 'strength and endurance are ';
-      return evalStatus(stamina, status, attrStr, 'unearthly savage',
+      const attrStr = 'endurance is ';
+      const topTier = 'unearthly';
+      return evalStatus(stamina, status, attrStr, topTier,
         'blue');
     }
 
     function getQuickness(quickness) {
-      var gender = statusUtil.getGenderNoun(player.getGender());
-      var status = {
-        1: 'a slug',
-        2: 'a sloth',
-        3: 'an old ' + gender,
-        5: 'an average ' + gender,
-        7: 'an athletic ' + gender,
-        10: 'a fox',
-        12: 'a leopard in the snow',
-        16: 'a cheetah'
+      const gender = statusUtil.getGenderNoun(player.getGender());
+      const status = {
+        1: ['slugs crawling', 'a sloth\'s napping', 'a maimed duck', 'those of a three-legged cat'],
+        3: ['those of an old ' + gender, 'awkward lovemaking', 'an awkward puppy'],
+        5: ['those of an average ' + gender, 'a flowing stream'],
+        7: ['those of an athletic ' + gender, 'graceful dancing'],
+        8: ['fleet foxes', 'those of nimble acrobats'],
+        10: 'those of a wild cat stalking its prey'
       };
-      var attrStr = 'quickness is comparable to '
-      return evalStatus(quickness, status, attrStr, 'laser unicorns',
+      const attrStr = 'movements resemble ';
+      const topTier = 'a flash of light';
+      return evalStatus(quickness, status, attrStr, topTier,
         'yellow');
     }
 
     function getCleverness(cleverness) {
-      var status = {
-        1: 'foggy',
-        3: 'hazy',
-        5: 'mundane at best',
-        6: 'shrewd',
-        8: 'adept',
-        10: 'prodigious',
+      const status = {
+        1: ['foggy', 'murky'],
+        3: ['hazy', 'bogged down'],
+        5: ['mundane at best', 'average', 'mediocre', 'unimpressive'],
+        6: ['shrewd', 'bright', 'clear'],
+        8: ['adept', 'impressive'],
+        10: ['prodigious', 'genius-level'],
         12: 'wizardly'
       };
-      var attrStr = 'mental acuity is ';
-      return evalStatus(cleverness, status, attrStr, 'coruscating', 'red');
+      const attrStr = 'mental acuity is ';
+      const topTier = 'coruscating';
+      return evalStatus(cleverness, status, attrStr, topTier, 'red');
     }
 
     function getWillpower(willpower) {
-      var status = {
-        1: 'sapped',
-        2: 'pitiful',
-        4: 'secure',
-        6: 'unbending iron',
+      const status = {
+        1: ['sapped', 'broken'],
+        2: ['pitiful', 'bent', 'brittle'],
+        4: ['secure', 'unbent'],
+        6: ['iron', 'unyielding'],
         8: 'an imposing force',
         10: 'uncanny'
       };
-      var attrStr = 'will is ';
-      return evalStatus(willpower, status, attrStr, 'divine', 'bold');
+      const attrStr = 'will is ';
+      const topTier = 'divine';
+      return evalStatus(willpower, status, attrStr, topTier, 'bold');
     }
 
     // Helper functions
 
-    function evalStatus(attr, status, attrStr,
-      defaultStr, color) {
-      for (var tier in status) {
-        if (attr <= parseInt(tier)) {
+    function evalStatus(attr, status, attrStr, defaultStr, color) {
+      color = color || 'magenta';
+
+      for (let tier in status) {
+        if (attr <= parseInt(tier, 10)) {
+
+          const isArrayOfStrings = status[tier].length && status[tier][0].length > 1;
+          if (isArrayOfStrings) {
+            const choice = Random.fromArray(status[tier]);
+            return statusString(attrStr, choice, color);
+          }
           return statusString(attrStr, status[tier], color);
         }
-        return statusString(attrStr,
-          defaultStr, color);
       }
+
+      return statusString(attrStr, defaultStr, color);
     }
 
 

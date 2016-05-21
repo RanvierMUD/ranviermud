@@ -1,13 +1,16 @@
 - title:
-    en: A Private Booth
+    en: the private booth in the corner
   area: "The Serpent's Hiss"
   location: 3
   description:
     en: 'Hidden from the rest of the taproom, this booth features benches of oak and inlaid mahogany in diamond patterns, circling a glass table. Figures of a nude man and woman intertwined with serpents has been frosted into the surface of the table. Cracks radiate through the design, as if someone slammed a fist or tankard into the middle of the table. The torn-up heavy royal crimson curtains lead out in to the taproom proper.'
+  short_desc:
+    en: 'This booth is hidden behind heavy curtains. Elaborate wooden benches surround a cracked, intricately designed glass table.'
+  dark_desc:
+    en: 'A small amount of light creeps in from the taproom, illuminating the booth. Shadows creep along the cracked glass, suggesting dark omens.'
   exits:
     -
       location: 1
       direction: 'out'
-      leave_message: 
+      leave_message:
         en:' pulls aside the curtain and leaves.'
-

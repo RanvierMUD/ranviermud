@@ -66,9 +66,9 @@ var Data = {
 				var listeners = require(scripts_dir + config.script).listeners;
 				// the localization file for the script will be l10n/scripts/<script name>.yml
 				// example: l10n/scripts/1.js.yml
-				var l10n_file = l10n_dir + config.script + '.yml';
-				var l10n = l10nHelper(l10n_file);
-				util.log('Loaded script file ' + l10n_file);
+				var l10nFile = l10n_dir + config.script + '.yml';
+				var l10n = l10nHelper(l10nFile);
+				util.log('Loaded script file ' + l10nFile);
 				for (var listener in listeners) {
 					target.on(listener, listeners[listener](l10n));
 				}
@@ -91,8 +91,8 @@ var Data = {
 			var behaviors = config.behaviors.split(',');
 			// reverse to give left-to-right weight in the array
 			behaviors.reverse().forEach(function (behavior) {
-				var l10n_file = behaviors_l10n_dir + subdir + behavior + '.yml';
-				var l10n = l10nHelper(l10n_file);
+				var l10nFile = behaviors_l10n_dir + subdir + behavior + '.yml';
+				var l10n = l10nHelper(l10nFile);
 				var listeners = require(behaviors_dir + subdir + behavior + '.js').listeners;
 				for (var listener in listeners) {
 					// For now do not allow conflicting listeners in behaviors

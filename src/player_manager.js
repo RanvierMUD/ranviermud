@@ -3,7 +3,7 @@ var PlayerManager = function ()
 	var self = this;
 	self.players = [];
 	// this is the default vnum
-	self.default_location = 1;
+	self.defaultLocation = 1;
 
 	/**
 	 * Get the default location for a player (this is used when they are first created)
@@ -11,7 +11,7 @@ var PlayerManager = function ()
 	 */
 	self.getDefaultLocation = function ()
 	{
-		return self.default_location;
+		return self.defaultLocation;
 	};
 
 	/**
@@ -43,7 +43,7 @@ var PlayerManager = function ()
 	 */
 	self.every = function (callback)
 	{
-		self.players.every(callback);
+		return self.players.every(callback);
 	};
 
 	/**
@@ -56,13 +56,20 @@ var PlayerManager = function ()
 	};
 
 	/**
-	 * Execute a function on all players
-	 * @param Callback callback
+	 * Return true if any players meet the condition.
+	 * @param Condition condition
 	 */
-	self.some = function (callback)
+	self.some = function (condition)
 	{
-		return self.players.some(callback);
+		return self.players.some(condition);
 	};
+
+	/**
+	 * Return array of players who meet the condition
+	 * @param condition
+	 * @return [players]
+	 */
+	 self.filter = condition => self.players.filter(condition);
 
 	/**
 	 * Execute a function on all players except one
