@@ -1,3 +1,4 @@
+'use strict';
 var fs       = require('fs'),
     util     = require('util'),
     uuid     = require('node-uuid'),
@@ -136,7 +137,6 @@ var Npcs = function () {
 	self.destroy = function (npc)
 	{
 		delete self.npcs[npc.getUuid()];
-		delete npc;
 	};
 }
 
