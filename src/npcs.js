@@ -1,19 +1,19 @@
 'use strict';
-var fs       = require('fs'),
+const fs       = require('fs'),
     util     = require('util'),
     uuid     = require('node-uuid'),
     events   = require('events'),
     Data     = require('./data.js').Data;
 
-var npcs_dir         = __dirname + '/../entities/npcs/';
-var npcs_scripts_dir = __dirname + '/../scripts/npcs/';
-var l10n_dir         = __dirname + '/../l10n/scripts/npcs/';
+const npcs_dir         = __dirname + '/../entities/npcs/';
+const npcs_scripts_dir = __dirname + '/../scripts/npcs/';
+const l10n_dir         = __dirname + '/../l10n/scripts/npcs/';
 
 /**
  * Npc container class. Loads/finds npcs
  */
-var Npcs = function () {
-	var self = this;
+const Npcs = function () {
+	const self = this;
 	self.npcs = {};
 	self.load_count = {};
 
@@ -22,18 +22,17 @@ var Npcs = function () {
 	 * @param boolean verbose Whether to do verbose logging
 	 * @param callback
 	 */
-	self.load = function (verbose, callback)
-	{
+	self.load = (verbose, callback) => {
 		verbose = verbose || false;
-		var log = function (message) { if (verbose) util.log(message); };
-		var debug = function (message) { if (verbose) util.debug(message); };
+		const log = message => { if (verbose) util.log(message); };
+		const debug = message => { if (verbose) util.debug(message); };
 
 		log("\tExamining npc directory - " + npcs_dir);
-		var npcs = fs.readdir(npcs_dir, function (err, files)
-		{
+		fs.readdir(npcs_dir, (err, files) => {
 			// Load any npc files
-			for (j in files) {
-				var npc_file = npcs_dir + files[j];
+			for (const j in files) {
+				const npc_file = npcs_dir + files[j];
+        
 				if (!fs.statSync(npc_file).isFile()) continue;
 				if (!npc_file.match(/yml$/)) continue;
 
@@ -137,6 +136,7 @@ var Npcs = function () {
 	self.destroy = function (npc)
 	{
 		delete self.npcs[npc.getUuid()];
+    npc = null;
 	};
 }
 
