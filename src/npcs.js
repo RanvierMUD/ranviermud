@@ -25,34 +25,43 @@ const Npcs = function NpcManager() {
   self.load = (verbose, callback) => {
     verbose = verbose || false;
     const log = message => {
-      if (verbose) util.log(message); };
+      if (verbose) util.log(message);
+    };
     const debug = message => {
-      if (verbose) util.debug(message); };
+      if (verbose) util.debug(message);
+    };
 
     log("\tExamining npc directory - " + npcs_dir);
     fs.readdir(npcs_dir, (err, files) => {
+      if (err) { log(err); }
 
       files.forEach(file => {
-        const npc_file = npcs_dir + files[j];
+        log(file);
+        const npcFile = npcs_dir + file;
 
-        const isNotYamlFile = file => !(fs.statSync(file).isFile && file.match(/yml$/));
-        if (isNotYamlFile) return;
+        const isYamlFile = file => fs.statSync(file).isFile && file.match(/yml$/);
+        if (!isYamlFile) {
+          log(npcFile + ' is not a valid .yml file.');
+          return;
+        }
 
         const parseNpc = file => {
           try {
             return require('js-yaml').load(fs.readFileSync(file).toString('utf8'));
           } catch (e) {
-            log("\t\tError loading npc - " + npc_file + ' - ' + e.message);
+            log("\t\tError loading npc - " + npcFile + ' - ' + e.message);
             return false
           }
         }
 
-        let npcDefinition = parseNpc(npc_file);
+        let npcDefinition = parseNpc(npcFile);
 
-        if (!npcDefinition) { return; }
+        if (!npcDefinition) {
+          return;
+        }
 
         // create and load the npcs
-        const hasError = npcDefinition.forEach(npc => {
+        const validNpcs = npcDefinition.filter(npc => {
           const required = ['keywords', 'short_description', 'vnum'];
 
           const hasRequirements = (missingReq, req) => {
@@ -66,19 +75,18 @@ const Npcs = function NpcManager() {
           return required.reduce(hasRequirements, true);
         });
 
-        if (hasError) {
-          return; }
-
-        const maxLoadHit = self.load_count[npc.vnum] && self.load_count[npc.vnum] >= npc.load_max;
-        if (maxLoadHit) {
-          log("\t\tMaxload of " + npc.load_max + " hit for npc " + npc.vnum);
-          return;
-        }
-
-        const npcObj = new Npc(npc);
-        npcObj.setUuid(uuid.v4());
-        log("\t\tLoaded npcObj [uuid:" + npcObj.getUuid() + ', vnum:' + npcObj.vnum + ']');
-        self.add(npcObj);
+        validNpcs.forEach(npc => {
+          const maxLoadHit = self.load_count[npc.vnum] && self.load_count[npc.vnum] >= npc.load_max;
+          if (maxLoadHit) {
+            log("\t\tMaxload of " + npc.load_max + " hit for npc " + npc.vnum);
+            return;
+          }
+          const npcObj = new Npc(npc);
+          npcObj.setUuid(uuid.v4());
+          log("\t\tLoaded npcObj [uuid:" + npcObj.getUuid() + ', vnum:' + npcObj.vnum + ']');
+          self.add(npcObj);
+        });
+        
       });
     });
 
@@ -186,36 +194,39 @@ const Npc = function NpcConstructor(config) {
    */
   self.getVnum = () => self.vnum;
   self.getInv = () => self.inventory;
-  self.isInCombat = () => self.inCombat;
   self.getRoom = () => self.room;
   self.getUuid = () => self.uuid;
   self.getDefenses = () => self.defenses;
   self.getLocations = () => Object.keys(self.defenses);
   self.getAttribute = attr =>
     typeof self.attributes[attr] !== 'undefined' ?
-      self.attributes[attr] :
-      false;
+    self.attributes[attr] :
+    false;
 
-  self.setUuid = uid => self.uuid = uid; };
+  self.setUuid = uid => self.uuid = uid;
+
   self.setRoom = room => self.room = room;
 
   //TODO: Have spawn inventory but also add same inv functionality as player
   self.setInventory = identifier => self.inventory = identifier;
   self.setInCombat = combat => self.inCombat = combat;
   self.setContainer = uid => self.container = uid;
-  self.setAttribute = (attr, val) => { self.attributes[attr] = val; };
-  self.removeEffect = aff => { delete self.effects[aff]; };
+  self.setAttribute = (attr, val) => self.attributes[attr] = val;
+  self.removeEffect = eff => { delete self.effects[eff]; };
+
+  self.isInCombat = () => self.inCombat;
   self.isPacifist = () => !self.listeners('combat').length;
   /**#@-*/
 
   /**
-   * Get currently applied effects
+   * Get specific currently applied effect, or all current effects
    * @param string aff
    * @return Array|Object
    */
-  self.getEffects = function (aff) {
-    if (aff) {
-      return typeof self.effects[aff] !== 'undefined' ? self.effects[aff] : false;
+  self.getEffects = eff => {
+    if (eff) {
+      return self.effects[eff] ?
+        self.effects[eff] : false;
     }
     return self.effects;
   };
@@ -239,51 +250,43 @@ const Npc = function NpcConstructor(config) {
     self.effects[name] = 1;
   };
 
-  //TODO: dry-ify the following
+  //TODO: dry-ify the following since they are all a pattern
+
+  const getTranslatedString = (thing, locale) =>
+    typeof self[thing] === 'string' ?
+      self[thing] :
+      (locale in self[thing] ? self[thing][locale] : 'UNTRANSLATED - Contact an admin');
 
   /**
    * Get the description, localized if possible
    * @param string locale
    * @return string
    */
-  self.getDescription = function (locale) {
-    return typeof self.description === 'string' ?
-      self.description :
-      (locale in self.description ? self.description[locale] : 'UNTRANSLATED - Contact an admin');
-  };
+  self.getDescription = locale => getTranslatedString('description', locale);
 
   /**
    * Get the attack, localized if possible
    * @param string locale
    * @return string
    */
-  self.getAttack = function (locale) {
-    return typeof self.attack === 'string' ?
-      self.attack :
-      (locale in self.attack ? self.attack[locale] : 'UNTRANSLATED - Contact an admin');
-  };
+  self.getAttack = locale => getTranslatedString('attack', locale);
 
   /**
    * Get the title, localized if possible
    * @param string locale
    * @return string
    */
-  self.getShortDesc = function (locale) {
-    return typeof self.short_description === 'string' ?
-      self.short_description :
-      (locale in self.short_description ? self.short_description[locale] : 'UNTRANSLATED - Contact an admin');
-  }
+  self.getShortDesc = locale => getTranslatedString('short_description', locale);
 
   /**
    * Get the title, localized if possible
    * @param string locale
    * @return string
    */
-  self.getKeywords = function (locale) {
-    return Array.isArray(self.keywords) ?
+  self.getKeywords = locale =>
+    Array.isArray(self.keywords) ?
       self.keywords :
       (locale in self.keywords ? self.keywords[locale] : 'UNTRANSLATED - Contact an admin');
-  }
 
   /**
    * check to see if an npc has a specific keyword
@@ -291,28 +294,24 @@ const Npc = function NpcConstructor(config) {
    * @param string locale
    * @return boolean
    */
-  self.hasKeyword = function (keyword, locale) {
-    return self.getKeywords(locale).some(function (word) {
-      return keyword === word });
-  };
+  self.hasKeyword = (keyword, locale) =>
+    self.getKeywords(locale).some( word => keyword === word );
 
   /**
-   * Get attack speed of an npc
+   * Get attack speed of an npc in ms
    * @return float
    */
-  self.getAttackSpeed = function () {
-    return self.getAttribute('speed') * 1000 || 1000;
-  };
+  self.getAttackSpeed = () => self.getAttribute('speed') * 1000 || 1000;
 
   /**
    * Get the damage an npc can do
    * @return obj {min: int, max: int}
    */
-  self.getDamage = function () {
-    var base = [1, 20];
-    var damage = self.getAttribute('damage') ?
-      self.getAttribute('damage').split('-').map(function (i) {
-        return parseInt(i, 10); }) : base;
+  self.getDamage = () => {
+    const defaultDamage = [1, 20];
+    const damage = self.getAttribute('damage') ?
+      self.getAttribute('damage').split('-').map(n => parseInt(i, 10)) :
+      defaultDamage;
     return { min: damage[0], max: damage[1] };
   };
 
@@ -323,7 +322,8 @@ const Npc = function NpcConstructor(config) {
   self.getSanityDamage = function () {
     var damage = self.getAttribute('sanity_damage') ?
       self.getAttribute('sanity_damage').split('-').map(function (i) {
-        return parseInt(i, 10); }) : false;
+        return parseInt(i, 10);
+      }) : false;
     return damage ? { min: damage[0], max: damage[1] } : false;
   };
 
@@ -361,6 +361,8 @@ const Npc = function NpcConstructor(config) {
 
   self.init(config);
 };
+
+
 util.inherits(Npc, events.EventEmitter);
 
 exports.Npcs = Npcs;
