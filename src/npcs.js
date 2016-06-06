@@ -12,7 +12,7 @@ const l10n_dir = __dirname + '/../l10n/scripts/npcs/';
 /**
  * Npc container class. Loads/finds npcs
  */
-const Npcs = function () {
+const Npcs = function NpcManager() {
   const self = this;
   self.npcs = {};
   self.load_count = {};
@@ -118,7 +118,7 @@ const Npcs = function () {
    * @param function callback
    */
   self.each = callback => {
-    for (var npc in self.npcs) {
+    for (const npc in self.npcs) {
       callback(self.npcs[npc]);
     }
   };
@@ -137,30 +137,28 @@ const Npcs = function () {
 /**
  * Actual class for NPCs
  */
-var Npc = function (config) {
-  var self = this;
+const Npc = function NpcConstructor(config) {
+  const self = this;
 
   self.keywords;
   self.short_description;
   self.attack;
   self.description;
-  self.room; // Room that it's in (vnum)
-  self.vnum; // Not to be confused with its vnum
+  self.room; // Vnum of current location
+  self.vnum;
   self.inCombat = false;
   self.uuid = null;
 
-  // attributes
   self.attributes = {
     max_health: 0,
     health: 0,
     level: 1
   };
 
-  // Anything affecting the NPC
   self.effects = {};
 
   /**
-   * constructor
+   * tha real constructor
    * @param object config
    */
   self.init = function (config) {
@@ -172,12 +170,12 @@ var Npc = function (config) {
     self.vnum = config.vnum;
     self.defenses = {};
 
-    for (var i in config.attributes || {}) {
-      self.attributes[i] = config.attributes[i];
+    for (const stat in config.attributes || {}) {
+      self.attributes[stat] = config.attributes[stat];
     }
 
-    for (var i in config.defenses || {}) {
-      self.defenses[i] = config.defenses[i];
+    for (const armor in config.defenses || {}) {
+      self.defenses[armor] = config.defenses[armor];
     }
 
     Data.loadListeners(config, l10n_dir, npcs_scripts_dir, Data.loadBehaviors(config, 'npcs/', self));
@@ -186,29 +184,27 @@ var Npc = function (config) {
   /**#@+
    * Mutators
    */
-  self.getVnum = function () {
-    return self.vnum; };
-  self.getInv = function () {
-    return self.inventory; };
-  self.isInCombat = function () {
-    return self.inCombat; };
-  self.getRoom = function () {
-    return self.room; };
-  self.getUuid = function () {
-    return self.uuid; };
-  self.getAttribute = function (attr) {
-    return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
-  self.setUuid = function (uid) { self.uuid = uid; };
-  self.setRoom = function (room) { self.room = room; };
-  self.setInventory = function (identifier) { self.inventory = identifier; }
-  self.setInCombat = function (combat) { self.inCombat = combat; }
-  self.setContainer = function (uid) { self.container = uid; }
-  self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
-  self.removeEffect = function (aff) { delete self.effects[aff]; };
-  self.getDefenses = function () {
-    return self.defenses; };
-  self.getLocations = function () {
-    return Object.keys(self.defenses); };
+  self.getVnum = () => self.vnum;
+  self.getInv = () => self.inventory;
+  self.isInCombat = () => self.inCombat;
+  self.getRoom = () => self.room;
+  self.getUuid = () => self.uuid;
+  self.getDefenses = () => self.defenses;
+  self.getLocations = () => Object.keys(self.defenses);
+  self.getAttribute = attr =>
+    typeof self.attributes[attr] !== 'undefined' ?
+      self.attributes[attr] :
+      false;
+
+  self.setUuid = uid => self.uuid = uid; };
+  self.setRoom = room => self.room = room;
+
+  //TODO: Have spawn inventory but also add same inv functionality as player
+  self.setInventory = identifier => self.inventory = identifier;
+  self.setInCombat = combat => self.inCombat = combat;
+  self.setContainer = uid => self.container = uid;
+  self.setAttribute = (attr, val) => { self.attributes[attr] = val; };
+  self.removeEffect = aff => { delete self.effects[aff]; };
   self.isPacifist = () => !self.listeners('combat').length;
   /**#@-*/
 
