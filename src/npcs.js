@@ -104,32 +104,22 @@ const Npcs = function () {
    * @param int vnum
    * @return Npc
    */
-  self.getByVnum = function (vnum) {
-    var objs = [];
-    self.each(function (o) {
-      if (o.getVnum() === vnum) {
-        objs.push(o);
-      }
-    });
-    return objs;
-  };
+  self.getByVnum = vnum => self.npcs.filter(npc => npc.getVnum() === vnum);
 
   /**
    * retreive an instance of an npc by uuid
    * @param string uid
    * @return Npc
    */
-  self.get = function (uid) {
-    return self.npcs[uid];
-  };
+  self.get = uid => self.npcs[uid];
 
   /**
    * proxy Array.each
    * @param function callback
    */
-  self.each = function (callback) {
-    for (var obj in self.npcs) {
-      callback(self.npcs[obj]);
+  self.each = callback => {
+    for (var npc in self.npcs) {
+      callback(self.npcs[npc]);
     }
   };
 
@@ -138,7 +128,7 @@ const Npcs = function () {
    * WARNING: If you haven't removed the npc from the room it's in shit _will_ break
    * @param Npc npc
    */
-  self.destroy = function (npc) {
+  self.destroy = npc => {
     delete self.npcs[npc.getUuid()];
     npc = null;
   };
