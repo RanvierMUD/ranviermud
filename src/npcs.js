@@ -45,7 +45,7 @@ const Npcs = function NpcManager() {
           return;
         }
 
-        const parseNpc = file => {
+        const parseNpcs = file => {
           try {
             return require('js-yaml').load(fs.readFileSync(file).toString('utf8'));
           } catch (e) {
@@ -54,39 +54,49 @@ const Npcs = function NpcManager() {
           }
         }
 
-        let npcDefinition = parseNpc(npcFile);
+        let npcGroup = parseNpcs(npcFile);
 
-        if (!npcDefinition) {
+        if (!npcGroup) {
           return;
         }
 
-        // create and load the npcs
-        const validNpcs = npcDefinition.filter(npc => {
+        // Helper functions for validating and creating NPCs.
+        const meetsRequirements = npc => {
           const required = ['keywords', 'short_description', 'vnum'];
 
-          const hasRequirements = (missingReq, req) => {
-            const hasReq = req in npc;
-
-            if (!hasReq) { log("Missing " + req + " in " + npc); }
-
-            return missingReq || !(req in npc);
+          const hasRequirements = (hasMet, req) => {
+            if (hasMet) {
+              const hasReq = req in npc;
+              if (!hasReq) { log("Missing " + req + " in " + npc); }
+              return hasReq;
+            }
+            return false;
           };
 
           return required.reduce(hasRequirements, true);
-        });
+        };
 
-        validNpcs.forEach(npc => {
+        const canStillLoad = npc => {
           const maxLoadHit = self.load_count[npc.vnum] && self.load_count[npc.vnum] >= npc.load_max;
           if (maxLoadHit) {
             log("\t\tMaxload of " + npc.load_max + " hit for npc " + npc.vnum);
-            return;
           }
-          const npcObj = new Npc(npc);
-          npcObj.setUuid(uuid.v4());
-          log("\t\tLoaded npcObj [uuid:" + npcObj.getUuid() + ', vnum:' + npcObj.vnum + ']');
-          self.add(npcObj);
-        });
-        
+          return !maxLoadHit;
+        };
+
+        const addToWorld = npc => {
+          if (canStillLoad(npc)) {
+            const npcObj = new Npc(npc);
+            npcObj.setUuid(uuid.v4());
+            log("\t\tLoaded npcObj [uuid:" + npcObj.getUuid() + ', vnum:' + npcObj.vnum + ']');
+            self.add(npcObj);
+          }
+        };
+
+        npcGroup
+          .filter(meetsRequirements)
+          .forEach(addToWorld);
+
       });
     });
 
