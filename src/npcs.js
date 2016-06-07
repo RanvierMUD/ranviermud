@@ -28,7 +28,7 @@ const Npcs = function NpcManager() {
       if (verbose) util.log(message);
     };
     const debug = message => {
-      if (verbose) util.debug(message);
+      if (verbose) console.error(message);
     };
 
     log("\tExamining npc directory - " + npcs_dir);
@@ -80,6 +80,7 @@ const Npcs = function NpcManager() {
           const maxLoadHit = self.load_count[npc.vnum] && self.load_count[npc.vnum] >= npc.load_max;
           if (maxLoadHit) {
             log("\t\tMaxload of " + npc.load_max + " hit for npc " + npc.vnum);
+            debug(self.load_count);
           }
           return !maxLoadHit;
         };
@@ -180,6 +181,7 @@ const Npc = function NpcConstructor(config) {
    * @param object config
    */
   self.init = function (config) {
+    console.error(config);
     self.short_description = config.short_description || '';
     self.keywords = config.keywords || [];
     self.attack = config.attack || { en: 'strike' };

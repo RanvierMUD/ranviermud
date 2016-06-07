@@ -6,15 +6,15 @@
     en: ['python', 'snake', 'hungry', 'py']
   short_description:
     en: 'a hungry python'
-  attack: 
+  attack:
     en: 'scaly embrace'
   description:
     en: "The python slithers slowly across the ground, its forked tongue darting out of its mouth."
   behaviors: "rtcombat,aggro"
   attributes:
     target: 'legs'
-    max_health: 60
-    health: 55
+    max_health: 40
+    health: 40
     speed: 3.5
     damage: 1-37
     level: 4

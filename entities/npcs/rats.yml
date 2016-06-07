@@ -1,5 +1,5 @@
 - &rat
-  vnum: 1
+  vnum: 4
   room: 2
   script: '1.js'
   keywords:
@@ -13,8 +13,8 @@
   behaviors: "rtcombat,randommove"
   attributes:
     target: 'feet'
-    max_health: 10
-    health: 10
+    max_health: 5
+    health: 5
     speed: 1.2
     damage: 1-9
     level: 2
