@@ -246,12 +246,12 @@ const Npc = function NpcConstructor(config) {
    * @param string name
    * @param object affect
    */
-  self.addEffect = function (name, effect) {
+  self.addEffect = (name, effect) => {
     if (effect.activate) {
       effect.activate();
     }
 
-    setTimeout(function () {
+    setTimeout(() => {
       if (effect.deactivate) {
         effect.deactivate();
       }
@@ -260,8 +260,12 @@ const Npc = function NpcConstructor(config) {
     self.effects[name] = 1;
   };
 
-  //TODO: dry-ify the following since they are all a pattern
-
+  /**
+   * Helper for getting strings that may or may not be translated
+   * @param string thing Property of npc
+   * @param string locale Locale of player
+   * @return string Translated string
+   */
   const getTranslatedString = (thing, locale) =>
     typeof self[thing] === 'string' ?
       self[thing] :
@@ -329,11 +333,10 @@ const Npc = function NpcConstructor(config) {
    * Get the damage to sanity an npc can do
    * @return obj {min: int, max: int} || false
    */
-  self.getSanityDamage = function () {
-    var damage = self.getAttribute('sanity_damage') ?
-      self.getAttribute('sanity_damage').split('-').map(function (i) {
-        return parseInt(i, 10);
-      }) : false;
+  self.getSanityDamage = () => {
+    const damage = self.getAttribute('sanity_damage') ?
+      self.getAttribute('sanity_damage').split('-').map(i => parseInt(i, 10)) :
+      false;
     return damage ? { min: damage[0], max: damage[1] } : false;
   };
 
