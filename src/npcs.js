@@ -324,7 +324,7 @@ const Npc = function NpcConstructor(config) {
   self.getDamage = () => {
     const defaultDamage = [1, 20];
     const damage = self.getAttribute('damage') ?
-      self.getAttribute('damage').split('-').map(n => parseInt(i, 10)) :
+      self.getAttribute('damage').split('-').map(n => parseInt(n, 10)) :
       defaultDamage;
     return { min: damage[0], max: damage[1] };
   };
@@ -335,7 +335,7 @@ const Npc = function NpcConstructor(config) {
    */
   self.getSanityDamage = () => {
     const damage = self.getAttribute('sanity_damage') ?
-      self.getAttribute('sanity_damage').split('-').map(i => parseInt(i, 10)) :
+      self.getAttribute('sanity_damage').split('-').map(n => parseInt(n, 10)) :
       false;
     return damage ? { min: damage[0], max: damage[1] } : false;
   };
