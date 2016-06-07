@@ -65,13 +65,13 @@ const Commands = {
     // Load external commands
     fs.readdir(commands_dir,
       (err, files) => {
-        for (let j in files) {
-          let command_file = commands_dir + files[j];
+        for (const j in files) {
+          const command_file = commands_dir + files[j];
           if (!fs.statSync(command_file)
             .isFile()) continue;
           if (!command_file.match(/js$/)) continue;
 
-          let command_name = files[j].split('.')[0];
+          const command_name = files[j].split('.')[0];
 
           //TODO: Add admin commands prefaced with @
           Commands.player_commands[command_name] = require(command_file)
@@ -153,11 +153,11 @@ function move(exit, player) {
     .emit('playerLeave', player, players);
 
   if ('door' in exit && exit.door.locked) {
-    var key = exit.door.locked;
+    const key = exit.door.locked;
 
     if (!CommandUtil.findItemInInventory(key, player)) {
 
-      let roomTitle = rooms.getAt(exit.location).getTitle(player.getLocale());
+      const roomTitle = rooms.getAt(exit.location).getTitle(player.getLocale());
 
       player.sayL10n(l10n, 'LOCKED', roomTitle);
       players.eachIf(
@@ -216,7 +216,7 @@ function move(exit, player) {
   // Trigger the playerEnter event
   // See example in scripts/npcs/1.js
   room.getNpcs().forEach(id => {
-    var npc = npcs.get(id);
+    const npc = npcs.get(id);
     if (!npc) { return; }
     npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
   });
