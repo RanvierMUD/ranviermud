@@ -344,30 +344,37 @@ const Npc = function NpcConstructor(config) {
    * Helper to get just one area's defense
    * @param string location
    */
-  self.getDefense = function (location) {
-    location = location || 'body';
-    return self.defenses[location] || 0;
+  self.getDefense = location => self.defenses[location || 'body'] || 0;
+
+  /**
+   * Method to apply physical damage
+   * @param int raw damage
+   * @param string location
+   * @return int final damage dealt
+   */
+  self.damage = (dmg, location) => {
+    if (dmg) {
+      location = location || 'body';
+      const damageDone = Math.max(1, dmg - calculateDefense(location));
+
+      self.setAttribute('health', Math.max(0, self.getAttribute('health') - damageDone));
+      util.log('Damage done to ' + self.getShortDesc('en') + ': ' + damageDone);
+
+      return damageDone;
+    }
   };
 
   /**
-   * Helper to calculate physical damage
-   * @param int damage
-   * @param string location
+   * Helper to calculate damage reduction
+   * @param  string location hit
+   * @return  int damage soaked
    */
-  self.damage = function (dmg, location) {
-    if (!dmg) return;
-    location = location || 'body';
-    damageDone = Math.max(1, dmg - calculateDefense(location));
-    self.setAttribute('health', Math.max(0, self.getAttribute('health') - damageDone));
-    util.log('Damage done to ' + self.getShortDesc('en') + ': ' + damageDone);
-
-    return damageDone;
-  };
 
   function calculateDefense(location) {
-    var defense = self.getDefense(location);
-    if (location !== 'body')
+    let defense = self.getDefense(location);
+    if (location !== 'body') {
       defense += self.getDefense('body');
+    }
     util.log(self.getShortDesc('en') + ' ' + location + ' def: ' + defense);
     return defense;
   }
