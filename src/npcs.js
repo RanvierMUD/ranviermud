@@ -45,18 +45,21 @@ const Npcs = function NpcManager() {
           return;
         }
 
-        const parseNpcs = file => {
+        const parseNpcs = npc => {
           try {
-            return require('js-yaml').load(fs.readFileSync(file).toString('utf8'));
+            return require('js-yaml').load(fs.readFileSync(npc).toString('utf8'));
           } catch (e) {
-            log("\t\tError loading npc - " + npcFile + ' - ' + e.message);
+            log("\t\tError loading npc - " + npc + ' - ' + e.message);
             return false
           }
         }
 
         let npcGroup = parseNpcs(npcFile);
 
-        if (!npcGroup) {
+        log('npcGroup');
+        debug(npcGroup);
+
+        if (!npcGroup || !npcGroup.length) {
           return;
         }
 
@@ -94,8 +97,8 @@ const Npcs = function NpcManager() {
           }
         };
 
-        npcGroup
-          .filter(meetsRequirements)
+        npcGroup.filter(meetsRequirements)
+          .map(x => console.log(x) || x)
           .forEach(addToWorld);
 
       });
@@ -114,6 +117,7 @@ const Npcs = function NpcManager() {
     }
     self.npcs[npc.getUuid()] = npc;
     self.load_count[npc.vnum] = self.load_count[npc.vnum] ? self.load_count[npc.vnum] + 1 : 1;
+    util.log(self.npcs);
   };
 
   /**
@@ -181,7 +185,6 @@ const Npc = function NpcConstructor(config) {
    * @param object config
    */
   self.init = function (config) {
-    console.error(config);
     self.short_description = config.short_description || '';
     self.keywords = config.keywords || [];
     self.attack = config.attack || { en: 'strike' };

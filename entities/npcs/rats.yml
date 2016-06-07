@@ -1,7 +1,7 @@
 - &rat
   vnum: 4
   room: 2
-  script: '1.js'
+  #script: '4.js'
   keywords:
     en: ['rat', 'feral rat', 'feral']
   short_description:
