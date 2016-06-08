@@ -30,7 +30,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
   var p = {
     isPlayer: true,
     name: player.getName(),
-    speed: player.getAttackSpeed(),
+    speed: player.getAttackSpeed,
     weapon: player.getEquipped('wield', true),
     locations: playerBodyParts,
     target: player.getPreference('target') || 'body',
@@ -38,7 +38,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
 
   var n = {
     name: npc.getShortDesc(locale),
-    speed: npc.getAttackSpeed(),
+    speed: npc.getAttackSpeed,
     weapon: npc.getAttack(locale),
     target: npc.getAttribute('target'),
     locations: npc.getLocations()
@@ -47,7 +47,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
   try {
     util.log("Combat begins between " + p.name + " and " + n.name);
     util.log("Weapons are " + p.weapon.getShortDesc('en') + ' and ' + n.weapon);
-    util.log("Speeds are " + p.speed + ' vs. ' + n.speed)
+    util.log("Speeds are " + p.speed() + ' vs. ' + n.speed()
   } catch (e) { util.log(e); }
 
   var playerCombat = combatRound.bind(null, player, npc, p, n);
@@ -56,8 +56,8 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
   p.attackRound = playerCombat;
   n.attackRound = npcCombat;
 
-  setTimeout(npcCombat, n.speed);
-  setTimeout(playerCombat, p.speed);
+  setTimeout(npcCombat, n.speed());
+  setTimeout(playerCombat, p.speed());
 
   function combatRound(attacker, defender, a, d) {
 
@@ -143,12 +143,13 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
       "From the sound of it, a mortal struggle is happening nearby.",
       "A cry from nearby! What could it be?",
       "The sounds of a clash echo nearby.",
-      "You hear the sounds of flesh being rent, but you cannot tell from where."
+      "You hear the sounds of flesh being rent, but you cannot tell from where.",
+      "A thud, a muffled groan. Fighting nearby?"
     ];
 
     broadcastToArea(Random.fromArray(nearbyFight));
 
-    setTimeout(a.attackRound, a.speed);
+    setTimeout(a.attackRound, a.speed());
   }
 
   function decideHitLocation(locations, target, precise) {

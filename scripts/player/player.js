@@ -84,8 +84,13 @@ exports.listeners = {
     }
   },
 
-  //TODO: Permadeath, add it.
+  quit: function(l10n) {
+    return function(){
+      this.effects.forEach(removeEffect);
+    }
+  },
 
+  //TODO: Permadeath, add it.
   die: function(l10n) {
     return function() {
       // they died, move then back to the start... you can do whatever you want instead of this
