@@ -14,7 +14,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       util.log(player.getName() + ' is searching for ' + args);
       util.log('  in ' + room.getTitle('en'));
 
-      const examinableRoom = room.listeners.indexOf('examine') > -1;
+      const examinableRoom = room.listeners.hasOwnProperty('examine');
       if (examinableRoom) {
         room.emit('examine', args, player, players);
         return;
