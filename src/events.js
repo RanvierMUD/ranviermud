@@ -256,19 +256,20 @@ var Events = {
       // Parse order is common direction shortcuts -> commands -> exits -> skills -> channels
       player.getSocket()
         .once('data', function (data) {
-          data = data.toString()
-            .trim();
+          data = data.toString().trim();
 
           var result;
           if (data) result = parseCommands(data);
-          if (result !== false) commandPrompt();
+          if (result !== false) { commandPrompt(); }
 
           // Methods
 
           function parseCommands(data) {
-            var command = data.split(' ')
+            var command = data
+              .split(' ')
               .shift();
-            var args = data.split(' ')
+            var args = data
+              .split(' ')
               .slice(1)
               .join(' ');
 
