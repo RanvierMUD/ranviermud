@@ -205,11 +205,14 @@ function load(callback)
 
 				util.log("Adding npcs to rooms...");
 				npcs.each(function (npc) {
-					if (npc.getRoom()) {
-						var room =rooms.getAt(npc.getRoom());
+					const npcRoom = npc.getRoom();
+					if (npcRoom) {
+						var room = rooms.getAt(npcRoom);
 						if (!room.hasNpc(npc.getUuid())) {
 							room.addNpc(npc.getUuid());
 						}
+					} else {
+						throw Error('Npc initialized without a room.');
 					}
 				});
 				util.log("Done.");
