@@ -96,9 +96,11 @@ var init = function (restart_server)
 		* Effectively the 'main' game loop but not really because it's a REPL
 		*/
 		server = new telnet.Server(socket => {
-			socket.on('interrupt', function () {
+			socket.on('interrupt', () => {
 				socket.write("\n*interrupt*\n");
 			});
+
+			socket.on('error', err => util.log(err));
 
 			// Register all of the events
 			for (var event in Events.events) {
