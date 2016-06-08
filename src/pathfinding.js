@@ -45,8 +45,9 @@ function _chooseRandomExit(chance) {
               });
 
             npc.setRoom(chosen.location);
-            chosenRoom.addNpc(uid);
             room.removeNpc(uid);
+            chosenRoom.addNpc(uid);
+
 
             const npcInRoomWithPlayer = CommandUtil.inSameRoom.bind(null, npc);
 

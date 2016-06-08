@@ -148,18 +148,16 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           else if (npcLevel === playerLevel)
             color = 'green';
 
-          player.say('<' + color + '>' + npc
-            .getShortDesc(player
-              .getLocale()) + '</' + color + '>');
+          player.say('<' + color + '>'
+            + npc.getShortDesc(player.getLocale())
+            + '</' + color + '>');
         }
       });
 
     player.write('[');
     player.write('<yellow><bold>Obvious exits: </yellow></bold>');
     room.getExits()
-      .forEach(function(exit) {
-        player.write(exit.direction + ' ');
-      });
+      .forEach(exit => player.write(exit.direction + ' '));
     player.say(']');
 
     function showPlayerEquipment(playerTarget, playerLooking) {
