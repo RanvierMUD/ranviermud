@@ -70,6 +70,7 @@ exports.listeners = {
       this.sayL10n(l10n, 'MUTAGEN_GAIN');
       this.setAttribute('level', newLevel);
       this.setAttribute('experience', 0);
+      this.setAttribute('attrPoints', (this.getAttribute('attrPoints') || 0) + 1);
 
       // Do whatever you want to do here when a player levels up...
       this.setAttribute('max_health', healthGain);
