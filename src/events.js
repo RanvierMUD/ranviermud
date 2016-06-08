@@ -482,13 +482,15 @@ var Events = {
         case 'done':
           socket.setLocale("en");
           socket.setLocation(players.getDefaultLocation());
+
           // create the pfile then send them on their way
-          socket.save(function () {
+          socket.save(() => {
             players.addPlayer(socket);
             socket.prompt();
             socket.getSocket()
               .emit('commands', socket);
           });
+
           util.log("A NEW CHALLENGER APPROACHES: ", socket);
           players.broadcastL10n(l10n, 'WELCOME', socket.getName());
           break;
