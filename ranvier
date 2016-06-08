@@ -253,7 +253,7 @@ var server_commands = {
 		if (warn) {
 			warn = function (interval) {
 				players.broadcastL10n(l10n, 'HOTBOOT_WARN', interval);
-				players.each(function(p) {p.prompt();});
+				players.each(p => p.prompt());
 			};
 			warn(time / 1000 + " seconds");
 			setTimeout(function () { warn(Math.floor((time / 4) / 1000) + " seconds"); }, time - Math.floor(time / 4));
@@ -284,7 +284,7 @@ var server_commands = {
 		if (warn) {
 			warn = function (interval) {
 				players.broadcastL10n(l10n, 'RESTART_WARN', interval);
-				players.each(function(p) {p.prompt();});
+				players.each(p => p.prompt());
 			};
 			warn(time / 1000 + " seconds");
 			setTimeout(function () { warn(Math.floor((time / 4) / 1000) + " seconds"); }, time - Math.floor(time / 4));
