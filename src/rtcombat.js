@@ -47,7 +47,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
   try {
     util.log("Combat begins between " + p.name + " and " + n.name);
     util.log("Weapons are " + p.weapon.getShortDesc('en') + ' and ' + n.weapon);
-    util.log("Speeds are " + p.speed() + ' vs. ' + n.speed()
+    util.log("Speeds are " + p.speed() + ' vs. ' + n.speed());
   } catch (e) { util.log(e); }
 
   var playerCombat = combatRound.bind(null, player, npc, p, n);
