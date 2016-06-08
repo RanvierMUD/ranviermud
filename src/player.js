@@ -48,6 +48,7 @@ var Player = function PlayerConstructor(socket) {
     level: 1,
     experience: 0,
     mutagens: 0,
+    attrPoints: 0,
 
     //TODO: Generated descs.
     description: 'A person.'
