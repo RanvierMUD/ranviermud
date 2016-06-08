@@ -256,19 +256,20 @@ var Events = {
       // Parse order is common direction shortcuts -> commands -> exits -> skills -> channels
       player.getSocket()
         .once('data', function (data) {
-          data = data.toString()
-            .trim();
+          data = data.toString().trim();
 
           var result;
           if (data) result = parseCommands(data);
-          if (result !== false) commandPrompt();
+          if (result !== false) { commandPrompt(); }
 
           // Methods
 
           function parseCommands(data) {
-            var command = data.split(' ')
+            var command = data
+              .split(' ')
               .shift();
-            var args = data.split(' ')
+            var args = data
+              .split(' ')
               .slice(1)
               .join(' ');
 
@@ -481,13 +482,15 @@ var Events = {
         case 'done':
           socket.setLocale("en");
           socket.setLocation(players.getDefaultLocation());
+
           // create the pfile then send them on their way
-          socket.save(function () {
+          socket.save(() => {
             players.addPlayer(socket);
             socket.prompt();
             socket.getSocket()
               .emit('commands', socket);
           });
+
           util.log("A NEW CHALLENGER APPROACHES: ", socket);
           players.broadcastL10n(l10n, 'WELCOME', socket.getName());
           break;
