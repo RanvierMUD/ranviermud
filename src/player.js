@@ -68,6 +68,9 @@ var Player = function PlayerConstructor(socket) {
   // Skills the players has
   self.skills = {};
 
+  // Feats the player can use
+  self.feats = {};
+
   // Training data
   self.training = { time: 0 };
 
@@ -97,7 +100,7 @@ var Player = function PlayerConstructor(socket) {
   self.setSkill = (skill, level) => self.skills[skill] = level;
   self.incrementSkill = skill => self.setSkill(skill, self.skills[skill] + 1);
 
-  self.getFeats = feat => typeof self.feats[feat] !== 'undefined' ?
+  self.getFeats = feat => self.feats && typeof self.feats[feat] !== 'undefined' ?
     self.feats[feat] : self.feats;
 
   self.gainFeat = feat => self.feats[feat.id] = feat;
