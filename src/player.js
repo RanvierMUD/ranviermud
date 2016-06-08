@@ -265,7 +265,7 @@ var Player = function PlayerConstructor(socket) {
     }
 
     let deact = function() {
-      if (effect.deactivate) {
+      if (effect.deactivate && self.getSocket()) {
         effect.deactivate();
         // self.prompt();
       }
@@ -359,8 +359,7 @@ var Player = function PlayerConstructor(socket) {
       l10n.setLocale(self.getLocale());
     }
 
-    self.write(l10n.translate.apply(null, [].slice.call(arguments)
-      .slice(1)));
+    self.write(l10n.translate.apply(null, [].slice.call(arguments).slice(1)));
 
     if (locale) l10n.setLocale(locale);
   };

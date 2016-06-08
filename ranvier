@@ -95,7 +95,7 @@ var init = function (restart_server)
 		/**
 		* Effectively the 'main' game loop but not really because it's a REPL
 		*/
-		server = new telnet.Server(function (socket) {
+		server = new telnet.Server(socket => {
 			socket.on('interrupt', function () {
 				socket.write("\n*interrupt*\n");
 			});
