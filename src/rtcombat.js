@@ -1,4 +1,5 @@
 module.exports.initCombat = _initCombat;
+
 //TODO: Add strings for sanity damage
 var Random = require('./random.js').Random;
 var LevelUtil = require('./levels')
@@ -44,7 +45,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
 
   try {
     util.log("Combat begins between " + p.name + " and " + n.name);
-    util.log("Weapons are " + p.weapon + ' and ' + n.weapon);
+    util.log("Weapons are " + p.weapon.getShortDesc('en') + ' and ' + n.weapon);
     util.log("Speeds are " + p.speed + ' vs. ' + n.speed)
   } catch (e) { util.log(e); }
 
