@@ -24,100 +24,67 @@ const Npcs = function NpcManager() {
    */
   self.load = (verbose, callback) => {
     verbose = verbose || false;
-    const log = message => {
-      if (verbose) util.log(message);
-    };
-    const debug = message => {
-      if (verbose) console.error(message);
-    };
+		const log = (message) => { if (verbose) util.log(message); };
+		const debug = (message) => { if (verbose) util.debug(message); };
 
-    log("\tExamining npc directory - " + npcs_dir);
-    fs.readdir(npcs_dir, (err, files) => {
-      if (err) { log(err); }
+		log("\tExamining npc directory - " + npcs_dir);
+		const npcs = fs.readdir(npcs_dir, (err, files) =>
+    {
+			// Load any npc files
+			for (const j in files) {
+				const npc_file = npcs_dir + files[j];
+				if (!fs.statSync(npc_file).isFile()) continue;
+				if (!npc_file.match(/yml$/)) continue;
 
-      files.forEach(file => {
-        log(file);
-        const npcFile = npcs_dir + file;
+        let npc_def;
+				// parse the npc files
+				try {
+          npc_def = require('js-yaml').load(fs.readFileSync(npc_file).toString('utf8'));
+				} catch (e) {
+					log("\t\tError loading npc - " + npc_file + ' - ' + e.message);
+					continue;
+				}
 
-        const isYamlFile = file => fs.statSync(file).isFile && file.match(/yml$/);
-        if (!isYamlFile) {
-          log(npcFile + ' is not a valid .yml file.');
-          return;
-        }
+				// create and load the npcs
+				npc_def.forEach(npc => {
+					const validate = ['keywords', 'short_description', 'vnum'];
 
-        const parseNpcs = npc => {
-          try {
-            return require('js-yaml').load(fs.readFileSync(npc).toString('utf8'));
-          } catch (e) {
-            log("\t\tError loading npc - " + npc + ' - ' + e.message);
-            return false
-          }
-        }
+					let err = false;
+					for (var v in validate) {
+						if (!(validate[v] in npc)) {
+							log("\t\tError loading npc in file " + npc + ' - no ' + validate[v] + ' specified');
+							err = true;
+							return;
+						}
+					}
 
-        let npcGroup = parseNpcs(npcFile);
+          const hitMaxLoad = self.load_count[npc.vnum] && self.load_count[npc.vnum] >= npc.load_max
+					if (hitMaxLoad) {
+						log("\t\tMaxload of " + npc.load_max + " hit for npc " + npc.vnum);
+						return;
+					}
 
-        log('npcGroup');
-        debug(npcGroup);
+					npc = new Npc(npc);
+					npc.setUuid(uuid.v4());
+					log("\t\tLoaded npc [uuid:" + npc.getUuid() + ', vnum:' + npc.vnum + ']');
+					self.add(npc);
+				});
+			}
 
-        if (!npcGroup || !npcGroup.length) {
-          return;
-        }
-
-        // Helper functions for validating and creating NPCs.
-        const meetsRequirements = npc => {
-          const required = ['keywords', 'short_description', 'vnum'];
-
-          const hasRequirements = (hasMet, req) => {
-            if (hasMet) {
-              const hasReq = req in npc;
-              if (!hasReq) { log("Missing " + req + " in " + npc); }
-              return hasReq;
-            }
-            return false;
-          };
-
-          return required.reduce(hasRequirements, true);
-        };
-
-        const canStillLoad = npc => {
-          const maxLoadHit = self.load_count[npc.vnum] && self.load_count[npc.vnum] >= npc.load_max;
-          if (maxLoadHit) {
-            log("\t\tMaxload of " + npc.load_max + " hit for npc " + npc.vnum);
-            debug(self.load_count);
-          }
-          return !maxLoadHit;
-        };
-
-        const addToWorld = npc => {
-          if (canStillLoad(npc)) {
-            const npcObj = new Npc(npc);
-            npcObj.setUuid(uuid.v4());
-            log("\t\tLoaded npcObj [uuid:" + npcObj.getUuid() + ', vnum:' + npcObj.vnum + ']');
-            self.add(npcObj);
-          }
-        };
-
-        npcGroup.filter(meetsRequirements)
-          .map(x => console.log(x) || x)
-          .forEach(addToWorld);
-
-      });
-    });
-
-    if (callback) { callback(); }
+			if (callback) { callback(); }
+		});
   };
 
   /**
    * Add an npc and generate a uuid if necessary
    * @param Npc npc
    */
-  self.add = function (npc) {
+  self.add = npc => {
     if (!npc.getUuid()) {
       npc.setUuid(uuid.v4());
     }
     self.npcs[npc.getUuid()] = npc;
     self.load_count[npc.vnum] = self.load_count[npc.vnum] ? self.load_count[npc.vnum] + 1 : 1;
-    util.log(self.npcs);
   };
 
   /**
