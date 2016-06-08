@@ -177,7 +177,7 @@ exports.Feats = {
 
           player.addEffect('stunning', Effects.slow({
             target: combatant,
-            magnitude: 1.5,
+            magnitude: 2,
           }));
         }
       });
