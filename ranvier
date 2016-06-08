@@ -95,10 +95,12 @@ var init = function (restart_server)
 		/**
 		* Effectively the 'main' game loop but not really because it's a REPL
 		*/
-		server = new telnet.Server(function (socket) {
-			socket.on('interrupt', function () {
+		server = new telnet.Server(socket => {
+			socket.on('interrupt', () => {
 				socket.write("\n*interrupt*\n");
 			});
+
+			socket.on('error', err => util.log(err));
 
 			// Register all of the events
 			for (var event in Events.events) {
@@ -253,7 +255,7 @@ var server_commands = {
 		if (warn) {
 			warn = function (interval) {
 				players.broadcastL10n(l10n, 'HOTBOOT_WARN', interval);
-				players.each(function(p) {p.prompt();});
+				players.each(p => p.prompt());
 			};
 			warn(time / 1000 + " seconds");
 			setTimeout(function () { warn(Math.floor((time / 4) / 1000) + " seconds"); }, time - Math.floor(time / 4));
@@ -284,7 +286,7 @@ var server_commands = {
 		if (warn) {
 			warn = function (interval) {
 				players.broadcastL10n(l10n, 'RESTART_WARN', interval);
-				players.each(function(p) {p.prompt();});
+				players.each(p => p.prompt());
 			};
 			warn(time / 1000 + " seconds");
 			setTimeout(function () { warn(Math.floor((time / 4) / 1000) + " seconds"); }, time - Math.floor(time / 4));

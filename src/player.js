@@ -22,7 +22,7 @@ var Player = function PlayerConstructor(socket) {
   self.location = null;
   self.locale = null;
   self.prompt_string =
-    '%health_condition <blue>||</blue> %sanity_condition\n<blue><bold>[ </bold></blue>';
+    '%health_condition <blue>||</blue> %sanity_condition\n';
   self.combat_prompt =
     "<bold>|| %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
   self.password = null;
@@ -68,6 +68,9 @@ var Player = function PlayerConstructor(socket) {
   // Skills the players has
   self.skills = {};
 
+  // Feats the player can use
+  self.feats = {};
+
   // Training data
   self.training = { time: 0 };
 
@@ -97,7 +100,7 @@ var Player = function PlayerConstructor(socket) {
   self.setSkill = (skill, level) => self.skills[skill] = level;
   self.incrementSkill = skill => self.setSkill(skill, self.skills[skill] + 1);
 
-  self.getFeats = feat => typeof self.feats[feat] !== 'undefined' ?
+  self.getFeats = feat => self.feats && typeof self.feats[feat] !== 'undefined' ?
     self.feats[feat] : self.feats;
 
   self.gainFeat = feat => self.feats[feat.id] = feat;
@@ -262,9 +265,9 @@ var Player = function PlayerConstructor(socket) {
     }
 
     let deact = function() {
-      if (effect.deactivate) {
+      if (effect.deactivate && self.getSocket()) {
         effect.deactivate();
-        self.prompt();
+        // self.prompt();
       }
       self.removeEffect(name);
     };
@@ -356,8 +359,7 @@ var Player = function PlayerConstructor(socket) {
       l10n.setLocale(self.getLocale());
     }
 
-    self.write(l10n.translate.apply(null, [].slice.call(arguments)
-      .slice(1)));
+    self.write(l10n.translate.apply(null, [].slice.call(arguments).slice(1)));
 
     if (locale) l10n.setLocale(locale);
   };
