@@ -61,6 +61,9 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
 
   function combatRound(attacker, defender, a, d) {
 
+    util.log("Speeds are " + a.speed() + ' vs. ' + d.speed());
+
+
     if (!defender.isInCombat() || !attacker.isInCombat())
       return;
 
