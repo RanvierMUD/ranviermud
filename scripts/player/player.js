@@ -86,8 +86,8 @@ exports.listeners = {
   },
 
   quit: function(l10n) {
-    return function(){
-      this.effects.forEach(removeEffect);
+    return function () {
+      this.effects.forEach(this.removeEffect);
     }
   },
 
