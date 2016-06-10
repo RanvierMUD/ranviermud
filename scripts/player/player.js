@@ -85,12 +85,6 @@ exports.listeners = {
     }
   },
 
-  quit: function(l10n) {
-    return function () {
-      this.effects.forEach(this.removeEffect);
-    }
-  },
-
   //TODO: Permadeath, add it.
   die: function(l10n) {
     return function() {
