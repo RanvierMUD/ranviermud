@@ -6,14 +6,13 @@ var LevelUtil = require('../../src/levels').LevelUtil,
 
 exports.listeners = {
 
-  // Function wrappers needed to access "this" (Player obj)
+  //// Function wrappers needed to access "this" (Player obj)
+  //TODO: Do regenHealth, regenSanity, and regenActions
   regen: function(l10n) {
     return function(bonus) {
       bonus = bonus || 1;
       const self = this;
       const regenInterval = 2000;
-
-      self.prompt();
 
       const regen = setInterval(() => {
         const health = self.getAttribute('health');
@@ -56,18 +55,20 @@ exports.listeners = {
       const name = this.getName();
       const newLevel = this.getAttribute('level') + 1;
       const healthGain = Math.ceil(this.getAttribute('max_health') * 1.10);
+      const gainedMutation = newLevel % 2 === 0;
 
       let mutationPoints = this.getAttribute('mutagens');
-
-      if (newLevel % 2 === 0) {
-        mutationPoints++;
-        this.setAttribute('mutagens', mutationPoints);
-      }
 
       util.log(name + ' is now level ' + newLevel);
 
       this.sayL10n(l10n, 'LEVELUP');
-      this.sayL10n(l10n, 'MUTAGEN_GAIN');
+
+      if (gainedMut) {
+        this.sayL10n(l10n, 'MUTAGEN_GAIN');
+        mutationPoints++;
+        this.setAttribute('mutagens', mutationPoints);
+      }
+
       this.setAttribute('level', newLevel);
       this.setAttribute('experience', 0);
       this.setAttribute('attrPoints', (this.getAttribute('attrPoints') || 0) + 1);
