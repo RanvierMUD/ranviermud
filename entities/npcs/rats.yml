@@ -16,7 +16,7 @@
     max_health: 4
     health: 4
     speed: 1.2
-    damage: 1-9
+    damage: 1-7
     level: 2
   defenses:
     body: 1

@@ -19,4 +19,8 @@
     damage: '4-40'
     sanity_damage: '1-4'
     level: 8
+  defenses:
+    head: 4
+    body: 1
+    torso: 1
   load_max: 3
