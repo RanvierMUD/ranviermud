@@ -30,7 +30,7 @@ module.exports.examine = (args, player, players, config) => {
   const defaultCheck = check => true;
   const nothingFound = () => {
     player.say('You find nothing of interest.');
-    players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
+    players.eachIf(p => CommandUtil.inSameRoom(player, p),
       p => p.say(player.getName() + ' seems to be searching for... something.'));
   };
   config.nothingFound = config.nothingFound || nothingFound;
