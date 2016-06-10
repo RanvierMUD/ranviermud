@@ -217,10 +217,10 @@ var Player = function PlayerConstructor(socket) {
   self.explore = vnum => {
     if (self.explored.indexOf(vnum) === -1) {
       self.explored.push(vnum);
-      util.log(player.getName() + ' explored room #' + vnum + ' for the first time.');
+      util.log(self.getName() + ' explored room #' + vnum + ' for the first time.');
       return false;
     }
-    util.log(player.getName() + ' moves to room #' + vnum);
+    util.log(self.getName() + ' moves to room #' + vnum);
     return true;
   };
 
@@ -508,8 +508,8 @@ var Player = function PlayerConstructor(socket) {
    * @return int
    */
   self.getDamage = () => {
-    let weapon = self.getEquipped('wield', true)
-    let base = [1, self.getAttribute('stamina') + 1];
+    const weapon = self.getEquipped('wield', true);
+    const base = [1, self.getAttribute('stamina') + 5];
 
     let damage = weapon ?
       (weapon.getAttribute('damage') ?
