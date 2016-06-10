@@ -350,6 +350,7 @@ var Events = {
           }
 
           function commandPrompt() {
+            player.prompt();
             player.getSocket()
               .emit("commands", player);
           }

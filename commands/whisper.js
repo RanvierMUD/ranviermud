@@ -17,7 +17,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     if (args.length > 0) {
       targetFound = false;
       players.eachIf(
-        p => CommandUtil.otherPlayerInRoom(p, player),
+        p => CommandUtil.inSameRoom(p, player),
         p => {
           if (p.getName().toLowerCase() === target.toLowerCase()) {
             p.sayL10n(l10n, 'THEY_WHISPER', playerName, msg);

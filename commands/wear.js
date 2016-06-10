@@ -30,12 +30,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     players.eachIf(
-      p => CommandUtil.otherPlayerInRoom(p, player),
-      p => {
-        p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), thing.getShortDesc(
-          p.getLocale()));
-        p.prompt();
-      });
+      p => CommandUtil.inSameRoom(p, player),
+      p => p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), thing.getShortDesc(p.getLocale()))
+      );
 
     var location = thing.getAttribute('wearLocation');
     // thing.emit('wear', location, player, players);

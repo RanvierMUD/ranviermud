@@ -28,7 +28,7 @@ exports.listeners = {
 
       function nothingFound() {
         player.sayL10n(l10n, 'NOT_FOUND');
-        players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
+        players.eachIf(p => CommandUtil.inSameRoom(player, p),
           p => { p.sayL10n(l10n, 'OTHER_NOT_FOUND', player.getName()); });
       }
 
@@ -36,7 +36,7 @@ exports.listeners = {
       function lookOutside() {
         if (Time.isDay()) {
           player.sayL10n(l10n, 'WALL');
-          players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
+          players.eachIf(p => CommandUtil.inSameRoom(player, p),
             p => { p.sayL10n(l10n, 'OTHER_LOOKING', player.getName()); });
         } else
           player.sayL10n(l10n, 'DARKNESS');
