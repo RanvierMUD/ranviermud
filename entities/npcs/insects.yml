@@ -19,11 +19,11 @@
     damage: 1-2
     level: 1
   defenses:
-    body: 3
-    torso: 3
-    head: -1
-    legs: 5
-    arms: 5
+    body: 1
+    torso: 2
+    head: -3
+    legs: 2
+    arms: 2
   load_max: 9
 - *roach
 - <<: *roach
