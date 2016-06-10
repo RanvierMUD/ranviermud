@@ -134,11 +134,9 @@ TelnetStream.prototype.write = function (data, encoding) {
     this.deflate.write(data);
     this.deflate.flush();
   } else {
-
     try {
       if (notClosed(this.stream)) { this.stream.write(data); }
-  } catch (e) { console.log(e); }
-
+    } catch (e) { console.log(e); }
   }
 };
 
