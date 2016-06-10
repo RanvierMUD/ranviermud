@@ -194,16 +194,9 @@ function move(exit, player) {
         } catch (e) {
           p.sayL10n(l10n, 'LEAVE', player.getName());
         }
-      }
-    });
-
-  players.eachExcept(
-    player,
-    p => {
-      if (p.getLocation() === player.getLocation()) {
         p.prompt();
       }
-  });
+    });
 
   player.setLocation(exit.location);
 

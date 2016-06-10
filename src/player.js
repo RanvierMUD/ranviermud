@@ -22,7 +22,7 @@ var Player = function PlayerConstructor(socket) {
   self.location = null;
   self.locale = null;
   self.prompt_string =
-    '%health_condition <blue>||</blue> %sanity_condition\n';
+    '%health_condition <blue>||</blue> %sanity_condition\n<blue><bold>[</bold></blue>';
   self.combat_prompt =
     "<bold>|| %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
   self.password = null;
