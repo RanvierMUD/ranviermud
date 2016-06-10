@@ -28,7 +28,7 @@ exports.listeners = {
 
       function nothingFound() {
         player.sayL10n(l10n, 'NOT_FOUND');
-        players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
+        players.eachIf(p => CommandUtil.inSameRoom(player, p),
           p => { p.sayL10n(l10n, 'OTHER_NOT_FOUND', player.getName()); });
       }
 
@@ -41,7 +41,7 @@ exports.listeners = {
 
           player.sayL10n(l10n, 'NOTE_FOUND_' + rand);
           players.eachIf(
-            p => CommandUtil.otherPlayerInRoom(player, p),
+            p => CommandUtil.inSameRoom(player, p),
             p => {
               p.sayL10n(l10n, 'OTHER_FOUND', player.getName());
             });

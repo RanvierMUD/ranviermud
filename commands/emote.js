@@ -10,7 +10,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     if (args) {
       player.say(self + " " + args);
       players.eachIf(
-        CommandUtil.otherPlayerInRoom.bind(null, player),
+        CommandUtil.inSameRoom.bind(null, player),
         target => target.say(self + " " + args));
       util.log(self + ' emotes: ' + args);
       return;

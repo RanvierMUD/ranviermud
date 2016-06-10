@@ -239,7 +239,6 @@ var Events = {
 
           Commands.player_commands.look(null, player);
           player.checkTraining();
-          player.prompt();
 
           // All that shit done, let them play!
           player.getSocket()

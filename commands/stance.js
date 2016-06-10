@@ -20,7 +20,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       player.setPreference('stance', stance);
       player.sayL10n(l10n, 'STANCE_SET', stance);
       players.eachIf(
-        p => CommandUtil.otherPlayerInRoom(player, p),
+        p => CommandUtil.inSameRoom(player, p),
         p => p.sayL10n('OTHER_STANCE', player.getName(), stance)
       );
       return;
