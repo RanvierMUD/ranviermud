@@ -54,7 +54,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       // Then other players
       if (!thing) {
         players.eachIf(
-          CommandUtil.otherPlayerInRoom.bind(null, player),
+          CommandUtil.inSameRoom.bind(null, player),
           lookAtOther);
       }
 
@@ -119,7 +119,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     player.say('');
 
     // display players in the same room
-    players.eachIf(CommandUtil.otherPlayerInRoom.bind(null, player),
+    players.eachIf(CommandUtil.inSameRoom.bind(null, player),
       p => player.sayL10n(l10n, 'IN_ROOM', p.getName())
     );
 
