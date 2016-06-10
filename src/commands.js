@@ -161,7 +161,7 @@ function move(exit, player) {
 
       player.sayL10n(l10n, 'LOCKED', roomTitle);
       players.eachIf(
-        p => CommandUtil.otherPlayerInRoom(player, p),
+        p => CommandUtil.inSameRoom(player, p),
         p => {
           let roomTitle = rooms.getAt(exit.location).getTitle(p.getLocale());
           p.sayL10n(l10n, 'OTHER_LOCKED', player.getName(), roomTitle);
@@ -172,7 +172,7 @@ function move(exit, player) {
     exit.door.locked = false;
     player.sayL10n(l10n, 'UNLOCKED', key);
     players.eachIf(
-      p => CommandUtil.otherPlayerInRoom(player, p),
+      p => CommandUtil.inSameRoom(player, p),
       p => p.sayL10n(l10n, 'OTHER_UNLOCKED', player.getName(), key));
   }
 

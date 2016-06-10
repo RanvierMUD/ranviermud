@@ -6,7 +6,6 @@ const CommandUtil = {
   findItemInRoom:      _findItemInRoom,
   findItemInInventory: _findItemInInventory,
   findNpcInRoom:       _findNpcInRoom,
-  otherPlayerInRoom:   _inSameRoom,
   inSameRoom:          _inSameRoom,
   parseDot:            _parseDot,
 
@@ -21,10 +20,10 @@ const CommandUtil = {
 function _inSameRoom(entity, target) {
   if (target) {
     if (entity.getName) { // Handle players
-      let notSameName = target.getName() !== entity.getName();
-      let sameLocation = target.getLocation() === entity.getLocation();
+      const notSameName = target.getName() !== entity.getName();
+      const sameLocation = target.getLocation() === entity.getLocation();
       return notSameName && sameLocation;
-    } else { // Handle NPCs
+    } else if (entity.getShortDesc) { // Handle NPCs and items
       return entity.getRoom() === target.getLocation();
     }
   }
