@@ -42,7 +42,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     targetPlayer = targetPlayer.toLowerCase();
 
     players.eachIf(
-      CommandUtil.otherPlayerInRoom.bind(null, player),
+      CommandUtil.inSameRoom.bind(null, player),
       checkForTarget
       );
 

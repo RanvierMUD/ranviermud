@@ -1,6 +1,6 @@
 'use strict';
 const getGenderNoun = require('./status').getGenderNoun;
-const newLine = new RegExp('\\n');  
+const newLine = new RegExp('\\n');
 
 exports.Channels = {
 	say: {

@@ -25,7 +25,7 @@ exports.listeners = {
       function found(what) {
         player.sayL10n(l10n, what);
         players.eachIf(
-          p => CommandUtil.otherPlayerInRoom(player, p),
+          p => CommandUtil.inSameRoom(player, p),
           p => { p.sayL10n(l10n, what + '_OTHER', player.getName()) });
       }
 

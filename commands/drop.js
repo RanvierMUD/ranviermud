@@ -16,8 +16,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     if (item.isEquipped()) {
-      item = CommandUtil.findItemInInventory('2.' + args, player, true) ||
-        item;
+      item = CommandUtil.findItemInInventory('2.' + args, player, true) || item;
       if (item.isEquipped()) {
         player.sayL10n(l10n, 'ITEM_WORN');
         return;
@@ -27,12 +26,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     let playerName = player.getName();
 
     players.eachIf(
-      p => CommandUtil.otherPlayerInRoom(p, player),
-      p => {
-        p.sayL10n(l10n, 'OTHER_DROPS', playerName, item.getShortDesc(
-          p.getLocale()));
-        p.prompt();
-      });
+      p => CommandUtil.inSameRoom(p, player),
+      p => p.sayL10n(l10n, 'OTHER_DROPS', playerName, item.getShortDesc(p.getLocale()))
+    );
+
 
     let itemName = item.getShortDesc(player.getLocale());
     player.sayL10n(l10n, 'ITEM_DROP', itemName, false);

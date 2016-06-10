@@ -30,7 +30,7 @@ exports.listeners = {
 function findFood(player, players) {
   player.emit('regen', 2);
   player.sayL10n(l10n, 'FOUND_FOOD');
-  players.eachIf(p => CommandUtil.otherPlayerInRoom(player, p),
+  players.eachIf(p => CommandUtil.inSameRoom(player, p),
     p => {
       p.sayL10n(l10n, 'OTHER_FOUND_FOOD', player.getName());
       player.sayL10n(l10n, 'SHARE_FOOD', p.getName());
