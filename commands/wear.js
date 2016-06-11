@@ -49,7 +49,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const worn = player.getEquipped(item.getAttribute('wearLocation'));
       if (worn) {
         util.log("Cannot wear due to already wearing an item.");
-        player.sayL10n(l10n, 'CANT_WEAR', items.get(wear).getShortDesc(player.getLocale()));
+        player.sayL10n(l10n, 'CANT_WEAR', items.get(worn).getShortDesc(player.getLocale()));
         return false;
       }
       return true;
