@@ -23,7 +23,7 @@ const L = function(locale, cls, key /*, args... */ ) {
 
 exports.Skills = {
 
-  dualWield: {
+  dual: {
     id: "dual",
     cost: 2,
     name: "Dual Wield",

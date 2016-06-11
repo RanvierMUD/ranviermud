@@ -3,8 +3,8 @@ const util = require('util'),
   ansi = require('sty').parse,
   fs = require('fs'),
   CommandUtil = require('./command_util').CommandUtil,
-  l10nHelper = require('./l10n'),
-  Skills = require('./skills').Skills;
+  l10nHelper = require('./l10n');
+
 
 // "Globals" to be specified later during config.
 let rooms = null;
@@ -35,10 +35,16 @@ const Commands = {
   admin_commands: {
     addSkill: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
-        args = args.toLowerCase();
-        const skill = Skill[args];
-        if (skill) { player.addSkill(args); }
-        util.log("@@Admin: " + player.getName() + " added " + skill + " to skills.@@");
+        const Skills = require('./skills').Skills;
+        args = args.toLowerCase().split(' ');
+
+        const skill = Skills[args[0]].id;
+        const number = args[1] || 1;
+        if (skill) {
+          player.addSkill(skill, number);
+          player.say("<red>ADMIN: Added " + args + ".</red>");
+        }
+        util.log("@@Admin: " + player.getName() + " added skill:", skill);
       },
   },
 
@@ -84,17 +90,16 @@ const Commands = {
 
           const command_name = files[j].split('.')[0];
 
-          //TODO: Add admin commands prefaced with @
           Commands.player_commands[command_name] = require(command_file)
             .command(rooms, items, players, npcs, Commands);
-
-          //TODO: Do the same way as above once you extract the admin commands.
-          for (const command in Commands.admin_commands) {
-            const commandFunc = Commands.admin_commands[command](rooms, items, players, npcs, Commands);
-            Commands.admin_commands[command] = commandFunc;
-          }
         }
       });
+
+      //TODO: Do the same way as above once you extract the admin commands.
+      for (const command in Commands.admin_commands) {
+        const commandFunc = Commands.admin_commands[command](rooms, items, players, npcs, Commands);
+        Commands.admin_commands[command] = commandFunc;
+      }
   },
 
   /**
@@ -156,6 +161,7 @@ alias('exp', 'tnl');
 alias('take', 'get');
 alias('consider', 'appraise');
 alias('me', 'emote');
+
 
 exports.Commands = Commands;
 
