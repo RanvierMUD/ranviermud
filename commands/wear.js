@@ -24,7 +24,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function wearAll() {
       const items = player.getInventory();
-      console.log(items);
       items.forEach(wearItem);
     }
 
@@ -39,7 +38,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function isWearable(item) {
 
       if (!item.getAttribute('wearLocation')) {
-        util.log("No wear location:" , JSON.stringify(item));
+        util.log("No wear location:" , item.getShortDesc(), item.wearLocation);
         player.sayL10n(l10n, 'NO_WEAR_LOCATION', item.getShortDesc(player.getLocale()));
         return false;
       }
@@ -47,7 +46,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function hasOpenSpot(item) {
-      const worn = player.getEquipped(thing.getAttribute('wearLocation'));
+      const worn = player.getEquipped(item.getAttribute('wearLocation'));
       if (worn) {
         util.log("Cannot wear due to already wearing an item.");
         player.sayL10n(l10n, 'CANT_WEAR', items.get(wear).getShortDesc(player.getLocale()));
