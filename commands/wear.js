@@ -6,38 +6,71 @@ const l10n = require('../src/l10n')(l10nFile);
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
-    var cmds = args.split(' ');
+    const cmds = args.toLowerCase().split(' ');
 
-    var thing = cmds[0];
+    let thing = cmds[0];
+    if (thing === 'all') {
+      wearAll();
+      return;
+    }
+
     thing = CommandUtil.findItemInInventory(thing, player, true);
     if (!thing) {
       player.sayL10n(l10n, 'ITEM_NOT_FOUND');
       return;
     }
 
-    if (!thing.getAttribute('wearLocation')) {
-      util.log("No wear location:" , JSON.stringify(thing));
-      player.sayL10n(l10n, 'NO_WEAR_LOCATION', thing.getShortDesc(player.getLocale()));
-      return;
+    return wearItem(thing);
+
+    function wearAll() {
+      const items = player.getInventory();
+      items.forEach(wearItem);
+      items.forEach(item => util.log(item.getShortDesc('en')));
     }
 
-    var wear = player.getEquipped(thing.getAttribute('wearLocation'));
-    if (wear) {
-      util.log("Cannot wear due to already wearing an item.");
-      player.sayL10n(l10n, 'CANT_WEAR', items.get(wear).getShortDesc(player
-        .getLocale()));
-      return;
+    function wearItem(item) {
+      if (isWearable(item) && hasOpenSpot(item)) {
+        broadCastWearing(item);
+        return putOn(item);
+      }
+      return false;
     }
 
-    players.eachIf(
-      p => CommandUtil.inSameRoom(p, player),
-      p => p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), thing.getShortDesc(p.getLocale()))
+    function isWearable(item) {
+      if (!item.getAttribute('wearLocation')) {
+        util.log("No wear location:" , item.getShortDesc('en'), item.wearLocation);
+        player.sayL10n(l10n, 'NO_WEAR_LOCATION', item.getShortDesc(player.getLocale()));
+        return false;
+      }
+      return true;
+    }
+
+    function hasOpenSpot(item) {
+      const worn = player.getEquipped(item.getAttribute('wearLocation'));
+      if (worn) {
+        util.log("Cannot wear due to already wearing an item.");
+        player.sayL10n(l10n, 'CANT_WEAR', items.get(worn).getShortDesc(player.getLocale()));
+        return false;
+      }
+      return true;
+    }
+
+    function broadCastWearing(item) {
+      players.eachIf(
+        p => CommandUtil.inSameRoom(p, player),
+        p => p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), item.getShortDesc(p.getLocale()))
       );
+    }
 
-    var location = thing.getAttribute('wearLocation');
-    // thing.emit('wear', location, player, players);
-    //FIXME: Emitting wear does not always work. Perhaps due to items lackign scripts.
-    player.equip(location, thing);
-    player.sayL10n(l10n, 'YOU_WEAR', thing.getShortDesc(player.getLocale()));
+    function putOn(item) {
+      const location = item.getAttribute('wearLocation');
+      const hasEmitScript = item._events && item._events.wear;
+      if (hasEmitScript) { item.emit('wear', location, player, players); }
+
+      //FIXME: Emitting wear does not always work. Perhaps due to items lacking scripts.
+      player.equip(location, item);
+      player.sayL10n(l10n, 'YOU_WEAR', item.getShortDesc(player.getLocale()));
+    }
+
   };
 };
