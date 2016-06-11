@@ -8,9 +8,24 @@ const CommandUtil = {
   findNpcInRoom:       _findNpcInRoom,
   inSameRoom:          _inSameRoom,
   parseDot:            _parseDot,
+  values:               _values,
 
 };
 
+/**
+ * Takes an object and returns an array of all of its values.
+ * @param  Obj
+ * @return Array of values */
+
+function _values(obj) {
+  let vals = [];
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)){
+      vals.push(obj[key]);
+    }
+  }
+  return vals;
+}
 
 /**
  * @param Player|NPC entity
