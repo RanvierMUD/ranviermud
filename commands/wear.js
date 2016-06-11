@@ -25,6 +25,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function wearAll() {
       const items = player.getInventory();
       items.forEach(wearItem);
+      items.forEach(item => util.log(item.getShortDesc('en')));
     }
 
     function wearItem(item) {
@@ -36,9 +37,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function isWearable(item) {
-
       if (!item.getAttribute('wearLocation')) {
-        util.log("No wear location:" , item.getShortDesc(), item.wearLocation);
+        util.log("No wear location:" , item.getShortDesc('en'), item.wearLocation);
         player.sayL10n(l10n, 'NO_WEAR_LOCATION', item.getShortDesc(player.getLocale()));
         return false;
       }
@@ -64,8 +64,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function putOn(item) {
       const location = item.getAttribute('wearLocation');
-      const hasEmitScript = item._events && items._events.wear;
-      item.emit('wear', location, player, players);
+      const hasEmitScript = item._events && item._events.wear;
+      if (hasEmitScript) { item.emit('wear', location, player, players); }
 
       //FIXME: Emitting wear does not always work. Perhaps due to items lacking scripts.
       player.equip(location, item);
