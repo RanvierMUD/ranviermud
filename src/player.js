@@ -15,8 +15,8 @@ const npcs_scripts_dir = __dirname + '/../scripts/player/';
 const l10n_dir = __dirname + '/../l10n/scripts/player/';
 const statusUtil = require('./status');
 
-var Player = function PlayerConstructor(socket) {
-  var self = this;
+const Player = function PlayerConstructor(socket) {
+  const self = this;
   self.name = '';
   self.description = '';
   self.location = null;
@@ -329,7 +329,7 @@ var Player = function PlayerConstructor(socket) {
    */
   self.unequip = item => {
     item.setEquipped(false);
-    for (var i in self.equipment) {
+    for (var slot in self.equipment) {
       if (self.equipment[slot] === item.getUuid()) {
         self.equipment[slot] = null;
         break;
