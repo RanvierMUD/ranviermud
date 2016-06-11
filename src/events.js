@@ -274,19 +274,26 @@ var Events = {
 
             var found = false;
 
+            if (command[0] === '@') {
+              const adminCommand = command.slice(1);
+              if (adminCommand in Commands.admin_commands) {
+                Commands.admin_commands[adminCommand](args);
+              }
+            }
+
             if (!(command in Commands.player_commands)) {
 
               found = checkForDirectionAlias(command);
-              if (!found) found = checkForCmd(command);
-              else if (found === true) return;
+              if (!found) { found = checkForCommandSafely(command); }
+              else if (found === true) { return; }
 
-              if (found) return getCmd(found, args);
-              else return checkForSpecializedCommand(command, args);
+              if (found) { return executeCommand(found, args); }
+              else { return checkForSpecializedCommand(command, args); }
 
-            } else return getCmd(command, args);
+            } else { return executeCommand(command, args); }
           }
 
-          function getCmd(cmd, args) {
+          function executeCommand(cmd, args) {
             try {
               return Commands.player_commands[cmd](args, player);
             } catch (e) { util.log(e) }
@@ -310,7 +317,7 @@ var Events = {
           }
 
 
-          function checkForCmd(command) {
+          function checkForCommandSafely(command) {
             for (var cmd in Commands.player_commands) {
               try {
                 var regex = new RegExp("^" + command);
