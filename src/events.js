@@ -277,7 +277,8 @@ var Events = {
             if (command[0] === '@') {
               const adminCommand = command.slice(1);
               if (adminCommand in Commands.admin_commands) {
-                Commands.admin_commands[adminCommand](args);
+                Commands.admin_commands[adminCommand](player, args);
+                return;
               }
             }
 
