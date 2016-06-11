@@ -329,7 +329,7 @@ const Player = function PlayerConstructor(socket) {
    */
   self.unequip = item => {
     item.setEquipped(false);
-    for (var slot in self.equipment) {
+    for (const slot in self.equipment) {
       if (self.equipment[slot] === item.getUuid()) {
         self.equipment[slot] = null;
         break;
