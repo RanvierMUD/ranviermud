@@ -23,6 +23,17 @@ const L = function(locale, cls, key /*, args... */ ) {
 
 exports.Skills = {
 
+  dualWield: {
+    id: "dual",
+    cost: 2,
+    name: "Dual Wield",
+    description: "Your ability to use two (or more...) weapons at once.",
+    usage: "Wield two one-handed weapons. Enjoy.",
+    attribute: "stamina",
+    type: "passive",
+    activate: player => util.log(player.getName() + ' can dual wield.'),
+  },
+
   //// Cleverness-related skills.
   pick: {
     id: "pick",
@@ -31,6 +42,7 @@ exports.Skills = {
     description: "Your ability to illicitly open locked doors or containers.",
     usage: "`pick [exit]`",
     attribute: "cleverness",
+    type: "active",
     activate: (player, target, rooms, npcs, players) => {
       if (target) {
         const room = rooms.getAt(player.getLocation());

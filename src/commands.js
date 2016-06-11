@@ -1,11 +1,10 @@
 'use strict';
 const util = require('util'),
-  ansi = require('sty')
-  .parse,
+  ansi = require('sty').parse,
   fs = require('fs'),
-  CommandUtil = require('./command_util')
-  .CommandUtil,
-  l10nHelper = require('./l10n');
+  CommandUtil = require('./command_util').CommandUtil,
+  l10nHelper = require('./l10n'),
+  Skills = require('./skills').Skills;
 
 // "Globals" to be specified later during config.
 let rooms = null;
@@ -18,6 +17,7 @@ let npcs = null;
  */
 let l10n = null;
 const l10nFile = __dirname + '/../l10n/commands.yml';
+
 // shortcut for l10n.translate
 let L = null;
 
@@ -30,6 +30,18 @@ const commands_dir = __dirname + '/../commands/';
  */
 const Commands = {
   player_commands: {},
+
+  //TODO: Extract into individual files.
+  admin_commands: {
+    addSkill: (rooms, items, players, npcs, Commands) =>
+      (player, args) => {
+        args = args.toLowerCase();
+        const skill = Skill[args];
+        if (skill) { player.addSkill(args); }
+        util.log("@@Admin: " + player.getName() + " added " + skill + " to skills.@@");
+      },
+  },
+
 
   /**
    * Configure the commands by using a joint players/rooms array
@@ -67,15 +79,20 @@ const Commands = {
       (err, files) => {
         for (const j in files) {
           const command_file = commands_dir + files[j];
-          if (!fs.statSync(command_file)
-            .isFile()) continue;
-          if (!command_file.match(/js$/)) continue;
+          if (!fs.statSync(command_file).isFile()) { continue; }
+          if (!command_file.match(/js$/)) { continue; }
 
           const command_name = files[j].split('.')[0];
 
           //TODO: Add admin commands prefaced with @
           Commands.player_commands[command_name] = require(command_file)
             .command(rooms, items, players, npcs, Commands);
+
+          //TODO: Do the same way as above once you extract the admin commands.
+          for (const command in Commands.admin_commands) {
+            const commandFunc = Commands.admin_commands[command](rooms, items, players, npcs, Commands);
+            Commands.admin_commands[command] = commandFunc;
+          }
         }
       });
   },
@@ -126,6 +143,8 @@ const Commands = {
     return true;
   },
 
+  move: move,
+
   setLocale: locale => l10n.setLocale(locale),
 };
 
@@ -139,7 +158,6 @@ alias('consider', 'appraise');
 alias('me', 'emote');
 
 exports.Commands = Commands;
-exports.Commands.move = move;
 
 /**
  * Move helper method
@@ -188,8 +206,10 @@ function move(exit, player) {
     p => {
       if (p.getLocation() === player.getLocation()) {
         try {
-          const leaveMessage = player.getName() + exit.leave_message[p.getLocale()] ||
-            ' leaves.';
+          const exitLeaveMessage = exit.leave_message[p.getLocale()];
+          const leaveMessage = exitLeaveMessage ?
+            player.getName() + exitLeaveMessage :
+            player.getName() + ' leaves.';
           p.say(leaveMessage);
         } catch (e) {
           p.sayL10n(l10n, 'LEAVE', player.getName());
