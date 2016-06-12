@@ -38,7 +38,7 @@ const Commands = {
         const Skills = require('./skills').Skills;
         args = args.toLowerCase().split(' ');
 
-        const skill = Skills[args[0]].id;
+        const skill = Skills[args[0]] ? Skills[args[0]].id : null;
         const number = args[1] || 1;
         if (skill) {
           player.addSkill(skill, number);
@@ -219,6 +219,7 @@ function move(exit, player) {
           p.say(leaveMessage);
         } catch (e) {
           p.sayL10n(l10n, 'LEAVE', player.getName());
+          util.log(e);
         }
         p.prompt();
       }

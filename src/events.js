@@ -297,7 +297,10 @@ var Events = {
           function executeCommand(cmd, args) {
             try {
               return Commands.player_commands[cmd](args, player);
-            } catch (e) { util.log(e) }
+            } catch (e) {
+              util.log(cmd);
+              util.log(e);
+            }
           }
 
           function checkForDirectionAlias(command) {

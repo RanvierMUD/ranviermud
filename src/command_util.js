@@ -40,7 +40,7 @@ function _values(obj) {
  */
 
 function _hasScript(entity, event){
-  return entity._events && typeof entity._events[event];
+  return entity._events && entity._events[event];
 }
 
 /**
