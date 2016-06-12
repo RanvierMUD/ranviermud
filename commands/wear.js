@@ -68,7 +68,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       //FIXME: Add wear scripts to items.
       if (hasWearScript) { item.emit('wear', location, player, players); }
-      util.log(l10n);
       player.equip(location, item);
       player.sayL10n(l10n, 'YOU_WEAR', item.getShortDesc(player.getLocale()));
     }
