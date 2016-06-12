@@ -4,6 +4,7 @@
   #script: '3.js'
   keywords:
     en: ['defiler', 'def']
+  types: ['humanoid', 'eldritch']
   short_description:
     en: 'a defiler'
   attack:
@@ -13,8 +14,8 @@
   behaviors: "aggro,rtcombat"
   attributes:
     target: 'head'
-    max_health: 100
-    health: 100
+    max_health: 140
+    health: 140
     speed: 6
     damage: '4-40'
     sanity_damage: '1-4'
