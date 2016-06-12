@@ -32,6 +32,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     name: player.getName(),
     speed: player.getAttackSpeed,
     weapon: player.getEquipped('wield', true),
+    offhand: player.getEquipped('offhand', true),
     locations: playerBodyParts,
     target: player.getPreference('target') || 'body',
   };
@@ -41,7 +42,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     speed: npc.getAttackSpeed,
     weapon: npc.getAttack(locale),
     target: npc.getAttribute('target'),
-    locations: npc.getLocations()
+    locations: npc.getLocations(),
   };
 
   try {
@@ -58,6 +59,14 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
 
   setTimeout(npcCombat, n.speed());
   setTimeout(playerCombat, p.speed());
+
+  var isDualWielding = CommandUtil.hasScript(p.offhand, 'wield');
+  var dualWieldSpeed = () => p.speed() * 1.5;
+  var dualWieldDamage = damage => damage * (0.5 + player.getSkill('dual') / 10);
+
+  if (isDualWielding) {
+    setTimeout(playerCombat, dualWieldSpeed());
+  }
 
   function combatRound(attacker, defender, a, d) {
 
