@@ -8,7 +8,7 @@ exports.listeners = {
 
   remove: function (l10n) {
     return function (player) {
-      player.say('You place the cleaver in your pack -- handle up.');
+      player.say('You place the bulky cleaver in your pack.');
     }
   },
 };
