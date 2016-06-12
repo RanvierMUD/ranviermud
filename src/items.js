@@ -233,7 +233,7 @@ var Item = function (config)
 	 */
 	self.hasKeyword = function (keyword, locale)
 	{
-		return self.getKeywords(locale).some(function (word) { return keyword === word });
+		return self.getKeywords(locale || 'en').indexOf(keyword) > -1;
 	};
 
 	/**

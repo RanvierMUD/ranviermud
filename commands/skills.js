@@ -54,8 +54,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 };
 
 function getSkillLevelDesc(skillLevel) {
+  if (!skillLevel) { return 'Unskilled' }
   const descs = {
-    1: 'Unskilled',
+    1: 'Sloppy',
     2: 'Novice',
     3: 'Dabbling',
     4: 'Apprentice',

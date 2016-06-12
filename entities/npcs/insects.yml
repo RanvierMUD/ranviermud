@@ -3,7 +3,7 @@
   room: 2
   #script: '1.js'
   keywords:
-    en: ['roach', 'cockroach', 'bug', 'cock']
+    en: ['roach', 'cockroach', 'bug', 'cock', 'ro']
   short_description:
     en: 'an oozing cockroach'
   attack:

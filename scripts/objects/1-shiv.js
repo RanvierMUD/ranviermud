@@ -12,4 +12,10 @@ exports.listeners = {
 			player.say('You carefully stow the shiv away, avoiding the rusty blade.');
 		}
 	},
+
+	hit: function (l10n) {
+		return function (player) {
+			player.say('Your shank finds purchase in flesh.');
+		}
+	}
 };

@@ -3,19 +3,24 @@ const util = require('util');
 
 const CommandUtil = {
 
+  //TODO: findItemInEquipment
+
+  findItemInEquipment: _findItemInEquipment,
   findItemInRoom:      _findItemInRoom,
   findItemInInventory: _findItemInInventory,
+  hasScript:           _hasScript,
   findNpcInRoom:       _findNpcInRoom,
   inSameRoom:          _inSameRoom,
   parseDot:            _parseDot,
-  values:               _values,
+  values:              _values,
 
 };
 
 /**
  * Takes an object and returns an array of all of its values.
  * @param  Obj
- * @return Array of values */
+ * @return Array of values
+ */
 
 function _values(obj) {
   let vals = [];
@@ -25,6 +30,17 @@ function _values(obj) {
     }
   }
   return vals;
+}
+
+/**
+ * Takes an object and name of event to emit and tells you if it has a listener.
+ * @param  Obj
+ * @param  String name of event
+ * @return Boolean if event has listener
+ */
+
+function _hasScript(entity, event){
+  return entity._events && entity._events[event];
 }
 
 /**
@@ -42,6 +58,26 @@ function _inSameRoom(entity, target) {
       return entity.getRoom() === target.getLocation();
     }
   }
+}
+
+/**
+ * Find an item in a room based on the syntax
+ *   things like: get 2.thing or look 6.thing or look thing
+ * @param string lookString
+ * @param Being player | npc
+ * @param boolean hydrate Whether to return the id or a full object
+ * @return string UUID of the item
+ */
+
+function _findItemInEquipment(lookString, being, hydrate) {
+  const equipment = being.getInventory().filter(i => i.isEquipped());
+  util.log('eq::::::', equipment);
+  const thing = CommandUtil.parseDot(lookString, equipment,
+    function(item) {
+      return item && item.hasKeyword(this.keyword, being.getLocale());
+    });
+
+  return thing ? (hydrate ? thing : thing.getUuid()) : false;
 }
 
 
@@ -133,6 +169,8 @@ function _parseDot(arg, objects, filterFunc) {
     keyword: keyword,
     nth: nth
   });
+
+  util.log(found);
 
   if (!found.length) {
     return false;
