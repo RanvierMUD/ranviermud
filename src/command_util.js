@@ -19,7 +19,8 @@ const CommandUtil = {
 /**
  * Takes an object and returns an array of all of its values.
  * @param  Obj
- * @return Array of values */
+ * @return Array of values
+ */
 
 function _values(obj) {
   let vals = [];
@@ -31,8 +32,15 @@ function _values(obj) {
   return vals;
 }
 
+/**
+ * Takes an object and name of event to emit and tells you if it has a listener.
+ * @param  Obj
+ * @param  String name of event
+ * @return Boolean if event has listener
+ */
+
 function _hasScript(entity, event){
-  return entity._events && entity._events[event];
+  return entity._events && typeof entity._events[event];
 }
 
 /**
@@ -62,8 +70,9 @@ function _inSameRoom(entity, target) {
  */
 
 function _findItemInEquipment(lookString, being, hydrate) {
-  const equipped = being.getInventory().filter(i => i.isEquipped());
-  const thing = CommandUtil.parseDot(lookString, equipped,
+  const equipment = being.getInventory().filter(i => i.isEquipped());
+  util.log('eq::::::', equipment);
+  const thing = CommandUtil.parseDot(lookString, equipment,
     function(item) {
       return item && item.hasKeyword(this.keyword, being.getLocale());
     });
