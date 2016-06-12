@@ -1,7 +1,7 @@
 exports.listeners = {
 	wield: function (l10n) {
 		return function (location, player, players) {
-			location = location || body;
+			location = location || 'wield';
 			player.sayL10n(l10n, 'WIELD', this.getShortDesc(player.getLocale()));
 			player.equip(location, this);
 		}
