@@ -158,6 +158,7 @@ const Npc = function NpcConstructor(config) {
     self.description = config.description || '';
     self.room = config.room || null;
     self.vnum = config.vnum;
+    self.types = config.types || [];
     self.defenses = {};
 
     for (const stat in config.attributes || {}) {
@@ -184,6 +185,10 @@ const Npc = function NpcConstructor(config) {
     typeof self.attributes[attr] !== 'undefined' ?
     self.attributes[attr] :
     false;
+
+  self.getTypes = () => self.types;
+  self.hasType = type => self.types.indexOf(type) > -1;
+  self.addType = type => self.types.push(type);
 
   self.setUuid = uid => self.uuid = uid;
 
