@@ -308,7 +308,7 @@ var Room = function(config) {
   };
 
   /**
-   * Check to see if an npc is in the room
+   * Check to see if an item is in the room
    * @param string uid
    * @return boolean
    */

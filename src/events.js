@@ -239,7 +239,6 @@ var Events = {
 
           Commands.player_commands.look(null, player);
           player.checkTraining();
-          player.prompt();
 
           // All that shit done, let them play!
           player.getSocket()
@@ -256,40 +255,52 @@ var Events = {
       // Parse order is common direction shortcuts -> commands -> exits -> skills -> channels
       player.getSocket()
         .once('data', function (data) {
-          data = data.toString()
-            .trim();
+          data = data.toString().trim();
 
           var result;
           if (data) result = parseCommands(data);
-          if (result !== false) commandPrompt();
+          if (result !== false) { commandPrompt(); }
 
           // Methods
 
           function parseCommands(data) {
-            var command = data.split(' ')
+            var command = data
+              .split(' ')
               .shift();
-            var args = data.split(' ')
+            var args = data
+              .split(' ')
               .slice(1)
               .join(' ');
 
             var found = false;
 
+            if (command[0] === '@') {
+              const adminCommand = command.slice(1);
+              if (adminCommand in Commands.admin_commands) {
+                Commands.admin_commands[adminCommand](player, args);
+                return;
+              }
+            }
+
             if (!(command in Commands.player_commands)) {
 
               found = checkForDirectionAlias(command);
-              if (!found) found = checkForCmd(command);
-              else if (found === true) return;
+              if (!found) { found = checkForCommandSafely(command); }
+              else if (found === true) { return; }
 
-              if (found) return getCmd(found, args);
-              else return checkForSpecializedCommand(command, args);
+              if (found) { return executeCommand(found, args); }
+              else { return checkForSpecializedCommand(command, args); }
 
-            } else return getCmd(command, args);
+            } else { return executeCommand(command, args); }
           }
 
-          function getCmd(cmd, args) {
+          function executeCommand(cmd, args) {
             try {
               return Commands.player_commands[cmd](args, player);
-            } catch (e) { util.log(e) }
+            } catch (e) {
+              util.log(cmd);
+              util.log(e);
+            }
           }
 
           function checkForDirectionAlias(command) {
@@ -310,7 +321,7 @@ var Events = {
           }
 
 
-          function checkForCmd(command) {
+          function checkForCommandSafely(command) {
             for (var cmd in Commands.player_commands) {
               try {
                 var regex = new RegExp("^" + command);
@@ -481,13 +492,15 @@ var Events = {
         case 'done':
           socket.setLocale("en");
           socket.setLocation(players.getDefaultLocation());
+
           // create the pfile then send them on their way
-          socket.save(function () {
+          socket.save(() => {
             players.addPlayer(socket);
             socket.prompt();
             socket.getSocket()
               .emit('commands', socket);
           });
+
           util.log("A NEW CHALLENGER APPROACHES: ", socket);
           players.broadcastL10n(l10n, 'WELCOME', socket.getName());
           break;

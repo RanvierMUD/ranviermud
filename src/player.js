@@ -15,14 +15,14 @@ const npcs_scripts_dir = __dirname + '/../scripts/player/';
 const l10n_dir = __dirname + '/../l10n/scripts/player/';
 const statusUtil = require('./status');
 
-var Player = function PlayerConstructor(socket) {
-  var self = this;
+const Player = function PlayerConstructor(socket) {
+  const self = this;
   self.name = '';
   self.description = '';
   self.location = null;
   self.locale = null;
   self.prompt_string =
-    '%health_condition <blue>||</blue> %sanity_condition\n<blue><bold>[ </bold></blue>';
+    '%health_condition <blue>||</blue> %sanity_condition\n<blue><bold>[</bold></blue>';
   self.combat_prompt =
     "<bold>|| %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
   self.password = null;
@@ -48,6 +48,7 @@ var Player = function PlayerConstructor(socket) {
     level: 1,
     experience: 0,
     mutagens: 0,
+    attrPoints: 0,
 
     //TODO: Generated descs.
     description: 'A person.'
@@ -67,6 +68,9 @@ var Player = function PlayerConstructor(socket) {
 
   // Skills the players has
   self.skills = {};
+
+  // Feats the player can use
+  self.feats = {};
 
   // Training data
   self.training = { time: 0 };
@@ -97,7 +101,7 @@ var Player = function PlayerConstructor(socket) {
   self.setSkill = (skill, level) => self.skills[skill] = level;
   self.incrementSkill = skill => self.setSkill(skill, self.skills[skill] + 1);
 
-  self.getFeats = feat => typeof self.feats[feat] !== 'undefined' ?
+  self.getFeats = feat => self.feats && typeof self.feats[feat] !== 'undefined' ?
     self.feats[feat] : self.feats;
 
   self.gainFeat = feat => self.feats[feat.id] = feat;
@@ -213,10 +217,10 @@ var Player = function PlayerConstructor(socket) {
   self.explore = vnum => {
     if (self.explored.indexOf(vnum) === -1) {
       self.explored.push(vnum);
-      util.log(player.getName() + ' explored room #' + vnum + ' for the first time.');
+      util.log(self.getName() + ' explored room #' + vnum + ' for the first time.');
       return false;
     }
-    util.log(player.getName() + ' moves to room #' + vnum);
+    util.log(self.getName() + ' moves to room #' + vnum);
     return true;
   };
 
@@ -262,9 +266,9 @@ var Player = function PlayerConstructor(socket) {
     }
 
     let deact = function() {
-      if (effect.deactivate) {
+      if (effect.deactivate && self.getSocket()) {
         effect.deactivate();
-        self.prompt();
+        // self.prompt();
       }
       self.removeEffect(name);
     };
@@ -325,9 +329,9 @@ var Player = function PlayerConstructor(socket) {
    */
   self.unequip = item => {
     item.setEquipped(false);
-    for (var i in self.equipment) {
+    for (const slot in self.equipment) {
       if (self.equipment[slot] === item.getUuid()) {
-        self.equipment[slot] = null;
+        delete self.equipment[slot];
         break;
       }
     }
@@ -356,8 +360,7 @@ var Player = function PlayerConstructor(socket) {
       l10n.setLocale(self.getLocale());
     }
 
-    self.write(l10n.translate.apply(null, [].slice.call(arguments)
-      .slice(1)));
+    self.write(l10n.translate.apply(null, [].slice.call(arguments).slice(1)));
 
     if (locale) l10n.setLocale(locale);
   };
@@ -504,9 +507,10 @@ var Player = function PlayerConstructor(socket) {
    * Get the damage a player can do
    * @return int
    */
-  self.getDamage = () => {
-    let weapon = self.getEquipped('wield', true)
-    let base = [1, self.getAttribute('stamina') + 1];
+  self.getDamage = location => {
+    location = location || 'wield';
+    const weapon = self.getEquipped(location, true);
+    const base = [1, self.getAttribute('stamina') + 5];
 
     let damage = weapon ?
       (weapon.getAttribute('damage') ?
@@ -521,6 +525,8 @@ var Player = function PlayerConstructor(socket) {
 
     return { min: damage[0], max: damage[1] };
   };
+
+
 
   function addDamageBonus(d) {
     let stance = self.getPreference('stance');

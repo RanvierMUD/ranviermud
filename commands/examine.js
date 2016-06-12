@@ -13,9 +13,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       util.log(player.getName() + ' is searching for ' + args);
       util.log('  in ' + room.getTitle('en'));
+      util.log(room);
 
-      room.emit('examine', args, player, players);
-      return;
+      const examinableRoom = room._events && room._events.examine;
+
+      if (examinableRoom) {
+        room.emit('examine', args, player, players);
+        return;
+      }
     }
 
     player.sayL10n(l10n, 'NOTHING_EXAMINED');
