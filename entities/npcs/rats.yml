@@ -2,6 +2,7 @@
   vnum: 4
   room: 2
   #script: '4.js'
+  types: ['beast', 'diseased']
   keywords:
     en: ['rat', 'feral rat', 'feral']
   short_description:
