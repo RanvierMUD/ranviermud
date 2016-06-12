@@ -5,8 +5,10 @@ const CommandUtil = {
 
   //TODO: findItemInEquipment
 
+  findItemInEquipment: _findItemInEquipment,
   findItemInRoom:      _findItemInRoom,
   findItemInInventory: _findItemInInventory,
+  hasScript:           _hasScript,
   findNpcInRoom:       _findNpcInRoom,
   inSameRoom:          _inSameRoom,
   parseDot:            _parseDot,
@@ -29,6 +31,10 @@ function _values(obj) {
   return vals;
 }
 
+function _hasScript(entity, event){
+  return entity._events && entity._events[event];
+}
+
 /**
  * @param Player|NPC entity
  * @param Player     target
@@ -44,6 +50,25 @@ function _inSameRoom(entity, target) {
       return entity.getRoom() === target.getLocation();
     }
   }
+}
+
+/**
+ * Find an item in a room based on the syntax
+ *   things like: get 2.thing or look 6.thing or look thing
+ * @param string lookString
+ * @param Being player | npc
+ * @param boolean hydrate Whether to return the id or a full object
+ * @return string UUID of the item
+ */
+
+function _findItemInEquipment(lookString, being, hydrate) {
+  const equipped = being.getInventory().filter(i => i.isEquipped());
+  const thing = CommandUtil.parseDot(lookString, equipped,
+    function(item) {
+      return item && item.hasKeyword(this.keyword, being.getLocale());
+    });
+
+  return thing ? (hydrate ? thing : thing.getUuid()) : false;
 }
 
 
@@ -135,6 +160,8 @@ function _parseDot(arg, objects, filterFunc) {
     keyword: keyword,
     nth: nth
   });
+
+  util.log(found);
 
   if (!found.length) {
     return false;
