@@ -29,7 +29,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         return false;
       }
 
-      if (!item.isEquipped()) {
+      if (!item.isEquipped() && target.indexOf('.') === -1) {
         item = CommandUtil.findItemInInventory('2.' + target, player, true);
         if (!item || !item.isEquipped()) {
           player.sayL10n(l10n, 'ITEM_NOT_EQUIPPED');
@@ -41,6 +41,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       player.unequip(item);
       player.sayL10n(l10n, 'REMOVED', item.getShortDesc(player.getLocale()));
       return true;
+    }
+
+    function isOffHandItem(target) {
+      return items.get(player.getEquipped('offhand'))
+        .hasKeyword(player.getLocale(), target);
     }
 
   };

@@ -3,12 +3,14 @@ const util = require('util');
 
 const CommandUtil = {
 
+  //TODO: findItemInEquipment
+
   findItemInRoom:      _findItemInRoom,
   findItemInInventory: _findItemInInventory,
   findNpcInRoom:       _findNpcInRoom,
   inSameRoom:          _inSameRoom,
   parseDot:            _parseDot,
-  values:               _values,
+  values:              _values,
 
 };
 
