@@ -64,11 +64,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function putOn(item) {
       const location = item.getAttribute('wearLocation');
-      const hasEmitScript = CommandUtil.hasScript(item, 'wear');
+      const hasWearScript = CommandUtil.hasScript(item, 'wear');
 
       //FIXME: Add wear scripts to items.
-      if (hasEmitScript) { item.emit('wear', location, player, players); }
-
+      if (hasWearScript) { item.emit('wear', location, player, players); }
+      util.log(l10n);
       player.equip(location, item);
       player.sayL10n(l10n, 'YOU_WEAR', item.getShortDesc(player.getLocale()));
     }
