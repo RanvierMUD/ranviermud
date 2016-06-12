@@ -40,7 +40,6 @@ function _values(obj) {
  */
 
 function _hasScript(entity, event){
-  util.log('scrips: ', entity._events);
   return entity._events && entity._events[event];
 }
 

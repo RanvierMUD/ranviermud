@@ -63,10 +63,10 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
   setTimeout(playerCombat, p.speed());
 
   var isDualWielding = CommandUtil.hasScript(p.offhand, 'wield');
-  util.log(p.offhand, isDualWielding);
   var dualWieldSpeed = () => p.speed() * (2.1 - player.getSkills('dual') / 10);
   var dualWieldDamage = damage => Math.round(damage * (0.5 + player.getSkills('dual') / 10));
   var dualWieldCancel = null;
+
   if (isDualWielding) {
     util.log("Player is using dual wield!");
     var pWithDual = Object.assign({}, p, { weapon: p.offhand });
