@@ -30,8 +30,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 			}
 
 			util.log(player.getName() + ' ' + location + ' wields ' + weapon.getShortDesc('en'));
-			player.say('You wield the ' + weapon.getShortDesc(player.getLocale()) + '.');
-			if (CommandUtil.hasScript(weapon, 'wield')) { weapon.emit('wield', location, player, players); }
+			if (CommandUtil.hasScript(weapon, 'wield')) {
+				weapon.emit('wield', location, player, players);
+			} else {
+				player.say('You wield the ' + weapon.getShortDesc(player.getLocale()) + '.');
+			}
 			player.equip(location, weapon);
 		}
 	};
