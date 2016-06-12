@@ -66,12 +66,12 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
   util.log(p.offhand, isDualWielding);
   var dualWieldSpeed = () => p.speed() * (2.1 - player.getSkills('dual') / 10);
   var dualWieldDamage = damage => Math.round(damage * (0.5 + player.getSkills('dual') / 10));
-
+  var dualWieldCancel = null;
   if (isDualWielding) {
     util.log("Player is using dual wield!");
     var pWithDual = Object.assign({}, p, { weapon: p.offhand });
     var dualWieldCombat = combatRound.bind({ secondAttack: true }, player, npc, pWithDual, n);
-    setTimeout(dualWieldCombat, dualWieldSpeed());
+    dualWieldCancel = setTimeout(dualWieldCombat, dualWieldSpeed());
   }
 
   function combatRound(attacker, defender, a, d) {
@@ -227,7 +227,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     npc.setInCombat(false);
 
     if (success) {
-
+      if (dualWieldCancel) { clearTimeout(dualWieldCancel); }
       player.emit('regen');
       room.removeNpc(npc.getUuid());
       npcs.destroy(npc);
