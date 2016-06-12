@@ -331,7 +331,7 @@ const Player = function PlayerConstructor(socket) {
     item.setEquipped(false);
     for (const slot in self.equipment) {
       if (self.equipment[slot] === item.getUuid()) {
-        self.equipment[slot] = null;
+        delete self.equipment[slot];
         break;
       }
     }
