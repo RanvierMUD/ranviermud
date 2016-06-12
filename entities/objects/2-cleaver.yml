@@ -3,7 +3,7 @@
     short_description:
         en: "meat cleaver"
     keywords:
-        en: [ "cleaver", "meat" ]
+        en: [ "cleaver", "meat", "cleav" ]
     description:
         en: "A long, sharp, thick blade. Adept when used to sever meat from the bone."
     room: 2
@@ -12,4 +12,3 @@
         speed: 2.5
         damage: 5-21
     load_max: 3
-
