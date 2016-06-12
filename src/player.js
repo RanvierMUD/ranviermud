@@ -331,7 +331,7 @@ const Player = function PlayerConstructor(socket) {
     item.setEquipped(false);
     for (const slot in self.equipment) {
       if (self.equipment[slot] === item.getUuid()) {
-        self.equipment[slot] = null;
+        delete self.equipment[slot];
         break;
       }
     }
@@ -507,8 +507,9 @@ const Player = function PlayerConstructor(socket) {
    * Get the damage a player can do
    * @return int
    */
-  self.getDamage = () => {
-    const weapon = self.getEquipped('wield', true);
+  self.getDamage = location => {
+    location = location || 'wield';
+    const weapon = self.getEquipped(location, true);
     const base = [1, self.getAttribute('stamina') + 5];
 
     let damage = weapon ?
@@ -524,6 +525,8 @@ const Player = function PlayerConstructor(socket) {
 
     return { min: damage[0], max: damage[1] };
   };
+
+
 
   function addDamageBonus(d) {
     let stance = self.getPreference('stance');

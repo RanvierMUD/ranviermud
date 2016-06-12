@@ -6,24 +6,36 @@ const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
 	return (args, player) => {
-		const location = 'wield';
-		const wield = player.getEquipped(location);
-		if (wield) {
-			player.sayL10n(l10n, 'CANT_WIELD', items.get(wield).getShortDesc(player.getLocale()));
+		let location = 'wield';
+		const wielded = player.getEquipped(location);
+		const offhand = player.getEquipped('offhand')
+		const canDual = player.getSkills('dual')
+
+		if (wielded && offhand || !canDual) {
+			player.sayL10n(l10n, 'CANT_WIELD', items.get(wielded).getShortDesc(player.getLocale()));
 			return;
+		} else if (wielded && canDual && !offhand) {
+		  location = 'offhand';
 		}
 
-		let thing = args.split(' ')[0];
-		thing = CommandUtil.findItemInInventory(thing, player, true);
+		wield(location);
 
-		if (!thing) {
-			player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-			return;
+		function wield(location) {
+			let weapon = args.split(' ')[0];
+			weapon = CommandUtil.findItemInInventory(weapon, player, true);
+
+			if (!weapon) {
+				player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+				return;
+			}
+
+			util.log(player.getName() + ' ' + location + ' wields ' + weapon.getShortDesc('en'));
+			if (CommandUtil.hasScript(weapon, 'wield')) {
+				weapon.emit('wield', location, player, players);
+			} else {
+				player.say('You wield the ' + weapon.getShortDesc(player.getLocale()) + '.');
+			}
+			player.equip(location, weapon);
 		}
-
-		util.log(player.getName() + ' wields ' + thing.getShortDesc('en'));
-		player.say('You wield the ' + thing.getShortDesc(player.getLocale()) + '.');
-		thing.emit(location, location, player, players);
-		player.equip(location, thing);
 	};
 };

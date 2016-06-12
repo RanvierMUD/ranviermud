@@ -63,7 +63,7 @@ exports.listeners = {
 
       this.sayL10n(l10n, 'LEVELUP');
 
-      if (gainedMut) {
+      if (gainedMutation) {
         this.sayL10n(l10n, 'MUTAGEN_GAIN');
         mutationPoints++;
         this.setAttribute('mutagens', mutationPoints);

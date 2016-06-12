@@ -10,11 +10,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     if (target === 'all') { return removeAll(); }
 
-    const thing = CommandUtil.findItemInInventory(target, player, true);
+    const thing = CommandUtil.findItemInEquipment(target, player, true);
 
     return remove(thing);
 
-    /// Helper functions
+    /// Helper functions ///
 
     function removeAll() {
       CommandUtil
@@ -24,24 +24,19 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function remove(item) {
+      util.log(item);
       if (!item) {
         player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-        return false;
-      }
-
-      if (!item.isEquipped()) {
-        item = CommandUtil.findItemInInventory('2.' + target, player, true);
-        if (!item || !item.isEquipped()) {
-          player.sayL10n(l10n, 'ITEM_NOT_EQUIPPED');
-          return false;
-        }
+        return;
       }
 
       util.log(player.getName() + ' removing ' + item.getShortDesc('en'));
+
       player.unequip(item);
+      if (CommandUtil.hasScript(item, 'remove')) { item.emit('remove'); }
       player.sayL10n(l10n, 'REMOVED', item.getShortDesc(player.getLocale()));
+
       return true;
     }
-
   };
 };
