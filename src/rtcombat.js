@@ -71,6 +71,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     util.log("Player is using dual wield!");
     var pWithDual = Object.assign({}, p, { weapon: p.offhand });
     var dualWieldCombat = combatRound.bind({ secondAttack: true }, player, npc, pWithDual, n);
+    pWithDual.attackRound = dualWieldCombat;
     dualWieldCancel = setTimeout(dualWieldCombat, dualWieldSpeed());
   }
 
@@ -172,7 +173,6 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     ];
 
     broadcastToArea(Random.fromArray(nearbyFight));
-
     setTimeout(a.attackRound, a.speed());
   }
 
