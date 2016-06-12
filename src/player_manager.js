@@ -21,8 +21,7 @@ var PlayerManager = function ()
 	 */
 	self.removePlayer = function (player, killsocket)
 	{
-		killsocket = killsocket || false;
-		if (killsocket || false) {
+		if (killsocket) {
 			player.getSocket().end();
 		}
 

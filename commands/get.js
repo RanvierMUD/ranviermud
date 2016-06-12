@@ -44,12 +44,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       util.log(playerName + ' picked up ' + item.getShortDesc('en'));
 
       players.eachIf(
-        (p) => CommandUtil.otherPlayerInRoom(p, player),
-        (p) => {
-          p.sayL10n(l10n, 'OTHER_PICKUP', playerName, item.getShortDesc(
-            p.getLocale()));
-          p.prompt();
-        });
+        (p) => CommandUtil.inSameRoom(p, player),
+        (p) => p.sayL10n(l10n, 'OTHER_PICKUP', playerName, item.getShortDesc(p.getLocale()))
+      );
     }
 
     function getAllItems(room) {
