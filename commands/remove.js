@@ -6,26 +6,37 @@ const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
-    const target = args.split(' ')[0];
-    let thing = CommandUtil.findItemInInventory(target, player,
-      true);
+    const target = args.toLowerCase().split(' ')[0];
 
-    if (!thing) {
-      player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-      return;
+    if (target === 'all') { return removeAll(); }
+
+    const thing = CommandUtil.findItemInEquipment(target, player, true);
+
+    return remove(thing);
+
+    /// Helper functions ///
+
+    function removeAll() {
+      CommandUtil
+        .values(player.getEquipped())
+        .map(id => items.get(id))
+        .forEach(remove);
     }
 
-    if (!thing.isEquipped()) {
-      thing = CommandUtil.findItemInInventory('2.' + target, player, true);
-      if (!thing || !thing.isEquipped()) {
-        player.sayL10n(l10n, 'ITEM_NOT_EQUIPPED');
+    function remove(item) {
+      util.log(item);
+      if (!item) {
+        player.sayL10n(l10n, 'ITEM_NOT_FOUND');
         return;
       }
+
+      util.log(player.getName() + ' removing ' + item.getShortDesc('en'));
+
+      player.unequip(item);
+      if (CommandUtil.hasScript(item, 'remove')) { item.emit('remove'); }
+      player.sayL10n(l10n, 'REMOVED', item.getShortDesc(player.getLocale()));
+
+      return true;
     }
-
-    util.log(player.getName() + ' removing ' + thing.getShortDesc('en'));
-    player.unequip(thing);
-    player.sayL10n(l10n, 'REMOVED', thing.getShortDesc(player.getLocale()));
-
   };
 };

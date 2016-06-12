@@ -37,7 +37,7 @@ function _chooseRandomExit(chance) {
             }
 
             players.eachIf(
-              CommandUtil.otherPlayerInRoom.bind(null, player || npc),
+              CommandUtil.inSameRoom.bind(null, player || npc),
               p => {
                 const locale = p.getLocale();
                 const msg = getLeaveMessage(p, chosenRoom);
@@ -45,8 +45,9 @@ function _chooseRandomExit(chance) {
               });
 
             npc.setRoom(chosen.location);
-            chosenRoom.addNpc(uid);
             room.removeNpc(uid);
+            chosenRoom.addNpc(uid);
+
 
             const npcInRoomWithPlayer = CommandUtil.inSameRoom.bind(null, npc);
 
