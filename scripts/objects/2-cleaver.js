@@ -11,4 +11,10 @@ exports.listeners = {
       player.say('You place the bulky cleaver in your pack.');
     }
   },
+
+  hit: function (l10n) {
+		return function (player) {
+			player.say('The blade of your cleaver does its job.');
+		}
+	}
 };

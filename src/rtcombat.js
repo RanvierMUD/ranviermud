@@ -2,6 +2,8 @@ module.exports.initCombat = _initCombat;
 
 //TODO: Add strings for sanity damage
 //TODO: Enhance for co-op, allow for setInCombat of NPC with multiple players.
+//FIXME: For the love of all that is unholy, refactor this:
+
 var Random = require('./random.js').Random;
 var LevelUtil = require('./levels')
   .LevelUtil;
@@ -62,29 +64,34 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
 
   var isDualWielding = CommandUtil.hasScript(p.offhand, 'wield');
   var dualWieldSpeed = () => p.speed() * 1.5;
-  var dualWieldDamage = damage => damage * (0.5 + player.getSkill('dual') / 10);
+  var dualWieldDamage = damage => Math.round(damage * (0.5 + player.getSkills('dual') / 10));
 
   if (isDualWielding) {
-    setTimeout(playerCombat, dualWieldSpeed());
+    util.log("Player is using dual wield!");
+    var pWithDual = Object.assign({}, p, { weapon: p.offhand });
+    var dualWieldCombat = combatRound.bind({ secondAttack: true }, player, npc, pWithDual, n);
+    setTimeout(dualWieldCombat, dualWieldSpeed());
   }
 
   function combatRound(attacker, defender, a, d) {
 
     util.log("Speeds are " + a.speed() + ' vs. ' + d.speed());
 
-
-    if (!defender.isInCombat() || !attacker.isInCombat())
-      return;
+    if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
 
     var starting_health = defender.getAttribute('health');
     util.log(a.name + ' health: ' + attacker.getAttribute('health'));
     util.log(d.name + ' health: ' + defender.getAttribute('health'));
 
-    if (d.isPlayer) checkWimpiness(starting_health);
+    if (d.isPlayer) { checkWimpiness(starting_health) };
 
-    var damage = attacker.getDamage();
+    if (this.isSecondAttack) { util.log('Offhand attack: '); }
+
+    var damage = this.isSecondAttack ?
+      dualWieldDamage(attacker.getDamage('offhand')) : attacker.getDamage();
     var defender_sanity = defender.getAttribute('sanity');
-    var sanityDamage = a.isPlayer ? 0 : attacker.getSanityDamage();
+    var sanityDamage = a.isPlayer ?
+      0 : attacker.getSanityDamage();
     var hitLocation = decideHitLocation(d.locations, a.target, isPrecise());
 
     function isPrecise() {
@@ -94,18 +101,20 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
 
     if (!damage) {
 
-      if (d.weapon && typeof d.weapon == 'object')
+      if (d.weapon && typeof d.weapon == 'object') {
         d.weapon.emit('parry', defender);
+      }
 
-      if (a.isPlayer)
+      if (a.isPlayer) {
         player.sayL10n(l10n, 'PLAYER_MISS', n.name, damage);
-
-      else
+      } else {
         player.sayL10n(l10n, 'NPC_MISS', a.name);
+      }
 
       broadcastExceptPlayer(
         '<bold>' + a.name + ' attacks ' + d.name +
         ' and misses!' + '</bold>');
+
       util.log(a.name + ' misses ' + d.name);
 
     } else {
@@ -117,13 +126,15 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
       util.log('Targeted ' + a.target + ' and hit ' + hitLocation);
       var damageStr = getDamageString(damage, defender.getAttribute('health'));
 
-      if (a.weapon && typeof a.weapon == 'object')
+      if (a.weapon && typeof a.weapon == 'object') {
         a.weapon.emit('hit', player);
+      }
 
-      if (d.isPlayer)
+      if (d.isPlayer) {
         player.sayL10n(l10n, 'DAMAGE_TAKEN', a.name, damageStr, a.weapon, hitLocation);
-
-      else player.sayL10n(l10n, 'DAMAGE_DONE', d.name, damageStr, hitLocation);
+      } else {
+        player.sayL10n(l10n, 'DAMAGE_DONE', d.name, damageStr, hitLocation);
+      }
 
       broadcastExceptPlayer('<bold><red>' + a.name + ' attacks ' + d.name +
         ' and ' + damageStr + ' them!' + '</red></bold>');
