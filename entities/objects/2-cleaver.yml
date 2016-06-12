@@ -7,6 +7,7 @@
     description:
         en: "A long, sharp, thick blade. Adept when used to sever meat from the bone."
     room: 2
+    script: '2-cleaver.js'
     behaviors: "wieldable"
     attributes:
         speed: 2.5

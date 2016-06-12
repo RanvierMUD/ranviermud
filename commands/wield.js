@@ -11,14 +11,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 		const offhand = player.getEquipped('offhand')
 		const canDual = player.getSkills('dual')
 
-		if (wielded && offhand && !canDual) {
+		if (wielded && offhand || !canDual) {
 			player.sayL10n(l10n, 'CANT_WIELD', items.get(wielded).getShortDesc(player.getLocale()));
 			return;
 		} else if (wielded && canDual && !offhand) {
 		  location = 'offhand';
 		}
 
-		util.log(location);
 		wield(location);
 
 		function wield(location) {
@@ -31,8 +30,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 			}
 
 			util.log(player.getName() + ' ' + location + ' wields ' + weapon.getShortDesc('en'));
-			player.say('You wield the ' + weapon.getShortDesc(player.getLocale()));
-			weapon.emit(location, location, player, players);
+			player.say('You wield the ' + weapon.getShortDesc(player.getLocale()) + '.');
+			weapon.emit(location, player, players);
 			player.equip(location, weapon);
 		}
 	};
