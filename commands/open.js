@@ -15,12 +15,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     args = args.toLowerCase().split(' ');
 
+    if (!args) {
+      player.say("Which door do you want to open?");
+      return;
+    }
+
     const room = rooms.getAt(player.getLocation());
     const exits = room.getExits()
       .filter(exit => exit.direction.indexOf(args[0]) > -1);
 
-    if (exit.length !== 1) {
-      player.say('Which door do you want to open?');
+    if (exits.length !== 1) {
+      player.say('Be more specific...');
       return;
     }
 
@@ -37,16 +42,16 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return;
     }
 
+    util.log(exit);
+
     player.say('You open the door.');
     exit.door.open = true;
 
     const dest = rooms.getAt(exit.location);
-    const src = rooms.getAt(player.getLocation());
     dest
       .getExits()
       .filter(exit => exit.location === player.getLocation())
       .forEach(exit => exit.door.open = true);
-
 
     players.eachIf(
       p => CommandUtil.inSameRoom(p, player),
@@ -58,8 +63,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     players.eachIf(
       p => p.getLocation() === exit.location,
       p => {
-        const srcTitle = src.getTitle('en');
-        p.say('The door to ' + src + ' swings open.');
+        const srcTitle = room.getTitle('en');
+        p.say('The door to ' + srcTitle + ' swings open.');
       });
   };
 };
