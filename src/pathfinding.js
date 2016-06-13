@@ -26,8 +26,12 @@ function _chooseRandomExit(chance) {
 
         const mobsAllowed = !chosen.hasOwnProperty('mob_locked');
         const openDoor = chosen.door && chosen.door.open === 'true';
+        const canOpenDoors = npc.hasType('humanoid');
+        const doorLocked = chosen.door && chosen.door.locked;
 
-        if (mobsAllowed && openDoor) {
+        const canMove = mobsAllowed && (openDoor || canOpenDoors) && !doorLocked;
+
+        if (canMove) {
           const uid = npc.getUuid();
           const chosenRoom = rooms.getAt(chosen.location);
 
