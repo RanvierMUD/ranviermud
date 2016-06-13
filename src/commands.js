@@ -43,9 +43,13 @@ const Commands = {
         if (skill) {
           player.addSkill(skill, number);
           player.say("<red>ADMIN: Added " + args + ".</red>");
-        }
+        } else { player.say("<red>ADMIN: No such skill.</red>"); }
         util.log("@@Admin: " + player.getName() + " added skill:", skill);
       },
+    //TODO: boostAttr
+    //TODO: addFeat
+    //TODO: teleport
+    //TODO: invis
   },
 
 
@@ -198,7 +202,7 @@ function move(exit, player) {
 
     exit.door.locked = false;
     exit.door.open = true;
-    
+
     player.sayL10n(l10n, 'UNLOCKED', key);
     players.eachIf(
       p => CommandUtil.inSameRoom(player, p),
