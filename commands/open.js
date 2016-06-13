@@ -41,10 +41,16 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     player.say('You open the door.');
     exit.door.open = true;
 
+    const dest = rooms.getAt(exit.location);
+    const otherSideDoor = dest
+      .getExits()
+      .filter(exit => exit.location === player.getLocation())
+      .forEach(exit => exit.door.open = true);
+
     players.eachIf(
       p => CommandUtil.inSameRoom(p, player),
       p => {
-        const dest = rooms.getAt(exit.location).getTitle('en');
+        const destTitle = dest.getTitle('en');
         p.say(player.getName() + ' opens the door to ' + dest + '.');
       });
 
