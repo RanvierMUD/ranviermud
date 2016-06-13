@@ -176,8 +176,11 @@ function move(exit, player) {
   rooms.getAt(player.getLocation())
     .emit('playerLeave', player, players);
 
-  if ('door' in exit && exit.door.locked) {
-    const key = exit.door.locked;
+  const closedDoor = exit.door && !exit.door.open;
+  const lockedDoor = exit.door && exit.door.locked;
+
+  if (closedDoor && lockedDoor) {
+    const key = exit.door.key;
 
     if (!CommandUtil.findItemInInventory(key, player)) {
 
@@ -194,6 +197,8 @@ function move(exit, player) {
     }
 
     exit.door.locked = false;
+    exit.door.open = true;
+    
     player.sayL10n(l10n, 'UNLOCKED', key);
     players.eachIf(
       p => CommandUtil.inSameRoom(player, p),
