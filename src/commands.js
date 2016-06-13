@@ -183,6 +183,8 @@ function move(exit, player) {
   const closedDoor = exit.door && !exit.door.open;
   const lockedDoor = exit.door && exit.door.locked;
 
+  util.log(exit);
+
   if (closedDoor && lockedDoor) {
     const key = exit.door.key;
 

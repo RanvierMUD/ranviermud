@@ -40,7 +40,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     player.say('You open the door.');
     exit.door.open = true;
-    
+
     players.eachIf(
       p => CommandUtil.inSameRoom(p, player),
       p => {
@@ -54,7 +54,5 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         const src = rooms.getAt(player.getLocation()).getTitle('en');
         p.say('The door to ' + src + ' swings open.');
       });
-
-
   };
 };

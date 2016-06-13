@@ -13,6 +13,8 @@
     -
       location: 5
       direction: 'adder'
+      door:
+        open: n
       leave_message:
         en: ' disappears into the adder room.'
     -
@@ -29,5 +31,7 @@
     -
       location: 7
       direction: 'cobra'
+      door:
+        open: n
       leave_message:
         en: ' disappears into the cobra room.'
