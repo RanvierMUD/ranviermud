@@ -19,6 +19,7 @@
       location: 6
       direction: 'python'
       door:
+        open: false
         locked: 'python key'
         difficulty: 15
         mob_locked: 'true'
