@@ -201,12 +201,14 @@ function move(exit, player) {
     }
 
     exit.door.locked = false;
-    exit.door.open = true;
 
     player.sayL10n(l10n, 'UNLOCKED', key);
     players.eachIf(
       p => CommandUtil.inSameRoom(player, p),
       p => p.sayL10n(l10n, 'OTHER_UNLOCKED', player.getName(), key));
+
+    Commands.player_commands.open(exit.direction, player);
+
   }
 
   const room = rooms.getAt(exit.location);
