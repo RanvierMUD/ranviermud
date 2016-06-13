@@ -16,17 +16,25 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     args = args.toLowerCase().split(' ');
 
+    if (!args) {
+      player.say("Which door do you want to close?");
+      return;
+    }
+
     const room = rooms.getAt(player.getLocation());
     const exits = room
       .getExits()
       .filter(exit => exit.direction.indexOf(args[0]) > -1);
 
-    if (exit.length !== 1) {
-      player.say('Which door do you want to close?');
+    if (exits.length !== 1) {
+      player.say('Be more specific...');
       return;
     }
 
+    util.log('exits: ', exits);
     const exit = exits[0];
+
+    util.log('exit: ', exit);
 
     if (!exit.door) {
       player.say('There is no door.');
@@ -43,10 +51,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     exit.door.open = false;
 
     const dest = rooms.getAt(exit.location);
-    const otherSideDoor = dest
+    dest
       .getExits()
       .filter(exit => exit.location === player.getLocation())
       .forEach(exit => exit.door.open = false);
+
+    util.log("dest:", dest.getExits());
 
     players.eachIf(
       p => CommandUtil.inSameRoom(p, player),
@@ -58,8 +68,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     players.eachIf(
       p => p.getLocation() === exit.location,
       p => {
-        const src = rooms.getAt(player.getLocation()).getTitle('en');
-        p.say('The door to ' + src + ' slams shut.');
+        const srcTitle = room.getTitle('en');
+        p.say('The door to ' + srcTitle + ' slams shut.');
       });
   };
 };
