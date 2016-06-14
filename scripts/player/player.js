@@ -11,26 +11,36 @@ exports.listeners = {
   //// Function wrappers needed to access "this" (Player obj)
   //TODO: Add check for action which ends regen or meditation.
   regen: function(l10n) {
-    const config = { player: this };
-    this.addEffect('resting', Effects.regen(config));
+      return function(bonus) {
+        const config = {
+          player: this,
+          bonus
+        };
+        this.addEffect('resting', Effects.regen(config));
+    }
   },
 
   meditate: function(l10n) {
+    return function(bonus) {
     const config = {
       player: this,
       stat: 'sanity',
+      bonus
     };
-    this.addEffect('meditating', Effects.regen(config))
+      this.addEffect('meditating', Effects.regen(config));
+    }
   },
 
   action: function(l10n) {
-    const recovery = ['resting', 'meditating'];
-    recovery.forEach(state => {
-      if (this.getEffects(state)) {
-        util.log(this.getName() + ' ends ' + state);
-        this.removeEffect(state);
-      }
-    });
+    return function(cost) {
+      const recovery = ['resting', 'meditating'];
+      recovery.forEach(state => {
+        if (this.getEffects(state)) {
+          util.log(this.getName() + ' ends ' + state);
+          this.removeEffect(state);
+        }
+      });
+    }
   },
 
   experience: function(l10n) {
