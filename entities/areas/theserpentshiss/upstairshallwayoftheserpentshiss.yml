@@ -14,14 +14,14 @@
       location: 5
       direction: 'adder'
       door:
-        open: n
+        open: false
       leave_message:
         en: ' disappears into the adder room.'
     -
       location: 6
       direction: 'python'
       door:
-        open: n
+        open: false
         locked: y
         key: 'python key'
         difficulty: 15
@@ -32,6 +32,6 @@
       location: 7
       direction: 'cobra'
       door:
-        open: n
+        open: false
       leave_message:
         en: ' disappears into the cobra room.'
