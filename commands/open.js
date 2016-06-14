@@ -42,12 +42,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return;
     }
 
-    util.log(exit);
+    const dest = rooms.getAt(exit.location);
 
-    player.say('You open the door.');
+    const srcTitle = room.getTitle('en');
+    const destTitle = dest.getTitle('en');
+
+    player.say('You open the door to ' + destTitle + '.');
     exit.door.open = true;
 
-    const dest = rooms.getAt(exit.location);
     dest
       .getExits()
       .filter(exit => exit.location === player.getLocation())
@@ -55,16 +57,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     players.eachIf(
       p => CommandUtil.inSameRoom(p, player),
-      p => {
-        const destTitle = dest.getTitle('en');
-        p.say(player.getName() + ' opens the door to ' + dest + '.');
-      });
+      p => p.say(player.getName() + ' opens the door to ' + dest + '.'));
 
     players.eachIf(
       p => p.getLocation() === exit.location,
-      p => {
-        const srcTitle = room.getTitle('en');
-        p.say('The door to ' + srcTitle + ' swings open.');
-      });
+      p => p.say('The door to ' + srcTitle + ' swings open.'));
   };
 };
