@@ -17,11 +17,11 @@
     max_health: 140
     health: 140
     speed: 6
-    damage: '4-40'
+    damage: '14-40'
     sanity_damage: '1-4'
     level: 8
   defenses:
     head: 4
-    body: 1
+    body: 5
     torso: 1
   load_max: 3
