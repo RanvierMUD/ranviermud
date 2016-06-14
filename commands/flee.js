@@ -10,6 +10,8 @@ const l10n = require('../src/l10n')(l10nFile);
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
 
+    player.emit('action', 1);
+
     if (!player.isInCombat()) {
       player.sayL10n(l10n, "NO_FIGHT");
       return;

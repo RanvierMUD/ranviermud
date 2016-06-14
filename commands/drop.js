@@ -33,9 +33,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     drop(item);
 
     function dropAll() {
-      player.getInventory().forEach(item => {
-        if (!item.isEquipped()) { drop(item); }
-      });
+      player.getInventory().forEach(item => drop(item));
     }
 
     function drop(item) {

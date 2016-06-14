@@ -7,6 +7,8 @@ const util = require('util');
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
 
+    player.emit('action', 0);
+
     // syntax 'give [item] [player]'
     if (player.isInCombat()) {
       player.sayL10n(l10n, 'GIVE_COMBAT');
