@@ -10,7 +10,6 @@ module.exports = {
 
 };
 
-//FIXME: There is probable a better pattern to use than this...
 function _chooseRandomExit(chance) {
   return () => {
     return (room, rooms, player, players, npc) => {
@@ -23,9 +22,17 @@ function _chooseRandomExit(chance) {
         const exits = room.getExits();
         const chosen = Random.fromArray(exits);
 
-        util.log(npc.getShortDesc('en') + " moves to " + chosen.location);
+        util.log(npc.getShortDesc('en') + " moves to room #" + chosen.location);
 
-        if (!chosen.hasOwnProperty('mob_locked')) {
+        const mobsAllowed = !chosen.hasOwnProperty('mob_locked');
+        const openDoor = chosen.door ?
+          chosen.door.open === 'true' : true;
+        const canOpenDoors = npc.hasType('humanoid');
+        const doorLocked = chosen.door && chosen.door.locked;
+
+        const canMove = mobsAllowed && (openDoor || canOpenDoors) && !doorLocked;
+
+        if (canMove) {
           const uid = npc.getUuid();
           const chosenRoom = rooms.getAt(chosen.location);
 

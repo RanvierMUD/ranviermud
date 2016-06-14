@@ -13,4 +13,5 @@
     -
       location: 10
       direction: 'out'
-      mob_locked: 'true'
+      door:
+        open: y

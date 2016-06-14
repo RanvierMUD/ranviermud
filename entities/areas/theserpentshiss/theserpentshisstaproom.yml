@@ -26,5 +26,7 @@
     -
       location: 12
       direction: 'out'
+      door:
+        open: false
       leave_message:
         en:' leaves the tavern.'

@@ -13,11 +13,14 @@
     -
       location: 2
       direction: 'kitchen'
+      door:
+        open: false
     -
       location: 9
       direction: 'cellar'
       door:
         locked: 'cellar key'
-        mob_locked: 'true'
+        mob_locked: true
+        open: false
       leave_message:
         en: ' unlocks the cellar door and climbs down, locking it behind them.'
