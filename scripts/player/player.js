@@ -101,7 +101,6 @@ exports.listeners = {
       this.setLocation(startLocation);
       this.emit('regen');
       this.setAttribute('experience', experiencePenalty);
-
     }
   },
 

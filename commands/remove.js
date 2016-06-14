@@ -33,7 +33,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       util.log(player.getName() + ' removing ' + item.getShortDesc('en'));
 
       player.unequip(item);
-      if (CommandUtil.hasScript(item, 'remove')) { item.emit('remove'); }
+      if (CommandUtil.hasScript(item, 'remove')) { item.emit('remove', player); }
       player.sayL10n(l10n, 'REMOVED', item.getShortDesc(player.getLocale()));
 
       return true;
