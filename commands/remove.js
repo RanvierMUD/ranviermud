@@ -5,7 +5,7 @@ const l10n = require('../src/l10n')(l10nFile);
 const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
-  return (args, player) => {
+  return (args, player, isDead) => {
     const target = args.toLowerCase().split(' ')[0];
 
     if (target === 'all') { return removeAll(); }
@@ -24,8 +24,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function remove(item) {
-      util.log(item);
-      if (!item) {
+      if (!item && !isDead) {
         player.sayL10n(l10n, 'ITEM_NOT_FOUND');
         return;
       }
@@ -34,8 +33,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       player.unequip(item);
       if (CommandUtil.hasScript(item, 'remove')) { item.emit('remove', player); }
-      player.sayL10n(l10n, 'REMOVED', item.getShortDesc(player.getLocale()));
-
+      if (!isDead) {
+        player.sayL10n(l10n, 'REMOVED', item.getShortDesc(player.getLocale()));
+      }
       return true;
     }
   };
