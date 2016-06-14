@@ -94,11 +94,9 @@ exports.listeners = {
       const playerExp = this.getAttribute('experience');
       const experiencePenalty = playerExp - Math.ceil((playerExp * 0.10));
 
-
       util.log(this.getName() + ' died.');
-      Commands.player_commands.remove(this, 'all');
-      Commands.player_commands.drop(this, 'all');
-
+      Commands.player_commands.remove('all', this);
+      Commands.player_commands.drop('all', this);
 
       this.setLocation(startLocation);
       this.emit('regen');
