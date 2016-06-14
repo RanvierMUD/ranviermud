@@ -1,34 +1,66 @@
-var l10n_file = __dirname + '/../l10n/commands/get.yml';
-var l10n = require('../src/l10n')(l10n_file);
-var CommandUtil = require('../src/command_util').CommandUtil;
-exports.command = function (rooms, items, players, npcs, Commands)
-{
-	return function (args, player)
-	{
-		// No picking stuff up in combat
-		if (player.isInCombat()) {
-			player.sayL10n(l10n, 'GET_COMBAT');
-			return;
-		}
+'use strict';
+const l10nFile = __dirname + '/../l10n/commands/get.yml';
+const l10n = require('../src/l10n')(l10nFile);
+const CommandUtil = require('../src/command_util').CommandUtil;
+const util = require('util');
 
-		var room = rooms.getAt(player.getLocation());
-		if (player.getInventory().length >= 20) {
-			player.sayL10n(l10n, 'CARRY_MAX');
-			return;
-		}
+exports.command = (rooms, items, players, npcs, Commands) => {
+  return (args, player) => {
 
-		var item = CommandUtil.findItemInRoom(items, args, room, player);
-		if (!item) {
-			player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-			return;
-		}
+    // No picking stuff up in combat
+    if (player.isInCombat()) {
+      player.sayL10n(l10n, 'GET_COMBAT');
+      return;
+    }
 
-		item = items.get(item);
+    const room = rooms.getAt(player.getLocation());
+    const playerName = player.getName();
 
-		player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc(player.getLocale()));
-		item.setRoom(null);
-		item.setInventory(player.getName());
-		player.addItem(item);
-		room.removeItem(item.getUuid());
-	};
+    if (inventoryFull()) {
+      player.sayL10n(l10n, 'CARRY_MAX');
+      return;
+    }
+
+    if (args.toLowerCase() === "all") {
+      getAllItems(room);
+      return;
+    }
+
+    const item = CommandUtil.findItemInRoom(items, args, room, player);
+    if (!item) {
+      player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+      return;
+    }
+    pickUp(item);
+
+    function pickUp(item) {
+      item = items.get(item);
+      player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc(player.getLocale()));
+      item.setRoom(null);
+      item.setInventory(playerName);
+      player.addItem(item);
+      room.removeItem(item.getUuid());
+
+      util.log(playerName + ' picked up ' + item.getShortDesc('en'));
+
+      players.eachIf(
+        (p) => CommandUtil.inSameRoom(p, player),
+        (p) => p.sayL10n(l10n, 'OTHER_PICKUP', playerName, item.getShortDesc(p.getLocale()))
+      );
+    }
+
+    function getAllItems(room) {
+      const items = room.getItems();
+      items.forEach( item => {
+        if (!inventoryFull()) pickUp(item);
+        else player.sayL10n(l10n, 'CARRY_MAX');
+      });
+    }
+
+    //TODO: Change to calculate based on character's strength and pack size vs. item weight/size.
+    function inventoryFull() {
+      return player.getInventory().length >= 20;
+    }
+
+  };
 };

@@ -1,54 +1,55 @@
-var fs       = require('fs'),
-    util     = require('util'),
-    uuid     = require('node-uuid'),
-    events   = require('events'),
-    Data     = require('./data.js').Data;
+'use strict';
+const fs = require('fs'),
+  util = require('util'),
+  uuid = require('node-uuid'),
+  events = require('events'),
+  Data = require('./data.js').Data;
 
-var npcs_dir         = __dirname + '/../entities/npcs/';
-var npcs_scripts_dir = __dirname + '/../scripts/npcs/';
-var l10n_dir         = __dirname + '/../l10n/scripts/npcs/';
+const npcs_dir = __dirname + '/../entities/npcs/';
+const npcs_scripts_dir = __dirname + '/../scripts/npcs/';
+const l10n_dir = __dirname + '/../l10n/scripts/npcs/';
 
 /**
  * Npc container class. Loads/finds npcs
  */
-var Npcs = function () {
-	var self = this;
-	self.npcs = {};
-	self.load_count = {};
+const Npcs = function NpcManager() {
+  const self = this;
+  self.npcs = {};
+  self.load_count = {};
 
-	/**
-	 * Load NPCs from the configs
-	 * @param boolean verbose Whether to do verbose logging
-	 * @param callback
-	 */
-	self.load = function (verbose, callback)
-	{
-		verbose = verbose || false;
-		var log = function (message) { if (verbose) util.log(message); };
-		var debug = function (message) { if (verbose) util.debug(message); };
+  /**
+   * Load NPCs from the configs
+   * @param boolean verbose Whether to do verbose logging
+   * @param callback
+   */
+  self.load = (verbose, callback) => {
+    verbose = verbose || false;
+		const log = (message) => { if (verbose) util.log(message); };
+		const debug = (message) => { if (verbose) util.debug(message); };
 
 		log("\tExamining npc directory - " + npcs_dir);
-		var npcs = fs.readdir(npcs_dir, function (err, files)
-		{
+		const npcs = fs.readdir(npcs_dir, (err, files) =>
+    {
 			// Load any npc files
-			for (j in files) {
-				var npc_file = npcs_dir + files[j];
+			for (const j in files) {
+				const npc_file = npcs_dir + files[j];
 				if (!fs.statSync(npc_file).isFile()) continue;
 				if (!npc_file.match(/yml$/)) continue;
 
+        let npc_def;
 				// parse the npc files
 				try {
-					var npc_def = require('js-yaml').load(fs.readFileSync(npc_file).toString('utf8'));
+          npc_def = require('js-yaml').load(fs.readFileSync(npc_file).toString('utf8'));
 				} catch (e) {
 					log("\t\tError loading npc - " + npc_file + ' - ' + e.message);
 					continue;
 				}
 
 				// create and load the npcs
-				npc_def.forEach(function (npc) {
-					var validate = ['keywords', 'short_description', 'vnum'];
+				npc_def.forEach(npc => {
+					const validate = ['keywords', 'short_description', 'vnum'];
 
-					var err = false;
+					let err = false;
 					for (var v in validate) {
 						if (!(validate[v] in npc)) {
 							log("\t\tError loading npc in file " + npc + ' - no ' + validate[v] + ' specified');
@@ -57,8 +58,8 @@ var Npcs = function () {
 						}
 					}
 
-					// max load for npcs so we don't have 1000 npcs in a room due to respawn
-					if (self.load_count[npc.vnum] && self.load_count[npc.vnum] >= npc.load_max) {
+          const hitMaxLoad = self.load_count[npc.vnum] && self.load_count[npc.vnum] >= npc.load_max
+					if (hitMaxLoad) {
 						log("\t\tMaxload of " + npc.load_max + " hit for npc " + npc.vnum);
 						return;
 					}
@@ -70,244 +71,296 @@ var Npcs = function () {
 				});
 			}
 
-			if (callback) {
-				callback();
-			}
+			if (callback) { callback(); }
 		});
-	};
+  };
 
-	/**
-	 * Add an npc and generate a uuid if necessary
-	 * @param Npc npc
-	 */
-	self.add = function (npc)
-	{
-		if (!npc.getUuid()) {
-			npc.setUuid(uuid.v4());
-		}
-		self.npcs[npc.getUuid()] = npc;
-		self.load_count[npc.vnum] = self.load_count[npc.vnum] ? self.load_count[npc.vnum] + 1 : 1;
-	};
+  /**
+   * Add an npc and generate a uuid if necessary
+   * @param Npc npc
+   */
+  self.add = npc => {
+    if (!npc.getUuid()) {
+      npc.setUuid(uuid.v4());
+    }
+    self.npcs[npc.getUuid()] = npc;
+    self.load_count[npc.vnum] = self.load_count[npc.vnum] ? self.load_count[npc.vnum] + 1 : 1;
+  };
 
-	/**
-	 * Gets all instance of an npc
-	 * Not sure exactly what you'd use this method for as you would most likely
-	 * rather act upon a single instance of an item
-	 * @param int vnum
-	 * @return Npc
-	 */
-	self.getByVnum = function (vnum)
-	{
-		var objs = [];
-		self.each(function (o) {
-			if (o.getVnum() === vnum) {
-				objs.push(o);
-			}
-		});
-		return objs;
-	};
+  /**
+   * Gets all instance of an npc
+   * Not sure exactly what you'd use this method for as you would most likely
+   * rather act upon a single instance of an item
+   * @param int vnum
+   * @return Npc
+   */
+  self.getByVnum = vnum => self.npcs.filter(npc => npc.getVnum() === vnum);
 
-	/**
-	 * retreive an instance of an npc by uuid
-	 * @param string uid
-	 * @return Npc
-	 */
-	self.get = function (uid)
-	{
-		return self.npcs[uid];
-	};
+  /**
+   * retreive an instance of an npc by uuid
+   * @param string uid
+   * @return Npc
+   */
+  self.get = uid => self.npcs[uid];
 
-	/**
-	 * proxy Array.each
-	 * @param function callback
-	 */
-	self.each = function (callback)
-	{
-		for (var obj in self.npcs) {
-			callback(self.npcs[obj]);
-		}
-	};
+  /**
+   * proxy Array.each
+   * @param function callback
+   */
+  self.each = callback => {
+    for (const npc in self.npcs) {
+      callback(self.npcs[npc]);
+    }
+  };
 
-	/**
-	 * Blows away an NPC
-	 * WARNING: If you haven't removed the npc from the room it's in shit _will_ break
-	 * @param Npc npc
-	 */
-	self.destroy = function (npc)
-	{
-		delete self.npcs[npc.getUuid()];
-		delete npc;
-	};
+  /**
+   * Blows away an NPC
+   * WARNING: If you haven't removed the npc from the room it's in shit _will_ break
+   * @param Npc npc
+   */
+  self.destroy = npc => {
+    delete self.npcs[npc.getUuid()];
+    npc = null;
+  };
 }
 
 /**
  * Actual class for NPCs
  */
-var Npc = function (config)
-{
-	var self = this;
+const Npc = function NpcConstructor(config) {
+  const self = this;
 
-	self.keywords;
-	self.short_description
-	self.description;
-	self.room; // Room that it's in (vnum)
-	self.vnum; // Not to be confused with its vnum
-	self.in_combat = false;
-	self.uuid = null;
+  self.keywords;
+  self.short_description;
+  self.attack;
+  self.description;
+  self.room; // Vnum of current location
+  self.vnum;
+  self.inCombat = false;
+  self.uuid = null;
 
-	// attributes
-	self.attributes = {
-		max_health : 0,
-		health: 0,
-		level: 1
-	};
+  self.attributes = {
+    max_health: 0,
+    health: 0,
+    level: 1
+  };
 
-	// Anything affecting the player
-	self.affects = {
-	};
+  self.effects = {};
 
-	/**
-	 * constructor
-	 * @param object config
-	 */
-	self.init = function (config)
-	{
-		self.short_description = config.short_description || '';
-		self.keywords          = config.keywords    || [];
-		self.description       = config.description || '';
-		self.room              = config.room        || null;
-		self.vnum              = config.vnum;
+  /**
+   * tha real constructor
+   * @param object config
+   */
+  self.init = function (config) {
+    self.short_description = config.short_description || '';
+    self.keywords = config.keywords || [];
+    self.attack = config.attack || { en: 'strike' };
+    self.description = config.description || '';
+    self.room = config.room || null;
+    self.vnum = config.vnum;
+    self.types = config.types || [];
+    self.defenses = {};
 
-		for (var i in config.attributes || {}) {
-			self.attributes[i] = config.attributes[i];
-		}
+    for (const stat in config.attributes || {}) {
+      self.attributes[stat] = config.attributes[stat];
+    }
 
-		Data.loadListeners(config, l10n_dir, npcs_scripts_dir, Data.loadBehaviors(config, 'npcs/', self));
-	};
+    for (const armor in config.defenses || {}) {
+      self.defenses[armor] = config.defenses[armor];
+    }
 
-	/**#@+
-	 * Mutators
-	 */
-	self.getVnum      = function () { return self.vnum; };
-	self.getInv       = function () { return self.inventory; };
-	self.isInCombat   = function () { return self.in_combat; };
-	self.getRoom      = function () { return self.room; };
-	self.getUuid      = function () { return self.uuid; };
-	self.getAttribute = function (attr) { return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
-	self.setUuid      = function (uid) { self.uuid = uid; };
-	self.setRoom      = function (room) { self.room = room; };
-	self.setInventory = function (identifier) { self.inventory = identifier; }
-	self.setInCombat  = function (combat) { self.in_combat = combat; }
-	self.setContainer = function (uid) { self.container = uid; }
-	self.setAttribute = function (attr, val) { self.attributes[attr] = val; };
-	self.removeAffect = function (aff) { delete self.affects[aff]; };
-	/**#@-*/
+    Data.loadListeners(config, l10n_dir, npcs_scripts_dir, Data.loadBehaviors(config, 'npcs/', self));
+  };
 
-	/**
-	 * Get currently applied affects
-	 * @param string aff
-	 * @return Array|Object
-	 */
-	self.getAffects = function (aff)
-	{
-		if (aff) {
-			return typeof self.affects[aff] !== 'undefined' ? self.affects[aff] : false;
-		}
-		return self.affects;
-	};
+  /**#@+
+   * Mutators
+   */
+  self.getVnum = () => self.vnum;
+  self.getInv = () => self.inventory;
+  self.getRoom = () => self.room;
+  self.getUuid = () => self.uuid;
+  self.getDefenses = () => self.defenses;
+  self.getLocations = () => Object.keys(self.defenses);
+  self.getAttribute = attr =>
+    typeof self.attributes[attr] !== 'undefined' ?
+    self.attributes[attr] :
+    false;
 
-	/**
-	 * Add, activate and set a timer for an affect
-	 * @param string name
-	 * @param object affect
-	 */
-	self.addAffect = function (name, affect)
-	{
-		if (affect.activate) {
-			affect.activate();
-		}
+  self.getTypes = () => self.types;
+  self.hasType = type => self.types.indexOf(type) > -1;
+  self.addType = type => self.types.push(type);
 
-		setTimeout(function () {
-			if (affect.deactivate) {
-				affect.deactivate();
-			}
-			self.removeAffect(name);
-		}, affect.duration * 1000);
-		self.affects[name] = 1;
-	};
+  self.setUuid = uid => self.uuid = uid;
 
-	/**
-	 * Get the description, localized if possible
-	 * @param string locale
-	 * @return string
-	 */
-	self.getDescription = function (locale)
-	{
-		return typeof self.description === 'string' ?
-			self.description :
-			(locale in self.description ? self.description[locale] : 'UNTRANSLATED - Contact an admin');
-	};
+  self.setRoom = room => self.room = room;
 
-	/**
-	 * Get the title, localized if possible
-	 * @param string locale
-	 * @return string
-	 */
-	self.getShortDesc = function (locale)
-	{
-		return typeof self.short_description === 'string' ?
-			self.short_description :
-			(locale in self.short_description ? self.short_description[locale] : 'UNTRANSLATED - Contact an admin');
-	}
+  //TODO: Have spawn inventory but also add same inv functionality as player
+  self.setInventory = identifier => self.inventory = identifier;
+  self.setInCombat = combat => self.inCombat = combat;
+  self.setContainer = uid => self.container = uid;
+  self.setAttribute = (attr, val) => self.attributes[attr] = val;
+  self.removeEffect = eff => { delete self.effects[eff]; };
 
-	/**
-	 * Get the title, localized if possible
-	 * @param string locale
-	 * @return string
-	 */
-	self.getKeywords = function (locale)
-	{
-		return Array.isArray(self.keywords) ?
-			self.keywords :
-			(locale in self.keywords ? self.keywords[locale] : 'UNTRANSLATED - Contact an admin');
-	}
+  self.isInCombat = () => self.inCombat;
+  self.isPacifist = () => !self.listeners('combat').length;
+  /**#@-*/
 
-	/**
-	 * check to see if an npc has a specific keyword
-	 * @param string keyword
-	 * @param string locale
-	 * @return boolean
-	 */
-	self.hasKeyword = function (keyword, locale)
-	{
-		return self.getKeywords(locale).some(function (word) { return keyword === word });
-	};
+  /**
+   * Get specific currently applied effect, or all current effects
+   * @param string aff
+   * @return Array|Object
+   */
+  self.getEffects = eff => {
+    if (eff) {
+      return self.effects[eff] ?
+        self.effects[eff] : false;
+    }
+    return self.effects;
+  };
 
-	/**
-	 * Get attack speed of a player
-	 * @return float
-	 */
-	self.getAttackSpeed = function ()
-	{
-		return self.getAttribute('speed') || 1;
-	};
+  /**
+   * Add, activate and set a timer for an affect
+   * @param string name
+   * @param object affect
+   */
+  self.addEffect = (name, effect) => {
+    if (effect.activate) {
+      effect.activate();
+    }
 
-	/**
-	 * Get the damage a player can do
-	 * @return int
-	 */
-	self.getDamage = function ()
-	{
-		var base = [1, 20];
-		var damage = self.getAttribute('damage') ?
-			self.getAttribute('damage').split('-').map(function (i) { return parseInt(i, 10); })
-			: base
-		return {min: damage[0], max: damage[1]};
-	};
+    setTimeout(() => {
+      if (effect.deactivate) {
+        effect.deactivate();
+      }
+      self.removeEffect(name);
+    }, effect.duration * 1000);
+    self.effects[name] = 1;
+  };
 
-	self.init(config);
+  /**
+   * Helper for getting strings that may or may not be translated
+   * @param string thing Property of npc
+   * @param string locale Locale of player
+   * @return string Translated string
+   */
+  const getTranslatedString = (thing, locale) =>
+    typeof self[thing] === 'string' ?
+      self[thing] :
+      (locale in self[thing] ? self[thing][locale] : 'UNTRANSLATED - Contact an admin');
+
+  /**
+   * Get the description, localized if possible
+   * @param string locale
+   * @return string
+   */
+  self.getDescription = locale => getTranslatedString('description', locale);
+
+  /**
+   * Get the attack, localized if possible
+   * @param string locale
+   * @return string
+   */
+  self.getAttack = locale => getTranslatedString('attack', locale);
+
+  /**
+   * Get the title, localized if possible
+   * @param string locale
+   * @return string
+   */
+  self.getShortDesc = locale => getTranslatedString('short_description', locale);
+
+  /**
+   * Get the title, localized if possible
+   * @param string locale
+   * @return string
+   */
+  self.getKeywords = locale =>
+    Array.isArray(self.keywords) ?
+      self.keywords :
+      (locale in self.keywords ? self.keywords[locale] : 'UNTRANSLATED - Contact an admin');
+
+  /**
+   * check to see if an npc has a specific keyword
+   * @param string keyword
+   * @param string locale
+   * @return boolean
+   */
+  self.hasKeyword = (keyword, locale) =>
+    self.getKeywords(locale).some( word => keyword === word );
+
+  /**
+   * Get attack speed of an npc in ms
+   * @return float
+   */
+  self.getAttackSpeed = () => self.getAttribute('speed') * 1000 || 1000;
+
+  /**
+   * Get the damage an npc can do
+   * @return obj {min: int, max: int}
+   */
+  self.getDamage = () => {
+    const defaultDamage = [1, 20];
+    const damage = self.getAttribute('damage') ?
+      self.getAttribute('damage').split('-').map(n => parseInt(n, 10)) :
+      defaultDamage;
+    return { min: damage[0], max: damage[1] };
+  };
+
+  /**
+   * Get the damage to sanity an npc can do
+   * @return obj {min: int, max: int} || false
+   */
+  self.getSanityDamage = () => {
+    const damage = self.getAttribute('sanity_damage') ?
+      self.getAttribute('sanity_damage').split('-').map(n => parseInt(n, 10)) :
+      false;
+    return damage ? { min: damage[0], max: damage[1] } : false;
+  };
+
+  /**
+   * Helper to get just one area's defense
+   * @param string location
+   */
+  self.getDefense = location => self.defenses[location || 'body'] || 0;
+
+  /**
+   * Method to apply physical damage
+   * @param int raw damage
+   * @param string location
+   * @return int final damage dealt
+   */
+  self.damage = (dmg, location) => {
+    if (dmg) {
+      location = location || 'body';
+      const damageDone = Math.max(1, dmg - calculateDefense(location));
+
+      self.setAttribute('health', Math.max(0, self.getAttribute('health') - damageDone));
+      util.log('Damage done to ' + self.getShortDesc('en') + ': ' + damageDone);
+
+      return damageDone;
+    }
+  };
+
+  /**
+   * Helper to calculate damage reduction
+   * @param  string location hit
+   * @return  int damage soaked
+   */
+
+  function calculateDefense(location) {
+    let defense = self.getDefense(location);
+    if (location !== 'body') {
+      defense += self.getDefense('body');
+    }
+    util.log(self.getShortDesc('en') + ' ' + location + ' def: ' + defense);
+    return defense;
+  }
+
+  self.init(config);
 };
+
+
 util.inherits(Npc, events.EventEmitter);
 
 exports.Npcs = Npcs;
-exports.Npc  = Npc;
+exports.Npc = Npc;

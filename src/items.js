@@ -148,7 +148,7 @@ var Item = function (config)
 	self.vnum;
 	self.uuid = null;
 	self.equipped = false;
-	self.script = '';
+	self.script = null;
 	self.attributes = {};
 
 	self.init = function (config)
@@ -163,10 +163,10 @@ var Item = function (config)
 		self.container         = config.container   || null;
 		self.uuid              = config.uuid        || null;
 		self.vnum              = config.vnum;
-		self.script            = config.script;
+		self.script            = config.script      || null;
 		self.attributes        = config.attributes;
-
-		Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
+		if (self !== null)
+		  Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
 	};
 
 	/**#@+
@@ -233,7 +233,7 @@ var Item = function (config)
 	 */
 	self.hasKeyword = function (keyword, locale)
 	{
-		return self.getKeywords(locale).some(function (word) { return keyword === word });
+		return self.getKeywords(locale || 'en').indexOf(keyword) > -1;
 	};
 
 	/**

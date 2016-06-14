@@ -1,0 +1,14 @@
+- &leather_boots
+    vnum: 4
+    short_description:
+        en: "leather boots"
+    keywords:
+        en: [ "leather boots", "boots", "shoes" ]
+    description:
+        en: "A pair of sturdy leather boots."
+    room: 5
+    behaviors: "wearable"
+    attributes:
+        defense: 3
+        wearLocation: 'feet'
+    load_max: 4
