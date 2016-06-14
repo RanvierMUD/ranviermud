@@ -3,30 +3,45 @@ var LevelUtil = require('../../src/levels').LevelUtil,
   Skills = require('../../src/skills').Skills,
   CommandUtil = require('../../src/command_util').CommandUtil,
   util = require('util'),
-  Commands = require('../../src/commands').Commands;
+  Commands = require('../../src/commands').Commands,
+  Effects = require('../../src/effects').Effects;
 
 exports.listeners = {
 
   //// Function wrappers needed to access "this" (Player obj)
-  //TODO: Do regenHealth, regenSanity, and regenActions
+  //TODO: Add check for action which ends regen or meditation.
   regen: function(l10n) {
+      return function(bonus) {
+        const config = {
+          player: this,
+          bonus
+        };
+        this.addEffect('resting', Effects.regen(config));
+    }
+  },
+
+  meditate: function(l10n) {
     return function(bonus) {
-      bonus = bonus || 1;
-      const self = this;
-      const regenInterval = 2000;
+    const config = {
+      player: this,
+      stat: 'sanity',
+      bonus
+    };
+      this.addEffect('meditating', Effects.regen(config));
+    }
+  },
 
-      const regen = setInterval(() => {
-        const health = self.getAttribute('health');
-        let regenerated = Math.floor(Math.random() * self.getAttribute('stamina') + bonus);
-
-        regenerated = Math.min(self.getAttribute('max_health'), health + regenerated);
-        util.log(self.getName() + ' has regenerated up to ' + regenerated + ' health.');
-
-        self.setAttribute('health', regenerated);
-        if (regenerated === self.getAttribute('max_health')) {
-          clearInterval(regen);
+  action: function(l10n) {
+    return function(cost) {
+      const recovery = ['resting', 'meditating'];
+      recovery.forEach(state => {
+        const effect = this.getEffects(state);
+        if (effect) {
+          util.log(this.getName() + ' ends ' + state);
+          effect.deactivate();
+          this.removeEffect(state);
         }
-      }, regenInterval);
+      });
     }
   },
 
