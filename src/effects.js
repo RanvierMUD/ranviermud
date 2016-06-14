@@ -149,8 +149,9 @@ const Effects = {
 				const verb = stat === 'health' ? 'resting' : 'meditating';
 				clearInterval(regenHandle);
 				player.say("You stop " + verb + '.');
-			}
-	};
+			},
+		};
+	},
 
 };
 
