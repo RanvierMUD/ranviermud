@@ -117,6 +117,41 @@ const Effects = {
 		return buff('stamina', config);
 	},
 
+	regen: config => {
+		const stat = config.stat || 'health';
+		const max = 'max_' + stat;
+		let regen = null;
+
+		let attr = stat === 'health' ? 'stamina' : 'willpower';
+
+		return {
+			activate: bonus => {
+	      bonus = bonus || config.bonus || 1;
+	      const self = config.player;
+	      const regenInterval = config.interval || 2000;
+
+	      regenHandle = setInterval(() => {
+	        const current = self.getAttribute(stat);
+
+	        let regenerated = Math.floor(Math.random() * self.getAttribute(attr) + bonus);
+	        regenerated = Math.min(self.getAttribute(max), health + regenerated);
+
+	        util.log(self.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
+	        self.setAttribute(stat, regenerated);
+
+	        if (regenerated === self.getAttribute(max)) {
+	          clearInterval(regenHandle);
+	        }
+	      }, regenInterval);
+    	},
+
+			deactivate: () => {
+				const verb = stat === 'health' ? 'resting' : 'meditating';
+				clearInterval(regenHandle);
+				player.say("You stop " + verb + '.');
+			}
+	};
+
 };
 
 exports.Effects = Effects;
