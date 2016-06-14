@@ -2,7 +2,8 @@
 var LevelUtil = require('../../src/levels').LevelUtil,
   Skills = require('../../src/skills').Skills,
   CommandUtil = require('../../src/command_util').CommandUtil,
-  util = require('util');
+  util = require('util'),
+  Commands = require('../../src/commands').Commands;
 
 exports.listeners = {
 
@@ -89,11 +90,17 @@ exports.listeners = {
   //TODO: Permadeath, add it.
   die: function(l10n) {
     return function() {
-      // they died, move then back to the start... you can do whatever you want instead of this
-      this.setLocation(1);
-      this.emit('regen');
+      const startLocation = 1;
+      const playerExp = this.getAttribute('experience');
+      const experiencePenalty = playerExp - Math.ceil((playerExp * 0.10));
+
       util.log(this.getName() + ' died.');
-      this.setAttribute('experience', this.getAttribute('experience') - Math.ceil((this.getAttribute('experience') * 0.10)));
+      Commands.player_commands.remove('all', this, true);
+      Commands.player_commands.drop('all', this);
+
+      this.setLocation(startLocation);
+      this.emit('regen');
+      this.setAttribute('experience', experiencePenalty);
     }
   },
 
