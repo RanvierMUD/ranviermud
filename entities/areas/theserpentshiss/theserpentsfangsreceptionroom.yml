@@ -11,6 +11,8 @@
     -
       location: 8
       direction: 'up'
+      door:
+        open: false
       leave_message:
         en: ' climbs up the ladder and through the trapdoor. It slams shut behind them.'
     -

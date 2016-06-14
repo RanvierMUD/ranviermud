@@ -208,9 +208,6 @@ function move(exit, player) {
     players.eachIf(
       p => CommandUtil.inSameRoom(player, p),
       p => p.sayL10n(l10n, 'OTHER_UNLOCKED', player.getName(), key));
-
-    Commands.player_commands.open(exit.direction, player);
-
   }
 
   const room = rooms.getAt(exit.location);
@@ -237,6 +234,10 @@ function move(exit, player) {
         p.prompt();
       }
     });
+
+  if (closedDoor) {
+    Commands.player_commands.open(exit.direction, player);
+  }
 
   player.setLocation(exit.location);
 
