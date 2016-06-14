@@ -14,14 +14,14 @@
   behaviors: "aggro,rtcombat"
   attributes:
     target: 'head'
-    max_health: 140
-    health: 140
-    speed: 6
-    damage: '4-40'
+    max_health: 375
+    health: 375
+    speed: 5
+    damage: '16-80'
     sanity_damage: '1-4'
     level: 8
   defenses:
     head: 4
-    body: 1
+    body: 6
     torso: 1
   load_max: 3
