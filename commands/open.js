@@ -8,6 +8,8 @@ const l10n = require('../src/l10n')(l10nFile);
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
 
+    player.emit('action', 0);
+
     if (player.isInCombat()) {
       player.say('You are too busy for that right now.');
       return;
