@@ -81,6 +81,7 @@ var Rooms = function() {
         // Load any room files
         for (let j in rooms) {
           var room_file = file + '/' + rooms[j];
+
           //skip the manifest or any directories
           if (room_file.match(/manifest/)) continue;
           if (!fs.statSync(room_file)
@@ -90,8 +91,7 @@ var Rooms = function() {
           // parse the room files
           try {
             var room_def = require('js-yaml')
-              .load(fs.readFileSync(room_file)
-                .toString('utf8'));
+              .load(fs.readFileSync(room_file).toString('utf8'));
           } catch (e) {
             log("\t\tError loading room - " + room_file + ' - ' + e.message);
             continue;
@@ -189,6 +189,10 @@ var Room = function(config) {
     self.dark_desc = config.dark_desc || config.description;
     self.location = config.location;
     self.exits = config.exits || [];
+    self.exits = self.exits.map(exit => {
+      if (exit.door) { exit.door.open = false; }
+      return exit;
+    });
     self.area = config.area;
     self.filename = config.filename;
     self.file_index = config.file_index;
