@@ -43,9 +43,13 @@ const Commands = {
         if (skill) {
           player.addSkill(skill, number);
           player.say("<red>ADMIN: Added " + args + ".</red>");
-        }
+        } else { player.say("<red>ADMIN: No such skill.</red>"); }
         util.log("@@Admin: " + player.getName() + " added skill:", skill);
       },
+    //TODO: boostAttr
+    //TODO: addFeat
+    //TODO: teleport
+    //TODO: invis
   },
 
 
@@ -176,8 +180,13 @@ function move(exit, player) {
   rooms.getAt(player.getLocation())
     .emit('playerLeave', player, players);
 
-  if ('door' in exit && exit.door.locked) {
-    const key = exit.door.locked;
+  const closedDoor = exit.door && !exit.door.open;
+  const lockedDoor = exit.door && exit.door.locked;
+
+  util.log(exit);
+
+  if (closedDoor && lockedDoor) {
+    const key = exit.door.key;
 
     if (!CommandUtil.findItemInInventory(key, player)) {
 
@@ -194,6 +203,7 @@ function move(exit, player) {
     }
 
     exit.door.locked = false;
+
     player.sayL10n(l10n, 'UNLOCKED', key);
     players.eachIf(
       p => CommandUtil.inSameRoom(player, p),
@@ -224,6 +234,10 @@ function move(exit, player) {
         p.prompt();
       }
     });
+
+  if (closedDoor) {
+    Commands.player_commands.open(exit.direction, player);
+  }
 
   player.setLocation(exit.location);
 
