@@ -6,7 +6,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     const self = player.getName();
     util.log(self + ' is resting.');
-    player.write('You rest and regain health.\n');
+    player.write('<blue>You rest and regain health.</blue>\n');
     player.emit('regen');
   };
 };
