@@ -95,7 +95,7 @@ exports.listeners = {
       const experiencePenalty = playerExp - Math.ceil((playerExp * 0.10));
 
       util.log(this.getName() + ' died.');
-      Commands.player_commands.remove('all', this);
+      Commands.player_commands.remove('all', this, true);
       Commands.player_commands.drop('all', this);
 
       this.setLocation(startLocation);
