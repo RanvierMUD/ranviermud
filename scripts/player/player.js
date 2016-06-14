@@ -8,7 +8,7 @@ var LevelUtil = require('../../src/levels').LevelUtil,
 exports.listeners = {
 
   //// Function wrappers needed to access "this" (Player obj)
-  //TODO: Do regenHealth, regenSanity, and regenActions
+  //TODO: Add check for movement which ends regen or meditation.
   regen: function(l10n) {
     return function(bonus) {
       bonus = bonus || 1;
@@ -24,6 +24,27 @@ exports.listeners = {
 
         self.setAttribute('health', regenerated);
         if (regenerated === self.getAttribute('max_health')) {
+          clearInterval(regen);
+        }
+      }, regenInterval);
+    }
+  },
+
+  meditate: function(l10n) {
+    return function(bonus) {
+      bonus = bonus || 1;
+      const self = this;
+      const regenInterval = 2000;
+
+      const regen = setInterval(() => {
+        const sanity = self.getAttribute('sanity');
+        let regenerated = Math.floor(Math.random() * self.getAttribute('stamina') + bonus);
+
+        regenerated = Math.min(self.getAttribute('max_sanity'), sanity + regenerated);
+        util.log(self.getName() + ' has regenerated up to ' + regenerated + ' sanity.');
+
+        self.setAttribute('sanity', regenerated);
+        if (regenerated === self.getAttribute('max_sanity')) {
           clearInterval(regen);
         }
       }, regenInterval);
