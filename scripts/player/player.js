@@ -35,8 +35,10 @@ exports.listeners = {
     return function(cost) {
       const recovery = ['resting', 'meditating'];
       recovery.forEach(state => {
-        if (this.getEffects(state)) {
+        const effect = this.getEffects(state);
+        if (effect) {
           util.log(this.getName() + ' ends ' + state);
+          effect.deactivate();
           this.removeEffect(state);
         }
       });

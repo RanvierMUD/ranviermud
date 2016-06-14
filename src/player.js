@@ -268,7 +268,6 @@ const Player = function PlayerConstructor(socket) {
     let deact = function() {
       if (effect.deactivate && self.getSocket()) {
         effect.deactivate();
-        // self.prompt();
       }
       self.removeEffect(name);
     };

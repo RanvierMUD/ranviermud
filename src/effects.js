@@ -120,9 +120,9 @@ const Effects = {
 	regen: config => {
 		const stat = config.stat || 'health';
 		const max = 'max_' + stat;
-		let regen = null;
+		const attr = stat === 'health' ? 'stamina' : 'willpower';
 
-		let attr = stat === 'health' ? 'stamina' : 'willpower';
+		let regenHandle = null;
 
 		return {
 			activate: bonus => {
@@ -148,7 +148,7 @@ const Effects = {
 			deactivate: () => {
 				const verb = stat === 'health' ? 'resting' : 'meditating';
 				clearInterval(regenHandle);
-				player.say("You stop " + verb + '.');
+				player.say("<blue>You stop " + verb + '.</blue>');
 			},
 		};
 	},
