@@ -1,6 +1,4 @@
 'use strict';
-const l10nFile = __dirname + '/../l10n/commands/emote.yml';
-const l10n = require('../src/l10n')(l10nFile);
 const CommandUtil = require('../src/command_util').CommandUtil;
 const util = require('util');
 
