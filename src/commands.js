@@ -241,8 +241,8 @@ function move(exit, player) {
 
   player.setLocation(exit.location);
 
-  const moveCost = 1;
-  player.emit('action', moveCost);
+  const moveCost = exit.cost ? exit.cost : 1;
+  if (!player.hasEnergy(moveCost)) { return player.noEnergy(); }
 
   // Add room to list of explored rooms
   const hasExplored = player.explore(room.getLocation());
