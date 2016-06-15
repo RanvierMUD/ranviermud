@@ -5,7 +5,8 @@ module.exports = {
   getSanityText: getSanityText,
   getGenderNoun: getGenderNoun,
   getStatusColor: getStatusColor,
-  getPercentage: getPercentage
+  getPercentage: getPercentage,
+  getEnergyText: getEnergyText,
 };
 
 function getHealthText(maxHealth, player, npc) {
@@ -69,7 +70,7 @@ function getSanityText(maxSanity, player) {
   }
 }
 
-function getActionText(maxEnergy, player) {
+function getEnergyText(maxEnergy, player) {
   return function(energy) {
     var percentage = getPercentage(energy, maxEnergy);
     var energyStatus = {
