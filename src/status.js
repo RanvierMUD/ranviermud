@@ -108,8 +108,8 @@ function getGenderNoun(gender) {
 }
 
 function getStatusColor(percentage) {
-  return status > 75 ?
-    'green' : status > 35 ?
+  return percentage > 75 ?
+    'green' : percentage > 35 ?
       'yellow' : 'red';
 }
 
