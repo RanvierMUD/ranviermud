@@ -23,11 +23,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function getStatusString(attr, value, character) {
       const maxHealth = character.max_health;
       const maxSanity = character.max_sanity;
+      const maxEnergy = character.max_energy;
       const status = {
         level:       getLevelText,
         health:      statusUtil.getHealthText(maxHealth, player, null, true),
         class:       () => {},
         sanity:      statusUtil.getSanityText(maxSanity, player),
+        energy:      statusUtil.getEnergyText(maxEnergy, player),
         stamina:     getStamina,
         willpower:   getWillpower,
         quickness:   getQuickness,

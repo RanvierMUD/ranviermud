@@ -22,3 +22,5 @@ WILLPOWER:
     en: "$[1]"
 MUTAGENS:
     en: "You may alter yourself $[1]."
+ENERGY:
+    en: "$[1]"

@@ -35,7 +35,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 }
 
 function purchaseFeat(player, feat) {
-  player.emit('action', 0);
+  if (!player.hasEnergy(5)) { return player.noEnergy(); }
   const originalMutagens = player.getAttribute('mutagens');
   player.setAttribute('mutagens', originalMutagens - feat.cost);
 
