@@ -50,6 +50,9 @@ const Player = function PlayerConstructor(socket) {
     mutagens: 0,
     attrPoints: 0,
 
+    actionPoints: 70,
+    max_actionPoints: 100,
+
     //TODO: Generated descs.
     description: 'A person.'
   };
