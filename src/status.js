@@ -69,6 +69,34 @@ function getSanityText(maxSanity, player) {
   }
 }
 
+function getActionText(maxSanity, player) {
+  return function(sanity) {
+    var percentage = getPercentage(energy, maxEnergy);
+    var energyStatus = {
+      0:  'consumed by madness',
+      10: 'nearing insanity',
+      15: 'feeling dysphoric',
+      50: 'stressed to breaking',
+      60: 'mentally unsound',
+      70: 'feeling stressed',
+      80: 'discontent',
+      90: 'mentally well',
+      95: 'quite stable',
+      100: 'sharp as a knife'
+    };
+
+    var color = getStatusColor(percentage);
+    for (var tier in sanityStatus) {
+      if (percentage <= parseInt(tier)) {
+        return '<' + color + '>You are ' + sanityStatus[tier] +
+          '.</' + color + '>';
+      }
+    }
+    return '<' + color + '>You are feeling strange.</' + color + '>';
+  }
+}
+
+
 function getGenderNoun(gender) {
   var nouns = {
     M: 'man',
