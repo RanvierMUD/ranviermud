@@ -87,7 +87,7 @@ function getEnergyText(maxEnergy, player) {
     };
 
     var color = getStatusColor(percentage);
-    for (var tier in sanityStatus) {
+    for (var tier in energyStatus) {
       if (percentage <= parseInt(tier)) {
         return '<' + color + '>You are ' + energyStatus[tier] +
           '.</' + color + '>';

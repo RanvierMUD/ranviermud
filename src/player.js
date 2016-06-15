@@ -39,6 +39,8 @@ const Player = function PlayerConstructor(socket) {
     health: 90,
     max_sanity: 100,
     sanity: 70,
+    energy: 70,
+    max_energy: 100,
 
     stamina: 1,
     willpower: 1,
@@ -49,9 +51,6 @@ const Player = function PlayerConstructor(socket) {
     experience: 0,
     mutagens: 0,
     attrPoints: 0,
-
-    energy: 70,
-    max_energy: 100,
 
     //TODO: Generated descs.
     description: 'A person.'
