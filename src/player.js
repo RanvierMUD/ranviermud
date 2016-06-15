@@ -91,6 +91,9 @@ const Player = function PlayerConstructor(socket) {
   self.getAttributes = () => self.attributes || {};
   self.getGender = () => self.gender;
 
+  self.hasEnergy = cost => self.getAttribute('energy') >= cost ?
+    self.emit('action', cost) : false;
+
   self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
     self.attributes[attr] : false;
 

@@ -7,6 +7,10 @@ const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
+
+
+    
+
     if (args) {
       args = args.trim().toLowerCase();
       const room = rooms.getAt(player.getLocation());
