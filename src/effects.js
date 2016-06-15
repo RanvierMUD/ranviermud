@@ -139,6 +139,8 @@ const Effects = {
 	        util.log(self.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
 	        self.setAttribute(stat, regenerated);
 
+					self.setAttribute('energy', Math.max(regenerated, self.getAttribute('max_energy')));
+
 	        if (regenerated === self.getAttribute(max)) {
 	          clearInterval(regenHandle);
 	        }
