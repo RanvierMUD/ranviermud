@@ -77,10 +77,8 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
 
   function combatRound(attacker, defender, a, d) {
 
-    if (attacker.hasEnergy) {
-      if (!attacker.hasEnergy(2)) {
-        a.speed = () => attacker.getSpeed() * 4;
-      }
+    if (attacker.hasEnergy && !attacker.hasEnergy(2)) {
+      a.speed = () => attacker.getAttackSpeed() * 4;
     }
 
     util.log("Speeds are " + a.speed() + ' vs. ' + d.speed());
