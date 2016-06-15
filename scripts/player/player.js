@@ -33,6 +33,13 @@ exports.listeners = {
 
   action: function(l10n) {
     return function(cost) {
+      
+      if (cost) {
+        const currentEnergy = this.getAttribute('energy');
+        const newEnergy = Math.max(0, currentEnergy - cost);
+        this.setAttribute('energy', newEnergy);
+      }
+
       const recovery = ['resting', 'meditating'];
       recovery.forEach(state => {
         const effect = this.getEffects(state);

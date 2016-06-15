@@ -39,6 +39,8 @@ const Player = function PlayerConstructor(socket) {
     health: 90,
     max_sanity: 100,
     sanity: 70,
+    energy: 0,
+    max_energy: 25,
 
     stamina: 1,
     willpower: 1,
@@ -88,6 +90,11 @@ const Player = function PlayerConstructor(socket) {
   self.getInventory = () => self.inventory;
   self.getAttributes = () => self.attributes || {};
   self.getGender = () => self.gender;
+
+  self.hasEnergy = cost => self.getAttribute('energy') >= cost ?
+    self.emit('action', cost) : false;
+
+  self.noEnergy = () => self.say('You need to rest first.');
 
   self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
     self.attributes[attr] : false;

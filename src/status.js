@@ -5,7 +5,8 @@ module.exports = {
   getSanityText: getSanityText,
   getGenderNoun: getGenderNoun,
   getStatusColor: getStatusColor,
-  getPercentage: getPercentage
+  getPercentage: getPercentage,
+  getEnergyText: getEnergyText,
 };
 
 function getHealthText(maxHealth, player, npc) {
@@ -69,6 +70,34 @@ function getSanityText(maxSanity, player) {
   }
 }
 
+function getEnergyText(maxEnergy, player) {
+  return function(energy) {
+    var percentage = getPercentage(energy, maxEnergy);
+    var energyStatus = {
+      0:  'unable to move',
+      10: 'dead tired',
+      15: 'exhausted',
+      50: 'drowsy',
+      60: 'tired',
+      70: 'fatigued',
+      80: 'weary',
+      90: 'active',
+      95: 'spry',
+      100: 'fresh'
+    };
+
+    var color = getStatusColor(percentage);
+    for (var tier in energyStatus) {
+      if (percentage <= parseInt(tier)) {
+        return '<' + color + '>You are ' + energyStatus[tier] +
+          '.</' + color + '>';
+      }
+    }
+    return '<' + color + '>You are feeling strange.</' + color + '>';
+  }
+}
+
+
 function getGenderNoun(gender) {
   var nouns = {
     M: 'man',
@@ -79,7 +108,9 @@ function getGenderNoun(gender) {
 }
 
 function getStatusColor(percentage) {
-  return percentage > 50 ? 'green' : 'red'
+  return percentage > 75 ?
+    'green' : percentage > 35 ?
+      'yellow' : 'red';
 }
 
 function getPercentage(numerator, denominator){
