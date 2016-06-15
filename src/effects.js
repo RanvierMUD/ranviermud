@@ -120,7 +120,7 @@ const Effects = {
 	regen: config => {
 		const stat = config.stat || 'health';
 		const max = 'max_' + stat;
-		const attr = stat === 'health' ? 'stamina' : 'willpower';
+		const attr = stat === 'sanity' ? 'willpower' : 'stamina';
 
 		let regenHandle = null;
 
@@ -129,6 +129,15 @@ const Effects = {
 	      bonus = bonus || config.bonus || 1;
 	      const self = config.player;
 	      const regenInterval = config.interval || 2000;
+
+				if (stat !== 'energy') {
+					const config = {
+						player: self,
+					  interval: 1000,
+						stat: 'energy'
+					}
+					self.addEffect('recuperating', regen(config));
+				}
 
 	      regenHandle = setInterval(() => {
 	        const current = self.getAttribute(stat);
@@ -139,10 +148,6 @@ const Effects = {
 	        util.log(self.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
 	        self.setAttribute(stat, regenerated);
 
-					if (regenerated < self.getAttribute('max_energy')) {
-						self.setAttribute('energy', Math.min(regenerated, self.getAttribute('max_energy')));
-					}
-
 	        if (regenerated === self.getAttribute(max)) {
 	          clearInterval(regenHandle);
 	        }
@@ -152,6 +157,7 @@ const Effects = {
 			deactivate: () => {
 				const verb = stat === 'health' ? 'resting' : 'meditating';
 				clearInterval(regenHandle);
+				if (stat === 'energy') { return; }
 				player.say("<blue>You stop " + verb + '.</blue>');
 			},
 		};
