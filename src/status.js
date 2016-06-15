@@ -69,26 +69,26 @@ function getSanityText(maxSanity, player) {
   }
 }
 
-function getActionText(maxSanity, player) {
-  return function(sanity) {
+function getActionText(maxEnergy, player) {
+  return function(energy) {
     var percentage = getPercentage(energy, maxEnergy);
     var energyStatus = {
-      0:  'consumed by madness',
-      10: 'nearing insanity',
-      15: 'feeling dysphoric',
-      50: 'stressed to breaking',
-      60: 'mentally unsound',
-      70: 'feeling stressed',
-      80: 'discontent',
-      90: 'mentally well',
-      95: 'quite stable',
-      100: 'sharp as a knife'
+      0:  'unable to move',
+      10: 'dead tired',
+      15: 'exhausted',
+      50: 'drowsy',
+      60: 'tired',
+      70: 'fatigued',
+      80: 'weary',
+      90: 'active',
+      95: 'spry',
+      100: 'fresh'
     };
 
     var color = getStatusColor(percentage);
     for (var tier in sanityStatus) {
       if (percentage <= parseInt(tier)) {
-        return '<' + color + '>You are ' + sanityStatus[tier] +
+        return '<' + color + '>You are ' + energyStatus[tier] +
           '.</' + color + '>';
       }
     }
@@ -107,7 +107,9 @@ function getGenderNoun(gender) {
 }
 
 function getStatusColor(percentage) {
-  return percentage > 50 ? 'green' : 'red'
+  return status > 75 ?
+    'green' : status > 35 ?
+      'yellow' : 'red';
 }
 
 function getPercentage(numerator, denominator){
