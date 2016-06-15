@@ -13,4 +13,6 @@
       direction: tavern
       leaveMessage:
         en: ' opens the creaking front door to the tavern and steps inside.'
+      door:
+        open: n
   area: Outside The Serpent's Hiss
