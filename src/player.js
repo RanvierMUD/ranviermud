@@ -94,6 +94,8 @@ const Player = function PlayerConstructor(socket) {
   self.hasEnergy = cost => self.getAttribute('energy') >= cost ?
     self.emit('action', cost) : false;
 
+  self.noEnergy = () => self.say('You need to rest first.');
+
   self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
     self.attributes[attr] : false;
 

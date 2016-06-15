@@ -9,7 +9,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
 
 
-    
+    if (!player.hasEnergy(1)) { return player.noEnergy(); }
 
     if (args) {
       args = args.trim().toLowerCase();

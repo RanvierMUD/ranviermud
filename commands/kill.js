@@ -17,7 +17,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
             return;
         }
 
-        player.emit('action', 2);
+        if (!player.hasEnergy(5)) { return player.noEnergy(); }
 
         util.log(player.getName() + ' is on the offensive...');
         npc.emit('combat', player, room, players, npcs, rooms, cleanup);
