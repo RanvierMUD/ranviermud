@@ -111,7 +111,10 @@ const Player = function PlayerConstructor(socket) {
   self.getFeats = feat => self.feats && typeof self.feats[feat] !== 'undefined' ?
     self.feats[feat] : self.feats;
 
-  self.gainFeat = feat => self.feats[feat.id] = feat;
+  self.gainFeat = feat => {
+    self.feats[feat.id] = feat;
+    if (feat.type === 'passive') { feat.activate(); }
+  }
 
   self.getPassword = () => self.password; // Returns hash.
   self.isInCombat = () => self.inCombat;
