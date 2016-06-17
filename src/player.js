@@ -108,7 +108,7 @@ const Player = function PlayerConstructor(socket) {
   self.setSkill = (skill, level) => self.skills[skill] = level;
   self.incrementSkill = skill => self.setSkill(skill, self.skills[skill] + 1);
 
-  self.getFeats = feat => self.feats && typeof self.feats[feat] !== 'undefined' ?
+  self.getFeats = feat => self.feats && self.feats[feat] ?
     self.feats[feat] : self.feats;
 
   self.gainFeat = feat => {
