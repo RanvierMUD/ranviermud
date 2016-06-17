@@ -55,7 +55,7 @@ const Commands = {
         const feat = Feats[args[0]] ? Feats[args[0]] : null;
 
         if (feat) {
-          player.addFeat(feat);
+          player.gainFeat(feat);
           player.say("<red>ADMIN: Added " + feat.id + ".</red>");
         } else { player.say("<red>ADMIN: No such feat.</red>"); }
         util.log("@@Admin: " + player.getName() + " added feat:", feat.name);
