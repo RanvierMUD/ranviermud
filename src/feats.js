@@ -208,7 +208,7 @@ exports.Feats = {
       player.setAttribute('energy', player.getAttribute('max_energy'));
 
       const cooldown = 120 * 1000;
-      combatant.addEffect('secondwind', {
+      player.addEffect('secondwind', {
         duration: cooldown,
         deactivate: () => {},
         activate: () => player.say('<magenta>You feel a fell energy coursing through your veins.</magenta>'),
