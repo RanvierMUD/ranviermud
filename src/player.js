@@ -113,7 +113,7 @@ const Player = function PlayerConstructor(socket) {
 
   self.gainFeat = feat => {
     self.feats[feat.id] = feat;
-    if (feat.type === 'passive') { feat.activate(); }
+    if (feat.type === 'passive') { feat.activate(self); }
   }
 
   self.getPassword = () => self.password; // Returns hash.
