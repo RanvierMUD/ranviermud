@@ -46,8 +46,22 @@ const Commands = {
         } else { player.say("<red>ADMIN: No such skill.</red>"); }
         util.log("@@Admin: " + player.getName() + " added skill:", skill);
       },
+
+    addFeat: (rooms, items, players, npcs, Commands) =>
+      (player, args) => {
+        const Feats = require('./feats').Feats;
+        args = args.toLowerCase().split(' ');
+
+        const feat = Feats[args[0]] ? Feats[args[0]] : null;
+
+        if (feat) {
+          player.addFeat(feat);
+          player.say("<red>ADMIN: Added " + feat.id + ".</red>");
+        } else { player.say("<red>ADMIN: No such feat.</red>"); }
+        util.log("@@Admin: " + player.getName() + " added feat:", feat.name);
+      },
+
     //TODO: boostAttr
-    //TODO: addFeat
     //TODO: teleport
     //TODO: invis
   },
