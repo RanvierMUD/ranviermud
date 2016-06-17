@@ -54,7 +54,7 @@ exports.Feats = {
         event: 'quit'
       }));
       player.say('Your skin hardens.');
-    }
+    },
   },
 
   ironskin: {
@@ -131,6 +131,7 @@ exports.Feats = {
         combatant.setInCombat(false);
         player.setInCombat(false);
         turnOnCharm();
+        deductSanity(player, 15);
       } else if (!charming) {
         turnOnCharm();
       } else {
@@ -175,14 +176,45 @@ exports.Feats = {
         activate: () => {
           player.say('<magenta>You concentrate on stifling your opponent.</magenta>');
 
+          deductSanity(player, 10);
           player.addEffect('stunning', Effects.slow({
             target: combatant,
             magnitude: 5,
           }));
-        }
+        },
       });
     }
   },
+
+  secondwind: {
+    type: 'active',
+    cost: 1,
+    prereqs: {
+      'stamina': 2,
+      'quickness': 2,
+    },
+    id: 'secondwind',
+    name: 'Second Wind',
+    description: 'Reinvigorate yourself in an instant.',
+    activate: (player, args, rooms, npcs, players) => {
+      const cooldownNotOver = player.getEffects('secondwind');
+
+      if (cooldownNotOver) {
+        player.say("You must wait before doing that again.");
+        return;
+      }
+
+      deductSanity(player, 15);
+      player.setAttribute('energy', player.getAttribute('max_energy'));
+
+      const cooldown = 120 * 1000;
+      player.addEffect('secondwind', {
+        duration: cooldown,
+        deactivate: () => {},
+        activate: () => player.say('<magenta>You feel a fell energy coursing through your veins.</magenta>'),
+      });
+    },
+  }
 
 };
 
@@ -218,4 +250,10 @@ function _meetsPrerequisites(player, feat) {
 function meetsFeatPrerequisites(player, featList) {
   const featsOwned = player.getFeats();
   return featList.filter(feat => feat in featsOwned).length > 0;
+}
+
+function deductSanity(player, cost) {
+  const sanityCost = Math.max(player.getAttribute('sanity') - cost, 0);
+  player.setAttribute('sanity', sanityCost);
+  return sanityCost;
 }
