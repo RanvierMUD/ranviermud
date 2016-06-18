@@ -128,30 +128,30 @@ const Effects = {
 		return {
 			activate: bonus => {
 	      bonus = bonus || config.bonus || 1;
-	      const self = config.player;
+	      const player = config.player;
 	      const regenInterval = config.interval || 2000;
 
 				if (stat !== 'energy') {
 					const energyConfig = {
-						player: self,
-					  interval: 1000,
+						player: player,
+					  interval,
 						stat: 'energy',
-						bonus: self.getSkills('athletics'),
+						bonus: player.getSkills('athletics'),
 					};
-					self.addEffect('recuperating', Effects.regen(energyConfig));
+					player.addEffect('recuperating', Effects.regen(energyConfig));
 				}
 
 	      regenHandle = setInterval(() => {
-	        const current = self.getAttribute(stat);
+	        const current = player.getAttribute(stat);
 
-	        let regenerated = Math.floor(Math.random() * self.getAttribute(attr) + bonus);
-	        regenerated = Math.min(self.getAttribute(max), current + regenerated);
+	        let regenerated = Math.floor(Math.random() * player.getAttribute(attr) + bonus);
+	        regenerated = Math.min(player.getAttribute(max), current + regenerated);
 
-	        util.log(self.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
-	        self.setAttribute(stat, regenerated);
+	        util.log(player.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
+	        player.setAttribute(stat, regenerated);
 
-	        if (regenerated === self.getAttribute(max)) {
-						util.log(self.getName() + ' has reached ' + max);
+	        if (regenerated === player.getAttribute(max)) {
+						util.log(player.getName() + ' has reached ' + max);
 	          clearInterval(regenHandle);
 	        }
 	      }, regenInterval);
