@@ -10,13 +10,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const character = player.getAttributes() || {};
     player.sayL10n(l10n, 'ATTRIBUTES');
 
+    const hiddenAttrs = ['experience', 'attrPoints', 'class'];
     for (let attr in character) {
-      const shouldDisplay = attr.indexOf('max') === -1 && attr !== 'experience' && attr !== 'attrPoints';
+      const playerFacing = hiddenAttrs.indexOf(attr) === -1;
+      const shouldDisplay = attr.indexOf('max') === -1 && playerFacing;
       const hasMutagens = !(attr === 'mutagens' && !character[attr]);
 
       if (shouldDisplay && hasMutagens) {
-        player.sayL10n(l10n, attr.toUpperCase(), getStatusString(attr,
-          character[attr], character));
+        const status = getStatusString(attr, character[attr], character);
+        return status ?
+          player.say(attr.toUpperCase() + ': ' + status)
+          : false;
       }
     }
 
@@ -35,7 +39,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         quickness:   getQuickness,
         cleverness:  getCleverness,
         mutagens:    value => value === 1 ? value + ' more time' : value + ' more times',
-        skills:      () => {}, //TODO: Add training text.
         description: player.getDescription,
       };
       return status[attr](value) || '';
