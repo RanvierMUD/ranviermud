@@ -61,7 +61,7 @@ exports.Feats = {
     type: 'passive',
     cost: 2,
     prereqs: {
-      'stamina': 3,
+      'stamina': 4,
       'willpower': 2,
       'level': 5,
       feats: ['leatherskin'],
@@ -107,8 +107,8 @@ exports.Feats = {
     type: 'active',
     cost: 2,
     prereqs: {
-      'willpower': 4,
-      'cleverness': 2,
+      'willpower': 3,
+      'cleverness': 4,
       'level': 5,
     },
     //TODO: Cooldown?
@@ -192,6 +192,7 @@ exports.Feats = {
     prereqs: {
       'stamina': 2,
       'quickness': 2,
+      'level': 2,
     },
     id: 'secondwind',
     name: 'Second Wind',
@@ -224,7 +225,7 @@ exports.Feats = {
       'quickness': 3,
       'willpower': 4,
       'cleverness': 3,
-      'level': 6,
+      'level': 8,
     },
     id: 'regeneration',
     name: 'Regeneration',
