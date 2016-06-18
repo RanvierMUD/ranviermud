@@ -23,8 +23,8 @@ exports.listeners = {
 
   meditate: function(l10n) {
     return function(bonus) {
+      bonus = bonus || player.getSkills('concentration');
       const config = {
-        bonus = bonus || player.getSkills('concentration');
         player: this,
         stat: 'sanity',
         bonus

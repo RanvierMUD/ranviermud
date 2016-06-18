@@ -136,7 +136,7 @@ const Effects = {
 						player: self,
 					  interval: 1000,
 						stat: 'energy',
-						bonus: self.getSkills('athletics');
+						bonus: self.getSkills('athletics'),
 					};
 					self.addEffect('recuperating', Effects.regen(energyConfig));
 				}

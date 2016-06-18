@@ -29,7 +29,7 @@ exports.Skills = {
     name: "Dual Wield",
     description: "Your ability to use two (or more...) weapons at once.",
     usage: "Wield two one-handed weapons. Enjoy.",
-    attribute: "stamina",
+    attribute: "quickness",
     type: "passive",
     activate: player => util.log(player.getName() + ' can dual wield.'),
   },
