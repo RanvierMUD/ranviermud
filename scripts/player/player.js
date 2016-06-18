@@ -12,6 +12,7 @@ exports.listeners = {
   //TODO: Add check for action which ends regen or meditation.
   regen: function(l10n) {
       return function(bonus) {
+        bonus = bonus || player.getSkills('recovery');
         const config = {
           player: this,
           bonus
@@ -23,6 +24,7 @@ exports.listeners = {
   meditate: function(l10n) {
     return function(bonus) {
       const config = {
+        bonus = bonus || player.getSkills('concentration');
         player: this,
         stat: 'sanity',
         bonus
