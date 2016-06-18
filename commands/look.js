@@ -80,7 +80,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
             player.say(thing.getTitle(locale));
           }
         }, true);
-        if (!canSee) { return; }
       }
 
       if (!thing) {
