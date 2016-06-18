@@ -41,7 +41,7 @@ exports.listeners = {
         this.setAttribute('energy', newEnergy);
       }
 
-      const recovery = ['resting', 'meditating'];
+      const recovery = ['resting', 'meditating', 'recuperating'];
       recovery.forEach(state => {
         const effect = this.getEffects(state);
         if (effect) {
