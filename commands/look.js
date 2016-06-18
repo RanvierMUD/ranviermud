@@ -78,6 +78,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
             }
             thing = rooms.getAt(exit.location);
             player.say(thing.getTitle(locale));
+            return canSee;
           }
         }, true);
       }
