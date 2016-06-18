@@ -129,11 +129,11 @@ const Effects = {
 			activate: bonus => {
 	      bonus = bonus || config.bonus || 1;
 	      const player = config.player;
-	      const regen = config.interval || 2000;
+	      const interval = config.interval || 2000;
 
 				if (stat !== 'energy') {
 					const energyConfig = {
-						player: player,
+						player,
 					  interval,
 						stat: 'energy',
 						bonus: player.getSkills('athletics'),
