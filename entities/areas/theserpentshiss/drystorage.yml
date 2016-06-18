@@ -19,7 +19,8 @@
       location: 9
       direction: 'cellar'
       door:
-        locked: 'cellar key'
+        locked: true
+        key: 'cellar key'
         mob_locked: true
         open: false
       leave_message:
