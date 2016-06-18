@@ -1,14 +1,14 @@
 'use strict';
-const l10nFile = __dirname + '/../l10n/commands/character.yml';
-const l10n = require('../src/l10n')(l10nFile);
+
 const statusUtil = require('../src/status.js');
 const Random = require('../src/random.js').Random;
+
 exports.command = (rooms, items, players, npcs, Commands) => {
 
   return (args, player) => {
 
     const character = player.getAttributes() || {};
-    player.sayL10n(l10n, 'ATTRIBUTES');
+    player.say("<yellow><bold>You reflect on your existence.</yellow></bold>");
 
     const hiddenAttrs = ['experience', 'attrPoints', 'class'];
     for (let attr in character) {
@@ -46,17 +46,20 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function getLevelText(level) {
       const titles = {
-        3: ['a novice', 'a neonate'],
-        8: ['a survivor', 'a surveyor'],
-        13: ['an embittered survivor', 'the subject of hushed whispers'],
-        15: ['an aimless wanderer', 'a hoarder of truths', 'a conquerer of horrors'],
-        18: ['a purposeful wanderer', 'a distiller of fates', 'a hopeful figure amidst tragedy'],
+        1:  'novice',
+        3:  'neonate',
+        5:  'survivor',
+        6:  'surveyor',
+        7:  'wanderer'
+        13: 'whisperer of secrets',
+        15: 'conquerer of horrors',
+        18: 'distiller of fates',
         20: 'the perseverer',
-        28: 'the outlaster',
-        35: 'the indweller',
-        42: 'the defier of death',
-        50: 'the reviver',
-        55: 'the undying',
+        24: 'the outlaster',
+        28: 'the indweller',
+        32: 'the defier of death',
+        36: 'the reviver',
+        40: 'the undying',
       };
 
       const topTier = "the paragon";
