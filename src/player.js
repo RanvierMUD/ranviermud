@@ -102,8 +102,8 @@ const Player = function PlayerConstructor(socket) {
   self.getPreference = pref => typeof self.preferences[pref] !== 'undefined' ?
     self.preferences[pref] : false;
 
-  self.getSkills = skill => typeof self.skills[skill] !== 'undefined' ?
-    self.skills[skill] : self.skills;
+  self.getSkills = skill => self.skills[skill] ?
+    parseInt(self.skills[skill], 10) : self.skills;
 
   self.setSkill = (skill, level) => self.skills[skill] = level;
   self.incrementSkill = skill => self.setSkill(skill, self.skills[skill] + 1);
