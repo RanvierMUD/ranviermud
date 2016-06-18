@@ -22,7 +22,7 @@ const buff = (attribute, config) => {
 
 	const original = config.target.getAttribute(attribute);
 	return {
-		duration: config.duration || defaultDuration,
+		duration: config.duration,
 		activate: () => {
 			config.target.setAttribute(attribute, original + config.magnitude);
 			if (config.activate) { config.activate(); }
@@ -54,7 +54,7 @@ const buffWithMax = (attribute, config) => {
 			config.player.setAttribute(attribute, Math.min(originalMax, config.player.getAttribute(attribute)));
 			if (config.deactivate) { config.deactivate(); }
 		},
-		duration: config.duration || defaultDuration,
+		duration: config.duration,
 		event: config.event
 
 	};
@@ -150,6 +150,7 @@ const Effects = {
 	        self.setAttribute(stat, regenerated);
 
 	        if (regenerated === self.getAttribute(max)) {
+						util.log(self.getName() + ' has reached ' + max);
 	          clearInterval(regenHandle);
 	        }
 	      }, regenInterval);

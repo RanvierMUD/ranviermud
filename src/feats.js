@@ -238,12 +238,14 @@ exports.Feats = {
         player.say("You must wait before doing that again.");
         return;
       }
+
       const bonus = 10;
       const config = {
         player,
         bonus,
         stat: 'health',
         callback: () => { // on deactivate
+          util.log(player.getName() + ' regen is deactivated.');
           player.addEffect('regenerated', { duration: cooldown });
           player.say('<green>You feel a dull ache as your body stops stitching itself back together.</green>')
         },
