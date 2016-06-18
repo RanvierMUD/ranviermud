@@ -9,7 +9,6 @@ var LevelUtil = require('../../src/levels').LevelUtil,
 exports.listeners = {
 
   //// Function wrappers needed to access "this" (Player obj)
-  //TODO: Add check for action which ends regen or meditation.
   regen: function(l10n) {
       return function(bonus) {
         bonus = bonus || player.getSkills('recovery');
@@ -42,7 +41,7 @@ exports.listeners = {
         this.setAttribute('energy', newEnergy);
       }
 
-      const recovery = ['resting', 'meditating'];
+      const recovery = ['resting', 'meditating', 'recuperating'];
       recovery.forEach(state => {
         const effect = this.getEffects(state);
         if (effect) {

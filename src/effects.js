@@ -128,42 +128,46 @@ const Effects = {
 		return {
 			activate: bonus => {
 	      bonus = bonus || config.bonus || 1;
-	      const self = config.player;
-	      const regenInterval = config.interval || 2000;
+	      const player = config.player;
+	      const interval = config.interval || 2000;
 
 				if (stat !== 'energy') {
 					const energyConfig = {
-						player: self,
-					  interval: 1000,
+						player,
+					  interval,
 						stat: 'energy',
-						bonus: self.getSkills('athletics'),
+						bonus: player.getSkills('athletics'),
 					};
-					self.addEffect('recuperating', Effects.regen(energyConfig));
+					player.addEffect('recuperating', Effects.regen(energyConfig));
 				}
 
 	      regenHandle = setInterval(() => {
-	        const current = self.getAttribute(stat);
 
-	        let regenerated = Math.floor(Math.random() * self.getAttribute(attr) + bonus);
-	        regenerated = Math.min(self.getAttribute(max), current + regenerated);
+	        const current = player.getAttribute(stat);
+					const modifier = player.getAttribute(attr);
 
-	        util.log(self.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
-	        self.setAttribute(stat, regenerated);
+	        let regenerated = Math.round(Math.random() * modifier) + bonus;
+					regenerated = Math.min(player.getAttribute(max), current + regenerated);
 
-	        if (regenerated === self.getAttribute(max)) {
-						util.log(self.getName() + ' has reached ' + max);
+					util.log(player.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
+	        player.setAttribute(stat, regenerated);
+
+	        if (regenerated === player.getAttribute(max)) {
+						util.log(player.getName() + ' has reached ' + max);
 	          clearInterval(regenHandle);
 	        }
-	      }, regenInterval);
+	      }, interval);
     	},
 
 			deactivate: () => {
 				const isHealth = stat === 'health';
 				const verb = getRegenVerb(isHealth, isFeat);
+
 				clearInterval(regenHandle);
+
+				if (config.callback) { config.callback(); }
 				if (stat === 'energy') { return; }
 				player.say("<blue>You stop " + verb + '.</blue>');
-				if (config.callback) { config.callback(); }
 			},
 		};
 	},

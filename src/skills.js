@@ -23,11 +23,12 @@ const L = function(locale, cls, key /*, args... */ ) {
 
 exports.Skills = {
 
+  //// Passive skills
   dual: {
     id: "dual",
     cost: 2,
     name: "Dual Wield",
-    description: "Your ability to use two (or more...) weapons at once.",
+    description: "Your ability to deftly xuse two (or more...) weapons at once.",
     usage: "Wield two one-handed weapons. Enjoy.",
     attribute: "quickness",
     type: "passive",
@@ -56,7 +57,6 @@ exports.Skills = {
     activate: () => {},
   },
 
-
   recovery: {
     id: "recovery",
     cost: 1,
@@ -68,7 +68,18 @@ exports.Skills = {
     activate: () => {},
   },
 
-  //// Cleverness-related skills.
+  dodging: {
+    id: "dodging",
+    cost: 1,
+    name: "Dodging",
+    description: "The ability to avoid getting hit.",
+    usage: "When in combat, use `stance precise` or `stance cautious`.",
+    attribute: "quickness",
+    type: "passive",
+    activate: () => {},
+  },
+
+  //// Active skills
   pick: {
     id: "pick",
     cost: 2,
