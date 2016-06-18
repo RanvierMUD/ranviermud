@@ -34,6 +34,40 @@ exports.Skills = {
     activate: player => util.log(player.getName() + ' can dual wield.'),
   },
 
+  athletics: {
+    id: "athletics",
+    cost: 1,
+    name: "Athletics",
+    description: "You recover more quickly from physical exertion.",
+    usage: "Try resting or meditating to recuperate your energy.",
+    attribute: "stamina",
+    type: "passive",
+    activate: () => {},
+  },
+
+  concentration: {
+    id: "concentration",
+    cost: 1,
+    name: "Concentration",
+    description: "You recover more quickly from mental exertion.",
+    usage: "Try meditating to increase focus and reduce stress.",
+    attribute: "willpower",
+    type: "passive",
+    activate: () => {},
+  },
+
+
+  recovery: {
+    id: "recovery",
+    cost: 1,
+    name: "Recovery",
+    description: "Your wounds heal more quickly.",
+    usage: "Try resting to recover from wounds or ailments.",
+    attribute: "stamina",
+    type: "passive",
+    activate: () => {},
+  },
+
   //// Cleverness-related skills.
   pick: {
     id: "pick",
