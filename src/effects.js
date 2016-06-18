@@ -154,16 +154,18 @@ const Effects = {
 						util.log(player.getName() + ' has reached ' + max);
 	          clearInterval(regenHandle);
 	        }
-	      }, regenInterval);
+	      }, interval);
     	},
 
 			deactivate: () => {
 				const isHealth = stat === 'health';
 				const verb = getRegenVerb(isHealth, isFeat);
+
 				clearInterval(regenHandle);
+
+				if (config.callback) { config.callback(); }
 				if (stat === 'energy') { return; }
 				player.say("<blue>You stop " + verb + '.</blue>');
-				if (config.callback) { config.callback(); }
 			},
 		};
 	},
