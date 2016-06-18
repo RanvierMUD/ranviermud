@@ -104,7 +104,6 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
       return a.isPlayer ? attacker.checkStance('precise') : false;
     }
 
-
     if (!damage) {
 
       if (d.weapon && typeof d.weapon == 'object') {
