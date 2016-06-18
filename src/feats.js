@@ -243,9 +243,9 @@ exports.Feats = {
         player,
         bonus,
         stat: 'health',
-        callback: () =>
+        callback: () => // on deactivate
           player.addEffect('regenerated', { duration: cooldown }),
-      }
+      };
 
       deductSanity(player, 25);
 
