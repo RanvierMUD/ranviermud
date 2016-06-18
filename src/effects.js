@@ -161,6 +161,7 @@ const Effects = {
 				clearInterval(regenHandle);
 				if (stat === 'energy') { return; }
 				player.say("<blue>You stop " + verb + '.</blue>');
+				if (config.callback) { config.callback(); }
 			},
 		};
 	},
