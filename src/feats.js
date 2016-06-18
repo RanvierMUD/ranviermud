@@ -234,6 +234,7 @@ exports.Feats = {
       const cooldownNotOver = player.getEffects('regenerated') || player.getEffects('regen');
       const duration = 30 * 1000;
       const cooldown = 120 * 1000;
+      const interval = 5 * 1000;
 
       if (cooldownNotOver) {
         player.say("You must wait before doing that again.");
@@ -244,6 +245,8 @@ exports.Feats = {
       const config = {
         player,
         bonus,
+        interval,
+        isFeat: true,
         stat: 'health',
         callback: () => { // on deactivate
           util.log(player.getName() + ' regen is deactivated.');
