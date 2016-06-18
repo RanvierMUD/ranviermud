@@ -145,7 +145,7 @@ const Effects = {
 	        const current = player.getAttribute(stat);
 
 	        let regenerated = Math.floor(Math.random() * player.getAttribute(attr) + bonus);
-	        regenerated = Math.max(player.getAttribute(max), current + regenerated);
+	        regenerated = Math.min(player.getAttribute(max), current + regenerated);
 
 	        util.log(player.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
 	        player.setAttribute(stat, regenerated);
