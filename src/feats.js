@@ -214,7 +214,44 @@ exports.Feats = {
         activate: () => player.say('<magenta>You feel a fell energy coursing through your veins.</magenta>'),
       });
     },
-  }
+  },
+
+  regeneration: {
+    type: 'active',
+    cost: 1,
+    prereqs: {
+      'stamina': 3,
+      'quickness': 3,
+      'willpower': 4,
+      'cleverness': 3,
+      'level': 6,
+    },
+    id: 'regeneration',
+    name: 'Regeneration',
+    description: 'Restore your own broken tissues.',
+    activate: (player, args, rooms, npcs, players) => {
+      const cooldownNotOver = player.getEffects('regenerated') || player.getEffects('regen');
+      const duration = 30 * 1000;
+      const cooldown = 120 * 1000;
+
+      if (cooldownNotOver) {
+        player.say("You must wait before doing that again.");
+        return;
+      }
+      const bonus = 10;
+      const config = {
+        player,
+        bonus,
+        stat: 'health',
+        callback: () =>
+          player.addEffect('regenerated', { duration: cooldown }),
+      }
+
+      deductSanity(player, 25);
+
+      player.addEffect('regen', Effects.regen(config));
+    },
+  },
 
 };
 
