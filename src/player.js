@@ -651,9 +651,9 @@ const Player = function PlayerConstructor(socket) {
     defense += self.getAttribute('stamina');
 
     const stanceToDefense = {
-      'cautious': self.getAttribute('cleverness') + (self.getSkills('dodge') * 2),
-      'precise': self.getAttribute('cleverness') + self.getSkills('dodge'),
-      'default': self.getSkills('dodge'),
+      'cautious': self.getAttribute('cleverness') + (self.getSkills('dodging') * 2),
+      'precise': self.getAttribute('cleverness') + self.getSkills('dodging'),
+      'default': self.getSkills('dodging'),
       'berserk': defense / 2,
     };
 
