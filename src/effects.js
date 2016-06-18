@@ -142,11 +142,15 @@ const Effects = {
 				}
 
 	      regenHandle = setInterval(() => {
+
 	        const current = player.getAttribute(stat);
+					const modifier = player.getAttribute(attr);
+					util.log('m', modifier);
+					util.log('b', bonus);
 
-	        let regenerated = Math.floor(Math.random() * player.getAttribute(attr) + bonus);
+	        let regenerated = Math.round(Math.random() * modifier) + bonus;
+					util.log('r1',regenerated);
 	        regenerated = Math.min(player.getAttribute(max), current + regenerated);
-
 	        util.log(player.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
 	        player.setAttribute(stat, regenerated);
 
