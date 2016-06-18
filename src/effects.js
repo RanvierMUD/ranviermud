@@ -121,6 +121,7 @@ const Effects = {
 		const stat = config.stat || 'health';
 		const max = 'max_' + stat;
 		const attr = stat === 'sanity' ? 'willpower' : 'stamina';
+		const isFeat = config.isFeat;
 
 		let regenHandle = null;
 
@@ -155,7 +156,8 @@ const Effects = {
     	},
 
 			deactivate: () => {
-				const verb = stat === 'health' ? 'resting' : 'meditating';
+				const isHealth = stat === 'health';
+				const verb = getRegenVerb(isHealth, isFeat);
 				clearInterval(regenHandle);
 				if (stat === 'energy') { return; }
 				player.say("<blue>You stop " + verb + '.</blue>');
@@ -164,5 +166,11 @@ const Effects = {
 	},
 
 };
+
+function getRegenVerb(isHealth, isFeat) {
+	if (isHealth && isFeat) { return 'regenerating'; }
+	if (isHealth) { return 'resting'; }
+	return 'meditating';
+}
 
 exports.Effects = Effects;
