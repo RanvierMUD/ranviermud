@@ -245,7 +245,7 @@ exports.Feats = {
       const config = {
         player,
         bonus,
-        interval,
+        interval: interval,
         isFeat: true,
         stat: 'health',
         callback: () => { // on deactivate
