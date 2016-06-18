@@ -22,18 +22,18 @@ exports.listeners = {
 
   meditate: function(l10n) {
     return function(bonus) {
-    const config = {
-      player: this,
-      stat: 'sanity',
-      bonus
-    };
+      const config = {
+        player: this,
+        stat: 'sanity',
+        bonus
+      };
       this.addEffect('meditating', Effects.regen(config));
     }
   },
 
   action: function(l10n) {
     return function(cost) {
-      
+
       if (cost) {
         const currentEnergy = this.getAttribute('energy');
         const newEnergy = Math.max(0, currentEnergy - cost);

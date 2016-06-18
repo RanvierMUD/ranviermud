@@ -22,7 +22,7 @@ const buff = (attribute, config) => {
 
 	const original = config.target.getAttribute(attribute);
 	return {
-		duration: config.duration || defaultDuration,
+		duration: config.duration,
 		activate: () => {
 			config.target.setAttribute(attribute, original + config.magnitude);
 			if (config.activate) { config.activate(); }
@@ -54,7 +54,7 @@ const buffWithMax = (attribute, config) => {
 			config.player.setAttribute(attribute, Math.min(originalMax, config.player.getAttribute(attribute)));
 			if (config.deactivate) { config.deactivate(); }
 		},
-		duration: config.duration || defaultDuration,
+		duration: config.duration,
 		event: config.event
 
 	};
@@ -121,6 +121,7 @@ const Effects = {
 		const stat = config.stat || 'health';
 		const max = 'max_' + stat;
 		const attr = stat === 'sanity' ? 'willpower' : 'stamina';
+		const isFeat = config.isFeat;
 
 		let regenHandle = null;
 
@@ -131,12 +132,12 @@ const Effects = {
 	      const regenInterval = config.interval || 2000;
 
 				if (stat !== 'energy') {
-					const config = {
+					const energyConfig = {
 						player: self,
 					  interval: 1000,
 						stat: 'energy'
 					}
-					self.addEffect('recuperating', regen(config));
+					self.addEffect('recuperating', Effects.regen(energyConfig));
 				}
 
 	      regenHandle = setInterval(() => {
@@ -149,20 +150,29 @@ const Effects = {
 	        self.setAttribute(stat, regenerated);
 
 	        if (regenerated === self.getAttribute(max)) {
+						util.log(self.getName() + ' has reached ' + max);
 	          clearInterval(regenHandle);
 	        }
 	      }, regenInterval);
     	},
 
 			deactivate: () => {
-				const verb = stat === 'health' ? 'resting' : 'meditating';
+				const isHealth = stat === 'health';
+				const verb = getRegenVerb(isHealth, isFeat);
 				clearInterval(regenHandle);
 				if (stat === 'energy') { return; }
 				player.say("<blue>You stop " + verb + '.</blue>');
+				if (config.callback) { config.callback(); }
 			},
 		};
 	},
 
 };
+
+function getRegenVerb(isHealth, isFeat) {
+	if (isHealth && isFeat) { return 'regenerating'; }
+	if (isHealth) { return 'resting'; }
+	return 'meditating';
+}
 
 exports.Effects = Effects;

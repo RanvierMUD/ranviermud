@@ -14,8 +14,8 @@
   behaviors: "aggro,rtcombat"
   attributes:
     target: 'head'
-    max_health: 375
-    health: 375
+    max_health: 575
+    health: 575
     speed: 5
     damage: '16-80'
     sanity_damage: '1-4'
