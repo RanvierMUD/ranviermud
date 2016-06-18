@@ -243,9 +243,13 @@ exports.Feats = {
         player,
         bonus,
         stat: 'health',
-        callback: () => // on deactivate
-          player.addEffect('regenerated', { duration: cooldown }),
+        callback: () => {// on deactivate
+          player.addEffect('regenerated', { duration: cooldown });
+          player.say('<green>You feel a dull ache as your body stops stitching itself back together.</green>')
+        };
       };
+
+      player.say("<blue>You feel your own flesh mending itself.</blue>");
 
       deductSanity(player, 25);
 

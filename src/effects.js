@@ -132,12 +132,12 @@ const Effects = {
 	      const regenInterval = config.interval || 2000;
 
 				if (stat !== 'energy') {
-					const config = {
+					const energyConfig = {
 						player: self,
 					  interval: 1000,
 						stat: 'energy'
 					}
-					self.addEffect('recuperating', regen(config));
+					self.addEffect('recuperating', Effects.regen(energyConfig));
 				}
 
 	      regenHandle = setInterval(() => {
