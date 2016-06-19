@@ -22,9 +22,9 @@ const Player = function PlayerConstructor(socket) {
   self.location = null;
   self.locale = null;
   self.prompt_string =
-    '%health_condition <blue>||</blue> %sanity_condition\n<blue><bold>[</bold></blue>';
+    '<cyan>PHYSICAL: </cyan>%health_condition <blue>||</blue><cyan>MENTAL:</cyan> %sanity_condition<cyan> <blue>||</blue>ENERGY:</cyan> %energy_condition\n<blue><bold>[</bold></blue>';
   self.combat_prompt =
-    "<bold>|| %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
+    "<bold>||<cyan>YOU: </cyan> %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
   self.password = null;
   self.inventory = [];
   self.equipment = {};
@@ -39,7 +39,7 @@ const Player = function PlayerConstructor(socket) {
     health: 90,
     max_sanity: 100,
     sanity: 70,
-    energy: 0,
+    energy: 20,
     max_energy: 25,
 
     stamina: 1,
@@ -408,10 +408,15 @@ const Player = function PlayerConstructor(socket) {
     let pstring = self.getPrompt();
     extra = extra || {};
 
-    extra.health_condition = statusUtil.getHealthText(self.getAttribute(
-      'max_health'), self)(self.getAttribute('health'));
-    extra.sanity_condition = statusUtil.getSanityText(self.getAttribute(
-      'max_sanity'), self)(self.getAttribute('sanity'));
+    extra.health_condition = statusUtil
+      .getHealthText(self.getAttribute('max_health'), self)
+      (self.getAttribute('health'));
+    extra.sanity_condition = statusUtil
+      .getSanityText(self.getAttribute('max_sanity'), self)
+      (self.getAttribute('sanity'));
+    extra.energy_condition = statusUtil
+      .getEnergyText(self.getAttribute('max_energy'), self)
+      (self.getAttribute('energy'));
 
     for (let data in extra) {
       pstring = pstring.replace("%" + data, extra[data]);
