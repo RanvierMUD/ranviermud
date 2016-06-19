@@ -2,6 +2,7 @@
 
 const statusUtil = require('../src/status.js');
 const Random = require('../src/random.js').Random;
+const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
 
@@ -12,16 +13,32 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const hiddenAttrs = ['experience', 'attrPoints', 'class'];
     for (let attr in character) {
+      util.log(attr);
       const playerFacing = hiddenAttrs.indexOf(attr) === -1;
       const shouldDisplay = attr.indexOf('max') === -1 && playerFacing;
       const hasMutagens = !(attr === 'mutagens' && !character[attr]);
 
+      util.log("Should display ", shouldDisplay);
+      util.log("Has mutagens?", hasMutagens);
+
       if (shouldDisplay && hasMutagens) {
         const status = getStatusString(attr, character[attr], character);
-        return status ?
-          player.say(attr.toUpperCase() + ': ' + status)
-          : false;
+        const label = getLabel(attr);
+
+        if (status) {
+          player.say('<cyan>' + attr.toUpperCase() + ':</cyan> ' + status);
+        }
       }
+    }
+
+    function getLabel(str) {
+      str = str.toUpperCase();
+      const relabel = {
+        'HEALTH': 'PHYSICAL HEALTH',
+        'SANITY': 'MENTAL HEALTH',
+      };
+      return str in relabel ?
+        relabel[str] : str;
     }
 
     function getStatusString(attr, value, character) {
@@ -41,6 +58,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         mutagens:    value => value === 1 ? value + ' more time' : value + ' more times',
         description: player.getDescription,
       };
+      util.log(value);
       return status[attr](value) || '';
     }
 
@@ -50,7 +68,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         3:  'neonate',
         5:  'survivor',
         6:  'surveyor',
-        7:  'wanderer'
+        7:  'wanderer',
         13: 'whisperer of secrets',
         15: 'conquerer of horrors',
         18: 'distiller of fates',
@@ -63,9 +81,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       };
 
       const topTier = "the paragon";
-      const attrStr = 'reputation precedes you as ';
       return evalStatus(level, titles, topTier);
-
     }
 
 
@@ -136,19 +152,22 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         if (attr <= parseInt(tier, 10)) {
 
           const isArrayOfStrings = Array.isArray(status[tier]);
+          util.log(attr + ' is array ', isArrayOfStrings);
           if (isArrayOfStrings) {
             const choice = Random.fromArray(status[tier]);
-            return statusString(attrStr, choice, color);
+            util.log(choice);
+            return statusString(choice, color);
           }
-          return statusString(attrStr, status[tier], color);
+          util.log(status[tier]);
+          return statusString(status[tier], color);
         }
       }
-
-      return statusString(attrStr, defaultStr, color);
+      util.log(defaultStr);
+      return statusString(defaultStr, color);
     }
 
 
-    function statusString(attrStr, attr, color) {
+    function statusString(attr, color) {
       return '<' + color + '>' + attr + '</' + color + '>';
     }
 
