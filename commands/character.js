@@ -16,16 +16,25 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const playerFacing = hiddenAttrs.indexOf(attr) === -1;
       const shouldDisplay = attr.indexOf('max') === -1 && playerFacing;
       const hasMutagens = !(attr === 'mutagens' && !character[attr]);
-
+      const longest = 12;
 
       if (shouldDisplay && hasMutagens) {
         const status = getStatusString(attr, character[attr], character);
         const label = getLabel(attr);
 
         if (status) {
-          player.say('<cyan>' + label + ':</cyan> ' + status);
+          player.say('<cyan>' + label + ':</cyan> ' + leftPad(longest - label.length) + status);
         }
       }
+    }
+
+    function leftPad(amt) {
+      let pad = '';
+      while (amt) {
+        pad += ' ';
+        amt--;
+      }
+      return pad;
     }
 
     function getLabel(str) {
