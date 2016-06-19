@@ -31,8 +31,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function getLabel(str) {
       str = str.toUpperCase();
       const relabel = {
-        'HEALTH': 'PHYSICAL HEALTH',
-        'SANITY': 'MENTAL HEALTH',
+        'HEALTH': 'PHYSICAL',
+        'SANITY': 'MENTAL',
       };
       util.log(str in relabel);
       return str in relabel ?
