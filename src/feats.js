@@ -1,6 +1,7 @@
 'use strict';
 const Effects = require('./effects.js').Effects;
 const util = require('util');
+const CommandUtil = require('./command_util').CommandUtil;
 
 const l10n_dir = __dirname + '/../l10n/skills/';
 const l10ncache = {};
@@ -191,8 +192,8 @@ exports.Feats = {
     cost: 2,
     prereqs: {
       'willpower': 3,
-      'cleverness': 4
-      'level': 8
+      'cleverness': 4,
+      'level': 8,
     },
     id: 'siphon',
     name: 'Siphon',
@@ -214,7 +215,8 @@ exports.Feats = {
       }
 
       if (target) {
-        const npc = CommandUtil.findNpcInRoom(npcs, target, player.getLocation(), player, true);
+        const room = rooms.getAt(player.getLocation());
+        const npc = CommandUtil.findNpcInRoom(npcs, target, room, player, true);
         return siphonTarget(npc);
       }
 
