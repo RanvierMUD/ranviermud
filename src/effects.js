@@ -122,12 +122,14 @@ const Effects = {
 		const max = 'max_' + stat;
 		const attr = stat === 'sanity' ? 'willpower' : 'stamina';
 		const isFeat = config.isFeat;
+		const player = config.player;
 
 		let regenHandle = null;
 
 		return {
 			activate: bonus => {
 	      bonus = bonus || config.bonus || 1;
+
 	      const player = config.player;
 	      const interval = config.interval || 2000;
 
@@ -142,7 +144,6 @@ const Effects = {
 				}
 
 	      regenHandle = setInterval(() => {
-
 	        const current = player.getAttribute(stat);
 					const modifier = player.getAttribute(attr);
 
