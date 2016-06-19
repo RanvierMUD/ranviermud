@@ -161,7 +161,7 @@ const Effects = {
 				const verb = getRegenVerb(isHealth, isFeat);
 				clearInterval(regenHandle);
 				if (stat === 'energy') { return; }
-				player.say("<blue>You stop " + verb + '.</blue>');
+				self.say("<blue>You stop " + verb + '.</blue>');
 				if (config.callback) { config.callback(); }
 			},
 		};
