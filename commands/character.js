@@ -13,20 +13,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const hiddenAttrs = ['experience', 'attrPoints', 'class'];
     for (let attr in character) {
-      util.log(attr);
       const playerFacing = hiddenAttrs.indexOf(attr) === -1;
       const shouldDisplay = attr.indexOf('max') === -1 && playerFacing;
       const hasMutagens = !(attr === 'mutagens' && !character[attr]);
 
-      util.log("Should display ", shouldDisplay);
-      util.log("Has mutagens?", hasMutagens);
 
       if (shouldDisplay && hasMutagens) {
         const status = getStatusString(attr, character[attr], character);
         const label = getLabel(attr);
 
         if (status) {
-          player.say('<cyan>' + attr.toUpperCase() + ':</cyan> ' + status);
+          player.say('<cyan>' + label + ':</cyan> ' + status);
         }
       }
     }
@@ -37,6 +34,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         'HEALTH': 'PHYSICAL HEALTH',
         'SANITY': 'MENTAL HEALTH',
       };
+      util.log(str in relabel);
       return str in relabel ?
         relabel[str] : str;
     }
@@ -58,7 +56,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         mutagens:    value => value,
         description: player.getDescription,
       };
-      util.log(value);
       return status[attr](value) || '';
     }
 
@@ -152,17 +149,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         if (attr <= parseInt(tier, 10)) {
 
           const isArrayOfStrings = Array.isArray(status[tier]);
-          util.log(attr + ' is array ', isArrayOfStrings);
           if (isArrayOfStrings) {
             const choice = Random.fromArray(status[tier]);
-            util.log(choice);
             return statusString(choice, color);
           }
-          util.log(status[tier]);
           return statusString(status[tier], color);
         }
       }
-      util.log(defaultStr);
       return statusString(defaultStr, color);
     }
 
