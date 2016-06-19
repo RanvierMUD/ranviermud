@@ -61,8 +61,24 @@ const Commands = {
         util.log("@@Admin: " + player.getName() + " added feat:", feat.name);
       },
 
+    teleport: (rooms, items, players, npcs, Commands) =>
+      (player, args) => {
+        const vnum = parseInt(args, 10);
+        if (isNaN(vnum)) {
+          return player.say("<red>ADMIN: Invalid vnum.</red>");
+        }
+
+        if (rooms.getAt(vnum)) {
+          player.setLocation(vnum);
+          player.say("<red>ADMIN: You have teleported.");
+          Commands.player_commands.look(null, player);
+          return;
+        }
+
+        player.say("<red>ADMIN: 404: Room not found.</red>");
+
+      },
     //TODO: boostAttr
-    //TODO: teleport
     //TODO: invis
   },
 
@@ -191,7 +207,8 @@ exports.Commands = Commands;
  */
 function move(exit, player) {
 
-  rooms.getAt(player.getLocation())
+  rooms
+    .getAt(player.getLocation())
     .emit('playerLeave', player, players);
 
   const closedDoor = exit.door && !exit.door.open;
