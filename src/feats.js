@@ -232,18 +232,21 @@ exports.Feats = {
     description: 'Restore your own broken tissues.',
     activate: (player, args, rooms, npcs, players) => {
       const cooldownNotOver = player.getEffects('regenerated') || player.getEffects('regen');
-      const duration = 30 * 1000;
-      const cooldown = 120 * 1000;
 
       if (cooldownNotOver) {
         player.say("You must wait before doing that again.");
         return;
       }
 
+      const duration = 30 * 1000;
+      const cooldown = 120 * 1000;
+      const interval = 5 * 1000;
       const bonus = 10;
       const config = {
         player,
         bonus,
+        interval: interval,
+        isFeat: true,
         stat: 'health',
         callback: () => { // on deactivate
           util.log(player.getName() + ' regen is deactivated.');

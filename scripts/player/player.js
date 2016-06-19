@@ -8,9 +8,10 @@ var LevelUtil = require('../../src/levels').LevelUtil,
 
 exports.listeners = {
 
-  //// Anon functions needed to access "this" (Player obj)
+  //// Function wrappers needed to access "this" (Player obj)
   regen: function(l10n) {
       return function(bonus) {
+        bonus = bonus || player.getSkills('recovery');
         const config = {
           player: this,
           bonus
@@ -21,6 +22,7 @@ exports.listeners = {
 
   meditate: function(l10n) {
     return function(bonus) {
+      bonus = bonus || player.getSkills('concentration');
       const config = {
         player: this,
         stat: 'sanity',
@@ -39,7 +41,7 @@ exports.listeners = {
         this.setAttribute('energy', newEnergy);
       }
 
-      const recovery = ['resting', 'meditating'];
+      const recovery = ['resting', 'meditating', 'recuperating'];
       recovery.forEach(state => {
         const effect = this.getEffects(state);
         if (effect) {
