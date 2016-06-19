@@ -61,8 +61,13 @@ const Commands = {
         util.log("@@Admin: " + player.getName() + " added feat:", feat.name);
       },
 
+    teleport: (rooms, items, players, npcs, Commands) =>
+      (player, args) => {
+        if (isNaN(parseInt(args, 10))) {
+          return player.say("<red>ADMIN: Invalid vnum.</red>");
+        }
+      },
     //TODO: boostAttr
-    //TODO: teleport
     //TODO: invis
   },
 
