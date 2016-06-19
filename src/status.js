@@ -14,7 +14,8 @@ function getHealthText(maxHealth, player, npc) {
     var locale = player ? player.getLocale() : 'en';
     var isPlayer = !npc;
     var percentage = getPercentage(health, maxHealth);
-    var descriptor = isPlayer ? '' : npc.getShortDesc(locale).toUpperCase() + ': ';
+    var descriptor = isPlayer ?
+      '' : '<cyan>' + npc.getShortDesc(locale).toUpperCase() + ':</cyan> ';
     var color = getStatusColor(percentage);
 
     var healthStatus = {
