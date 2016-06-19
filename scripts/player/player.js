@@ -8,8 +8,7 @@ var LevelUtil = require('../../src/levels').LevelUtil,
 
 exports.listeners = {
 
-  //// Function wrappers needed to access "this" (Player obj)
-  //TODO: Add check for action which ends regen or meditation.
+  //// Anon functions needed to access "this" (Player obj)
   regen: function(l10n) {
       return function(bonus) {
         const config = {
