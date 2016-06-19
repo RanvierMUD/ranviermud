@@ -129,40 +129,46 @@ const Effects = {
 		return {
 			activate: bonus => {
 	      bonus = bonus || config.bonus || 1;
-	      const regenInterval = config.interval || 2000;
+
+	      const player = config.player;
+	      const interval = config.interval || 2000;
 
 				if (stat !== 'energy') {
 					const energyConfig = {
 						player,
-					  interval: 1000,
-						stat: 'energy'
-					}
+					  interval,
+						stat: 'energy',
+						bonus: player.getSkills('athletics'),
+					};
 					player.addEffect('recuperating', Effects.regen(energyConfig));
 				}
 
 	      regenHandle = setInterval(() => {
 	        const current = player.getAttribute(stat);
+					const modifier = player.getAttribute(attr);
 
-	        let regenerated = Math.floor(Math.random() * player.getAttribute(attr) + bonus);
-	        regenerated = Math.min(player.getAttribute(max), current + regenerated);
+	        let regenerated = Math.round(Math.random() * modifier) + bonus;
+					regenerated = Math.min(player.getAttribute(max), current + regenerated);
 
-	        util.log(player.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
+					util.log(player.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
 	        player.setAttribute(stat, regenerated);
 
 	        if (regenerated === player.getAttribute(max)) {
 						util.log(player.getName() + ' has reached ' + max);
 	          clearInterval(regenHandle);
 	        }
-	      }, regenInterval);
+	      }, interval);
     	},
 
 			deactivate: () => {
 				const isHealth = stat === 'health';
 				const verb = getRegenVerb(isHealth, isFeat);
+
 				clearInterval(regenHandle);
+
+				if (config.callback) { config.callback(); }
 				if (stat === 'energy') { return; }
 				player.say("<blue>You stop " + verb + '.</blue>');
-				if (config.callback) { config.callback(); }
 			},
 		};
 	},

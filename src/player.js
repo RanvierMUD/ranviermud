@@ -102,8 +102,8 @@ const Player = function PlayerConstructor(socket) {
   self.getPreference = pref => typeof self.preferences[pref] !== 'undefined' ?
     self.preferences[pref] : false;
 
-  self.getSkills = skill => typeof self.skills[skill] !== 'undefined' ?
-    self.skills[skill] : self.skills;
+  self.getSkills = skill => self.skills[skill] ?
+    parseInt(self.skills[skill], 10) : self.skills;
 
   self.setSkill = (skill, level) => self.skills[skill] = level;
   self.incrementSkill = skill => self.setSkill(skill, self.skills[skill] + 1);
@@ -509,8 +509,19 @@ const Player = function PlayerConstructor(socket) {
     let speed = Math.max(speedRoll, minimum);
     util.log("Player's speed is ", speed);
 
-    if (self.checkStance('precise')) speed = Math.round(speed * 1.5);
-    if (self.checkStance('berserk')) speed = Math.round(speed * .75);
+    const stanceToSpeed = {
+      'precise': 1.25,
+      'cautious': 2,
+      'berserk': .5,
+    };
+
+    for (const stance in stanceToSpeed){
+      if (player.checkStance(stance)) {
+        const speedModifier = stanceToSpeed[stance];
+        util.log(player.getName() + '\'s speed is modified: x' + speedModifier);
+        speed = speed * speedModifier;
+      }
+    }
 
     return speed;
   };
@@ -644,8 +655,20 @@ const Player = function PlayerConstructor(socket) {
 
     defense += self.getAttribute('stamina');
 
-    if (self.checkStance('cautious')) defense += self.getAttribute('cleverness');
-    if (self.checkStance('berserk')) defense = Math.round(defense / 2);
+    const stanceToDefense = {
+      'cautious': self.getAttribute('cleverness') + (self.getSkills('dodging') * 2),
+      'precise': self.getAttribute('cleverness') + self.getSkills('dodging'),
+      'default': self.getSkills('dodging'),
+      'berserk': defense / 2,
+    };
+
+    for (const stance in stanceToDefense) {
+      if (player.checkStance(stance)) {
+        const defenseBonus = stanceToDefense[stance];
+        util.log(player.getName() + '\'s defense bonus is ' + defenseBonus);
+        defense += defenseBonus;
+      }
+    }
 
     util.log(self.getName() + ' ' + location + ' def: ' + defense);
 
