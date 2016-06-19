@@ -22,9 +22,9 @@ const Player = function PlayerConstructor(socket) {
   self.location = null;
   self.locale = null;
   self.prompt_string =
-    '%health_condition <blue>||</blue> %sanity_condition\n<blue><bold>[</bold></blue>';
+    '<cyan>PHYS:</cyan>%health_condition <blue>||</blue><cyan>MENT:</cyan> %sanity_condition<cyan>ENERGY:</cyan> %energy_condition\n<blue><bold>[</bold></blue>';
   self.combat_prompt =
-    "<bold>|| %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
+    "<bold>||<cyan>YOU:</cyan> %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
   self.password = null;
   self.inventory = [];
   self.equipment = {};
