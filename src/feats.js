@@ -186,6 +186,65 @@ exports.Feats = {
     }
   },
 
+  siphon: {
+    type: 'active',
+    cost: 2,
+    prereqs: {
+      'willpower': 3,
+      'cleverness': 4
+      'level': 8
+    },
+    id: 'siphon',
+    name: 'Siphon',
+    description: 'Drain others of their will to live, and restore your own.',
+    activate: (player, args, rooms, npcs, players) => {
+      util.log(player.getName() + ' activates Siphon.');
+      const combatant = player.isInCombat();
+      const target = args.toLowerCase().split(' ')[0];
+
+      // Can hit combatant with no args, if possible.
+      // Otherwise looks for target npc in room.
+
+      if (!player.hasEnergy(5)) {
+        return player.say('<magenta>You will need to rest first.</magenta>');
+      }
+
+      if (combatant && !target) {
+        return siphonTarget(combatant);
+      }
+
+      if (target) {
+        const npc = CommandUtil.findNpcInRoom(npcs, target, player.getLocation(), player, true);
+        return siphonTarget(npc);
+      }
+
+      return player.say('<magenta>You find no one to siphon.</magenta>');
+
+      function siphonTarget(target) {
+        const coolingDown = player.getEffects('siphoning');
+
+        if (coolingDown) {
+          player.say('You must wait before doing that again.');
+          return;
+        }
+
+        const targetHealth = target.getAttribute('health');
+        const siphoned = targetHealth / 10;
+        target.setAttribute('health', targetHealth - siphoned);
+
+        const healed = Math.max(player.getAttribute('max_health'),
+                                player.getAttribute('health') + siphoned);
+
+        player.setAttribute('health', healed);
+        deductSanity(player, siphoned);
+
+        const cooldown = 150 * 1000;
+        player.addEffect('siphoning', { duration: cooldown });
+        player.say('<red>You drain the life from ' + target.getShortDesc('en'));
+      }
+    }
+  },
+
   secondwind: {
     type: 'active',
     cost: 1,
