@@ -55,7 +55,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         willpower:   getWillpower,
         quickness:   getQuickness,
         cleverness:  getCleverness,
-        mutagens:    value => value === 1 ? value + ' more time' : value + ' more times',
+        mutagens:    value => value,
         description: player.getDescription,
       };
       util.log(value);
