@@ -21,6 +21,7 @@
     -
       location: 4
       direction: 'up'
+      cost: 2
       leave_message:
         en:' heads upstairs.'
     -
