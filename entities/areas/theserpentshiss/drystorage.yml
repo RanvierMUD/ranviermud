@@ -21,7 +21,6 @@
       door:
         locked: true
         key: 'cellar key'
-        mob_locked: true
         open: false
       leave_message:
         en: ' unlocks the cellar door and climbs down, locking it behind them.'
