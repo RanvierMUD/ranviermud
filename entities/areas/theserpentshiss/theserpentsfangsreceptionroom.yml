@@ -13,6 +13,8 @@
       direction: 'up'
       door:
         open: false
+        locked: true
+        key: 'cellar key'
       leave_message:
         en: ' climbs up the ladder and through the trapdoor. It slams shut behind them.'
     -
