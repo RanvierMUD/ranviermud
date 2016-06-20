@@ -11,6 +11,7 @@
     -
       location: 8
       direction: 'up'
+      cost: 3
       door:
         open: false
         locked: true

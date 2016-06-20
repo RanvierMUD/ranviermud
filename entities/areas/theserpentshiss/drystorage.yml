@@ -18,6 +18,7 @@
     -
       location: 9
       direction: 'cellar'
+      cost: 2
       door:
         locked: true
         key: 'cellar key'
