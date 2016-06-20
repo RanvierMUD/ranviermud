@@ -79,6 +79,14 @@ exports.listeners = {
       const name = this.getName();
       const newLevel = this.getAttribute('level') + 1;
       const healthGain = Math.ceil(this.getAttribute('max_health') * 1.10);
+      const energyGain = this.getAttribute('max_energy')
+                       + this.getAttribute('stamina')
+                       + this.getAttribute('quickness'));
+
+      const sanityGain = this.getAttribute('max_sanity')
+                       + this.getAttribute('willpower')
+                       + this.getAttribute('cleverness');
+
       const gainedMutation = newLevel % 2 === 0;
 
       let mutationPoints = this.getAttribute('mutagens');
