@@ -79,6 +79,18 @@ exports.listeners = {
       const name = this.getName();
       const newLevel = this.getAttribute('level') + 1;
       const healthGain = Math.ceil(this.getAttribute('max_health') * 1.10);
+      const energyGain = this.getAttribute('max_energy')
+                       + this.getAttribute('stamina')
+                       + this.getAttribute('quickness');
+
+      const sanityGain = this.getAttribute('max_sanity')
+                       + this.getAttribute('willpower')
+                       + this.getAttribute('cleverness');
+
+      util.log(name + ' gained health ' + healthGain);
+      util.log(name + ' gained energy ' + energyGain);
+      util.log(name + ' gained sanity' + sanityGain);
+
       const gainedMutation = newLevel % 2 === 0;
 
       let mutationPoints = this.getAttribute('mutagens');
@@ -98,9 +110,18 @@ exports.listeners = {
       this.setAttribute('attrPoints', (this.getAttribute('attrPoints') || 0) + 1);
 
       // Do whatever you want to do here when a player levels up...
-      this.setAttribute('max_health', healthGain);
-      this.setAttribute('health', this.getAttribute('max_health'));
-      util.log(name + ' now has ' + healthGain + ' max health.');
+      const attrToLevel = {
+        'health': healthGain,
+        'energy': energyGain,
+        'sanity:': sanityGain,
+      };
+
+      for (const attr in attrToLevel) {
+        const max = 'max_' + attr;
+        this.setAttribute(max, healthGain);
+        this.setAttribute(attr, this.getAttribute(max));
+        player.say('<blue>You have gained ' + attr + '.</blue>');
+      }
 
       // Add points for skills
       const skillGain = LevelUtil.getTrainingTime(newLevel);

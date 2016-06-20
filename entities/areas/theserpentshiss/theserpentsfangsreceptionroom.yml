@@ -11,8 +11,11 @@
     -
       location: 8
       direction: 'up'
+      cost: 3
       door:
         open: false
+        locked: true
+        key: 'cellar key'
       leave_message:
         en: ' climbs up the ladder and through the trapdoor. It slams shut behind them.'
     -
