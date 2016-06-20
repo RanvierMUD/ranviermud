@@ -3,8 +3,6 @@ const Effects = require('./effects.js').Effects;
 const util = require('util');
 const CommandUtil = require('./command_util').CommandUtil;
 
-const l10n_dir = __dirname + '/../l10n/skills/';
-const l10ncache = {};
 
 /*
  * Feats -- in-game stylized as 'mutations' or whatever.
@@ -15,15 +13,6 @@ const l10ncache = {};
  * Localization helper
  * @return string
  */
-
-
-const L = function (locale, cls, key /*, args... */ ) {
-  const l10nFile = l10n_dir + cls + '.yml';
-  const l10n = l10ncache[cls + locale] || require('./l10n')(l10nFile);
-
-  l10n.setLocale(locale);
-  return l10n.translate.apply(null, [].slice.call(arguments).slice(2));
-};
 
 // For activate functions:
 // Command event passes in player, args, rooms, npcs, players.
@@ -37,9 +26,9 @@ exports.Feats = {
     type: 'passive',
     cost: 1,
     prereqs: {
-      'stamina': 2,
+      'stamina':   2,
       'willpower': 2,
-      'level': 2,
+      'level':     2,
     },
     name: "Leatherskin",
     id: "leatherskin",
@@ -62,9 +51,9 @@ exports.Feats = {
     type: 'passive',
     cost: 2,
     prereqs: {
-      'stamina': 4,
+      'stamina':   4,
       'willpower': 2,
-      'level': 5,
+      'level':     5,
       feats: ['leatherskin'],
     },
     name: 'Ironskin',
@@ -82,16 +71,16 @@ exports.Feats = {
       const ironSkinEffects = [
         Effects.health_boost({
           magnitude: 100,
-          player: player,
+          player,
           target: player,
         }),
         Effects.haste({
           magnitude: .5,
-          player: player,
+          player,
         }),
         Effects.fortify({
           magnitude: 2,
-          player: player,
+          player,
         })
       ];
 
@@ -108,9 +97,9 @@ exports.Feats = {
     type: 'active',
     cost: 2,
     prereqs: {
-      'willpower': 3,
+      'willpower':  3,
       'cleverness': 4,
-      'level': 5,
+      'level':      5,
     },
     //TODO: Cooldown?
     name: 'Charm',
@@ -146,7 +135,7 @@ exports.Feats = {
     cost: 1,
     prereqs: {
       'willpower': 2,
-      'level': 2
+      'level':     2,
     },
     id: 'stun',
     name: 'Stun',
@@ -206,23 +195,24 @@ exports.Feats = {
       // Can hit combatant with no args, if possible.
       // Otherwise looks for target npc in room.
 
-      if (!player.hasEnergy(5)) {
-        return player.say('<magenta>You will need to rest first.</magenta>');
-      }
-
       if (combatant && !target) {
         return siphonTarget(combatant);
       }
 
       if (target) {
-        const room = rooms.getAt(player.getLocation());
+        const room = player.getRoom(rooms);
         const npc = CommandUtil.findNpcInRoom(npcs, target, room, player, true);
-        return siphonTarget(npc);
+        if (npc) { return siphonTarget(npc); }
       }
 
       return player.say('<magenta>You find no one to siphon.</magenta>');
 
       function siphonTarget(target) {
+
+        if (!player.hasEnergy(5)) {
+          return player.say('<magenta>You will need to rest first.</magenta>');
+        }
+
         const coolingDown = player.getEffects('siphoning');
 
         if (coolingDown) {
@@ -234,15 +224,18 @@ exports.Feats = {
         const siphoned = targetHealth / 10;
         target.setAttribute('health', targetHealth - siphoned);
 
-        const healed = Math.max(player.getAttribute('max_health'),
-                                player.getAttribute('health') + siphoned);
+        const healed = Math
+          .min(player.getAttribute('max_health'),
+               player.getAttribute('health') + siphoned);
 
         player.setAttribute('health', healed);
         deductSanity(player, siphoned);
 
+        util.log(player.getName() + ' drains a ' + target.getShortDesc() + ' for ' + siphoned);
+
         const cooldown = 150 * 1000;
         player.addEffect('siphoning', { duration: cooldown });
-        player.say('<red>You drain the life from ' + target.getShortDesc('en'));
+        player.say('<red>You drain the life from ' + target.getShortDesc('en') + '.</red>');
       }
     }
   },
@@ -251,9 +244,9 @@ exports.Feats = {
     type: 'active',
     cost: 1,
     prereqs: {
-      'stamina': 2,
+      'stamina':   2,
       'quickness': 2,
-      'level': 2,
+      'level':     2,
     },
     id: 'secondwind',
     name: 'Second Wind',
@@ -282,11 +275,11 @@ exports.Feats = {
     type: 'active',
     cost: 1,
     prereqs: {
-      'stamina': 3,
-      'quickness': 3,
-      'willpower': 4,
+      'stamina':    3,
+      'quickness':  3,
+      'willpower':  4,
       'cleverness': 3,
-      'level': 8,
+      'level':      8,
     },
     id: 'regeneration',
     name: 'Regeneration',
@@ -299,14 +292,15 @@ exports.Feats = {
         return;
       }
 
-      const duration = 30 * 1000;
+      const duration = 30  * 1000;
       const cooldown = 120 * 1000;
-      const interval = 5 * 1000;
-      const bonus = 10;
+      const interval = 5   * 1000;
+      const bonus    = 10;
+
       const config = {
         player,
         bonus,
-        interval: interval,
+        interval,
         isFeat: true,
         stat: 'health',
         callback: () => { // on deactivate
@@ -361,7 +355,8 @@ function meetsFeatPrerequisites(player, featList) {
 }
 
 function deductSanity(player, cost) {
-  const sanityCost = Math.max(player.getAttribute('sanity') - cost, 0);
+  const sanityCost = Math
+    .max(player.getAttribute('sanity') - cost, 0);
   player.setAttribute('sanity', sanityCost);
   return sanityCost;
 }
