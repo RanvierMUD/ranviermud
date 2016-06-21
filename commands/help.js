@@ -2,34 +2,54 @@
 const l10nFile = __dirname + '/../l10n/commands/help.yml';
 const l10n = require('../src/l10n')(l10nFile);
 const util = require('util');
+const HelpFiles = require('../src/help_files');
+
+/*
+  NEW: {
+    title: 'Welcome to Ranvier',
+    body: 'Important topics include:',
+    related: 'levels','attributes','mutants','mental','physical','energy','combat','social',
+  },
+*/
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
-
-    const hr = () => player.sayL10n(l10n, 'HR');
-
-    hr();
+    util.log(l10n.getTranslations('en'));
 
     if (!args) {
-      player.writeL10n(l10n, 'HELP');
-      hr();
+      displayHelpFile('HELP');
       return;
     }
 
     args = args.toLowerCase().trim();
 
-      try {
-        player.sayL10n(l10n, args.toUpperCase());
 
-      } catch (err) {
-        const errMsg = "" + player.getName() + " attempted to get a helpfile for " + args + " and this happened: ";
-        util.log(errMsg, err);
+    // const errMsg = "" + player.getName() + " attempted to get a helpfile for " + args + " and this happened: ";
 
-        args in Commands.player_commands ?
+    function displayHelpFile(topic) {
+      const file = HelpFiles[topic];
+
+      if (!file) {
+        return args in Commands.player_commands ?
           player.writeL10n(l10n, 'NO_HELP_FILE') : player.writeL10n(l10n, 'NOT_FOUND');
-          
-      } finally {
-        hr();
       }
+
+      const hr = () => player.say('---------------------------------');
+      const title = txt => player.say('<bold>' + txt + '</bold>');
+      const usage = usage => player.say('<cyan>USAGE:</cyan> ' + usage);
+      const listTopic = topic => player.say('<magenta> * </magenta>' + topic);
+
+      hr();
+      if (file.title) { title(file.title)); }
+      if (file.body) { player.say(file.body); }
+      if (file.usage) { usage(file.usage); }
+      if (file.related) {
+        player.say('<blue>RELATED TOPICS:</blue>');
+        file.related.forEach(listTopic);
+      }
+
+    }
+
+
   };
 };
