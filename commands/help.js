@@ -18,22 +18,18 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     args = args.toLowerCase().trim();
 
-    if (args in Commands.player_commands) {
       try {
         player.sayL10n(l10n, args.toUpperCase());
 
       } catch (err) {
         const errMsg = "" + player.getName() + " attempted to get a helpfile for " + args + " and this happened: ";
         util.log(errMsg, err);
-        player.writeL10n(l10n, 'NO_HELP_FILE');
 
+        args in Commands.player_commands ?
+          player.writeL10n(l10n, 'NO_HELP_FILE') : player.writeL10n(l10n, 'NOT_FOUND');
+          
       } finally {
         hr();
-        return;
       }
-    }
-    player.writeL10n(l10n, 'NOT_FOUND');
-    hr();
-    return;
   };
 };
