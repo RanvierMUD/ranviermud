@@ -1,15 +1,32 @@
 const HelpFiles = {
   HELP:  {
+    title: 'Getting help'
     body: 'Type \'commands\' to see a list of possible commands.\nType \'help (command)\' to see more information about that command.\nType \'help new\' to see a list of other topics.',
   },
+
   NEW: {
     title: 'Welcome to Ranvier',
     body: 'Important topics include:',
-    related: ['levels', 'attributes', 'mutants', 'mental', 'physical', 'energy', 'combat', 'social'],
+    related: ['commands', 'levels', 'attributes', 'mutants', 'mental', 'physical', 'energy', 'combat', 'social'],
   },
-  LEVELS: { en: 'Levels are gained by earning experience. Experience can be gained through a variety of ways.\nBy defeating enemies, exploring, learning, and helping others, you will advance.\nAs you advance, you will gain the ability to `boost` your attributes, `train` your skills, and `manifest` mutations.\n\nRELATED TOPICS:\n tnl, character, boost, train, mutations, manifest' },
-  NOT_FOUND: { en: 'That command was not found in the helpfiles. \nType \'commands\' to see a list of possible commands.' },
-  NO_HELP_FILE: { en: 'No helpfile was found for that command.\nPlease contact an admin.' },
+
+  LEVELS: {
+    title: 'Leveling',
+    body: 'Levels are gained by earning experience. Experience can be gained through a variety of ways.\nBy defeating enemies, exploring, learning, and helping others, you will advance.\nAs you advance, you will gain the ability to `boost` your attributes, `train` your skills, and `manifest` mutations.'
+    related: ['boost', 'train', 'mutations', 'manifest', 'tnl', 'character'],
+  },
+
+  NOT_FOUND: {
+    title: '404',
+    body: 'That command was not found in the helpfiles. \nType \'commands\' to see a list of possible commands.',
+  },
+
+  NO_HELP_FILE: {
+    title: '404',
+    //TODO: Dynamically pull in list of admins
+    body: 'No helpfile was found for that command.\nPlease contact an admin.'
+  },
+
   DROP: { en: 'Usage: \n  drop (item name)\nor \n  drop 2.(item name) to drop the 2nd item of that same name \n\nThis will drop the item if it is found in your inventory. \nYou cannot drop items that are currently being worn.' },
   GET: { en: 'Usage: \n  get (item name) \nor \n  get 2.(item name) to get the 2nd item of that same name \nor \n  get all \n\nThis will place the item in your inventory if it is in the same room as you.\nYou cannot get items while in combat.' },
   QUIT: { en: 'Usage: \n  quit\n\nThis saves and closes your connection to RanvierMUD.\nYou cannot quit while in combat.' },
