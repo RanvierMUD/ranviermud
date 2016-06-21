@@ -5,7 +5,7 @@ const HelpFiles = {
   NEW: {
     title: 'Welcome to Ranvier',
     body: 'Important topics include:',
-    related: 'levels','attributes','mutants','mental','physical','energy','combat','social',
+    related: ['levels', 'attributes', 'mutants', 'mental', 'physical', 'energy', 'combat', 'social'],
   },
   LEVELS: { en: 'Levels are gained by earning experience. Experience can be gained through a variety of ways.\nBy defeating enemies, exploring, learning, and helping others, you will advance.\nAs you advance, you will gain the ability to `boost` your attributes, `train` your skills, and `manifest` mutations.\n\nRELATED TOPICS:\n tnl, character, boost, train, mutations, manifest' },
   NOT_FOUND: { en: 'That command was not found in the helpfiles. \nType \'commands\' to see a list of possible commands.' },
@@ -45,3 +45,4 @@ const HelpFiles = {
   MUTATIONS: { en: 'Usage \n mutations \n\nDisplay your current mutations and any you can `manifest` now.' },
   TRAIN: { en: 'Usage \n train \n\nDisplay your queued training sessions.\n\nUsage:\n train (skill)\n\nQueue a training session in the skill of your choice.\nYour character will train while you are logged out.\n\nUsage:\n train clear\n\nClears all planned and ongoing training sessions.' }
 }
+module.exports = { HelpFiles };
