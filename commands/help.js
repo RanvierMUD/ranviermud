@@ -36,19 +36,23 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const hr = () => player.say('---------------------------------');
       const title = txt => player.say('<bold>' + txt + '</bold>');
       const usage = usage => player.say('<cyan>    USAGE:</cyan> ' + usage);
+      const options = option => player.say('<red> - </red>' + option);
       const listTopic = topic => player.say('<magenta> * </magenta>' + topic);
+
+      const maybeForEach = txt, fn => Array.isArray(txt) ? txt.forEach(fn) : fn(txt);
 
       hr();
       if (file.title) { title(file.title); }
       if (file.body) { player.say(file.body); }
-      if (file.usage) {
-        Array.isArray(file.usage) ?
-          file.usage.forEach(usage) : usage(file.usage);
-      }
+      if (file.usage) { maybeForEach(file.usage, usage); }
       hr();
+      if (file.options) {
+        player.say('<green>OPTIONS:</green>');
+        maybeForEach(file.options, options);
+      }
       if (file.related) {
         player.say('<blue>RELATED TOPICS:</blue>');
-        file.related.forEach(listTopic);
+        maybeForEach(file.related, related);
         hr();
       }
 

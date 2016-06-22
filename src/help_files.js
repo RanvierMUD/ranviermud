@@ -31,7 +31,7 @@ const HelpFiles = {
   DROP: {
     title: 'Drop',
     body: 'Remove an item from your inventory and leave it on the ground.',
-    usage: ['drop (item name)', 'drop n.(item name) to drop the nth item of that same name'],
+    usage: ['drop (item name)', 'drop n.(item name) to drop the nth item of that same name', 'drop all'],
     related: ['get', 'remove', 'give'],
   },
 
@@ -52,7 +52,7 @@ const HelpFiles = {
   CHANNELS: {
     title: 'Channels',
     body: 'List all available channels and their description.',
-    usage: 'channels'
+    usage: 'channels',
     related: ['who', 'emote', 'commands']
   },
 
@@ -87,7 +87,7 @@ const HelpFiles = {
   REMOVE: {
     title: 'Remove',
     body: 'This will uneqip an item and place it in your inventory.',
-    usage: ['remove (item name)', 'remove n.(item name) to remove the nth item of that same name' ],
+    usage: ['remove (item name)', 'remove n.(item name) to remove the nth item of that same name', 'remove all' ],
     related: ['equipment', 'inventory', 'wear', 'give'],
   },
 
@@ -99,7 +99,7 @@ const HelpFiles = {
   },
 
   LOOK: {
-    title: 'Look'
+    title: 'Look',
     usage: ['look', 'look (thing)', 'look n.(thing) to look at the nth thing of the same name', 'look (direction) to look into adjacent areas'],
     body: 'Read a description of your current location, or a thing in your immediate vicinity, including your inventory.',
     related: ['examine'],
@@ -115,12 +115,16 @@ const HelpFiles = {
   SKILLS: {
     title: 'Skills -- command and overview',
     usage: 'skills',
-    body: 'This command lists all skills available to your character, including a description of how to use the skill.\nSkills include any activity that an average human would be capable of attempting.\nAll skills are available to all player characters, however training skills will increase a character\'s odds of success and the effects of using the skill.',
+    body: 'This command lists all skills available to your character, including a description of how to use the skill.\nSkills include any activity that an average human would be capable of attempting.\nAll skills are available to all player characters, however, training skills will increase a character\'s odds of success and the effects of using the skill.',
     related: ['character', 'train', 'boost'],
   },
 
-  TNL: { usage: 'tnl This displays a bar of the amount of experience needed to gain your next level.' },
-  EXP: { usage: 'exp This displays a bar of the amount of experience needed to gain your next level.' },
+  TNL: {
+    usage: 'tnl',
+    body: 'Read a description of the amount of experience needed to gain your next level.',
+    title: 'To Next Level (TNL)',
+  },
+  
   WHERE: { usage: 'where This displays the name of your current location.' },
   WHO: { usage: 'who This displays the name of each player who is online.' },
   WIELD: { usage: 'wield (weapon) ' },
