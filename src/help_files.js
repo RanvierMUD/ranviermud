@@ -39,40 +39,58 @@ const HelpFiles = {
     title: 'Get',
     body: 'Pick up an item and place it in your inventory. \nDoes not work while in combat. \nYour inventory space is limited.',
     usage: ['get (item name)', 'get n.(item name) to get the nth item of that same name', 'get all'],
+    related: ['drop', 'remove', 'give'],
   },
 
   QUIT: {
     title: 'Quit',
     body: 'Save your character and disconnect.',
     usage: 'quit',
+    related: ['save'],
   },
 
   CHANNELS: {
     title: 'Channels',
     body: 'List all available channels and their description.',
     usage: 'channels'
+    related: ['who', 'emote', 'commands']
   },
 
   INVENTORY: {
     title: 'Inventory',
     body: 'List all items in your character\'s inventory.\nThis does not include the items your character has equipped.',
     usage: 'inventory',
+    related: ['equipment', 'give', 'get', 'remove', 'equip', 'wield']
   },
 
   COMMANDS: {
     title: 'Commands',
     body: 'List all possible commands.',
-    usage: 'commands'
+    usage: 'commands',
+    related: ['help', 'channels']
   },
 
   EQUIPMENT: {
     title: 'Equipment',
     body: 'List all equipped items.',
     usage: 'equipment'
+    related: ['inventory', 'equip', 'wield', 'remove']
   },
-  
-  KILL: { usage: 'Usage: \n  kill (NPC name) \nor \n  kill 2.(NPC name) to attack the 2nd NPC of that same name \n\nThis will cause your character to attempt to kill a non-player character (NPC).\nSome NPCs are pacifists and cannot be targeted.' },
-  REMOVE: { usage: 'Usage: \n  remove (item name) \nor \n  remove 2.(item name) to remove the 2nd item of that same name \n\nThis will remove an item that is equipped and place it in your inventory.' },
+
+  KILL: {
+    title: 'Kill',
+    body: 'Attempt to slay a creature or character.',
+    usage: ['kill (NPC name)','kill n.(NPC name) to attack the nth NPC of that same name'],
+    related: ['combat', 'stance', 'target', 'wimpy']
+  },
+
+  REMOVE: {
+    title: 'Remove',
+    body: 'This will uneqip an item and place it in your inventory.',
+    usage: ['remove (item name)', 'remove 2.(item name) to remove the 2nd item of that same name' ],
+    related: ['equipment', 'inventory', 'equip', 'give'],
+  },
+
   WEAR: { usage: 'Usage: \n  wear (item name) \nor \n  wear 2.(item name) to wear the 2nd item of that same name \n\nThis will equip an item that is in your inventory, as long as it is wearable.\nFor weapons, use \'wield\'.' },
   LOOK: { usage: 'Usage: \n  look\n\nThis will describe your character\'s current location.\n\nUsage: \n  look (thing)\nor\n  look 2.(thing) to look at the 2nd thing of the same name \n\nThis will describe a non-player character or item in the same room as you. \nIt can also be used to look at items in your inventory.' },
   SAVE: { usage: 'Usage: \n  save\n\nThis will save your character\'s progress. \nUsing \'quit\' will save and then close your connection.' },
