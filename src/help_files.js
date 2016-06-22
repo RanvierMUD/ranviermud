@@ -1,7 +1,8 @@
 const HelpFiles = {
+
   HELP:  {
-    title: 'Getting help'
-    body: 'Type \'commands\' to see a list of possible commands.\nType \'help (command)\' to see more information about that command.\nType \'help new\' to see a list of other topics.',
+    title: 'Getting help',
+    body: "Type \'commands\' to see a list of possible commands.\nType 'help (command)' to see more information about that command.\nAlso try 'help new' for a list of introductory topics.",
   },
 
   NEW: {
@@ -12,7 +13,7 @@ const HelpFiles = {
 
   LEVELS: {
     title: 'Leveling',
-    body: 'Levels are gained by earning experience. Experience can be gained through a variety of ways.\nBy defeating enemies, exploring, learning, and helping others, you will advance.\nAs you advance, you will gain the ability to `boost` your attributes, `train` your skills, and `manifest` mutations.'
+    body: 'Levels are gained by earning experience. Experience can be gained through a variety of ways.\nBy defeating enemies, exploring, learning, and helping others, you will advance.\nAs you advance, you will gain the ability to `boost` your attributes, `train` your skills, and `manifest` mutations.',
     related: ['boost', 'train', 'mutations', 'manifest', 'tnl', 'character'],
   },
 
@@ -24,26 +25,52 @@ const HelpFiles = {
   NO_HELP_FILE: {
     title: '404',
     //TODO: Dynamically pull in list of admins
-    body: 'No helpfile was found for that command.\nPlease contact an admin.'
+    body: 'No helpfile was found for that command.\nPlease contact an admin.',
   },
 
   DROP: {
     title: 'Drop',
-    body: 'Remove an item from your inventory and leave it on the ground.'
-    usage: ['drop (item name)', 'drop n.(item name) to drop the nth item of that same name']
-    related: ['get', 'remove', 'give']
+    body: 'Remove an item from your inventory and leave it on the ground.',
+    usage: ['drop (item name)', 'drop n.(item name) to drop the nth item of that same name'],
+    related: ['get', 'remove', 'give'],
   },
 
   GET: {
     title: 'Get',
     body: 'Pick up an item and place it in your inventory. \nDoes not work while in combat. \nYour inventory space is limited.',
-    usage: ['get (item name)', 'get n.(item name) to get the nth item of that same name', 'get all'
+    usage: ['get (item name)', 'get n.(item name) to get the nth item of that same name', 'get all'],
   },
-  QUIT: { usage: 'Usage: \n  quit\n\nThis saves and closes your connection to RanvierMUD.\nYou cannot quit while in combat.' },
-  CHANNELS: { usage: 'Usage: \n  channels\n\nList all available channels and their description.' },
-  INVENTORY: { usage: 'Usage: \n  inventory\n\nList all items in your character\'s inventory, including the amount of each item.\nThis does not show you the items your character has equipped.' },
-  COMMANDS: { usage: 'Usage: \n  commands\n\nList all possible commands.' },
-  EQUIPMENT: { usage: 'Usage: \n  equipment\n\nList all items that your character has equipped.' },
+
+  QUIT: {
+    title: 'Quit',
+    body: 'Save your character and disconnect.',
+    usage: 'quit',
+  },
+
+  CHANNELS: {
+    title: 'Channels',
+    body: 'List all available channels and their description.',
+    usage: 'channels'
+  },
+
+  INVENTORY: {
+    title: 'Inventory',
+    body: 'List all items in your character\'s inventory.\nThis does not include the items your character has equipped.',
+    usage: 'inventory',
+  },
+
+  COMMANDS: {
+    title: 'Commands',
+    body: 'List all possible commands.',
+    usage: 'commands'
+  },
+
+  EQUIPMENT: {
+    title: 'Equipment',
+    body: 'List all equipped items.',
+    usage: 'equipment'
+  },
+  
   KILL: { usage: 'Usage: \n  kill (NPC name) \nor \n  kill 2.(NPC name) to attack the 2nd NPC of that same name \n\nThis will cause your character to attempt to kill a non-player character (NPC).\nSome NPCs are pacifists and cannot be targeted.' },
   REMOVE: { usage: 'Usage: \n  remove (item name) \nor \n  remove 2.(item name) to remove the 2nd item of that same name \n\nThis will remove an item that is equipped and place it in your inventory.' },
   WEAR: { usage: 'Usage: \n  wear (item name) \nor \n  wear 2.(item name) to wear the 2nd item of that same name \n\nThis will equip an item that is in your inventory, as long as it is wearable.\nFor weapons, use \'wield\'.' },
@@ -71,5 +98,6 @@ const HelpFiles = {
   MANIFEST: { usage: 'Usage \n manifest (mutation) \n\nExpend a mutagen to manifest a special mutation or talent. This is permanent, so choose wisely.' },
   MUTATIONS: { usage: 'Usage \n mutations \n\nDisplay your current mutations and any you can `manifest` now.' },
   TRAIN: { usage: 'Usage \n train \n\nDisplay your queued training sessions.\n\nUsage:\n train (skill)\n\nQueue a training session in the skill of your choice.\nYour character will train while you are logged out.\n\nUsage:\n train clear\n\nClears all planned and ongoing training sessions.' }
-}
+};
+
 module.exports = { HelpFiles };
