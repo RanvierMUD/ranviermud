@@ -49,6 +49,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       if (file.options) {
         player.say('<green>OPTIONS:</green>');
         maybeForEach(file.options, options);
+        hr();
       }
       if (file.related) {
         player.say('<blue>RELATED TOPICS:</blue>');

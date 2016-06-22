@@ -2,7 +2,7 @@ const HelpFiles = {
 
   HELP:  {
     title: 'Getting help',
-    body: "Type \'commands\' to see a list of possible commands.\nType 'help (command)' to see more information about that command.\nAlso try 'help new' for a list of introductory topics.",
+    body: 'Type \'commands\' to see a list of possible commands.\nType 'help (command)' to see more information about that command.\nAlso try \'help new\' for a list of introductory topics.',
   },
 
   NEW: {
@@ -100,7 +100,7 @@ const HelpFiles = {
 
   LOOK: {
     title: 'Look',
-    usage: ['look', 'look (thing)', 'look n.(thing) to look at the nth thing of the same name', 'look (direction) to look into adjacent areas'],
+    usage: ['look', 'look (thing)', 'look n.(thing) to look at the nth thing of the same name', 'look (direction)', 'look me'],
     body: 'Read a description of your current location, or a thing in your immediate vicinity, including your inventory.',
     related: ['examine'],
   },
@@ -124,16 +124,69 @@ const HelpFiles = {
     body: 'Read a description of the amount of experience needed to gain your next level.',
     title: 'To Next Level (TNL)',
   },
+
+  WHERE: {
+    title: 'Where',
+    usage: 'where',
+    body: 'This displays the name of your current general location.',
+    related: 'who',
+  },
+
+  WHO: {
+    title: 'Who',
+    usage: 'who',
+    body: 'This displays the name of each player who is online.',
+    related: ['where', 'channels']
+  },
+
+  WIELD: {
+    title: 'Wield',
+    body: 'This readies a weapon from your inventory for combat.',
+    usage: 'wield (weapon)',
+  },
+
+  DESCRIBE: {
+    title: 'Wield',
+    body: 'This allows you to set a new description for your character or view the current description.',
+    usage: ['describe (description)', 'describe'],
+    related: ['character', 'look']
+  },
+
+  APPRAISE: {
+    title: 'Appraise',
+    usage: 'appraise (NPC)',
+    body: 'This allows you to see how you might match up to an NPC in a fight.',
+    related: ['kill', 'look', 'stance', 'target'],
+  },
+
+  SAY: {
+    title: 'Say',
+    usage: 'say (message)',
+    body: ' This sends a message to all other players in the room.',
+    related: 'channels',
+  },
+
+  WHISPER: {
+    title: 'Whisper',
+    usage: 'whisper (player) (message)',
+    body: 'This sends a message to a single player in the same room. \nOther players in the room can see that you are whispering, but cannot hear the message.',
+    related: 'channels',
+  },
+
+  EMOTE: {
+    title: 'Emote',
+    usage: 'emote (action)',
+    body: 'This allows you to roleplay as your character performing the action.\nThis message will be shown to all other players in the room, so write it in third person. \nExample: `emote jumps with joy` would display `Helga jumps with joy`.'
+    related: 'channels',
+  },
+
+  GIVE: {
+    title: 'Give',
+    usage: 'give (item) (player)',
+    body: 'This gives the specified item in your inventory to another player\'s character.\nTheir character must be in the same room as you.',
+    related: ['get', 'inventory', 'drop']
+  },
   
-  WHERE: { usage: 'where This displays the name of your current location.' },
-  WHO: { usage: 'who This displays the name of each player who is online.' },
-  WIELD: { usage: 'wield (weapon) ' },
-  DESCRIBE: { usage: 'describe (description) This allows you to set a new description for your character. Usage: \n  describe This allows you to see your current description.' },
-  APPRAISE: { usage: 'appraise (NPC) This allows you to see how you might match up to an NPC in a fight.' },
-  SAY: { usage: 'say (message) This sends a message to all other players in the room.' },
-  WHISPER: { usage: 'whisper (player) (message) This sends a message to a single player in the same room. \nOther players can see that you are whispering, but cannot hear the message.' },
-  EMOTE: { usage: 'emote (action) This allows you to roleplay as your character performing the action.\nThis message will be shown to all other players in the room, so write it in third person. Example: `emote jumps with joy` would display `Helga jumps with joy`.' },
-  GIVE: { usage: 'give (item) (player) This gives the specified item in your inventory to another player\'s character.\nTheir character must be in the same room as you.' },
   TELL: { usage: 'tell (player) (message) This sends a private message to the player as long as they are online, even if they aren\'t in the same room.' },
   TARGET: { usage: 'target (body part)  This lets the player decide where to aim their attack.\nExample: `target legs` to aim at your opponents\' legs, while `target` will show your current target.' },
   WIMPY: { usage: 'wimpy (percentage)  This lets the player decide when to flee combat. \nExample: `wimpy 50` will cause you to flee after losing half of your life.\n`wimpy` will show your current wimpiness preference.' },
