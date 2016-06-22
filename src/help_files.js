@@ -186,12 +186,45 @@ const HelpFiles = {
     body: 'This gives the specified item in your inventory to another player\'s character.\nTheir character must be in the same room as you.',
     related: ['get', 'inventory', 'drop']
   },
-  
-  TELL: { usage: 'tell (player) (message) This sends a private message to the player as long as they are online, even if they aren\'t in the same room.' },
-  TARGET: { usage: 'target (body part)  This lets the player decide where to aim their attack.\nExample: `target legs` to aim at your opponents\' legs, while `target` will show your current target.' },
-  WIMPY: { usage: 'wimpy (percentage)  This lets the player decide when to flee combat. \nExample: `wimpy 50` will cause you to flee after losing half of your life.\n`wimpy` will show your current wimpiness preference.' },
-  FLEE: { usage: 'flee  If you are fighting, this will cause you to attempt to flee.' },
-  STANCE: { usage: 'stance (stance)  Options:\n`normal`: This has no major effect on your combat style.\n`berserk`: You do more damage at the cost of defense.\n`cautious`: You have higher defense at the cost of damage.\n`precise`: Your attacks always hit their target, and you defend \nwell against aimed strikes, at a cost to speed.' },
+
+  TELL: {
+    title: 'Tell',
+    body: 'This sends a private message to the player as long as they are online, even if they aren\'t in the same room.',
+    usage: 'tell (player) (message)',
+    related: ['channels', 'who'],
+  },
+
+  TARGET: {
+    title: 'Target',
+    usage: ['target (body part)', 'target'],
+    body: 'This lets the player decide where to aim their attack.\nExample: `target legs` to aim at your opponents\' legs, while `target` will show your current target.',
+    related: ['stance', 'kill', 'wimpy'],
+  },
+
+  WIMPY: {
+    usage: ['wimpy (percentage)', 'wimpy'],
+    body: 'This lets the player decide when to flee combat based on the percentage of their physical health remaining. \nExample: `wimpy 50` will cause you to flee after losing half of your life.\n`wimpy` will show your current wimpiness preference.',
+    title: 'Wimpiness',
+    related: ['stance', 'kill', 'target', 'flee']
+  },
+
+  FLEE: {
+    usage: 'flee',
+    body: 'If you are fighting, this will cause you to attempt to flee.',
+    title: 'Flee',
+    related: ['kill', 'wimpy'],
+  },
+
+  STANCE: {
+    usage: 'stance (option)',
+    options:  [ 'normal: A balance of offense and defense.',
+                'berserk: A focus on strong and fast attacks at the expense of defense.',
+                'cautious: Protect your weak points and take it slowly.',
+                'precise: Wait for an opening, then strike. Defend with precise parrying.'
+              ],
+    body: 'Your stance and attitude during combat. This can be changed in the middle of a fight. Various skills may impact each stance\'s effects.',
+    title: 'Stance Preference'
+  },
   ROOMDESCS: { usage: 'roomdesc (preference)  Options:\n`default`: Show a verbose description the first time you enter a room, or when using the `look` command. Otherwise, show the short description.\n`short`: Always show the short description unless you use the look command.\n`verbose` Always show the verbose description.' },
   EXAMINE: { usage: 'examine (point of interest)  Examine items in your environment to learn more. Investigate your surroundings thoroughly and you may be surprised.' },
   MANIFEST: { usage: 'manifest (mutation)  Expend a mutagen to manifest a special mutation or talent. This is permanent, so choose wisely.' },
