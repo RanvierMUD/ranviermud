@@ -2,7 +2,7 @@ const HelpFiles = {
 
   HELP:  {
     title: 'Getting help',
-    body: 'Type \'commands\' to see a list of possible commands.\nType 'help (command)' to see more information about that command.\nAlso try \'help new\' for a list of introductory topics.',
+    body: 'Type \'commands\' to see a list of possible commands.\nType \'help (command)\' to see more information about that command.\nAlso try \'help new\' for a list of introductory topics.',
   },
 
   NEW: {
@@ -176,7 +176,7 @@ const HelpFiles = {
   EMOTE: {
     title: 'Emote',
     usage: 'emote (action)',
-    body: 'This allows you to roleplay as your character performing the action.\nThis message will be shown to all other players in the room, so write it in third person. \nExample: `emote jumps with joy` would display `Helga jumps with joy`.'
+    body: 'This allows you to roleplay as your character performing the action.\nThis message will be shown to all other players in the room, so write it in third person. \nExample: `emote jumps with joy` would display `Helga jumps with joy`.',
     related: 'channels',
   },
 

@@ -39,7 +39,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const options = option => player.say('<red> - </red>' + option);
       const listTopic = topic => player.say('<magenta> * </magenta>' + topic);
 
-      const maybeForEach = txt, fn => Array.isArray(txt) ? txt.forEach(fn) : fn(txt);
+      const maybeForEach = (txt, fn) => Array.isArray(txt) ? txt.forEach(fn) : fn(txt);
 
       hr();
       if (file.title) { title(file.title); }
