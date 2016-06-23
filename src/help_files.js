@@ -217,19 +217,71 @@ const HelpFiles = {
 
   STANCE: {
     usage: 'stance (option)',
-    options:  [ 'normal: A balance of offense and defense.',
-                'berserk: A focus on strong and fast attacks at the expense of defense.',
-                'cautious: Protect your weak points and take it slowly.',
-                'precise: Wait for an opening, then strike. Defend with precise parrying.'
-              ],
+    options:  [
+      'normal: A balance of offense and defense.',
+      'berserk: A focus on strong and fast attacks at the expense of defense.',
+      'cautious: Protect your weak points and take it slowly.',
+      'precise: Wait for an opening, then strike. Defend with precise parrying.'
+    ],
     body: 'Your stance and attitude during combat. This can be changed in the middle of a fight. Various skills may impact each stance\'s effects.',
-    title: 'Stance Preference'
+    title: 'Stance Preference',
+    related: ['target', 'wimpy', 'kill', 'skills']
   },
-  ROOMDESCS: { usage: 'roomdesc (preference)  Options:\n`default`: Show a verbose description the first time you enter a room, or when using the `look` command. Otherwise, show the short description.\n`short`: Always show the short description unless you use the look command.\n`verbose` Always show the verbose description.' },
-  EXAMINE: { usage: 'examine (point of interest)  Examine items in your environment to learn more. Investigate your surroundings thoroughly and you may be surprised.' },
-  MANIFEST: { usage: 'manifest (mutation)  Expend a mutagen to manifest a special mutation or talent. This is permanent, so choose wisely.' },
-  MUTATIONS: { usage: 'mutations  Display your current mutations and any you can `manifest` now.' },
-  TRAIN: { usage: 'train  Display your queued training sessions. Usage:\n train (skill) Queue a training session in the skill of your choice.\nYour character will train while you are logged out. Usage:\n train clear Clears all planned and ongoing training sessions.' }
+
+  ROOMDESCS: {
+    usage: 'roomdesc (option)',
+    options:  [
+      'default: Show a verbose description the first time you enter a room, or when using the look command. Otherwise, show the short description.',
+      'short: Always show the short description unless you use the look command.',
+      'verbose: Always show the verbose description.',
+    ],
+    body: 'Define which room descriptions you would like to see.',
+    title: 'Room Description Preference',
+    related: ['look'],
+  },
+
+  EXAMINE: {
+    title: 'examine',
+    usage: ['examine (point of interest)'],
+    body: 'Examine items in your environment to learn more. \nInvestigate your surroundings thoroughly and you may be surprised.'
+    related: 'look'
+  },
+
+  MANIFEST: {
+    usage: 'manifest (mutation)',
+    title: 'Manifest Mutation',
+    related: ['manifest', 'levels', 'character']
+    body: 'Expend a mutagen to manifest a special mutation or talent through sheer will. \nThis choice is permanent, so choose wisely.\nSome mutations manifest physically, while others are psychic abilities. \nThey all come at a cost to one\'s humanity.\nUse the character command to see how many times you may mutate yourself.',
+  },
+
+  MUTATIONS: {
+    usage: 'mutations',
+    body: 'Display your current mutations and any you can `manifest` right now. \nKeep checking as you boost your attributes and acquire more power.',
+    related: ['manifest', 'levels', 'boost', 'character'],
+    title: 'Mutations',
+   },
+
+  TRAIN: {
+    usage: ['`train` to display your queued training sessions.', '`train (skill)` to queue a training session in the skill of your choice.', '`train clear` to clear all planned and ongoing training sessions.'],
+    body: 'Your character will train while you are logged out.\n You must expend a number of training points and a number of hours equal to the skill level you want to obtain.\nFor example, to train lockpicking to level 5 from level 4, your character will need \n5 points and to spend 5 offline hours training.'
+    title: 'Train Skills',
+    related: ['levels', 'skills']
+  },
+
+  OPEN: {
+    usage: ['open (direction)'],
+    body: 'Open a closed door. \nDoors will open automatically when you move in that direction, if they are unlocked. \nSome NPCs can open doors. \nYou cannot see through doors... usually.',
+    title: 'Open',
+    related: ['close', 'look']
+  },
+
+  CLOSE: {
+    usage: ['close (direction)'],
+    body: 'Close an open door. \nDoors will NOT automatically close behind you when you move through them. \nSome NPCs will be blocked by a closed door.',
+    title: 'Close',
+    related: 'open',
+  },
+
 };
 
 module.exports = { HelpFiles };
