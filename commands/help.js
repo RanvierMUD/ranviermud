@@ -3,6 +3,7 @@ const l10nFile = __dirname + '/../l10n/commands/help.yml';
 const l10n = require('../src/l10n')(l10nFile);
 const util = require('util');
 const HelpFiles = require('../src/help_files').HelpFiles;
+const wrap = require('wrap-ansi');
 
 /*
   NEW: {
@@ -14,6 +15,7 @@ const HelpFiles = require('../src/help_files').HelpFiles;
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
+    const print = txt => player.say(wrap(txt, 60))
 
     if (!args) {
       displayHelpFile('HELP');
@@ -33,17 +35,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           player.writeL10n(l10n, 'NO_HELP_FILE') : player.writeL10n(l10n, 'NOT_FOUND');
       }
 
-      const hr = () => player.say('---------------------------------');
-      const title = txt => player.say('<bold>' + txt + '</bold>');
-      const usage = usage => player.say('<cyan>    USAGE:</cyan> ' + usage);
-      const options = option => player.say('<red> - </red>' + option);
-      const listTopic = topic => player.say('<magenta> * </magenta>' + topic);
+      const hr = () => print('---------------------------------');
+      const title = txt => print('<bold>' + txt + '</bold>');
+      const usage = usage => print('<cyan>    USAGE:</cyan> ' + usage);
+      const options = option => print('<red> - </red>' + option);
+      const related = topic => print('<magenta> * </magenta>' + topic);
 
       const maybeForEach = (txt, fn) => Array.isArray(txt) ? txt.forEach(fn) : fn(txt);
 
       hr();
       if (file.title) { title(file.title); }
-      if (file.body) { player.say(file.body); }
+      if (file.body) { print(file.body); }
       if (file.usage) { maybeForEach(file.usage, usage); }
       hr();
       if (file.options) {

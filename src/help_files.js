@@ -243,14 +243,14 @@ const HelpFiles = {
   EXAMINE: {
     title: 'examine',
     usage: ['examine (point of interest)'],
-    body: 'Examine items in your environment to learn more. \nInvestigate your surroundings thoroughly and you may be surprised.'
-    related: 'look'
+    body: 'Examine items in your environment to learn more. \nInvestigate your surroundings thoroughly and you may be surprised.',
+    related: 'look',
   },
 
   MANIFEST: {
     usage: 'manifest (mutation)',
     title: 'Manifest Mutation',
-    related: ['manifest', 'levels', 'character']
+    related: ['manifest', 'levels', 'character'],
     body: 'Expend a mutagen to manifest a special mutation or talent through sheer will. \nThis choice is permanent, so choose wisely.\nSome mutations manifest physically, while others are psychic abilities. \nThey all come at a cost to one\'s humanity.\nUse the character command to see how many times you may mutate yourself.',
   },
 
@@ -263,7 +263,7 @@ const HelpFiles = {
 
   TRAIN: {
     usage: ['`train` to display your queued training sessions.', '`train (skill)` to queue a training session in the skill of your choice.', '`train clear` to clear all planned and ongoing training sessions.'],
-    body: 'Your character will train while you are logged out.\n You must expend a number of training points and a number of hours equal to the skill level you want to obtain.\nFor example, to train lockpicking to level 5 from level 4, your character will need \n5 points and to spend 5 offline hours training.'
+    body: 'Your character will train while you are logged out.\n You must expend a number of training points and a number of hours equal to the skill level you want to obtain.\nFor example, to train lockpicking to level 5 from level 4, your character will need \n5 points and to spend 5 offline hours training.',
     title: 'Train Skills',
     related: ['levels', 'skills']
   },
@@ -280,6 +280,24 @@ const HelpFiles = {
     body: 'Close an open door. \nDoors will NOT automatically close behind you when you move through them. \nSome NPCs will be blocked by a closed door.',
     title: 'Close',
     related: 'open',
+  },
+
+  BOOST: {
+    usage: ['boost (attribute)', '`boost` to see which attributes you may boost.'],
+    body: 'After earning a level, you may boost your character\'s four main attributes.\nAttributes effect many aspects of life in Ranvier, including which mutations you may manifest.',
+    related: ['levels', 'manifest', 'mutations', 'attributes'],
+    title: 'Boost Attribute'
+  },
+
+  ATTRIBUTES: {
+    body: 'The four core attributes in Ranvier are split into Mental and Physical attributes.'
+    + '\nThe Mental attributes are Willpower and Cleverness. The Physical attributes are Stamina and Quickness.'
+    + '\n Willpower dictates your mental strength. It is your resistance to stressful events and psionic attacks. Imposing your will on others (psionically or otherwise) becomes easier as your willpower increases.'
+    + '\nCleverness is your ability to think your way out of a tough situation, or slyly avoid conflict. Puzzlemasters and charmers are highly clever.'
+    + '\nStamina is a measure of your physical strength and endurance. High stamina means you can take a lot of damage and keep moving -- though you may be broken on the inside. It also means use of brute force is easier.'
+    + '\nQuickness describes graceful deftness of feet and hands... or the lack thereof. Acrobats and assassins are quick, as are couriers and dancers.',
+    title: 'Attributes in Ranvier',
+    related: ['boost', 'levels', 'skills']
   },
 
 };
