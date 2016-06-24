@@ -25,21 +25,22 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     args = args.toUpperCase().trim();
 
     displayHelpFile(args);
-    // const errMsg = "" + player.getName() + " attempted to get a helpfile for " + args + " and this happened: ";
-
+    const errMsg = "" + player.getName() +
+                   " attempted to get a helpfile for "
+                   + args + ".";
     function displayHelpFile(topic) {
       const file = HelpFiles[topic];
 
-      if (!file) {
-        return args in Commands.player_commands ?
+      if ( !file) {
+        return args in Commands.player_commands  ?
           player.writeL10n(l10n, 'NO_HELP_FILE') : player.writeL10n(l10n, 'NOT_FOUND');
       }
 
-      const hr = () => print('---------------------------------');
-      const title = txt => print('<bold>' + txt + '</bold>');
-      const usage = usage => print('<cyan>    USAGE:</cyan> ' + usage);
+      const hr      = ()     => print('<green>---------------------------------</green>');
+      const title   = txt    => print('<bold>' + txt + '</bold>');
+      const usage   = usage  => print('<cyan>    USAGE:</cyan> ' + usage);
       const options = option => print('<red> - </red>' + option);
-      const related = topic => print('<magenta> * </magenta>' + topic);
+      const related = topic  => print('<magenta> * </magenta>' + topic);
 
       const maybeForEach = (txt, fn) => Array.isArray(txt) ? txt.forEach(fn) : fn(txt);
 
