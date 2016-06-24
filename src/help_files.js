@@ -7,8 +7,20 @@ const HelpFiles = {
 
   NEW: {
     title: 'Welcome to Ranvier',
-    body: 'Important topics include:',
+    body: '<bold>Important topics include:</bold>',
     related: ['commands', 'levels', 'attributes', 'mutants', 'mental', 'physical', 'energy', 'combat', 'social', 'skills'],
+  },
+
+  COMBAT: {
+    title: 'Fighting to Survive',
+    body: 'Combat in Ranvier relies on a combination of strength and strategy.\nFleeing is a valid tactic, as combat can be deadly. Many creatures may attack, with or without warning.\nUse everything at your disposal to even the odds. Look at and appraise your target. Then, adapt your stance and aim for their weaknesses.',
+    related: ['stance', 'target', 'kill', 'flee', 'wimpy', 'appraise', 'look', 'skills', 'mutants']
+  },
+
+  SOCIAL: {
+    title: 'Sticking Together',
+    body: 'Communication in Ranvier can happen through many channels. Tell and chat are considered out-of-character.',
+    related: ['channels', 'whisper', 'emote', 'say', 'tell']
   },
 
   LEVELS: {
@@ -219,9 +231,9 @@ const HelpFiles = {
     usage: 'stance (option)',
     options:  [
       'normal: A balance of offense and defense.',
-      'berserk: A focus on strong and fast attacks at the expense of defense.',
-      'cautious: Protect your weak points and take it slowly.',
-      'precise: Wait for an opening, then strike. Defend with precise parrying.'
+      'berserk: A focus on strong and fast\n    attacks at the expense of \n    defense.',
+      'cautious: Protect your weak points and\n    take it slowly.',
+      'precise: Wait for an opening, then strike.\n    Defend with precise parrying.'
     ],
     body: 'Your stance and attitude during combat. This can be changed in the middle of a fight. Various skills may impact each stance\'s effects.',
     title: 'Stance Preference',
@@ -231,8 +243,8 @@ const HelpFiles = {
   ROOMDESCS: {
     usage: 'roomdesc (option)',
     options:  [
-      'default: Show a verbose description the first time you enter a room, or when using the look command. Otherwise, show the short description.',
-      'short: Always show the short description unless you use the look command.',
+      'default: Show a verbose description\n    the first time you enter a room, \n    or when using the look command. \n    Otherwise, show the short description.',
+      'short: Always show the short description \n    unless you use the look command.',
       'verbose: Always show the verbose description.',
     ],
     body: 'Define which room descriptions you would like to see.',
@@ -250,14 +262,14 @@ const HelpFiles = {
   MANIFEST: {
     usage: 'manifest (mutation)',
     title: 'Manifest Mutation',
-    related: ['manifest', 'levels', 'character'],
+    related: ['mutants', 'mutations', 'levels', 'character'],
     body: 'Expend a mutagen to manifest a special mutation or talent through sheer will. \nThis choice is permanent, so choose wisely.\nSome mutations manifest physically, while others are psychic abilities. \nThey all come at a cost to one\'s humanity.\nUse the character command to see how many times you may mutate yourself.',
   },
 
   MUTATIONS: {
     usage: 'mutations',
     body: 'Display your current mutations and any you can `manifest` right now. \nKeep checking as you boost your attributes and acquire more power.',
-    related: ['manifest', 'levels', 'boost', 'character'],
+    related: ['mutants', 'manifest', 'levels', 'boost', 'character'],
     title: 'Mutations',
    },
 
@@ -290,7 +302,7 @@ const HelpFiles = {
   },
 
   ATTRIBUTES: {
-    body: 'The four core attributes in Ranvier are split into Mental and Physical attributes.',
+    body: 'The four core attributes in Ranvier are split into Mental and Physical attributes.'
     + '\nThe Mental attributes are Willpower and Cleverness. The Physical attributes are Stamina and Quickness.',
     title: 'Attributes in Ranvier',
     related: ['mental', 'physical', 'willpower', 'stamina', 'quickness', 'cleverness']
@@ -329,14 +341,34 @@ const HelpFiles = {
   MENTAL: {
     title: 'Mental Attributes',
     body: 'Mentalists spend time improving their mind and intuition. They may sense things that others do not, or affect the worlds within and without in a way that is sometimes unseen.\nOther times, impossible to miss.\n Their mutations manifest as psionic powers, incredible concentration, and a keen sensitivity.\nMental health describes how much stress you may endure before beginning to break. Most mentalists describe invoking their psionic powers as highly stressful.\nMental skills typically require in-depth knowledge, problem-solving, and emotional stability.',
-    related: ['physical', 'attributed', 'skills', 'mutants', 'quickness', 'stamina'],
+    related: ['physical', 'attributes', 'skills', 'mutants', 'quickness', 'stamina'],
   },
 
   MUTANTS: {
     title: 'Mutants, Mutating, and Mutations',
-    body: 'Ranvier, the node of science and industry.\nAnd experimentation.\nNow, the city is deserted save for mutants, recycles souls that the wheel of the Napistum compresses brusquely into hollowed husks.\nEnhanced by eldritch technology, these wandering psyches can alter the threads of their genome through sheer will.\nThus, evolution has been hastened in Ranvier.\nOur next breakthrough was to be the Hemisphaeira.\n\n -- Eroadaus Jenkorm, \nauthor of "The Indigo Age"\n6 P.R. (post ruinam)'
-  }
+    body: 'Ranvier, the node of science and industry.\nAnd experimentation.\nNow, the city is deserted save for mutants, recycled souls that the wheel of the Napistum compresses brusquely into hollowed husks.\nEnhanced by eldritch technology, these wandering psyches can alter the threads of their genome through sheer will.\nThus, evolution has been hastened in Ranvier.\nOur next breakthrough was to be the Hemisphaeira.\n\n -- Eroadaus Jenkorm, \nauthor of "The Indigo Age"\n6 P.R. (post ruinam)',
+    related: ['physical', 'mental', 'manifest', 'mutations', 'levels'],
+  },
 
+  ENERGY: {
+    title: 'Energy Level',
+    body: 'Everyone gets tired eventually. When your energy is depleted, you will need to rest or meditate before taking certain actions.\nIf your energy is depleted in the middle of fighting, you will keep striving but will be sluggish and weak -- and unable to flee.',
+    related: ['rest', 'meditate', 'flee', 'commands'],
+  },
+
+  REST: {
+    title: 'Rest',
+    body: 'Resting restores your physical health and your energy. Many different actions will disrupt your rest.',
+    usage: 'rest',
+    related: ['meditate', 'energy', 'physical']
+  },
+
+  MEDITATE: {
+    title: 'Meditate',
+    body: 'Meditation relieves stress and improves mental health. Many say it also improves energy. Movement of any sort will compromise your meditation practice.',
+    usage: 'meditate',
+    related: ['rest', 'energy', 'mental'],
+  },
 
 
 };

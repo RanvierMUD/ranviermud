@@ -36,7 +36,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           player.writeL10n(l10n, 'NO_HELP_FILE') : player.writeL10n(l10n, 'NOT_FOUND');
       }
 
-      const hr      = ()     => print('<green>---------------------------------</green>');
+      const hr      = ()     => print('<green>---------------------------------'
+                                      + '------------------------------</green>');
       const title   = txt    => print('<bold>' + txt + '</bold>');
       const usage   = usage  => print('<cyan>    USAGE:</cyan> ' + usage);
       const options = option => print('<red> - </red>' + option);
