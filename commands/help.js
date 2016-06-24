@@ -1,9 +1,9 @@
 'use strict';
-const l10nFile = __dirname + '/../l10n/commands/help.yml';
-const l10n = require('../src/l10n')(l10nFile);
-const util = require('util');
+const l10nFile  = __dirname + '/../l10n/commands/help.yml';
+const l10n      = require('../src/l10n')(l10nFile);
+const util      = require('util');
 const HelpFiles = require('../src/help_files').HelpFiles;
-const wrap = require('wrap-ansi');
+const wrap      = require('wrap-ansi');
 
 /*
   NEW: {
@@ -15,7 +15,7 @@ const wrap = require('wrap-ansi');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
-    const print = txt => player.say(wrap(txt, 60))
+    const print = txt => player.say(wrap(txt, 80));
 
     if (!args) {
       displayHelpFile('HELP');
@@ -23,11 +23,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     args = args.toUpperCase().trim();
-
-    displayHelpFile(args);
     const errMsg = "" + player.getName() +
                    " attempted to get a helpfile for "
                    + args + ".";
+
+    try      { displayHelpFile(args); }
+    catch(e) { util.log(e); }
+    finally  { util.log(errMsg); }
+
     function displayHelpFile(topic) {
       const file = HelpFiles[topic];
 
@@ -46,15 +49,19 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const maybeForEach = (txt, fn) => Array.isArray(txt) ? txt.forEach(fn) : fn(txt);
 
       hr();
-      if (file.title) { title(file.title); }
-      if (file.body) { print(file.body); }
-      if (file.usage) { maybeForEach(file.usage, usage); }
+      
+      if (file.title)   { title(file.title); }
+      if (file.body)    { print(file.body); }
+      if (file.usage)   { maybeForEach(file.usage, usage); }
+
       hr();
+
       if (file.options) {
         player.say('<green>OPTIONS:</green>');
         maybeForEach(file.options, options);
         hr();
       }
+
       if (file.related) {
         player.say('<blue>RELATED TOPICS:</blue>');
         maybeForEach(file.related, related);
