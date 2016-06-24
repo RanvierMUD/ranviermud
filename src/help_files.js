@@ -292,13 +292,24 @@ const HelpFiles = {
   ATTRIBUTES: {
     body: 'The four core attributes in Ranvier are split into Mental and Physical attributes.'
     + '\nThe Mental attributes are Willpower and Cleverness. The Physical attributes are Stamina and Quickness.'
-    + '\n Willpower dictates your mental strength. It is your resistance to stressful events and psionic attacks. Imposing your will on others (psionically or otherwise) becomes easier as your willpower increases.'
-    + '\nCleverness is your ability to think your way out of a tough situation, or slyly avoid conflict. Puzzlemasters and charmers are highly clever.'
     + '\nStamina is a measure of your physical strength and endurance. High stamina means you can take a lot of damage and keep moving -- though you may be broken on the inside. It also means use of brute force is easier.'
     + '\nQuickness describes graceful deftness of feet and hands... or the lack thereof. Acrobats and assassins are quick, as are couriers and dancers.',
     title: 'Attributes in Ranvier',
-    related: ['boost', 'levels', 'skills']
+    related: ['mental', 'physical', 'willpower', 'stamina', 'quickness', 'cleverness']
   },
+
+  WILLPOWER: {
+    body: 'Willpower dictates your mental strength. It is your resistance to stressful events and psionic attacks. Imposing your will on others (psionically or otherwise) becomes easier as your willpower increases.'
+    title: 'Mental: Willpower',
+    related: ['mental', 'cleverness', 'attributes'],
+  },
+
+  CLEVERNESS: {
+    body: '\nCleverness is your ability to think your way out of a tough situation, or slyly avoid conflict. Puzzlemasters and charmers are highly clever.'
+    title: 'Mental: Cleverness'
+  }
+
+
 
 };
 
