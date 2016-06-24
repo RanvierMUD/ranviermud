@@ -1,0 +1,34 @@
+- &rat
+  vnum: 4
+  room: 2
+  #script: '4.js'
+  types: ['beast', 'diseased']
+  keywords:
+    en: ['rat', 'feral rat', 'feral']
+  short_description:
+    en: 'a feral rat'
+  attack:
+    en: 'jagged fangs'
+  description:
+    en: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
+  behaviors: "rtcombat,randommove"
+  attributes:
+    target: 'feet'
+    max_health: 4
+    health: 4
+    speed: 1.2
+    damage: 1-7
+    level: 2
+  defenses:
+    body: 1
+    head: -3
+    torso: 1
+  load_max: 7
+- *rat
+- *rat
+- <<: *rat
+  room: 1
+- <<: *rat
+  room: 4
+- <<: *rat
+  room: 8

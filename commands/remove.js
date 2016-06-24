@@ -1,21 +1,42 @@
-var CommandUtil = require('../src/command_util').CommandUtil;
-var l10n_file = __dirname + '/../l10n/commands/remove.yml';
-var l10n = require('../src/l10n')(l10n_file);
-exports.command = function (rooms, items, players, npcs, Commands)
-{
-	return function (args, player)
-	{
-		thing = CommandUtil.findItemInInventory(args.split(' ')[0], player, true);
-		if (!thing) {
-			player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-			return;
-		}
+'use strict';
+const CommandUtil = require('../src/command_util').CommandUtil;
+const l10nFile = __dirname + '/../l10n/commands/remove.yml';
+const l10n = require('../src/l10n')(l10nFile);
+const util = require('util');
 
-		if (!thing.isEquipped()) {
-			player.sayL10n(l10n, 'ITEM_NOT_EQUIPPED');
-			return;
-		}
+exports.command = (rooms, items, players, npcs, Commands) => {
+  return (args, player, isDead) => {
+    const target = args.toLowerCase().split(' ')[0];
 
-		player.unequip(thing);
-	};
+    if (target === 'all') { return removeAll(); }
+
+    const thing = CommandUtil.findItemInEquipment(target, player, true);
+
+    return remove(thing);
+
+    /// Helper functions ///
+
+    function removeAll() {
+      CommandUtil
+        .values(player.getEquipped())
+        .map(id => items.get(id))
+        .forEach(remove);
+    }
+
+    function remove(item) {
+      if (!item && !isDead) {
+        player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+        return;
+      }
+
+      util.log(player.getName() + ' removing ' + item.getShortDesc('en'));
+
+      player.unequip(item);
+      if (CommandUtil.hasScript(item, 'remove')) { item.emit('remove', player); }
+      if (!isDead) {
+        player.sayL10n(l10n, 'REMOVED', item.getShortDesc(player.getLocale()));
+      }
+      return true;
+    }
+  };
 };

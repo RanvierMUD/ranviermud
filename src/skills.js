@@ -1,89 +1,149 @@
-var Affects  = require('./affects.js').Affects;
+'use strict';
+const Effects = require('./effects.js').Effects;
+const util = require('util');
+const move = require('./commands').Commands.move;
+const CommandUtil = require('./command_util').CommandUtil;
 
-var l10n_dir = __dirname + '/../l10n/skills/';
-var l10ncache = {};
+const l10n_dir = __dirname + '/../l10n/skills/';
+let l10ncache = {};
+
 /**
  * Localization helper
  * @return string
  */
-var L = function (locale, cls, key /*, args... */)
-{
-	var l10n_file = l10n_dir + cls + '.yml';
-	var l10n = l10ncache[cls+locale] || require('./l10n')(l10n_file);
-	l10n.setLocale(locale);
-	return l10n.translate.apply(null, [].slice.call(arguments).slice(2));
+const L = function(locale, cls, key /*, args... */ ) {
+  var l10nFile = l10n_dir + cls + '.yml';
+  var l10n = l10ncache[cls + locale] || require('./l10n')(l10nFile);
+  l10n.setLocale(locale);
+  return l10n.translate.apply(null, [].slice.call(arguments).slice(2));
 };
 
+// For activate functions:
+// Command event passes in player, args, rooms, npcs, players.
+
 exports.Skills = {
-	warrior: {
-		tackle: {
-			type: 'active',
-			level: 2,
-			name: "Tackle",
-			description: "Tackle your opponent for 120% weapon damage. Target's attacks are slower for 5 seconds following the attack.",
-			cooldown: 4,
-			activate: function (player, args, rooms, npcs)
-			{
-				if (!player.isInCombat()) {
-					player.say(L(player.getLocale(), 'warrior', 'TACKLE_NOCOMBAT'));
-					return true;
-				}
 
-				if (player.getAffects('cooldown_tackle')) {
-					player.say(L(player.getLocale(), 'warrior', 'TACKLE_COOLDOWN'));
-					return true;
-				}
-				
-				var target = player.isInCombat();
-				if (!target) {
-					player.say("Somehow you're in combat with a ghost");
-					return true;
-				}
+  //// Passive skills
+  dual: {
+    id: "dual",
+    cost: 2,
+    name: "Dual Wield",
+    description: "Your ability to deftly xuse two (or more...) weapons at once.",
+    usage: "Wield two one-handed weapons. Enjoy.",
+    attribute: "quickness",
+    type: "passive",
+    activate: player => util.log(player.getName() + ' can dual wield.'),
+  },
 
-				var damage = Math.min(target.getAttribute('max_health'), Math.ceil(player.getDamage().max * 1.2));
+  athletics: {
+    id: "athletics",
+    cost: 1,
+    name: "Athletics",
+    description: "You recover more quickly from physical exertion.",
+    usage: "Try resting or meditating to recuperate your energy.",
+    attribute: "stamina",
+    type: "passive",
+    activate: () => {},
+  },
 
-				player.say(L(player.getLocale(), 'warrior', 'TACKLE_DAMAGE', damage));
-				target.setAttribute('health', target.getAttribute('health') - damage);
+  concentration: {
+    id: "concentration",
+    cost: 1,
+    name: "Concentration",
+    description: "You recover more quickly from mental exertion.",
+    usage: "Try meditating to increase focus and reduce stress.",
+    attribute: "willpower",
+    type: "passive",
+    activate: () => {},
+  },
 
-				if (!target.getAffects('slow')) {
-					target.addAffect('slow', Affects.slow({
-						duration: 3,
-						magnitude: 1.5,
-						player: player,
-						target: target,
-						deactivate: function () {
-							player.say(L(player.getLocale(), 'warrior', 'TACKLE_RECOVER'));
-						}
-					}));
-				}
+  recovery: {
+    id: "recovery",
+    cost: 1,
+    name: "Recovery",
+    description: "Your wounds heal more quickly.",
+    usage: "Try resting to recover from wounds or ailments.",
+    attribute: "stamina",
+    type: "passive",
+    activate: () => {},
+  },
 
-				// Slap a cooldown on the player
-				player.addAffect('cooldown_tackle', {
-					duration: 4,
-					deactivate: function () {
-						player.say(L(player.getLocale(), 'warrior', 'TACKLE_COOLDOWN_END'));
-					}
-				});
+  dodging: {
+    id: "dodging",
+    cost: 1,
+    name: "Dodging",
+    description: "The ability to avoid getting hit.",
+    usage: "When in combat, use `stance precise` or `stance cautious`.",
+    attribute: "quickness",
+    type: "passive",
+    activate: () => {},
+  },
 
-				return true;
-			}
-		},
-		battlehardened: {
-			type: 'passive',
-			level: 5,
-			name: "Battle Hardened",
-			description: "Your experience in battle has made you more hardy. Max health is increased by 200",
-			activate: function (player)
-			{
-				if (player.getAffects('battlehardened')) {
-					player.removeAffect('battlehardened');
-				}
-				player.addAffect('battlehardened', Affects.health_boost({
-					magnitude: 200,
-					player: player,
-					event: 'quit'
-				}));
-			}
-		}
-	}
+  //// Active skills
+  pick: {
+    id: "pick",
+    cost: 2,
+    name: "Lockpick",
+    description: "Your ability to illicitly open locked doors or containers.",
+    usage: "`pick [exit]`",
+    attribute: "cleverness",
+    type: "active",
+    activate: (player, target, rooms, npcs, players) => {
+      if (target) {
+        const room = rooms.getAt(player.getLocation());
+        const exits = room.getExits();
+        const name = player.getName();
+        const possibleTargets = exits
+          .filter(e => e.direction.indexOf(target.toLowerCase()) > -1);
+
+        util.log(name + ' is trying to pick a lock...');
+
+        if (possibleTargets && possibleTargets.length === 1) {
+          const exit = possibleTargets[0];
+          const isDoor = exit.hasOwnProperty('door');
+          const isLocked = isDoor && exit.door.locked;
+
+          if (isLocked) {
+            player.say("<yellow>You attempt to unlock the door...</yellow>");
+            const lockpicking = player.getSkills('pick') + player.getAttribute('cleverness');
+            const challenge = parseInt(exit.door.difficulty || 10, 10);
+            const getExitDesc = locale => rooms.getAt(exit.location).getTitle(locale);
+
+            if (lockpicking > challenge){
+              player.say("<bold><cyan>You unlock the door!<cyan></bold>");
+              players.eachIf(
+                p => CommandUtil.inSameRoom(player, p),
+                p => p.say(name + ' swiftly picks the lock to ' + getExitDesc(p.getLocale()) + '.')
+              );
+              exit.door.locked = false;
+              move(exit, player, true);
+            } else {
+              util.log(name + " fails to pick lock.");
+              player.say("<red>You fail to unlock the door.</red>");
+              players.eachIf(
+                p => CommandUtil.inSameRoom(player, p),
+                p => p.say(name + ' tries to unlock the door to ' + getExitDesc(p.getLocale()) +', but fails to pick it.')
+              );
+              return;
+            }
+          } else if (isDoor) {
+            player.say("That door is not locked.");
+            return;
+          } else {
+            player.say("There is no door in that direction.");
+            return;
+          }
+        } else if (possibleTarget.length) {
+          player.say("Which door's lock do you want to pick?");
+          return;
+        } else {
+          player.say("There doesn't seem to be an exit in that direction, much less a lock to pick.");
+          return;
+        }
+      } else {
+        player.say("Which door's lock do you want to pick?");
+        return;
+      }
+    },
+  }
 };
