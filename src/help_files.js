@@ -290,23 +290,51 @@ const HelpFiles = {
   },
 
   ATTRIBUTES: {
-    body: 'The four core attributes in Ranvier are split into Mental and Physical attributes.'
-    + '\nThe Mental attributes are Willpower and Cleverness. The Physical attributes are Stamina and Quickness.'
-    + '\nStamina is a measure of your physical strength and endurance. High stamina means you can take a lot of damage and keep moving -- though you may be broken on the inside. It also means use of brute force is easier.'
-    + '\nQuickness describes graceful deftness of feet and hands... or the lack thereof. Acrobats and assassins are quick, as are couriers and dancers.',
+    body: 'The four core attributes in Ranvier are split into Mental and Physical attributes.',
+    + '\nThe Mental attributes are Willpower and Cleverness. The Physical attributes are Stamina and Quickness.',
     title: 'Attributes in Ranvier',
     related: ['mental', 'physical', 'willpower', 'stamina', 'quickness', 'cleverness']
   },
 
   WILLPOWER: {
-    body: 'Willpower dictates your mental strength. It is your resistance to stressful events and psionic attacks. Imposing your will on others (psionically or otherwise) becomes easier as your willpower increases.'
+    body: 'Willpower dictates your mental strength. It is your resistance to stressful events and psionic attacks. Imposing your will on others (psionically or otherwise) becomes easier as your willpower increases.',
     title: 'Mental: Willpower',
     related: ['mental', 'cleverness', 'attributes'],
   },
 
   CLEVERNESS: {
-    body: '\nCleverness is your ability to think your way out of a tough situation, or slyly avoid conflict. Puzzlemasters and charmers are highly clever.'
-    title: 'Mental: Cleverness'
+    body: 'Cleverness is your ability to think your way out of a tough situation, \nor slyly avoid conflict. \nPuzzlemasters and charmers are highly clever.',
+    title: 'Mental: Cleverness',
+    related: ['mental', 'willpower', 'attributes']
+  },
+
+  STAMINA: {
+    title: 'Physical: Stamina',
+    body: 'Stamina is a measure of your physical strength and endurance. High stamina means you can take a lot of damage and keep moving -- though you may be broken on the inside. It also means use of brute force is easier.',
+    related: ['physical', 'quickness', 'attributes'],
+  },
+
+  QUICKNESS: {
+    body: 'Quickness describes graceful deftness of feet and hands... \nor the lack thereof. \nAcrobats and assassins are quick, as are couriers and dancers.',
+    title: 'Physical: Quickness',
+    related: ['physical', 'stamina', 'attributes'],
+  },
+
+  PHYSICAL: {
+    title: 'Physical Attributes',
+    body: 'The physicalists, also called brutalists, treat their body as a temple, thus enhancing their stamina and quickness. \nWith poise and grace they stand strong against most threats. \nThey become capable of great athletic feats, and their mutations manifest in a physical manner -- \nan extra limb, hard chitin, or inhuman musculature and speed. \nPhysical skills often deal with kinesthetics and brute force.\nYour physical health is how much bodily damage you can endure.',
+    related: ['mental', 'attributes', 'skills', 'mutants', 'quickness', 'stamina'],
+  },
+
+  MENTAL: {
+    title: 'Mental Attributes',
+    body: 'Mentalists spend time improving their mind and intuition. They may sense things that others do not, or affect the worlds within and without in a way that is sometimes unseen.\nOther times, impossible to miss.\n Their mutations manifest as psionic powers, incredible concentration, and a keen sensitivity.\nMental health describes how much stress you may endure before beginning to break. Most mentalists describe invoking their psionic powers as highly stressful.\nMental skills typically require in-depth knowledge, problem-solving, and emotional stability.',
+    related: ['physical', 'attributed', 'skills', 'mutants', 'quickness', 'stamina'],
+  },
+
+  MUTANTS: {
+    title: 'Mutants, Mutating, and Mutations',
+    body: 'Ranvier, the node of science and industry.\nAnd experimentation.\nNow, the city is deserted save for mutants, recycles souls that the wheel of the Napistum compresses brusquely into hollowed husks.\nEnhanced by eldritch technology, these wandering psyches can alter the threads of their genome through sheer will.\nThus, evolution has been hastened in Ranvier.\nOur next breakthrough was to be the Hemisphaeira.\n\n -- Eroadaus Jenkorm, \nauthor of "The Indigo Age"\n6 P.R. (post ruinam)'
   }
 
 
