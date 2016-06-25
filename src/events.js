@@ -1,3 +1,5 @@
+'use strict';
+
 var crypto = require('crypto'),
   util = require('util'),
   ansi = require('colorize')
@@ -27,6 +29,7 @@ var l10nFile = __dirname + '/../l10n/events.yml';
 var L = null;
 
 var players = null;
+var player = null;
 var npcs = null;
 var rooms = null;
 var items = null;
@@ -236,7 +239,6 @@ var Events = {
             });
           player.setInventory(inv);
 
-
           Commands.player_commands.look(null, player);
           player.checkTraining();
 
@@ -258,7 +260,7 @@ var Events = {
           data = data.toString().trim();
 
           var result;
-          if (data) result = parseCommands(data);
+          if (data) { result = parseCommands(data); }
           if (result !== false) { commandPrompt(); }
 
           // Methods
@@ -273,6 +275,11 @@ var Events = {
               .join(' ');
 
             var found = false;
+
+            // Kludge so that 'l' alone will always force a look, instead of mixing it up with lock.
+            if (command === 'l') {
+              return Commands.player_commands.look(args, player);
+            }
 
             if (command[0] === '@') {
               const adminCommand = command.slice(1);

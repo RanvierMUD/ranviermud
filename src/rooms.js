@@ -32,8 +32,7 @@ var Rooms = function() {
 
       for (let i in files) {
         var file = rooms_dir + files[i];
-        if (!fs.statSync(file)
-          .isDirectory()) continue;
+        if (!fs.statSync(file).isDirectory()) continue;
 
         log("\tExamining area directory - " + file);
         var rooms = fs.readdirSync(file);
@@ -84,8 +83,7 @@ var Rooms = function() {
 
           //skip the manifest or any directories
           if (room_file.match(/manifest/)) continue;
-          if (!fs.statSync(room_file)
-            .isFile()) continue;
+          if (!fs.statSync(room_file).isFile()) continue;
           if (!room_file.match(/yml$/)) continue;
 
           // parse the room files
@@ -111,9 +109,7 @@ var Rooms = function() {
               }
             }
 
-            if (err) {
-              continue;
-            }
+            if (err) { continue;}
 
             log("\t\tLoaded room " + room.location + '...');
             room.area = room.area || area
@@ -259,7 +255,7 @@ var Room = function(config) {
   /**
    * Get the leave message for an exit, localized if possible
    * @param object exit
-   * @param strign locale
+   * @param string locale
    * @return string
    */
   self.getLeaveMessage = function(exit, locale) {

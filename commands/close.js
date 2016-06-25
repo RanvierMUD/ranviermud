@@ -33,10 +33,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return;
     }
 
-    util.log('exits: ', exits);
     const exit = exits[0];
-
-    util.log('exit: ', exit);
 
     if (!exit.door) {
       player.say('There is no door.');
