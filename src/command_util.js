@@ -2,18 +2,10 @@
 const util = require('util');
 
 const CommandUtil = {
-
-  //TODO: findItemInEquipment
-
-  findItemInEquipment: _findItemInEquipment,
-  findItemInRoom:      _findItemInRoom,
-  findItemInInventory: _findItemInInventory,
-  hasScript:           _hasScript,
-  findNpcInRoom:       _findNpcInRoom,
-  inSameRoom:          _inSameRoom,
-  parseDot:            _parseDot,
-  values:              _values,
-
+  findItemInEquipment, findItemInRoom,
+  findItemInInventory, hasScript,
+  findNpcInRoom      , inSameRoom,
+  parseDot           , values
 };
 
 /**
@@ -22,7 +14,7 @@ const CommandUtil = {
  * @return Array of values
  */
 
-function _values(obj) {
+function values(obj) {
   let vals = [];
   for (const key in obj) {
     if (obj.hasOwnProperty(key)){
@@ -39,7 +31,7 @@ function _values(obj) {
  * @return Boolean if event has listener
  */
 
-function _hasScript(entity, event){
+function hasScript(entity, event){
   return entity._events && entity._events[event];
 }
 
@@ -48,7 +40,7 @@ function _hasScript(entity, event){
  * @param Player     target
  * @return boolean   True if they are in the same room, else false.
  */
-function _inSameRoom(entity, target) {
+function inSameRoom(entity, target) {
   if (target) {
     if (entity.getName) { // Handle players
       const notSameName = target.getName() !== entity.getName();
@@ -69,7 +61,7 @@ function _inSameRoom(entity, target) {
  * @return string UUID of the item
  */
 
-function _findItemInEquipment(lookString, being, hydrate) {
+function findItemInEquipment(lookString, being, hydrate) {
   const equipment = being.getInventory().filter(i => i.isEquipped());
   util.log('eq::::::', equipment);
   const thing = CommandUtil.parseDot(lookString, equipment,
@@ -90,7 +82,7 @@ function _findItemInEquipment(lookString, being, hydrate) {
  * @param boolean hydrate Whether to return the id or a full object
  * @return string UUID of the item
  */
-function _findItemInRoom(items, lookString, room, player, hydrate) {
+function findItemInRoom(items, lookString, room, player, hydrate) {
   hydrate = hydrate || false;
   let thing = CommandUtil.parseDot(lookString, room.getItems(), function(
     item) {
@@ -111,7 +103,7 @@ function _findItemInRoom(items, lookString, room, player, hydrate) {
  * @param boolean hydrate Whether to return the id or a full object
  * @return string UUID of the item
  */
-function _findNpcInRoom(npcs, lookString, room, player, hydrate) {
+function findNpcInRoom(npcs, lookString, room, player, hydrate) {
   hydrate = hydrate || false;
   let thing = CommandUtil.parseDot(lookString, room.getNpcs(),
     function (id) {
@@ -131,7 +123,7 @@ function _findNpcInRoom(npcs, lookString, room, player, hydrate) {
  * @param object being This could be a player or NPC. Though most likely player
  * @return string UUID of the item
  */
-function _findItemInInventory(lookString, being, hydrate) {
+function findItemInInventory(lookString, being, hydrate) {
   hydrate = hydrate || false;
   let thing = CommandUtil.parseDot(lookString, being.getInventory(),
     function (item) {
@@ -149,7 +141,7 @@ function _findItemInInventory(lookString, being, hydrate) {
  * @param Function filterFunc Function to filter the list
  * @return object
  */
-function _parseDot(arg, objects, filterFunc) {
+function parseDot(arg, objects, filterFunc) {
   if (!arg) {
     util.log(arguments);
     return;

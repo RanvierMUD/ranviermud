@@ -1,4 +1,3 @@
-U
 NOT_FOUND:
     en: "That command was not found in the helpfiles. \nType 'commands' to see a list of possible commands."
 NO_HELP_FILE:
