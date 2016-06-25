@@ -29,6 +29,7 @@ var l10nFile = __dirname + '/../l10n/events.yml';
 var L = null;
 
 var players = null;
+var player = null;
 var npcs = null;
 var rooms = null;
 var items = null;

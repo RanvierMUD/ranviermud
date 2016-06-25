@@ -517,9 +517,9 @@ const Player = function PlayerConstructor(socket) {
     };
 
     for (const stance in stanceToSpeed){
-      if (player.checkStance(stance)) {
+      if (self.checkStance(stance)) {
         const speedModifier = stanceToSpeed[stance];
-        util.log(player.getName() + '\'s speed is modified: x' + speedModifier);
+        util.log(self.getName() + '\'s speed is modified: x' + speedModifier);
         speed = speed * speedModifier;
       }
     }
