@@ -32,8 +32,7 @@ var Rooms = function() {
 
       for (let i in files) {
         var file = rooms_dir + files[i];
-        if (!fs.statSync(file)
-          .isDirectory()) continue;
+        if (!fs.statSync(file).isDirectory()) continue;
 
         log("\tExamining area directory - " + file);
         var rooms = fs.readdirSync(file);
@@ -81,17 +80,16 @@ var Rooms = function() {
         // Load any room files
         for (let j in rooms) {
           var room_file = file + '/' + rooms[j];
+
           //skip the manifest or any directories
           if (room_file.match(/manifest/)) continue;
-          if (!fs.statSync(room_file)
-            .isFile()) continue;
+          if (!fs.statSync(room_file).isFile()) continue;
           if (!room_file.match(/yml$/)) continue;
 
           // parse the room files
           try {
             var room_def = require('js-yaml')
-              .load(fs.readFileSync(room_file)
-                .toString('utf8'));
+              .load(fs.readFileSync(room_file).toString('utf8'));
           } catch (e) {
             log("\t\tError loading room - " + room_file + ' - ' + e.message);
             continue;
@@ -111,9 +109,7 @@ var Rooms = function() {
               }
             }
 
-            if (err) {
-              continue;
-            }
+            if (err) { continue;}
 
             log("\t\tLoaded room " + room.location + '...');
             room.area = room.area || area
@@ -182,16 +178,22 @@ var Room = function(config) {
 
 
   self.init = function(config) {
-    self.title = config.title;
-    self.biome = config.biome || 'indoors';
+    self.title       = config.title;
+    self.biome       = config.biome      || 'indoors';
     self.description = config.description;
-    self.short_desc = config.short_desc || config.description;
-    self.dark_desc = config.dark_desc || config.description;
-    self.location = config.location;
-    self.exits = config.exits || [];
-    self.area = config.area;
-    self.filename = config.filename;
-    self.file_index = config.file_index;
+    self.short_desc  = config.short_desc || config.description;
+    self.dark_desc   = config.dark_desc  || config.description;
+    self.location    = config.location;
+    self.exits       = config.exits      || [];
+    self.area        = config.area;
+    self.filename    = config.filename;
+    self.file_index  = config.file_index;
+
+    self.exits = self.exits.map(exit => {
+      if (exit.door) { exit.door.open = false; }
+      return exit;
+    });
+
     Data.loadListeners(config, l10n_dir, rooms_scripts_dir, Data.loadBehaviors(config, 'rooms/', self));
   };
 
@@ -255,7 +257,7 @@ var Room = function(config) {
   /**
    * Get the leave message for an exit, localized if possible
    * @param object exit
-   * @param strign locale
+   * @param string locale
    * @return string
    */
   self.getLeaveMessage = function(exit, locale) {

@@ -2,26 +2,25 @@
 NodeJS based MUD engine with full localization support
 
 ## Development notes
-Included in this master branch is a stable version of [ranvier-gen](), in the plugins directory, for generating areas from the command line.
+Included in this master branch is a stable version of [ranvier-gen](), in the plugins directory, for generating areas from the command line. (currently pretty buggy, I am planning on rewriting it soon)
 
 See the [gamedev](https://github.com/seanohue/ranviermud/tree/gamedev) branch for the latest features. The master branch will be the latest 'stable' release. The 'development' branch is the lightweight MUD engine branch for submitting PRs upstream.
 
 ## Features
-* Full localization for any strings displayed to the player after they log in. This isn't a common feature in MUDs so I'll explain it. Player A and Player B log in, play the same game and see a different language. Same items, npcs, rooms, etc, different language.
+* Full localization (to be deprecated, without special characters it is not very useful right now.)
 * Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.
-* Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the event is emitted. Adding new events is easy as npc.emit('eventName');
-* Pfile saving in JSON, easy to parse for external usage
+* Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the event is emitted. Adding new events is easy as npc.emit('eventName'); See documentation on node event emitters for more.
+* Pfile saving in JSON, easy to parse for external usage.
 * Rooms, items, and npcs are easily described in yaml. No weird bullshit ~~~~ and byte-specific parsing that requires a GUI editor to build.
 * Arbitrary room exits custom to each room not locked into n/s/e/w and it's not a pain in the ass to add them
 * Did I mention it's in blasting Javascript? No compiling, no C, no cygwin, no 15 year old spaghetti code.
-* Basic leveling system
-* Basic combat sytem. Due to the way the repl works it could be used to do turn-based or real-time combat without changing the base functionality.
-* Basic, easily customizable/overhauled skill system
+* Leveling, passive/active trainable skills, passive/active feats/talents/spells/what-have-you.
+* Turn-based PvE combat featuring different stances and a targeting system.
 * Basic channel system
 
 ## Requirements
 
-* NodeJS >= (whatever version supports ES6 fat arrow functions)
+* NodeJS >= v5.6.0
 
 ## Up and running
 
@@ -31,8 +30,12 @@ See the [gamedev](https://github.com/seanohue/ranviermud/tree/gamedev) branch fo
     sudo ./ranvier -v --save=10 --respawn=10
 
 Connect to the server using `telnet localhost 23`
-    
+
 
 ## Documentation
 Holy crap there is actually documentation and guides for this thing!
 [See the wiki right here.](https://github.com/shawncplus/ranviermud/wiki/Home)
+
+## TODO:
+* See todos.md
+* Also, a wiki should/will be created for all the custom features from this branch of ranvierMUD. Eventually.

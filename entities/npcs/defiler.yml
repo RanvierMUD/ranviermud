@@ -4,23 +4,24 @@
   #script: '3.js'
   keywords:
     en: ['defiler', 'def']
+  types: ['humanoid', 'eldritch']
   short_description:
     en: 'a defiler'
   attack:
     en: 'gnashing teeth'
   description:
     en: "a fat humanoid with a gaping maw where its neck should be, and sucking mouths in the palms of its hands."
-  behaviors: "aggro,rtcombat"
+  behaviors: "aggro,rtcombat,randommove"
   attributes:
     target: 'head'
-    max_health: 100
-    health: 100
-    speed: 6
-    damage: '4-40'
+    max_health: 575
+    health: 575
+    speed: 5
+    damage: '16-80'
     sanity_damage: '1-4'
     level: 8
   defenses:
     head: 4
-    body: 1
+    body: 6
     torso: 1
   load_max: 3

@@ -11,4 +11,5 @@
     -
       location: 11
       direction: 'private'
-      mob_locked: 'true'
+      door:
+        open: y

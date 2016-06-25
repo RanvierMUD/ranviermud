@@ -21,10 +21,13 @@
     -
       location: 4
       direction: 'up'
+      cost: 2
       leave_message:
         en:' heads upstairs.'
     -
       location: 12
       direction: 'out'
+      door:
+        open: false
       leave_message:
         en:' leaves the tavern.'

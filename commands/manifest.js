@@ -10,7 +10,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       if (featToManifest in player.getFeats()) {
         player.say('You already have manifested ' + featToManifest + '.');
-        return
+        return;
       }
 
       if (featToManifest in Feats) {
@@ -35,6 +35,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 }
 
 function purchaseFeat(player, feat) {
+  if (!player.hasEnergy(5)) { return player.noEnergy(); }
   const originalMutagens = player.getAttribute('mutagens');
   player.setAttribute('mutagens', originalMutagens - feat.cost);
 

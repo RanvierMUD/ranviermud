@@ -12,3 +12,5 @@
     -
       location: 4
       direction: 'out'
+      door:
+        open: false

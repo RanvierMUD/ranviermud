@@ -77,6 +77,10 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
 
   function combatRound(attacker, defender, a, d) {
 
+    if (attacker.hasEnergy && !attacker.hasEnergy(2)) {
+      a.speed = () => attacker.getAttackSpeed() * 4;
+    }
+
     util.log("Speeds are " + a.speed() + ' vs. ' + d.speed());
 
     if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
@@ -99,7 +103,6 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     function isPrecise() {
       return a.isPlayer ? attacker.checkStance('precise') : false;
     }
-
 
     if (!damage) {
 
@@ -228,7 +231,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
 
     if (success) {
       if (dualWieldCancel) { clearTimeout(dualWieldCancel); }
-      player.emit('regen');
+
       room.removeNpc(npc.getUuid());
       npcs.destroy(npc);
       player.sayL10n(l10n, 'WIN', npc.getShortDesc(locale));

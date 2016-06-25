@@ -2,6 +2,7 @@
   vnum: 2
   room: 6
   script: '2.js'
+  types: ['beast', 'reptilian']
   keywords:
     en: ['python', 'snake', 'hungry', 'py']
   short_description:
@@ -10,7 +11,7 @@
     en: 'scaly embrace'
   description:
     en: "The python slithers slowly across the ground, its forked tongue darting out of its mouth."
-  behaviors: "rtcombat,aggro"
+  behaviors: "rtcombat,aggro,randommove"
   attributes:
     target: 'legs'
     max_health: 40

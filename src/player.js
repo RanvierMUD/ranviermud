@@ -22,9 +22,9 @@ const Player = function PlayerConstructor(socket) {
   self.location = null;
   self.locale = null;
   self.prompt_string =
-    '%health_condition <blue>||</blue> %sanity_condition\n<blue><bold>[</bold></blue>';
+    '<cyan>PHYSICAL: </cyan>%health_condition <blue>||</blue><cyan>MENTAL:</cyan> %sanity_condition<cyan> <blue>||</blue>ENERGY:</cyan> %energy_condition\n<blue><bold>[</bold></blue>';
   self.combat_prompt =
-    "<bold>|| %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
+    "<bold>|| <cyan>YOU: </cyan> %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
   self.password = null;
   self.inventory = [];
   self.equipment = {};
@@ -39,6 +39,8 @@ const Player = function PlayerConstructor(socket) {
     health: 90,
     max_sanity: 100,
     sanity: 70,
+    energy: 40,
+    max_energy: 50,
 
     stamina: 1,
     willpower: 1,
@@ -84,10 +86,16 @@ const Player = function PlayerConstructor(socket) {
   self.getName = () => self.name;
   self.getDescription = () => self.attributes.description;
   self.getLocation = () => self.location;
+  self.getRoom = rooms => rooms ? rooms.getAt(self.getLocation()) : null;
   self.getSocket = () => socket;
   self.getInventory = () => self.inventory;
   self.getAttributes = () => self.attributes || {};
   self.getGender = () => self.gender;
+
+  self.hasEnergy = cost => self.getAttribute('energy') >= cost ?
+    self.emit('action', cost) : false;
+
+  self.noEnergy = () => self.say('You need to rest first.');
 
   self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
     self.attributes[attr] : false;
@@ -95,16 +103,19 @@ const Player = function PlayerConstructor(socket) {
   self.getPreference = pref => typeof self.preferences[pref] !== 'undefined' ?
     self.preferences[pref] : false;
 
-  self.getSkills = skill => typeof self.skills[skill] !== 'undefined' ?
-    self.skills[skill] : self.skills;
+  self.getSkills = skill => self.skills[skill] ?
+    parseInt(self.skills[skill], 10) : self.skills;
 
   self.setSkill = (skill, level) => self.skills[skill] = level;
   self.incrementSkill = skill => self.setSkill(skill, self.skills[skill] + 1);
 
-  self.getFeats = feat => self.feats && typeof self.feats[feat] !== 'undefined' ?
+  self.getFeats = feat => self.feats && self.feats[feat] ?
     self.feats[feat] : self.feats;
 
-  self.gainFeat = feat => self.feats[feat.id] = feat;
+  self.gainFeat = feat => {
+    self.feats[feat.id] = feat;
+    if (feat.type === 'passive') { feat.activate(self); }
+  }
 
   self.getPassword = () => self.password; // Returns hash.
   self.isInCombat = () => self.inCombat;
@@ -157,7 +168,7 @@ const Player = function PlayerConstructor(socket) {
 
     let trainingTime = Date.now() - beginning;
 
-    player.say("");
+    self.say("");
 
     for (let i = 0; i < queuedTraining.length; i++) {
       let session = queuedTraining[i];
@@ -202,7 +213,7 @@ const Player = function PlayerConstructor(socket) {
       delete self.training.beginTraining;
     }
 
-    player.say('You decide to change your training regimen.');
+    self.say('You decide to change your training regimen.');
   };
 
   self.checkStance = stance => self.preferences.stance === stance.toLowerCase();
@@ -268,7 +279,6 @@ const Player = function PlayerConstructor(socket) {
     let deact = function() {
       if (effect.deactivate && self.getSocket()) {
         effect.deactivate();
-        // self.prompt();
       }
       self.removeEffect(name);
     };
@@ -399,10 +409,15 @@ const Player = function PlayerConstructor(socket) {
     let pstring = self.getPrompt();
     extra = extra || {};
 
-    extra.health_condition = statusUtil.getHealthText(self.getAttribute(
-      'max_health'), self)(self.getAttribute('health'));
-    extra.sanity_condition = statusUtil.getSanityText(self.getAttribute(
-      'max_sanity'), self)(self.getAttribute('sanity'));
+    extra.health_condition = statusUtil
+      .getHealthText(self.getAttribute('max_health'), self)
+      (self.getAttribute('health'));
+    extra.sanity_condition = statusUtil
+      .getSanityText(self.getAttribute('max_sanity'), self)
+      (self.getAttribute('sanity'));
+    extra.energy_condition = statusUtil
+      .getEnergyText(self.getAttribute('max_energy'), self)
+      (self.getAttribute('energy'));
 
     for (let data in extra) {
       pstring = pstring.replace("%" + data, extra[data]);
@@ -495,8 +510,19 @@ const Player = function PlayerConstructor(socket) {
     let speed = Math.max(speedRoll, minimum);
     util.log("Player's speed is ", speed);
 
-    if (self.checkStance('precise')) speed = Math.round(speed * 1.5);
-    if (self.checkStance('berserk')) speed = Math.round(speed * .75);
+    const stanceToSpeed = {
+      'precise': 1.25,
+      'cautious': 2,
+      'berserk': .5,
+    };
+
+    for (const stance in stanceToSpeed){
+      if (self.checkStance(stance)) {
+        const speedModifier = stanceToSpeed[stance];
+        util.log(self.getName() + '\'s speed is modified: x' + speedModifier);
+        speed = speed * speedModifier;
+      }
+    }
 
     return speed;
   };
@@ -630,8 +656,20 @@ const Player = function PlayerConstructor(socket) {
 
     defense += self.getAttribute('stamina');
 
-    if (self.checkStance('cautious')) defense += self.getAttribute('cleverness');
-    if (self.checkStance('berserk')) defense = Math.round(defense / 2);
+    const stanceToDefense = {
+      'cautious': self.getAttribute('cleverness') + (self.getSkills('dodging') * 2),
+      'precise': self.getAttribute('cleverness') + self.getSkills('dodging'),
+      'default': self.getSkills('dodging'),
+      'berserk': defense / 2,
+    };
+
+    for (const stance in stanceToDefense) {
+      if (self.checkStance(stance)) {
+        const defenseBonus = stanceToDefense[stance];
+        util.log(self.getName() + '\'s defense bonus is ' + defenseBonus);
+        defense += defenseBonus;
+      }
+    }
 
     util.log(self.getName() + ' ' + location + ' def: ' + defense);
 

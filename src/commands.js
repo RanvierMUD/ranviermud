@@ -43,9 +43,45 @@ const Commands = {
         if (skill) {
           player.addSkill(skill, number);
           player.say("<red>ADMIN: Added " + args + ".</red>");
-        }
+        } else { player.say("<red>ADMIN: No such skill.</red>"); }
         util.log("@@Admin: " + player.getName() + " added skill:", skill);
       },
+
+    addFeat: (rooms, items, players, npcs, Commands) =>
+      (player, args) => {
+        const Feats = require('./feats').Feats;
+        args = args.toLowerCase().split(' ');
+
+        const feat = Feats[args[0]] ? Feats[args[0]] : null;
+
+        if (feat) {
+          player.gainFeat(feat);
+          player.say("<red>ADMIN: Added " + feat.id + ".</red>");
+        } else {
+          return player.say("<red>ADMIN: No such feat.</red>");
+        }
+        util.log("@@Admin: " + player.getName() + " added feat:", feat.name);
+      },
+
+    teleport: (rooms, items, players, npcs, Commands) =>
+      (player, args) => {
+        const vnum = parseInt(args, 10);
+        if (isNaN(vnum)) {
+          return player.say("<red>ADMIN: Invalid vnum.</red>");
+        }
+
+        if (rooms.getAt(vnum)) {
+          player.setLocation(vnum);
+          player.say("<red>ADMIN: You have teleported.");
+          Commands.player_commands.look(null, player);
+          return;
+        }
+
+        player.say("<red>ADMIN: 404: Room not found.</red>");
+
+      },
+    //TODO: boostAttr
+    //TODO: invis
   },
 
 
@@ -60,10 +96,11 @@ const Commands = {
    * @param object config
    */
   configure: function(config) {
-    rooms = config.rooms;
+    rooms   = config.rooms;
     players = config.players;
-    items = config.items;
-    npcs = config.npcs;
+    items   = config.items;
+    npcs    = config.npcs;
+
     util.log("Loading command l10n... ");
     l10n = l10nHelper(l10nFile);
     l10n.setLocale(config.locale);
@@ -173,11 +210,17 @@ exports.Commands = Commands;
  */
 function move(exit, player) {
 
-  rooms.getAt(player.getLocation())
+  rooms
+    .getAt(player.getLocation())
     .emit('playerLeave', player, players);
 
-  if ('door' in exit && exit.door.locked) {
-    const key = exit.door.locked;
+  const closedDoor = exit.door && !exit.door.open;
+  const lockedDoor = exit.door && exit.door.locked;
+
+  util.log(exit);
+
+  if (closedDoor && lockedDoor) {
+    const key = exit.door.key;
 
     if (!CommandUtil.findItemInInventory(key, player)) {
 
@@ -194,6 +237,7 @@ function move(exit, player) {
     }
 
     exit.door.locked = false;
+
     player.sayL10n(l10n, 'UNLOCKED', key);
     players.eachIf(
       p => CommandUtil.inSameRoom(player, p),
@@ -225,7 +269,14 @@ function move(exit, player) {
       }
     });
 
+  if (closedDoor) {
+    Commands.player_commands.open(exit.direction, player);
+  }
+
   player.setLocation(exit.location);
+
+  const moveCost = exit.cost ? exit.cost : 1;
+  if (!player.hasEnergy(moveCost)) { return player.noEnergy(); }
 
   // Add room to list of explored rooms
   const hasExplored = player.explore(room.getLocation());
