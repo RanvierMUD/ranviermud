@@ -37,11 +37,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     if (exit.door.open === true) {
-      return player.say('That door is already unlocked and opened.');
+      player.say('You close the door.');
+      exit.door.open = false;
     }
 
-    if (!exit.door.locked) {
-      return player.say('That door is already unlocked.');
+    if (exit.door.locked) {
+      return player.say('That door is already locked.');
     }
 
     const key = CommandUtil.findItemInInventory(exit.door.key, player, true);
@@ -53,13 +54,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const dest       = rooms.getAt(exit.location);
     const srcTitle   = room.getTitle('en');
     const destTitle  = dest.getTitle('en');
-    const unlockDoor = targetExit => {
-      targetExit.door.open = true;
-      delete targetExit.door.locked;
-    };
 
-    player.say('You unlock and open the door.');
-    unlockDoor(exit);
+    player.say('You lock the door.');
+    exit.door.locked = true;
 
     dest
       .getExits()
@@ -69,10 +66,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     players.eachIf(
       p => CommandUtil.inSameRoom(p, player),
-      p => p.say(player.getName() + ' unlocks and opens the door to ' + destTitle + '.'));
+      p => p.say(player.getName() + ' pulls out a key and locks the door to ' + destTitle + '.'));
 
     players.eachIf(
       p => p.getLocation() === exit.location,
-      p => p.say('You hear a click. \nThe door to ' + srcTitle + ' swings open.'));
+      p => p.say('You hear a click from the direction of ' + srcTitle + '.'));
   };
 };
