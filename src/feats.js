@@ -207,6 +207,7 @@ exports.Feats = {
 
       return player.say('<magenta>You find no one to siphon.</magenta>');
 
+
       function siphonTarget(target) {
 
         if (!player.hasEnergy(5)) {
