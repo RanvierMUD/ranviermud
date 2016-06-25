@@ -96,10 +96,11 @@ const Commands = {
    * @param object config
    */
   configure: function(config) {
-    rooms = config.rooms;
+    rooms   = config.rooms;
     players = config.players;
-    items = config.items;
-    npcs = config.npcs;
+    items   = config.items;
+    npcs    = config.npcs;
+
     util.log("Loading command l10n... ");
     l10n = l10nHelper(l10nFile);
     l10n.setLocale(config.locale);
