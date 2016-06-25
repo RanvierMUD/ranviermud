@@ -168,7 +168,7 @@ const Player = function PlayerConstructor(socket) {
 
     let trainingTime = Date.now() - beginning;
 
-    player.say("");
+    self.say("");
 
     for (let i = 0; i < queuedTraining.length; i++) {
       let session = queuedTraining[i];
@@ -213,7 +213,7 @@ const Player = function PlayerConstructor(socket) {
       delete self.training.beginTraining;
     }
 
-    player.say('You decide to change your training regimen.');
+    self.say('You decide to change your training regimen.');
   };
 
   self.checkStance = stance => self.preferences.stance === stance.toLowerCase();
@@ -664,9 +664,9 @@ const Player = function PlayerConstructor(socket) {
     };
 
     for (const stance in stanceToDefense) {
-      if (player.checkStance(stance)) {
+      if (self.checkStance(stance)) {
         const defenseBonus = stanceToDefense[stance];
-        util.log(player.getName() + '\'s defense bonus is ' + defenseBonus);
+        util.log(self.getName() + '\'s defense bonus is ' + defenseBonus);
         defense += defenseBonus;
       }
     }
