@@ -178,20 +178,22 @@ var Room = function(config) {
 
 
   self.init = function(config) {
-    self.title = config.title;
-    self.biome = config.biome || 'indoors';
+    self.title       = config.title;
+    self.biome       = config.biome      || 'indoors';
     self.description = config.description;
-    self.short_desc = config.short_desc || config.description;
-    self.dark_desc = config.dark_desc || config.description;
-    self.location = config.location;
-    self.exits = config.exits || [];
+    self.short_desc  = config.short_desc || config.description;
+    self.dark_desc   = config.dark_desc  || config.description;
+    self.location    = config.location;
+    self.exits       = config.exits      || [];
+    self.area        = config.area;
+    self.filename    = config.filename;
+    self.file_index  = config.file_index;
+
     self.exits = self.exits.map(exit => {
       if (exit.door) { exit.door.open = false; }
       return exit;
     });
-    self.area = config.area;
-    self.filename = config.filename;
-    self.file_index = config.file_index;
+
     Data.loadListeners(config, l10n_dir, rooms_scripts_dir, Data.loadBehaviors(config, 'rooms/', self));
   };
 
