@@ -1,4 +1,6 @@
 'use strict';
+const l10nFile = __dirname + '/../l10n/commands/emote.yml';
+const l10n = require('../src/l10n')(l10nFile);
 const CommandUtil = require('../src/command_util').CommandUtil;
 const util = require('util');
 
@@ -13,8 +15,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return player.say('You are already recuperating.');
     }
 
-    util.log(self + ' is resting.');
-    player.write('<blue>You rest and regain health.</blue>\n');
-    player.emit('regen');
+    util.log(self + ' is meditating.');
+    player.write('<blue>You rest and regain your focus.</blue>\n');
+    player.emit('meditate');
   };
 };

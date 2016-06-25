@@ -4,11 +4,8 @@ const CommandUtil = require('../src/command_util')
 const sprintf = require('sprintf')
   .sprintf;
 const l10nFile = __dirname + '/../l10n/commands/look.yml';
-const l10n = new require('jall')(require('js-yaml')
-  .load(require('fs')
-    .readFileSync(
-      l10nFile)
-    .toString('utf8')), undefined, 'zz');
+const l10n = new require('jall')(require('js-yaml').load(require('fs')
+    .readFileSync(l10nFile).toString('utf8')), undefined, 'zz');
 const wrap = require('wrap-ansi');
 const util = require('util');
 const Time = require('../src/time').Time;
@@ -72,12 +69,18 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       //TODO: Improve based on player stats/skills?
       if (!thing) {
         const exits = room.getExits();
-        exits.forEach(exit => {
+        const canSee = exits.reduce((canSee, exit) => {
+          if (!canSee) { return canSee; }
           if (args === exit.direction) {
+            if (exit.door && !exit.door.open) {
+              player.say("There's a door in the way.");
+              return false;
+            }
             thing = rooms.getAt(exit.location);
             player.say(thing.getTitle(locale));
+            return canSee;
           }
-        });
+        }, true);
       }
 
       if (!thing) {
@@ -85,8 +88,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         return;
       }
 
-      player.say(thing.getDescription(locale));
-      if (thingIsPlayer) showPlayerEquipment(thing, player);
+      player.say(wrap(thing.getDescription(locale), 80));
+      if (thingIsPlayer) { showPlayerEquipment(thing, player); }
 
       return;
     }
@@ -104,7 +107,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     if (Time.isDay()) {
 
-      const showShortByDefault = (hasExplored === true && !descPreference === 'verbose');
+      const showShortByDefault = hasExplored === true && descPreference !== 'verbose';
 
       if (showShortByDefault || descPreference === 'short') {
         player.say(wrap(room.getShortDesc(locale), 80));
@@ -120,8 +123,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     // display players in the same room
     players.eachIf(CommandUtil.inSameRoom.bind(null, player),
-      p => player.sayL10n(l10n, 'IN_ROOM', p.getName())
-    );
+      p => player.sayL10n(l10n, 'IN_ROOM', p.getName()));
 
     // show all the items in the rom
     room.getItems()

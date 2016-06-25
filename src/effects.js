@@ -22,7 +22,7 @@ const buff = (attribute, config) => {
 
 	const original = config.target.getAttribute(attribute);
 	return {
-		duration: config.duration || defaultDuration,
+		duration: config.duration,
 		activate: () => {
 			config.target.setAttribute(attribute, original + config.magnitude);
 			if (config.activate) { config.activate(); }
@@ -54,7 +54,7 @@ const buffWithMax = (attribute, config) => {
 			config.player.setAttribute(attribute, Math.min(originalMax, config.player.getAttribute(attribute)));
 			if (config.deactivate) { config.deactivate(); }
 		},
-		duration: config.duration || defaultDuration,
+		duration: config.duration,
 		event: config.event
 
 	};
@@ -117,6 +117,68 @@ const Effects = {
 		return buff('stamina', config);
 	},
 
+	regen: config => {
+		const stat = config.stat || 'health';
+		const max = 'max_' + stat;
+		const attr = stat === 'sanity' ? 'willpower' : 'stamina';
+		const isFeat = config.isFeat;
+		const player = config.player;
+
+		let regenHandle = null;
+
+		return {
+			activate: bonus => {
+	      bonus = bonus || config.bonus || 1;
+
+	      const player = config.player;
+	      const interval = config.interval || 2000;
+
+				if (stat !== 'energy') {
+					const energyConfig = {
+						player,
+					  interval,
+						stat: 'energy',
+						bonus: player.getSkills('athletics'),
+					};
+					player.addEffect('recuperating', Effects.regen(energyConfig));
+				}
+
+	      regenHandle = setInterval(() => {
+	        const current = player.getAttribute(stat);
+					const modifier = player.getAttribute(attr);
+
+	        let regenerated = Math.round(Math.random() * modifier) + bonus;
+					regenerated = Math.min(player.getAttribute(max), current + regenerated);
+
+					util.log(player.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
+	        player.setAttribute(stat, regenerated);
+
+	        if (regenerated === player.getAttribute(max)) {
+						util.log(player.getName() + ' has reached ' + max);
+	          clearInterval(regenHandle);
+	        }
+	      }, interval);
+    	},
+
+			deactivate: () => {
+				const isHealth = stat === 'health';
+				const verb = getRegenVerb(isHealth, isFeat);
+
+				clearInterval(regenHandle);
+
+				if (config.callback) { config.callback(); }
+				if (stat === 'energy') { return; }
+				player.say("<blue>You stop " + verb + '.</blue>');
+			},
+		};
+	},
+
 };
+
+function getRegenVerb(isHealth, isFeat) {
+	if (isHealth && isFeat) { return 'regenerating'; }
+	if (isHealth) { return 'resting'; }
+	return 'meditating';
+}
 
 exports.Effects = Effects;

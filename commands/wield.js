@@ -24,17 +24,19 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 			let weapon = args.split(' ')[0];
 			weapon = CommandUtil.findItemInInventory(weapon, player, true);
 
-			if (!weapon) {
+			if (!weapon || !weapon.getAttribute('damage')) {
 				player.sayL10n(l10n, 'ITEM_NOT_FOUND');
 				return;
 			}
 
 			util.log(player.getName() + ' ' + location + ' wields ' + weapon.getShortDesc('en'));
+
 			if (CommandUtil.hasScript(weapon, 'wield')) {
 				weapon.emit('wield', location, player, players);
 			} else {
 				player.say('You wield the ' + weapon.getShortDesc(player.getLocale()) + '.');
 			}
+			
 			player.equip(location, weapon);
 		}
 	};
