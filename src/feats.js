@@ -101,7 +101,7 @@ exports.Feats = {
       'cleverness': 4,
       'level':      5,
     },
-    //TODO: Cooldown?
+
     name: 'Charm',
     id: 'charm',
     description: 'You are able to calm violent creatures and stop them from attacking you.',
@@ -249,7 +249,7 @@ exports.Feats = {
       'quickness': 2,
       'level':     2,
     },
-    id: 'secondwind',
+    id:   'secondwind',
     name: 'Second Wind',
     description: 'Reinvigorate yourself in an instant.',
     activate: (player, args, rooms, npcs, players) => {

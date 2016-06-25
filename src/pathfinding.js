@@ -80,6 +80,7 @@ function getLeaveMessage(player, chosenRoom) {
   return ' leaves.'
 }
 
+//TODO: Custom entry messages for NPCs.
 function getEntryMessage() {
   return ' enters.';
 }

@@ -8,9 +8,9 @@
 | /Users/seanodonohue/myForks/ranviermud/src/events.js | 225 | Consider saving player here as well, and stuff.
 | /Users/seanodonohue/myForks/ranviermud/src/events.js | 231 | Have load in player file?
 | /Users/seanodonohue/myForks/ranviermud/src/events.js | 348 | Refactor as to not rely on negative conditionals as much?
-| /Users/seanodonohue/myForks/ranviermud/src/feats.js | 104 | Cooldown?
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 39 | Dynamically pull in list of admins
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 197 | Have spawn inventory but also add same inv functionality as player
+| /Users/seanodonohue/myForks/ranviermud/src/pathfinding.js | 83 | Custom entry messages for NPCs.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 55 | Generated descs.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 248 | Consider using Random.roll instead.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 468 | Probably a better way to do this than toLowerCase.
