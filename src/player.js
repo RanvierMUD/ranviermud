@@ -85,11 +85,13 @@ const Player = function PlayerConstructor(socket) {
   self.getName         = () => self.name;
   self.getDescription  = () => self.attributes.description;
   self.getLocation     = () => self.location;
-  self.getRoom      = rooms => rooms ? rooms.getAt(self.getLocation()) : null;
   self.getSocket       = () => socket;
   self.getInventory    = () => self.inventory;
   self.getAttributes   = () => self.attributes || {};
   self.getGender       = () => self.gender;
+  self.getRoom         = rooms => rooms ?
+        rooms.getAt(self.getLocation()) : null;
+
 
   self.hasEnergy = cost =>
     self.getAttribute('energy') >= cost ?
