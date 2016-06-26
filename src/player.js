@@ -118,15 +118,13 @@ const Player = function PlayerConstructor(socket) {
   }
 
   self.getPassword = () => self.password; // Returns hash.
-  self.isInCombat = () => self.inCombat;
+  self.isInCombat  = () => self.inCombat;
 
-  self.setPrompt = str => self.prompt_string = str;
+  self.setPrompt       = str => self.prompt_string = str;
   self.setCombatPrompt = str => self.combat_prompt = str;
-  self.setLocale = locale => self.locale = locale;
-  self.setName = newname => self.name = newname;
-  self.setDescription = newdesc =>
-    self.attributes.description =
-      newdesc;
+  self.setLocale       = locale => self.locale = locale;
+  self.setName         = newname => self.name = newname;
+  self.setDescription  = newdesc => self.attributes.description = newdesc;
 
   self.setLocation = loc => self.location = loc;
   self.setPassword = pass =>
