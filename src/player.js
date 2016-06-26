@@ -56,9 +56,9 @@ const Player = function PlayerConstructor(socket) {
   };
 
   self.preferences = {
-    target: 'body',
-    wimpy: 30,
-    stance: 'normal',
+    target:    'body',
+    wimpy:     30,
+    stance:    'normal',
     roomdescs: 'default' //default = verbose 1st time, short after.
   };
 

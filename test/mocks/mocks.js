@@ -20,11 +20,19 @@ const defaultAttributes = {
   description: 'A person.'
 };
 
+const defaultPreferences = {
+  target: 'body',
+  wimpy: 30,
+  stance: 'normal',
+  roomdescs: 'default'
+};
+
 const Rooms = {
   getAt: () => 'Correct',
 };
 
 module.exports = {
   defaultAttributes,
+  defaultPreferences,
   Rooms
 };
