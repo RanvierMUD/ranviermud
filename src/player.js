@@ -1,19 +1,18 @@
 'use strict';
-const Data = require('./data')
-  .Data,
-  Skills = require('./skills')
-  .Skills,
-  crypto = require('crypto'),
-  ansi = require('sty'),
-  util = require('util'),
-  events = require('events'),
-  wrap = require('wrap-ansi'),
-  Random = require('./random').Random,
-  Feats = require('./feats').Feats;
+const Data = require('./data').Data,
+  Skills   = require('./skills').Skills,
+  crypto   = require('crypto'),
+  ansi     = require('sty'),
+  util     = require('util'),
+  events   = require('events'),
+  wrap     = require('wrap-ansi'),
+  Random   = require('./random').Random,
+  Feats    = require('./feats').Feats;
+
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
-const l10n_dir = __dirname + '/../l10n/scripts/player/';
-const statusUtil = require('./status');
+const l10n_dir         = __dirname + '/../l10n/scripts/player/';
+const statusUtil       = require('./status');
 
 const Player = function PlayerConstructor(socket) {
   const self = this;
@@ -57,9 +56,9 @@ const Player = function PlayerConstructor(socket) {
   };
 
   self.preferences = {
-    target: 'body',
-    wimpy: 30,
-    stance: 'normal',
+    target:    'body',
+    wimpy:     30,
+    stance:    'normal',
     roomdescs: 'default' //default = verbose 1st time, short after.
   };
 
@@ -80,20 +79,23 @@ const Player = function PlayerConstructor(socket) {
   /**#@+
    * Mutators
    */
-  self.getPrompt = () => self.prompt_string;
+  self.getPrompt       = () => self.prompt_string;
   self.getCombatPrompt = () => self.combat_prompt;
-  self.getLocale = () => self.locale;
-  self.getName = () => self.name;
-  self.getDescription = () => self.attributes.description;
-  self.getLocation = () => self.location;
-  self.getRoom = rooms => rooms ? rooms.getAt(self.getLocation()) : null;
-  self.getSocket = () => socket;
-  self.getInventory = () => self.inventory;
-  self.getAttributes = () => self.attributes || {};
-  self.getGender = () => self.gender;
+  self.getLocale       = () => self.locale;
+  self.getName         = () => self.name;
+  self.getDescription  = () => self.attributes.description;
+  self.getLocation     = () => self.location;
+  self.getSocket       = () => socket;
+  self.getInventory    = () => self.inventory;
+  self.getAttributes   = () => self.attributes || {};
+  self.getGender       = () => self.gender;
+  self.getRoom         = rooms => rooms ?
+        rooms.getAt(self.getLocation()) : null;
 
-  self.hasEnergy = cost => self.getAttribute('energy') >= cost ?
-    self.emit('action', cost) : false;
+
+  self.hasEnergy = cost =>
+    self.getAttribute('energy') >= cost ?
+              self.emit('action', cost) : false;
 
   self.noEnergy = () => self.say('You need to rest first.');
 
@@ -118,15 +120,13 @@ const Player = function PlayerConstructor(socket) {
   }
 
   self.getPassword = () => self.password; // Returns hash.
-  self.isInCombat = () => self.inCombat;
+  self.isInCombat  = () => self.inCombat;
 
-  self.setPrompt = str => self.prompt_string = str;
+  self.setPrompt       = str => self.prompt_string = str;
   self.setCombatPrompt = str => self.combat_prompt = str;
-  self.setLocale = locale => self.locale = locale;
-  self.setName = newname => self.name = newname;
-  self.setDescription = newdesc =>
-    self.attributes.description =
-      newdesc;
+  self.setLocale       = locale => self.locale = locale;
+  self.setName         = newname => self.name = newname;
+  self.setDescription  = newdesc => self.attributes.description = newdesc;
 
   self.setLocation = loc => self.location = loc;
   self.setPassword = pass =>
