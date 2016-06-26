@@ -6,7 +6,8 @@
     "url": "git://github.com/shawncplus/ranviermud.git"
   },
   "scripts": {
-    "start": "sudo ./ranvier -v --save=10 --respawn=10"
+    "start": "sudo ./ranvier -v --save=10 --respawn=10",
+    "test:coverage": "./node_modules/.bin/istanbul cover --root ./src mocha -- './test/**/*.spec.js'"
   },
   "dependencies": {
     "chalk": "^1.1.1",
