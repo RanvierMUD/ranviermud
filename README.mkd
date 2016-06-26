@@ -31,6 +31,10 @@ See the [gamedev](https://github.com/seanohue/ranviermud/tree/gamedev) branch fo
 
 Connect to the server using `telnet localhost 23`
 
+## Tests
+Unit tests are in mocha and backfilling them is a work-in-progress. I'll try to follow TDD best practices from here on out.
+
+Run them with `npm test`.
 
 ## Documentation
 Holy crap there is actually documentation and guides for this thing!
