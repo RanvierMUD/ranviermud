@@ -1,19 +1,18 @@
 'use strict';
-const Data = require('./data')
-  .Data,
-  Skills = require('./skills')
-  .Skills,
-  crypto = require('crypto'),
-  ansi = require('sty'),
-  util = require('util'),
-  events = require('events'),
-  wrap = require('wrap-ansi'),
-  Random = require('./random').Random,
-  Feats = require('./feats').Feats;
+const Data = require('./data').Data,
+  Skills   = require('./skills').Skills,
+  crypto   = require('crypto'),
+  ansi     = require('sty'),
+  util     = require('util'),
+  events   = require('events'),
+  wrap     = require('wrap-ansi'),
+  Random   = require('./random').Random,
+  Feats    = require('./feats').Feats;
+
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
-const l10n_dir = __dirname + '/../l10n/scripts/player/';
-const statusUtil = require('./status');
+const l10n_dir         = __dirname + '/../l10n/scripts/player/';
+const statusUtil       = require('./status');
 
 const Player = function PlayerConstructor(socket) {
   const self = this;
