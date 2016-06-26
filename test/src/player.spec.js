@@ -29,4 +29,11 @@ describe('New player', () => {
       expect(testPlayer.getLocation() === 5).to.be.true;
     });
 
+    it('Should be able to set and get attributes', () => {
+      const current = testPlayer.getAttribute('health');
+      const damaged     = current - 10;
+      testPlayer.setAttribute('health', damaged);
+      expect(testPlayer.getAttribute('health') === damaged).to.be.true;
+    });
+
 });

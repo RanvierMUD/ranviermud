@@ -79,20 +79,21 @@ const Player = function PlayerConstructor(socket) {
   /**#@+
    * Mutators
    */
-  self.getPrompt = () => self.prompt_string;
+  self.getPrompt       = () => self.prompt_string;
   self.getCombatPrompt = () => self.combat_prompt;
-  self.getLocale = () => self.locale;
-  self.getName = () => self.name;
-  self.getDescription = () => self.attributes.description;
-  self.getLocation = () => self.location;
-  self.getRoom = rooms => rooms ? rooms.getAt(self.getLocation()) : null;
-  self.getSocket = () => socket;
-  self.getInventory = () => self.inventory;
-  self.getAttributes = () => self.attributes || {};
-  self.getGender = () => self.gender;
+  self.getLocale       = () => self.locale;
+  self.getName         = () => self.name;
+  self.getDescription  = () => self.attributes.description;
+  self.getLocation     = () => self.location;
+  self.getRoom      = rooms => rooms ? rooms.getAt(self.getLocation()) : null;
+  self.getSocket       = () => socket;
+  self.getInventory    = () => self.inventory;
+  self.getAttributes   = () => self.attributes || {};
+  self.getGender       = () => self.gender;
 
-  self.hasEnergy = cost => self.getAttribute('energy') >= cost ?
-    self.emit('action', cost) : false;
+  self.hasEnergy = cost =>
+    self.getAttribute('energy') >= cost ?
+              self.emit('action', cost) : false;
 
   self.noEnergy = () => self.say('You need to rest first.');
 
