@@ -1,6 +1,6 @@
-const Player = require('../src/player.js').Player;
+const Player = require('../../src/player.js').Player;
 const expect = require('chai').expect;
-const Mocks  = require('./mocks/mocks');
+const Mocks  = require('../mocks/mocks');
 
 
 describe('New player', () => {
