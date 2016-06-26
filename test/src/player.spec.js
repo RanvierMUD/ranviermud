@@ -31,9 +31,19 @@ describe('New player', () => {
 
     it('Should be able to set and get attributes', () => {
       const current = testPlayer.getAttribute('health');
-      const damaged     = current - 10;
+      const damaged = current - 10;
       testPlayer.setAttribute('health', damaged);
       expect(testPlayer.getAttribute('health') === damaged).to.be.true;
     });
+
+    it('Should be able to get player room from rooms obj', () => {
+      const room = testPlayer.getRoom(Mocks.Rooms);
+      expect(room).to.equal("Correct");
+    });
+
+    it('Returns null if rooms object is invalid', () => {
+      const room = testPlayer.getRoom(undefined);
+      expect(room).to.not.be.ok;
+    })
 
 });

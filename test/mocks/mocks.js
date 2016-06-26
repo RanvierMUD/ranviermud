@@ -20,6 +20,11 @@ const defaultAttributes = {
   description: 'A person.'
 };
 
+const Rooms = {
+  getAt: () => 'Correct',
+};
+
 module.exports = {
   defaultAttributes,
+  Rooms
 };
