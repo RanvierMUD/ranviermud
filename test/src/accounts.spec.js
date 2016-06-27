@@ -29,6 +29,13 @@ describe('User Account', () => {
       expect(testAccount.getUsername()).to.equal(name);
     });
 
+    it('should be able to add and return characters', () => {
+      const expected = { getName: () => 'Hooray'};
+      testAccount.addCharacter(expected);
+      const actual = testAccount.getCharacter('Hooray');
+      expect(actual).to.eql(expected);
+    });
+
   });
 
 });
