@@ -19,4 +19,16 @@ describe('User Account', () => {
     expect(testAccount instanceof Account).to.be.true;
   });
 
+  describe('Usernames', () => {
+
+    const testAccount = new Account();
+
+    it('should be able to set and get username', () => {
+      const name = 'Hats';
+      testAccount.setUsername(name);
+      expect(testAccount.getUsername()).to.equal(name);
+    });
+
+  });
+
 });
