@@ -38,4 +38,32 @@ describe('User Account', () => {
 
   });
 
+  describe('Karma', () => {
+
+    const testAccount = new Account();
+
+    it('should be able to add and get karma', () => {
+      const expected = 6;
+      testAccount.addKarma(expected);
+      expect(testAccount.getKarma()).to.equal(expected);
+    });
+
+    it('should be able to deduct and get karma', () => {
+      const expected = 3;
+      testAccount.deductKarma(expected);
+      expect(testAccount.getKarma()).to.equal(expected);
+    });
+
+    describe('Scoring', () => {
+
+      it('should be able to get a cumulative total of all karma earned', () => {
+        const expected = 12;
+        testAccount.addKarma(6);
+        expect(testAccount.getScore('totalKarma')).to.equal(expected);
+      });
+
+    })
+
+  });
+
 });
