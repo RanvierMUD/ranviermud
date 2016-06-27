@@ -15,40 +15,43 @@ const l10n_dir         = __dirname + '/../l10n/scripts/player/';
 const statusUtil       = require('./status');
 
 const Player = function PlayerConstructor(socket) {
-  const self = this;
-  self.name = '';
+  const self       = this;
+
+  self.name        = '';
   self.description = '';
-  self.location = null;
-  self.locale = null;
+  self.location    = null;
+  self.locale      = null;
+
   self.prompt_string =
     '<cyan>PHYSICAL: </cyan>%health_condition <blue>||</blue><cyan>MENTAL:</cyan> %sanity_condition<cyan> <blue>||</blue>ENERGY:</cyan> %energy_condition\n<blue><bold>[</bold></blue>';
   self.combat_prompt =
     "<bold>|| <cyan>YOU: </cyan> %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
-  self.password = null;
+
+  self.password  = null;
   self.inventory = [];
   self.equipment = {};
 
   // In combat is either false or an NPC vnum
-  self.inCombat = false;
+  self.inCombat  = false;
 
   // Attributes
   self.attributes = {
 
     max_health: 100,
-    health: 90,
+    health:     90,
     max_sanity: 100,
-    sanity: 70,
-    energy: 40,
+    sanity:     70,
+    energy:     40,
     max_energy: 50,
 
-    stamina: 1,
-    willpower: 1,
-    quickness: 1,
+    stamina:    1,
+    willpower:  1,
+    quickness:  1,
     cleverness: 1,
 
-    level: 1,
+    level:      1,
     experience: 0,
-    mutagens: 0,
+    mutagens:   0,
     attrPoints: 0,
 
     //TODO: Generated descs.
