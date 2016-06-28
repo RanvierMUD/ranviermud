@@ -31,8 +31,16 @@ const Rooms = {
   getAt: () => 'Correct',
 };
 
+const Player = {
+  attributes:  defaultAttributes,
+  preferences: defaultPreferences,
+  skills:      {},
+  feats:       {}
+};
+
 module.exports = {
   defaultAttributes,
   defaultPreferences,
-  Rooms
+  Rooms,
+  Player
 };

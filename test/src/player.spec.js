@@ -12,7 +12,6 @@ describe('New player', () => {
     afterEach(() => {});
 
 
-
     it('Should be of the Player class', () => {
       const testPlayer = new Player();
       expect(testPlayer instanceof Player).to.be.true;
@@ -85,6 +84,17 @@ describe('New player', () => {
 
     });
 
+
+    describe('Loading Account', () => {
+
+      const testPlayer = new Player();
+
+      it('should be loaded with a uid', () => {
+        testPlayer.load(Mocks.Player);
+        expect(testPlayer.getUuid()).to.be.ok;
+      });
+
+    });
 
 
 });
