@@ -3,6 +3,13 @@ const crypto = require('crypto');
 
 const Accounts = function() {
   this.accounts = [];
+
+  this.addAccount  = acc  => this.accounts.push(acc);
+  this.getAccounts = ()   => this.accounts;
+  this.getAccount  = name => this.accounts.find(
+    acc => acc.getUsername().toLowerCase() === name.toLowerCase());
+
+  return this;
 };
 
 const Account = function() {
