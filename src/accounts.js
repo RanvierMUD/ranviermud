@@ -12,7 +12,9 @@ const Account = function() {
   this.karma      = 0;
   this.uid        = null;
   this.score = {
-    totalKarma: 0,
+    totalKarma:    0,
+    totalKills:    0,
+    totalExplored: 0,
   };
 
   /* Mutators */
@@ -48,7 +50,19 @@ const Account = function() {
 
   this.getScore = key => key ? this.score[key] : this.score;
 
+  this.updateScore = {
+    const sumScore = score =>
+      (sum, char) => char[score].length ? sum + char[score].length : sum;
 
+    this.score.totalKilled = this.characters
+      .reduce(sumScore('killed'),
+        this.score.totalKilled);
+
+    this.score.totalExplored = this.characters
+      .reduce(sumScore('explored'),
+        this.score.totalExplored);
+        
+  };
 
   return this;
 };
