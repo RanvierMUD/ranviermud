@@ -11,12 +11,16 @@ describe('Accounts Manager', () => {
   describe('Getting Accounts', () => {
     const Manager = new Accounts();
 
-    it('Should be able to add and get new accounts', () => {
+    it('should be able to add and get new accounts', () => {
       const expected = { getUsername: () => 'lol' };
       Manager.addAccount(expected);
-      expect(Manager.getAccounts().length).to.equal(1);
       expect(Manager.getAccount('lol')).to.eql(expected);
     });
+
+    it('should be able to get all accounts', () => {
+      Manager.addAccount({ getUsername: () => 'hah' });
+      expect(Manager.getAccounts().length).to.equal(2);
+    })
 
   });
 

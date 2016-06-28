@@ -19,6 +19,7 @@ const Account = function() {
   this.password   = null;
   this.karma      = 0;
   this.uid        = null;
+
   this.score = {
     totalKarma:    0,
     totalKills:    0,
@@ -94,6 +95,30 @@ const Account = function() {
 
     this.score.grandTotal = sumGT(this.score);
     console.log(this.score);
+  };
+
+  this.save = () => {
+    const accountData = {
+      username:   this.username,
+      characters: this.characters,
+      password:   this.password,
+      karma:      this.karma,
+      uid:        this.uid,
+      score:      this.score,
+    };
+
+    const data = JSON.stringify(this);
+    //TODO: Write data here
+  }
+
+  //TODO: Use this in the accountmanager when loading all accounts
+  this.load = data => {
+    this.username   = data.username;
+    this.characters = data.characters;
+    this.password   = data.password;
+    this.karma      = data.karma;
+    this.uid        = data.uid;
+    this.score      = data.score;
   };
 
   return this;
