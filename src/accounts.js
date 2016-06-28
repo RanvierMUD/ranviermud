@@ -27,6 +27,11 @@ const Account = function() {
   this.getCharacter  = uid  => this.characters.find(
     char => uid === char.getUuid());
 
+  this.getLivingCharacters = () =>
+    this.characters.filter(char => char.isAlive);
+  this.getDeadCharacters   = () =>
+    this.characters.filter(char => !char.isAlive);
+
   this.getPassword = ()   => this.password; // Returns hash.
   this.setPassword = pass =>
     this.password  = crypto
