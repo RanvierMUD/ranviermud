@@ -29,22 +29,38 @@ describe('User Account', () => {
       expect(testAccount.getUsername()).to.equal(name);
     });
 
+  });
+
+  describe('Character Management', () => {
+
     it('should be able to add and return characters', () => {
-      const expected = { getUuid: () => 'Hooray'};
+      const expected = {
+        getUuid: () => 'Hooray',
+        isAlive: true
+      };
       testAccount.addCharacter(expected);
       const actual = testAccount.getCharacter('Hooray');
       expect(actual).to.eql(expected);
     });
 
-    it ('should be able to return array of all characters', () => {
-      testAccount.addCharacter({});
+    it('should be able to return array of all characters', () => {
+      testAccount.addCharacter({ isAlive: false });
       const actual   = testAccount.getCharacters().length;
       const expected = 2;
       expect(actual).to.equal(expected);
     });
 
-  });
+    it('should return array of all living characters', () => {
+      const alive = testAccount.getLivingCharacters();
+      expect(alive.length).to.equal(1);
+    });
 
+    it('should return array of all living characters', () => {
+      const dead = testAccount.getDeadCharacters();
+      expect(dead.length).to.equal(1);
+    });
+
+  });
 
 
   describe('Karma', () => {
