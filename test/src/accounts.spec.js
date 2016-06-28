@@ -30,10 +30,17 @@ describe('User Account', () => {
     });
 
     it('should be able to add and return characters', () => {
-      const expected = { getName: () => 'Hooray'};
+      const expected = { getUuid: () => 'Hooray'};
       testAccount.addCharacter(expected);
       const actual = testAccount.getCharacter('Hooray');
       expect(actual).to.eql(expected);
+    });
+
+    it ('should be able to return array of all characters', () => {
+      testAccount.addCharacter({});
+      const actual   = testAccount.getCharacters().length;
+      const expected = 2;
+      expect(actual).to.equal(expected);
     });
 
   });
