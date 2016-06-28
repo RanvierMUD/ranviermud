@@ -1,4 +1,6 @@
 const crypto = require('crypto');
+const uuid   = require('node-uuid');
+
 
 const Accounts = function() {
   this.accounts = [];
@@ -10,6 +12,7 @@ const Account = function() {
   this.characters = [];
   this.password   = null;
   this.karma      = 0;
+  this.uid        = null;
   this.score = {
     totalKarma: 0,
   };
@@ -17,6 +20,9 @@ const Account = function() {
   /* Mutators */
   this.getUsername  = ()   => this.username;
   this.setUsername  = name => this.username = name;
+
+  this.setUuid = uid => this.uid = uid;
+  this.getUuid = ()  => this.uid;
 
   this.addCharacter  = char => this.characters.push(char);
   this.getCharacters = ()   => this.characters;
@@ -38,6 +44,10 @@ const Account = function() {
   };
 
   this.getScore = key => key ? this.score[key] : this.score;
+
+  this.load = () => {
+    this.setUuid(uuid.v4());
+  }
 
   return this;
 };
