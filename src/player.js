@@ -7,7 +7,8 @@ const Data = require('./data').Data,
   events   = require('events'),
   wrap     = require('wrap-ansi'),
   Random   = require('./random').Random,
-  Feats    = require('./feats').Feats;
+  Feats    = require('./feats').Feats,
+  uuid     = require('node-uuid');
 
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
@@ -28,6 +29,7 @@ const Player = function PlayerConstructor(socket) {
     "<bold>|| <cyan>YOU: </cyan> %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
 
   self.password  = null;
+  self.uid       = null;
   self.inventory = [];
   self.equipment = {};
 
@@ -92,6 +94,7 @@ const Player = function PlayerConstructor(socket) {
   self.getInventory    = () => self.inventory;
   self.getAttributes   = () => self.attributes || {};
   self.getGender       = () => self.gender;
+  self.getUuid         = () => self.uid;
   self.getRoom         = rooms => rooms ?
         rooms.getAt(self.getLocation()) : null;
 
@@ -131,7 +134,8 @@ const Player = function PlayerConstructor(socket) {
   self.setName         = newname => self.name = newname;
   self.setDescription  = newdesc => self.attributes.description = newdesc;
 
-  self.setLocation = loc => self.location = loc;
+  self.setLocation = loc  => self.location = loc;
+  self.setUuid     = uid  => self.uid = uid;
   self.setPassword = pass =>
     self.password = crypto
       .createHash('md5')
@@ -466,6 +470,7 @@ const Player = function PlayerConstructor(socket) {
     self.preferences = data.preferences || {};
     self.explored = data.explored || [];
     self.training = data.training || { time: 0 };
+    self.setUuid(uuid.v4());
 
     // Activate any passive skills the player has
     //TODO: Probably a better way to do this than toLowerCase.
