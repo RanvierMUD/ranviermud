@@ -1,6 +1,4 @@
 const crypto = require('crypto');
-const uuid   = require('node-uuid');
-
 
 const Accounts = function() {
   this.accounts = [];
@@ -45,9 +43,7 @@ const Account = function() {
 
   this.getScore = key => key ? this.score[key] : this.score;
 
-  this.load = () => {
-    this.setUuid(uuid.v4());
-  }
+
 
   return this;
 };
