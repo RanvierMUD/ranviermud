@@ -50,7 +50,7 @@ const Account = function() {
 
   this.getScore = key => key ? this.score[key] : this.score;
 
-  this.updateScore = {
+  this.updateScore = () => {
     const sumScore = score =>
       (sum, char) => char[score].length ? sum + char[score].length : sum;
 
@@ -61,7 +61,6 @@ const Account = function() {
     this.score.totalExplored = this.characters
       .reduce(sumScore('explored'),
         this.score.totalExplored);
-        
   };
 
   return this;
