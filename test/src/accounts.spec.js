@@ -33,6 +33,8 @@ describe('User Account', () => {
 
   describe('Character Management', () => {
 
+    const testAccount = new Account();
+
     it('should be able to add and return characters', () => {
       const expected = {
         getUuid: () => 'Hooray',
@@ -81,11 +83,57 @@ describe('User Account', () => {
 
     describe('Scoring', () => {
 
+      const scoreMockA = {
+        'killed': [1, 2, 3],
+        'explored': [1, 2],
+        'level': 12
+      };
+
+      const scoreMockB = {
+        'killed': [2, 2],
+        'explored': [1],
+        'level': 5
+      };
+
       it('should be able to get a cumulative total of all karma earned', () => {
         const expected = 12;
         testAccount.addKarma(6);
         expect(testAccount.getScore('totalKarma')).to.equal(expected);
       });
+
+      it('should be able to total scores', () => {
+        const expected = {
+          totalKarma: 12,
+          totalKills: 0,
+          totalExplored: 0,
+          totalLevels: 0,
+          grandTotal: 12,
+          totalKilled: 0
+        };
+
+        testAccount.updateScore();
+        expect(testAccount.getScore()).to.eql(expected);
+      });
+
+      it('should be able to update scores', () => {
+        const expected = {
+          totalKarma: 12,
+          totalKills: 0,
+          totalExplored: 3,
+          totalLevels: 17,
+          grandTotal: 15,
+          totalKilled: 5
+        };
+
+        testAccount.addCharacter(scoreMockA);
+        testAccount.addCharacter(scoreMockB);
+
+        testAccount.updateScore();
+        const actual = testAccount.getScore();
+
+        expect(actual).to.eql(expected)
+      });
+
 
     })
 

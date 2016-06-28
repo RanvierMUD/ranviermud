@@ -1,3 +1,4 @@
+'use strict';
 const crypto = require('crypto');
 
 const Accounts = function() {
@@ -15,6 +16,8 @@ const Account = function() {
     totalKarma:    0,
     totalKills:    0,
     totalExplored: 0,
+    totalLevels:   0,
+    grandTotal:    0,
   };
 
   /* Mutators */
@@ -55,12 +58,35 @@ const Account = function() {
       (sum, char) => char[score].length ? sum + char[score].length : sum;
 
     this.score.totalKilled = this.characters
-      .reduce(sumScore('killed'),
-        this.score.totalKilled);
+      .reduce(sumScore('killed'), 0);
 
     this.score.totalExplored = this.characters
-      .reduce(sumScore('explored'),
-        this.score.totalExplored);
+      .reduce(sumScore('explored'), 0);
+
+    this.score.totalLevels = this.characters
+      .reduce((sum, char) => sum + char.level, 0);
+
+    const sumGT = obj => {
+      const scoring = {
+        'Killed':   n => Math.round(n / 50),
+        'Explored': n => Math.round(n / 40),
+        'Levels':   n => Math.round(n / 5),
+        'Karma':    n => n,
+      };
+
+      let points = 0;
+      for (const conversion in scoring) {
+        const converter = scoring[conversion];
+        const total     = 'total' + conversion;
+        const amount    = this.score[total];
+
+        points += converter(amount);
+      }
+      return points;
+    };
+
+    this.score.grandTotal = sumGT(this.score);
+    console.log(this.score);
   };
 
   return this;
