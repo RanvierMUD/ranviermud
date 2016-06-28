@@ -45,16 +45,7 @@ describe('User Account', () => {
 
   });
 
-  describe('Loading Account', () => {
 
-    const testAccount = new Account();
-
-    it('should be loaded with a uid', () => {
-      testAccount.load();
-      expect(testAccount.getUuid()).to.be.ok;
-    });
-
-  });
 
   describe('Karma', () => {
 
