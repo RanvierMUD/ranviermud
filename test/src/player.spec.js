@@ -85,7 +85,7 @@ describe('New player', () => {
     });
 
 
-    describe('Loading Account', () => {
+    describe('Loading Player', () => {
 
       const testPlayer = new Player();
 
