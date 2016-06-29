@@ -135,11 +135,12 @@ var Events = {
                    + str.toLowerCase().substr(1);
             }
 
-            var data = Data.loadPlayer(name);
+            var data = Data.loadAccount(name);
 
             // That player doesn't exit so ask if them to create it
             if (!data) {
-              socket.emit('createPlayer', socket);
+              //TODO: Change to createAccount
+              socket.emit('createAccount', socket);
               return;
             }
 
@@ -371,6 +372,10 @@ var Events = {
           }
 
         });
+    },
+
+    createAccount: function(socket, stage) {
+      //TODO: Implement
     },
 
     /**
