@@ -45,7 +45,7 @@ var Data = {
    */
   loadAccount : function (name)
   {
-    var accountPath = accounts_path + 'accounts/' + name + '.json';
+    var accountPath = data_path + 'accounts/' + name + '.json';
     if (!fs.existsSync(playerpath)) {
       return false;
     }
