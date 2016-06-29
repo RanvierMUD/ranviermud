@@ -104,6 +104,15 @@ var Events = {
             socket.write("Welcome, what is your name? ");
           }
 
+          //TODO: Check if account exists.
+          //      If so, continue to player selection menu
+          //      Else, continue to account creation menu
+
+          // Player selection menu:
+          // * Can select existing player
+          // * Can view deceased (if applicable)
+          // * Can create new (if less than 3 living chars)
+
           socket.once('data', function (name) {
 
             // swallow any data that's not from player input i.e., doesn't end with a newline
@@ -242,8 +251,7 @@ var Events = {
           player.checkTraining();
 
           // All that shit done, let them play!
-          player.getSocket()
-            .emit("commands", player);
+          player.getSocket().emit("commands", player);
           break;
       }
     },
@@ -374,17 +382,35 @@ var Events = {
         });
     },
 
+    /**
+     * Create an account
+     * Note: Do we already ask for a name in the login step?
+     * Stages:
+     *
+     *   done:   This is always the end step, here we register them in with
+     *           the rest of the logged in players and where they log in
+     *
+     * @param object arg This is either a Socket or a Player depending on
+     *                  the stage.
+     * @param string stage See above
+     */
+
     createAccount: function(socket, stage) {
-      //TODO: Implement
+      stage = stage || 'check';
+
+      l10n.setLocale('en');
+
+      var next = gen_next('createAccount');
+      var repeat = gen_repeat(arguments, next);
+
+
     },
 
     /**
      * Create a player
      * Stages:
      *   check:  See if they actually want to create a player or not
-     *   locale: Get the language they want to play in so we can give them
-     *           the rest of the creation process in their language
-     *   name:   ... get there name
+     *   name:   ... get their name
      *   done:   This is always the end step, here we register them in with
      *           the rest of the logged in players and where they log in
      *
