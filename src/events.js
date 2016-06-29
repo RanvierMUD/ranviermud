@@ -2,21 +2,14 @@
 
 var crypto = require('crypto'),
   util = require('util'),
-  ansi = require('colorize')
-  .ansify,
+  ansi = require('colorize').ansify,
 
-  Commands = require('./commands')
-  .Commands,
-  Channels = require('./channels')
-  .Channels,
-  Data = require('./data')
-  .Data,
-  Item = require('./items')
-  .Item,
-  Player = require('./player')
-  .Player,
-  Skills = require('./skills')
-  .Skills,
+  Commands = require('./commands').Commands,
+  Channels = require('./channels').Channels,
+  Data = require('./data').Data,
+  Item = require('./items').Item,
+  Player = require('./player').Player,
+  Skills = require('./skills').Skills,
   l10nHelper = require('./l10n');
 
 
@@ -29,10 +22,10 @@ var l10nFile = __dirname + '/../l10n/events.yml';
 var L = null;
 
 var players = null;
-var player = null;
-var npcs = null;
-var rooms = null;
-var items = null;
+var player  = null;
+var npcs    = null;
+var rooms   = null;
+var items   = null;
 
 // Keep track of password attempts
 var password_attempts = {};
@@ -127,15 +120,20 @@ var Events = {
               return;
             }
 
-            var name = name.toString()
-              .trim();
+            var name = name.toString().trim();
+
+            //TODO: Blacklist/whitelist names here.
             if (/[^a-z]/i.test(name) || !name) {
               socket.write("That's not really your name, now is it?\r\n");
               return repeat();
             }
 
-            name = name[0].toUpperCase() + name.toLowerCase()
-              .substr(1);
+
+            name = capitalize(name);
+            function capitalize(str) {
+              return str[0].toUpperCase()
+                   + str.toLowerCase().substr(1);
+            }
 
             var data = Data.loadPlayer(name);
 

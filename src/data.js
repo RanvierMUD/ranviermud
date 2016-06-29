@@ -37,6 +37,22 @@ var Data = {
 		return JSON.parse(fs.readFileSync(playerpath).toString('utf8'));
 	},
 
+  /**
+   * Load a player's pfile.
+   * This does not instantiate a player, it simply returns data
+   * @param string name Player's name
+   * @return object
+   */
+  loadAccount : function (name)
+  {
+    var accountPath = accounts_path + 'accounts/' + name + '.json';
+    if (!fs.existsSync(playerpath)) {
+      return false;
+    }
+
+    return JSON.parse(fs.readFileSync(accountPath).toString('utf8'));
+  },
+
 	/**
 	 * Save a player
 	 * @param Player player
