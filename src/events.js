@@ -149,10 +149,8 @@ var Events = {
             // That player doesn't exit so ask if them to create it
             if (!data) {
               //TODO: Change to createAccount
-              socket.emit('createAccount', socket);
-              return;
+              return socket.emit('createAccount', socket);
             }
-
 
             next(socket, 'password', false, name);
             return;
@@ -160,7 +158,7 @@ var Events = {
           break;
 
         case 'password':
-          if (typeof password_attempts[name] === 'undefined') {
+          if (!password_attempts[name]) {
             password_attempts[name] = 0;
           }
 
@@ -189,7 +187,7 @@ var Events = {
               .update(pass.toString('').trim())
               .digest('hex');
 
-            if (pass !== Data.loadPlayer(name).password) {
+            if (pass !== Data.loadAccount(name).getPassword()) {
               util.log("Failed password attempt by ", socket)
               socket.write(L('PASSWORD_FAIL') + "\r\n");
               password_attempts[name] += 1;
