@@ -32,13 +32,10 @@ const Account = function() {
   this.getUsername  = ()   => this.username;
   this.setUsername  = name => this.username = name;
 
-  this.setUuid = uid => this.uid = uid;
-  this.getUuid = ()  => this.uid;
-
-  this.addCharacter  = char => this.characters.push(char);
+  this.addCharacter  = name => this.characters.push(char);
   this.getCharacters = ()   => this.characters;
-  this.getCharacter  = uid  => this.characters.find(
-    char => uid === char.getUuid());
+  this.getCharacter  = name  => this.characters.find(
+    char => name === char);
 
   this.getLivingCharacters = () =>
     this.characters.filter(char => char.isAlive);

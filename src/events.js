@@ -222,7 +222,6 @@ var Events = {
           } else {
             account = new Account();
             account.load(Data.loadAccount(name));
-            account.updateScore();
           }
 
           const characters = account.getLivingCharacters();
@@ -230,8 +229,26 @@ var Events = {
 
           const maxCharacters   = 3;
           const canAddCharacter = characters.length < maxCharacters;
-          // Show some options if there are players
 
+          let options  = [];
+          let selected = '';
+
+          if (canAddCharacters) {
+            options.push({
+              display: 'Create New Character',
+              toStage: 'createPlayer',
+            });
+          }
+
+          if (characters.length) {
+            characters.forEach(char => {
+              options.push({
+                display: 'Enter World as ' + char.getName(),
+                toStage: 'done',
+                param:   players.getByUuid
+              })
+            })
+          }
 
 
 
