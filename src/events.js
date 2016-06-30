@@ -216,7 +216,23 @@ var Events = {
                 util.log("Replaced: ", p.getName());
                 players.removePlayer(p, true);
               });
+            account = boot;
+            account.updateScore();
+            account.save();
+          } else {
+            account = new Account();
+            account.load(Data.loadAccount(name));
+            account.updateScore();
           }
+
+          const characters = account.getLivingCharacters();
+          const deceased   = account.getDeadCharacters();
+
+          const maxCharacters   = 3;
+          const canAddCharacter = characters.length < maxCharacters;
+          // Show some options if there are players
+
+
 
 
 
@@ -409,7 +425,7 @@ var Events = {
 
       var next = gen_next('createAccount');
       var repeat = gen_repeat(arguments, next);
-
+      //TODO: create new account code goes here
 
     },
 
