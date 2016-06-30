@@ -3,7 +3,7 @@ var fs   = require('fs'),
     util = require('util'),
     l10nHelper = require('./l10n');
 
-var data_path = __dirname + '/../data/';
+var data_path          = __dirname + '/../data/';
 var behaviors_dir      = __dirname + '/../scripts/behaviors/';
 var behaviors_l10n_dir = __dirname + '/../l10n/scripts/behaviors/';
 
@@ -62,9 +62,7 @@ var Data = {
 	savePlayer: function (player, callback)
 	{
 		fs.writeFileSync(data_path + 'players/' + player.getName() + '.json', player.stringify(), 'utf8');
-		if (callback) {
-			callback();
-		}
+		if (callback) { callback(); }
 	},
 
 	/**

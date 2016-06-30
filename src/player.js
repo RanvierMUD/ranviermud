@@ -7,9 +7,7 @@ const Data = require('./data').Data,
   events   = require('events'),
   wrap     = require('wrap-ansi'),
   Random   = require('./random').Random,
-  Feats    = require('./feats').Feats,
-  uuid     = require('node-uuid');
-
+  Feats    = require('./feats').Feats;
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
 const l10n_dir         = __dirname + '/../l10n/scripts/player/';
@@ -29,7 +27,6 @@ const Player = function PlayerConstructor(socket) {
     "<bold>|| <cyan>YOU: </cyan> %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
 
   self.password  = null;
-  self.uid       = null;
   self.inventory = [];
   self.equipment = {};
 
@@ -94,7 +91,6 @@ const Player = function PlayerConstructor(socket) {
   self.getInventory    = () => self.inventory;
   self.getAttributes   = () => self.attributes || {};
   self.getGender       = () => self.gender;
-  self.getUuid         = () => self.uid;
   self.getRoom         = rooms => rooms ?
         rooms.getAt(self.getLocation()) : null;
 
@@ -135,7 +131,6 @@ const Player = function PlayerConstructor(socket) {
   self.setDescription  = newdesc => self.attributes.description = newdesc;
 
   self.setLocation = loc  => self.location = loc;
-  self.setUuid     = uid  => self.uid = uid;
   self.setPassword = pass =>
     self.password = crypto
       .createHash('md5')
