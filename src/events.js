@@ -1,16 +1,17 @@
 'use strict';
 
-var crypto = require('crypto'),
-  util = require('util'),
-  ansi = require('colorize').ansify,
+var crypto   = require('crypto'),
+  util       = require('util'),
+  ansi       = require('colorize').ansify,
 
-  Commands = require('./commands').Commands,
-  Channels = require('./channels').Channels,
-  Data = require('./data').Data,
-  Item = require('./items').Item,
-  Player = require('./player').Player,
-  Skills = require('./skills').Skills,
-  l10nHelper = require('./l10n');
+  Commands   = require('./commands').Commands,
+  Channels   = require('./channels').Channels,
+  Data       = require('./data').Data,
+  Item       = require('./items').Item,
+  Player     = require('./player').Player,
+  Skills     = require('./skills').Skills,
+  l10nHelper = require('./l10n')
+  Accounts   =;
 
 
 /**
@@ -21,11 +22,13 @@ var l10nFile = __dirname + '/../l10n/events.yml';
 // shortcut for l10n.translate
 var L = null;
 
-var players = null;
-var player  = null;
-var npcs    = null;
-var rooms   = null;
-var items   = null;
+var players  = null;
+var player   = null;
+var npcs     = null;
+var rooms    = null;
+var items    = null;
+var account  = null;
+var accounts = null;
 
 // Keep track of password attempts
 var password_attempts = {};
@@ -108,11 +111,6 @@ var Events = {
           //      If so, continue to player selection menu
           //      Else, continue to account creation menu
 
-          // Player selection menu:
-          // * Can select existing player
-          // * Can view deceased (if applicable)
-          // * Can create new (if less than 3 living chars)
-
           socket.once('data', function (name) {
 
             // swallow any data that's not from player input i.e., doesn't end with a newline
@@ -187,24 +185,31 @@ var Events = {
               .update(pass.toString('').trim())
               .digest('hex');
 
-            if (pass !== Data.loadAccount(name).getPassword()) {
+            if (pass !== Data.loadAccount(name).password) {
               util.log("Failed password attempt by ", socket)
               socket.write(L('PASSWORD_FAIL') + "\r\n");
               password_attempts[name] += 1;
               return repeat();
             }
-            next(socket, 'done', name);
+            next(socket, 'chooseChar', name);
           });
           break;
 
+        // Player selection menu:
+        // * Can select existing player
+        // * Can view deceased (if applicable)
+        // * Can create new (if less than 3 living chars)
 
-        case 'done':
+        //TODO: Redo 'done' below this
+        case 'chooseChar':
           var name = dontwelcome;
-          var haveSameName = p => p.getName().toLowerCase() === name.toLowerCase();
-          var boot = players.some(haveSameName);
+          var boot = Accounts.getAccount(name);
+          var multiplaying = player =>
+            player.getAccountName().toLowerCase() === name.toLowerCase();
 
           if (boot) {
-            players.eachIf(haveSameName,
+            players.eachIf(
+              multiplaying,
               p => {
                 p.say("Replaced.");
                 p.emit('quit');
@@ -213,6 +218,9 @@ var Events = {
               });
           }
 
+
+
+          /* Next step
           player = new Player(socket);
           player.load(Data.loadPlayer(name));
           players.addPlayer(player);
@@ -250,6 +258,7 @@ var Events = {
 
           // All that shit done, let them play!
           player.getSocket().emit("commands", player);
+          */
           break;
       }
     },
@@ -544,10 +553,13 @@ var Events = {
   },
 
   configure: function (config) {
-    players = players || config.players;
-    items = items || config.items;
-    rooms = rooms || config.rooms;
-    npcs = npcs || config.npcs;
+    players  = players  || config.players;
+    items    = items    || config.items;
+    rooms    = rooms    || config.rooms;
+    npcs     = npcs     || config.npcs;
+    accounts = accounts || config.accounts;
+
+
     if (!l10n) {
       util.log("Loading event l10n... ");
       l10n = l10nHelper(l10nFile);
