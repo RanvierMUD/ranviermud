@@ -10,8 +10,9 @@ var crypto   = require('crypto'),
   Item       = require('./items').Item,
   Player     = require('./player').Player,
   Skills     = require('./skills').Skills,
-  l10nHelper = require('./l10n')
-  Accounts   =;
+  l10nHelper = require('./l10n'),
+  Accounts   = require('./accounts').Accounts,
+  Account    = require('./accounts').Account;
 
 
 /**
@@ -224,6 +225,7 @@ var Events = {
             account.load(Data.loadAccount(name));
           }
 
+          // This just gets their names.
           const characters = account.getLivingCharacters();
           const deceased   = account.getDeadCharacters();
 
@@ -243,16 +245,23 @@ var Events = {
           if (characters.length) {
             characters.forEach(char => {
               options.push({
-                display: 'Enter World as ' + char.getName(),
+                display: 'Enter World as ' + char,
                 toStage: 'done',
-                param:   players.getByUuid
-              })
-            })
+                param:   players.getByName(char),
+              });
+            });
           }
 
+          if (deceased.length) {
+            options.push({
+              display: 'View Memorials',
+              toStage: 'deceased',
+            });
+          }
 
+        break;
 
-
+        case 'done':
           /* Next step
           player = new Player(socket);
           player.load(Data.loadPlayer(name));
