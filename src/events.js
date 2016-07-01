@@ -144,15 +144,17 @@ var Events = {
             }
 
             var data = Data.loadAccount(name);
+            util.log('Data/account is ', data);
 
             // That player doesn't exit so ask if them to create it
             if (!data) {
               //TODO: Change to createAccount
-              return socket.emit('createAccount', socket);
+              util.log('No account found')
+              return next(socket, 'createAccount');
             }
 
-            next(socket, 'password', false, name);
-            return;
+            return next(socket, 'password', false, name);
+            
           });
           break;
 
@@ -203,6 +205,8 @@ var Events = {
 
         //TODO: Redo 'done' below this
         case 'chooseChar':
+
+          util.log('Account opts menu');
           var name = dontwelcome;
           var boot = Accounts.getAccount(name);
           var multiplaying = player =>
@@ -268,6 +272,9 @@ var Events = {
 
         break;
 
+        case 'createAccount':
+          util.log('Account creation step');
+        break;
         case 'done':
           /* Next step
           player = new Player(socket);
