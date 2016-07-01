@@ -235,6 +235,7 @@ var Events = {
           let options  = [];
           let selected = '';
 
+          // Configure account options menu
           if (canAddCharacters) {
             options.push({
               display: 'Create New Character',
@@ -258,6 +259,12 @@ var Events = {
               toStage: 'deceased',
             });
           }
+
+          // Display options menu
+
+          options.forEach((opt, i) => {
+            socket.write('[' + i + '] ' + opt.display);
+          });
 
         break;
 
