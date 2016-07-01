@@ -146,15 +146,14 @@ var Events = {
             var data = Data.loadAccount(name);
             util.log('Data/account is ', data);
 
-            // That player doesn't exit so ask if them to create it
+            // That player doesn't exist so ask if them to create it
             if (!data) {
-              //TODO: Change to createAccount
               util.log('No account found')
-              return next(socket, 'createAccount');
+              return next(socket, 'createAccount', false, name);
             }
 
             return next(socket, 'password', false, name);
-            
+
           });
           break;
 
@@ -204,10 +203,13 @@ var Events = {
         // * Can create new (if less than 3 living chars)
 
         //TODO: Redo 'done' below this
+        //TODO: Consider turning into its own event listener.
         case 'chooseChar':
 
           util.log('Account opts menu');
           var name = dontwelcome;
+
+          //FIXME: This should actually go later, when they enter their password.
           var boot = Accounts.getAccount(name);
           var multiplaying = player =>
             player.getAccountName().toLowerCase() === name.toLowerCase();
@@ -267,13 +269,28 @@ var Events = {
           // Display options menu
 
           options.forEach((opt, i) => {
-            socket.write('[' + i + '] ' + opt.display);
+            socket.write('[' + i + '] ' + opt.display + '\r\n');
           });
 
         break;
 
         case 'createAccount':
           util.log('Account creation step');
+          let newAccount = null;
+          socket.write('Your username will be ' + name + ', y/n?\r\n');
+          socket.on('data', data => {
+            if (data && data === 'y') {
+              socket.write('Creating account...\n');
+              newAccount = new Account();
+              newAccount.setUsername(name);
+              return next(socket, 'password', true, name);
+            }
+            if (data && data === 'n') {
+              socket.write('Goodbye!');
+              return socket.emit('close');
+            }
+          });
+
         break;
         case 'done':
           /* Next step
