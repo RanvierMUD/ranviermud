@@ -57,6 +57,12 @@ function isNegot(buffer) {
   return buffer[buffer.length - 1] === 0x0a || buffer[buffer.length - 1] === 0x0d;
 }
 
+// Does what it says on the box
+function capitalize(str) {
+  return str[0].toUpperCase()
+       + str.toLowerCase().substr(1);
+}
+
 /**
  * Helper for repeating staged events
  * @param Array repeat_args
@@ -136,10 +142,6 @@ var Events = {
 
 
             name = capitalize(name);
-            function capitalize(str) {
-              return str[0].toUpperCase()
-                   + str.toLowerCase().substr(1);
-            }
 
             var data = Data.loadAccount(name);
             util.log('Data/account is ', data);
@@ -274,7 +276,7 @@ var Events = {
 
         break;
 
-
+        //TODO: Put this in its own emitter or extract into method or something?
         case 'done':
           /* Next step
           player = new Player(socket);
@@ -467,16 +469,15 @@ var Events = {
       var repeat = gen_repeat(arguments, next);
 
       switch (stage) {
-        case 'check':
 
+        case 'check':
           let newAccount = null;
           socket.write('No such account exists.\r\n');
           socket.write('Your username will be ' + name + '? [y/n]\r\n');
 
           socket.once('data', data => {
-            var negot = isNegot(data);
 
-            if (!negot) {
+            if (!isNegot(data)) {
               next(socket, 'createAccount', true, name);
               return;
             }
@@ -514,7 +515,7 @@ var Events = {
 
               // setPassword handles hashing
               socket.setPassword(pass);
-
+              socket.getSocket().emit('createPlayer', socket);
             });
           break;
 
@@ -533,25 +534,35 @@ var Events = {
      *                  the stage.
      * @param string stage See above
      */
-    createPlayer: function (socket, stage) {
-      stage = stage || 'check';
+    createPlayer: function (account, stage) {
+      stage = stage || 'name';
 
-      if (socket instanceof Player) {
-        l10n.setLocale("en");
-      }
+      l10n.setLocale("en");
 
-      var next = gen_next('createPlayer');
+      var next   = gen_next('createPlayer');
       var repeat = gen_repeat(arguments, next);
-
+      var socket = account.getSocket();
       /* Multi-stage character creation i.e., races, classes, etc.
        * Always emit 'done' in your last stage to keep it clean
        * Also try to put the cases in order that they happen during creation
        */
       switch (stage) {
+        case 'name':
+          socket.write("What would you like to name your character?");
+          socket.once('data', name => {
+
+            if (!isNegot(name)) {
+              return repeat();
+            }
+
+            name = capitalize(name
+              .toString()
+              .trim());
+          })
+        break;
+
         case 'check':
-          socket.write(
-            "That player doesn't exist, would you like to create it? [y/n] "
-          );
+          socket.write("That player doesn't exist, would you like to create it? [y/n] ");
           socket.once('data', function (check) {
             check = check.toString()
               .trim()
