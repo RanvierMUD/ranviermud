@@ -147,7 +147,7 @@ var Events = {
             // That player doesn't exist so ask if them to create it
             if (!data) {
               util.log('No account found')
-              return next(socket, 'createAccount', false, name);
+              return socket.emit('createAccount', socket, 'check', name);
             }
 
             return next(socket, 'password', false, name);
@@ -274,44 +274,7 @@ var Events = {
 
         break;
 
-        case 'createAccount':
-          util.log('Account creation step');
 
-          let newAccount = null;
-          socket.write('No such account exists.\r\n');
-          socket.write('Your username will be ' + name + ', y/n?\r\n');
-
-          socket.once('data', data => {
-
-            var negot = isNegot(data);
-
-            if (!negot) {
-              next(socket, 'createAccount', true, name);
-              return;
-            }
-
-            data = data.toString('').trim();
-            util.log('data ', data);
-
-            if (data[0] === 0xFA) {
-              return next(socket, 'createAccount', true, name);
-            }
-
-            if (data && data === 'y') {
-              socket.write('Creating account...\n');
-              newAccount = new Account();
-              newAccount.setUsername(name);
-              return next(socket, 'password', true, name);
-            }
-
-            if (data && data === 'n') {
-              socket.write('Goodbye!');
-              console.log(socket);
-              return socket.close();
-            }
-          });
-          util.log('After data');
-        break;
         case 'done':
           /* Next step
           player = new Player(socket);
@@ -495,7 +458,7 @@ var Events = {
      * @param string stage See above
      */
 
-    createAccount: function(socket, stage) {
+    createAccount: function(socket, stage, name) {
       stage = stage || 'check';
 
       l10n.setLocale('en');
@@ -504,6 +467,48 @@ var Events = {
       var repeat = gen_repeat(arguments, next);
       //TODO: create new account code goes here
 
+      //TODO: Consider having this be its own event emitted.
+      switch (stage){
+        case 'check':
+          util.log('Account creation step');
+
+          let newAccount = null;
+          socket.write('No such account exists.\r\n');
+          socket.write('Your username will be ' + name + '? [y/n]\r\n');
+
+          socket.once('data', data => {
+
+            var negot = isNegot(data);
+
+            if (!negot) {
+              next(socket, 'createAccount', true, name);
+              return;
+            }
+
+            data = data.toString('').trim();
+            util.log('data ', data);
+
+            if (data[0] === 0xFA) {
+              return next(socket, 'check', true, name);
+            }
+
+            if (data && data === 'y') {
+              socket.write('Creating account...\n');
+              newAccount = new Account();
+              newAccount.setUsername(name);
+              return next(socket, 'password', true, name);
+            }
+
+            if (data && data === 'n') {
+              socket.write('Goodbye!\r\n');
+              console.log(socket);
+              return socket.end();
+            }
+          });
+
+          util.log('After data');
+        break;
+      }
     },
 
     /**
