@@ -465,10 +465,8 @@ var Events = {
 
       var next = gen_next('createAccount');
       var repeat = gen_repeat(arguments, next);
-      //TODO: create new account code goes here
 
-      //TODO: Consider having this be its own event emitted.
-      switch (stage){
+      switch (stage) {
         case 'check':
 
           let newAccount = null;
@@ -492,6 +490,7 @@ var Events = {
               socket.write('Creating account...\n');
               newAccount = new Account();
               newAccount.setUsername(name);
+              newAccount.setSocket(socket);
               return next(newAccount, 'password', true, name);
             }
 
@@ -515,7 +514,7 @@ var Events = {
 
               // setPassword handles hashing
               socket.setPassword(pass);
-              next(socket, 'gender');
+
             });
           break;
 
