@@ -592,15 +592,16 @@ var Events = {
                 return next(socket, 'check', account, name);
               }
             }
-          })
+          });
         break;
 
         case 'check':
-          socket.write("That character doesn't exist, would you like to create it? [y/n] ");
+          socket.write(name + " doesn't exist, would you like to create it? [y/n] ");
           socket.once('data', check => {
             check = check.toString()
               .trim()
               .toLowerCase();
+
             if (!/[yn]/.test(check)) {
               return repeat();
             }
@@ -610,7 +611,7 @@ var Events = {
               return socket.emit('createPlayer', socket, 'name');
             }
 
-            return next(socket, 'create', account);
+            return next(socket, 'create', account, name);
           });
           break;
         case 'create':
@@ -620,21 +621,19 @@ var Events = {
           socket.setName(name);
           account.addCharacter(name);
           account.save();
-          
+
           next(socket, 'gender');
           break;
         case 'gender':
-          socket.write(
-            'What is your character\'s gender?\n[F]emale\n[M]ale\n[A]ndrogynous\n'
-          );
+          socket.write('What is your character\'s gender?\n'
+          + '[F]emale\n[M]ale\n[A]ndrogynous\n');
+
           socket.getSocket()
-            .once('data', function (gender) {
+            .once('data', gender => {
               gender = gender.toString()
                 .toLowerCase();
               if (!gender) {
-                socket.say(
-                  'Please specify a gender, or [A]ndrogynous if you\'d prefer not to.'
-                );
+                socket.say('Please specify a gender, or [A]ndrogynous if you\'d prefer.');
                 return repeat();
               }
               socket.setGender(gender);

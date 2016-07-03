@@ -65,6 +65,12 @@ var Data = {
 		if (callback) { callback(); }
 	},
 
+  saveAccount: function (account, callback)
+  {
+    fs.writeFileSync(data_path + 'accounts/' + account.getUsername() + '.json', account.stringify(), 'utf8');
+    if (callback) { callback(); }
+  },
+
 	/**
 	 * Load and set listeners onto an object
 	 * @param object config
