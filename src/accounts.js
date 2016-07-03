@@ -39,8 +39,8 @@ const Account = function() {
   this.getUsername  = ()   => this.username;
   this.setUsername  = name => this.username = name;
 
-  this.addCharacter  = name => this.characters.push(char);
-  this.getCharacters = ()   => this.characters;
+  this.addCharacter  = name  => this.characters.push(name);
+  this.getCharacters = ()    => this.characters;
   this.getCharacter  = name  => this.characters.find(
     char => name === char);
 
@@ -110,7 +110,7 @@ const Account = function() {
       score:      this.score,
     };
 
-    const data = JSON.stringify(this);
+    const data = JSON.stringify(accountData);
     //TODO: Write data here
   }
 
