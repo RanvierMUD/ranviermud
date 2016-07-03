@@ -581,8 +581,9 @@ var Events = {
               socket.write(invalid + '\r\n');
               return repeat();
             } else {
-              const exists = players.getByName(name);
-              util.log("Does player already exist?", exists);
+
+              const exists = players.getByName(name) || Data.loadPlayer(name);
+
               if (exists) {
                 socket.write('That name is already taken.\r\n');
                 return repeat();
@@ -596,7 +597,7 @@ var Events = {
 
         case 'check':
           socket.write("That character doesn't exist, would you like to create it? [y/n] ");
-          socket.once('data', function (check) {
+          socket.once('data', check => {
             check = check.toString()
               .trim()
               .toLowerCase();
@@ -605,49 +606,22 @@ var Events = {
             }
 
             if (check === 'n') {
-              socket.write("Goodbye!\r\n");
-              socket.end();
-              return false;
+              socket.write("Let's try again...\r\n");
+              return socket.emit('createPlayer', socket, 'name');
             }
 
-            next(socket, 'name');
+            return next(socket, 'create', account);
           });
           break;
-        case 'name':
+        case 'create':
+          socket.write('Creating character...');
           socket = new Player(socket);
-          socket.write(L('NAME_PROMPT'));
-          socket.getSocket()
-            .once('data', function (name) {
-              name = name.toString()
-                .trim();
-              if (/\W/.test(name)) {
-                socket.say(L('INVALID_NAME'));
-                return repeat();
-              }
 
-              var player = false;
-              players.every(function (p) {
-                if (p.getName()
-                  .toLowerCase() === name.toLowerCase()) {
-                  player = true;
-                  return false;
-                }
-                return true;
-              });
-
-              player = player || Data.loadPlayer(name);
-
-              if (player) {
-                socket.say(L('NAME_TAKEN'));
-                return repeat();
-              }
-
-              // Always give them a name like Shawn instead of sHaWn
-              socket.setName(name[0].toUpperCase() + name.toLowerCase()
-                .substr(
-                  1));
-              next(socket, 'gender');
-            });
+          socket.setName(name);
+          account.addCharacter(name);
+          account.save();
+          
+          next(socket, 'gender');
           break;
         case 'gender':
           socket.write(
