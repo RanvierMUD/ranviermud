@@ -278,11 +278,12 @@ var Events = {
           util.log('Account creation step');
 
           let newAccount = null;
+          socket.write('No such account exists.\r\n');
           socket.write('Your username will be ' + name + ', y/n?\r\n');
 
           socket.once('data', data => {
 
-            var negot = isNegot(name);
+            var negot = isNegot(data);
 
             if (!negot) {
               next(socket, 'createAccount', true, name);
@@ -290,10 +291,11 @@ var Events = {
             }
 
             data = data.toString('').trim();
+            util.log('data ', data);
+
             if (data[0] === 0xFA) {
               return next(socket, 'createAccount', true, name);
             }
-            util.log('data ', data);
 
             if (data && data === 'y') {
               socket.write('Creating account...\n');
@@ -304,7 +306,8 @@ var Events = {
 
             if (data && data === 'n') {
               socket.write('Goodbye!');
-              return socket.emit('quit');
+              console.log(socket);
+              return socket.close();
             }
           });
           util.log('After data');
