@@ -22,6 +22,7 @@ const Account = function() {
   this.karma      = 0;
   this.uid        = null;
   this.socket     = null;
+  this.deceased   = [];
 
   this.score = {
     totalKarma:    0,
@@ -43,11 +44,16 @@ const Account = function() {
   this.getCharacters = ()    => this.characters;
   this.getCharacter  = name  => this.characters.find(
     char => name === char);
+  this.getDeceased   = ()    => this.deceased;
 
-  this.getLivingCharacters = () =>
-    this.characters.filter(char => char.isAlive);
-  this.getDeadCharacters   = () =>
-    this.characters.filter(char => !char.isAlive);
+
+  this.loadCharacters = ()   => this.characters
+    .map(char => Data.loadPlayer(char));
+
+  this.loadCharacter  = name => Data
+    .loadPlayer(this.characters
+      .find(char => char === name));
+
 
   this.getPassword = ()   => this.password; // Returns hash.
   this.setPassword = pass =>
@@ -65,17 +71,20 @@ const Account = function() {
 
   this.getScore = key => key ? this.score[key] : this.score;
 
+  // Convert char score to karma upon death and add to karma.
   this.updateScore = () => {
     const sumScore = score =>
       (sum, char) => char[score].length ? sum + char[score].length : sum;
 
-    this.score.totalKilled = this.characters
+    const chars = this.loadCharacters();
+
+    this.score.totalKilled   = chars
       .reduce(sumScore('killed'), 0);
 
-    this.score.totalExplored = this.characters
+    this.score.totalExplored = chars
       .reduce(sumScore('explored'), 0);
 
-    this.score.totalLevels = this.characters
+    this.score.totalLevels   = chars
       .reduce((sum, char) => sum + char.level, 0);
 
     const sumGT = obj => {
@@ -113,7 +122,7 @@ const Account = function() {
     return JSON.stringify(accountData);
   }
 
-  this.save = () = > Data.saveAccount(this);
+  this.save = () => Data.saveAccount(this);
 
   //TODO: Use this in the accountmanager when loading all accounts
   this.load = data => {
