@@ -47,6 +47,7 @@ var gen_next = function (event) {
    * @param ...
    */
   return function (socket, nextstage) {
+    util.log(arguments);
     var func = (socket instanceof Player ? socket.getSocket() : socket);
     func.emit.apply(func, [event].concat([].slice.call(arguments)));
   }
@@ -516,7 +517,7 @@ var Events = {
               // setPassword handles hashing
               account.setPassword(pass);
               account.getSocket()
-                .emit('createPlayer', account);
+                .emit('createPlayer', account.getSocket(), 'name', account, null);
             });
           break;
 
@@ -535,16 +536,15 @@ var Events = {
      *                  the stage.
      * @param string stage See above
      */
-    createPlayer: function (account, stage, name) {
+    createPlayer: function (socket, stage, account, name) {
       stage = stage || 'name';
 
       l10n.setLocale("en");
 
-      util.log(account);
-      util.log('args', arguments);
       var next   = gen_next('createPlayer');
       var repeat = gen_repeat(arguments, next);
-      var socket = account.getSocket();
+
+      util.log('Stage of charCreation: ', stage);
 
       /* Multi-stage character creation i.e., races, classes, etc.
        * Always emit 'done' in your last stage to keep it clean
@@ -582,21 +582,20 @@ var Events = {
               return repeat();
             } else {
               const exists = players.getByName(name);
-
+              util.log("Does player already exist?", exists);
               if (exists) {
                 socket.write('That name is already taken.\r\n');
                 return repeat();
               } else {
-                return next(account, 'check', name);
+                util.log('Checking...');
+                return next(socket, 'check', account, name);
               }
             }
-
-
           })
         break;
 
         case 'check':
-          socket.write("That player doesn't exist, would you like to create it? [y/n] ");
+          socket.write("That character doesn't exist, would you like to create it? [y/n] ");
           socket.once('data', function (check) {
             check = check.toString()
               .trim()
