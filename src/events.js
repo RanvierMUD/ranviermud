@@ -640,7 +640,7 @@ var Events = {
                 .trim()
                 .toLowerCase();
 
-              if (!gender || !validGenders.find(gender)) {
+              if (!gender || validGenders.indexOf(gender) === -1) {
                 socket.say('Please specify a gender, or [A]ndrogynous if you\'d prefer.');
                 return repeat();
               }
