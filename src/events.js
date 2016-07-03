@@ -614,6 +614,7 @@ var Events = {
             return next(socket, 'create', account, name);
           });
           break;
+
         case 'create':
           socket.write('Creating character...');
           socket = new Player(socket);
@@ -624,18 +625,26 @@ var Events = {
 
           next(socket, 'gender');
           break;
+
         case 'gender':
+
+          const validGenders = ['m', 'f', 'a'];
+
           socket.write('What is your character\'s gender?\n'
           + '[F]emale\n[M]ale\n[A]ndrogynous\n');
 
           socket.getSocket()
             .once('data', gender => {
-              gender = gender.toString()
+              gender = gender
+                .toString()
+                .trim()
                 .toLowerCase();
-              if (!gender) {
+
+              if (!gender || !validGenders.find(gender)) {
                 socket.say('Please specify a gender, or [A]ndrogynous if you\'d prefer.');
                 return repeat();
               }
+
               socket.setGender(gender);
               next(socket, 'done');
             });

@@ -3,6 +3,8 @@ const crypto = require('crypto');
 const util   = require('util');
 const events = require('events');
 
+const Data   = require('./data').Data;
+
 const Accounts = function() {
   this.accounts = [];
 
