@@ -52,6 +52,11 @@ var gen_next = function (event) {
   }
 };
 
+// Decides if stuff is actually player input or no.
+function isNegot(buffer) {
+  return buffer[buffer.length - 1] === 0x0a || buffer[buffer.length - 1] === 0x0d;
+}
+
 /**
  * Helper for repeating staged events
  * @param Array repeat_args
@@ -114,14 +119,7 @@ var Events = {
 
           socket.once('data', function (name) {
 
-            // swallow any data that's not from player input i.e., doesn't end with a newline
-            // Windows can s@#* a d@#$
-            var negot = false;
-            if (name[name.length - 1] === 0x0a) {
-              negot = true;
-            } else if (name[name.length - 1] === 0x0d) {
-              negot = true;
-            }
+            var negot = isNegot(name);
 
             if (!negot) {
               next(socket, 'login', true);
@@ -272,25 +270,44 @@ var Events = {
             socket.write('[' + i + '] ' + opt.display + '\r\n');
           });
 
+          //TODO: Take input for option selection here
+
         break;
 
         case 'createAccount':
           util.log('Account creation step');
+
           let newAccount = null;
           socket.write('Your username will be ' + name + ', y/n?\r\n');
-          socket.on('data', data => {
+
+          socket.once('data', data => {
+
+            var negot = isNegot(name);
+
+            if (!negot) {
+              next(socket, 'createAccount', true, name);
+              return;
+            }
+
+            data = data.toString('').trim();
+            if (data[0] === 0xFA) {
+              return next(socket, 'createAccount', true, name);
+            }
+            util.log('data ', data);
+
             if (data && data === 'y') {
               socket.write('Creating account...\n');
               newAccount = new Account();
               newAccount.setUsername(name);
               return next(socket, 'password', true, name);
             }
+
             if (data && data === 'n') {
               socket.write('Goodbye!');
-              return socket.emit('close');
+              return socket.emit('quit');
             }
           });
-
+          util.log('After data');
         break;
         case 'done':
           /* Next step
