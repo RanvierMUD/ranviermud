@@ -470,14 +470,12 @@ var Events = {
       //TODO: Consider having this be its own event emitted.
       switch (stage){
         case 'check':
-          util.log('Account creation step');
 
           let newAccount = null;
           socket.write('No such account exists.\r\n');
           socket.write('Your username will be ' + name + '? [y/n]\r\n');
 
           socket.once('data', data => {
-
             var negot = isNegot(data);
 
             if (!negot) {
@@ -486,8 +484,6 @@ var Events = {
             }
 
             data = data.toString('').trim();
-            util.log('data ', data);
-
             if (data[0] === 0xFA) {
               return next(socket, 'check', true, name);
             }
@@ -496,18 +492,33 @@ var Events = {
               socket.write('Creating account...\n');
               newAccount = new Account();
               newAccount.setUsername(name);
-              return next(socket, 'password', true, name);
+              return next(newAccount, 'password', true, name);
             }
 
             if (data && data === 'n') {
               socket.write('Goodbye!\r\n');
-              console.log(socket);
               return socket.end();
             }
           });
-
-          util.log('After data');
+          next(socket, 'password')
         break;
+
+        case 'password':
+          socket.write(L('PASSWORD'));
+          socket.getSocket()
+            .once('data', function (pass) {
+              pass = pass.toString().trim();
+              if (!pass) {
+                socket.write(L('EMPTY_PASS'));
+                return repeat();
+              }
+
+              // setPassword handles hashing
+              socket.setPassword(pass);
+              next(socket, 'gender');
+            });
+          break;
+
       }
     },
 
@@ -592,22 +603,6 @@ var Events = {
               socket.setName(name[0].toUpperCase() + name.toLowerCase()
                 .substr(
                   1));
-              next(socket, 'password');
-            });
-          break;
-        case 'password':
-          socket.write(L('PASSWORD'));
-          socket.getSocket()
-            .once('data', function (pass) {
-              pass = pass.toString()
-                .trim();
-              if (!pass) {
-                socket.sayL10n(l10n, 'EMPTY_PASS');
-                return repeat();
-              }
-
-              // setPassword handles hashing
-              socket.setPassword(pass);
               next(socket, 'gender');
             });
           break;
