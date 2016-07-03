@@ -100,7 +100,7 @@ const Account = function() {
     this.score.grandTotal = sumGT(this.score);
   };
 
-  this.save = () => {
+  this.stringify = () => {
     const accountData = {
       username:   this.username,
       characters: this.characters,
@@ -110,9 +110,10 @@ const Account = function() {
       score:      this.score,
     };
 
-    const data = JSON.stringify(accountData);
-    //TODO: Write data here
+    return JSON.stringify(accountData);
   }
+
+  this.save = () = > Data.saveAccount(this);
 
   //TODO: Use this in the accountmanager when loading all accounts
   this.load = data => {
