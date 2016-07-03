@@ -19,6 +19,7 @@ const Account = function() {
   this.password   = null;
   this.karma      = 0;
   this.uid        = null;
+  this.socket     = null;
 
   this.score = {
     totalKarma:    0,
@@ -29,6 +30,10 @@ const Account = function() {
   };
 
   /* Mutators */
+
+  this.getSocket    = ()   => this.socket;
+  this.setSocket    = sock => this.socket = sock;
+
   this.getUsername  = ()   => this.username;
   this.setUsername  = name => this.username = name;
 
