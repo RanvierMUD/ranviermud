@@ -152,7 +152,7 @@ var Events = {
               return socket.emit('createAccount', socket, 'check', name);
             }
 
-            return next(socket, 'password', false, name);
+            return next(socket, 'password', name);
 
           });
           break;
@@ -460,7 +460,7 @@ var Events = {
      * @param string stage See above
      */
 
-    createAccount: function(socket, stage, name) {
+    createAccount: function(socket, stage, name, account) {
       stage = stage || 'check';
 
       l10n.setLocale('en');
@@ -473,40 +473,40 @@ var Events = {
         case 'check':
           let newAccount = null;
           socket.write('No such account exists.\r\n');
-          socket.write('Your username will be ' + name + '? [y/n]\r\n');
+          socket.write('You want your account\'s username to be ' + name + '? [y/n] ');
 
           socket.once('data', data => {
 
             if (!isNegot(data)) {
-              next(socket, 'createAccount', true, name);
+              next(socket, 'createAccount', name, null);
               return;
             }
 
             data = data.toString('').trim();
             if (data[0] === 0xFA) {
-              return next(socket, 'check', true, name);
+              return repeat();
             }
 
             if (data && data === 'y') {
-              socket.write('Creating account...\n');
+              socket.write('Creating account...\r\n');
               newAccount = new Account();
               newAccount.setUsername(name);
               newAccount.setSocket(socket);
-              return next(newAccount, 'password', true, name);
-            }
+              return next(socket, 'password', name, newAccount);
 
-            if (data && data === 'n') {
+            } else if (data && data === 'n') {
               socket.write('Goodbye!\r\n');
               return socket.end();
+
+            } else {
+              return repeat();
             }
           });
-          next(socket, 'password')
         break;
 
         case 'password':
           socket.write(L('PASSWORD'));
-          socket.getSocket()
-            .once('data', function (pass) {
+          socket.once('data', pass => {
               pass = pass.toString().trim();
               if (!pass) {
                 socket.write(L('EMPTY_PASS'));
@@ -514,8 +514,9 @@ var Events = {
               }
 
               // setPassword handles hashing
-              socket.setPassword(pass);
-              socket.getSocket().emit('createPlayer', socket);
+              account.setPassword(pass);
+              account.getSocket()
+                .emit('createPlayer', account);
             });
           break;
 
@@ -534,21 +535,25 @@ var Events = {
      *                  the stage.
      * @param string stage See above
      */
-    createPlayer: function (account, stage) {
+    createPlayer: function (account, stage, name) {
       stage = stage || 'name';
 
       l10n.setLocale("en");
 
+      util.log(account);
+      util.log('args', arguments);
       var next   = gen_next('createPlayer');
       var repeat = gen_repeat(arguments, next);
       var socket = account.getSocket();
+
       /* Multi-stage character creation i.e., races, classes, etc.
        * Always emit 'done' in your last stage to keep it clean
        * Also try to put the cases in order that they happen during creation
        */
+
       switch (stage) {
         case 'name':
-          socket.write("What would you like to name your character?");
+          socket.write("What would you like to name your character? ");
           socket.once('data', name => {
 
             if (!isNegot(name)) {
@@ -558,6 +563,35 @@ var Events = {
             name = capitalize(name
               .toString()
               .trim());
+
+            const invalid = validate(name);
+
+            //TODO: Put any player name whitelisting/blacklisting here.
+            function validate(name) {
+              if (name.length > 20) {
+                return 'Too long, try a shorter name.';
+              }
+              if (name.length < 3) {
+                return 'Too short, try a longer name.';
+              }
+              return false;
+            }
+
+            if (invalid) {
+              socket.write(invalid + '\r\n');
+              return repeat();
+            } else {
+              const exists = players.getByName(name);
+
+              if (exists) {
+                socket.write('That name is already taken.\r\n');
+                return repeat();
+              } else {
+                return next(account, 'check', name);
+              }
+            }
+
+
           })
         break;
 

@@ -1,5 +1,7 @@
 'use strict';
 const crypto = require('crypto');
+const util   = require('util');
+const events = require('events');
 
 const Accounts = function() {
   this.accounts = [];
@@ -125,5 +127,7 @@ const Account = function() {
 
   return this;
 };
+
+util.inherits(Account, events.EventEmitter);
 
 module.exports = { Accounts, Account };
