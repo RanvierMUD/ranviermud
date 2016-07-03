@@ -98,7 +98,6 @@ const Account = function() {
     };
 
     this.score.grandTotal = sumGT(this.score);
-    console.log(this.score);
   };
 
   this.save = () => {
