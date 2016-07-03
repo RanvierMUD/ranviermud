@@ -233,8 +233,8 @@ var Events = {
           }
 
           // This just gets their names.
-          const characters = account.getLivingCharacters();
-          const deceased   = account.getDeadCharacters();
+          const characters = account.getCharacters();
+          const deceased   = account.getDeceased();
 
           const maxCharacters   = 3;
           const canAddCharacter = characters.length < maxCharacters;

@@ -83,18 +83,5 @@ describe('New player', () => {
       });
 
     });
-
-
-    describe('Loading Player', () => {
-
-      const testPlayer = new Player();
-
-      it('should be loaded with a uid', () => {
-        testPlayer.load(Mocks.Player);
-        expect(testPlayer.getUuid()).to.be.ok;
-      });
-
-    });
-
-
+    
 });
