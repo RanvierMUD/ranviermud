@@ -15,6 +15,7 @@ var crypto   = require('crypto'),
   Account    = require('./accounts').Account;
 
 
+Accounts = new Accounts();
 /**
  * Localization
  */
@@ -47,7 +48,6 @@ var gen_next = function (event) {
    * @param ...
    */
   return function (socket, nextstage) {
-    util.log(arguments);
     var func = (socket instanceof Player ? socket.getSocket() : socket);
     func.emit.apply(func, [event].concat([].slice.call(arguments)));
   }
@@ -104,14 +104,14 @@ var Events = {
         l10n.setLocale('en');
       }
 
-      var next = gen_next('login');
+      var next   = gen_next('login');
       var repeat = gen_repeat(arguments, next);
 
       switch (stage) {
 
         case 'intro':
           var motd = Data.loadMotd();
-          if (motd) socket.write(motd);
+          if (motd) { socket.write(motd); }
           next(socket, 'login');
           break;
 
@@ -120,20 +120,20 @@ var Events = {
             socket.write("Welcome, what is your name? ");
           }
 
-          //TODO: Check if account exists.
-          //      If so, continue to player selection menu
+          //      If account, continue to player selection menu
           //      Else, continue to account creation menu
 
           socket.once('data', function (name) {
 
-            var negot = isNegot(name);
 
-            if (!negot) {
+            if (!isNegot(name)) {
               next(socket, 'login', true);
               return;
             }
 
-            var name = name.toString().trim();
+            var name = name
+              .toString()
+              .trim();
 
             //TODO: Blacklist/whitelist names here.
             if (/[^a-z]/i.test(name) || !name) {
@@ -153,28 +153,31 @@ var Events = {
               return socket.emit('createAccount', socket, 'check', name);
             }
 
-            return next(socket, 'password', name);
+            return next(socket, 'password', false, name);
 
           });
           break;
 
         case 'password':
+
+          util.log('Password...');
+
           if (!password_attempts[name]) {
             password_attempts[name] = 0;
           }
 
           // Boot and log any failed password attempts
           if (password_attempts[name] > 2) {
-            socket.write(L('PASSWORD_EXCEEDED') + "\r\n");
+            socket.write("Password attempts exceeded.\r\n");
             password_attempts[name] = 0;
             util.log('Failed login - exceeded password attempts - ' + name);
             socket.end();
             return false;
           }
 
-
+          util.log('dontwelcome: ', dontwelcome);
           if (!dontwelcome) {
-            socket.write(L('PASSWORD'));
+            socket.write("Enter your password: ");
           }
 
           socket.once('data', pass => {
@@ -207,14 +210,14 @@ var Events = {
         //TODO: Consider turning into its own event listener.
         case 'chooseChar':
 
-          util.log('Account opts menu');
-          var name = dontwelcome;
+          socket.write('Choose your fate:\r\n');
+          var name = name || dontwelcome;
 
-          //FIXME: This should actually go later, when they enter their password.
           var boot = Accounts.getAccount(name);
           var multiplaying = player =>
             player.getAccountName().toLowerCase() === name.toLowerCase();
 
+          //TODO: Consider booting later, when player enters.
           if (boot) {
             players.eachIf(
               multiplaying,
@@ -243,7 +246,7 @@ var Events = {
           let selected = '';
 
           // Configure account options menu
-          if (canAddCharacters) {
+          if (canAddCharacter) {
             options.push({
               display: 'Create New Character',
               toStage: 'createPlayer',
@@ -270,10 +273,22 @@ var Events = {
           // Display options menu
 
           options.forEach((opt, i) => {
-            socket.write('[' + i + '] ' + opt.display + '\r\n');
+            socket.write('[' + i + 1 + '] ' + opt.display + '\r\n');
           });
 
-          //TODO: Take input for option selection here
+          socket.once('data', choice => {
+            choice = parseInt(choice.trim(), 10) - 1;
+            if (isNaN(choice)) {
+              return repeat();
+            }
+
+            if (options[choice]) {
+              // Emit to option: args -> socket, account, optional dynamic param
+              socket.emit(options[choice], socket, account, param);
+            }
+
+          })
+
 
         break;
 
@@ -544,8 +559,6 @@ var Events = {
       var next   = gen_next('createPlayer');
       var repeat = gen_repeat(arguments, next);
 
-      util.log('Stage of charCreation: ', stage);
-
       /* Multi-stage character creation i.e., races, classes, etc.
        * Always emit 'done' in your last stage to keep it clean
        * Also try to put the cases in order that they happen during creation
@@ -627,7 +640,6 @@ var Events = {
           break;
 
         case 'gender':
-
           const validGenders = ['m', 'f', 'a'];
 
           socket.write('What is your character\'s gender?\n'
@@ -649,6 +661,7 @@ var Events = {
               next(socket, 'done');
             });
           break;
+
           // 'done' assumes the argument passed to the event is a player, ...so always do that.
         case 'done':
           socket.setLocale("en");
