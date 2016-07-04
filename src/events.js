@@ -258,8 +258,7 @@ const Events = {
           if (canAddCharacter) {
             options.push({
               display: 'Create New Character',
-              toStage: 'createPlayer',
-              param:    account,
+              onSelect: () => socket.emit('createPlayer', socket, null, account),
             });
           }
 
@@ -267,8 +266,7 @@ const Events = {
             characters.forEach(char => {
               options.push({
                 display: 'Enter World as ' + char,
-                toStage: 'done',
-                param:    char,
+                onSelect: () => next(socket, 'done', null, char),
               });
             });
           }
@@ -276,14 +274,13 @@ const Events = {
           if (deceased.length) {
             options.push({
               display: 'View Memorials',
-              toStage: 'deceased',
-              param:    account
+              onSelect: () => socket.emit('deceased', socket, null, account),
             });
           }
 
           options.push({
             display: 'Quit',
-            toStage: 'quit',
+            onSelect: () => socket.end(),
           });
 
           // Display options menu
@@ -305,20 +302,11 @@ const Events = {
             const selection = options[choice];
 
             if (selection) {
-              if (selection.toStage === 'done') {
-                return next(socket, 'done', null, selection.param);
-              }
-              if (selection.toStage === 'quit') {
-                return socket.end();
-              }
-              // Options: 'deceased', 'createPlayer', 'done'
-              // Emit to option: args -> socket, account, optional dynamic param
-              socket.emit(selection.toStage, socket, null, selection.param);
+              util.log('Selected ' + selection.display);
+              selection.onSelect();
             } else {
               return repeat();
             }
-
-
 
           });
 
