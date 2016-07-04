@@ -465,7 +465,6 @@ const Player = function PlayerConstructor(socket) {
     self.preferences = data.preferences || {};
     self.explored = data.explored || [];
     self.training = data.training || { time: 0 };
-    self.setUuid(uuid.v4());
 
     // Activate any passive skills the player has
     //TODO: Probably a better way to do this than toLowerCase.
