@@ -250,6 +250,7 @@ var Events = {
             options.push({
               display: 'Create New Character',
               toStage: 'createPlayer',
+              param:    account;
             });
           }
 
@@ -258,7 +259,7 @@ var Events = {
               options.push({
                 display: 'Enter World as ' + char,
                 toStage: 'done',
-                param:   players.getByName(char),
+                param:    Data.loadPlayer(name),
               });
             });
           }
@@ -267,6 +268,7 @@ var Events = {
             options.push({
               display: 'View Memorials',
               toStage: 'deceased',
+              param:    account
             });
           }
 
@@ -282,9 +284,15 @@ var Events = {
               return repeat();
             }
 
-            if (options[choice]) {
+            const selection = options[choice];
+
+            if (selection) {
+              if (selection.toStage === 'done') {
+                return next(socket, 'done', selection.param);
+              }
+              // Options: 'deceased', 'createPlayer', 'done'
               // Emit to option: args -> socket, account, optional dynamic param
-              socket.emit(options[choice], socket, account, param);
+              socket.emit(selection.toStage, socket, null, selection.param);
             }
 
           })
