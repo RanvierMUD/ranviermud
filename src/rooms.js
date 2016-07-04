@@ -229,18 +229,18 @@ var Room = function(config) {
 
   self.getShortDesc = function(locale) {
     return typeof self.short_desc === 'string' ?
-      self.dark_desc :
-      (locale in self.dark_desc ? self.dark_desc[locale] :
-        (locale in self.description ? self.description[locale] : self.description)
-      );
+      self.short_desc :
+      (locale in self.short_desc ?
+        self.short_desc[locale] :
+        self.getDescription(locale));
   };
 
   self.getDarkDesc = function(locale) {
     return typeof self.dark_desc === 'string' ?
       self.short_desc :
-      (locale in self.dark_desc ? self.dark_desc[locale] :
-        (locale in self.description ? self.description[locale] : self.description)
-      );
+      (locale in self.dark_desc ?
+        self.dark_desc[locale] :
+        self.getShortDesc(locale));
   }
 
   /**
