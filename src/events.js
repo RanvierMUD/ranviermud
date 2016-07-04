@@ -326,7 +326,6 @@ const Events = {
         case 'done':
 
           player = new Player(socket);
-          util.log('name:', name);
           player.load(Data.loadPlayer(name));
           players.addPlayer(player);
 
@@ -634,7 +633,6 @@ const Events = {
                 socket.write('That name is already taken.\r\n');
                 return repeat();
               } else {
-                util.log('Checking...');
                 return next(socket, 'check', account, name);
               }
             }
