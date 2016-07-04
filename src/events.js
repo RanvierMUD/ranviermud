@@ -5,6 +5,8 @@
 const crypto = require('crypto'),
   util       = require('util'),
   ansi       = require('colorize').ansify,
+  sty        = require('sty'),
+
 
   Commands   = require('./commands').Commands,
   Channels   = require('./channels').Channels,
@@ -93,6 +95,8 @@ const Events = {
      * @param Socket socket
      */
     login: function login(socket, stage, dontwelcome, name) {
+
+      const say = string => socket.write(sty.parse(string));
 
       util.log("Login event detected... ", stage);
 
@@ -286,7 +290,7 @@ const Events = {
 
           options.forEach((opt, i) => {
             const num = i + 1;
-            socket.write('<cyan>[' + num + ']</cyan> <bold>' + opt.display + '</bold>\r\n');
+            say('<cyan>[' + num + ']</cyan> <bold>' + opt.display + '</bold>\r\n');
           });
 
           socket.once('data', choice => {
@@ -506,6 +510,9 @@ const Events = {
      */
 
     createAccount: function(socket, stage, name, account) {
+
+      const say = string => socket.write(sty.parse(string));
+
       stage = stage || 'check';
 
       l10n.setLocale('en');
@@ -518,7 +525,7 @@ const Events = {
         case 'check':
           let newAccount = null;
           socket.write('No such account exists.\r\n');
-          socket.write('<bold>Do you want your account\'s username to be ' + name + '?</bold> <cyan>[y/n]</cyan> ');
+          say('<bold>Do you want your account\'s username to be ' + name + '?</bold> <cyan>[y/n]</cyan> ');
 
           socket.once('data', data => {
 
@@ -585,6 +592,7 @@ const Events = {
     createPlayer: function (socket, stage, account, name) {
       stage = stage || 'name';
 
+      const say = string => socket.write(sty.parse(string));
       l10n.setLocale("en");
 
       var next   = gen_next('createPlayer');
@@ -597,7 +605,7 @@ const Events = {
 
       switch (stage) {
         case 'name':
-          socket.write("What would you like to name your character? ");
+          say("<bold>What would you like to name your character?</bold> ");
           socket.once('data', name => {
 
             if (!isNegot(name)) {
@@ -639,7 +647,7 @@ const Events = {
         break;
 
         case 'check':
-          socket.write("<bold>" + name + " doesn't exist, would you like to create it?</bold> <cyan>[y/n]</cyan> ");
+          say("<bold>" + name + " doesn't exist, would you like to create it?</bold> <cyan>[y/n]</cyan> ");
           socket.once('data', check => {
             check = check.toString()
               .trim()
@@ -674,7 +682,7 @@ const Events = {
         case 'gender':
           const validGenders = ['m', 'f', 'a'];
 
-          socket.write('<bold>What is your character\'s gender?</bold>\n'
+          say('<bold>What is your character\'s gender?</bold>\n'
           + '<cyan>[F]emale\n[M]ale\n[A]ndrogynous</cyan>\n');
 
           socket.getSocket()
