@@ -456,6 +456,7 @@ const Player = function PlayerConstructor(socket) {
    */
   self.load = data => {
     self.name = data.name;
+    self.accountName = data.accountName;
     self.location = data.location;
     self.locale = data.locale;
     self.prompt_string = data.prompt_string;
@@ -583,6 +584,7 @@ const Player = function PlayerConstructor(socket) {
 
     return JSON.stringify({
       name: self.name,
+      accountName: self.accountName,
       location: self.location,
       locale: self.locale,
       prompt_string: self.prompt_string,
