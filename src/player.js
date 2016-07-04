@@ -20,6 +20,7 @@ const Player = function PlayerConstructor(socket) {
   self.description = '';
   self.location    = null;
   self.locale      = null;
+  self.accountName = '';
 
   self.prompt_string =
     '<cyan>PHYSICAL: </cyan>%health_condition <blue>||</blue><cyan>MENTAL:</cyan> %sanity_condition<cyan> <blue>||</blue>ENERGY:</cyan> %energy_condition\n<blue><bold>[</bold></blue>';
@@ -85,6 +86,7 @@ const Player = function PlayerConstructor(socket) {
   self.getCombatPrompt = () => self.combat_prompt;
   self.getLocale       = () => self.locale;
   self.getName         = () => self.name;
+  self.getAccountName  = () => self.accountName;
   self.getDescription  = () => self.attributes.description;
   self.getLocation     = () => self.location;
   self.getSocket       = () => socket;
@@ -128,6 +130,7 @@ const Player = function PlayerConstructor(socket) {
   self.setCombatPrompt = str => self.combat_prompt = str;
   self.setLocale       = locale => self.locale = locale;
   self.setName         = newname => self.name = newname;
+  self.setAccountName  = accname => self.accountName = accname;
   self.setDescription  = newdesc => self.attributes.description = newdesc;
 
   self.setLocation = loc  => self.location = loc;
