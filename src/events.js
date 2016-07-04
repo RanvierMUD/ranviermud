@@ -271,6 +271,11 @@ var Events = {
             });
           }
 
+          options.push({
+            display: 'Quit',
+            toStage: 'quit',
+          });
+
           // Display options menu
 
           options.forEach((opt, i) => {
@@ -293,12 +298,19 @@ var Events = {
               if (selection.toStage === 'done') {
                 return next(socket, 'done', null, selection.param);
               }
+              if (selection.toStage === 'quit') {
+                return socket.end();
+              }
               // Options: 'deceased', 'createPlayer', 'done'
               // Emit to option: args -> socket, account, optional dynamic param
               socket.emit(selection.toStage, socket, null, selection.param);
+            } else {
+              return repeat();
             }
 
-          })
+
+
+          });
 
 
         break;
