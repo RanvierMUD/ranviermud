@@ -1,5 +1,7 @@
 'use strict';
 
+//FIXME: Find a way to modularize as much of this as possible.
+
 const crypto   = require('crypto'),
   util       = require('util'),
   ansi       = require('colorize').ansify,
