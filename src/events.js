@@ -286,7 +286,7 @@ const Events = {
 
           options.forEach((opt, i) => {
             const num = i + 1;
-            socket.write('[' + num + '] ' + opt.display + '\r\n');
+            socket.write('<cyan>[' + num + ']</cyan> <bold>' + opt.display + '</bold>\r\n');
           });
 
           socket.once('data', choice => {
@@ -518,7 +518,7 @@ const Events = {
         case 'check':
           let newAccount = null;
           socket.write('No such account exists.\r\n');
-          socket.write('You want your account\'s username to be ' + name + '? [y/n] ');
+          socket.write('<bold>Do you want your account\'s username to be ' + name + '?</bold> <cyan>[y/n]</cyan> ');
 
           socket.once('data', data => {
 
@@ -639,7 +639,7 @@ const Events = {
         break;
 
         case 'check':
-          socket.write(name + " doesn't exist, would you like to create it? [y/n] ");
+          socket.write("<bold>" + name + " doesn't exist, would you like to create it?</bold> <cyan>[y/n]</cyan> ");
           socket.once('data', check => {
             check = check.toString()
               .trim()
@@ -674,8 +674,8 @@ const Events = {
         case 'gender':
           const validGenders = ['m', 'f', 'a'];
 
-          socket.write('What is your character\'s gender?\n'
-          + '[F]emale\n[M]ale\n[A]ndrogynous\n');
+          socket.write('<bold>What is your character\'s gender?</bold>\n'
+          + '<cyan>[F]emale\n[M]ale\n[A]ndrogynous</cyan>\n');
 
           socket.getSocket()
             .once('data', gender => {
