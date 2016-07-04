@@ -2,7 +2,7 @@
 
 //FIXME: Find a way to modularize as much of this as possible.
 
-const crypto   = require('crypto'),
+const crypto = require('crypto'),
   util       = require('util'),
   ansi       = require('colorize').ansify,
 
@@ -41,7 +41,7 @@ const password_attempts = {};
  * @param string stage
  * @param object firstarg Override for the default arg
  */
-var gen_next = function (event) {
+const gen_next = function (event) {
   /**
    * Move to the next stage of a staged event
    * @param Socket|Player socket       Either a Socket or Player on which emit() will be called
@@ -70,7 +70,7 @@ function capitalize(str) {
  * @param Array repeat_args
  * @return function
  */
-var gen_repeat = function (repeat_args, next) {
+const gen_repeat = function (repeat_args, next) {
   return function () {
     next.apply(null, [].slice.call(repeat_args))
   };
@@ -82,7 +82,7 @@ var gen_repeat = function (repeat_args, next) {
  * if it isn't just a basic command. Complex listeners are staged.
  * See login or createPlayer for examples
  */
-var Events = {
+const Events = {
   /**
    * Container for events
    * @var object
@@ -125,7 +125,6 @@ var Events = {
           //      Else, continue to account creation menu
 
           socket.once('data', function (name) {
-
 
             if (!isNegot(name)) {
               next(socket, 'login', true);
@@ -212,11 +211,16 @@ var Events = {
         case 'chooseChar':
 
           socket.write('Choose your fate:\r\n');
-          var name = name || dontwelcome;
+          name = name || dontwelcome;
 
-          var boot = accounts.getAccount(name);
-          var multiplaying = player =>
-            player.getAccountName().toLowerCase() === name.toLowerCase();
+          const boot = accounts.getAccount(name);
+          util.log("boot? ", boot);
+          const multiplaying = player => {
+            const accountName = player.getAccountName().toLowerCase();
+            util.log('checking', accountName);
+            util.log('against', name);
+            return accountName === name.toLowerCase();
+          };
 
           //TODO: Consider booting later, when player enters.
           if (boot) {
@@ -234,6 +238,7 @@ var Events = {
           } else {
             account = new Account();
             account.load(Data.loadAccount(name));
+            accounts.addAccount(account);
           }
 
           // This just gets their names.
@@ -557,6 +562,8 @@ var Events = {
 
               // setPassword handles hashing
               account.setPassword(pass);
+              accounts.addAccount(account);
+
               account.getSocket()
                 .emit('createPlayer', account.getSocket(), 'name', account, null);
             });
@@ -659,6 +666,8 @@ var Events = {
           socket = new Player(socket);
 
           socket.setName(name);
+          socket.setAccountName(account.getUserName());
+
           account.addCharacter(name);
           account.save();
 
