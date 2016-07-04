@@ -258,7 +258,7 @@ var Events = {
               options.push({
                 display: 'Enter World as ' + char,
                 toStage: 'done',
-                param:    name,
+                param:    char,
               });
             });
           }
@@ -274,11 +274,15 @@ var Events = {
           // Display options menu
 
           options.forEach((opt, i) => {
-            socket.write('[' + i + 1 + '] ' + opt.display + '\r\n');
+            const num = i + 1;
+            socket.write('[' + num + '] ' + opt.display + '\r\n');
           });
 
           socket.once('data', choice => {
-            choice = parseInt(choice.trim(), 10) - 1;
+            choice = choice
+              .toString()
+              .trim();
+            choice = parseInt(choice, 10) - 1;
             if (isNaN(choice)) {
               return repeat();
             }
