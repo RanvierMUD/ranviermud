@@ -1,6 +1,6 @@
 'use strict';
 
-var crypto   = require('crypto'),
+const crypto   = require('crypto'),
   util       = require('util'),
   ansi       = require('colorize').ansify,
 
@@ -15,25 +15,24 @@ var crypto   = require('crypto'),
   Account    = require('./accounts').Account;
 
 
-Accounts = new Accounts();
 /**
  * Localization
  */
-var l10n = null;
-var l10nFile = __dirname + '/../l10n/events.yml';
+let l10n = null;
+const l10nFile = __dirname + '/../l10n/events.yml';
 // shortcut for l10n.translate
-var L = null;
+let L = null;
 
-var players  = null;
-var player   = null;
-var npcs     = null;
-var rooms    = null;
-var items    = null;
-var account  = null;
-var accounts = null;
+let players  = null;
+let player   = null;
+let npcs     = null;
+let rooms    = null;
+let items    = null;
+let account  = null;
+let accounts = null;
 
 // Keep track of password attempts
-var password_attempts = {};
+const password_attempts = {};
 
 /**
  * Helper for advancing staged events
@@ -213,7 +212,7 @@ var Events = {
           socket.write('Choose your fate:\r\n');
           var name = name || dontwelcome;
 
-          var boot = Accounts.getAccount(name);
+          var boot = accounts.getAccount(name);
           var multiplaying = player =>
             player.getAccountName().toLowerCase() === name.toLowerCase();
 
@@ -250,7 +249,7 @@ var Events = {
             options.push({
               display: 'Create New Character',
               toStage: 'createPlayer',
-              param:    account;
+              param:    account,
             });
           }
 
@@ -259,7 +258,7 @@ var Events = {
               options.push({
                 display: 'Enter World as ' + char,
                 toStage: 'done',
-                param:    Data.loadPlayer(name),
+                param:    name,
               });
             });
           }
@@ -302,7 +301,7 @@ var Events = {
 
         //TODO: Put this in its own emitter or extract into method or something?
         case 'done':
-          /* Next step
+
           player = new Player(socket);
           player.load(Data.loadPlayer(name));
           players.addPlayer(player);
@@ -340,7 +339,7 @@ var Events = {
 
           // All that shit done, let them play!
           player.getSocket().emit("commands", player);
-          */
+
           break;
       }
     },

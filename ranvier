@@ -18,6 +18,7 @@ var net = require('net'),
 	express = require('express'),
 	commander = require('commander'),
 	wrap = require('wrap-ansi'),
+	pkg = require('./package.json'),
 
 	// local
 	Commands = require('./src/commands').Commands,
@@ -26,6 +27,7 @@ var net = require('net'),
 	Items    = require('./src/items').Items,
 	Data     = require('./src/data').Data,
 	Events   = require('./src/events').Events,
+	Accounts = require('./src/accounts').Accounts,
 	Plugins  = require('./src/plugins'),
 
 	PlayerManager = require('./src/player_manager').PlayerManager,
@@ -44,9 +46,10 @@ var net = require('net'),
 
 	//storage of main game entities
 	var players,
-	rooms = new Rooms(),
-	items = new Items(),
-	npcs  = new Npcs(),
+	rooms    = new Rooms(),
+	items    = new Items(),
+	npcs     = new Npcs(),
+	accounts = new Accounts(),
 	server,
 
 	// Stuff for the server executable
@@ -56,7 +59,7 @@ var net = require('net'),
 
 // cmdline options
 commander
-	.version('0.2.1') //TODO: yank from package.json
+	.version(pkg.version)
 	.option('-s, --save [time]', 'Number of minutes between auto-save ticks [10]', 10)
 	.option('-r, --respawn [time]', 'Number of minutes between respawn tickets [20]', 20)
 	.option('-p, --port [portNumber]', 'Port to host telnet server [23]', 23)
@@ -86,7 +89,8 @@ var init = function (restart_server)
 		items: items,
 		locale:  commander.locale,
 		npcs: npcs,
-		rooms: rooms
+		rooms: rooms,
+		accounts: accounts,
 	});
 
 	if (restart_server) {
