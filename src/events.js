@@ -291,7 +291,7 @@ var Events = {
 
             if (selection) {
               if (selection.toStage === 'done') {
-                return next(socket, 'done', selection.param);
+                return next(socket, 'done', null, selection.param);
               }
               // Options: 'deceased', 'createPlayer', 'done'
               // Emit to option: args -> socket, account, optional dynamic param
@@ -307,6 +307,7 @@ var Events = {
         case 'done':
 
           player = new Player(socket);
+          util.log('name:', name);
           player.load(Data.loadPlayer(name));
           players.addPlayer(player);
 
