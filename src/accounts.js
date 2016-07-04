@@ -11,7 +11,8 @@ const Accounts = function() {
   this.addAccount  = acc  => this.accounts.push(acc);
   this.getAccounts = ()   => this.accounts;
   this.getAccount  = name => this.accounts.find(
-    acc => acc.getUsername().toLowerCase() === name.toLowerCase());
+    acc => acc.getUsername()
+              .toLowerCase() === name.toLowerCase());
 
   return this;
 };
@@ -76,7 +77,7 @@ const Account = function() {
   // Convert char score to karma upon death and add to karma.
   this.updateScore = () => {
     const sumScore = score =>
-      (sum, char) => char[score].length ? sum + char[score].length : sum;
+      (sum, char) => char[score] && char[score].length ? sum + char[score].length : sum;
 
     const chars = this.loadCharacters();
 

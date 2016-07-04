@@ -145,7 +145,6 @@ const Events = {
             name = capitalize(name);
 
             var data = Data.loadAccount(name);
-            util.log('Data/account is ', data);
 
             // That player doesn't exist so ask if them to create it
             if (!data) {
@@ -214,7 +213,7 @@ const Events = {
           name = name || dontwelcome;
 
           const boot = accounts.getAccount(name);
-          util.log("boot? ", boot);
+
           const multiplaying = player => {
             const accountName = player.getAccountName().toLowerCase();
             util.log('checking', accountName);
@@ -664,7 +663,7 @@ const Events = {
           socket = new Player(socket);
 
           socket.setName(name);
-          socket.setAccountName(account.getUserName());
+          socket.setAccountName(account.getUsername());
 
           account.addCharacter(name);
           account.save();
