@@ -248,14 +248,19 @@ const Player = function PlayerConstructor(socket) {
   */
 
   self.hasKilled = npc => {
-    const name = npc.getShortDesc(player.getLocale());
+    const name = npc.getShortDesc(self.getLocale());
+
     if (!self.killed.hasOwnProperty(name)) {
-      self.killed[name].amount = 1;
-      self.killed[name].level = npc.getAttribute('level');
+      self.killed[name] = {
+        amount: 1,
+        level: npc.getAttribute('level'),
+      };
+
       self.killed.length++;
       util.log(self.getName() + ' has slain ' + name + ' for the first time.');
       return false;
     }
+    
     const nth = self.killed[name].amount += 1;
     util.log(self.getName() + ' has slain ' + name + ' for the #' + nth + ' time');
     return true;
