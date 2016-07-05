@@ -66,6 +66,7 @@ const Player = function PlayerConstructor(socket) {
   };
 
   self.explored = [];
+  self.killed   = { length: 0 };
 
   // Anything affecting the player
   self.effects = {};
@@ -135,21 +136,21 @@ const Player = function PlayerConstructor(socket) {
 
   self.setLocation = loc  => self.location = loc;
   self.setPassword = pass =>
-    self.password = crypto
+    self.password  = crypto
       .createHash('md5')
       .update(pass)
       .digest('hex');
 
-  self.setGender = gender => self.gender = gender.toUpperCase();
-  self.addItem = item => self.inventory.push(item);
-  self.removeItem = item => {
+  self.setGender   = gender => self.gender = gender.toUpperCase();
+  self.addItem     = item   => self.inventory.push(item);
+  self.removeItem  = item   =>
     self.inventory = self.inventory.filter(i => item !== i);
-  };
-  self.setInventory = inv => self.inventory = inv;
-  self.setInCombat = combatant => self.inCombat = combatant;
-  self.setAttribute = (attr, val) => self.attributes[attr] = val;
-  self.setPreference = (pref, val) => self.preferences[pref] = val;
-  self.addSkill = (name, skill) => self.skills[name] = skill;
+
+  self.setInventory  = inv           => self.inventory = inv;
+  self.setInCombat   = combatant     => self.inCombat = combatant;
+  self.setAttribute  = (attr, val)   => self.attributes[attr] = val;
+  self.setPreference = (pref, val)   => self.preferences[pref] = val;
+  self.addSkill      = (name, skill) => self.skills[name] = skill;
 
   // Used to set up skill training business.
   self.setTraining = (key, value) => self.training[key] = value;
@@ -237,6 +238,26 @@ const Player = function PlayerConstructor(socket) {
       return false;
     }
     util.log(self.getName() + ' moves to room #' + vnum);
+    return true;
+  };
+
+  /**
+  * To keep track of the player's kills.
+  * @param obj of creature killed...
+  * @return boolean True if they have already slain it. Otherwise false.
+  */
+
+  self.hasKilled = npc => {
+    const name = npc.getShortDesc(player.getLocale());
+    if (!self.killed.hasOwnProperty(name)) {
+      self.killed[name].amount = 1;
+      self.killed[name].level = npc.getAttribute('level');
+      self.killed.length++;
+      util.log(self.getName() + ' has slain ' + name + ' for the first time.');
+      return false;
+    }
+    const nth = self.killed[name].amount += 1;
+    util.log(self.getName() + ' has slain ' + name + ' for the #' + nth + ' time');
     return true;
   };
 
