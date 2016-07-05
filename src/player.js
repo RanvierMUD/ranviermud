@@ -488,6 +488,7 @@ const Player = function PlayerConstructor(socket) {
     self.skills = data.skills;
     self.feats = data.feats || {};
     self.preferences = data.preferences || {};
+    self.killed   = data.killed   || { length: 0 };
     self.explored = data.explored || [];
     self.training = data.training || { time: 0 };
 
@@ -619,6 +620,7 @@ const Player = function PlayerConstructor(socket) {
       gender: self.gender,
       preferences: self.preferences,
       explored: self.explored,
+      killed:   self.killed,
       training: self.training,
     });
   };
