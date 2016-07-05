@@ -661,6 +661,8 @@ const Events = {
           socket.setName(name);
           socket.setAccountName(account.getUsername());
 
+          //FIXME: Kludgey.
+          // Save player, then load in order to init.
           socket.save();
           socket.load(Data.loadPlayer(name));
 
