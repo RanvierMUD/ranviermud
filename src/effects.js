@@ -119,7 +119,7 @@ const Effects = {
 
 	regen: config => {
 		const stat = config.stat || 'health';
-		const max = 'max_' + stat;
+		const max  = 'max_' + stat;
 		const attr = stat === 'sanity' ? 'willpower' : 'stamina';
 		const isFeat = config.isFeat;
 		const player = config.player;
@@ -138,7 +138,7 @@ const Effects = {
 						player,
 					  interval,
 						stat: 'energy',
-						bonus: player.getSkills('athletics'),
+						bonus: player.getSkills('athletics') * 2,
 					};
 					player.addEffect('recuperating', Effects.regen(energyConfig));
 				}
