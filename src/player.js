@@ -23,9 +23,9 @@ const Player = function PlayerConstructor(socket) {
   self.accountName = '';
 
   self.prompt_string =
-    '<cyan>PHYSICAL: </cyan>%health_condition <blue>||</blue><cyan>MENTAL:</cyan> %sanity_condition<cyan> <blue>||</blue>ENERGY:</cyan> %energy_condition\n<blue><bold>[</bold></blue>';
+    '<cyan>PHYSICAL: </cyan>%health_condition <blue>|| </blue><cyan>MENTAL:</cyan> %sanity_condition<cyan> <blue>|| </blue>ENERGY:</cyan> %energy_condition\n<blue><bold>[</bold></blue>';
   self.combat_prompt =
-    "<bold>|| <cyan>YOU: </cyan> %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
+    "<bold>|| <cyan>YOU: </cyan> %player_condition <blue>|<red>VS</red>|</blue> %target_condition ||</bold>\r\n>";
 
   self.password  = null;
   self.inventory = [];
@@ -260,7 +260,7 @@ const Player = function PlayerConstructor(socket) {
       util.log(self.getName() + ' has slain ' + name + ' for the first time.');
       return false;
     }
-    
+
     const nth = self.killed[name].amount += 1;
     util.log(self.getName() + ' has slain ' + name + ' for the #' + nth + ' time');
     return true;
