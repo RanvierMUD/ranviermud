@@ -138,7 +138,7 @@ const Effects = {
 						player,
 					  interval,
 						stat: 'energy',
-						bonus: player.getSkills('athletics') * 2,
+						bonus: player.getSkills('athletics') + 4,
 					};
 					player.addEffect('recuperating', Effects.regen(energyConfig));
 				}
