@@ -134,11 +134,12 @@ const Effects = {
 	      const interval = config.interval || 2000;
 
 				if (stat !== 'energy') {
+					const bonus = player.getSkills('athletics') + 4 || 5;
 					const energyConfig = {
 						player,
 					  interval,
 						stat: 'energy',
-						bonus: player.getSkills('athletics') + 4,
+						bonus,
 					};
 					player.addEffect('recuperating', Effects.regen(energyConfig));
 				}
@@ -147,8 +148,16 @@ const Effects = {
 	        const current = player.getAttribute(stat);
 					const modifier = player.getAttribute(attr);
 
+					util.log('mod: ', modifier);
+					util.log('bonus: ', bonus);
+					util.log('current: ', current);
+
 	        let regenerated = Math.round(Math.random() * modifier) + bonus;
+
+					util.log('regen #1: ', regenerated);
 					regenerated = Math.min(player.getAttribute(max), current + regenerated);
+
+					regenerated = regenerated || player.getAttribute(max) - 1;
 
 					util.log(player.getName() + ' has regenerated up to ' + regenerated + ' ' + stat + '.');
 	        player.setAttribute(stat, regenerated);

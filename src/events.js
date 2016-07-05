@@ -661,6 +661,9 @@ const Events = {
           socket.setName(name);
           socket.setAccountName(account.getUsername());
 
+          socket.save();
+          socket.load(Data.loadPlayer(name));
+
           account.addCharacter(name);
           account.save();
 

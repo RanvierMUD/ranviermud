@@ -25,7 +25,7 @@ const Player = function PlayerConstructor(socket) {
   self.prompt_string =
     '<cyan>PHYSICAL: </cyan>%health_condition <blue>|| </blue><cyan>MENTAL:</cyan> %sanity_condition<cyan> <blue>|| </blue>ENERGY:</cyan> %energy_condition\n<blue><bold>[</bold></blue>';
   self.combat_prompt =
-    "<bold>|| <cyan>YOU: </cyan> %player_condition <blue>|<red>VS</red>|</blue> %target_condition ||</bold>\r\n>";
+    "<bold>|| <cyan>YOU: </cyan> %player_condition <blue>|VS.|</blue> %target_condition ||</bold>\r\n>";
 
   self.password  = null;
   self.inventory = [];
@@ -714,8 +714,9 @@ const Player = function PlayerConstructor(socket) {
   function armor(location) {
     let bonus = self.checkStance('precise') ? self.getAttribute('willpower') + self.getAttribute('stamina') : 0
     let item = self.getEquipped(location, true);
-    if (item)
+    if (item) {
       return item.getAttribute('defense') * bonus;
+    }
     return 0;
   }
 
