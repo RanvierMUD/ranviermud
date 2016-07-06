@@ -41,8 +41,8 @@ const Player = function PlayerConstructor(socket) {
     health:     90,
     max_sanity: 100,
     sanity:     70,
-    energy:     40,
-    max_energy: 50,
+    energy:     90,
+    max_energy: 100,
 
     stamina:    1,
     willpower:  1,
