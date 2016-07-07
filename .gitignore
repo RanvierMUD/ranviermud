@@ -1,4 +1,5 @@
 node_modules
 plugins/
 data/players/*.json
+data/accounts/*.json
 *.swp
