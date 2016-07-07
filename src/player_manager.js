@@ -14,6 +14,10 @@ var PlayerManager = function ()
 		return self.defaultLocation;
 	};
 
+	self.getByName = function(name) {
+		return self.players.find(p => p.getName() === name);
+	}
+
 	/**
 	 * Get rid of a player
 	 * @param Player player

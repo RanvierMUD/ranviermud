@@ -11,7 +11,7 @@ exports.listeners = {
   //// Function wrappers needed to access "this" (Player obj)
   regen: function(l10n) {
       return function(bonus) {
-        bonus = bonus || player.getSkills('recovery');
+        bonus = bonus || this.getSkills('recovery');
         const config = {
           player: this,
           bonus
@@ -22,7 +22,7 @@ exports.listeners = {
 
   meditate: function(l10n) {
     return function(bonus) {
-      bonus = bonus || player.getSkills('concentration');
+      bonus = bonus || this.getSkills('concentration');
       const config = {
         player: this,
         stat: 'sanity',
@@ -120,7 +120,7 @@ exports.listeners = {
         const max = 'max_' + attr;
         this.setAttribute(max, healthGain);
         this.setAttribute(attr, this.getAttribute(max));
-        player.say('<blue>You have gained ' + attr + '.</blue>');
+        this.say('<blue>You have gained ' + attr + '.</blue>');
       }
 
       // Add points for skills

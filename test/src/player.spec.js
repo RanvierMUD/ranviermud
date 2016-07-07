@@ -12,7 +12,6 @@ describe('New player', () => {
     afterEach(() => {});
 
 
-
     it('Should be of the Player class', () => {
       const testPlayer = new Player();
       expect(testPlayer instanceof Player).to.be.true;
@@ -84,7 +83,5 @@ describe('New player', () => {
       });
 
     });
-
-
-
+    
 });
