@@ -23,8 +23,9 @@ exports.event = (/* globals go here */) => {
       l10n.setLocale('en');
     }
 
-    const next   = EventUtils.gen_next('login');
-    const repeat = EventUtils.gen_repeat(arguments, next);
+    const say    = EventUtil.gen_say(socket);
+    const next   = EventUtil.gen_next('login');
+    const repeat = EventUtil.gen_repeat(arguments, next);
 
     switch (stage) {
 
@@ -102,6 +103,11 @@ exports.event = (/* globals go here */) => {
             return next(socket, 'password', true, name);
           }
 
+          if (pass.length < 6) {
+            EventUtil.say('Your password must be at least 6 characters.');
+            return next(socket, 'password', true, name);
+          }
+
           pass = crypto
             .createHash('md5')
             .update(pass.toString('').trim())
@@ -109,8 +115,8 @@ exports.event = (/* globals go here */) => {
 
           if (pass !== Data.loadAccount(name).password) {
             util.log("Failed password attempt by ", socket)
-            socket.write(L('PASSWORD_FAIL') + "\r\n");
-            passwordAttempts[name] += 1;
+            EventUtil.say(''));
+            passwordAttempts[name]++;
             return repeat();
           }
           next(socket, 'chooseChar', name);
