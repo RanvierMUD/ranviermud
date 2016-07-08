@@ -38,14 +38,15 @@ let items    = null;
 let account  = null;
 let accounts = null;
 
-const say       = string => socket.write(sty.parse(string));
+const gen_say = socket => string => socket.write(sty.parse(string));
 const EventUtil = {
   gen_next,
   gen_repeat,
+  gen_say,
+
   capitalize,
   isNegot,
   swallowGarbage,
-  say
 };
 
 
@@ -500,4 +501,4 @@ const Events = {
   }
 };
 exports.Events     = Events;
-exports.EventUtils = EventUtils;
+exports.EventUtil = EventUtil;
