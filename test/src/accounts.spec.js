@@ -67,12 +67,13 @@ describe('User Account', () => {
     });
 
     it('should return array of all living characters', () => {
-      const alive = testAccount.getLivingCharacters();
+      testAccount.addDeceased('Potato');
+      const alive = testAccount.getCharacters();
       expect(alive.length).to.equal(1);
     });
 
-    it('should return array of all living characters', () => {
-      const dead = testAccount.getDeadCharacters();
+    it('should return array of all dead characters', () => {
+      const dead = testAccount.getDeceased();
       expect(dead.length).to.equal(1);
     });
 
@@ -95,7 +96,8 @@ describe('User Account', () => {
       expect(testAccount.getKarma()).to.equal(expected);
     });
 
-    describe('Scoring', () => {
+    //FIXME: Skipped because I plan on modularizing the scoring stuff.
+    xdescribe('Scoring', () => {
 
       const scoreMockA = {
         'killed': [1, 2, 3],
