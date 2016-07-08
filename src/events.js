@@ -1,48 +1,49 @@
 'use strict';
 
-var crypto = require('crypto'),
-  util = require('util'),
-  ansi = require('colorize')
-  .ansify,
+//FIXME: Find a way to modularize as much of this as possible.
 
-  Commands = require('./commands')
-  .Commands,
-  Channels = require('./channels')
-  .Channels,
-  Data = require('./data')
-  .Data,
-  Item = require('./items')
-  .Item,
-  Player = require('./player')
-  .Player,
-  Skills = require('./skills')
-  .Skills,
-  l10nHelper = require('./l10n');
+const crypto = require('crypto'),
+  util       = require('util'),
+  ansi       = require('colorize').ansify,
+  sty        = require('sty'),
+
+
+  Commands   = require('./commands').Commands,
+  Channels   = require('./channels').Channels,
+  Data       = require('./data').Data,
+  Item       = require('./items').Item,
+  Player     = require('./player').Player,
+  Skills     = require('./skills').Skills,
+  l10nHelper = require('./l10n'),
+  Accounts   = require('./accounts').Accounts,
+  Account    = require('./accounts').Account;
 
 
 /**
  * Localization
  */
-var l10n = null;
-var l10nFile = __dirname + '/../l10n/events.yml';
+let l10n = null;
+const l10nFile = __dirname + '/../l10n/events.yml';
 // shortcut for l10n.translate
-var L = null;
+let L = null;
 
-var players = null;
-var player = null;
-var npcs = null;
-var rooms = null;
-var items = null;
+let players  = null;
+let player   = null;
+let npcs     = null;
+let rooms    = null;
+let items    = null;
+let account  = null;
+let accounts = null;
 
 // Keep track of password attempts
-var password_attempts = {};
+const password_attempts = {};
 
 /**
  * Helper for advancing staged events
  * @param string stage
  * @param object firstarg Override for the default arg
  */
-var gen_next = function (event) {
+const gen_next = function (event) {
   /**
    * Move to the next stage of a staged event
    * @param Socket|Player socket       Either a Socket or Player on which emit() will be called
@@ -55,12 +56,23 @@ var gen_next = function (event) {
   }
 };
 
+// Decides if stuff is actually player input or no.
+function isNegot(buffer) {
+  return buffer[buffer.length - 1] === 0x0a || buffer[buffer.length - 1] === 0x0d;
+}
+
+// Does what it says on the box
+function capitalize(str) {
+  return str[0].toUpperCase()
+       + str.toLowerCase().substr(1);
+}
+
 /**
  * Helper for repeating staged events
  * @param Array repeat_args
  * @return function
  */
-var gen_repeat = function (repeat_args, next) {
+const gen_repeat = function (repeat_args, next) {
   return function () {
     next.apply(null, [].slice.call(repeat_args))
   };
@@ -72,7 +84,7 @@ var gen_repeat = function (repeat_args, next) {
  * if it isn't just a basic command. Complex listeners are staged.
  * See login or createPlayer for examples
  */
-var Events = {
+const Events = {
   /**
    * Container for events
    * @var object
@@ -83,6 +95,8 @@ var Events = {
      * @param Socket socket
      */
     login: function login(socket, stage, dontwelcome, name) {
+
+      const say = string => socket.write(sty.parse(string));
 
       util.log("Login event detected... ", stage);
 
@@ -95,14 +109,14 @@ var Events = {
         l10n.setLocale('en');
       }
 
-      var next = gen_next('login');
+      var next   = gen_next('login');
       var repeat = gen_repeat(arguments, next);
 
       switch (stage) {
 
         case 'intro':
           var motd = Data.loadMotd();
-          if (motd) socket.write(motd);
+          if (motd) { socket.write(motd); }
           next(socket, 'login');
           break;
 
@@ -111,63 +125,62 @@ var Events = {
             socket.write("Welcome, what is your name? ");
           }
 
+          //      If account, continue to player selection menu
+          //      Else, continue to account creation menu
+
           socket.once('data', function (name) {
 
-            // swallow any data that's not from player input i.e., doesn't end with a newline
-            // Windows can s@#* a d@#$
-            var negot = false;
-            if (name[name.length - 1] === 0x0a) {
-              negot = true;
-            } else if (name[name.length - 1] === 0x0d) {
-              negot = true;
-            }
-
-            if (!negot) {
+            if (!isNegot(name)) {
               next(socket, 'login', true);
               return;
             }
 
-            var name = name.toString()
+            var name = name
+              .toString()
               .trim();
+
+            //TODO: Blacklist/whitelist names here.
             if (/[^a-z]/i.test(name) || !name) {
               socket.write("That's not really your name, now is it?\r\n");
               return repeat();
             }
 
-            name = name[0].toUpperCase() + name.toLowerCase()
-              .substr(1);
 
-            var data = Data.loadPlayer(name);
+            name = capitalize(name);
 
-            // That player doesn't exit so ask if them to create it
+            var data = Data.loadAccount(name);
+
+            // That player doesn't exist so ask if them to create it
             if (!data) {
-              socket.emit('createPlayer', socket);
-              return;
+              util.log('No account found')
+              return socket.emit('createAccount', socket, 'check', name);
             }
 
+            return next(socket, 'password', false, name);
 
-            next(socket, 'password', false, name);
-            return;
           });
           break;
 
         case 'password':
-          if (typeof password_attempts[name] === 'undefined') {
+
+          util.log('Password...');
+
+          if (!password_attempts[name]) {
             password_attempts[name] = 0;
           }
 
           // Boot and log any failed password attempts
           if (password_attempts[name] > 2) {
-            socket.write(L('PASSWORD_EXCEEDED') + "\r\n");
+            socket.write("Password attempts exceeded.\r\n");
             password_attempts[name] = 0;
             util.log('Failed login - exceeded password attempts - ' + name);
             socket.end();
             return false;
           }
 
-
+          util.log('dontwelcome: ', dontwelcome);
           if (!dontwelcome) {
-            socket.write(L('PASSWORD'));
+            socket.write("Enter your password: ");
           }
 
           socket.once('data', pass => {
@@ -181,31 +194,127 @@ var Events = {
               .update(pass.toString('').trim())
               .digest('hex');
 
-            if (pass !== Data.loadPlayer(name).password) {
+            if (pass !== Data.loadAccount(name).password) {
               util.log("Failed password attempt by ", socket)
               socket.write(L('PASSWORD_FAIL') + "\r\n");
               password_attempts[name] += 1;
               return repeat();
             }
-            next(socket, 'done', name);
+            next(socket, 'chooseChar', name);
           });
           break;
 
+        // Player selection menu:
+        // * Can select existing player
+        // * Can view deceased (if applicable)
+        // * Can create new (if less than 3 living chars)
 
-        case 'done':
-          var name = dontwelcome;
-          var haveSameName = p => p.getName().toLowerCase() === name.toLowerCase();
-          var boot = players.some(haveSameName);
+        //TODO: Redo 'done' below this
+        //TODO: Consider turning into its own event listener.
+        case 'chooseChar':
 
+          socket.write('Choose your fate:\r\n');
+          name = name || dontwelcome;
+
+          const boot = accounts.getAccount(name);
+
+          const multiplaying = player => {
+            const accountName = player.getAccountName().toLowerCase();
+            util.log('checking', accountName);
+            util.log('against', name);
+            return accountName === name.toLowerCase();
+          };
+
+          //TODO: Consider booting later, when player enters.
           if (boot) {
-            players.eachIf(haveSameName,
+            players.eachIf(
+              multiplaying,
               p => {
                 p.say("Replaced.");
                 p.emit('quit');
                 util.log("Replaced: ", p.getName());
                 players.removePlayer(p, true);
               });
+            account = boot;
+            account.updateScore();
+            account.save();
+          } else {
+            account = new Account();
+            account.load(Data.loadAccount(name));
+            accounts.addAccount(account);
           }
+
+          // This just gets their names.
+          const characters = account.getCharacters();
+          const deceased   = account.getDeceased();
+
+          const maxCharacters   = 3;
+          const canAddCharacter = characters.length < maxCharacters;
+
+          let options  = [];
+          let selected = '';
+
+          // Configure account options menu
+          if (canAddCharacter) {
+            options.push({
+              display: 'Create New Character',
+              onSelect: () => socket.emit('createPlayer', socket, null, account),
+            });
+          }
+
+          if (characters.length) {
+            characters.forEach(char => {
+              options.push({
+                display: 'Enter World as ' + char,
+                onSelect: () => next(socket, 'done', null, char),
+              });
+            });
+          }
+
+          if (deceased.length) {
+            options.push({
+              display: 'View Memorials',
+              onSelect: () => socket.emit('deceased', socket, null, account),
+            });
+          }
+
+          options.push({
+            display: 'Quit',
+            onSelect: () => socket.end(),
+          });
+
+          // Display options menu
+
+          options.forEach((opt, i) => {
+            const num = i + 1;
+            say('<cyan>[' + num + ']</cyan> <bold>' + opt.display + '</bold>\r\n');
+          });
+
+          socket.once('data', choice => {
+            choice = choice
+              .toString()
+              .trim();
+            choice = parseInt(choice, 10) - 1;
+            if (isNaN(choice)) {
+              return repeat();
+            }
+
+            const selection = options[choice];
+
+            if (selection) {
+              util.log('Selected ' + selection.display);
+              selection.onSelect();
+            } else {
+              return repeat();
+            }
+
+          });
+
+
+        break;
+
+        //TODO: Put this in its own emitter or extract into method or something?
+        case 'done':
 
           player = new Player(socket);
           player.load(Data.loadPlayer(name));
@@ -243,8 +352,8 @@ var Events = {
           player.checkTraining();
 
           // All that shit done, let them play!
-          player.getSocket()
-            .emit("commands", player);
+          player.getSocket().emit("commands", player);
+
           break;
       }
     },
@@ -376,12 +485,10 @@ var Events = {
     },
 
     /**
-     * Create a player
+     * Create an account
+     * Note: Do we already ask for a name in the login step?
      * Stages:
-     *   check:  See if they actually want to create a player or not
-     *   locale: Get the language they want to play in so we can give them
-     *           the rest of the creation process in their language
-     *   name:   ... get there name
+     *
      *   done:   This is always the end step, here we register them in with
      *           the rest of the logged in players and where they log in
      *
@@ -389,112 +496,205 @@ var Events = {
      *                  the stage.
      * @param string stage See above
      */
-    createPlayer: function (socket, stage) {
+
+    createAccount: function(socket, stage, name, account) {
+
+      const say = string => socket.write(sty.parse(string));
+
       stage = stage || 'check';
 
-      if (socket instanceof Player) {
-        l10n.setLocale("en");
-      }
+      l10n.setLocale('en');
 
-      var next = gen_next('createPlayer');
+      var next = gen_next('createAccount');
+      var repeat = gen_repeat(arguments, next);
+
+      switch (stage) {
+
+        case 'check':
+          let newAccount = null;
+          socket.write('No such account exists.\r\n');
+          say('<bold>Do you want your account\'s username to be ' + name + '?</bold> <cyan>[y/n]</cyan> ');
+
+          socket.once('data', data => {
+
+            if (!isNegot(data)) {
+              next(socket, 'createAccount', name, null);
+              return;
+            }
+
+            data = data.toString('').trim();
+            if (data[0] === 0xFA) {
+              return repeat();
+            }
+
+            if (data && data === 'y') {
+              socket.write('Creating account...\r\n');
+              newAccount = new Account();
+              newAccount.setUsername(name);
+              newAccount.setSocket(socket);
+              return next(socket, 'password', name, newAccount);
+
+            } else if (data && data === 'n') {
+              socket.write('Goodbye!\r\n');
+              return socket.end();
+
+            } else {
+              return repeat();
+            }
+          });
+        break;
+
+        case 'password':
+          socket.write(L('PASSWORD'));
+          socket.once('data', pass => {
+              pass = pass.toString().trim();
+              if (!pass) {
+                socket.write(L('EMPTY_PASS'));
+                return repeat();
+              }
+
+              // setPassword handles hashing
+              account.setPassword(pass);
+              accounts.addAccount(account);
+
+              account.getSocket()
+                .emit('createPlayer', account.getSocket(), 'name', account, null);
+            });
+          break;
+
+      }
+    },
+
+    /**
+     * Create a player
+     * Stages:
+     *   check:  See if they actually want to create a player or not
+     *   name:   ... get their name
+     *   done:   This is always the end step, here we register them in with
+     *           the rest of the logged in players and where they log in
+     *
+     * @param object arg This is either a Socket or a Player depending on
+     *                  the stage.
+     * @param string stage See above
+     */
+    createPlayer: function (socket, stage, account, name) {
+      stage = stage || 'name';
+
+      const say = string => socket.write(sty.parse(string));
+      l10n.setLocale("en");
+
+      var next   = gen_next('createPlayer');
       var repeat = gen_repeat(arguments, next);
 
       /* Multi-stage character creation i.e., races, classes, etc.
        * Always emit 'done' in your last stage to keep it clean
        * Also try to put the cases in order that they happen during creation
        */
+
       switch (stage) {
+        case 'name':
+          say("<bold>What would you like to name your character?</bold> ");
+          socket.once('data', name => {
+
+            if (!isNegot(name)) {
+              return repeat();
+            }
+
+            name = capitalize(name
+              .toString()
+              .trim());
+
+            const invalid = validate(name);
+
+            //TODO: Put any player name whitelisting/blacklisting here.
+            function validate(name) {
+              if (name.length > 20) {
+                return 'Too long, try a shorter name.';
+              }
+              if (name.length < 3) {
+                return 'Too short, try a longer name.';
+              }
+              return false;
+            }
+
+            if (invalid) {
+              socket.write(invalid + '\r\n');
+              return repeat();
+            } else {
+
+              const exists = players.getByName(name) || Data.loadPlayer(name);
+
+              if (exists) {
+                socket.write('That name is already taken.\r\n');
+                return repeat();
+              } else {
+                return next(socket, 'check', account, name);
+              }
+            }
+          });
+        break;
+
         case 'check':
-          socket.write(
-            "That player doesn't exist, would you like to create it? [y/n] "
-          );
-          socket.once('data', function (check) {
+          say("<bold>" + name + " doesn't exist, would you like to create it?</bold> <cyan>[y/n]</cyan> ");
+          socket.once('data', check => {
             check = check.toString()
               .trim()
               .toLowerCase();
+
             if (!/[yn]/.test(check)) {
               return repeat();
             }
 
             if (check === 'n') {
-              socket.write("Goodbye!\r\n");
-              socket.end();
-              return false;
+              socket.write("Let's try again...\r\n");
+              return socket.emit('createPlayer', socket, 'name');
             }
 
-            next(socket, 'name');
+            return next(socket, 'create', account, name);
           });
           break;
-        case 'name':
+
+        case 'create':
+          socket.write('Creating character...');
           socket = new Player(socket);
-          socket.write(L('NAME_PROMPT'));
-          socket.getSocket()
-            .once('data', function (name) {
-              name = name.toString()
-                .trim();
-              if (/\W/.test(name)) {
-                socket.say(L('INVALID_NAME'));
-                return repeat();
-              }
 
-              var player = false;
-              players.every(function (p) {
-                if (p.getName()
-                  .toLowerCase() === name.toLowerCase()) {
-                  player = true;
-                  return false;
-                }
-                return true;
-              });
+          socket.setName(name);
+          socket.setAccountName(account.getUsername());
 
-              player = player || Data.loadPlayer(name);
+          //FIXME: Kludgey.
+          // Save player, then load in order to init.
+          socket.save();
+          socket.load(Data.loadPlayer(name));
 
-              if (player) {
-                socket.say(L('NAME_TAKEN'));
-                return repeat();
-              }
+          account.addCharacter(name);
+          account.save();
 
-              // Always give them a name like Shawn instead of sHaWn
-              socket.setName(name[0].toUpperCase() + name.toLowerCase()
-                .substr(
-                  1));
-              next(socket, 'password');
-            });
+          next(socket, 'gender');
           break;
-        case 'password':
-          socket.write(L('PASSWORD'));
-          socket.getSocket()
-            .once('data', function (pass) {
-              pass = pass.toString()
-                .trim();
-              if (!pass) {
-                socket.sayL10n(l10n, 'EMPTY_PASS');
-                return repeat();
-              }
 
-              // setPassword handles hashing
-              socket.setPassword(pass);
-              next(socket, 'gender');
-            });
-          break;
         case 'gender':
-          socket.write(
-            'What is your character\'s gender?\n[F]emale\n[M]ale\n[A]ndrogynous\n'
-          );
+          const validGenders = ['m', 'f', 'a'];
+
+          say('<bold>What is your character\'s gender?</bold>\n'
+          + '<cyan>[F]emale\n[M]ale\n[A]ndrogynous</cyan>\n');
+
           socket.getSocket()
-            .once('data', function (gender) {
-              gender = gender.toString()
+            .once('data', gender => {
+              gender = gender
+                .toString()
+                .trim()
                 .toLowerCase();
-              if (!gender) {
-                socket.say(
-                  'Please specify a gender, or [A]ndrogynous if you\'d prefer not to.'
-                );
+
+              if (!gender || validGenders.indexOf(gender) === -1) {
+                socket.say('Please specify a gender, or [A]ndrogynous if you\'d prefer.');
                 return repeat();
               }
+
               socket.setGender(gender);
               next(socket, 'done');
             });
           break;
+
           // 'done' assumes the argument passed to the event is a player, ...so always do that.
         case 'done':
           socket.setLocale("en");
@@ -517,10 +717,13 @@ var Events = {
   },
 
   configure: function (config) {
-    players = players || config.players;
-    items = items || config.items;
-    rooms = rooms || config.rooms;
-    npcs = npcs || config.npcs;
+    players  = players  || config.players;
+    items    = items    || config.items;
+    rooms    = rooms    || config.rooms;
+    npcs     = npcs     || config.npcs;
+    accounts = accounts || config.accounts;
+
+
     if (!l10n) {
       util.log("Loading event l10n... ");
       l10n = l10nHelper(l10nFile);
