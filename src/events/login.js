@@ -8,6 +8,7 @@ const CommandUtil = require('../command_util').CommandUtil;
 const Player      = require('../player').Player;
 const Type        = require('../type').Type;
 
+const passwordAttempts = {};
 
 exports.event = (/* globals go here */) => {
 
@@ -43,8 +44,7 @@ exports.event = (/* globals go here */) => {
         socket.once('data', name => {
 
           if (!EventUtil.isNegot(name)) {
-            next(socket, 'login', true);
-            return;
+            return next(socket, 'login', true);
           }
 
           let name = name
@@ -69,7 +69,6 @@ exports.event = (/* globals go here */) => {
           }
 
           return next(socket, 'password', false, name);
-
         });
         break;
 
@@ -77,14 +76,16 @@ exports.event = (/* globals go here */) => {
 
         util.log('Password...');
 
-        if (!password_attempts[name]) {
-          password_attempts[name] = 0;
+        if (!passwordAttempts[name]) {
+          passwordAttempts[name] = 0;
         }
 
+        const maxFailedAttempts = 2;
+
         // Boot and log any failed password attempts
-        if (password_attempts[name] > 2) {
+        if (passwordAttempts[name] > maxFailedAttempts) {
           socket.write("Password attempts exceeded.\r\n");
-          password_attempts[name] = 0;
+          passwordAttempts[name] = 0;
           util.log('Failed login - exceeded password attempts - ' + name);
           socket.end();
           return false;
@@ -109,7 +110,7 @@ exports.event = (/* globals go here */) => {
           if (pass !== Data.loadAccount(name).password) {
             util.log("Failed password attempt by ", socket)
             socket.write(L('PASSWORD_FAIL') + "\r\n");
-            password_attempts[name] += 1;
+            passwordAttempts[name] += 1;
             return repeat();
           }
           next(socket, 'chooseChar', name);

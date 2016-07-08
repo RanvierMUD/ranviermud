@@ -38,9 +38,6 @@ let items    = null;
 let account  = null;
 let accounts = null;
 
-// Keep track of password attempts
-const password_attempts = {};
-
 const say       = string => socket.write(sty.parse(string));
 const EventUtil = {
   gen_next,
