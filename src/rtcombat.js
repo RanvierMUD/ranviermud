@@ -232,6 +232,8 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     if (success) {
       if (dualWieldCancel) { clearTimeout(dualWieldCancel); }
 
+      var hasKilled = player.hasKilled(npc);
+
       room.removeNpc(npc.getUuid());
       npcs.destroy(npc);
       player.sayL10n(l10n, 'WIN', npc.getShortDesc(locale));

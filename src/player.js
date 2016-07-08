@@ -1,55 +1,57 @@
 'use strict';
-const Data = require('./data')
-  .Data,
-  Skills = require('./skills')
-  .Skills,
-  crypto = require('crypto'),
-  ansi = require('sty'),
-  util = require('util'),
-  events = require('events'),
-  wrap = require('wrap-ansi'),
-  Random = require('./random').Random,
-  Feats = require('./feats').Feats;
+const Data = require('./data').Data,
+  Skills   = require('./skills').Skills,
+  crypto   = require('crypto'),
+  ansi     = require('sty'),
+  util     = require('util'),
+  events   = require('events'),
+  wrap     = require('wrap-ansi'),
+  Random   = require('./random').Random,
+  Feats    = require('./feats').Feats;
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
-const l10n_dir = __dirname + '/../l10n/scripts/player/';
-const statusUtil = require('./status');
+const l10n_dir         = __dirname + '/../l10n/scripts/player/';
+const statusUtil       = require('./status');
 
 const Player = function PlayerConstructor(socket) {
-  const self = this;
-  self.name = '';
+  const self       = this;
+
+  self.name        = '';
   self.description = '';
-  self.location = null;
-  self.locale = null;
+  self.location    = null;
+  self.locale      = null;
+  self.accountName = '';
+
   self.prompt_string =
-    '<cyan>PHYSICAL: </cyan>%health_condition <blue>||</blue><cyan>MENTAL:</cyan> %sanity_condition<cyan> <blue>||</blue>ENERGY:</cyan> %energy_condition\n<blue><bold>[</bold></blue>';
+    '<cyan>PHYSICAL: </cyan>%health_condition <blue>|| </blue><cyan>MENTAL:</cyan> %sanity_condition<cyan> <blue>|| </blue>ENERGY:</cyan> %energy_condition\n<blue><bold>[</bold></blue>';
   self.combat_prompt =
-    "<bold>|| <cyan>YOU: </cyan> %player_condition <blue>||</blue> %target_condition ||</bold>\r\n>";
-  self.password = null;
+    "<bold>|| <cyan>YOU: </cyan> %player_condition <blue>|VS.|</blue> %target_condition ||</bold>\r\n>";
+
+  self.password  = null;
   self.inventory = [];
   self.equipment = {};
 
   // In combat is either false or an NPC vnum
-  self.inCombat = false;
+  self.inCombat  = false;
 
   // Attributes
   self.attributes = {
 
     max_health: 100,
-    health: 90,
+    health:     90,
     max_sanity: 100,
-    sanity: 70,
-    energy: 40,
-    max_energy: 50,
+    sanity:     70,
+    energy:     90,
+    max_energy: 100,
 
-    stamina: 1,
-    willpower: 1,
-    quickness: 1,
+    stamina:    1,
+    willpower:  1,
+    quickness:  1,
     cleverness: 1,
 
-    level: 1,
+    level:      1,
     experience: 0,
-    mutagens: 0,
+    mutagens:   0,
     attrPoints: 0,
 
     //TODO: Generated descs.
@@ -57,13 +59,14 @@ const Player = function PlayerConstructor(socket) {
   };
 
   self.preferences = {
-    target: 'body',
-    wimpy: 30,
-    stance: 'normal',
+    target:    'body',
+    wimpy:     30,
+    stance:    'normal',
     roomdescs: 'default' //default = verbose 1st time, short after.
   };
 
   self.explored = [];
+  self.killed   = { length: 0 };
 
   // Anything affecting the player
   self.effects = {};
@@ -80,20 +83,24 @@ const Player = function PlayerConstructor(socket) {
   /**#@+
    * Mutators
    */
-  self.getPrompt = () => self.prompt_string;
+  self.getPrompt       = () => self.prompt_string;
   self.getCombatPrompt = () => self.combat_prompt;
-  self.getLocale = () => self.locale;
-  self.getName = () => self.name;
-  self.getDescription = () => self.attributes.description;
-  self.getLocation = () => self.location;
-  self.getRoom = rooms => rooms ? rooms.getAt(self.getLocation()) : null;
-  self.getSocket = () => socket;
-  self.getInventory = () => self.inventory;
-  self.getAttributes = () => self.attributes || {};
-  self.getGender = () => self.gender;
+  self.getLocale       = () => self.locale;
+  self.getName         = () => self.name;
+  self.getAccountName  = () => self.accountName;
+  self.getDescription  = () => self.attributes.description;
+  self.getLocation     = () => self.location;
+  self.getSocket       = () => socket;
+  self.getInventory    = () => self.inventory;
+  self.getAttributes   = () => self.attributes || {};
+  self.getGender       = () => self.gender;
+  self.getRoom         = rooms => rooms ?
+        rooms.getAt(self.getLocation()) : null;
 
-  self.hasEnergy = cost => self.getAttribute('energy') >= cost ?
-    self.emit('action', cost) : false;
+
+  self.hasEnergy = cost =>
+    self.getAttribute('energy') >= cost ?
+              self.emit('action', cost) : false;
 
   self.noEnergy = () => self.say('You need to rest first.');
 
@@ -118,33 +125,32 @@ const Player = function PlayerConstructor(socket) {
   }
 
   self.getPassword = () => self.password; // Returns hash.
-  self.isInCombat = () => self.inCombat;
+  self.isInCombat  = () => self.inCombat;
 
-  self.setPrompt = str => self.prompt_string = str;
+  self.setPrompt       = str => self.prompt_string = str;
   self.setCombatPrompt = str => self.combat_prompt = str;
-  self.setLocale = locale => self.locale = locale;
-  self.setName = newname => self.name = newname;
-  self.setDescription = newdesc =>
-    self.attributes.description =
-      newdesc;
+  self.setLocale       = locale => self.locale = locale;
+  self.setName         = newname => self.name = newname;
+  self.setAccountName  = accname => self.accountName = accname;
+  self.setDescription  = newdesc => self.attributes.description = newdesc;
 
-  self.setLocation = loc => self.location = loc;
+  self.setLocation = loc  => self.location = loc;
   self.setPassword = pass =>
-    self.password = crypto
+    self.password  = crypto
       .createHash('md5')
       .update(pass)
       .digest('hex');
 
-  self.setGender = gender => self.gender = gender.toUpperCase();
-  self.addItem = item => self.inventory.push(item);
-  self.removeItem = item => {
+  self.setGender   = gender => self.gender = gender.toUpperCase();
+  self.addItem     = item   => self.inventory.push(item);
+  self.removeItem  = item   =>
     self.inventory = self.inventory.filter(i => item !== i);
-  };
-  self.setInventory = inv => self.inventory = inv;
-  self.setInCombat = combatant => self.inCombat = combatant;
-  self.setAttribute = (attr, val) => self.attributes[attr] = val;
-  self.setPreference = (pref, val) => self.preferences[pref] = val;
-  self.addSkill = (name, skill) => self.skills[name] = skill;
+
+  self.setInventory  = inv           => self.inventory = inv;
+  self.setInCombat   = combatant     => self.inCombat = combatant;
+  self.setAttribute  = (attr, val)   => self.attributes[attr] = val;
+  self.setPreference = (pref, val)   => self.preferences[pref] = val;
+  self.addSkill      = (name, skill) => self.skills[name] = skill;
 
   // Used to set up skill training business.
   self.setTraining = (key, value) => self.training[key] = value;
@@ -232,6 +238,31 @@ const Player = function PlayerConstructor(socket) {
       return false;
     }
     util.log(self.getName() + ' moves to room #' + vnum);
+    return true;
+  };
+
+  /**
+  * To keep track of the player's kills.
+  * @param obj of creature killed...
+  * @return boolean True if they have already slain it. Otherwise false.
+  */
+
+  self.hasKilled = npc => {
+    const name = npc.getShortDesc(self.getLocale());
+
+    if (!self.killed.hasOwnProperty(name)) {
+      self.killed[name] = {
+        amount: 1,
+        level: npc.getAttribute('level'),
+      };
+
+      self.killed.length++;
+      util.log(self.getName() + ' has slain ' + name + ' for the first time.');
+      return false;
+    }
+
+    const nth = self.killed[name].amount += 1;
+    util.log(self.getName() + ' has slain ' + name + ' for the #' + nth + ' time');
     return true;
   };
 
@@ -451,6 +482,7 @@ const Player = function PlayerConstructor(socket) {
    */
   self.load = data => {
     self.name = data.name;
+    self.accountName = data.accountName;
     self.location = data.location;
     self.locale = data.locale;
     self.prompt_string = data.prompt_string;
@@ -461,6 +493,7 @@ const Player = function PlayerConstructor(socket) {
     self.skills = data.skills;
     self.feats = data.feats || {};
     self.preferences = data.preferences || {};
+    self.killed   = data.killed   || { length: 0 };
     self.explored = data.explored || [];
     self.training = data.training || { time: 0 };
 
@@ -578,6 +611,7 @@ const Player = function PlayerConstructor(socket) {
 
     return JSON.stringify({
       name: self.name,
+      accountName: self.accountName,
       location: self.location,
       locale: self.locale,
       prompt_string: self.prompt_string,
@@ -591,6 +625,7 @@ const Player = function PlayerConstructor(socket) {
       gender: self.gender,
       preferences: self.preferences,
       explored: self.explored,
+      killed:   self.killed,
       training: self.training,
     });
   };
@@ -679,8 +714,9 @@ const Player = function PlayerConstructor(socket) {
   function armor(location) {
     let bonus = self.checkStance('precise') ? self.getAttribute('willpower') + self.getAttribute('stamina') : 0
     let item = self.getEquipped(location, true);
-    if (item)
+    if (item) {
       return item.getAttribute('defense') * bonus;
+    }
     return 0;
   }
 
