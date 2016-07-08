@@ -1,8 +1,11 @@
 const EventUtil   = require('../events').EventUtil;
 const Data        = require('../data').Data;
 const CommandUtil = require('../command_util').CommandUtil;
+const Player      = require('../player').Player;
+
 
 exports.event = (/* globals go here */) => {
+
   return function login(socket, stage, dontwelcome, name) {
 
     util.log("Login event detected... ", stage);
@@ -12,7 +15,7 @@ exports.event = (/* globals go here */) => {
       dontwelcome;
     stage = stage || 'intro';
 
-    if (socket instanceof Player) {
+    if (CommandUtil.is(Player, socket)) {
       l10n.setLocale('en');
     }
 
@@ -37,7 +40,7 @@ exports.event = (/* globals go here */) => {
 
         socket.once('data', function (name) {
 
-          if (!isNegot(name)) {
+          if (!EventUtil.isNegot(name)) {
             next(socket, 'login', true);
             return;
           }
@@ -53,7 +56,7 @@ exports.event = (/* globals go here */) => {
           }
 
 
-          name = capitalize(name);
+          name = EventUtil.capitalize(name);
 
           var data = Data.loadAccount(name);
 
