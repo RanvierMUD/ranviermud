@@ -3,7 +3,6 @@ const Npc     = require('./npcs').Npc;
 const Item    = require('./items').Item;
 const Account = require('./accounts').Account;
 
-
 const isPlayer  = is(Player);
 const isNpc     = is(Npc);
 const isItem    = is(Item);

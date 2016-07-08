@@ -1,5 +1,7 @@
 'use strict';
 
+const util = require('util');
+
 const EventUtil   = require('../events').EventUtil;
 const Data        = require('../data').Data;
 const CommandUtil = require('../command_util').CommandUtil;
@@ -14,7 +16,6 @@ exports.event = (/* globals go here */) => {
     util.log("Login event detected... ", stage);
 
     dontwelcome = EventUtil.swallowGarbage(dontwelcome);
-    dontwelcome =
     stage = stage || 'intro';
 
     if (Type.isPlayer(socket)) {
@@ -57,14 +58,13 @@ exports.event = (/* globals go here */) => {
             return repeat();
           }
 
-
           name = EventUtil.capitalize(name);
 
-          var data = Data.loadAccount(name);
+          let accountExists = Data.loadAccount(name);
 
           // That player doesn't exist so ask if them to create it
-          if (!data) {
-            util.log('No account found')
+          if (!accountExists) {
+            util.log('No account found');
             return socket.emit('createAccount', socket, 'check', name);
           }
 
