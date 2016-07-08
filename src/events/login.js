@@ -1,3 +1,5 @@
+'use strict';
+
 const EventUtil   = require('../events').EventUtil;
 const Data        = require('../data').Data;
 const CommandUtil = require('../command_util').CommandUtil;
@@ -19,16 +21,15 @@ exports.event = (/* globals go here */) => {
       l10n.setLocale('en');
     }
 
-    var next   = EventUtils.gen_next('login');
-    var repeat = EventUtils.gen_repeat(arguments, next);
+    const next   = EventUtils.gen_next('login');
+    const repeat = EventUtils.gen_repeat(arguments, next);
 
     switch (stage) {
 
       case 'intro':
-        var motd = Data.loadMotd();
+        const motd = Data.loadMotd();
         if (motd) { socket.write(motd); }
-        next(socket, 'login');
-        break;
+        return next(socket, 'login');
 
       case 'login':
         if (!dontwelcome) {
@@ -38,18 +39,19 @@ exports.event = (/* globals go here */) => {
         //      If account, continue to player selection menu
         //      Else, continue to account creation menu
 
-        socket.once('data', function (name) {
+        socket.once('data', name => {
 
           if (!EventUtil.isNegot(name)) {
             next(socket, 'login', true);
             return;
           }
 
-          var name = name
+          let name = name
             .toString()
             .trim();
 
           //TODO: Blacklist/whitelist names here.
+          //TODO: Put name validation functions in module
           if (/[^a-z]/i.test(name) || !name) {
             socket.write("That's not really your name, now is it?\r\n");
             return repeat();

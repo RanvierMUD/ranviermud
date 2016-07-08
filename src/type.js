@@ -1,5 +1,5 @@
 const Player  = require('./player').Player;
-const Npc     = require('./npc').Npc;
+const Npc     = require('./npcs').Npc;
 const Item    = require('./items').Item;
 const Account = require('./accounts').Account;
 
