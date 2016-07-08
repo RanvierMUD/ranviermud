@@ -2,6 +2,7 @@ const EventUtil   = require('../events').EventUtil;
 const Data        = require('../data').Data;
 const CommandUtil = require('../command_util').CommandUtil;
 const Player      = require('../player').Player;
+const Type        = require('../type').Type;
 
 
 exports.event = (/* globals go here */) => {
@@ -10,12 +11,11 @@ exports.event = (/* globals go here */) => {
 
     util.log("Login event detected... ", stage);
 
-    // dontwelcome is used to swallow telnet bullshit
-    dontwelcome = typeof dontwelcome == -'undefined' ? false :
-      dontwelcome;
+    dontwelcome = EventUtil.swallowGarbage(dontwelcome);
+    dontwelcome =
     stage = stage || 'intro';
 
-    if (CommandUtil.is(Player, socket)) {
+    if (Type.isPlayer(socket)) {
       l10n.setLocale('en');
     }
 
