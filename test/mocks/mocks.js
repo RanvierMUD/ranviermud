@@ -1,20 +1,19 @@
 const defaultAttributes = {
-  // Copied from
   max_health: 100,
-  health: 90,
+  health:     90,
   max_sanity: 100,
-  sanity: 70,
-  energy: 40,
-  max_energy: 50,
+  sanity:     70,
+  energy:     90,
+  max_energy: 100,
 
-  stamina: 1,
-  willpower: 1,
-  quickness: 1,
+  stamina:    1,
+  willpower:  1,
+  quickness:  1,
   cleverness: 1,
 
-  level: 1,
+  level:      1,
   experience: 0,
-  mutagens: 0,
+  mutagens:   0,
   attrPoints: 0,
 
   description: 'A person.'
