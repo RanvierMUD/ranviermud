@@ -43,7 +43,7 @@ const password_attempts = {};
 
 const say = string => socket.write(sty.parse(string));
 
-const EventUtils = {
+const EventUtil = {
   gen_next,
   gen_repeat,
   capitalize,

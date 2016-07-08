@@ -1,6 +1,9 @@
-exports.event = () => {
+const EventUtil   = require('../events').EventUtil;
+const Data        = require('../data').Data;
+const CommandUtil = require('../command_util').CommandUtil;
+
+exports.event = (/* globals go here */) => {
   return function login(socket, stage, dontwelcome, name) {
-    const say = string => socket.write(sty.parse(string));
 
     util.log("Login event detected... ", stage);
 
@@ -13,8 +16,8 @@ exports.event = () => {
       l10n.setLocale('en');
     }
 
-    var next   = gen_next('login');
-    var repeat = gen_repeat(arguments, next);
+    var next   = EventUtils.gen_next('login');
+    var repeat = EventUtils.gen_repeat(arguments, next);
 
     switch (stage) {
 
