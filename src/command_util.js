@@ -5,8 +5,20 @@ const CommandUtil = {
   findItemInEquipment, findItemInRoom,
   findItemInInventory, hasScript,
   findNpcInRoom      , inSameRoom,
-  parseDot           , values
+  parseDot           , values,
+  is,
 };
+
+/**
+ * Takes a constructor and a thing and returns a boolean
+ * @param typeClass constructor functions
+ * @param thing     object
+ * @return boolean True is thing is of typeClass
+ */
+
+function is(typeClass, thing) {
+  return thing instanceof typeClass;
+}
 
 /**
  * Takes an object and returns an array of all of its values.
