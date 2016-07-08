@@ -38,12 +38,19 @@ let accounts = null;
 // Keep track of password attempts
 const password_attempts = {};
 
+const EventUtils = {
+  gen_next,
+  gen_repeat,
+  capitalize,
+  isNegot,
+};
+
 /**
  * Helper for advancing staged events
  * @param string stage
  * @param object firstarg Override for the default arg
  */
-const gen_next = function (event) {
+function gen_next(event) {
   /**
    * Move to the next stage of a staged event
    * @param Socket|Player socket       Either a Socket or Player on which emit() will be called
@@ -56,6 +63,17 @@ const gen_next = function (event) {
   }
 };
 
+/**
+ * Helper for repeating staged events
+ * @param Array repeat_args
+ * @return function
+ */
+function gen_repeat(repeat_args, next) {
+  return function () {
+    next.apply(null, [].slice.call(repeat_args))
+  };
+};
+
 // Decides if stuff is actually player input or no.
 function isNegot(buffer) {
   return buffer[buffer.length - 1] === 0x0a || buffer[buffer.length - 1] === 0x0d;
@@ -66,17 +84,6 @@ function capitalize(str) {
   return str[0].toUpperCase()
        + str.toLowerCase().substr(1);
 }
-
-/**
- * Helper for repeating staged events
- * @param Array repeat_args
- * @return function
- */
-const gen_repeat = function (repeat_args, next) {
-  return function () {
-    next.apply(null, [].slice.call(repeat_args))
-  };
-};
 
 /**
  * Events object is a container for any "context switches" for the player.
@@ -742,4 +749,5 @@ const Events = {
     };
   }
 };
-exports.Events = Events;
+exports.Events     = Events;
+exports.EventUtils = EventUtils;
