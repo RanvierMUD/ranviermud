@@ -104,7 +104,7 @@ exports.event = (/* globals go here */) => {
           }
 
           if (pass.length < 6) {
-            EventUtil.say('Your password must be at least 6 characters.');
+            say('Your password must be at least 6 characters.');
             return next(socket, 'password', true, name);
           }
 
@@ -115,7 +115,7 @@ exports.event = (/* globals go here */) => {
 
           if (pass !== Data.loadAccount(name).password) {
             util.log("Failed password attempt by ", socket)
-            EventUtil.say(''));
+            say('Incorrect password');
             passwordAttempts[name]++;
             return repeat();
           }
@@ -129,7 +129,6 @@ exports.event = (/* globals go here */) => {
       // * Can create new (if less than 3 living chars)
 
       //TODO: Redo 'done' below this
-      //TODO: Consider turning into its own event listener.
       case 'chooseChar':
 
         socket.write('Choose your fate:\r\n');
