@@ -7,16 +7,19 @@ const crypto = require('crypto'),
   ansi       = require('colorize').ansify,
   sty        = require('sty'),
 
-
+  // TODO: Pass these all in to events funcs
   Commands   = require('./commands').Commands,
   Channels   = require('./channels').Channels,
   Data       = require('./data').Data,
   Item       = require('./items').Item,
   Player     = require('./player').Player,
   Skills     = require('./skills').Skills,
-  l10nHelper = require('./l10n'),
   Accounts   = require('./accounts').Accounts,
-  Account    = require('./accounts').Account;
+  Account    = require('./accounts').Account,
+
+  //TODO: Deprecate this if possible.
+  l10nHelper = require('./l10n');
+
 
 
 /**
@@ -730,6 +733,7 @@ const Events = {
     npcs     = npcs     || config.npcs;
     accounts = accounts || config.accounts;
 
+    //TODO: Might have to set up event functions here after they are modularized.
 
     if (!l10n) {
       util.log("Loading event l10n... ");
