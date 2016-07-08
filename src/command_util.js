@@ -10,14 +10,15 @@ const CommandUtil = {
 };
 
 /**
- * Takes a constructor and a thing and returns a boolean
+ * Takes a constructor and a thing and returns function
+ * which then returns a boolean (partial application station)
  * @param typeClass constructor functions
  * @param thing     object
  * @return boolean True is thing is of typeClass
  */
 
-function is(typeClass, thing) {
-  return thing instanceof typeClass;
+function is(typeClass) {
+  return thing => thing instanceof typeClass;
 }
 
 /**
