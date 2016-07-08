@@ -48,7 +48,11 @@ const Account = function() {
   this.getCharacter  = name  => this.characters.find(
     char => name === char);
   this.getDeceased   = ()    => this.deceased;
-
+  this.addDeceased   = name  => {
+    const characterIndex = this.characters.indexOf(name);
+    this.characters.splice(characterIndex, 1);
+    this.deceased.push(name)
+  };
 
   this.loadCharacters = ()   => this.characters
     .map(char => Data.loadPlayer(char));
