@@ -41,15 +41,22 @@ let accounts = null;
 // Keep track of password attempts
 const password_attempts = {};
 
-const say = string => socket.write(sty.parse(string));
-
+const say       = string => socket.write(sty.parse(string));
 const EventUtil = {
   gen_next,
   gen_repeat,
   capitalize,
   isNegot,
+  swallowGarbage,
   say
 };
+
+
+// Swallows telnet bullshit
+function swallowGarbage(dontwelcome) {
+  return typeof dontwelcome == -'undefined' ?
+    false : dontwelcome;
+}
 
 /**
  * Helper for advancing staged events

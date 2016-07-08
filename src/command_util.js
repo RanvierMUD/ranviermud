@@ -6,20 +6,7 @@ const CommandUtil = {
   findItemInInventory, hasScript,
   findNpcInRoom      , inSameRoom,
   parseDot           , values,
-  is,
 };
-
-/**
- * Takes a constructor and a thing and returns function
- * which then returns a boolean (partial application station)
- * @param typeClass constructor functions
- * @param thing     object
- * @return boolean True is thing is of typeClass
- */
-
-function is(typeClass) {
-  return thing => thing instanceof typeClass;
-}
 
 /**
  * Takes an object and returns an array of all of its values.
