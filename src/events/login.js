@@ -12,6 +12,9 @@ const passwordAttempts = {};
 
 exports.event = (/* globals go here */) => {
 
+  let account = null;
+  let player  = null;
+
   return function login(socket, stage, dontwelcome, name) {
 
     util.log("Login event detected... ", stage);
@@ -131,29 +134,21 @@ exports.event = (/* globals go here */) => {
       //TODO: Redo 'done' below this
       case 'chooseChar':
 
-        socket.write('Choose your fate:\r\n');
+        say('Choose your fate:\r\n');
         name = name || dontwelcome;
 
-        const boot = accounts.getAccount(name);
-
-        const multiplaying = player => {
-          const accountName = player.getAccountName().toLowerCase();
-          util.log('checking', accountName);
-          util.log('against', name);
-          return accountName === name.toLowerCase();
+        const accountAlreadyLoaded = accounts.getAccount(name);
+        const multiplaying = player => player.getAccountName() === name;
+        const bootPlayer   = player => {
+          player.say("Replaced.");
+          player.emit('quit');
+          util.log("Replaced: ", player.getName());
+          players.removePlayer(player, true);
         };
 
-        //TODO: Consider booting later, when player enters.
-        if (boot) {
-          players.eachIf(
-            multiplaying,
-            p => {
-              p.say("Replaced.");
-              p.emit('quit');
-              util.log("Replaced: ", p.getName());
-              players.removePlayer(p, true);
-            });
-          account = boot;
+        if (accountAlreadyLoaded) {
+          players.eachIf(multiplaying, bootPlayer);
+          account = accountAlreadyLoaded;
           account.updateScore();
           account.save();
         } else {
