@@ -57,7 +57,6 @@ const Events = {
     /**
      * Point of entry for the player. They aren't actually a player yet
      */
-     //TODO: Config the way it is done for commands, but on server startup.
     login: login,
 
     /**
@@ -410,7 +409,6 @@ const Events = {
           });
 
           util.log("A NEW CHALLENGER APPROACHES: ", socket);
-          players.broadcastL10n(l10n, 'WELCOME', socket.getName());
           break;
 
       }
@@ -424,14 +422,13 @@ const Events = {
     npcs     = npcs     || config.npcs;
     accounts = accounts || config.accounts;
 
-    //TODO: Might have to set up event functions here after they are modularized.
+    const requiresConfig = ['login'];
 
     for (const event in Events.events) {
       const injector = Events.events[event];
-      // temp kludge lolz
-      if (event === 'login') {
+      //FIXME: temp kludge lolz
+      if (requiresConfig.indexOf(event) !== -1) {
         Events.events[event] = injector(players, items, rooms, npcs, accounts, l10n);
-        util.log(Events.events);
       }
     }
 
