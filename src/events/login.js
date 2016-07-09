@@ -255,8 +255,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
             players.removePlayer(player);
           });
 
-        players.broadcastL10n(l10n, 'WELCOME_BACK', player.getName());
-
         //TODO: Have load in player file?
         // Load the player's inventory (There's probably a better place to do this)
         var inv = [];

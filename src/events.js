@@ -424,6 +424,14 @@ const Events = {
 
     const requiresConfig = ['login'];
 
+    if (!l10n) {
+      util.log("Loading event l10n... ");
+      l10n = l10nHelper(l10nFile);
+      util.log("Done");
+    }
+    
+    l10n.setLocale(config.locale);
+
     for (const event in Events.events) {
       const injector = Events.events[event];
       //FIXME: temp kludge lolz
@@ -432,12 +440,7 @@ const Events = {
       }
     }
 
-    if (!l10n) {
-      util.log("Loading event l10n... ");
-      l10n = l10nHelper(l10nFile);
-      util.log("Done");
-    }
-    l10n.setLocale(config.locale);
+
 
     /**
      * Hijack translate to also do coloring
