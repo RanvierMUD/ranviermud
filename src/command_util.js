@@ -5,7 +5,7 @@ const CommandUtil = {
   findItemInEquipment, findItemInRoom,
   findItemInInventory, hasScript,
   findNpcInRoom      , inSameRoom,
-  parseDot           , values
+  parseDot           , values,
 };
 
 /**

@@ -1,7 +1,7 @@
-const Player = require('../../src/player.js').Player;
 const expect = require('chai').expect;
-const Mocks  = require('../mocks/mocks');
 
+const Player = require('../../src/player.js').Player;
+const Mocks  = require('../mocks/mocks');
 
 describe('New player', () => {
 
@@ -83,5 +83,5 @@ describe('New player', () => {
       });
 
     });
-    
+
 });
