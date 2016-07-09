@@ -2,8 +2,7 @@
 
 //FIXME: Find a way to modularize as much of this as possible.
 
-const crypto = require('crypto'),
-  util       = require('util'),
+const util   = require('util'),
   ansi       = require('colorize').ansify,
   sty        = require('sty'),
 
@@ -16,11 +15,14 @@ const crypto = require('crypto'),
   Skills     = require('./skills').Skills,
   Accounts   = require('./accounts').Accounts,
   Account    = require('./accounts').Account,
+  EventUtil  = require('./events/event_util').EventUtil,
 
   //TODO: Deprecate this if possible.
   l10nHelper = require('./l10n');
 
-
+// Event modules
+//TODO: Automate this using fs.
+const login = require('./events/login').event;
 
 /**
  * Localization
@@ -30,6 +32,8 @@ const l10nFile = __dirname + '/../l10n/events.yml';
 // shortcut for l10n.translate
 let L = null;
 
+//TODO: Pass most of these and l10n into events.
+// Some get instantiated in events.
 let players  = null;
 let player   = null;
 let npcs     = null;
@@ -37,65 +41,6 @@ let rooms    = null;
 let items    = null;
 let account  = null;
 let accounts = null;
-
-const gen_say = socket => string => socket.write(sty.parse(string));
-const EventUtil = {
-  gen_next,
-  gen_repeat,
-  gen_say,
-
-  capitalize,
-  isNegot,
-  swallowGarbage,
-};
-
-
-// Swallows telnet bullshit
-function swallowGarbage(dontwelcome) {
-  return typeof dontwelcome == -'undefined' ?
-    false : dontwelcome;
-}
-
-/**
- * Helper for advancing staged events
- * @param string stage
- * @param object firstarg Override for the default arg
- */
-function gen_next(event) {
-  /**
-   * Move to the next stage of a staged event
-   * @param Socket|Player socket       Either a Socket or Player on which emit() will be called
-   * @param string        nextstage
-   * @param ...
-   */
-  return function (socket, nextstage) {
-    var func = (socket instanceof Player ? socket.getSocket() : socket);
-    func.emit.apply(func, [event].concat([].slice.call(arguments)));
-  }
-};
-
-/**
- * Helper for repeating staged events
- * @param Array repeat_args
- * @return function
- */
-function gen_repeat(repeat_args, next) {
-  return function () {
-    next.apply(null, [].slice.call(repeat_args))
-  };
-};
-
-// Decides if stuff is actually player input or no.
-function isNegot(buffer) {
-  return buffer[buffer.length - 1] === 0x0a || buffer[buffer.length - 1] === 0x0d;
-}
-
-// Does what it says on the box
-function capitalize(str) {
-  return str[0].toUpperCase()
-       + str.toLowerCase().substr(1);
-}
-
 
 /**
  * Events object is a container for any "context switches" for the player.
@@ -111,9 +56,9 @@ const Events = {
   events: {
     /**
      * Point of entry for the player. They aren't actually a player yet
-     * @param Socket socket
      */
-    login: function(){},
+     //TODO: Config the way it is done for commands, but on server startup.
+    login: login,
 
     /**
      * Command loop
@@ -256,14 +201,13 @@ const Events = {
 
     createAccount: function(socket, stage, name, account) {
 
-      const say = string => socket.write(sty.parse(string));
-
+      const say = EventUtil.gen_say(socket);
       stage = stage || 'check';
 
       l10n.setLocale('en');
 
-      var next = gen_next('createAccount');
-      var repeat = gen_repeat(arguments, next);
+      var next = EventUtil.gen_next('createAccount');
+      var repeat = EventUtil.gen_repeat(arguments, next);
 
       switch (stage) {
 
@@ -337,11 +281,11 @@ const Events = {
     createPlayer: function (socket, stage, account, name) {
       stage = stage || 'name';
 
-      const say = string => socket.write(sty.parse(string));
+      const say = EventUtil.gen_say(socket);
       l10n.setLocale("en");
 
-      var next   = gen_next('createPlayer');
-      var repeat = gen_repeat(arguments, next);
+      var next   = EventUtil.gen_next('createPlayer');
+      var repeat = EventUtil.gen_repeat(arguments, next);
 
       /* Multi-stage character creation i.e., races, classes, etc.
        * Always emit 'done' in your last stage to keep it clean
@@ -482,6 +426,15 @@ const Events = {
 
     //TODO: Might have to set up event functions here after they are modularized.
 
+    for (const event in Events.events) {
+      const injector = Events.events[event];
+      // temp kludge lolz
+      if (event === 'login') {
+        Events.events[event] = injector(players, items, rooms, npcs, accounts, l10n);
+        util.log(Events.events);
+      }
+    }
+
     if (!l10n) {
       util.log("Loading event l10n... ");
       l10n = l10nHelper(l10nFile);
@@ -500,5 +453,5 @@ const Events = {
     };
   }
 };
-exports.Events     = Events;
-exports.EventUtil = EventUtil;
+
+exports.Events    = Events;

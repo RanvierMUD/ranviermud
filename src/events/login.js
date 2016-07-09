@@ -1,17 +1,23 @@
 'use strict';
 
-const util = require('util');
+const util   = require('util');
+const crypto = require('crypto');
 
-const EventUtil   = require('../events').EventUtil;
+
+const EventUtil   = require('./event_util').EventUtil;
 const Data        = require('../data').Data;
 const CommandUtil = require('../command_util').CommandUtil;
 const Player      = require('../player').Player;
+const Account     = require('../accounts').Account;
 const Type        = require('../type').Type;
 
 const passwordAttempts = {};
 
-exports.event = (/* globals go here */) => {
+console.log(EventUtil);
 
+exports.event = (players, items, rooms, npcs, accounts, l10n) => {
+
+  // Local variables persisted between stages.
   let account = null;
   let player  = null;
 
@@ -51,7 +57,7 @@ exports.event = (/* globals go here */) => {
             return next(socket, 'login', true);
           }
 
-          let name = name
+          name = name
             .toString()
             .trim();
 
@@ -126,13 +132,13 @@ exports.event = (/* globals go here */) => {
         });
         break;
 
-      // Player selection menu:
-      // * Can select existing player
-      // * Can view deceased (if applicable)
-      // * Can create new (if less than 3 living chars)
-
-      //TODO: Redo 'done' below this
       case 'chooseChar':
+      /*
+      Player selection menu:
+        * Can select existing player
+        * Can view deceased (if applicable)
+        * Can create new (if less than 3 living chars)
+      */
 
         say('Choose your fate:\r\n');
         name = name || dontwelcome;
@@ -226,6 +232,7 @@ exports.event = (/* globals go here */) => {
 
       break;
 
+      //TODO: Refactor?
       //TODO: Put this in its own emitter or extract into method or something?
       case 'done':
 
