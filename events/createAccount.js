@@ -16,7 +16,8 @@
 
 const util   = require('util');
 
-const Account   = require('../accounts').Account;
+const src       = '../src/';
+const Account   = require(src + 'accounts').Account;
 const EventUtil = require('./event_util').EventUtil;
 
 exports.event = (players, items, rooms, npcs, accounts, l10n) =>
