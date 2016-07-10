@@ -8,7 +8,8 @@
 
 const util = require('util'),
   ansi = require('colorize').ansify,
-  sty = require('sty'),
+  sty  = require('sty'),
+  fs   = require('fs'),
 
   Commands = require('./commands').Commands,
   Channels = require('./channels').Channels,
