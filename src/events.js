@@ -21,7 +21,8 @@ const util   = require('util'),
 
 // Event modules
 //TODO: Automate this using fs.
-const login = require('./events/login').event;
+const login    = require('./events/login').event;
+const commands = require('./events/commands').event;
 
 /**
  * Localization
@@ -55,14 +56,15 @@ const Events = {
   events: {
     /**
      * Point of entry for the player. They aren't actually a player yet
+     * @param Socket telnet socket
      */
-    login: login,
+    login,
 
     /**
      * Command loop
      * @param Player player
      */
-    commands: function(){},
+    commands,
 
     /**
      * Create an account
@@ -76,7 +78,6 @@ const Events = {
      *                  the stage.
      * @param string stage See above
      */
-
     createAccount: function(socket, stage, name, account) {
 
       const say = EventUtil.gen_say(socket);

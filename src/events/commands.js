@@ -11,8 +11,8 @@ const Type        = require('../type').Type;
 const Commands    = require('../commands').Commands;
 
 
-exports.event = (players, items, rooms, npcs, accounts, l10n) => function (player) {
-  // Parse order is common direction shortcuts -> commands -> exits -> skills -> channels
+exports.event = (players, items, rooms, npcs, accounts, l10n) => function commandLoop(player) {
+
   player.getSocket()
     .once('data', data => {
       data = data.toString().trim();
@@ -20,8 +20,14 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => function (playe
       const isCommand = data ? parseCommands(data) : false;
       if (isCommand !== false) { commandPrompt(); }
 
-      // Methods
-
+      /* Parse order is:
+       * common direction shortcuts
+       * commands
+       * exits
+       * skills/feats
+       * channels
+       */
+       
       function parseCommands(data) {
         var command = data
           .split(' ')
