@@ -18,7 +18,7 @@ const util = require('util'),
   Skills = require('./skills').Skills,
   Accounts = require('./accounts').Accounts,
   Account = require('./accounts').Account,
-  EventUtil = require('./events/event_util').EventUtil,
+  EventUtil = require('../events/event_util').EventUtil,
 
   //TODO: Deprecate this if possible.
   l10nHelper = require('./l10n');
@@ -74,7 +74,7 @@ const Events = {
     l10n.setLocale(config.locale);
 
     fs.readdir(eventsDir,
-    (err, files) =>
+    (err, files) => {
       if (err) { util.log(err); }
       for (const file in files) {
         const eventFile = eventDir + files[file];
