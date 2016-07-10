@@ -122,7 +122,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
           if (pass !== Data.loadAccount(name).password) {
             util.log("Failed password attempt by ", socket)
-            say('Incorrect password');
+            say('Incorrect password.\r\n');
             passwordAttempts[name]++;
             return repeat();
           }
