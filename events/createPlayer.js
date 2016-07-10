@@ -18,6 +18,7 @@ const util = require('util');
 const src       = '../src/';
 const EventUtil = require('./event_util').EventUtil;
 const Player    = require(src + 'player').Player;
+const Data      = require(src + 'data').Data;
 
 exports.event = (players, items, rooms, npcs, accounts, l10n) =>
   function createPlayer(socket, stage, account, name) {
