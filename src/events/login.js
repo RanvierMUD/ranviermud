@@ -3,7 +3,6 @@
 const util   = require('util');
 const crypto = require('crypto');
 
-
 const EventUtil   = require('./event_util').EventUtil;
 const Data        = require('../data').Data;
 const CommandUtil = require('../command_util').CommandUtil;
@@ -13,8 +12,6 @@ const Type        = require('../type').Type;
 const Commands    = require('../commands').Commands;
 
 const passwordAttempts = {};
-
-console.log(EventUtil);
 
 exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
@@ -252,13 +249,12 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
               util.log(player.getName() + ' socket closed during combat!!!');
             }
 
-            //TODO: Consider saving player here as well, and stuff.
             players.removePlayer(player);
           });
 
         //TODO: Have load in player file?
         // Load the player's inventory (There's probably a better place to do this)
-        var inv = [];
+        let inv = [];
         player.getInventory()
           .forEach(item => {
             item = new Item(item);
