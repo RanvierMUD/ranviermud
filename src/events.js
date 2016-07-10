@@ -24,7 +24,7 @@ const util = require('util'),
   //TODO: Deprecate this if possible.
   l10nHelper = require('./l10n');
 
-const eventsDir = __dirname + '/../events';
+const eventsDir = __dirname + '/../events/';
 
 /**
  * Localization
@@ -78,11 +78,11 @@ const Events = {
     (err, files) => {
       if (err) { util.log(err); }
       for (const file in files) {
-        const eventFile = eventDir + files[file];
+        const eventFile = eventsDir + files[file];
 
         //TODO: Extract stuff like this into Data module as util funcs.
         const isJsFile   = _file => fs.statSync(_file).isFile() && _file.match(/js$/);
-        const isUtilFile = _file => _file.incldes('util');
+        const isUtilFile = _file => _file.includes('util');
 
         if (!isJsFile(eventFile) || isUtilFile(eventFile)) { continue; }
 
