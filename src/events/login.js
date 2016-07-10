@@ -13,7 +13,7 @@ const Commands    = require('../commands').Commands;
 
 const passwordAttempts = {};
 
-exports.event =  => {
+exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
   // Local variables persisted between stages.
   let account = null;
