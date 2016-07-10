@@ -52,6 +52,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         });
       break;
 
+      //TODO: Validate password creation.
       case 'password':
         socket.write('Enter your account password: ');
         socket.once('data', pass => {
