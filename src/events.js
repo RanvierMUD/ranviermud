@@ -21,8 +21,10 @@ const util   = require('util'),
 
 // Event modules
 //TODO: Automate this using fs.
-const login    = require('./events/login').event;
-const commands = require('./events/commands').event;
+const login         = require('./events/login').event;
+const commands      = require('./events/commands').event;
+const createAccount = require('./events/createAccount').event;
+
 
 /**
  * Localization
@@ -239,7 +241,7 @@ const Events = {
     npcs     = npcs     || config.npcs;
     accounts = accounts || config.accounts;
 
-    const requiresConfig = ['login', 'commands'];
+    const requiresConfig = ['login', 'commands', 'createAccount'];
 
     if (!l10n) {
       util.log("Loading event l10n... ");
