@@ -21,10 +21,10 @@ const util = require('util'),
 
 // Event modules
 //TODO: Automate this using fs.
-const login    = require('./events/login').event;
+const login = require('./events/login').event;
 const commands = require('./events/commands').event;
 const createAccount = require('./events/createAccount').event;
-const createPlayer  = require('./events/createPlayer').event;
+const createPlayer = require('./events/createPlayer').event;
 
 /**
  * Localization
@@ -56,85 +56,48 @@ const Events = {
    * @var object
    */
   events: {
-    /**
-     * Point of entry for the player. They aren't actually a player yet
-     * @param Socket telnet socket
-     */
     login,
-
-    /**
-     * Command loop
-     * @param Player player
-     */
     commands,
-
-    /**
-     * Create an account
-     * Note: Do we already ask for a name in the login step?
-     * Stages:
-     *
-     *   done:   This is always the end step, here we register them in with
-     *           the rest of the logged in players and where they log in
-     *
-     * @param object arg This is either a Socket or a Player depending on
-     *                  the stage.
-     * @param string stage See above
-     * @param name  account username
-     * @param account player account obj
-     */
     createAccount,
+    createPlayer,
+  },
+
+  configure: function configureEvents(config) {
+    players = players || config.players;
+    items = items || config.items;
+    rooms = rooms || config.rooms;
+    npcs = npcs || config.npcs;
+    accounts = accounts || config.accounts;
+
+    const requiresConfig = ['login', 'commands', 'createAccount', 'createPlayer'];
+
+    if (!l10n) {
+      util.log("Loading event l10n... ");
+      l10n = l10nHelper(l10nFile);
+      util.log("Done");
+    }
+
+    l10n.setLocale(config.locale);
+
+    for (const event in Events.events) {
+      const injector = Events.events[event];
+      //FIXME: temp kludge lolz
+      if (requiresConfig.indexOf(event) !== -1) {
+        Events.events[event] = injector(players, items, rooms, npcs, accounts, l10n);
+      }
+    }
+
+
 
     /**
-     * Create a player
-     * Stages:
-     *   check:  See if they actually want to create a player or not
-     *   name:   ... get their name
-     *   done:   This is always the end step, here we register them in with
-     *           the rest of the logged in players and where they log in
-     *
-     * @param object arg This is either a Socket or a Player depending on
-     *                  the stage.
-     * @param string stage See above
+     * Hijack translate to also do coloring
+     * @param string text
+     * @param ...
+     * @return string
      */
-    createPlayer,
-
-    configure: function configureEvents(config) {
-      players = players || config.players;
-      items = items || config.items;
-      rooms = rooms || config.rooms;
-      npcs = npcs || config.npcs;
-      accounts = accounts || config.accounts;
-
-      const requiresConfig = ['login', 'commands', 'createAccount', 'createPlayer'];
-
-      if (!l10n) {
-        util.log("Loading event l10n... ");
-        l10n = l10nHelper(l10nFile);
-        util.log("Done");
-      }
-
-      l10n.setLocale(config.locale);
-
-      for (const event in Events.events) {
-        const injector = Events.events[event];
-        //FIXME: temp kludge lolz
-        if (requiresConfig.indexOf(event) !== -1) {
-          Events.events[event] = injector(players, items, rooms, npcs, accounts, l10n);
-        }
-      }
-
-
-
-      /**
-       * Hijack translate to also do coloring
-       * @param string text
-       * @param ...
-       * @return string
-       */
-      L = function (text) {
-        return ansi(l10n.translate.apply(null, [].slice.call(arguments)));
-      };
-    }
+    L = function (text) {
+      return ansi(l10n.translate.apply(null, [].slice.call(arguments)));
+    };
   }
 };
 

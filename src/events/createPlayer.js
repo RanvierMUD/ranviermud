@@ -1,3 +1,18 @@
+'use strict';
+
+/**
+ * Create a player
+ * Stages:
+ *   check:  See if they actually want to create a player or not
+ *   name:   ... get their name
+ *   done:   This is always the end step, here we register them in with
+ *           the rest of the logged in players and where they log in
+ *
+ * @param object arg This is either a Socket or a Player depending on
+ *                  the stage.
+ * @param string stage See above
+ */
+
 const util = require('util');
 
 const EventUtil = require('./event_util').EventUtil;

@@ -1,5 +1,19 @@
 'use strict';
 
+/**
+ * Create an account
+ * Stages:
+ *
+ *   done:   This is always the end step, here we register them in with
+ *           the rest of the logged in players and where they log in
+ *
+ * @param object arg This is either a Socket or a Player depending on
+ *                  the stage.
+ * @param string stage See above
+ * @param name  account username
+ * @param account player account obj
+ */
+
 const util   = require('util');
 
 const Account   = require('../accounts').Account;
