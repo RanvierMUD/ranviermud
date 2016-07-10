@@ -21,25 +21,28 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => function comman
       if (isCommand !== false) { commandPrompt(); }
 
       /* Parse order is:
+       * look shortcut
+       * admin commands
        * common direction shortcuts
        * commands
        * exits
        * skills/feats
        * channels
        */
-       
+
       function parseCommands(data) {
-        var command = data
+        const command = data
           .split(' ')
           .shift();
-        var args = data
+        const args = data
           .split(' ')
           .slice(1)
           .join(' ');
 
-        var found = false;
+        let found = false;
 
-        // Kludge so that 'l' alone will always force a look, instead of mixing it up with lock.
+        // Kludge so that 'l' alone will always force a look,
+        // instead of mixing it up with lock.
         if (command === 'l') {
           return Commands.player_commands.look(args, player);
         }
