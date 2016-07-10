@@ -1,3 +1,9 @@
+'use strict';
+
+const util   = require('util');
+
+const Account = require('../accounts').Account;
+
 exports.event = (players, items, rooms, npcs, accounts, l10n) =>
   function createAccount(socket, stage, name, account) {
 
@@ -6,8 +12,8 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
 
     l10n.setLocale('en');
 
-    var next = EventUtil.gen_next('createAccount');
-    var repeat = EventUtil.gen_repeat(arguments, next);
+    const next   = EventUtil.gen_next('createAccount');
+    const repeat = EventUtil.gen_repeat(arguments, next);
 
     switch (stage) {
 
