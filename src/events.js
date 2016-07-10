@@ -6,7 +6,6 @@ const util   = require('util'),
   ansi       = require('colorize').ansify,
   sty        = require('sty'),
 
-  // TODO: Pass these all in to events funcs
   Commands   = require('./commands').Commands,
   Channels   = require('./channels').Channels,
   Data       = require('./data').Data,
@@ -63,127 +62,7 @@ const Events = {
      * Command loop
      * @param Player player
      */
-    commands: function (player) {
-      // Parse order is common direction shortcuts -> commands -> exits -> skills -> channels
-      player.getSocket()
-        .once('data', function (data) {
-          data = data.toString().trim();
-
-          var result;
-          if (data) { result = parseCommands(data); }
-          if (result !== false) { commandPrompt(); }
-
-          // Methods
-
-          function parseCommands(data) {
-            var command = data
-              .split(' ')
-              .shift();
-            var args = data
-              .split(' ')
-              .slice(1)
-              .join(' ');
-
-            var found = false;
-
-            // Kludge so that 'l' alone will always force a look, instead of mixing it up with lock.
-            if (command === 'l') {
-              return Commands.player_commands.look(args, player);
-            }
-
-            if (command[0] === '@') {
-              const adminCommand = command.slice(1);
-              if (adminCommand in Commands.admin_commands) {
-                Commands.admin_commands[adminCommand](player, args);
-                return;
-              }
-            }
-
-            if (!(command in Commands.player_commands)) {
-
-              found = checkForDirectionAlias(command);
-              if (!found) { found = checkForCommandSafely(command); }
-              else if (found === true) { return; }
-
-              if (found) { return executeCommand(found, args); }
-              else { return checkForSpecializedCommand(command, args); }
-
-            } else { return executeCommand(command, args); }
-          }
-
-          function executeCommand(cmd, args) {
-            try {
-              return Commands.player_commands[cmd](args, player);
-            } catch (e) {
-              util.log(cmd);
-              util.log(e);
-            }
-          }
-
-          function checkForDirectionAlias(command) {
-            var directions = {
-              'n': 'north',
-              'e': 'east',
-              's': 'south',
-              'w': 'west',
-              'u': 'up',
-              'd': 'down'
-            };
-
-            if (command.toLowerCase() in directions) {
-              const exit = directions[command.toLowerCase()];
-              Commands.room_exits(exit, player);
-              return true;
-            }
-          }
-
-
-          function checkForCommandSafely(command) {
-            for (var cmd in Commands.player_commands) {
-              try {
-                var regex = new RegExp("^" + command);
-              } catch (err) {
-                continue;
-              }
-              if (cmd.match(regex)) {
-                return cmd;
-              }
-            }
-          }
-
-          // Handles skills, feats, exits
-          function checkForSpecializedCommand(command, args) {
-            var exit = Commands.room_exits(command, player);
-
-            //TODO: Refactor as to not rely on negative conditionals as much?
-            if (exit === false) {
-              var isSkill = command in player.getSkills();
-              var isFeat = command in player.getFeats();
-
-              if (!isSkill && !isFeat) {
-                if (!(command in Channels)) {
-                  player.say(command + " is not a valid command.");
-                  return true;
-                } else {
-                  Channels[command].use(args, player, players, rooms);
-                  return true
-                }
-              } else {
-                var use = isSkill ? player.useSkill : player.useFeat;
-                use(command, player, args, rooms, npcs, players);
-                return true;
-              }
-            }
-          }
-
-          function commandPrompt() {
-            player.prompt();
-            player.getSocket()
-              .emit("commands", player);
-          }
-
-        });
-    },
+    commands: function(){},
 
     /**
      * Create an account
@@ -429,7 +308,7 @@ const Events = {
       l10n = l10nHelper(l10nFile);
       util.log("Done");
     }
-    
+
     l10n.setLocale(config.locale);
 
     for (const event in Events.events) {
