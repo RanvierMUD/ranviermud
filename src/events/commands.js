@@ -6,9 +6,10 @@ const EventUtil   = require('./event_util').EventUtil;
 const Data        = require('../data').Data;
 const CommandUtil = require('../command_util').CommandUtil;
 const Player      = require('../player').Player;
-const Account     = require('../accounts').Account;
-const Type        = require('../type').Type;
 const Commands    = require('../commands').Commands;
+const Channels    = require('../channels').Channels;
+const Skills      = require('../skills').Skills;
+const Feats       = require('../feats').Feats;
 
 
 exports.event = (players, items, rooms, npcs, accounts, l10n) => function commandLoop(player) {

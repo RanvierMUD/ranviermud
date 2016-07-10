@@ -302,7 +302,7 @@ const Events = {
     npcs     = npcs     || config.npcs;
     accounts = accounts || config.accounts;
 
-    const requiresConfig = ['login'];
+    const requiresConfig = ['login', 'commands'];
 
     if (!l10n) {
       util.log("Loading event l10n... ");
