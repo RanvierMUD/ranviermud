@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * Command loop
+ * @param Player player
+ */
+
 const util   = require('util');
 
 const EventUtil   = require('./event_util').EventUtil;

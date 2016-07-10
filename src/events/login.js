@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * Point of entry for the player. They aren't actually a player yet
+ * @param Socket telnet socket
+ */
+
 const util   = require('util');
 const crypto = require('crypto');
 
