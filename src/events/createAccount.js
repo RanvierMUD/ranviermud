@@ -53,11 +53,11 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
       break;
 
       case 'password':
-        socket.write(L('PASSWORD'));
+        socket.write('Enter your account password: ');
         socket.once('data', pass => {
             pass = pass.toString().trim();
             if (!pass) {
-              socket.write(L('EMPTY_PASS'));
+              socket.write('You must use a password.\r\n');
               return repeat();
             }
 
