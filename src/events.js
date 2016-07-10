@@ -2,29 +2,29 @@
 
 //FIXME: Find a way to modularize as much of this as possible.
 
-const util   = require('util'),
-  ansi       = require('colorize').ansify,
-  sty        = require('sty'),
+const util = require('util'),
+  ansi = require('colorize').ansify,
+  sty = require('sty'),
 
-  Commands   = require('./commands').Commands,
-  Channels   = require('./channels').Channels,
-  Data       = require('./data').Data,
-  Item       = require('./items').Item,
-  Player     = require('./player').Player,
-  Skills     = require('./skills').Skills,
-  Accounts   = require('./accounts').Accounts,
-  Account    = require('./accounts').Account,
-  EventUtil  = require('./events/event_util').EventUtil,
+  Commands = require('./commands').Commands,
+  Channels = require('./channels').Channels,
+  Data = require('./data').Data,
+  Item = require('./items').Item,
+  Player = require('./player').Player,
+  Skills = require('./skills').Skills,
+  Accounts = require('./accounts').Accounts,
+  Account = require('./accounts').Account,
+  EventUtil = require('./events/event_util').EventUtil,
 
   //TODO: Deprecate this if possible.
   l10nHelper = require('./l10n');
 
 // Event modules
 //TODO: Automate this using fs.
-const login         = require('./events/login').event;
-const commands      = require('./events/commands').event;
+const login    = require('./events/login').event;
+const commands = require('./events/commands').event;
 const createAccount = require('./events/createAccount').event;
-
+const createPlayer  = require('./events/createPlayer').event;
 
 /**
  * Localization
@@ -36,12 +36,12 @@ let L = null;
 
 //TODO: Pass most of these and l10n into events.
 // Some get instantiated in events.
-let players  = null;
-let player   = null;
-let npcs     = null;
-let rooms    = null;
-let items    = null;
-let account  = null;
+let players = null;
+let player = null;
+let npcs = null;
+let rooms = null;
+let items = null;
+let account = null;
 let accounts = null;
 
 /**
@@ -98,43 +98,44 @@ const Events = {
      */
     createPlayer,
 
-  configure: function (config) {
-    players  = players  || config.players;
-    items    = items    || config.items;
-    rooms    = rooms    || config.rooms;
-    npcs     = npcs     || config.npcs;
-    accounts = accounts || config.accounts;
+    configure: function configureEvents(config) {
+      players = players || config.players;
+      items = items || config.items;
+      rooms = rooms || config.rooms;
+      npcs = npcs || config.npcs;
+      accounts = accounts || config.accounts;
 
-    const requiresConfig = ['login', 'commands', 'createAccount'];
+      const requiresConfig = ['login', 'commands', 'createAccount', 'createPlayer'];
 
-    if (!l10n) {
-      util.log("Loading event l10n... ");
-      l10n = l10nHelper(l10nFile);
-      util.log("Done");
-    }
-
-    l10n.setLocale(config.locale);
-
-    for (const event in Events.events) {
-      const injector = Events.events[event];
-      //FIXME: temp kludge lolz
-      if (requiresConfig.indexOf(event) !== -1) {
-        Events.events[event] = injector(players, items, rooms, npcs, accounts, l10n);
+      if (!l10n) {
+        util.log("Loading event l10n... ");
+        l10n = l10nHelper(l10nFile);
+        util.log("Done");
       }
+
+      l10n.setLocale(config.locale);
+
+      for (const event in Events.events) {
+        const injector = Events.events[event];
+        //FIXME: temp kludge lolz
+        if (requiresConfig.indexOf(event) !== -1) {
+          Events.events[event] = injector(players, items, rooms, npcs, accounts, l10n);
+        }
+      }
+
+
+
+      /**
+       * Hijack translate to also do coloring
+       * @param string text
+       * @param ...
+       * @return string
+       */
+      L = function (text) {
+        return ansi(l10n.translate.apply(null, [].slice.call(arguments)));
+      };
     }
-
-
-
-    /**
-     * Hijack translate to also do coloring
-     * @param string text
-     * @param ...
-     * @return string
-     */
-    L = function (text) {
-      return ansi(l10n.translate.apply(null, [].slice.call(arguments)));
-    };
   }
 };
 
-exports.Events    = Events;
+exports.Events = Events;
