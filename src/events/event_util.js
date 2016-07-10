@@ -27,7 +27,7 @@ function gen_next(event) {
     var func = (Type.isPlayer(socket) ? socket.getSocket() : socket);
     func.emit.apply(func, [event].concat([].slice.call(arguments)));
   }
-};
+}
 
 /**
  * Helper for repeating staged events
@@ -38,7 +38,7 @@ function gen_repeat(repeat_args, next) {
   return function () {
     next.apply(null, [].slice.call(repeat_args))
   };
-};
+}
 
 // Decides if stuff is actually player input or no.
 function isNegot(buffer) {
