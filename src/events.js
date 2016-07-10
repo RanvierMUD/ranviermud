@@ -1,6 +1,10 @@
 'use strict';
-
-//FIXME: Find a way to modularize as much of this as possible.
+ /*
+  * Place staged events in the events directory.
+  * Export the event listener as `exports.events`.
+  * Use switch/case to stage events.
+  * Use EventUtils for common helper functions.
+  */
 
 const util = require('util'),
   ansi = require('colorize').ansify,
@@ -19,12 +23,7 @@ const util = require('util'),
   //TODO: Deprecate this if possible.
   l10nHelper = require('./l10n');
 
-// Event modules
-//TODO: Automate this using fs.
-const login = require('./events/login').event;
-const commands = require('./events/commands').event;
-const createAccount = require('./events/createAccount').event;
-const createPlayer = require('./events/createPlayer').event;
+const eventsDir = __dirname + '/../events';
 
 /**
  * Localization
@@ -55,12 +54,7 @@ const Events = {
    * Container for events
    * @var object
    */
-  events: {
-    login,
-    commands,
-    createAccount,
-    createPlayer,
-  },
+  events: {},
 
   configure: function configureEvents(config) {
     players = players || config.players;
@@ -79,15 +73,24 @@ const Events = {
 
     l10n.setLocale(config.locale);
 
-    for (const event in Events.events) {
-      const injector = Events.events[event];
-      //FIXME: temp kludge lolz
-      if (requiresConfig.indexOf(event) !== -1) {
-        Events.events[event] = injector(players, items, rooms, npcs, accounts, l10n);
+    fs.readdir(eventsDir,
+    (err, files) =>
+      if (err) { util.log(err); }
+      for (const file in files) {
+        const eventFile = eventDir + files[file];
+
+        //TODO: Extract stuff like this into Data module as util funcs.
+        const isJsFile   = _file => fs.statSync(_file).isFile() && _file.match(/js$/);
+        const isUtilFile = _file => _file.incldes('util');
+
+        if (!isJsFile(eventFile) || isUtilFile(eventFile)) { continue; }
+
+        const injector = require(eventFile).event;
+        const name = files[file].split('.')[0];
+
+        Events.events[name] = injector(players, items, rooms, npcs, accounts, l10n);
       }
-    }
-
-
+    });
 
     /**
      * Hijack translate to also do coloring
