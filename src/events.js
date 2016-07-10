@@ -115,7 +115,7 @@ const Events = {
           say("<bold>What would you like to name your character?</bold> ");
           socket.once('data', name => {
 
-            if (!isNegot(name)) {
+            if (!EventUtil.isNegot(name)) {
               return repeat();
             }
 
