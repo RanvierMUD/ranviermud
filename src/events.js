@@ -119,7 +119,7 @@ const Events = {
               return repeat();
             }
 
-            name = capitalize(name
+            name = EventUtil.capitalize(name
               .toString()
               .trim());
 
