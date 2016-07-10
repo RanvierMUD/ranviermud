@@ -126,7 +126,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
             passwordAttempts[name]++;
             return repeat();
           }
-          next(socket, 'chooseChar', name);
+          return next(socket, 'chooseChar', name);
         });
         break;
 
