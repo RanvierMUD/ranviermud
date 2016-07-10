@@ -8,13 +8,14 @@
 const util   = require('util');
 const crypto = require('crypto');
 
+const src       = '../src/';
 const EventUtil   = require('./event_util').EventUtil;
-const Data        = require('../data').Data;
-const CommandUtil = require('../command_util').CommandUtil;
-const Player      = require('../player').Player;
-const Account     = require('../accounts').Account;
-const Type        = require('../type').Type;
-const Commands    = require('../commands').Commands;
+const Data        = require(src + 'data').Data;
+const CommandUtil = require(src + 'command_util').CommandUtil;
+const Player      = require(src + 'player').Player;
+const Account     = require(src + 'accounts').Account;
+const Type        = require(src + 'type').Type;
+const Commands    = require(src + 'commands').Commands;
 
 const passwordAttempts = {};
 
