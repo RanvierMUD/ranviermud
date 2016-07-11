@@ -18,9 +18,10 @@ const updateDestination = (player, dest, callback) => dest
   .filter(exit => exit.location === player.getLocation())
   .forEach(callback);
 
-exports.DoorUtil = {
+exports.Doors = {
   has,       updateDestination,
-  findExit,  openOrClose };
+  findExit,  openOrClose
+};
 
 function openOrClose(verb, args, player, players, rooms) {
 
