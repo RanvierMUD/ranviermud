@@ -29,6 +29,7 @@ exports.Doors = {
   has,       updateDestination,
   findExit,  openOrClose,
   lockDoor,  unlockDoor,
+  useKey
 };
 
 function openOrClose(verb, args, player, players, rooms) {
