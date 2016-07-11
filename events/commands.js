@@ -1,15 +1,21 @@
 'use strict';
 
+/**
+ * Command loop
+ * @param Player player
+ */
+
 const util   = require('util');
 
+const src      = '../src/';
 const EventUtil   = require('./event_util').EventUtil;
-const Data        = require('../data').Data;
-const CommandUtil = require('../command_util').CommandUtil;
-const Player      = require('../player').Player;
-const Commands    = require('../commands').Commands;
-const Channels    = require('../channels').Channels;
-const Skills      = require('../skills').Skills;
-const Feats       = require('../feats').Feats;
+const Data        = require(src + 'data').Data;
+const CommandUtil = require(src + 'command_util').CommandUtil;
+const Player      = require(src + 'player').Player;
+const Commands    = require(src + 'commands').Commands;
+const Channels    = require(src + 'channels').Channels;
+const Skills      = require(src + 'skills').Skills;
+const Feats       = require(src + 'feats').Feats;
 
 
 exports.event = (players, items, rooms, npcs, accounts, l10n) =>
