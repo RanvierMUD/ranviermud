@@ -21,7 +21,7 @@ const updateDestination = (player, dest, callback) => dest
 
 
 const changeDoorLockState = isLocked => exit => exit.door.locked = isLocked;
-const lockDoor = changeDoorLockState(true);
+const lockDoor   = changeDoorLockState(true);
 const unlockDoor = changeDoorLockState(false);
 
 /**/
