@@ -24,13 +24,20 @@ const changeDoorLockState = isLocked => exit => exit.door.locked = isLocked;
 const lockDoor = changeDoorLockState(true);
 const unlockDoor = changeDoorLockState(false);
 
-
+/**/
 exports.Doors = {
   has,       updateDestination,
   findExit,  openOrClose,
   lockDoor,  unlockDoor,
-  useKey
+  useKey,
 };
+/* useKey && openOrClose
+ * both take a verb string along with args, player, players, rooms dependencies.
+ * useKey verb:       'lock' | 'unlock'
+ * openOrClose verb:  'open' | 'close'
+ * This is because the code is more or less the same for each command, and this
+ * helps keep things dry.
+ */
 
 function openOrClose(verb, args, player, players, rooms) {
 
