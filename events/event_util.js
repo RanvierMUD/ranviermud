@@ -1,8 +1,7 @@
 const sty = require('sty');
 const util = require('util');
 
-const Type = require('../type').Type;
-
+const Type = require('../src/type').Type;
 
 
 // Swallows telnet bullshit
