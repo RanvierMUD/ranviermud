@@ -2,8 +2,9 @@
 // open/close, lock/unlock, and other player and NPC interactions with doors.
 
 'use strict';
-const CommandUtil = require('./command_util').CommandUtil;
 const util = require('util');
+
+const CommandUtil = require('./command_util').CommandUtil;
 
 /*
  * Handy little util functions.
@@ -72,7 +73,7 @@ function openOrClose(verb, args, player, players, rooms) {
 
       const nounPhrase = isOpen ? 'swings open' : 'slams shut';
       players.eachIf(
-        p => p.getLocation() === exit.location,
+        p => p.getLocation() === dest.getLocation(),
         p => p.say('The door to ' + srcTitle + ' ' + nounPhrase + '.'));
     });
 
