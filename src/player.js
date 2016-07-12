@@ -7,7 +7,8 @@ const Data = require('./data').Data,
   events   = require('events'),
   wrap     = require('wrap-ansi'),
   Random   = require('./random').Random,
-  Feats    = require('./feats').Feats;
+  Feats    = require('./feats').Feats,
+  _        = require('./helpers');
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
 const l10n_dir         = __dirname + '/../l10n/scripts/player/';
@@ -232,7 +233,7 @@ const Player = function PlayerConstructor(socket) {
   * @return boolean True if they have already been there. Otherwise false.
   */
   self.explore = vnum => {
-    if (self.explored.indexOf(vnum) === -1) {
+    if (_.hasNot(self.explored, vnum)) {
       self.explored.push(vnum);
       util.log(self.getName() + ' explored room #' + vnum + ' for the first time.');
       return false;
