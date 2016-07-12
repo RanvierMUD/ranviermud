@@ -44,7 +44,7 @@ function chooseRandomExit(chance) {
               const msg    = getMsg(p, chosenRoom);
               p.say(npc.getShortDesc(locale) + msg);
             };
-            
+
             const broadcastLeave = broadcastNpcMovement(getLeaveMessage);
             const broadcastEntry = broadcastNpcMovement(getEntryMessage);
 
@@ -73,9 +73,9 @@ function chooseRandomExit(chance) {
 }
 
 function getLeaveMessage(player, chosenRoom) {
-  if (chosenRoom && chosenRoom.title)
-    return ' leaves for ' + chosenRoom.title[player.getLocale()] + '.';
-  return ' leaves.'
+  return chosenRoom && chosenRoom.title ?
+    ' leaves for ' + chosenRoom.title[player.getLocale()] + '.' :
+    ' leaves.';
 }
 
 //TODO: Custom entry messages for NPCs.
