@@ -27,7 +27,16 @@ const values = obj => {
   return vals;
 }
 
+const leftPad = amt => {
+  let pad = '';
+  while (amt) {
+    pad += ' ';
+    amt--;
+  }
+  return pad;
+}
+
 
 module.exports = {
-  has, values, hasNot
+  has, values, hasNot, leftPad,
 };
