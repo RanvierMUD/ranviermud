@@ -26,8 +26,12 @@ const changeDoorLockState = isLocked => exit => exit.door.locked = isLocked;
 const lockDoor   = changeDoorLockState(true);
 const unlockDoor = changeDoorLockState(false);
 
-const isLocked    = exit => exit.door && exit.door.locked;
-const isMobLocked = exit => exit.hasOwnProperty('mob_locked');
+const isLocked = exit => exit.door && exit.door.locked;
+
+/* Dealing with npc passage */
+const isMobLocked   = exit => exit.hasOwnProperty('mob_locked');
+const isNpcPassable = exit => !(isMobLocked(exit) || isLocked(exit)); 
+
 
 /* Dealing with open/closed states */
 
