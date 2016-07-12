@@ -12,8 +12,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     // syntax 'give [item] [player]'
     if (player.isInCombat()) {
-      player.sayL10n(l10n, 'GIVE_COMBAT');
-      return;
+      return player.sayL10n(l10n, 'GIVE_COMBAT');
     }
 
     args = _.splitArgs(args);
