@@ -22,9 +22,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return;
     }
 
-    let to = args.indexOf('to');
-    if (to > -1) args.splice(to, 1);
-    util.log(args);
+    let toIndex = args.indexOf('to');
+    if (toIndex > -1) { args.splice(to, 1); }
 
     const item = CommandUtil.findItemInInventory(args[0], player, true);
     const room = rooms.getAt(player.getLocation());
@@ -45,8 +44,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     players.eachIf(
       CommandUtil.inSameRoom.bind(null, player),
-      checkForTarget
-      );
+      checkForTarget);
 
     function checkForTarget(target) {
         if (target.getName().toLowerCase() === targetPlayer) {
