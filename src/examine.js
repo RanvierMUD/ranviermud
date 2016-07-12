@@ -1,3 +1,4 @@
+'use strict';
 /*
  * For reducing boilerplate on examine listeners.
  *
@@ -14,12 +15,14 @@
  *    not found. A default is provided.
  */
 
-var util = require('util');
+//TODO: Change so that it can work on any item, npc, or room by emitting.
+
+const util = require('util');
+const _ = require(src + 'helpers');
 
 module.exports.examine = (args, player, players, config) => {
 
-  args = args.toLowerCase();
-
+  const target = _.firstWord(args);
   // Check to make sure config is valid.
   if (!config.poi || (!config.found && config.poi.length)) {
     util.log("Invalid config for examine event: ", config);
@@ -38,15 +41,15 @@ module.exports.examine = (args, player, players, config) => {
 
   // Handle POI as an object.
   if (!config.poi.length && config.check()) {
-    if (args in config.poi) { config.poi[args](); }
+    if (target in config.poi) { config.poi[target](); }
     else { config.nothingFound(); }
     return;
   }
 
-  var valid = config.poi.indexOf(args) > -1;
+  const valid = _.has(config.poi, target);
 
-  util.log(valid && config.check())
+  return valid && config.check() ?
+    config.found() :
+    config.nothingFound();
 
-  valid && config.check() ? config.found() : config.nothingFound();
-
-}
+};
