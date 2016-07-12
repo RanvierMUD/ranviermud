@@ -7,7 +7,22 @@
  */
 const has = (collection, thing) => collection.indexOf(thing) !== -1;
 
+/**
+ * Takes an object and returns an array of all of its values.
+ * @param  Obj
+ * @return Array of values
+ */
+
+const values = obj => {
+  let vals = [];
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)){
+      vals.push(obj[key]);
+    }
+  }
+  return vals;
+}
 
 module.exports = {
-  has,
+  has, values,
 };

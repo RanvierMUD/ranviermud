@@ -1,5 +1,6 @@
 'use strict';
 const CommandUtil = require('../src/command_util').CommandUtil;
+const _ = require('../src/helpers');
 const l10nFile = __dirname + '/../l10n/commands/remove.yml';
 const l10n = require('../src/l10n')(l10nFile);
 const util = require('util');
@@ -17,10 +18,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     /// Helper functions ///
 
     function removeAll() {
-      CommandUtil
-        .values(player.getEquipped())
-        .map(id => items.get(id))
-        .forEach(remove);
+      _.values(player.getEquipped())
+       .map(id => items.get(id))
+       .forEach(remove);
     }
 
     function remove(item) {
