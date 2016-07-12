@@ -6,9 +6,13 @@ const sprintf = require('sprintf')
 const l10nFile = __dirname + '/../l10n/commands/look.yml';
 const l10n = new require('jall')(require('js-yaml').load(require('fs')
     .readFileSync(l10nFile).toString('utf8')), undefined, 'zz');
-const wrap = require('wrap-ansi');
-const util = require('util');
-const Time = require('../src/time').Time;
+const wrap  = require('wrap-ansi');
+const util  = require('util');
+
+const Time  = require('../src/time').Time;
+const Doors = require('../src/doors').Doors;
+const Type  = require('../src/type').Type;
+const _     = require('../src/helpers');
 
 l10n.throwOnMissingTranslation(false);
 
@@ -17,8 +21,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player, hasExplored) => {
     const room = rooms.getAt(player.getLocation());
     const locale = player.getLocale();
-
-    let thingIsPlayer = false;
 
     if (args) {
       args = args.toLowerCase();
@@ -40,12 +42,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       // Then the player themselves
       if (!thing && isLookingAtSelf()) {
         thing = player;
-        thingIsPlayer = true;
       }
 
       function isLookingAtSelf() {
-        const me = ['me', 'self', player.getName().toLowerCase()];
-        return me.indexOf(args) !== -1;
+        const lookAtMe = ['me', 'self', player.getName().toLowerCase()];
+        return _.has(lookAtMe, args);
       }
 
       // Then other players
@@ -67,12 +68,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       // Then look at exits
       //TODO: Improve based on player stats/skills?
+      //FIXME: This does not really seem to be working.
+      //FIXME: Consider making it a 'scout' command/skill.
       if (!thing) {
         const exits = room.getExits();
         const canSee = exits.reduce((canSee, exit) => {
           if (!canSee) { return canSee; }
           if (args === exit.direction) {
-            if (exit.door && !exit.door.open) {
+            if (Doors.isOpen(exit)) {
               player.say("There's a door in the way.");
               return false;
             }
@@ -84,20 +87,18 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }
 
       if (!thing) {
-        player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-        return;
+        return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
       }
 
       player.say(wrap(thing.getDescription(locale), 80));
-      if (thingIsPlayer) { showPlayerEquipment(thing, player); }
+      if (Type.isPlayer(thing)) { showPlayerEquipment(thing, player); }
 
       return;
     }
 
     if (!room) {
-      player.sayL10n(l10n, 'LIMBO');
       util.log(player.getName() + ' is in limbo.');
-      return;
+      return player.say('You are in a deep, dark void.');
     }
 
     // Render the room and its exits
@@ -121,7 +122,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     player.say('');
 
     // display players in the same room
-    players.eachIf(CommandUtil.inSameRoom.bind(null, player),
+    players.eachIf(
+      CommandUtil.inSameRoom.bind(null, player),
       p => player.sayL10n(l10n, 'IN_ROOM', p.getName()));
 
     // show all the items in the rom
@@ -135,19 +137,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     // show all npcs in the room
     room.getNpcs()
       .forEach(id => {
-        var npc = npcs.get(id);
+        const npc = npcs.get(id);
 
         if (npc) {
-          var npcLevel = npc.getAttribute('level');
-          var playerLevel = player.getAttribute('level');
-          var color = 'cyan';
+          const npcLevel    = npc.getAttribute('level');
+          const playerLevel = player.getAttribute('level');
+          const difference  = npcLevel - playerLevel;
 
-          if ((npcLevel - playerLevel) > 3)
-            color = 'red';
-          else if ((npcLevel - playerLevel) >= 1)
-            color = 'yellow';
-          else if (npcLevel === playerLevel)
-            color = 'green';
+          const color = getNpcColor(difference)
 
           player.say('<' + color + '>'
             + npc.getShortDesc(player.getLocale())
@@ -162,19 +159,26 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     player.say(']');
 
     function showPlayerEquipment(playerTarget, playerLooking) {
-      let naked = true;
       const equipped = playerTarget.getEquipped();
-      for (const i in equipped) {
-        const item = items.get(equipped[i]);
-        naked = false;
+      for (const slot in equipped) {
+        const item = items.get(equipped[slot]);
         playerLooking.say(
           sprintf(
-            "%-15s %s", "<" + i + ">",
+            "%-15s %s", "<" + slot + ">",
             item.getShortDesc(playerLooking.getLocale())
           ));
       }
+
+      const naked = Object.keys(equipped).length;
       if (naked) { playerLooking.sayL10n(l10n, "NAKED"); }
     }
 
   }
 };
+
+function getNpcColor(difference) {
+  if (difference > 3)  return 'red';
+  if (difference >= 1) return 'yellow';
+  if (!difference)     return 'green';
+  return 'cyan';
+}
