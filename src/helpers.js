@@ -6,9 +6,10 @@
  */
 
 /*
- * Takes an array and a thing and tells you if the thing is in the array.
+ * Takes an array or string and a thing and tells you if the thing is in the array or string.
  */
-const has = (collection, thing) => collection.indexOf(thing) !== -1;
+const has    = (collection, thing) => collection.indexOf(thing) !== -1;
+const hasNot = (collection, value) => !has(collection, value);
 
 /**
  * Takes an object and returns an array of all of its values.
@@ -26,6 +27,7 @@ const values = obj => {
   return vals;
 }
 
+
 module.exports = {
-  has, values,
+  has, values, hasNot
 };

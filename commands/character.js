@@ -13,10 +13,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const hiddenAttrs = ['experience', 'attrPoints', 'class'];
     for (let attr in character) {
-      const playerFacing = hiddenAttrs.indexOf(attr) === -1;
-      const shouldDisplay = attr.indexOf('max') === -1 && playerFacing;
+      const playerFacing = _.hasNot(hiddenAttrs, attr);
+      const shouldDisplay = _.hasNot(attr, 'max') && playerFacing;
       const hasMutagens = !(attr === 'mutagens' && !character[attr]);
-      const longest = 12;
+      const longest = 12; //TODO: Dynamically get length of longest attr label.
 
       if (shouldDisplay && hasMutagens) {
         const status = getStatusString(attr, character[attr], character);
