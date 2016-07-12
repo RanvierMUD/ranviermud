@@ -10,7 +10,7 @@ const _ = require('../src/helpers');
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
 
-    const stance = args.split(' ')[0].toLowerCase();
+    const stance = _.firstWord(args);
 
     const stances = [
       'cautious',

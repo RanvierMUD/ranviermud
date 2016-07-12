@@ -12,8 +12,7 @@ const _ = require('../src/helpers');
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
 
-    const option = args.split(' ')[0].toLowerCase();
-
+    const option = _.firstWord(args)
     const options = [
       'default',
       'verbose',
