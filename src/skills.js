@@ -2,6 +2,7 @@
 
 const util = require('util');
 
+const _ = require('./helpers');
 const Effects = require('./effects.js').Effects;
 const move = require('./commands').Commands.move;
 const CommandUtil = require('./command_util').CommandUtil;
@@ -17,14 +18,16 @@ let l10ncache = {};
  * @return string
  */
 const L = function(locale, cls, key /*, args... */ ) {
-  var l10nFile = l10n_dir + cls + '.yml';
-  var l10n = l10ncache[cls + locale] || require('./l10n')(l10nFile);
+  const l10nFile = l10n_dir + cls + '.yml';
+  const l10n = l10ncache[cls + locale] || require('./l10n')(l10nFile);
   l10n.setLocale(locale);
   return l10n.translate.apply(null, [].slice.call(arguments).slice(2));
 };
 
 // For activate functions:
 // Command event passes in player, args, rooms, npcs, players.
+
+//TODO: Pull into own files.
 
 exports.Skills = {
 
@@ -33,7 +36,7 @@ exports.Skills = {
     id: "dual",
     cost: 2,
     name: "Dual Wield",
-    description: "Your ability to deftly xuse two (or more...) weapons at once.",
+    description: "Your ability to deftly use two (or more...) weapons at once.",
     usage: "Wield two one-handed weapons. Enjoy.",
     attribute: "quickness",
     type: "passive",
@@ -94,26 +97,26 @@ exports.Skills = {
     attribute: "cleverness",
     type: "active",
     activate: (player, target, rooms, npcs, players) => {
-      if (target) {
-        const room = rooms.getAt(player.getLocation());
-        const exits = room.getExits();
-        const name = player.getName();
-        const possibleTargets = exits
-          .filter(e => e.direction.indexOf(target.toLowerCase()) > -1);
+      if (!target) { return player.say("Which door's lock do you want to pick?"); }
+      target = target.toLowerCase();
 
-        util.log(name + ' is trying to pick a lock...');
+      const room = rooms.getAt(player.getLocation());
+      const exits = room.getExits();
+      const name = player.getName();
+      const possibleTargets = exits
+        .filter(exit => _has(exit.direction, target));
 
-        if (possibleTargets && possibleTargets.length === 1) {
-          const exit = possibleTargets[0];
-          return attemptLockpick(player, players, rooms, exit);
-        } else if (possibleTarget.length) {
-          return player.say("Which door's lock do you want to pick?");
-        } else {
-          return player.say("There doesn't seem to be an exit in that direction, much less a lock to pick.");
-        }
-      } else {
+      util.log(name + ' is trying to pick a lock...');
+
+      if (possibleTargets && possibleTargets.length === 1) {
+        const exit = possibleTargets[0];
+        return attemptLockpick(player, players, rooms, exit);
+      } else if (possibleTargets && possibleTargets.length) {
         return player.say("Which door's lock do you want to pick?");
+      } else {
+        return player.say("There doesn't seem to be an exit in that direction, much less a lock to pick.");
       }
+    }
     },
   }
 };
