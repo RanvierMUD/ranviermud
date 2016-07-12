@@ -144,11 +144,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           const playerLevel = player.getAttribute('level');
           const difference  = npcLevel - playerLevel;
 
-          let color = 'cyan';
-
-          if (difference > 3)  { color = 'red';    }
-          if (difference >= 1) { color = 'yellow'; }
-          if (!difference)     { color = 'green';  }
+          const color = getNpcColor(difference)
 
           player.say('<' + color + '>'
             + npc.getShortDesc(player.getLocale())
@@ -179,3 +175,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
   }
 };
+
+function getNpcColor(difference) {
+  if (difference > 3)  return 'red';
+  if (difference >= 1) return 'yellow';
+  if (!difference)     return 'green';
+  return 'cyan';
+}
