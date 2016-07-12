@@ -1,8 +1,11 @@
 'use strict';
+
+const util = require('util');
+
 const Skills = require('../src/skills').Skills;
 const l10nFile = __dirname + '/../l10n/commands/skills.yml';
 const l10n = require('../src/l10n')(l10nFile);
-const util = require('util');
+const _ = require('../src/helpers');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
@@ -18,7 +21,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         ];
         const attr = skill.attribute;
 
-        if (attrs.indexOf(attr) > -1) {
+        if (_.has(attrs, attr)) {
           if (attr in skillCategories) {
             skillCategories[attr].push(skill);
           } else {
