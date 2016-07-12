@@ -36,8 +36,10 @@ const leftPad = amt => {
   return pad;
 }
 
-const firstWord = args => args.split(' ')[0].toLowerCase();
+const firstWord = args => splitArgs(args)[0];
+
+const splitArgs = args => args.split(' ').toLowerCase();
 
 module.exports = {
-  has, values, hasNot, leftPad, firstWord,
+  has, values, hasNot, leftPad, firstWord, splitArgs
 };

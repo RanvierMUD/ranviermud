@@ -4,10 +4,12 @@ const _ = require('../src/helpers');
 const l10nFile = __dirname + '/../l10n/commands/remove.yml';
 const l10n = require('../src/l10n')(l10nFile);
 const util = require('util');
+const _ = require('../src/helpers');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player, isDead) => {
-    const target = args.toLowerCase().split(' ')[0];
+
+    const target = _.firstWord(args);
 
     if (target === 'all') { return removeAll(); }
 
