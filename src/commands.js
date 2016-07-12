@@ -5,6 +5,7 @@ const util = require('util'),
   CommandUtil = require('./command_util').CommandUtil,
   l10nHelper = require('./l10n');
 
+const Doors = require('./doors').Doors;
 
 // "Globals" to be specified later during config.
 let rooms = null;
@@ -214,23 +215,25 @@ function move(exit, player) {
     .getAt(player.getLocation())
     .emit('playerLeave', player, players);
 
-  const closedDoor = exit.door && !exit.door.open;
-  const lockedDoor = exit.door && exit.door.locked;
-
-  util.log(exit);
+  const closedDoor = !Doors.isOpen(exit);
+  const lockedDoor = Doors.isLocked(exit);
 
   if (closedDoor && lockedDoor) {
     const key = exit.door.key;
 
     if (!CommandUtil.findItemInInventory(key, player)) {
+      const getExitTitle = exitLoc => locale => rooms
+          .getAt(exitLoc)
+          .getTitle(locale);
 
-      const roomTitle = rooms.getAt(exit.location).getTitle(player.getLocale());
+      const getDestinatonTitle = getExitTitle(exit.location);
+      const roomTitle = getDestinationTitle(player.getLocale());
 
       player.sayL10n(l10n, 'LOCKED', roomTitle);
       players.eachIf(
         p => CommandUtil.inSameRoom(player, p),
         p => {
-          let roomTitle = rooms.getAt(exit.location).getTitle(p.getLocale());
+          let roomTitle = getDestinationTitle(p.getLocale());
           p.sayL10n(l10n, 'OTHER_LOCKED', player.getName(), roomTitle);
         });
       return false;
