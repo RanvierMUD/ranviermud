@@ -3,6 +3,8 @@ const l10nFile = __dirname + '/../l10n/commands/target.yml';
 const l10n = require('../src/l10n')(l10nFile);
 const util = require('util');
 
+const _ = require('../src/helpers');
+
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     const targets = {
@@ -13,7 +15,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       legs: ['leg']
     };
 
-    args = args.toLowerCase().trim();
+    args = _.firstWord(args);
 
     if (args) {
       if (args in targets) {
@@ -21,17 +23,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         return;
       } else {
         for (let targetable in targets) {
-          const found = targets[targetable].indexOf(args) > -1;
-          if (found) {
-            setTarget(targetable);
-            return;
-          }
+          const synonym = targets[targetable];
+          const found   = _.has(synonym, args);
+          if (found) { return setTarget(targetable); }
         }
       }
     }
 
-    player.sayL10n(l10n, 'NO_TARGET', player.getPreference('target'));
-    return;
+    return player.sayL10n(l10n, 'NO_TARGET', player.getPreference('target'));
 
     function setTarget(target) {
       player.setPreference('target', target);
