@@ -239,7 +239,7 @@ function move(exit, player) {
       return false;
     }
 
-    exit.door.locked = false;
+    Doors.unlockDoor(exit);
 
     player.sayL10n(l10n, 'UNLOCKED', key);
     players.eachIf(
@@ -253,11 +253,18 @@ function move(exit, player) {
     return true;
   }
 
+  const moveCost = exit.cost ? exit.cost : 1;
+  if (!player.hasEnergy(moveCost)) { return player.noEnergy(); }
+
+  if (closedDoor) {
+    Commands.player_commands.open(exit.direction, player);
+  }
+
   // Send the room leave message
   players.eachExcept(
     player,
     p => {
-      if (p.getLocation() === player.getLocation()) {
+      if (CommandUtil.inSameRoom(p, player)) {
         try {
           const exitLeaveMessage = exit.leave_message[p.getLocale()];
           const leaveMessage = exitLeaveMessage ?
@@ -272,14 +279,9 @@ function move(exit, player) {
       }
     });
 
-  if (closedDoor) {
-    Commands.player_commands.open(exit.direction, player);
-  }
+
 
   player.setLocation(exit.location);
-
-  const moveCost = exit.cost ? exit.cost : 1;
-  if (!player.hasEnergy(moveCost)) { return player.noEnergy(); }
 
   // Add room to list of explored rooms
   const hasExplored = player.explore(room.getLocation());
@@ -289,11 +291,12 @@ function move(exit, player) {
 
   // Trigger the playerEnter event
   // See example in scripts/npcs/1.js
-  room.getNpcs().forEach(id => {
-    const npc = npcs.get(id);
-    if (!npc) { return; }
-    npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
-  });
+  room.getNpcs()
+      .forEach(id => {
+        const npc = npcs.get(id);
+        if (!npc) { return; }
+        npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
+      });
 
   room.emit('playerEnter', player, players);
 
@@ -301,7 +304,7 @@ function move(exit, player) {
   players.eachExcept(
     player,
     p => {
-      if (p.getLocation() === player.getLocation()) {
+      if (CommandUtil.inSameRoom(p, player)) {
         p.say(player.getName() + ' enters.');
       }
   });
