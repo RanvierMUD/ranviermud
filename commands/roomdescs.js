@@ -1,9 +1,13 @@
 'use strict';
+
+const util = require('util');
+
 const l10nFile = __dirname + '/../l10n/commands/roomdescs.yml';
 const l10n = require('../src/l10n')(l10nFile);
 const CommandUtil = require('../src/command_util')
   .CommandUtil;
-const util = require('util');
+
+const _ = require('../src/helpers');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
@@ -16,7 +20,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       'short'
     ];
 
-    if (option && options.indexOf(option) > -1) {
+    if (option && _.has(options, option)) {
       player.setPreference('roomdescs', option);
       player.sayL10n(l10n, 'DESCS_SET', option);
       return;
