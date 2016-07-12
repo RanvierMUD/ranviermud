@@ -3,34 +3,37 @@
 
 'use strict';
 const util = require('util');
-
+const _    = require('./helpers');
 const CommandUtil = require('./command_util').CommandUtil;
 
 /*
- * Handy little util functions.
+ * Door-related helper functions.
  */
-const has = (collection, thing) => collection.indexOf(thing) !== -1;
 
+// Returns an array of exits that match the provided direction string.
 const findExit = (room, dir) => room.getExits()
-  .filter(exit => has(exit.direction, dir));
+  .filter(exit => _.has(exit.direction, dir));
 
+// Takes a callback to use on the destination location. 
 const updateDestination = (player, dest, callback) => dest
   .getExits()
   .filter(exit => exit.location === player.getLocation())
   .forEach(callback);
 
-
+//
 const changeDoorLockState = isLocked => exit => exit.door.locked = isLocked;
 const lockDoor   = changeDoorLockState(true);
 const unlockDoor = changeDoorLockState(false);
 
 /**/
+
 exports.Doors = {
-  has,       updateDestination,
+  updateDestination,
   findExit,  openOrClose,
   lockDoor,  unlockDoor,
   useKey,
 };
+
 /* useKey && openOrClose
  * both take a verb string along with args, player, players, rooms dependencies.
  * useKey verb:       'lock' | 'unlock'
