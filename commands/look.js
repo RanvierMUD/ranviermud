@@ -147,7 +147,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           let color = 'cyan';
 
           if (difference > 3)  { color = 'red';    }
-          if (diference >= 1)  { color = 'yellow'; }
+          if (difference >= 1) { color = 'yellow'; }
           if (!difference)     { color = 'green';  }
 
           player.say('<' + color + '>'
