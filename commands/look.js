@@ -73,7 +73,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         const canSee = exits.reduce((canSee, exit) => {
           if (!canSee) { return canSee; }
           if (args === exit.direction) {
-            if (exit.door && !exit.door.open) {
+            if (Doors.isOpen(exit)) {
               player.say("There's a door in the way.");
               return false;
             }
@@ -95,9 +95,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     if (!room) {
-      player.sayL10n(l10n, 'LIMBO');
       util.log(player.getName() + ' is in limbo.');
-      return;
+      return player.say('You are in a deep, dark void.');
     }
 
     // Render the room and its exits
@@ -121,7 +120,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     player.say('');
 
     // display players in the same room
-    players.eachIf(CommandUtil.inSameRoom.bind(null, player),
+    players.eachIf(
+      CommandUtil.inSameRoom.bind(null, player),
       p => player.sayL10n(l10n, 'IN_ROOM', p.getName()));
 
     // show all the items in the rom
@@ -135,19 +135,18 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     // show all npcs in the room
     room.getNpcs()
       .forEach(id => {
-        var npc = npcs.get(id);
+        const npc = npcs.get(id);
 
         if (npc) {
-          var npcLevel = npc.getAttribute('level');
-          var playerLevel = player.getAttribute('level');
-          var color = 'cyan';
+          const npcLevel = npc.getAttribute('level');
+          const playerLevel = player.getAttribute('level');
+          const difference  = npcLevel - playerLevel;
 
-          if ((npcLevel - playerLevel) > 3)
-            color = 'red';
-          else if ((npcLevel - playerLevel) >= 1)
-            color = 'yellow';
-          else if (npcLevel === playerLevel)
-            color = 'green';
+          let color = 'cyan';
+
+          if (difference > 3)  { color = 'red';    }
+          if (diference >= 1)  { color = 'yellow'; }
+          if (!difference)     { color = 'green';  }
 
           player.say('<' + color + '>'
             + npc.getShortDesc(player.getLocale())
