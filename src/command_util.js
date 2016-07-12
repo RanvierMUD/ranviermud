@@ -8,21 +8,6 @@ const CommandUtil = {
   parseDot           , values,
 };
 
-/**
- * Takes an object and returns an array of all of its values.
- * @param  Obj
- * @return Array of values
- */
-
-function values(obj) {
-  let vals = [];
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)){
-      vals.push(obj[key]);
-    }
-  }
-  return vals;
-}
 
 /**
  * Takes an object and name of event to emit and tells you if it has a listener.
