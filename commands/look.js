@@ -68,6 +68,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       // Then look at exits
       //TODO: Improve based on player stats/skills?
+      //FIXME: This does not really seem to be working.
+      //FIXME: Consider making it a 'scout' command/skill.
       if (!thing) {
         const exits = room.getExits();
         const canSee = exits.reduce((canSee, exit) => {
@@ -161,17 +163,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     player.say(']');
 
     function showPlayerEquipment(playerTarget, playerLooking) {
-      let naked = true;
       const equipped = playerTarget.getEquipped();
-      for (const i in equipped) {
-        const item = items.get(equipped[i]);
-        naked = false;
+      for (const slot in equipped) {
+        const item = items.get(equipped[slot]);
         playerLooking.say(
           sprintf(
-            "%-15s %s", "<" + i + ">",
+            "%-15s %s", "<" + slot + ">",
             item.getShortDesc(playerLooking.getLocale())
           ));
       }
+
+      const naked = !!Object.keys(equipped);
       if (naked) { playerLooking.sayL10n(l10n, "NAKED"); }
     }
 
