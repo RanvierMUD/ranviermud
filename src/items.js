@@ -7,6 +7,9 @@ var fs     = require('fs'),
 var objects_dir = __dirname + '/../entities/objects/';
 var l10n_dir    = __dirname + '/../l10n/scripts/objects/';
 var objects_scripts_dir = __dirname + '/../scripts/objects/';
+var _ = require('./helpers');
+
+//FIXME: Refactor plz;
 
 var Items = function () {
 	var self = this;
@@ -233,7 +236,7 @@ var Item = function (config)
 	 */
 	self.hasKeyword = function (keyword, locale)
 	{
-		return self.getKeywords(locale || 'en').indexOf(keyword) > -1;
+		return _.has(self.getKeywords(locale || 'en'), keyword);
 	};
 
 	/**

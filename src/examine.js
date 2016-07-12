@@ -15,10 +15,11 @@
  *    not found. A default is provided.
  */
 
-//TODO: Change so that it can work on any item, npc, or room by emitting.
+//TODO: Change command so that it can work on any item, npc, or room by emitting.
+// Then this func will be used if it does not find any valid items, npcs, etc.
 
 const util = require('util');
-const _ = require(src + 'helpers');
+const _ = require('./helpers');
 
 module.exports.examine = (args, player, players, config) => {
 
