@@ -117,7 +117,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         break;
 
       case 'gender':
-        const validGenders = ['m', 'f', 'a'];
+        const genders = ['m', 'f', 'a'];
 
         say('<bold>What is your character\'s gender?</bold>\n'
         + '<cyan>[F]emale\n[M]ale\n[A]ndrogynous</cyan>\n');
@@ -129,7 +129,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
               .trim()
               .toLowerCase();
 
-            if (!gender || validGenders.indexOf(gender) === -1) {
+            if (!gender || _.hasNot(genders, gender)) {
               socket.say('Please specify a gender, or [A]ndrogynous if you\'d prefer.');
               return repeat();
             }
