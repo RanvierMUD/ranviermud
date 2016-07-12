@@ -100,9 +100,9 @@ exports.Skills = {
       if (!target) { return player.say("Which door's lock do you want to pick?"); }
       target = target.toLowerCase();
 
-      const room = rooms.getAt(player.getLocation());
+      const room  = rooms.getAt(player.getLocation());
       const exits = room.getExits();
-      const name = player.getName();
+      const name  = player.getName();
       const possibleTargets = exits
         .filter(exit => _has(exit.direction, target));
 
@@ -116,7 +116,6 @@ exports.Skills = {
       } else {
         return player.say("There doesn't seem to be an exit in that direction, much less a lock to pick.");
       }
-    }
     },
   }
 };
