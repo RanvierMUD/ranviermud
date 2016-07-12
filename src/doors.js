@@ -46,7 +46,7 @@ exports.Doors = {
   lockDoor,  unlockDoor,
   useKey,    isMobLocked,
   isLocked,  isOpen,
-  isDoor,
+  isDoor,    isNpcPassable
 };
 
 /* useKey && openOrClose
