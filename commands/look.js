@@ -6,9 +6,13 @@ const sprintf = require('sprintf')
 const l10nFile = __dirname + '/../l10n/commands/look.yml';
 const l10n = new require('jall')(require('js-yaml').load(require('fs')
     .readFileSync(l10nFile).toString('utf8')), undefined, 'zz');
-const wrap = require('wrap-ansi');
-const util = require('util');
-const Time = require('../src/time').Time;
+const wrap  = require('wrap-ansi');
+const util  = require('util');
+
+const Time  = require('../src/time').Time;
+const Doors = require('../src/doors').Doors;
+const Type  = require('../src/type').Type;
+const _     = require('../src/helpers');
 
 l10n.throwOnMissingTranslation(false);
 
@@ -17,8 +21,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player, hasExplored) => {
     const room = rooms.getAt(player.getLocation());
     const locale = player.getLocale();
-
-    let thingIsPlayer = false;
 
     if (args) {
       args = args.toLowerCase();
@@ -40,12 +42,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       // Then the player themselves
       if (!thing && isLookingAtSelf()) {
         thing = player;
-        thingIsPlayer = true;
       }
 
       function isLookingAtSelf() {
-        const me = ['me', 'self', player.getName().toLowerCase()];
-        return me.indexOf(args) !== -1;
+        const lookAtMe = ['me', 'self', player.getName().toLowerCase()];
+        return _.has(lookAtMe, args);
       }
 
       // Then other players
@@ -84,12 +85,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }
 
       if (!thing) {
-        player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-        return;
+        return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
       }
 
       player.say(wrap(thing.getDescription(locale), 80));
-      if (thingIsPlayer) { showPlayerEquipment(thing, player); }
+      if (Type.isPlayer(thing)) { showPlayerEquipment(thing, player); }
 
       return;
     }
