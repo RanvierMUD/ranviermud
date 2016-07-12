@@ -140,7 +140,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         const npc = npcs.get(id);
 
         if (npc) {
-          const npcLevel = npc.getAttribute('level');
+          const npcLevel    = npc.getAttribute('level');
           const playerLevel = player.getAttribute('level');
           const difference  = npcLevel - playerLevel;
 
@@ -169,7 +169,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           ));
       }
 
-      const naked = !!Object.keys(equipped);
+      const naked = Object.keys(equipped).length;
       if (naked) { playerLooking.sayL10n(l10n, "NAKED"); }
     }
 
