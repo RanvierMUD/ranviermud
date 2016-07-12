@@ -26,7 +26,8 @@ const changeDoorLockState = isLocked => exit => exit.door.locked = isLocked;
 const lockDoor   = changeDoorLockState(true);
 const unlockDoor = changeDoorLockState(false);
 
-const isLocked = exit => exit.door && exit.door.locked; 
+const isLocked    = exit => exit.door && exit.door.locked;
+const isMobLocked = exit => exit.hasOwnProperty('mob_locked');
 
 /* Dealing with open/closed states */
 
@@ -36,7 +37,8 @@ exports.Doors = {
   updateDestination,
   findExit,  openOrClose,
   lockDoor,  unlockDoor,
-  useKey,
+  useKey,    isMobLocked,
+  isLocked,  isOpen,
 };
 
 /* useKey && openOrClose

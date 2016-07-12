@@ -23,10 +23,10 @@ function chooseRandomExit(chance) {
 
         util.log(npc.getShortDesc('en') + " moves to room #" + chosen.location);
 
-        const mobsAllowed = !chosen.hasOwnProperty('mob_locked');
-        const openDoor = Doors.isOpen(chosen);
+        const mobsAllowed  = Doors.isMobLocked(chosen);
+        const openDoor     = Doors.isOpen(chosen);
         const canOpenDoors = npc.hasType('humanoid');
-        const doorLocked = Doors.isLocked(chosen);
+        const doorLocked   = Doors.isLocked(chosen);
 
         const canMove = mobsAllowed && (openDoor || canOpenDoors) && !doorLocked;
 
