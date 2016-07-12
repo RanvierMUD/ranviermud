@@ -3,6 +3,7 @@ const l10nFile = __dirname + '/../l10n/commands/give.yml';
 const l10n = require('../src/l10n')(l10nFile);
 const CommandUtil = require('../src/command_util').CommandUtil;
 const util = require('util');
+const _ = require('../src/helpers');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
@@ -15,7 +16,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return;
     }
 
-    args = args.toLowerCase().split(' ');
+    args = _.splitArgs(args);
 
     if (!args.length) {
       player.sayL10n(l10n, 'NO_ITEM_OR_TARGET');
