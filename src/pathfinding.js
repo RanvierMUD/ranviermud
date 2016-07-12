@@ -2,15 +2,14 @@
 const CommandUtil = require('./command_util.js')
   .CommandUtil;
 const Random = require('./random.js').Random;
-const util = require('util');
+const Doors  = require('./doors.js').Doors;
+const util   = require('util');
 
 module.exports = {
-
-  chooseRandomExit: _chooseRandomExit,
-
+  chooseRandomExit,
 };
 
-function _chooseRandomExit(chance) {
+function chooseRandomExit(chance) {
   return () => {
     return (room, rooms, player, players, npc) => {
 
@@ -25,10 +24,9 @@ function _chooseRandomExit(chance) {
         util.log(npc.getShortDesc('en') + " moves to room #" + chosen.location);
 
         const mobsAllowed = !chosen.hasOwnProperty('mob_locked');
-        const openDoor = chosen.door ?
-          chosen.door.open === 'true' : true;
+        const openDoor = Doors.isOpen(chosen);
         const canOpenDoors = npc.hasType('humanoid');
-        const doorLocked = chosen.door && chosen.door.locked;
+        const doorLocked = Doors.isLocked(chosen);
 
         const canMove = mobsAllowed && (openDoor || canOpenDoors) && !doorLocked;
 

@@ -14,18 +14,23 @@ const CommandUtil = require('./command_util').CommandUtil;
 const findExit = (room, dir) => room.getExits()
   .filter(exit => _.has(exit.direction, dir));
 
-// Takes a callback to use on the destination location. 
+// Takes a callback to use on the destination location.
 const updateDestination = (player, dest, callback) => dest
   .getExits()
   .filter(exit => exit.location === player.getLocation())
   .forEach(callback);
 
-//
+/* Dealing with locked/unlocked states */
+
 const changeDoorLockState = isLocked => exit => exit.door.locked = isLocked;
 const lockDoor   = changeDoorLockState(true);
 const unlockDoor = changeDoorLockState(false);
 
-/**/
+const isLocked = exit => exit.door && exit.door.locked; 
+
+/* Dealing with open/closed states */
+
+const isOpen = exit => exit.door ? exit.door.open : true;
 
 exports.Doors = {
   updateDestination,
