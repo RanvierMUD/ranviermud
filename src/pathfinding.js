@@ -23,12 +23,10 @@ function chooseRandomExit(chance) {
 
         util.log(npc.getShortDesc('en') + " moves to room #" + chosen.location);
 
-        const mobsAllowed  = Doors.isMobLocked(chosen);
         const openDoor     = Doors.isOpen(chosen);
         const canOpenDoors = npc.hasType('humanoid');
-        const doorLocked   = Doors.isLocked(chosen);
 
-        const canMove = mobsAllowed && (openDoor || canOpenDoors) && !doorLocked;
+        const canMove = (openDoor || canOpenDoors) && Doors.isNpcPassable(chosen);
 
         if (canMove) {
           const uid = npc.getUuid();
@@ -41,27 +39,29 @@ function chooseRandomExit(chance) {
               player.say(npc.getShortDesc(locale) + msg);
             }
 
+            const broadcastNpcMovement = getMsg => p => {
+              const locale = p.getLocale();
+              const msg    = getMsg(p, chosenRoom);
+              p.say(npc.getShortDesc(locale) + msg);
+            };
+            
+            const broadcastLeave = broadcastNpcMovement(getLeaveMessage);
+            const broadcastEntry = broadcastNpcMovement(getEntryMessage);
+
             players.eachIf(
-              CommandUtil.inSameRoom.bind(null, player || npc),
-              p => {
-                const locale = p.getLocale();
-                const msg = getLeaveMessage(p, chosenRoom);
-                p.say(npc.getShortDesc(locale) + msg);
-              });
+              p => CommandUtil.inSameRoom(player || npc, p),
+              broadcastLeave);
 
             npc.setRoom(chosen.location);
             room.removeNpc(uid);
             chosenRoom.addNpc(uid);
 
-
             const npcInRoomWithPlayer = CommandUtil.inSameRoom.bind(null, npc);
 
-            players.eachIf(npcInRoomWithPlayer,
-              p => {
-                const locale = p.getLocale();
-                const msg = getEntryMessage();
-                p.say(npc.getShortDesc(locale) + msg);
-              });
+            players.eachIf(
+              npcInRoomWithPlayer,
+              broadcastEntry);
+
           } catch (e) {
             console.log("EXCEPTION: ", e);
             console.log("NPC: ", npc);
