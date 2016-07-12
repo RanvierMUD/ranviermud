@@ -27,14 +27,17 @@ const lockDoor   = changeDoorLockState(true);
 const unlockDoor = changeDoorLockState(false);
 
 const isLocked = exit => exit.door && exit.door.locked;
+const defaultDifficulty = 10;
+const getLockDifficulty = exit => parseInt(exit.door.difficulty || defaultDifficulty, 10);
 
 /* Dealing with npc passage */
 const isMobLocked   = exit => exit.hasOwnProperty('mob_locked');
-const isNpcPassable = exit => !(isMobLocked(exit) || isLocked(exit)); 
+const isNpcPassable = exit => !(isMobLocked(exit) || isLocked(exit));
 
 
 /* Dealing with open/closed states */
 
+const isDoor = exit => exit && exit.hasOwnProperty('door');
 const isOpen = exit => exit.door ? exit.door.open : true;
 
 exports.Doors = {
@@ -43,6 +46,7 @@ exports.Doors = {
   lockDoor,  unlockDoor,
   useKey,    isMobLocked,
   isLocked,  isOpen,
+  isDoor,
 };
 
 /* useKey && openOrClose

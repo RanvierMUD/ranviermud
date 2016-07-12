@@ -1,8 +1,13 @@
 'use strict';
-const Effects = require('./effects.js').Effects;
+
 const util = require('util');
+
+const Effects = require('./effects.js').Effects;
 const move = require('./commands').Commands.move;
 const CommandUtil = require('./command_util').CommandUtil;
+const Doors = require('./doors').Doors;
+
+const attemptLockpick = require('../skills/lockpick');
 
 const l10n_dir = __dirname + '/../l10n/skills/';
 let l10ncache = {};
@@ -100,49 +105,14 @@ exports.Skills = {
 
         if (possibleTargets && possibleTargets.length === 1) {
           const exit = possibleTargets[0];
-          const isDoor = exit.hasOwnProperty('door');
-          const isLocked = isDoor && exit.door.locked;
-
-          if (isLocked) {
-            player.say("<yellow>You attempt to unlock the door...</yellow>");
-            const lockpicking = player.getSkills('pick') + player.getAttribute('cleverness');
-            const challenge = parseInt(exit.door.difficulty || 10, 10);
-            const getExitDesc = locale => rooms.getAt(exit.location).getTitle(locale);
-
-            if (lockpicking > challenge){
-              player.say("<bold><cyan>You unlock the door!<cyan></bold>");
-              players.eachIf(
-                p => CommandUtil.inSameRoom(player, p),
-                p => p.say(name + ' swiftly picks the lock to ' + getExitDesc(p.getLocale()) + '.')
-              );
-              exit.door.locked = false;
-              move(exit, player, true);
-            } else {
-              util.log(name + " fails to pick lock.");
-              player.say("<red>You fail to unlock the door.</red>");
-              players.eachIf(
-                p => CommandUtil.inSameRoom(player, p),
-                p => p.say(name + ' tries to unlock the door to ' + getExitDesc(p.getLocale()) +', but fails to pick it.')
-              );
-              return;
-            }
-          } else if (isDoor) {
-            player.say("That door is not locked.");
-            return;
-          } else {
-            player.say("There is no door in that direction.");
-            return;
-          }
+          return attemptLockpick(player, players, rooms, exit);
         } else if (possibleTarget.length) {
-          player.say("Which door's lock do you want to pick?");
-          return;
+          return player.say("Which door's lock do you want to pick?");
         } else {
-          player.say("There doesn't seem to be an exit in that direction, much less a lock to pick.");
-          return;
+          return player.say("There doesn't seem to be an exit in that direction, much less a lock to pick.");
         }
       } else {
-        player.say("Which door's lock do you want to pick?");
-        return;
+        return player.say("Which door's lock do you want to pick?");
       }
     },
   }
