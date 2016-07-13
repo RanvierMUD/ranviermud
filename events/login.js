@@ -16,6 +16,7 @@ const Player      = require(src + 'player').Player;
 const Account     = require(src + 'accounts').Account;
 const Type        = require(src + 'type').Type;
 const Commands    = require(src + 'commands').Commands;
+const Item        = require(src + 'items').Item;
 
 const passwordAttempts = {};
 
