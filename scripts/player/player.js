@@ -113,7 +113,7 @@ exports.listeners = {
       const attrToLevel = {
         'health': healthGain,
         'energy': energyGain,
-        'sanity:': sanityGain,
+        'sanity': sanityGain,
       };
 
       for (const attr in attrToLevel) {
