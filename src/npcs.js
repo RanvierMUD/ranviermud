@@ -3,7 +3,7 @@ const fs = require('fs'),
   util   = require('util'),
   uuid   = require('node-uuid'),
   events = require('events'),
-  Data   = require('./data.js').Data;
+  Data   = require('./data.js').Data,
   _      = require('./helpers');
 
 const npcs_dir = __dirname + '/../entities/npcs/';
@@ -189,7 +189,7 @@ const Npc = function NpcConstructor(config) {
     false;
 
   self.getTypes = () => self.types;
-  self.hasType = type => .has(self.types, type);
+  self.hasType = type => _.has(self.types, type);
   self.addType = type => self.types.push(type);
 
   self.setUuid = uid => self.uuid = uid;
