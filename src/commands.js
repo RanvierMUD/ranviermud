@@ -6,6 +6,7 @@ const util = require('util'),
   l10nHelper = require('./l10n');
 
 const Doors = require('./doors').Doors;
+const _ = require('./helpers');
 
 // "Globals" to be specified later during config.
 let rooms = null;
@@ -37,7 +38,7 @@ const Commands = {
     addSkill: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const Skills = require('./skills').Skills;
-        args = args.toLowerCase().split(' ');
+        args = _.splitArgs(args);
 
         const skill = Skills[args[0]] ? Skills[args[0]].id : null;
         const number = args[1] || 1;

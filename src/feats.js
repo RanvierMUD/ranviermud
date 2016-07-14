@@ -2,6 +2,7 @@
 const Effects = require('./effects.js').Effects;
 const util = require('util');
 const CommandUtil = require('./command_util').CommandUtil;
+const _ = require('./helpers');
 
 
 /*
@@ -190,7 +191,7 @@ exports.Feats = {
     activate: (player, args, rooms, npcs, players) => {
       util.log(player.getName() + ' activates Siphon.');
       const combatant = player.isInCombat();
-      const target = args.toLowerCase().split(' ')[0];
+      const target = _.firstWord(args);
 
       // Can hit combatant with no args, if possible.
       // Otherwise looks for target npc in room.
