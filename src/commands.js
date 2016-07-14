@@ -52,7 +52,7 @@ const Commands = {
     addFeat: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const Feats = require('./feats').Feats;
-        args = args.toLowerCase().split(' ');
+        args = _.splitArgs(args);
 
         const feat = Feats[args[0]] ? Feats[args[0]] : null;
 
@@ -75,8 +75,7 @@ const Commands = {
         if (rooms.getAt(vnum)) {
           player.setLocation(vnum);
           player.say("<red>ADMIN: You have teleported.");
-          Commands.player_commands.look(null, player);
-          return;
+          return Commands.player_commands.look(null, player);
         }
 
         player.say("<red>ADMIN: 404: Room not found.</red>");

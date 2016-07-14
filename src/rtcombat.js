@@ -89,7 +89,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     util.log(a.name + ' health: ' + attacker.getAttribute('health'));
     util.log(d.name + ' health: ' + defender.getAttribute('health'));
 
-    if (d.isPlayer) { checkWimpiness(starting_health) };
+    if (d.isPlayer) { checkWimpiness(starting_health) }
 
     if (this.isSecondAttack) { util.log('Offhand attack: '); }
 
