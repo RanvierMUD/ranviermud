@@ -9,6 +9,7 @@ const _ = require('./helpers');
  * Feats -- in-game stylized as 'mutations' or whatever.
  */
 
+exports = { Feats, meetsPrerequisites };
 
 /**
  * Localization helper
@@ -18,8 +19,7 @@ const _ = require('./helpers');
 // For activate functions:
 // Command event passes in player, args, rooms, npcs, players.
 
-
-exports.Feats = {
+const Feats = {
 
 
   /// Passive feats
@@ -322,7 +322,6 @@ exports.Feats = {
 
 };
 
-exports.meetsPrerequisites = _meetsPrerequisites;
 
 /**
  * Does the player meet the prereqs for the feat, including cost?
@@ -330,7 +329,7 @@ exports.meetsPrerequisites = _meetsPrerequisites;
  * @param  Feat
  * @return  bool True if they meet all conditions and can afford the feat.
  */
-function _meetsPrerequisites(player, feat) {
+function meetsPrerequisites(player, feat) {
   if (!feat.prereqs && !feat.cost) { return true; }
   const attributes = player.getAttributes();
 
@@ -344,7 +343,7 @@ function _meetsPrerequisites(player, feat) {
     const meets = req <= stat;
     util.log(player.getName() + '\'s ' + attr + ': ' + stat + ' vs. ' + req);
 
-    if (!meets) { return false; }
+    return meets;
   }
 
   const isAffordable = feat.cost && attributes.mutagens >= feat.cost;
