@@ -6,6 +6,7 @@ const util = require('util'),
   l10nHelper = require('./l10n');
 
 const Doors = require('./doors').Doors;
+const _ = require('./helpers');
 
 // "Globals" to be specified later during config.
 let rooms = null;
@@ -37,7 +38,7 @@ const Commands = {
     addSkill: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const Skills = require('./skills').Skills;
-        args = args.toLowerCase().split(' ');
+        args = _.splitArgs(args);
 
         const skill = Skills[args[0]] ? Skills[args[0]].id : null;
         const number = args[1] || 1;
@@ -51,7 +52,7 @@ const Commands = {
     addFeat: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const Feats = require('./feats').Feats;
-        args = args.toLowerCase().split(' ');
+        args = _.splitArgs(args);
 
         const feat = Feats[args[0]] ? Feats[args[0]] : null;
 
@@ -74,8 +75,7 @@ const Commands = {
         if (rooms.getAt(vnum)) {
           player.setLocation(vnum);
           player.say("<red>ADMIN: You have teleported.");
-          Commands.player_commands.look(null, player);
-          return;
+          return Commands.player_commands.look(null, player);
         }
 
         player.say("<red>ADMIN: 404: Room not found.</red>");

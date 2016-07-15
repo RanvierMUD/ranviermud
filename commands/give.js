@@ -3,6 +3,7 @@ const l10nFile = __dirname + '/../l10n/commands/give.yml';
 const l10n = require('../src/l10n')(l10nFile);
 const CommandUtil = require('../src/command_util').CommandUtil;
 const util = require('util');
+const _ = require('../src/helpers');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
@@ -11,20 +12,18 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     // syntax 'give [item] [player]'
     if (player.isInCombat()) {
-      player.sayL10n(l10n, 'GIVE_COMBAT');
-      return;
+      return player.sayL10n(l10n, 'GIVE_COMBAT');
     }
 
-    args = args.toLowerCase().split(' ');
+    args = _.splitArgs(args);
 
     if (!args.length) {
       player.sayL10n(l10n, 'NO_ITEM_OR_TARGET');
       return;
     }
 
-    let to = args.indexOf('to');
-    if (to > -1) args.splice(to, 1);
-    util.log(args);
+    let toIndex = args.indexOf('to');
+    if (toIndex > -1) { args.splice(to, 1); }
 
     const item = CommandUtil.findItemInInventory(args[0], player, true);
     const room = rooms.getAt(player.getLocation());
@@ -45,8 +44,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     players.eachIf(
       CommandUtil.inSameRoom.bind(null, player),
-      checkForTarget
-      );
+      checkForTarget);
 
     function checkForTarget(target) {
         if (target.getName().toLowerCase() === targetPlayer) {
