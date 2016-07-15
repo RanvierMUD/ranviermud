@@ -9,8 +9,6 @@ const _ = require('./helpers');
  * Feats -- in-game stylized as 'mutations' or whatever.
  */
 
-exports = { Feats, meetsPrerequisites };
-
 /**
  * Localization helper
  * @return string
@@ -361,3 +359,6 @@ function deductSanity(player, cost) {
   player.setAttribute('sanity', sanityCost);
   return sanityCost;
 }
+
+exports.Feats = Feats;
+exports.meetsPrerequisites = meetsPrerequisites;
