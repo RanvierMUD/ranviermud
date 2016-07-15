@@ -377,7 +377,6 @@ const Player = function PlayerConstructor(socket) {
         break;
       }
     }
-    item.emit('remove', self);
   };
 
   /**
