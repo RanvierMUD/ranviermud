@@ -13,30 +13,21 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const hiddenAttrs = ['experience', 'attrPoints', 'class'];
     for (let attr in character) {
-      const playerFacing = hiddenAttrs.indexOf(attr) === -1;
-      const shouldDisplay = attr.indexOf('max') === -1 && playerFacing;
-      const hasMutagens = !(attr === 'mutagens' && !character[attr]);
-      const longest = 12;
+      const playerFacing  = _.hasNot(hiddenAttrs, attr);
+      const shouldDisplay = _.hasNot(attr, 'max') && playerFacing;
+      const hasMutagens   = !(attr === 'mutagens' && !character[attr]);
+      const longest       = 12; //TODO: Dynamically get length of longest attr label.
 
       if (shouldDisplay && hasMutagens) {
         const status = getStatusString(attr, character[attr], character);
         const label = getLabel(attr);
 
         if (status) {
-          player.say('<cyan>' + label + ':</cyan> ' + leftPad(longest - label.length) + status);
+          player.say('<cyan>' + label + ':</cyan> ' + _.leftPad(longest - label.length) + status);
         }
       }
     }
-
-    function leftPad(amt) {
-      let pad = '';
-      while (amt) {
-        pad += ' ';
-        amt--;
-      }
-      return pad;
-    }
-
+    
     function getLabel(str) {
       str = str.toUpperCase();
       const relabel = {

@@ -1,11 +1,12 @@
 'use strict';
 const util = require('util');
+const _ = require('./helpers');
 
 const CommandUtil = {
   findItemInEquipment, findItemInRoom,
   findItemInInventory, hasScript,
   findNpcInRoom      , inSameRoom,
-  parseDot           ,  
+  parseDot           ,
 };
 
 
@@ -131,7 +132,7 @@ function parseDot(arg, objects, filterFunc) {
     util.log(arguments);
     return;
   }
-  let keyword = arg.split(' ')[0];
+  let keyword = _.firstWord(arg);
   let multi = false;
   let nth = null;
 
