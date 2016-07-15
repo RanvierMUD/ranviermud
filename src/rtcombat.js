@@ -1,51 +1,32 @@
+'use strict';
+
 module.exports.initCombat = _initCombat;
 
 //TODO: Add strings for sanity damage
 //TODO: Enhance for co-op, allow for setInCombat of NPC with multiple players.
 //FIXME: For the love of all that is unholy, refactor this:
 
-var Random = require('./random.js').Random;
-var LevelUtil = require('./levels')
-  .LevelUtil;
-var CommandUtil = require('./command_util')
-  .CommandUtil;
-var util = require('util');
-var statusUtils = require('./status');
-var Commands = require('./commands').Commands;
+const util = require('util');
+const _    = require('./helpers');
 
+const Random      = require('./random.js').Random;
+const LevelUtil   = require('./levels').LevelUtil;
+const CommandUtil = require('./command_util').CommandUtil;
+const statusUtils = require('./status');
+const Commands    = require('./commands').Commands;
+const CombatUtil  = require('./combat_util').CombatUtil;
+const Type        = require('./type').Type;
 
 function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
-  var locale = player.getLocale();
+  const locale = player.getLocale();
   player.setInCombat(npc);
-  npc.setInCombat(player.getName());
+  npc.setInCombat(player);
 
   player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(locale));
 
-  var playerBodyParts = [
-    'legs',
-    'feet',
-    'torso',
-    'hands',
-    'head'
-  ];
 
-  var p = {
-    isPlayer: true,
-    name: player.getName(),
-    speed: player.getAttackSpeed,
-    weapon: player.getEquipped('wield', true),
-    offhand: player.getEquipped('offhand', true),
-    locations: playerBodyParts,
-    target: player.getPreference('target') || 'body',
-  };
 
-  var n = {
-    name: npc.getShortDesc(locale),
-    speed: npc.getAttackSpeed,
-    weapon: npc.getAttack(locale),
-    target: npc.getAttribute('target'),
-    locations: npc.getLocations(),
-  };
+  // FIXME: Use Types instead
 
   try {
     util.log("Combat begins between " + p.name + " and " + n.name);
@@ -53,8 +34,8 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     util.log("Speeds are " + p.speed() + ' vs. ' + n.speed());
   } catch (e) { util.log(e); }
 
-  var playerCombat = combatRound.bind(null, player, npc, p, n);
-  var npcCombat = combatRound.bind(null, npc, player, n, p);
+  var playerCombat = combatRound.bind(null, player, npc);
+  var npcCombat = combatRound.bind(null, npc, player);
 
   p.attackRound = playerCombat;
   n.attackRound = npcCombat;
@@ -75,33 +56,46 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     dualWieldCancel = setTimeout(dualWieldCombat, dualWieldSpeed());
   }
 
-  function combatRound(attacker, defender, a, d) {
+  function combatRound(attacker, defender) {
 
-    if (attacker.hasEnergy && !attacker.hasEnergy(2)) {
-      a.speed = () => attacker.getAttackSpeed() * 4;
+    // Try to standardize function calls so this is not necessary.
+
+    const attackerHelper = getCombatHelper(attacker);
+    const defenderHelper = getCombatHelper(defender);
+
+
+    const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(2);
+    if (slowAttacker) {
+      //TODO: Set an effect instead if possible.
+      attackerHelper.speed = () => attacker.getAttackSpeed() * 4;
     }
 
-    util.log("Speeds are " + a.speed() + ' vs. ' + d.speed());
+    util.log("Speeds are " + attackerHelper.speed() + ' vs. ' + defenderHelper.speed());
 
+    //TODO: Remove this when allowing for multicombat.
     if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
 
-    var starting_health = defender.getAttribute('health');
-    util.log(a.name + ' health: ' + attacker.getAttribute('health'));
-    util.log(d.name + ' health: ' + defender.getAttribute('health'));
+    const startingHealth = defender.getAttribute('health');
+    util.log(attackerHelper.name + ' health: ' + attacker.getAttribute('health'));
+    util.log(defenderHelper.name + ' health: ' + defender.getAttribute('health'));
 
-    if (d.isPlayer) { checkWimpiness(starting_health) }
+    if (Type.isPlayer(defender)) {
+      //FIXME: Extract to module
+      checkWimpiness(startingHealth);
+    }
 
     if (this.isSecondAttack) { util.log('Offhand attack: '); }
 
+    //TODO: Extract to module
     var damage = this.isSecondAttack ?
       dualWieldDamage(attacker.getDamage('offhand')) : attacker.getDamage();
     var defender_sanity = defender.getAttribute('sanity');
-    var sanityDamage = a.isPlayer ?
+    var sanityDamage = attackerHelper.isPlayer ?
       0 : attacker.getSanityDamage();
-    var hitLocation = decideHitLocation(d.locations, a.target, isPrecise());
+    var hitLocation = decideHitLocation(d.locations, attackerHelper.target, isPrecise());
 
     function isPrecise() {
-      return a.isPlayer ? attacker.checkStance('precise') : false;
+      return attackerHelper.isPlayer ? attacker.checkStance('precise') : false;
     }
 
     if (!damage) {
@@ -110,17 +104,17 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
         d.weapon.emit('parry', defender);
       }
 
-      if (a.isPlayer) {
+      if (attackerHelper.isPlayer) {
         player.sayL10n(l10n, 'PLAYER_MISS', n.name, damage);
       } else {
-        player.sayL10n(l10n, 'NPC_MISS', a.name);
+        player.sayL10n(l10n, 'NPC_MISS', attackerHelper.name);
       }
 
       broadcastExceptPlayer(
-        '<bold>' + a.name + ' attacks ' + d.name +
+        '<bold>' + attackerHelper.name + ' attacks ' + d.name +
         ' and misses!' + '</bold>');
 
-      util.log(a.name + ' misses ' + d.name);
+      util.log(attackerHelper.name + ' misses ' + d.name);
 
     } else {
 
@@ -128,20 +122,20 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
         calcRawDamage(damage, defender.getAttribute('health')),
         hitLocation);
 
-      util.log('Targeted ' + a.target + ' and hit ' + hitLocation);
+      util.log('Targeted ' + attackerHelper.target + ' and hit ' + hitLocation);
       var damageStr = getDamageString(damage, defender.getAttribute('health'));
 
-      if (a.weapon && typeof a.weapon == 'object') {
-        a.weapon.emit('hit', player);
+      if (attackerHelper.weapon && typeof attackerHelper.weapon == 'object') {
+        attackerHelper.weapon.emit('hit', player);
       }
 
       if (d.isPlayer) {
-        player.sayL10n(l10n, 'DAMAGE_TAKEN', a.name, damageStr, a.weapon, hitLocation);
+        player.sayL10n(l10n, 'DAMAGE_TAKEN', attackerHelper.name, damageStr, attackerHelper.weapon, hitLocation);
       } else {
         player.sayL10n(l10n, 'DAMAGE_DONE', d.name, damageStr, hitLocation);
       }
 
-      broadcastExceptPlayer('<bold><red>' + a.name + ' attacks ' + d.name +
+      broadcastExceptPlayer('<bold><red>' + attackerHelper.name + ' attacks ' + d.name +
         ' and ' + damageStr + ' them!' + '</red></bold>');
 
     }
@@ -151,22 +145,24 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
       defender.setAttribute('sanity', Math.max(defender_sanity - sanityDamage, 0));
     }
 
-    if (starting_health <= damage) {
+    if (startingHealth <= damage) {
       defender.setAttribute('health', 1);
       defender.setAttribute('sanity', 1);
-      return combat_end(a.isPlayer);
+      return combat_end(attackerHelper.isPlayer);
     }
 
+    const getCondition = entity => {
+        const npc    = Type.isPlayer(entity) ? npc : false;
+        const max    = entity.getAttribute('max_health');
+        return statusUtils.getHealthText(max, player, npc);
+    };
+
     player.combatPrompt({
-      target_condition: statusUtils.getHealthText(
-        npc.getAttribute('max_health'),
-        player, npc)(npc.getAttribute('health')),
-      player_condition: statusUtils.getHealthText(
-        player.getAttribute('max_health'),
-        player, false)(player.getAttribute('health'))
+      target_condition: getCondition(npc)(npc.getAttribute('health')),
+      player_condition: getCondition(player)(player.getAttribute('health'))
     });
 
-    var nearbyFight = [
+    const nearbyFight = [
       "The sounds of a nearby struggle fill the air.",
       "From the sound of it, a mortal struggle is happening nearby.",
       "A cry from nearby! What could it be?",
@@ -176,7 +172,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     ];
 
     broadcastToArea(Random.fromArray(nearbyFight));
-    setTimeout(a.attackRound, a.speed());
+    setTimeout(attackerHelper.attackRound, attackerHelper.speed());
   }
 
   function decideHitLocation(locations, target, precise) {
