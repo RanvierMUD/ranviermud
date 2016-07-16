@@ -25,20 +25,38 @@ const getBodyParts = entity => Type.isPlayer(entity) ?
   playerBodyParts :
   entity.getBodyParts();
 
-function get(entity) {
-  const name      = getName(entity);
-  const getSpeed  = getSpeed(entity);
-  const weapon    = getWeapon(entity);
-  const offhand   = getOffhand(entity);
-  const locations = getBodyParts(entity);
 
-  return {
-    name,
-    getSpeed,
-    weapon,
-    offhand,
-    locations
-  };
+function CombatHelper(entity) {
+  this.entity      = entity;
+
+  /*
+   * Example: { 'berserk': damage => damage * 2 }
+   */
+  this.speedMods   = {};
+  this.damageMods  = {};
+  this.toHitMods   = {};
+
+  this.addSpeedMod  = addMod('speedMods');
+  this.addDamageMod = addMod('damageMods');
+  this.addToHitMod  = addMod('toHitMods');
+
+  function addMod(type) {
+    return modifier => this[type][modifier.name] = modifier.effect;
+  }
+
+  this.removeSpeedMod  = deleteMod('speedMods');
+  this.removeDamageMod = deleteMod('damageMods');
+  this.removeToHitMod  = deleteMod('toHitMods');
+
+  function deleteMod(type) {
+    return name => delete this[type][name];
+  }
+
+  return this;
+}
+
+function get(entity) {
+  return new CombatHelper(entity);
 }
 
 exports.CombatUtil = { get };
