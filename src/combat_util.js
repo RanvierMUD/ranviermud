@@ -30,27 +30,30 @@ function CombatHelper(entity) {
   this.entity      = entity;
 
   /*
-   * Example: { 'berserk': damage => damage * 2 }
+   * Example modifier: {
+      name: 'berserk',
+      effect: damage => damage * 2
+    }
+   * Speed mods will affect time in between attacks
+   * in milliseconds. So, doubling it will half attack speed.
    */
   this.speedMods   = {};
   this.damageMods  = {};
   this.toHitMods   = {};
 
+  const addMod = type =>
+    modifier => this[type][modifier.name] = modifier.effect;
+
   this.addSpeedMod  = addMod('speedMods');
   this.addDamageMod = addMod('damageMods');
   this.addToHitMod  = addMod('toHitMods');
 
-  function addMod(type) {
-    return modifier => this[type][modifier.name] = modifier.effect;
-  }
+  const deleteMod = type =>
+    name => delete this[type][name];
 
   this.removeSpeedMod  = deleteMod('speedMods');
   this.removeDamageMod = deleteMod('damageMods');
   this.removeToHitMod  = deleteMod('toHitMods');
-
-  function deleteMod(type) {
-    return name => delete this[type][name];
-  }
 
   return this;
 }
