@@ -81,6 +81,14 @@ const Player = function PlayerConstructor(socket) {
   // Training data
   self.training = { time: 0 };
 
+  self.bodyParts = [
+    'legs',
+    'feet',
+    'torso',
+    'hands',
+    'head'
+  ]; //TODO: Add dynamically
+
   /**#@+
    * Mutators
    */
@@ -88,9 +96,11 @@ const Player = function PlayerConstructor(socket) {
   self.getCombatPrompt = () => self.combat_prompt;
   self.getLocale       = () => self.locale;
   self.getName         = () => self.name;
+  self.getShortDesc    = () => self.name;
   self.getAccountName  = () => self.accountName;
   self.getDescription  = () => self.attributes.description;
   self.getLocation     = () => self.location;
+  self.getBodyParts    = () => self.bodyParts;
   self.getSocket       = () => socket;
   self.getInventory    = () => self.inventory;
   self.getAttributes   = () => self.attributes || {};
@@ -484,6 +494,7 @@ const Player = function PlayerConstructor(socket) {
     self.name = data.name;
     self.accountName = data.accountName;
     self.location = data.location;
+    self.bodyParts = data.bodyParts;
     self.locale = data.locale;
     self.prompt_string = data.prompt_string;
     self.password = data.password;
@@ -525,6 +536,12 @@ const Player = function PlayerConstructor(socket) {
   self.save = callback => {
     Data.savePlayer(self, callback);
   };
+
+  /*
+   * Gets a suite of combat helper functions.
+   * getAttackSpeed, getDamage, damage, etc.
+   */
+  self.combat = CombatUtil.get(self);
 
   /**
    * Get attack speed of a player
