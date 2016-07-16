@@ -13,9 +13,10 @@ const Data = require('./data').Data,
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
 const l10n_dir         = __dirname + '/../l10n/scripts/player/';
 const statusUtil       = require('./status');
+const CombatUtil       = require('./combat_util').CombatUtil;
 
 const Player = function PlayerConstructor(socket) {
-  const self       = this;
+  const self = this;
 
   self.name        = '';
   self.description = '';
@@ -541,7 +542,7 @@ const Player = function PlayerConstructor(socket) {
    * Gets a suite of combat helper functions.
    * getAttackSpeed, getDamage, damage, etc.
    */
-  self.combat = CombatUtil.get(self);
+  self.combat = CombatUtil.getHelper(self);
 
   /**
    * Get attack speed of a player

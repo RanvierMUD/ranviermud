@@ -4,7 +4,7 @@ const Type = require('../../src/type').Type;
 const Player = require('../../src/player').Player;
 
 describe('Typing', () => {
-
+  //FIXME: Why do these fail?
   it('Should return true if constructor was used', () => {
     const testPlayer = new Player();
     expect(Type.isPlayer(testPlayer)).to.be.true;
