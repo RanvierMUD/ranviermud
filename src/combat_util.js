@@ -55,8 +55,9 @@ function CombatHelper(entity) {
   return this;
 }
 
-function get(entity) {
+function getHelper(entity) {
   return new CombatHelper(entity);
 }
 
-exports.CombatUtil = { get };
+exports.CombatUtil   = { getHelper };
+exports.CombatHelper = CombatHelper;
