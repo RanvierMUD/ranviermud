@@ -1,13 +1,5 @@
 const Type = require('./type').Type;
 
-//TODO: Consider putting into player obj so that mutations can add more limbs.
-const playerBodyParts = [
-  'legs',
-  'feet',
-  'torso',
-  'hands',
-  'head'
-];
 
 /*
  * These functions take an entity (npc/player)
@@ -29,16 +21,16 @@ const getOffhand = entity => Type.isPlayer(entity) ?
   entity.getEquipped('offhand', true) :
   null; //TODO: allow for dual attacks for npcs
 
-const getLocations = entity => Type.isPlayer(entity) ?
+const getBodyParts = entity => Type.isPlayer(entity) ?
   playerBodyParts :
-  entity.getLocations();
+  entity.getBodyParts();
 
-function getCombatHelper(entity) {
+function get(entity) {
   const name      = getName(entity);
   const getSpeed  = getSpeed(entity);
   const weapon    = getWeapon(entity);
   const offhand   = getOffhand(entity);
-  const locations = getLocations(entity);
+  const locations = getBodyParts(entity);
 
   return {
     name,
@@ -49,4 +41,4 @@ function getCombatHelper(entity) {
   };
 }
 
-exports.CombatUtil = { getCombatHelper };
+exports.CombatUtil = { get };

@@ -182,7 +182,7 @@ const Npc = function NpcConstructor(config) {
   self.getRoom = () => self.room;
   self.getUuid = () => self.uuid;
   self.getDefenses = () => self.defenses;
-  self.getLocations = () => Object.keys(self.defenses);
+  self.getBodyParts = () => Object.keys(self.defenses);
   self.getAttribute = attr =>
     typeof self.attributes[attr] !== 'undefined' ?
     self.attributes[attr] :
