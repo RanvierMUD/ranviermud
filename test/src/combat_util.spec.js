@@ -7,14 +7,19 @@ const CombatUtil   = require('../../src/combat_util.js').CombatUtil;
 const CombatHelper = require('../../src/combat_util.js').CombatHelper;
 
 describe('Player/NPC Combat Helper', () => {
+  const testPlayer = new Player();
 
   it('should create a new instance', () => {
-    const testPlayer = new Player();
     expect(testPlayer.combat instanceof CombatHelper).to.be.true;
   });
 
   it('should be able to add and remove modifiers', () => {
-
+    testPlayer.combat.addSpeedMod({
+      name:   'haste',
+      effect: speed => speed / 2
+    });
+    const numberOfSpeedMods = Object.keys(testPlayer.combat.speedMods).length;
+    expect(numberOfSpeedMods).to.equal(1);
   });
 
 });
