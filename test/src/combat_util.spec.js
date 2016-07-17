@@ -1,3 +1,5 @@
+'use strict';
+
 const expect = require('chai').expect;
 
 const Player = require('../../src/player.js').Player;
@@ -56,4 +58,25 @@ describe('Player/NPC Combat Helper', () => {
 
   });
 
+  describe('damage helpers', () => {
+    const sword = {
+      getAttribute: () => '5-40'
+    };
+    const warrior = {
+      getEquipped:  () => sword
+    };
+
+    const testWarrior = new CombatHelper(warrior);
+
+
+    it('should be able to get damage within a range', () => {
+      let i = 0;
+      let limit = 100;
+      while(i < limit) {
+        const damage = testWarrior.getDamage();
+        expect(damage >= 5).to.be.true;
+        expect(damage <= 40).to.be.true;
+      }
+    });
+  });
 });
