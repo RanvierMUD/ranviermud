@@ -59,9 +59,15 @@ function CombatHelper(entity) {
 
   /**
    * Get primary weapon of player
-   *
+   * Returns its name
    */
-  this.getWeapon = () => this._entity.getEquipped('wield', true);
+
+  this.getAttack = location => this._entity
+    .getEquipped(location || 'wield', true)
+    .getShortDesc('en');
+
+  this.getSecondary = () => this.getAttack('offhand');
+
 
   /**
   * Generic func to apply all mods to a stat,
@@ -76,6 +82,42 @@ function CombatHelper(entity) {
   */
   const setBounds = (min, max) => stat =>
     Math.max(Math.min(max, stat), min);
+
+  const getWeaponDamage = (weapon, base) => weapon ?
+    (weapon.getAttribute('damage') ?
+      weapon.getAttribute('damage')
+        .split('-')
+        .map(dmg => {
+          return parseInt(dmg, 10);
+        }) : base
+   ) : base;
+
+  /**
+   * Get the damage a player can do
+   * @return int
+   */
+
+  this.getDamage = location => {
+  location = location || 'wield';
+  const weapon = self.getEquipped(location, true);
+  const base = [1, self.getAttribute('stamina') + 5];
+
+  let damage = getWeaponDamage(weapon, base);
+
+  damage = damage.map(dmg => dmg + addDamageBonus(dmg));
+
+  return { min: damage[0], max: damage[1] };
+  };
+
+  function addDamageBonus(d) {
+   let stance = self.getPreference('stance');
+   let bonuses = {
+     'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
+     'cautious': -(Math.round(d / 2)),
+     'precise': 1
+   }
+   return bonuses[stance] || 0;
+  }
 
   /**
    * Get attack speed of a player
