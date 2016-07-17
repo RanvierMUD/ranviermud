@@ -98,26 +98,26 @@ function CombatHelper(entity) {
    */
 
   this.getDamage = location => {
-  location = location || 'wield';
-  const weapon = self.getEquipped(location, true);
-  const base = [1, self.getAttribute('stamina') + 5];
+    location = location || 'wield';
+    const weapon = self.getEquipped(location, true);
+    const base   = [1, self.getAttribute('stamina') + 5];
 
-  let damage = getWeaponDamage(weapon, base);
+    const damageRange = getWeaponDamage(weapon, base);
 
-  damage = damage.map(dmg => dmg + addDamageBonus(dmg));
-
-  return { min: damage[0], max: damage[1] };
+    return { min: damage[0], max: damage[1] };
   };
 
-  function addDamageBonus(d) {
-   let stance = self.getPreference('stance');
-   let bonuses = {
-     'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
-     'cautious': -(Math.round(d / 2)),
-     'precise': 1
-   }
-   return bonuses[stance] || 0;
-  }
+
+  //TODO: Use mods instead.
+  // function addDamageBonus(d) {
+  //   let stance = self.getPreference('stance');
+  //   let bonuses = {
+  //     'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
+  //     'cautious': -(Math.round(d / 2)),
+  //     'precise': 1
+  //   };
+  //   return bonuses[stance] || 0;
+  // }
 
   /**
    * Get attack speed of a player
