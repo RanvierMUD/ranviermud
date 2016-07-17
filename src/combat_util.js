@@ -1,6 +1,7 @@
 const util = require('util');
 
-const Type = require('./type').Type;
+const Type   = require('./type').Type;
+const Random = require('./random').Random;
 const _ = require('./helpers');
 
 /*
@@ -103,8 +104,13 @@ function CombatHelper(entity) {
     const base   = [1, self.getAttribute('stamina') + 5];
 
     const damageRange = getWeaponDamage(weapon, base);
+    const damageRoll  = Random.inRange(...damageRange);
 
-    return { min: damage[0], max: damage[1] };
+    const damageDealt = applyMods(damageRoll, this.damageMods);
+
+    util.log('Deals damage: ', damageDealt);
+
+    return damageDealt;
   };
 
 

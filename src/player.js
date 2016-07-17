@@ -580,40 +580,7 @@ const Player = function PlayerConstructor(socket) {
 
 
 
-  /**
-   * Get the damage a player can do
-   * @return int
-   */
-  self.getDamage = location => {
-    location = location || 'wield';
-    const weapon = self.getEquipped(location, true);
-    const base = [1, self.getAttribute('stamina') + 5];
 
-    let damage = weapon ?
-      (weapon.getAttribute('damage') ?
-        weapon.getAttribute('damage')
-        .split('-')
-        .map(dmg => {
-          return parseInt(dmg, 10);
-        }) : base
-      ) : base;
-
-    damage = damage.map(dmg => dmg + addDamageBonus(dmg));
-
-    return { min: damage[0], max: damage[1] };
-  };
-
-
-
-  function addDamageBonus(d) {
-    let stance = self.getPreference('stance');
-    let bonuses = {
-      'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
-      'cautious': -(Math.round(d / 2)),
-      'precise': 1
-    }
-    return bonuses[stance] || 0;
-  }
 
   /**
    * Turn the player into a JSON string for storage
