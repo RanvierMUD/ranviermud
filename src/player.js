@@ -579,9 +579,6 @@ const Player = function PlayerConstructor(socket) {
   };
 
 
-
-
-
   /**
    * Turn the player into a JSON string for storage
    * @return string

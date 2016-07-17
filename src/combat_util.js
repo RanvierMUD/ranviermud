@@ -52,10 +52,16 @@ function CombatHelper(entity) {
    * Returns its name
    */
 
-  this.getAttack = location => this._entity
-    .getEquipped(location || 'wield', true)
+  this.getWeapon  = location => this._entity
+    .getEquipped(location || 'wield', true);
+
+  this.getOffhand = ()       => this.getWeapon('offhand');
+
+  this.getAttack = location => this
+    .getWeapon(location)
     .getShortDesc('en');
 
+  this.getPrimary   = () => this.getAttack('wield');
   this.getSecondary = () => this.getAttack('offhand');
 
   /**
@@ -76,11 +82,12 @@ function CombatHelper(entity) {
    * Get the damage a player can do
    * @return int
    */
-
   this.getDamage = location => {
     location = location || 'wield';
+
+    const self   = this._entity;
     const weapon = self.getEquipped(location, true);
-    const base   = [1, self.getAttribute('stamina') + 5];
+    const base   = [ 1, self.getAttribute('stamina') + 5 ];
 
     const damageRange = getWeaponDamage(weapon, base);
     const damageRoll  = Random.inRange(...damageRange);
@@ -109,7 +116,7 @@ function CombatHelper(entity) {
    * @return float milliseconds between attacks
    */
   this.getAttackSpeed = secondAttack => {
-    const weapon  = secondAttack ? this.getSecondary() : this.getWeapon();
+    const weapon  = secondAttack ? this.getWeapon() : this.getWeapon('offhand');
 
     const minimum = secondAttack ? 750 : 500;
     const maximum = 10 * 1000;
