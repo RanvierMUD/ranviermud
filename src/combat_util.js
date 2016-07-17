@@ -62,6 +62,15 @@ function CombatHelper(entity) {
    *
    */
   this.getWeapon = () => this._entity.getEquipped('wield', true);
+
+  /**
+  * Generic func to apply all mods to a stat,
+  * starting with the base stat. 
+  */
+  const applyMods = (base, modsObj) => _
+    .values(modsObj)
+    .reduce((stat, modifier) => modifier(stat), base);
+
   /**
    * Get attack speed of a player
    * @return float milliseconds between attacks
