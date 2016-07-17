@@ -38,8 +38,11 @@ describe('Player/NPC Combat Helper', () => {
     expect(speed).to.equal(expected);
   });
 
-  it('has a maximum for speed mod', () => {
-
+  it('can remove mods, has a maximum for speed mod', () => {
+    testPlayer.combat.removeSpeedMod('haste');
+    const speed = testPlayer.combat.getAttackSpeed();
+    const maximum = 10 * 1000;
+    expect(speed).to.equal(maximum);
   });
 
 });
