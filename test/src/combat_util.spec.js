@@ -24,8 +24,22 @@ describe('Player/NPC Combat Helper', () => {
 
   it('should be able to apply modifiers', () => {
     const speed = testPlayer.combat.getAttackSpeed();
-    console.log(speed);
-    expect(true).to.be.true;
+    const expected = 4375;
+    expect(speed).to.equal(expected);
+  });
+
+  it('should stack modifiers', () => {
+    testPlayer.combat.addSpeedMod({
+      name: 'slow',
+      effect: speed => speed * 2
+    });
+    const speed = testPlayer.combat.getAttackSpeed();
+    const expected = 4375 * 2;
+    expect(speed).to.equal(expected);
+  });
+
+  it('has a maximum for speed mod', () => {
+
   });
 
 });
