@@ -65,11 +65,17 @@ function CombatHelper(entity) {
 
   /**
   * Generic func to apply all mods to a stat,
-  * starting with the base stat. 
+  * starting with the base stat.
   */
   const applyMods = (base, modsObj) => _
     .values(modsObj)
     .reduce((stat, modifier) => modifier(stat), base);
+
+  /**
+  * Returns the max or min if the stat is out of bounds.
+  */
+  const setBounds = (min, max) => stat =>
+    Math.max(Math.min(max, stat), min);
 
   /**
    * Get attack speed of a player
@@ -77,8 +83,11 @@ function CombatHelper(entity) {
    */
   this.getAttackSpeed = secondAttack => {
     const weapon  = secondAttack ? this.getSecondary() : this.getWeapon();
+
     const minimum = secondAttack ? 750 : 500;
     const maximum = 10 * 1000;
+
+    const speedWithinBounds = setBounds(minimum, maximum);
 
     const unarmedSpeed = this._entity.getAttribute('quickness');
     const weaponSpeed  = (weapon ?
@@ -91,9 +100,7 @@ function CombatHelper(entity) {
 
     util.log("Player's base speed is ", baseSpeed);
 
-    const speed = _
-      .values(this.speedMods)
-      .reduce((speed, modifier) => modifier(speed), baseSpeed);
+    const speed = applyMods(baseSpeed, this.speedMods);
 
     util.log("Player's modified speed is ", speed);
 
@@ -103,16 +110,8 @@ function CombatHelper(entity) {
     //   'cautious': 2,
     //   'berserk': .5,
     // };
-    //
-    // for (const stance in stanceToSpeed){
-    //   if (self.checkStance(stance)) {
-    //     const speedModifier = stanceToSpeed[stance];
-    //     util.log(self.getName() + '\'s speed is modified: x' + speedModifier);
-    //     speed = speed * speedModifier;
-    //   }
-    // }
 
-    return Math.max(Math.min(maximum, speed), minimum);
+    return speedWithinBounds(speed);
   };
 
   return this;
