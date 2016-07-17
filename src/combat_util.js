@@ -27,7 +27,7 @@ const getBodyParts = entity => Type.isPlayer(entity) ?
 
 
 function CombatHelper(entity) {
-  this.entity      = entity;
+  this._entity = entity;
 
   /*
    * Example modifier: {
@@ -54,6 +54,48 @@ function CombatHelper(entity) {
   this.removeSpeedMod  = deleteMod('speedMods');
   this.removeDamageMod = deleteMod('damageMods');
   this.removeToHitMod  = deleteMod('toHitMods');
+
+  /**
+   * Get primary weapon of player
+   *
+   */
+  this.getWeapon = () => this._entity.getEquipped('wield', true);
+  /**
+   * Get attack speed of a player
+   * @return float milliseconds between attacks
+   */
+  this.getAttackSpeed = secondAttack => {
+    const weapon  = secondAttack ? this.getWeapon() : this.getSecondary();
+    const minimum = secondAttack ? 750 : 500;
+    const maximum = 10 * 1000;
+
+    const unarmedSpeed = this._entity.getAttribute('quickness');
+    const weaponSpeed  = (weapon ?
+      weapon.getAttribute('speed') :
+      unarmedSpeed) * 500;
+    const attributesSpeed = unarmedSpeed * 500
+      + this._entity.getAttribute('cleverness') * 250;
+
+    const speed = maximum - weaponSpeed - attributesSpeed;
+
+    util.log("Player's speed is ", speed);
+
+    const stanceToSpeed = {
+      'precise': 1.25,
+      'cautious': 2,
+      'berserk': .5,
+    };
+
+    for (const stance in stanceToSpeed){
+      if (self.checkStance(stance)) {
+        const speedModifier = stanceToSpeed[stance];
+        util.log(self.getName() + '\'s speed is modified: x' + speedModifier);
+        speed = speed * speedModifier;
+      }
+    }
+
+    return speed;
+  };
 
   return this;
 }
