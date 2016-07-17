@@ -45,4 +45,11 @@ describe('Player/NPC Combat Helper', () => {
     expect(speed).to.equal(maximum);
   });
 
+  it('should still work without any mods', () => {
+    testPlayer.combat.removeSpeedMod('slow');
+    const speed = testPlayer.combat.getAttackSpeed();
+    const expected = 4375 * 2;
+    expect(speed).to.equal(expected);
+  });
+
 });
