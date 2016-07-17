@@ -2,18 +2,24 @@
 const util = require('util');
 
 const Random = {
-
-  coinFlip:   _coinFlip,
-  fromArray:  _fromArray,
-  roll:       _roll,
-
+  coinFlip,  inRange,
+  fromArray, roll,
 };
 
 /**
  * @return 0 or 1
  */
-function _coinFlip() {
+function coinFlip() {
   return Math.round(Math.random());
+}
+/**
+ * Integers only.
+ * @param minimum #
+ * @param maximum #
+ * @return random # in range
+ */
+function inRange(min, max) {
+  return Math.round(Math.random() * (max - min) + min);
 }
 
 
@@ -21,7 +27,7 @@ function _coinFlip() {
  * @param Array arr
  * @return * from arr
  */
-function _fromArray(arr) {
+function fromArray(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
@@ -33,7 +39,7 @@ function _fromArray(arr) {
  * @return  int Result of roll
  */
 
-function _roll(dice, sides) {
+function roll(dice, sides) {
   dice = dice || 1;
   sides = sides || 20;
   return dice * (Math.floor(sides * Math.random()) + 1);
