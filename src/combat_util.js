@@ -1,5 +1,7 @@
-const Type = require('./type').Type;
+const util = require('util');
 
+const Type = require('./type').Type;
+const _ = require('./helpers');
 
 /*
  * These functions take an entity (npc/player)
@@ -65,7 +67,7 @@ function CombatHelper(entity) {
    * @return float milliseconds between attacks
    */
   this.getAttackSpeed = secondAttack => {
-    const weapon  = secondAttack ? this.getWeapon() : this.getSecondary();
+    const weapon  = secondAttack ? this.getSecondary() : this.getWeapon();
     const minimum = secondAttack ? 750 : 500;
     const maximum = 10 * 1000;
 
@@ -76,23 +78,30 @@ function CombatHelper(entity) {
     const attributesSpeed = unarmedSpeed * 500
       + this._entity.getAttribute('cleverness') * 250;
 
-    const speed = maximum - weaponSpeed - attributesSpeed;
+    const baseSpeed = maximum - weaponSpeed - attributesSpeed;
 
-    util.log("Player's speed is ", speed);
+    util.log("Player's base speed is ", speed);
 
-    const stanceToSpeed = {
-      'precise': 1.25,
-      'cautious': 2,
-      'berserk': .5,
-    };
+    const speed = _
+      .values(this.speedMods)
+      .reduce((speed, modifier) => modifier(speed), baseSpeed);
 
-    for (const stance in stanceToSpeed){
-      if (self.checkStance(stance)) {
-        const speedModifier = stanceToSpeed[stance];
-        util.log(self.getName() + '\'s speed is modified: x' + speedModifier);
-        speed = speed * speedModifier;
-      }
-    }
+    util.log("Player's modified speed is ", speed);
+
+    //TODO: Use mod methods instead.
+    // const stanceToSpeed = {
+    //   'precise': 1.25,
+    //   'cautious': 2,
+    //   'berserk': .5,
+    // };
+    //
+    // for (const stance in stanceToSpeed){
+    //   if (self.checkStance(stance)) {
+    //     const speedModifier = stanceToSpeed[stance];
+    //     util.log(self.getName() + '\'s speed is modified: x' + speedModifier);
+    //     speed = speed * speedModifier;
+    //   }
+    // }
 
     return speed;
   };
