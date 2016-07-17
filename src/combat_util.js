@@ -4,30 +4,19 @@ const Type   = require('./type').Type;
 const Random = require('./random').Random;
 const _ = require('./helpers');
 
-/*
- * These functions take an entity (npc/player)
- * and return the correct method or property
- * depending on type.
- */
+/**
+* Generic func to apply all mods to a stat,
+* starting with the base stat.
+*/
+const applyMods = (base, modsObj) => _
+  .values(modsObj)
+  .reduce((stat, modifier) => modifier(stat), base);
 
-const getName = entity => Type.isPlayer(entity) ?
-  entity.getName() :
-  entity.getShortDesc('en');
-
-const getSpeed = entity => entity.getAttackSpeed;
-
-const getWeapon = entity => Type.isPlayer(entity) ?
-  entity.getEquipped('wield', true) :
-  entity.getAttack('en');
-
-const getOffhand = entity => Type.isPlayer(entity) ?
-  entity.getEquipped('offhand', true) :
-  null; //TODO: allow for dual attacks for npcs
-
-const getBodyParts = entity => Type.isPlayer(entity) ?
-  playerBodyParts :
-  entity.getBodyParts();
-
+/**
+* Returns the max or min if the stat is out of bounds.
+*///TODO: Consider adding to helper.js
+const setBounds = (min, max) => stat =>
+  Math.max(Math.min(max, stat), min);
 
 function CombatHelper(entity) {
   this._entity = entity;
@@ -69,29 +58,19 @@ function CombatHelper(entity) {
 
   this.getSecondary = () => this.getAttack('offhand');
 
-
   /**
-  * Generic func to apply all mods to a stat,
-  * starting with the base stat.
+  * Gets damage range from weapon obj
+  * @param   Weapon obj
+  * @param   Base possible damage for hand-to-hand
+  * @return  Array of [min, max] damage range
   */
-  const applyMods = (base, modsObj) => _
-    .values(modsObj)
-    .reduce((stat, modifier) => modifier(stat), base);
-
-  /**
-  * Returns the max or min if the stat is out of bounds.
-  */
-  const setBounds = (min, max) => stat =>
-    Math.max(Math.min(max, stat), min);
-
   const getWeaponDamage = (weapon, base) => weapon ?
     (weapon.getAttribute('damage') ?
       weapon.getAttribute('damage')
         .split('-')
-        .map(dmg => {
-          return parseInt(dmg, 10);
-        }) : base
-   ) : base;
+        .map(dmg => parseInt(dmg, 10)) :
+        base) :
+      base;
 
   /**
    * Get the damage a player can do
