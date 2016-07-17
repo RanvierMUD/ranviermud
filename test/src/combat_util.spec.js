@@ -56,6 +56,4 @@ describe('Player/NPC Combat Helper', () => {
 
   });
 
-
-
 });
