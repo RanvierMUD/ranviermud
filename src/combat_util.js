@@ -80,7 +80,7 @@ function CombatHelper(entity) {
 
     const baseSpeed = maximum - weaponSpeed - attributesSpeed;
 
-    util.log("Player's base speed is ", speed);
+    util.log("Player's base speed is ", baseSpeed);
 
     const speed = _
       .values(this.speedMods)
@@ -103,7 +103,7 @@ function CombatHelper(entity) {
     //   }
     // }
 
-    return speed;
+    return Math.max(Math.min(maximum, speed), minimum);
   };
 
   return this;
