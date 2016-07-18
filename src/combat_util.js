@@ -48,15 +48,17 @@ function CombatHelper(entity) {
   this.removeToHitMod  = deleteMod('toHitMods');
 
   /**
-   * Get primary weapon of player
-   * Returns its name
+   * Get primary or offhand weapon of player.
    */
-
   this.getWeapon  = location => this._entity
     .getEquipped(location || 'wield', true);
 
-  this.getOffhand = ()       => this.getWeapon('offhand');
+  this.getOffhand = () => this.getWeapon('offhand');
 
+
+  /**
+   * Get just the name of the attack.
+   */
   this.getAttack = location => this
     .getWeapon(location)
     .getShortDesc('en');
@@ -111,22 +113,23 @@ function CombatHelper(entity) {
   //   return bonuses[stance] || 0;
   // }
 
+  const getWeaponSpeed = (weapon, base, factor) => (weapon ?
+    weapon.getAttribute('speed') : base) * factor;
+
   /**
    * Get attack speed of a player
    * @return float milliseconds between attacks
    */
   this.getAttackSpeed = secondAttack => {
-    const weapon  = secondAttack ? this.getWeapon() : this.getWeapon('offhand');
+    const weapon  = secondAttack ? this.getWeapon() : this.getOffhand();
 
     const minimum = secondAttack ? 750 : 500;
     const maximum = 10 * 1000;
 
     const speedWithinBounds = setBounds(minimum, maximum);
 
-    const unarmedSpeed = this._entity.getAttribute('quickness');
-    const weaponSpeed  = (weapon ?
-      weapon.getAttribute('speed') :
-      unarmedSpeed) * 500;
+    const unarmedSpeed    = this._entity.getAttribute('quickness');
+    const weaponSpeed     = getWeaponSpeed(weapon, unarmedSpeed, 500);
     const attributesSpeed = unarmedSpeed * 500
       + this._entity.getAttribute('cleverness') * 250;
 
