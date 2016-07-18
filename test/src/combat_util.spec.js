@@ -58,12 +58,14 @@ describe('Player/NPC Combat Helper', () => {
 
   });
 
-  describe('damage helpers', () => {
+  describe('weapon/damage helpers', () => {
     const sword = {
-      getAttribute: () => '5-40'
+      getAttribute: () => '5-40',
+      getShortDesc: () => 'Yey'
     };
     const warrior = {
-      getEquipped:  () => sword
+      getEquipped:  () => sword,
+      getAttribute: () => 1,
     };
 
     const testWarrior = new CombatHelper(warrior);
@@ -76,7 +78,40 @@ describe('Player/NPC Combat Helper', () => {
         const damage = testWarrior.getDamage();
         expect(damage >= 5).to.be.true;
         expect(damage <= 40).to.be.true;
+        i++;
       }
     });
+
+    it('should also be able to use modifiers', () => {
+      testWarrior.addDamageMod({
+        name:  'berserk',
+        effect: damage => damage * 2
+      });
+
+      let i = 0;
+      let limit = 100;
+      while(i < limit) {
+        const damage = testWarrior.getDamage();
+        expect(damage >= 10).to.be.true;
+        expect(damage <= 80).to.be.true;
+        i++;
+      }
+
+    });
+
+    describe('weapon helpers', () => {
+
+      it('should be able to get weapon desc', () => {
+        const attackName = testWarrior.getPrimary();
+        expect(attackName).to.equal('Yey');
+      });
+
+
+
+    });
+
   });
+
+
+
 });
