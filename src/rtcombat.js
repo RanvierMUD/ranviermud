@@ -182,18 +182,15 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
   }
 
   function calcRawDamage(damage, attr) {
-    var range = damage.max - damage.min;
-    with(Math) {
-      return min(
-        attr,
-        damage.min + max(
-          0,
-          floor(random() * (range))
-        )
-      );
-    }
+    const range = damage.max - damage.min;
+    return Math.max(
+      Random.inRange(damage.min, damage.max) + attr,
+      attr,
+      range
+    );
   }
 
+  //TODO: Add to utils helper.js file
   function getPercentage(numerator, denominator) {
     return Math.round((numerator / denominator) * 100);
   }

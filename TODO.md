@@ -2,7 +2,8 @@
 | Filename | line # | TODO
 |:------|:------:|:------
 | /Users/seanodonohue/myForks/ranviermud/src/accounts.js | 134 | Use this in the accountmanager when loading all accounts
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 107 | Use mod methods instead.
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 105 | Use mods instead.
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 144 | Use mod methods instead.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 84 | boostAttr
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 85 | invis
@@ -23,8 +24,9 @@
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 69 | Set an effect instead if possible.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 75 | Remove this when allowing for multicombat.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 89 | Extract to module
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 254 | consider doing sanity damage to all other players in the room.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 278 | More candidates for utilification, I suppose.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 193 | Add to utils helper.js file
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 251 | consider doing sanity damage to all other players in the room.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 275 | More candidates for utilification, I suppose.
 | /Users/seanodonohue/myForks/ranviermud/src/skills.js | 30 | Pull into own files.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 134 | Permadeath, add it.
