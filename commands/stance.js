@@ -19,9 +19,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         defense: defense => defense * 1.5,
         toHit:   toHit   => toHit   * .75
       },
-      'normal': {}
-      'berserk': {}
-      'precise': {}
+      'normal': {},
+      'berserk': {},
+      'precise': {},
     };
 
     if (stance && stance in stances) {
@@ -31,9 +31,26 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       if (hasMods) {
         player.setPreference('stance', stance);
         player.sayL10n(l10n, 'STANCE_SET', stance);
+
+        for (const modifier in chosenStance) {
+          const addMod = player.combat.addMod(modifier);
+          addMod({
+            name:   stance,
+            effect: chosenStance(modifier)
+          })
+        }
+
+        for (const otherStance in stances) {
+          if (otherStance !== stance) {
+            player.combat.removeAllMods(otherStance);
+          }
+        }
+
         return players.eachIf(
           p => CommandUtil.inSameRoom(player, p),
           p => p.sayL10n('OTHER_STANCE', player.getName(), stance));
+      } else {
+
       }
     }
 

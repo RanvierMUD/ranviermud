@@ -32,19 +32,25 @@ function CombatHelper(entity) {
   this.damageMods  = {};
   this.toHitMods   = {};
 
-  const addMod = type =>
+  this.addMod = type =>
     modifier => this[type][modifier.name] = modifier.effect;
 
-  this.addSpeedMod  = addMod('speedMods');
-  this.addDamageMod = addMod('damageMods');
-  this.addToHitMod  = addMod('toHitMods');
+  this.addSpeedMod  = this.addMod('speedMods');
+  this.addDamageMod = this.addMod('damageMods');
+  this.addToHitMod  = this.addMod('toHitMods');
 
-  const deleteMod = type =>
+  this.deleteMod = type =>
     name => delete this[type][name];
 
   this.removeSpeedMod  = deleteMod('speedMods');
   this.removeDamageMod = deleteMod('damageMods');
   this.removeToHitMod  = deleteMod('toHitMods');
+
+  this.deleteAllMods = name => {
+    this.removeSpeedMod(name);
+    this.removeDamageMod(name);
+    this.removeToHitMod(name);
+  };
 
   /**
    * Get primary or offhand weapon of player.
