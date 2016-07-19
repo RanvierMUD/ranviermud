@@ -12,21 +12,31 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const stance = _.firstWord(args);
 
-    const stances = [
-      'cautious',
-      'normal',
-      'berserk',
-      'precise'
-    ];
+    const stances = {
+      'cautious': {
+        speed:   speed   => speed   * 2,
+        damage:  damage  => damage  * .5,
+        defense: defense => defense * 1.5,
+        toHit:   toHit   => toHit   * .75
+      },
+      'normal': {}
+      'berserk': {}
+      'precise': {}
+    };
 
-    if (stance && _.has(stances, stance)) {
-      player.setPreference('stance', stance);
-      player.sayL10n(l10n, 'STANCE_SET', stance);
-      players.eachIf(
-        p => CommandUtil.inSameRoom(player, p),
-        p => p.sayL10n('OTHER_STANCE', player.getName(), stance));
-      return;
+    if (stance && stance in stances) {
+      const chosenStance = stances[stance];
+      const hasMods = _.hasKeys(chosenStance);
+
+      if (hasMods) {
+        player.setPreference('stance', stance);
+        player.sayL10n(l10n, 'STANCE_SET', stance);
+        return players.eachIf(
+          p => CommandUtil.inSameRoom(player, p),
+          p => p.sayL10n('OTHER_STANCE', player.getName(), stance));
+      }
     }
+
 
     player.sayL10n(l10n, 'STANCE', player.getPreference('stance'));
   }

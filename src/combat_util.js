@@ -5,6 +5,11 @@ const Random = require('./random').Random;
 const _ = require('./helpers');
 
 /**
+* The purpose of this class is to standardize
+* the realtime combat API between players & NPCs.
+*/
+
+/**
 * Generic func to apply all mods to a stat,
 * starting with the base stat.
 */
@@ -59,12 +64,12 @@ function CombatHelper(entity) {
   /**
    * Get just the name of the attack.
    */
-  this.getAttack = location => this
+  this.getAttackName = location => this
     .getWeapon(location)
     .getShortDesc('en');
 
-  this.getPrimary   = () => this.getAttack('wield');
-  this.getSecondary = () => this.getAttack('offhand');
+  this.getPrimaryAttackName   = () => this.getAttackName('wield');
+  this.getSecondaryAttackName = () => this.getAttackName('offhand');
 
   /**
   * Gets damage range from weapon obj

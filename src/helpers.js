@@ -26,6 +26,8 @@ const values = obj => {
   return vals;
 }
 
+const hasKeys = obj => !!Object.keys(obj).length;
+
 const leftPad = amt => {
   let pad = '';
   while (amt) {
@@ -40,5 +42,8 @@ const firstWord = args => splitArgs(args)[0];
 const splitArgs = args => args.toLowerCase().split(' ');
 
 module.exports = {
-  has, values, hasNot, leftPad, firstWord, splitArgs
+  has, values,
+  hasNot, leftPad,
+  firstWord, splitArgs,
+  hasKeys,
 };
