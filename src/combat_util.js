@@ -97,14 +97,14 @@ function CombatHelper(entity) {
     const base   = [ 1, self.getAttribute('stamina') + 5 ];
 
     const damageRange = getWeaponDamage(weapon, base);
-    const damageWithinBounds = _.setBounds(damageRange[0],
 
     const damageRoll = Random.inRange(...damageRange);
 
     const min = damageRange[0];
-    const max = applyMods(damageRoll, this.damageMods);
+    const modifiedDamageRoll = applyMods(damageRoll, this.damageMods);
 
-    const damageDealt = damageWithinBounds(min, max);
+    const damageWithinBounds = _.setBounds(min, Infinity);
+    const damageDealt = damageWithinBounds(modifiedDamageRoll);
 
     util.log('Deals damage: ', damageDealt);
 
