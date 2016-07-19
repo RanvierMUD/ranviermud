@@ -33,7 +33,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         player.sayL10n(l10n, 'STANCE_SET', stance);
 
         for (const modifier in chosenStance) {
-          const addMod = player.combat.addMod(modifier);
+          const addMod = player.combat.addMod(modifier + 'Mods');
           addMod({
             name:   stance,
             effect: chosenStance(modifier)

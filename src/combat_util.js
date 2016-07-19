@@ -36,18 +36,21 @@ function CombatHelper(entity) {
   this.addMod = type =>
     modifier => this[type][modifier.name] = modifier.effect;
 
-  this.addSpeedMod  = this.addMod('speedMods');
-  this.addDamageMod = this.addMod('damageMods');
-  this.addToHitMod  = this.addMod('toHitMods');
+  this.addSpeedMod   = this.addMod('speedMods');
+  this.addDamageMod  = this.addMod('damageMods');
+  this.addToHitMod   = this.addMod('toHitMods');
+  this.addDefenseMod = this.addMod('defenseMods');
 
   this.deleteMod = type =>
     name => delete this[type][name];
 
-  this.removeSpeedMod  = this.deleteMod('speedMods');
-  this.removeDamageMod = this.deleteMod('damageMods');
-  this.removeToHitMod  = this.deleteMod('toHitMods');
+  this.removeSpeedMod   = this.deleteMod('speedMods');
+  this.removeDamageMod  = this.deleteMod('damageMods');
+  this.removeToHitMod   = this.deleteMod('toHitMods');
+  this.removeDefenseMod = this.deleteMod('defenseMods');
 
   this.deleteAllMods = name => {
+    if (!name) { return false; }
     this.removeSpeedMod(name);
     this.removeDamageMod(name);
     this.removeToHitMod(name);
