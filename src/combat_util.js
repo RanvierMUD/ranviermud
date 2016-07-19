@@ -118,18 +118,6 @@ function CombatHelper(entity) {
     return damageDealt;
   };
 
-
-  //TODO: Use mods instead.
-  // function addDamageBonus(d) {
-  //   let stance = self.getPreference('stance');
-  //   let bonuses = {
-  //     'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
-  //     'cautious': -(Math.round(d / 2)),
-  //     'precise': 1
-  //   };
-  //   return bonuses[stance] || 0;
-  // }
-
   const getWeaponSpeed = (weapon, base, factor) => (weapon ?
     weapon.getAttribute('speed') : base) * factor;
 
@@ -158,15 +146,17 @@ function CombatHelper(entity) {
 
     util.log("Player's modified speed is ", speed);
 
-    //TODO: Use mod methods instead.
-    // const stanceToSpeed = {
-    //   'precise': 1.25,
-    //   'cautious': 2,
-    //   'berserk': .5,
-    // };
-
     return speedWithinBounds(speed);
   };
+
+  this.getDodgeChance = () => {
+    const dodgeSkill = this._entity.getSkills('dodge');
+    const dodgeBonus = this._entity.getAttribute('quickness')
+      + Math.round(this._entity.getAttribute('cleverness') / 2);
+    const dodgeChance = applyMods(dodgeSkill + dodgeBonus, this.dodgeMods);
+    const dodgeWithinBounds = _.setBounds(5, 90);
+    return dodgeWithinBounds(dodgeChance);
+  }
 
   return this;
 }
