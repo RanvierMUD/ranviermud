@@ -43,9 +43,13 @@ const firstWord = args => splitArgs(args)[0];
 
 const splitArgs = args => args.toLowerCase().split(' ');
 
+const setBounds = (min, max) => stat =>
+  Math.max(Math.min(max, stat), min);
+
 module.exports = {
   has,       hasNot,
   firstWord, splitArgs,
   hasKeys,   leftPad,
   values,    reduceValues,
+  setBounds,
 };

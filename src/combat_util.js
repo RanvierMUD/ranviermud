@@ -17,12 +17,6 @@ const applyMod  = (stat, modifier) => modifier(stat)
 const applyMods = (base, modsObj)  => _
   .reduceValues(modsObj, applyMod, base);
 
-/**
-* Returns the max or min if the stat is out of bounds.
-*///TODO: Consider adding to helper.js
-const setBounds = (min, max) => stat =>
-  Math.max(Math.min(max, stat), min);
-
 function CombatHelper(entity) {
   this._entity = entity;
 
@@ -97,9 +91,14 @@ function CombatHelper(entity) {
     const base   = [ 1, self.getAttribute('stamina') + 5 ];
 
     const damageRange = getWeaponDamage(weapon, base);
-    const damageRoll  = Random.inRange(...damageRange);
+    const damageWithinBounds = _.setBounds(damageRange[0],
 
-    const damageDealt = applyMods(damageRoll, this.damageMods);
+    const damageRoll = Random.inRange(...damageRange);
+
+    const min = damageRange[0];
+    const max = applyMods(damageRoll, this.damageMods);
+
+    const damageDealt = damageWithinBounds(min, max);
 
     util.log('Deals damage: ', damageDealt);
 
@@ -131,7 +130,7 @@ function CombatHelper(entity) {
     const minimum = secondAttack ? 750 : 500;
     const maximum = 10 * 1000;
 
-    const speedWithinBounds = setBounds(minimum, maximum);
+    const speedWithinBounds = _.setBounds(minimum, maximum);
 
     const unarmedSpeed    = this._entity.getAttribute('quickness');
     const weaponSpeed     = getWeaponSpeed(weapon, unarmedSpeed, 500);
