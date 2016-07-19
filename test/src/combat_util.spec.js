@@ -102,7 +102,7 @@ describe('Player/NPC Combat Helper', () => {
     describe('weapon helpers', () => {
 
       it('should be able to get weapon desc', () => {
-        const attackName = testWarrior.getPrimary();
+        const attackName = testWarrior.getPrimaryAttackName();
         expect(attackName).to.equal('Yey');
       });
 
