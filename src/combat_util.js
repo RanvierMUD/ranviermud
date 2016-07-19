@@ -42,9 +42,9 @@ function CombatHelper(entity) {
   this.deleteMod = type =>
     name => delete this[type][name];
 
-  this.removeSpeedMod  = deleteMod('speedMods');
-  this.removeDamageMod = deleteMod('damageMods');
-  this.removeToHitMod  = deleteMod('toHitMods');
+  this.removeSpeedMod  = this.deleteMod('speedMods');
+  this.removeDamageMod = this.deleteMod('damageMods');
+  this.removeToHitMod  = this.deleteMod('toHitMods');
 
   this.deleteAllMods = name => {
     this.removeSpeedMod(name);
