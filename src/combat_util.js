@@ -53,7 +53,7 @@ function CombatHelper(entity) {
   };
 
   /**
-   * Get primary or offhand weapon of player.
+   * Get hydrated primary or offhand weapon of player/npc.
    */
   this.getWeapon  = location => this._entity
     .getEquipped(location || 'wield', true);
