@@ -31,6 +31,7 @@ function CombatHelper(entity) {
   this.speedMods   = {};
   this.damageMods  = {};
   this.toHitMods   = {};
+  this.defenseMods = {};
 
   this.addMod = type =>
     modifier => this[type][modifier.name] = modifier.effect;
