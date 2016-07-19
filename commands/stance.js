@@ -17,11 +17,23 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         speed:   speed   => speed   * 2,
         damage:  damage  => damage  * .5,
         defense: defense => defense * 1.5,
-        toHit:   toHit   => toHit   * .75
+        toHit:   toHit   => toHit   * .75,
+        dodge:   dodge   => dodge   * 2
       },
       'normal': {},
-      'berserk': {},
-      'precise': {},
+      'berserk': {
+        speed:   speed   => speed   * .5,
+        damage:  damage  => damage  * 1.5,
+        defense: defense => defense * .5,
+        toHit:   toHit   => toHit   * .75,
+        dodge:   dodge   => dodge   * .5
+      },
+      'precise': {
+        speed:   speed   => speed   * 2,
+        damage:  damage  => damage  * 1.25,
+        toHit:   toHit   => toHit   * 1.5,
+        dodge:   dodge   => dodge   * 1.25
+      },
     };
 
     if (stance && stance in stances) {
@@ -32,6 +44,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         player.setPreference('stance', stance);
         player.sayL10n(l10n, 'STANCE_SET', stance);
 
+        // Add modifiers for stance.
         for (const modifier in chosenStance) {
           const addMod = player.combat.addMod(modifier + 'Mods');
           addMod({
@@ -40,12 +53,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           })
         }
 
+        // Remove modifiers for other stances.
         for (const otherStance in stances) {
           if (otherStance !== stance) {
             player.combat.removeAllMods(otherStance);
           }
         }
 
+        // Make it known.
         return players.eachIf(
           p => CommandUtil.inSameRoom(player, p),
           p => p.sayL10n('OTHER_STANCE', player.getName(), stance));
