@@ -13,9 +13,9 @@ const _ = require('./helpers');
 * Generic func to apply all mods to a stat,
 * starting with the base stat.
 */
-const applyMods = (base, modsObj) => _
-  .values(modsObj)
-  .reduce((stat, modifier) => modifier(stat), base);
+const applyMod  = (stat, modifier) => modifier(stat)
+const applyMods = (base, modsObj)  => _
+  .reduceValues(modsObj, applyMod, base);
 
 /**
 * Returns the max or min if the stat is out of bounds.

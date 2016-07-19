@@ -37,6 +37,8 @@ const leftPad = amt => {
   return pad;
 }
 
+const reduceValues = (obj, callback, starter) => values(obj).reduce(callback, starter);
+
 const firstWord = args => splitArgs(args)[0];
 
 const splitArgs = args => args.toLowerCase().split(' ');
