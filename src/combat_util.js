@@ -140,11 +140,11 @@ function CombatHelper(entity) {
 
     const baseSpeed = maximum - weaponSpeed - attributesSpeed;
 
-    util.log("Player's base speed is ", baseSpeed);
+    util.log("Their base speed is ", baseSpeed);
 
     const speed = applyMods(baseSpeed, this.speedMods);
 
-    util.log("Player's modified speed is ", speed);
+    util.log("Their modified speed is ", speed);
 
     return speedWithinBounds(speed);
   };
@@ -155,6 +155,7 @@ function CombatHelper(entity) {
       + Math.round(this._entity.getAttribute('cleverness') / 2);
     const dodgeChance = applyMods(dodgeSkill + dodgeBonus, this.dodgeMods);
     const dodgeWithinBounds = _.setBounds(5, 90);
+    util.log('Dodge chance is ', dodgeChance);
     return dodgeWithinBounds(dodgeChance);
   }
 
