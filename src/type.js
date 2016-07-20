@@ -1,8 +1,11 @@
+'use strict';
+
 const Player  = require('./player').Player;
 const Npc     = require('./npcs').Npc;
 const Item    = require('./items').Item;
 const Account = require('./accounts').Account;
 
+//FIXME: OH NO CIRCULAR DEPENDENCY
 const isPlayer  = is(Player);
 const isNpc     = is(Npc);
 const isItem    = is(Item);
@@ -22,6 +25,7 @@ exports.Type = {
  */
 
 function is(typeClass) {
+  console.log(typeClass);
   return thing => thing ?
     thing instanceof typeClass :
     false;

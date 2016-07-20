@@ -706,7 +706,4 @@ const Player = function PlayerConstructor(socket) {
 };
 
 util.inherits(Player, events.EventEmitter);
-
-// Export the Player class so you can use it in
-// other files by using require("Player").Player
 exports.Player = Player;
