@@ -22,5 +22,7 @@ exports.Type = {
  */
 
 function is(typeClass) {
-  return thing => thing instanceof typeClass;
+  return thing => thing ?
+    thing instanceof typeClass :
+    false;
 }
