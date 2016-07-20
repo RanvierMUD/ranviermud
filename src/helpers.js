@@ -37,6 +37,8 @@ const leftPad = amt => {
   return pad;
 }
 
+const is = (typeclass, thing) => thing ? thing instanceof typeclass : false;
+
 const reduceValues = (obj, callback, starter) => values(obj).reduce(callback, starter);
 
 const firstWord = args => splitArgs(args)[0];
@@ -51,5 +53,5 @@ module.exports = {
   firstWord, splitArgs,
   hasKeys,   leftPad,
   values,    reduceValues,
-  setBounds,
+  setBounds, is
 };
