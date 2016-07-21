@@ -1,20 +1,19 @@
 'use strict';
 
-const Player  = require('./player').Player;
-const Npc     = require('./npcs').Npc;
-const Item    = require('./items').Item;
-const Account = require('./accounts').Account;
 
-//FIXME: OH NO CIRCULAR DEPENDENCY
-const isPlayer  = is(Player);
-const isNpc     = is(Npc);
-const isItem    = is(Item);
-const isAccount = is(Account);
+const Type = { config };
 
-exports.Type = {
-  isPlayer, isNpc,
-  isItem,   isAccount,
-};
+function config(Player, Npc, Item, Account) {
+  Type.isPlayer  = is(Player);
+  Type.isNpc     = is(Npc);
+  Type.isItem    = is(Item);
+  Type.isAccount = is(Account);
+
+}
+
+exports.Type = Type;
+
+
 
 /**
  * Takes a constructor and a thing and returns function
