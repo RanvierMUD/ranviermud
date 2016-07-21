@@ -4,6 +4,8 @@ const Type   = require('./type').Type;
 const Random = require('./random').Random;
 const _ = require('./helpers');
 
+//TODO: Eventually, have API for both NPCs and Players.
+
 /**
 * The purpose of this class is to standardize
 * the realtime combat API between players & NPCs.
@@ -165,13 +167,19 @@ function CombatHelper(entity) {
 this.getToHitChance = () => {
   //TODO: Weapon skills related to weapon type?
   //TODO: General combat skills?
-  const toHitSkill = 1 + Random.roll(); //For now, 1-20.
+  // Replace 1 with skill get.
+  const toHitSkill = this._entity.getAttribute('level') + Random.roll(); //For now, 1-20.
   const toHitBonus = this._entity.getAttribute('cleverness')
     + Math.round(this._entity.getAttribute('quickness') / 2);
   const toHitChance = applyMods(toHitSkill + toHitBonus, this.toHitMods);
   const toHitWithinBounds = _.setBounds(5, 90);
   util.log('To hit chance is ', toHitChance);
   return toHitWithinBounds(toHitChance);
+}
+
+this.getDefense = () => {
+  //TODO: Replace with defense func from player.
+  return this._entity.getAttribute('level') * 2;
 }
 
 function getHelper(entity) {
