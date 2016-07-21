@@ -53,9 +53,9 @@ var players,
 	accounts = new Accounts(),
 	server,
 	Player  = require('./src/player').Player,
-	Npc     = require('./npcs').Npc,
-	Item    = require('./items').Item,
-	Account = require('./accounts').Account,
+	Npc     = require('./src/npcs').Npc,
+	Item    = require('./src/items').Item,
+	Account = require('./src/accounts').Account,
 
 	// Stuff for the server executable
 	l10n,
