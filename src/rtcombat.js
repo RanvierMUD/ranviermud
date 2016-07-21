@@ -25,8 +25,35 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
   player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(locale));
 
 
+  /*
+    Ideas:
 
-  // FIXME: Use Types instead
+    To hit vs. Dodge:
+      Dodge = chance of auto-dodge, or does it need to be manual?
+              Leave open to potential manual dodging in future.
+      ToHit = chance of hitting the enemy. Potentially,
+              chance of hitting = (toHitRoll - dodgeChance) vs. EnemyLevel?
+              Gah.
+
+    Damage vs. Defense:
+      Defense soaks up damage depending on where the hit lands.
+      It is possible for a blow to hit but then do zero damage.
+      Defenses should be able to stack.
+
+    Have different messaging for a dodged blow vs. a blow that hits
+    yet does no damage.
+
+    Also have different messaging for a near miss and a complete miss,
+    as well as varieties of damage done.
+
+    Consider having primary and secondary attacks for each npc, with varying
+    amounts of damage.
+
+    Consider allowing npcs to be equipped with armor and such at some point
+    (this will be easier to implement with new API)
+  */
+
+
 
   try {
     util.log("Combat begins between " + p.name + " and " + n.name);
