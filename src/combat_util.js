@@ -150,7 +150,7 @@ function CombatHelper(entity) {
   };
 
   this.getDodgeChance = () => {
-    const dodgeSkill = this._entity.getSkills('dodge');
+    const dodgeSkill = this._entity.getSkills('dodge') + Random.roll();
     const dodgeBonus = this._entity.getAttribute('quickness')
       + Math.round(this._entity.getAttribute('cleverness') / 2);
     const dodgeChance = applyMods(dodgeSkill + dodgeBonus, this.dodgeMods);
@@ -160,6 +160,18 @@ function CombatHelper(entity) {
   }
 
   return this;
+}
+
+this.getToHitChance = () => {
+  //TODO: Weapon skills related to weapon type?
+  //TODO: General combat skills?
+  const toHitSkill = 1 + Random.roll(); //For now, 1-20.
+  const toHitBonus = this._entity.getAttribute('cleverness')
+    + Math.round(this._entity.getAttribute('quickness') / 2);
+  const toHitChance = applyMods(toHitSkill + toHitBonus, this.toHitMods);
+  const toHitWithinBounds = _.setBounds(5, 90);
+  util.log('To hit chance is ', toHitChance);
+  return toHitWithinBounds(toHitChance);
 }
 
 function getHelper(entity) {
