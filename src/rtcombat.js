@@ -55,37 +55,51 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
 
 
+  /**
+   * Create attack round functions, then attach them
+   * to the combat helper objects for each entity.
+   *
+   * Then, invoke a timeout for each combatant's round.
+   * //TODO: Cancel the timeouts when combat ends due to fleeing/death/etc.
+   */
   const playerCombat = combatRound.bind(null, player, target);
   const targetCombat = combatRound.bind(null, target, player);
 
   player.combat.combatRound = playerCombat;
   target.combat.combatRound = targetCombat;
 
-  setTimeout(targetCombat, target.combat.combatRound);
-  setTimeout(playerCombat, player.combat.combatRound);
+  const targetCombatCancel = setTimeout(targetCombat, target.combat.getAttackSpeed());
+  const playerCombatCancel = setTimeout(playerCombat, player.combat.getAttackSpeed());
 
-  const dualWieldBaseSpeed = 2.1
+  /**
+   * Detect if the attacker is dual wielding.
+   * Then, figure out the speed and damage -- since
+   * both are decreased depending on the player's skill level in
+   * dual-wielding.
+   *
+   * Then, create another combat round so the attacker can dual-attack.
+   * //TODO: Do the same for the defender once NPC dual attacks are a thing.
+   * //TODO: Do the same once PvP is a thing, too.
+   */
 
-  let isDualWielding  = CommandUtil.hasScript(p.offhand, 'wield');
-  let dualWieldSpeed  = () => p.speed() * (dualWieldBaseSpeed - player.getSkills('dual') / 10);
+  const dualWieldBaseSpeed   = 2.1;
+  const dualWieldSpeedFactor = dualWieldBaseSpeed - (player.getSkills('dual') / 10);
+
+  let isDualWielding  = CommandUtil.hasScript(player.combat.getOffhand(), 'wield');
+  let getDuelWieldSpeed  = () => player.combat.getAttackSpeed(isDualWielding) * dualWieldSpeedFactor;
   let dualWieldDamage = damage => Math.round(damage * (0.5 + player.getSkills('dual') / 10));
   let dualWieldCancel = null;
 
   if (isDualWielding) {
     util.log("Player is using dual wield!");
-    var pWithDual = Object.assign({}, p, { weapon: p.offhand });
-    var dualWieldCombat = combatRound.bind({ secondAttack: true }, player, npc, pWithDual, n);
-    pWithDual.attackRound = dualWieldCombat;
-    dualWieldCancel = setTimeout(dualWieldCombat, dualWieldSpeed());
+    const dualWieldCombat = combatRound.bind({ secondAttack: true }, player, npc);
+    secondAttack.attackRound = dualWieldCombat;
+    dualWieldCancel = setTimeout(dualWieldCombat, getDuelWieldSpeed());
   }
 
   function combatRound(attacker, defender) {
 
     // Try to standardize function calls so this is not necessary.
-
-    const attackerHelper = getCombatHelper(attacker);
-    const defenderHelper = getCombatHelper(defender);
-
 
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(2);
     if (slowAttacker) {
@@ -175,6 +189,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     }
 
     const getCondition = entity => {
+
+        //FIXME: dis b fucked
         const npc    = Type.isPlayer(entity) ? npc : false;
         const max    = entity.getAttribute('max_health');
         return statusUtils.getHealthText(max, player, npc);
