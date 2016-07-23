@@ -164,6 +164,9 @@ function CombatHelper(entity) {
   return this;
 }
 
+this.getDesc = () => Type.isPlayer(this._entity) ?
+  this._entity.getName() : this._entity.getShortDesc('en');
+
 this.getToHitChance = () => {
   //TODO: Weapon skills related to weapon type?
   //TODO: General combat skills?
