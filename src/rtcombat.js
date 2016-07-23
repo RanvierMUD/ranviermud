@@ -22,7 +22,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
   player.setInCombat(target);
   target.setInCombat(player);
 
-  player.sayL10n(l10n, 'ATTACK', target.combat.getDesc(locale));
+  player.sayL10n(l10n, 'ATTACK', target.combat.getDesc());
 
 
   /*
@@ -55,19 +55,21 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
 
 
-  var playerCombat = combatRound.bind(null, player, npc);
-  var npcCombat = combatRound.bind(null, npc, player);
+  const playerCombat = combatRound.bind(null, player, target);
+  const targetCombat = combatRound.bind(null, target, player);
 
-  p.attackRound = playerCombat;
-  n.attackRound = npcCombat;
+  player.combat.combatRound = playerCombat;
+  target.combat.combatRound = targetCombat;
 
-  setTimeout(npcCombat, n.speed());
-  setTimeout(playerCombat, p.speed());
+  setTimeout(targetCombat, target.combat.combatRound);
+  setTimeout(playerCombat, player.combat.combatRound);
 
-  var isDualWielding = CommandUtil.hasScript(p.offhand, 'wield');
-  var dualWieldSpeed = () => p.speed() * (2.1 - player.getSkills('dual') / 10);
-  var dualWieldDamage = damage => Math.round(damage * (0.5 + player.getSkills('dual') / 10));
-  var dualWieldCancel = null;
+  const dualWieldBaseSpeed = 2.1
+
+  let isDualWielding  = CommandUtil.hasScript(p.offhand, 'wield');
+  let dualWieldSpeed  = () => p.speed() * (dualWieldBaseSpeed - player.getSkills('dual') / 10);
+  let dualWieldDamage = damage => Math.round(damage * (0.5 + player.getSkills('dual') / 10));
+  let dualWieldCancel = null;
 
   if (isDualWielding) {
     util.log("Player is using dual wield!");
