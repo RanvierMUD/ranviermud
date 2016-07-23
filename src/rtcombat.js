@@ -17,12 +17,12 @@ const Commands    = require('./commands').Commands;
 const CombatUtil  = require('./combat_util').CombatUtil;
 const Type        = require('./type').Type;
 
-function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
-  const locale = player.getLocale();
-  player.setInCombat(npc);
-  npc.setInCombat(player);
+function _initCombat(l10n, target, player, room, npcs, players, rooms, callback) {
+  const locale = Type.isPlayer(player) ? player.getLocale() : 'en';
+  player.setInCombat(target);
+  target.setInCombat(player);
 
-  player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(locale));
+  player.sayL10n(l10n, 'ATTACK', target.combat.getDesc(locale));
 
 
   /*
@@ -54,12 +54,6 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
   */
 
 
-
-  try {
-    util.log("Combat begins between " + p.name + " and " + n.name);
-    util.log("Weapons are " + p.weapon.getShortDesc('en') + ' and ' + n.weapon);
-    util.log("Speeds are " + p.speed() + ' vs. ' + n.speed());
-  } catch (e) { util.log(e); }
 
   var playerCombat = combatRound.bind(null, player, npc);
   var npcCombat = combatRound.bind(null, npc, player);
