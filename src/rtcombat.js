@@ -101,17 +101,31 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(2);
     if (slowAttacker) {
+
+      //TODO: Consider adding to Effects file instead of here.
       attacker.addEffect('tired', {
         duration: 5000,
         activate: () => {
           if (!attacker.getEffects('tired')) {
             attacker.combat.addSpeedMod({
-              name: 'tired',
+              name:  'tired',
               effect: speed => speed * 2,
+            });
+            attacker.combat.addDamageMod({
+              name:  'tired',
+              effect: damage => damage * .75,
+            });
+            attacker.combat.addToHitMod({
+              name:  'tired',
+              effect: toHit => toHit * .75,
+            });
+            attacker.combat.addDodgeMod({
+              name:  'tired',
+              effect: dodge => dodge * .5
             });
           }
         },
-        deactivate: () => attacker.combat.removeSpeedMod('tired'),
+        deactivate: () => attacker.combat.removeAllMods('tired'),
       });
     }
 
@@ -163,10 +177,13 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       }
 
       broadcastExceptPlayer(
-        '<bold>' + attackerHelper.name + ' attacks ' + d.name +
-        ' and misses!' + '</bold>');
+        '<bold>'
+        + attacker.combat.getDescription()
+        + ' attacks '
+        + defender.combat.getDescription()
+        + ' and misses!' + '</bold>');
 
-      util.log(attackerHelper.name + ' misses ' + d.name);
+      util.log(attacker.combat.getDescription() + ' misses ' + defender.combat.getDescription());
 
     } else {
 

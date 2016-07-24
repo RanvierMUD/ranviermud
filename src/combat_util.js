@@ -59,6 +59,8 @@ function CombatHelper(entity) {
     this.removeSpeedMod(name);
     this.removeDamageMod(name);
     this.removeToHitMod(name);
+    this.removeDodgeMod(name);
+    this.removeDefenseMod(name);
   };
 
   /**
