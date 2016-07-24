@@ -189,6 +189,7 @@ this.getDefense = () => {
 
 this.getTarget = () => Type.isPlayer(this._entity) ?
   this._entity.getPreference('target') :
+  this._entity.getAttribute('target');
 
 function getHelper(entity) {
   return new CombatHelper(entity);
