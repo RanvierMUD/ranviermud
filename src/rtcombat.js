@@ -167,7 +167,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
       //FIXME: What if the defender is an npc?
       const defenderWeapon = defender.combat.getWeapon();
-      if (defenderWeapon) {
+      if (defenderWeapon && CommandUtil.hasScript(defenderWeapon, 'parry')) {
+        util.log('def weapon', defenderWeapon);
         defenderWeapon.emit('parry', defender);
       }
 
@@ -192,7 +193,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         calcRawDamage(damage, defender.getAttribute('health')),
         hitLocation);
 
-      util.log('Targeted ' + attacker.combat.getTarget + ' and hit ' + hitLocation);
+      util.log('Targeted ' + attacker.combat.getTarget() + ' and hit ' + hitLocation);
       var damageStr = getDamageString(damage, defender.getAttribute('health'));
 
       const attackerWeapon = this.isSecondAttack ?
@@ -235,7 +236,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     if (startingHealth <= damage) {
       defender.setAttribute('health', 1);
       defender.setAttribute('sanity', 1);
-      return combatEnd(attackerHelper.isPlayer);
+      return combatEnd(Type.isPlayer(attacker));
     }
 
     const getCondition = entity => {
@@ -313,28 +314,29 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     util.log("*** Combat Over ***");
 
     player.setInCombat(false);
-    npc.setInCombat(false);
+    target.setInCombat(false);
 
+    //TODO: Handle PvP or NvN combat ending differently.
     if (success) {
       if (dualWieldCancel) { clearTimeout(dualWieldCancel); }
 
-      var hasKilled = player.hasKilled(npc);
+      const hasKilled = player.hasKilled(target);
 
-      room.removeNpc(npc.getUuid());
-      npcs.destroy(npc);
-      player.sayL10n(l10n, 'WIN', npc.getShortDesc(locale));
-      broadcastExceptPlayer('<bold>' + npc.getShortDesc(locale) +
+      room.removeNpc(target.getUuid());
+      npcs.destroy(target);
+      player.sayL10n(l10n, 'WIN', target.getShortDesc(locale));
+      broadcastExceptPlayer('<bold>' + target.getShortDesc(locale) +
         ' dies.</bold>');
 
       // hand out experience
-      var exp = npc.getAttribute('experience') !== false ?
-        npc.getAttribute('experience') : LevelUtil.mobExp(npc.getAttribute('level'));
+      var exp = target.getAttribute('experience') !== false ?
+        target.getAttribute('experience') : LevelUtil.mobExp(target.getAttribute('level'));
       util.log("Player wins, exp gain: ", exp);
       player.emit('experience', exp);
 
     } else {
       util.log("Player death: ", player.getName());
-      player.sayL10n(l10n, 'LOSE', npc.getShortDesc(locale));
+      player.sayL10n(l10n, 'LOSE', target.getShortDesc(locale));
       player.emit('die');
 
       broadcastExceptPlayer(player.getName() +
@@ -343,7 +345,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
       //TODO: consider doing sanity damage to all other players in the room.
       broadcastExceptPlayer('<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
-      npc.setAttribute('health', npc.getAttribute('max_health'));
+      target.setAttribute('health', npc.getAttribute('max_health'));
 
       broadcastToArea('The gurgles of a dying ' +
         statusUtils.getGenderNoun(player) +
