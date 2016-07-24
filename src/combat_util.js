@@ -165,33 +165,33 @@ function CombatHelper(entity) {
     return dodgeWithinBounds(dodgeChance);
   }
 
+  this.getDesc = () => Type.isPlayer(this._entity) ?
+    this._entity.getName() : this._entity.getShortDesc('en');
+
+  this.getToHitChance = () => {
+    //TODO: Weapon skills related to weapon type?
+    //TODO: General combat skills?
+    // Replace 1 with skill get.
+    const toHitSkill = this._entity.getAttribute('level') + Random.roll(); //For now, 1-20.
+    const toHitBonus = this._entity.getAttribute('cleverness')
+      + Math.round(this._entity.getAttribute('quickness') / 2);
+    const toHitChance = applyMods(toHitSkill + toHitBonus, this.toHitMods);
+    const toHitWithinBounds = _.setBounds(5, 90);
+    util.log('To hit chance is ', toHitChance);
+    return toHitWithinBounds(toHitChance);
+  }
+
+  this.getDefense = () => {
+    //TODO: Replace with defense func from player.
+    return this._entity.getAttribute('level') * 2;
+  }
+
+  this.getTarget = () => Type.isPlayer(this._entity) ?
+    this._entity.getPreference('target') :
+    this._entity.getAttribute('target');
+
   return this;
 }
-
-this.getDesc = () => Type.isPlayer(this._entity) ?
-  this._entity.getName() : this._entity.getShortDesc('en');
-
-this.getToHitChance = () => {
-  //TODO: Weapon skills related to weapon type?
-  //TODO: General combat skills?
-  // Replace 1 with skill get.
-  const toHitSkill = this._entity.getAttribute('level') + Random.roll(); //For now, 1-20.
-  const toHitBonus = this._entity.getAttribute('cleverness')
-    + Math.round(this._entity.getAttribute('quickness') / 2);
-  const toHitChance = applyMods(toHitSkill + toHitBonus, this.toHitMods);
-  const toHitWithinBounds = _.setBounds(5, 90);
-  util.log('To hit chance is ', toHitChance);
-  return toHitWithinBounds(toHitChance);
-}
-
-this.getDefense = () => {
-  //TODO: Replace with defense func from player.
-  return this._entity.getAttribute('level') * 2;
-}
-
-this.getTarget = () => Type.isPlayer(this._entity) ?
-  this._entity.getPreference('target') :
-  this._entity.getAttribute('target');
 
 function getHelper(entity) {
   return new CombatHelper(entity);
