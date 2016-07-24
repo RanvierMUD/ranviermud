@@ -192,11 +192,15 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         calcRawDamage(damage, defender.getAttribute('health')),
         hitLocation);
 
-      util.log('Targeted ' + attackerHelper.target + ' and hit ' + hitLocation);
+      util.log('Targeted ' + attacker.combat.getTarget + ' and hit ' + hitLocation);
       var damageStr = getDamageString(damage, defender.getAttribute('health'));
 
-      if (attackerHelper.weapon && typeof attackerHelper.weapon == 'object') {
-        attackerHelper.weapon.emit('hit', player);
+      const attackerWeapon = this.isSecondAttack ?
+        attacker.combat.getOffhand() :
+        attacker.combat.getWeapon();
+
+      if (attackerWeapon && typeof attackerWeapon === 'object') {
+        attackerWeapon.emit('hit', attacker, defender);
       }
 
       //TODO: This could be a method of util since this pattern is used in a couple of spots.
