@@ -295,12 +295,6 @@ const Npc = function NpcConstructor(config) {
     self.getKeywords(locale).some( word => keyword === word );
 
   /**
-   * Get attack speed of an npc in ms
-   * @return float
-   */
-  self.getAttackSpeed = () => self.getAttribute('speed') * 1000 || 1000;
-
-  /**
    * Get the damage an npc can do
    * @return obj {min: int, max: int}
    */

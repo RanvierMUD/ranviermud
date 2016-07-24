@@ -22,7 +22,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
   player.setInCombat(target);
   target.setInCombat(player);
 
-  player.sayL10n(l10n, 'ATTACK', target.combat.getDescription());
+  player.sayL10n(l10n, 'ATTACK', target.combat.getDesc());
 
 
   /*
@@ -171,19 +171,19 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       }
 
       if (Type.isPlayer(attacker)) {
-        player.sayL10n(l10n, 'PLAYER_MISS', defender.combat.getDescription(), damage);
+        player.sayL10n(l10n, 'PLAYER_MISS', defender.combat.getDesc(), damage);
       } else if (Type.isPlayer(defender)) {
-        player.sayL10n(l10n, 'NPC_MISS', attacker.combat.getDescription());
+        player.sayL10n(l10n, 'NPC_MISS', attacker.combat.getDesc());
       }
 
       broadcastExceptPlayer(
         '<bold>'
-        + attacker.combat.getDescription()
+        + attacker.combat.getDesc()
         + ' attacks '
-        + defender.combat.getDescription()
+        + defender.combat.getDesc()
         + ' and misses!' + '</bold>');
 
-      util.log(attacker.combat.getDescription() + ' misses ' + defender.combat.getDescription());
+      util.log(attacker.combat.getDesc() + ' misses ' + defender.combat.getDesc());
 
     } else {
 

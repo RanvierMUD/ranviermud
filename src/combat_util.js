@@ -130,7 +130,7 @@ function CombatHelper(entity) {
    * @return float milliseconds between attacks
    */
   this.getAttackSpeed = Type.isNpc(this._entity) ?
-    this._entity.getAttackSpeed :
+    ()           => this._entity.getAttribute('speed') * 1000 || 1000 :
     secondAttack => {
       const weapon  = secondAttack ? this.getWeapon() : this.getOffhand();
 
