@@ -129,7 +129,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       });
     }
 
-    util.log("Speeds are " + attackerHelper.speed() + ' vs. ' + defenderHelper.speed());
+    util.log("Speeds are " + attacker.combat.getAttackSpeed(this.isSecondAttack) + ' vs. ' + defender.combat.getAttackSpeed());
 
     //TODO: Remove this when allowing for multicombat.
     //TODO: Use an array of targets for multicombat.
@@ -144,11 +144,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       checkWimpiness(startingHealth);
     }
 
-    if (this.isSecondAttack) { util.log('Offhand attack: '); }
+    if (this.isSecondAttack) { util.log('** Offhand attack: '); }
 
     const damage = this.isSecondAttack ?
       dualWieldDamage(attacker.combat.getDamage('offhand')) : attacker.combat.getDamage();
-    const defender_sanity = defender.getAttribute('sanity');
+    const defenderSanity = defender.getAttribute('sanity');
     const sanityDamage = Type.isPlayer(defender) ?
       0 : attacker.getSanityDamage(); //TODO: Extract into module.
 
@@ -198,9 +198,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         attackerHelper.weapon.emit('hit', player);
       }
 
-      if (d.isPlayer) {
+      //TODO: This could be a method of util since this pattern is used in a couple of spots.
+      // Check to
+      if (Type.isPlayer(defender)) {
         player.sayL10n(l10n, 'DAMAGE_TAKEN', attackerHelper.name, damageStr, attackerHelper.weapon, hitLocation);
-      } else {
+      } else if (Type.isPlayer(attacker)){
         player.sayL10n(l10n, 'DAMAGE_DONE', d.name, damageStr, hitLocation);
       }
 
@@ -210,8 +212,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     }
 
     if (sanityDamage) {
-      sanityDamage = calcRawDamage(sanityDamage, defender_sanity);
-      defender.setAttribute('sanity', Math.max(defender_sanity - sanityDamage, 0));
+      sanityDamage = calcRawDamage(sanityDamage, defenderSanity);
+      defender.setAttribute('sanity', Math.max(defenderSanity - sanityDamage, 0));
     }
 
     if (startingHealth <= damage) {
@@ -221,16 +223,21 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     }
 
     const getCondition = entity => {
-        //FIXME: dis b fucked
-        const npc    = Type.isPlayer(entity) ? npc : false;
+        //FIXME: This could be a problem if the combat is between two NPCs or two players.
+        //FIXME: The fix might have to go in statusUtils?
+        const npc    = Type.isPlayer(entity) ? target : false;
         const max    = entity.getAttribute('max_health');
         return statusUtils.getHealthText(max, player, npc);
     };
+    const getTargetCondition   = getCondition(defender);
+    const getAttackerCondition = getCondition(attacker);
 
-    player.combatPrompt({
-      target_condition: getCondition(npc)(npc.getAttribute('health')),
-      player_condition: getCondition(player)(player.getAttribute('health'))
-    });
+    if (Type.isPlayer(attacker)) {
+      attacker.combatPrompt({
+        target_condition: getTargetCondition(target.getAttribute('health')),
+        player_condition: getAttackerCondition(attacker.getAttribute('health'))
+      });
+    }
 
     const nearbyFight = [
       "The sounds of a nearby struggle fill the air.",
@@ -242,7 +249,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     ];
 
     broadcastToArea(Random.fromArray(nearbyFight));
-    setTimeout(attackerHelper.attackRound, attackerHelper.speed());
+    setTimeout(attacker.combat.attackRound, attacker.combat.getAttackSpeed());
   }
 
   function decideHitLocation(locations, target, precise) {
