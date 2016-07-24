@@ -8,7 +8,6 @@ function config(Player, Npc, Item, Account) {
   Type.isNpc     = is(Npc);
   Type.isItem    = is(Item);
   Type.isAccount = is(Account);
-
 }
 
 exports.Type = Type;
@@ -24,7 +23,6 @@ exports.Type = Type;
  */
 
 function is(typeClass) {
-  console.log(typeClass);
   return thing => thing ?
     thing instanceof typeClass :
     false;
