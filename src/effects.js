@@ -80,6 +80,30 @@ const multiply = (attribute, config) => {
 };
 
 const Effects = {
+	fatigued: {
+		duration: 5000,
+		activate: () => {
+			if (!attacker.getEffects('fatigued')) {
+				attacker.combat.addSpeedMod({
+					name:  'fatigued',
+					effect: speed => speed * 2,
+				});
+				attacker.combat.addDamageMod({
+					name:  'fatigued',
+					effect: damage => damage * .75,
+				});
+				attacker.combat.addToHitMod({
+					name:  'fatigued',
+					effect: toHit => toHit * .75,
+				});
+				attacker.combat.addDodgeMod({
+					name:  'fatigued',
+					effect: dodge => dodge * .5
+				});
+			}
+		},
+		deactivate: () => attacker.combat.removeAllMods('fatigued'),
+	},
   /**
    * Slow
 	 * config.target: NPC to slow
