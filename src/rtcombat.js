@@ -142,19 +142,24 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     const hitLocation = decideHitLocation(defender.getBodyParts(), attacker.combat.getTarget(), isPrecise());
 
     function isPrecise() {
-      return attackerHelper.isPlayer ? attacker.checkStance('precise') : false;
+      return Type.isPlayer(attacker) ?
+        attacker.checkStance('precise') : false;
     }
 
-    if (!damage) {
+    //TODO: Do toHit check before/instead of checking for a lack of damage.
+    const missed = attacker.combat.getToHitChance() < defender.combat.getDodgeChance();
+    if (!damage || missed) {
 
-      if (d.weapon && typeof d.weapon == 'object') {
-        d.weapon.emit('parry', defender);
+      //FIXME: What if the defender is an npc?
+      const defenderWeapon = defender.combat.getWeapon();
+      if (defenderWeapon) {
+        defenderWeapon.emit('parry', defender);
       }
 
-      if (attackerHelper.isPlayer) {
-        player.sayL10n(l10n, 'PLAYER_MISS', n.name, damage);
-      } else {
-        player.sayL10n(l10n, 'NPC_MISS', attackerHelper.name);
+      if (Type.isPlayer(attacker)) {
+        player.sayL10n(l10n, 'PLAYER_MISS', defender.combat.getDescription(), damage);
+      } else if (Type.isPlayer(defender)) {
+        player.sayL10n(l10n, 'NPC_MISS', attacker.combat.getDescription());
       }
 
       broadcastExceptPlayer(
