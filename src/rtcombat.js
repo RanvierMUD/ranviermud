@@ -166,7 +166,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     } else {
 
       damage = defender.damage(
-        calcRawDamage(damage, defender.getAttribute('health')),
+        CombatUtil.calcRawDamage(damage, defender.getAttribute('health')),
         hitLocation);
 
       util.log('Targeted ' + attacker.combat.getTarget() + ' and hit ' + hitLocation);
@@ -205,7 +205,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     }
 
     if (sanityDamage) {
-      sanityDamage = calcRawDamage(sanityDamage, defenderSanity);
+      sanityDamage = CombatUtil.calcRawDamage(sanityDamage, defenderSanity);
       defender.setAttribute('sanity', Math.max(defenderSanity - sanityDamage, 0));
     }
 
@@ -243,15 +243,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     broadcastToArea(Random.fromArray(nearbyFight));
     setTimeout(attacker.combat.attackRound, attacker.combat.getAttackSpeed());
-  }
-
-  function calcRawDamage(damage, attr) {
-    const range = damage.max - damage.min;
-    return Math.max(
-      Random.inRange(damage.min, damage.max) + attr,
-      attr,
-      range
-    );
   }
 
   //TODO: Add to utils helper.js file
