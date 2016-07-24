@@ -4,6 +4,9 @@ const expect = require('chai').expect;
 
 const Player = require('../../src/player.js').Player;
 const Npc    = require('../../src/npcs.js').Npc;
+const Type   = require('../../src/type.js').Type;
+
+Type.config(Player, Npc);
 
 const CombatUtil   = require('../../src/combat_util.js').CombatUtil;
 const CombatHelper = require('../../src/combat_util.js').CombatHelper;
@@ -63,10 +66,10 @@ describe('Player/NPC Combat Helper', () => {
       getAttribute: () => '5-40',
       getShortDesc: () => 'Yey'
     };
-    const warrior = {
+    const warrior = Object.assign(new Player(), {
       getEquipped:  () => sword,
       getAttribute: () => 1,
-    };
+    });
 
     const testWarrior = new CombatHelper(warrior);
 
@@ -105,7 +108,6 @@ describe('Player/NPC Combat Helper', () => {
         const attackName = testWarrior.getPrimaryAttackName();
         expect(attackName).to.equal('Yey');
       });
-
 
 
     });
