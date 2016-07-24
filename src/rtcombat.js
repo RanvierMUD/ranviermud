@@ -151,7 +151,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     const defenderSanity = defender.getAttribute('sanity');
     const sanityDamage = Type.isPlayer(defender) ?
-      0 : attacker.getSanityDamage(); //TODO: Extract into module.
+      attacker.getSanityDamage() : 0; //TODO: Extract into module.
 
     //TODO: Extract to module.
     const hitLocation = decideHitLocation(defender.getBodyParts(), attacker.combat.getTarget(), isPrecise());
@@ -199,6 +199,10 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         attacker.combat.getOffhand() :
         attacker.combat.getWeapon();
 
+      const attackerAttack = this.isSecondAttack ?
+        attacker.combat.getSecondaryAttackName() :
+        attacker.combat.getPrimaryAttackName();
+
       if (attackerWeapon && typeof attackerWeapon === 'object') {
         attackerWeapon.emit('hit', attacker, defender);
       }
@@ -206,13 +210,20 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       //TODO: This could be a method of util since this pattern is used in a couple of spots.
       // Check to
       if (Type.isPlayer(defender)) {
-        player.sayL10n(l10n, 'DAMAGE_TAKEN', attackerHelper.name, damageStr, attackerHelper.weapon, hitLocation);
+        player.sayL10n(l10n, 'DAMAGE_TAKEN', attacker.combat.getDesc(), damageStr, attackerAttack, hitLocation);
       } else if (Type.isPlayer(attacker)){
-        player.sayL10n(l10n, 'DAMAGE_DONE', d.name, damageStr, hitLocation);
+        player.sayL10n(l10n, 'DAMAGE_DONE', defender.combat.getDesc(), damageStr, hitLocation);
       }
 
-      broadcastExceptPlayer('<bold><red>' + attackerHelper.name + ' attacks ' + d.name +
-        ' and ' + damageStr + ' them!' + '</red></bold>');
+      broadcastExceptPlayer(
+        '<bold><red>'
+        + attacker.combat.getDesc()
+        + ' attacks '
+        + defender.combat.getDesc() +
+        ' and '
+        + damageStr
+        + ' them!'
+        + '</red></bold>');
 
     }
 

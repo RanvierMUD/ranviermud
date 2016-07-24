@@ -66,8 +66,11 @@ function CombatHelper(entity) {
   /**
    * Get hydrated primary or offhand weapon of player/npc.
    */
-  this.getWeapon  = location => this._entity
-    .getEquipped(location || 'wield', true);
+   //FIXME: Can be done better with changes to npc class.
+   // Works, since this will let you get damage attr.
+  this.getWeapon  = location => Type.isPlayer(this._entity) ?
+    this._entity.getEquipped(location || 'wield', true) :
+    () => this._entity;
 
   this.getOffhand = () => this.getWeapon('offhand');
 
@@ -75,9 +78,9 @@ function CombatHelper(entity) {
   /**
    * Get just the name of the attack.
    */
-  this.getAttackName = location => this
-    .getWeapon(location)
-    .getShortDesc('en');
+  this.getAttackName = location => Type.isPlayer(this._entity) ?
+    this.getWeapon(location).getShortDesc('en') :
+    this._entity.getAttack('en');
 
   this.getPrimaryAttackName   = () => this.getAttackName('wield');
   this.getSecondaryAttackName = () => this.getAttackName('offhand');
@@ -105,7 +108,7 @@ function CombatHelper(entity) {
 
     const self   = this._entity;
     const weapon = Type.isPlayer(self) ?
-      self.getEquipped(location, true) :
+      this.getWeapon(location) :
       self;
     const base   = Type.isPlayer(self) ?
       [ 1, self.getAttribute('stamina') + 5 ] :
