@@ -22,7 +22,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
   player.setInCombat(target);
   target.setInCombat(player);
 
-  player.sayL10n(l10n, 'ATTACK', target.combat.getDesc());
+  player.sayL10n(l10n, 'ATTACK', target.combat.getDescription());
 
 
   /*
@@ -31,9 +31,9 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     To hit vs. Dodge:
       Dodge = chance of auto-dodge, or does it need to be manual?
               Leave open to potential manual dodging in future.
-      ToHit = chance of hitting the enemy. Potentially,
-              chance of hitting = (toHitRoll - dodgeChance) vs. EnemyLevel?
-              Gah.
+              (manual dodging = temp. increase to dodge and lowered toHit/attackSpeed)
+      ToHit = chance of hitting the enemy
+              chance of hitting = attacker.toHit vs. target.dodge
 
     Damage vs. Defense:
       Defense soaks up damage depending on where the hit lands.
