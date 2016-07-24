@@ -99,17 +99,26 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
   function combatRound(attacker, defender) {
 
-    // Try to standardize function calls so this is not necessary.
-
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(2);
     if (slowAttacker) {
-      //TODO: Set an effect instead if possible.
-      attackerHelper.speed = () => attacker.getAttackSpeed() * 4;
+      attacker.addEffect('tired', {
+        duration: 5000,
+        activate: () => {
+          if (!attacker.getEffects('tired')) {
+            attacker.combat.addSpeedMod({
+              name: 'tired',
+              effect: speed => speed * 2,
+            });
+          }
+        },
+        deactivate: () => attacker.combat.removeSpeedMod('tired'),
+      });
     }
 
     util.log("Speeds are " + attackerHelper.speed() + ' vs. ' + defenderHelper.speed());
 
     //TODO: Remove this when allowing for multicombat.
+    //TODO: Use an array of targets for multicombat.
     if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
 
     const startingHealth = defender.getAttribute('health');
@@ -117,19 +126,20 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     util.log(defenderHelper.name + ' health: ' + defender.getAttribute('health'));
 
     if (Type.isPlayer(defender)) {
-      //FIXME: Extract to module
+      //FIXME: Check at end
       checkWimpiness(startingHealth);
     }
 
     if (this.isSecondAttack) { util.log('Offhand attack: '); }
 
-    //TODO: Extract to module
-    var damage = this.isSecondAttack ?
-      dualWieldDamage(attacker.getDamage('offhand')) : attacker.getDamage();
-    var defender_sanity = defender.getAttribute('sanity');
-    var sanityDamage = attackerHelper.isPlayer ?
-      0 : attacker.getSanityDamage();
-    var hitLocation = decideHitLocation(d.locations, attackerHelper.target, isPrecise());
+    const damage = this.isSecondAttack ?
+      dualWieldDamage(attacker.combat.getDamage('offhand')) : attacker.combat.getDamage();
+    const defender_sanity = defender.getAttribute('sanity');
+    const sanityDamage = Type.isPlayer(defender) ?
+      0 : attacker.getSanityDamage(); //TODO: Extract into module.
+
+    //TODO: Extract to module.
+    const hitLocation = decideHitLocation(defender.getBodyParts(), attacker.combat.getTarget(), isPrecise());
 
     function isPrecise() {
       return attackerHelper.isPlayer ? attacker.checkStance('precise') : false;
@@ -185,11 +195,10 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     if (startingHealth <= damage) {
       defender.setAttribute('health', 1);
       defender.setAttribute('sanity', 1);
-      return combat_end(attackerHelper.isPlayer);
+      return combatEnd(attackerHelper.isPlayer);
     }
 
     const getCondition = entity => {
-
         //FIXME: dis b fucked
         const npc    = Type.isPlayer(entity) ? npc : false;
         const max    = entity.getAttribute('max_health');
@@ -254,7 +263,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     return 'crushes';
   }
 
-  function combat_end(success) {
+  function combatEnd(success) {
 
     util.log("*** Combat Over ***");
 
@@ -300,6 +309,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     callback(success);
   }
 
+  //TODO: Extract this to combat utils.
   function checkWimpiness(health) {
     var percentage = getPercentage(health, player.getAttribute('max_health'));
     var wimpiness = player.getPreference('wimpy')

@@ -127,29 +127,31 @@ function CombatHelper(entity) {
    * Get attack speed of a player
    * @return float milliseconds between attacks
    */
-  this.getAttackSpeed = secondAttack => {
-    const weapon  = secondAttack ? this.getWeapon() : this.getOffhand();
+  this.getAttackSpeed = Type.isNpc(this._entity) ?
+    this._entity.getAttackSpeed :
+    secondAttack => {
+      const weapon  = secondAttack ? this.getWeapon() : this.getOffhand();
 
-    const minimum = secondAttack ? 750 : 500;
-    const maximum = 10 * 1000;
+      const minimum = secondAttack ? 750 : 500;
+      const maximum = 10 * 1000;
 
-    const speedWithinBounds = _.setBounds(minimum, maximum);
+      const speedWithinBounds = _.setBounds(minimum, maximum);
 
-    const unarmedSpeed    = this._entity.getAttribute('quickness');
-    const weaponSpeed     = getWeaponSpeed(weapon, unarmedSpeed, 500);
-    const attributesSpeed = unarmedSpeed * 500
-      + this._entity.getAttribute('cleverness') * 250;
+      const unarmedSpeed    = this._entity.getAttribute('quickness');
+      const weaponSpeed     = getWeaponSpeed(weapon, unarmedSpeed, 500);
+      const attributesSpeed = unarmedSpeed * 500
+        + this._entity.getAttribute('cleverness') * 250;
 
-    const baseSpeed = maximum - weaponSpeed - attributesSpeed;
+      const baseSpeed = maximum - weaponSpeed - attributesSpeed;
 
-    util.log("Their base speed is ", baseSpeed);
+      util.log("Their base speed is ", baseSpeed);
 
-    const speed = applyMods(baseSpeed, this.speedMods);
+      const speed = applyMods(baseSpeed, this.speedMods);
 
-    util.log("Their modified speed is ", speed);
+      util.log("Their modified speed is ", speed);
 
-    return speedWithinBounds(speed);
-  };
+      return speedWithinBounds(speed);
+    };
 
   this.getDodgeChance = () => {
     const dodgeSkill = this._entity.getSkills('dodge') + Random.roll();
@@ -184,6 +186,9 @@ this.getDefense = () => {
   //TODO: Replace with defense func from player.
   return this._entity.getAttribute('level') * 2;
 }
+
+this.getTarget = () => Type.isPlayer(this._entity) ?
+  this._entity.getPreference('target') :
 
 function getHelper(entity) {
   return new CombatHelper(entity);

@@ -56,7 +56,6 @@ const buffWithMax = (attribute, config) => {
 		},
 		duration: config.duration,
 		event: config.event
-
 	};
 };
 
