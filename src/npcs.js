@@ -295,18 +295,6 @@ const Npc = function NpcConstructor(config) {
     self.getKeywords(locale).some( word => keyword === word );
 
   /**
-   * Get the damage an npc can do
-   * @return obj {min: int, max: int}
-   */
-  self.getDamage = () => {
-    const defaultDamage = [1, 20];
-    const damage = self.getAttribute('damage') ?
-      self.getAttribute('damage').split('-').map(n => parseInt(n, 10)) :
-      defaultDamage;
-    return { min: damage[0], max: damage[1] };
-  };
-
-  /**
    * Get the damage to sanity an npc can do
    * @return obj {min: int, max: int} || false
    */

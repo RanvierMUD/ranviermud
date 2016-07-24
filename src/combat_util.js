@@ -104,12 +104,15 @@ function CombatHelper(entity) {
     location = location || 'wield';
 
     const self   = this._entity;
-    const weapon = self.getEquipped(location, true);
-    const base   = [ 1, self.getAttribute('stamina') + 5 ];
+    const weapon = Type.isPlayer(self) ?
+      self.getEquipped(location, true) :
+      self;
+    const base   = Type.isPlayer(self) ?
+      [ 1, self.getAttribute('stamina') + 5 ] :
+      [ 1, 20 ];
 
     const damageRange = getWeaponDamage(weapon, base);
-
-    const damageRoll = Random.inRange(...damageRange);
+    const damageRoll  = Random.inRange(...damageRange);
 
     const min = damageRange[0];
     const modifiedDamageRoll = applyMods(damageRoll, this.damageMods);
