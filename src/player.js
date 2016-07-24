@@ -88,7 +88,7 @@ const Player = function PlayerConstructor(socket) {
     'torso',
     'hands',
     'head'
-  ]; //TODO: Add dynamically
+  ];
 
   /**#@+
    * Mutators
@@ -508,6 +508,7 @@ const Player = function PlayerConstructor(socket) {
     self.killed   = data.killed   || { length: 0 };
     self.explored = data.explored || [];
     self.training = data.training || { time: 0 };
+    self.bodyParts = data.bodyParts || playerBodyParts
 
     // Activate any passive skills the player has
     //TODO: Probably a better way to do this than toLowerCase.
@@ -548,6 +549,7 @@ const Player = function PlayerConstructor(socket) {
    * Get attack speed of a player
    * @return float milliseconds between attacks
    */
+   //TODO: Remove all of these leftover combat funcs.
   self.getAttackSpeed = () => {
     let weapon = self.getEquipped('wield', true);
     let minimum = 100;
@@ -609,6 +611,7 @@ const Player = function PlayerConstructor(socket) {
       explored: self.explored,
       killed:   self.killed,
       training: self.training,
+      bodyParts: self.bodyPards,
     });
   };
 
@@ -673,6 +676,7 @@ const Player = function PlayerConstructor(socket) {
 
     defense += self.getAttribute('stamina');
 
+    //FIXME: Use mods instead. Verify.
     const stanceToDefense = {
       'cautious': self.getAttribute('cleverness') + (self.getSkills('dodging') * 2),
       'precise': self.getAttribute('cleverness') + self.getSkills('dodging'),
