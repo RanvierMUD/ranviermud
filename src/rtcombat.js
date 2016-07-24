@@ -85,9 +85,10 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
   const dualWieldBaseSpeed   = 2.1;
   const dualWieldSpeedFactor = dualWieldBaseSpeed - (player.getSkills('dual') / 10);
 
-  let isDualWielding  = CommandUtil.hasScript(player.combat.getOffhand(), 'wield');
-  let getDuelWieldSpeed  = () => player.combat.getAttackSpeed(isDualWielding) * dualWieldSpeedFactor;
-  let dualWieldDamage = damage => Math.round(damage * (0.5 + player.getSkills('dual') / 10));
+  //TODO: What if they swap weapons mid-fight?
+  let isDualWielding      = CommandUtil.hasScript(player.combat.getOffhand(), 'wield');
+  const getDuelWieldSpeed = ()   => player.combat.getAttackSpeed(isDualWielding) * dualWieldSpeedFactor;
+  const dualWieldDamage = damage => Math.round(damage * (0.5 + player.getSkills('dual') / 10));
   let dualWieldCancel = null;
 
   if (isDualWielding) {
@@ -98,35 +99,10 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
   }
 
   function combatRound(attacker, defender) {
-
-    const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(2);
+    const energyCost   = 2;
+    const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
     if (slowAttacker) {
-
-      //TODO: Consider adding to Effects file instead of here.
-      attacker.addEffect('tired', {
-        duration: 5000,
-        activate: () => {
-          if (!attacker.getEffects('tired')) {
-            attacker.combat.addSpeedMod({
-              name:  'tired',
-              effect: speed => speed * 2,
-            });
-            attacker.combat.addDamageMod({
-              name:  'tired',
-              effect: damage => damage * .75,
-            });
-            attacker.combat.addToHitMod({
-              name:  'tired',
-              effect: toHit => toHit * .75,
-            });
-            attacker.combat.addDodgeMod({
-              name:  'tired',
-              effect: dodge => dodge * .5
-            });
-          }
-        },
-        deactivate: () => attacker.combat.removeAllMods('tired'),
-      });
+      attacker.addEffect('fatigued', Effects.fatigued);
     }
 
     util.log("Speeds are " + attacker.combat.getAttackSpeed(this.isSecondAttack) + ' vs. ' + defender.combat.getAttackSpeed());
@@ -154,7 +130,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       attacker.getSanityDamage() : 0; //TODO: Extract into module.
 
     //TODO: Extract to module.
-    const hitLocation = decideHitLocation(defender.getBodyParts(), attacker.combat.getTarget(), isPrecise());
+    const hitLocation = CombatUtil.decideHitLocation(defender.getBodyParts(), attacker.combat.getTarget(), isPrecise());
 
     function isPrecise() {
       return Type.isPlayer(attacker) ?
@@ -267,12 +243,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     broadcastToArea(Random.fromArray(nearbyFight));
     setTimeout(attacker.combat.attackRound, attacker.combat.getAttackSpeed());
-  }
-
-  function decideHitLocation(locations, target, precise) {
-    if (precise || Random.coinFlip()) {
-      return target;
-    } else return Random.fromArray(locations);
   }
 
   function calcRawDamage(damage, attr) {

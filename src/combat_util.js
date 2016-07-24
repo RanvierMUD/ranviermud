@@ -4,7 +4,21 @@ const Type   = require('./type').Type;
 const Random = require('./random').Random;
 const _ = require('./helpers');
 
-//TODO: Eventually, have API for both NPCs and Players.
+/**
+ * Helper func to decide where an attack lands
+ * Unless the attacker is putting effort in being precise,
+ * There is only a 50% chance their attack will hit its target.
+ *
+ * @param Array of locations to hit
+ * @param String location being targeted
+ * @param Boolean Is the attacker trying to be precise
+ * @returns String location that get hit
+ */
+function decideHitLocation(locations, target, precise) {
+  if (precise || Random.coinFlip()) { return target; }
+  return Random.fromArray(locations);
+}
+
 
 /**
 * The purpose of this class is to standardize
