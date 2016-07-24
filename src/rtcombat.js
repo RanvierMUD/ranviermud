@@ -146,8 +146,9 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     if (this.isSecondAttack) { util.log('** Offhand attack: '); }
 
-    const damage = this.isSecondAttack ?
+    let damage = this.isSecondAttack ?
       dualWieldDamage(attacker.combat.getDamage('offhand')) : attacker.combat.getDamage();
+
     const defenderSanity = defender.getAttribute('sanity');
     const sanityDamage = Type.isPlayer(defender) ?
       0 : attacker.getSanityDamage(); //TODO: Extract into module.
