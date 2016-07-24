@@ -10,6 +10,8 @@ const npcs_dir = __dirname + '/../entities/npcs/';
 const npcs_scripts_dir = __dirname + '/../scripts/npcs/';
 const l10n_dir = __dirname + '/../l10n/scripts/npcs/';
 
+const CombatUtil = require('./combat_util').CombatUtil;
+
 
 /**
  * Npc container class. Loads/finds npcs
@@ -202,6 +204,8 @@ const Npc = function NpcConstructor(config) {
   self.setContainer = uid => self.container = uid;
   self.setAttribute = (attr, val) => self.attributes[attr] = val;
   self.removeEffect = eff => { delete self.effects[eff]; };
+
+  self.combat = CombatUtil.getHelper(self);
 
   self.isInCombat = () => self.inCombat;
   self.isPacifist = () => !self.listeners('combat').length;
