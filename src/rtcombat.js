@@ -325,23 +325,22 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       room.removeNpc(target.getUuid());
       npcs.destroy(target);
       player.sayL10n(l10n, 'WIN', target.getShortDesc(locale));
-      broadcastExceptPlayer('<bold>' + target.getShortDesc(locale) +
+      broadcastExceptPlayer('<bold>'
+        + target.getShortDesc(locale) +
         ' dies.</bold>');
 
-      // hand out experience
-      var exp = target.getAttribute('experience') !== false ?
+      const exp = target.getAttribute('experience') ?
         target.getAttribute('experience') : LevelUtil.mobExp(target.getAttribute('level'));
       util.log("Player wins, exp gain: ", exp);
       player.emit('experience', exp);
 
     } else {
-      util.log("Player death: ", player.getName());
+      util.log("** Player death: ", player.getName());
       player.sayL10n(l10n, 'LOSE', target.getShortDesc(locale));
       player.emit('die');
 
       broadcastExceptPlayer(player.getName() +
-        ' collapses to the ground, life fleeing their body before your eyes.'
-      );
+        ' collapses to the ground, life fleeing their body before your eyes.');
 
       //TODO: consider doing sanity damage to all other players in the room.
       broadcastExceptPlayer('<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
