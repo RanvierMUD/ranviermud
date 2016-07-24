@@ -62,8 +62,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
    * Then, invoke a timeout for each combatant's round.
    * //TODO: Cancel the timeouts when combat ends due to fleeing/death/etc.
    */
-  const playerCombat = combatRound.bind(null, player, target);
-  const targetCombat = combatRound.bind(null, target, player);
+  const playerCombat = combatRound.bind({}, player, target);
+  const targetCombat = combatRound.bind({}, target, player);
 
   player.combat.combatRound = playerCombat;
   target.combat.combatRound = targetCombat;
@@ -136,8 +136,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
 
     const startingHealth = defender.getAttribute('health');
-    util.log(attackerHelper.name + ' health: ' + attacker.getAttribute('health'));
-    util.log(defenderHelper.name + ' health: ' + defender.getAttribute('health'));
+    util.log(attacker.combat.getDesc() + ' health: ' + attacker.getAttribute('health'));
+    util.log(defender.combat.getDesc() + ' health: ' + defender.getAttribute('health'));
 
     if (Type.isPlayer(defender)) {
       //FIXME: Check at end
