@@ -19,25 +19,7 @@ function decideHitLocation(locations, target, precise) {
   return Random.fromArray(locations);
 }
 
-/**
- * Gets damage before soaked by armor and etc.
- * Minimums are the damage.min and the attr that determines damage.
- *
- * //TODO: Make sure this isn't redundant with the below getDamage func.
- *
- * @param {min: int, max: int} damage
- * @param int attr - value of attr determining damage.
- * @returns Damage done before armor soak or other effects.
- */
-
-function calcRawDamage(damage, attr) {
-  return Math.max(
-    Random.inRange(damage.min, damage.max) + attr,
-    attr,
-    damage.min);
-}
-
-/**
+/** OVERVIEW ** //////////////////////////////
 * The purpose of this class is to standardize
 * the realtime combat API between players & NPCs.
 */
