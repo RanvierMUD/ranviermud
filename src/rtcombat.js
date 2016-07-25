@@ -62,11 +62,13 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
    * Then, invoke a timeout for each combatant's round.
    * //TODO: Cancel the timeouts when combat ends due to fleeing/death/etc.
    */
-  const playerCombat = combatRound.bind({}, player, target);
-  const targetCombat = combatRound.bind({}, target, player);
+  const playerCombatContext = { combatRound: null };
+  const targetCombatContext = { combatRound: null };
+  const playerCombat = combatRound.bind(playerCombatContext, player, target);
+  const targetCombat = combatRound.bind(targetCombatContext, target, player);
 
-  player.combat.combatRound = playerCombat;
-  target.combat.combatRound = targetCombat;
+  playerCombatContext.combatRound = playerCombat;
+  targetCombatContext.combatRound = targetCombat;
 
   const targetCombatCancel = setTimeout(targetCombat, target.combat.getAttackSpeed());
   const playerCombatCancel = setTimeout(playerCombat, player.combat.getAttackSpeed());
@@ -86,15 +88,18 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
   const dualWieldSpeedFactor = dualWieldBaseSpeed - (player.getSkills('dual') / 10);
 
   //TODO: What if they swap weapons mid-fight?
-  let isDualWielding      = CommandUtil.hasScript(player.combat.getOffhand(), 'wield');
+  let isDualWielding = CommandUtil.hasScript(player.combat.getOffhand(), 'wield');
   const getDuelWieldSpeed = ()   => player.combat.getAttackSpeed(isDualWielding) * dualWieldSpeedFactor;
   const dualWieldDamage = damage => Math.round(damage * (0.5 + player.getSkills('dual') / 10));
   let dualWieldCancel = null;
 
   if (isDualWielding) {
     util.log("Player is using dual wield!");
-    const dualWieldCombat = combatRound.bind({ secondAttack: true }, player, npc);
-    secondAttack.attackRound = dualWieldCombat;
+    const secondAttack = {
+      isSecondAttack: true,
+    }
+    const dualWieldCombat = combatRound.bind(secondAttack, player, npc);
+    secondAttack.combatRound = dualWieldCombat;
     dualWieldCancel = setTimeout(dualWieldCombat, getDuelWieldSpeed());
   }
 
@@ -325,8 +330,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     broadcastToArea(Random.fromArray(nearbyFight));
 
-    //FIXME: Combat seems to always end after one round.
-    setTimeout(attacker.combat.attackRound, attacker.combat.getAttackSpeed());
+    setTimeout(this.combatRound, attackerSpeed);
   }
 
   //TODO: Add to utils helper.js file

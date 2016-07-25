@@ -2,9 +2,9 @@
 | Filename | line # | TODO
 |:------|:------:|:------
 | /Users/seanodonohue/myForks/ranviermud/src/accounts.js | 134 | Use this in the accountmanager when loading all accounts
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 201 | Weapon skills related to weapon type?
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 202 | General combat skills?
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 214 | Replace with defense func from player.
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 205 | Weapon skills related to weapon type?
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 206 | General combat skills?
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 218 | Replace with defense func from player.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 84 | boostAttr
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 85 | invis
@@ -19,28 +19,27 @@
 | /Users/seanodonohue/myForks/ranviermud/src/pathfinding.js | 81 | Custom entry messages for NPCs.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 291 | Consider using Random.roll instead.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 514 | Probably a better way to do this than toLowerCase.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 552 | Remove all of these leftover combat funcs.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 513 | Probably a better way to do this than toLowerCase.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 551 | Remove all of these leftover combat funcs.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 6 | Enhance for co-op, allow for setInCombat of NPC with multiple players.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 88 | What if they swap weapons mid-fight?
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 121 | Remove this when allowing for multicombat.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 122 | Use an array of targets for multicombat.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 173 | Decide IF it lands, first...
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 187 | Improve the parry, dodge, and miss scripts.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 196 | Consider adding a parry skill/modifier.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 197 | Consider making this less random.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 209 | What if there are no players involved in combat?
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 210 | Create a utility func for broadcasting to first, second, and 3rd parties.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 243 | Extract damage funcs to combat helper class.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 250 | Add scripts for hitting with weapons.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 255 | Add scripts for hitting and getting damaged to NPCs.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 259 | This could be a method of util since this pattern is used in a couple of spots.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 333 | Add to utils helper.js file
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 365 | Handle PvP or NvN combat ending differently.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 391 | consider doing sanity damage to all other players in the room.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 404 | Extract this to combat utils.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 416 | More candidates for utilification, I suppose.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 186 | Improve the parry, dodge, and miss scripts.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 195 | Consider adding a parry skill/modifier.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 196 | Consider making this less random.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 208 | What if there are no players involved in combat?
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 209 | Create a utility func for broadcasting to first, second, and 3rd parties.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 242 | Extract damage funcs to combat helper class.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 249 | Add scripts for hitting with weapons.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 254 | Add scripts for hitting and getting damaged to NPCs.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 258 | This could be a method of util since this pattern is used in a couple of spots.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 335 | Add to utils helper.js file
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 367 | Handle PvP or NvN combat ending differently.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 393 | consider doing sanity damage to all other players in the room.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 406 | Extract this to combat utils.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 418 | More candidates for utilification, I suppose.
 | /Users/seanodonohue/myForks/ranviermud/src/skills.js | 30 | Pull into own files.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 134 | Permadeath, add it.
@@ -53,14 +52,14 @@
 |:------|:------:|:------
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 82 | Can be done better with changes to npc class.
 | /Users/seanodonohue/myForks/ranviermud/src/items.js | 12 | Refactor plz;
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 679 | Use mods instead. Verify.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 678 | Use mods instead. Verify.
 | /Users/seanodonohue/myForks/ranviermud/src/rooms.js | 216 | 
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 7 | For the love of all that is unholy, refactor this:
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 294 | Check at end
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 300 | This could be a problem if the combat is between two NPCs or two players.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 301 | The fix might have to go in statusUtils?
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 307 | This is really jacked up right now.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 329 | Combat seems to always end after one round.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 293 | Check at end
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 299 | This could be a problem if the combat is between two NPCs or two players.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 300 | The fix might have to go in statusUtils?
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 306 | This is really jacked up right now.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 331 | Combat seems to always end after one round.
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 71 | This does not really seem to be working.
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 72 | Consider making it a 'scout' command/skill.
 | /Users/seanodonohue/myForks/ranviermud/commands/wear.js | 69 | Add wear scripts to items.
