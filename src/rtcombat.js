@@ -325,6 +325,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     ];
 
     broadcastToArea(Random.fromArray(nearbyFight));
+
+    //FIXME: Combat seems to always end after one round.
     setTimeout(attacker.combat.attackRound, attacker.combat.getAttackSpeed());
   }
 

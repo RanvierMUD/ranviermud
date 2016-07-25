@@ -2,9 +2,9 @@
 | Filename | line # | TODO
 |:------|:------:|:------
 | /Users/seanodonohue/myForks/ranviermud/src/accounts.js | 134 | Use this in the accountmanager when loading all accounts
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 193 | Weapon skills related to weapon type?
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 194 | General combat skills?
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 206 | Replace with defense func from player.
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 201 | Weapon skills related to weapon type?
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 202 | General combat skills?
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 214 | Replace with defense func from player.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 84 | boostAttr
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 85 | invis
@@ -36,11 +36,11 @@
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 250 | Add scripts for hitting with weapons.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 255 | Add scripts for hitting and getting damaged to NPCs.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 259 | This could be a method of util since this pattern is used in a couple of spots.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 329 | Add to utils helper.js file
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 361 | Handle PvP or NvN combat ending differently.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 387 | consider doing sanity damage to all other players in the room.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 400 | Extract this to combat utils.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 412 | More candidates for utilification, I suppose.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 333 | Add to utils helper.js file
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 365 | Handle PvP or NvN combat ending differently.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 391 | consider doing sanity damage to all other players in the room.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 404 | Extract this to combat utils.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 416 | More candidates for utilification, I suppose.
 | /Users/seanodonohue/myForks/ranviermud/src/skills.js | 30 | Pull into own files.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 134 | Permadeath, add it.
@@ -56,10 +56,11 @@
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 679 | Use mods instead. Verify.
 | /Users/seanodonohue/myForks/ranviermud/src/rooms.js | 216 | 
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 7 | For the love of all that is unholy, refactor this:
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 292 | Check at end
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 298 | This could be a problem if the combat is between two NPCs or two players.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 299 | The fix might have to go in statusUtils?
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 305 | This is really jacked up right now.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 294 | Check at end
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 300 | This could be a problem if the combat is between two NPCs or two players.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 301 | The fix might have to go in statusUtils?
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 307 | This is really jacked up right now.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 329 | Combat seems to always end after one round.
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 71 | This does not really seem to be working.
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 72 | Consider making it a 'scout' command/skill.
 | /Users/seanodonohue/myForks/ranviermud/commands/wear.js | 69 | Add wear scripts to items.
