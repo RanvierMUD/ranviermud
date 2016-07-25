@@ -98,27 +98,41 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     dualWieldCancel = setTimeout(dualWieldCombat, getDuelWieldSpeed());
   }
 
+  /**
+   * Main combat round
+   * Flow:
+   * ======
+   * Check if already in combat.
+   * Determine speeds.
+   * Set constants for this round. (speeds, descs, starting health, etc.)
+   * Determine potential damage/sanity damage.
+   * Determine hit loction.
+   *
+   * @param attacker
+   * @param defender
+   */
+
   function combatRound(attacker, defender) {
+    //TODO: Remove this when allowing for multicombat.
+    //TODO: Use an array of targets for multicombat.
+    if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
+
     const energyCost   = 2;
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
     if (slowAttacker) {
       attacker.addEffect('fatigued', Effects.fatigued);
     }
 
-    util.log("Speeds are " + attacker.combat.getAttackSpeed(this.isSecondAttack) + ' vs. ' + defender.combat.getAttackSpeed());
+    const attackerSpeed = attacker.combat.getAttackSpeed(this.isSecondAttack);
+    const attackerDesc  = attacker.combat.getDesc;
 
-    //TODO: Remove this when allowing for multicombat.
-    //TODO: Use an array of targets for multicombat.
-    if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
 
-    const startingHealth = defender.getAttribute('health');
-    util.log(attacker.combat.getDesc() + ' health: ' + attacker.getAttribute('health'));
-    util.log(defender.combat.getDesc() + ' health: ' + defender.getAttribute('health'));
+    util.log(attackerDesc + ' has speed of ' + attackerSpeed + '.');
 
-    if (Type.isPlayer(defender)) {
-      //FIXME: Check at end
-      checkWimpiness(startingHealth);
-    }
+    const defenderDesc = defender.combat.getDesc();
+    const defenderStartingHealth = defender.getAttribute('health');
+    util.log(attackerDesc + ' health: ' + attacker.getAttribute('health'));
+    util.log(defenderDesc + ' health: ' + defender.getAttribute('health'));
 
     if (this.isSecondAttack) { util.log('** Offhand attack: '); }
 
@@ -149,19 +163,19 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       }
 
       if (Type.isPlayer(attacker)) {
-        player.sayL10n(l10n, 'PLAYER_MISS', defender.combat.getDesc(), damage);
+        player.sayL10n(l10n, 'PLAYER_MISS', defenderDesc, damage);
       } else if (Type.isPlayer(defender)) {
-        player.sayL10n(l10n, 'NPC_MISS', attacker.combat.getDesc());
+        player.sayL10n(l10n, 'NPC_MISS', attackerDesc);
       }
 
       broadcastExceptPlayer(
         '<bold>'
-        + attacker.combat.getDesc()
+        + attackerDesc
         + ' attacks '
-        + defender.combat.getDesc()
+        + defenderDesc
         + ' and misses!' + '</bold>');
 
-      util.log(attacker.combat.getDesc() + ' misses ' + defender.combat.getDesc());
+      util.log(attackerDesc + ' misses ' + defenderDesc);
 
     } else {
 
@@ -187,14 +201,14 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       //TODO: This could be a method of util since this pattern is used in a couple of spots.
       // Check to
       if (Type.isPlayer(defender)) {
-        player.sayL10n(l10n, 'DAMAGE_TAKEN', attacker.combat.getDesc(), damageStr, attackerAttack, hitLocation);
+        player.sayL10n(l10n, 'DAMAGE_TAKEN', attackerDesc, damageStr, attackerAttack, hitLocation);
       } else if (Type.isPlayer(attacker)){
         player.sayL10n(l10n, 'DAMAGE_DONE', defender.combat.getDesc(), damageStr, hitLocation);
       }
 
       broadcastExceptPlayer(
         '<bold><red>'
-        + attacker.combat.getDesc()
+        + attackerDesc
         + ' attacks '
         + defender.combat.getDesc() +
         ' and '
@@ -209,10 +223,15 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       defender.setAttribute('sanity', Math.max(defenderSanity - sanityDamage, 0));
     }
 
-    if (startingHealth <= damage) {
+    if (defenderStartingHealth <= damage) {
       defender.setAttribute('health', 1);
       defender.setAttribute('sanity', 1);
       return combatEnd(Type.isPlayer(attacker));
+    }
+
+    if (Type.isPlayer(defender)) {
+      //FIXME: Check at end
+      checkWimpiness(defenderStartingHealth);
     }
 
     const getCondition = entity => {
