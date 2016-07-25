@@ -508,7 +508,6 @@ const Player = function PlayerConstructor(socket) {
     self.killed   = data.killed   || { length: 0 };
     self.explored = data.explored || [];
     self.training = data.training || { time: 0 };
-    self.bodyParts = data.bodyParts || [];
 
     // Activate any passive skills the player has
     //TODO: Probably a better way to do this than toLowerCase.
@@ -611,7 +610,7 @@ const Player = function PlayerConstructor(socket) {
       explored: self.explored,
       killed:   self.killed,
       training: self.training,
-      bodyParts: self.bodyPards,
+      bodyParts: self.bodyParts,
     });
   };
 
