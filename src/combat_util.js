@@ -15,7 +15,7 @@ const _ = require('./helpers');
  * @returns String location that get hit
  */
 function decideHitLocation(locations, target, precise) {
-  if (target && precise || Random.coinFlip()) { return target; }
+  if (target && (precise || Random.coinFlip())) { return target; }
   return Random.fromArray(locations);
 }
 
