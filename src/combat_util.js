@@ -220,5 +220,5 @@ function getHelper(entity) {
 
 exports.CombatHelper = CombatHelper;
 exports.CombatUtil   = {
-  getHelper, calcRawDamage, decideHitLocation
+  getHelper, decideHitLocation
 };
