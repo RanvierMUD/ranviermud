@@ -210,7 +210,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         //TODO: Create a utility func for broadcasting to first, second, and 3rd parties.
         // Make it hella configurable.
         if (Type.isPlayer(attacker)) {
-          player.sayL10n(l10n, 'PLAYER_MISS', defenderDesc, damage) :
+          player.sayL10n(l10n, 'PLAYER_MISS', defenderDesc, damage);
         } else if (Type.isPlayer(defender)) {
           player.sayL10n(l10n, 'NPC_MISS', attackerDesc);
         }
