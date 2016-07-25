@@ -103,10 +103,13 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
    * Flow:
    * ======
    * Check if already in combat.
-   * Determine speeds.
+   * Determine speeds and effects. (tired, stressed, insane)
    * Set constants for this round. (speeds, descs, starting health, etc.)
    * Determine potential damage/sanity damage.
-   * Determine hit loction.
+   * Determine hit location.
+   *
+   *
+   *
    *
    * @param attacker
    * @param defender
@@ -121,6 +124,17 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
     if (slowAttacker) {
       attacker.addEffect('fatigued', Effects.fatigued);
+    }
+
+    const stressedLimit = 40;
+    const stressedAttacker = Type.isPlayer(attacker) && attacker.getAttribute('sanity') <= stressedLimit;
+    if (stressedAttacker) {
+      attacker.addEffect('stressed', Effects.stressed);
+
+      const insanityLimit = 20;
+      if (attacker.getAttribute('sanity') > insanityLimit) {
+        attacker.addEffect('insane', Effects.insane);
+      }
     }
 
     const attackerSpeed = attacker.combat.getAttackSpeed(this.isSecondAttack);
