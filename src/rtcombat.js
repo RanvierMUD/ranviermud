@@ -116,16 +116,20 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
    */
 
   function combatRound(attacker, defender) {
+
+    // Handle if attacker or defender is already in combat...
     //TODO: Remove this when allowing for multicombat.
     //TODO: Use an array of targets for multicombat.
     if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
 
+    // Handle attacker fatigue...
     const energyCost   = 2;
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
     if (slowAttacker) {
       attacker.addEffect('fatigued', Effects.fatigued);
     }
 
+    // Handle attacker sanity effects...
     const stressedLimit = 40;
     const stressedAttacker = Type.isPlayer(attacker) && attacker.getAttribute('sanity') <= stressedLimit;
     if (stressedAttacker) {
@@ -137,27 +141,34 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       }
     }
 
+    // Assign constants for this round...
     const attackerSpeed = attacker.combat.getAttackSpeed(this.isSecondAttack);
-    const attackerDesc  = attacker.combat.getDesc;
-
-
-    util.log(attackerDesc + ' has speed of ' + attackerSpeed + '.');
-
-    const defenderDesc = defender.combat.getDesc();
+    const attackerDesc  = attacker.combat.getDesc();
+    const attackDesc    = attacker.combat.getPrimaryAttackName();
+    const defenderDesc  = defender.combat.getDesc();
     const defenderStartingHealth = defender.getAttribute('health');
+
+    // Log constants for this round...
+    util.log(attackerDesc + ' has speed of ' + attackerSpeed + '.');
     util.log(attackerDesc + ' health: ' + attacker.getAttribute('health'));
-    util.log(defenderDesc + ' health: ' + defender.getAttribute('health'));
+    util.log(defenderDesc + ' health: ' + defenderStartingHealth + '.\n');
+    util.log(attackerDesc + ' is attacking... ');
+    this.isSecondAttack ?
+      util.log('** Offhand attack: ') :
+      util.log('** Primary attack: ')
 
-    if (this.isSecondAttack) { util.log('** Offhand attack: '); }
-
+    // Begin assigning damage...
     let damage = this.isSecondAttack ?
       dualWieldDamage(attacker.combat.getDamage('offhand')) : attacker.combat.getDamage();
+    util.log('Base damage for the ' + attackDesc + ': ', damage);
 
+    // Handle possible sanity damage (for now, only npcs do sanity dmg)...
     const defenderSanity = defender.getAttribute('sanity');
     const sanityDamage = Type.isPlayer(defender) ?
       attacker.getSanityDamage() : 0; //TODO: Extract into module.
 
-    //TODO: Extract to module.
+    // Decide where the hit lands
+    //TODO: Decide IF it lands, first...
     const hitLocation = CombatUtil.decideHitLocation(defender.getBodyParts(), attacker.combat.getTarget(), isPrecise());
 
     function isPrecise() {
@@ -165,21 +176,44 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         attacker.checkStance('precise') : false;
     }
 
-    //TODO: Do toHit check before/instead of checking for a lack of damage.
-    const missed = attacker.combat.getToHitChance() < defender.combat.getDodgeChance();
-    if (!damage || missed) {
+    const missed = attacker.combat.getToHitChance() <= defender.combat.getDodgeChance();
 
-      //FIXME: What if the defender is an npc?
+    // If they somehow do no damage at all despite hitting!
+    if (damage <= 0 && !missed) {
+      Type.isPlayer(attacker) ?
+        player.say('Your blow glances off ' + defenderDesc + '.') :
+        player.say(attackerDesc + '\'s ' + attackDesc + ' connects, but you shrug it off!');
+    }
+
+    // If their attack has potential to do damage, but misses!
+    if (missed) {
+
+      // Do they dodge, parry, or is it just a straight up miss?
+      //TODO: Improve the parry, dodge, and miss scripts.
       const defenderWeapon = defender.combat.getWeapon();
-      if (defenderWeapon && CommandUtil.hasScript(defenderWeapon, 'parry')) {
-        util.log('def weapon', defenderWeapon);
-        defenderWeapon.emit('parry', defender);
-      }
+      const canParry = defenderWeapon ?
+        CommandUtil.hasScript(defenderWeapon, 'parry') :
+        CommandUtil.hasScript(defender, 'parry');
+      const canDodge = CommandUtil.hasScript(defender, 'dodge');
 
+      if (canParry && Random.coinFlip()) {
+        util.log('The attack is parried!');
+        defenderWeapon.emit('parry', defender, attacker);
+      } else if (canDodge && Random.coinFlip()) {
+        util.log('They dodge!');
+        defender.emit('dodge', defender, attacker)
+      } else {
+
+        // If it is just a regular ole miss... 
+        //TODO: What if there are no players involved in combat?
+        //TODO: Create a utility func for broadcasting to first, second, and 3rd parties.
+        // Make it hella configurable.
+        Type.isPlayer(attacker) ?
+          player.sayL10n(l10n, 'PLAYER_MISS', defenderDesc, damage) :
+          player.sayL10n(l10n, 'NPC_MISS', attackerDesc);
+      }
       if (Type.isPlayer(attacker)) {
-        player.sayL10n(l10n, 'PLAYER_MISS', defenderDesc, damage);
       } else if (Type.isPlayer(defender)) {
-        player.sayL10n(l10n, 'NPC_MISS', attackerDesc);
       }
 
       broadcastExceptPlayer(
