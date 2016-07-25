@@ -260,7 +260,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       if (Type.isPlayer(defender)) {
         player.sayL10n(l10n, 'DAMAGE_TAKEN', attackerDesc, damageStr, attackDesc, hitLocation);
       } else if (Type.isPlayer(attacker)) {
-        player.sayL10n(l10n, 'DAMAGE_DONE', defenderDesx, damageStr, hitLocation);
+        player.sayL10n(l10n, 'DAMAGE_DONE', defenderDesc, damageStr, hitLocation);
       }
 
       broadcastExceptPlayer(
