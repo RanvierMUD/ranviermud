@@ -172,6 +172,9 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     // Decide where the hit lands
     //TODO: Decide IF it lands, first...
     const hitLocation = CombatUtil.decideHitLocation(defender.getBodyParts(), attacker.combat.getTarget(), isPrecise());
+    util.log(defenderDesc + 'what are these body parts anyway::: ', defender.getBodyParts());
+    util.log('HIT LOCATION RIGHT AFTER DECIDED: ', hitLocation);
+
 
     function isPrecise() {
       return Type.isPlayer(attacker) ?
