@@ -91,9 +91,17 @@ function CombatHelper(entity) {
   /**
    * Get just the name of the attack.
    */
-  this.getAttackName = location => Type.isPlayer(this._entity) ?
-    this.getWeapon(location).getShortDesc('en') :
-    this._entity.getAttack('en');
+  this.getAttackName = location => {
+    const defaultWeapon = 'bare hands';
+    if (Type.isPlayer(this._entity)) {
+      const weapon = this.getWeapon(location);
+      return weapon ?
+        weapon.getShortDesc('en') :
+        defaultWeapon;
+    }
+    return this._entity.getAttack('en') || defaultWeapon;
+  }
+
 
   this.getPrimaryAttackName   = () => this.getAttackName('wield');
   this.getSecondaryAttackName = () => this.getAttackName('offhand');
