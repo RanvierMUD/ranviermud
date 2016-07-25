@@ -170,14 +170,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       attacker.getSanityDamage() : 0; //TODO: Extract into module.
 
     // Decide where the hit lands
-    //TODO: Decide IF it lands, first...
-    const possibleLocations = defender.getBodyParts();
-    const targetedLocation  = attacker.combat.getTarget();
-    const hitLocation = CombatUtil.decideHitLocation(possibleLocations, , isPrecise());
-    util.log(defenderDesc + ' what are these body parts anyway::: ', possibleLocations);
-    util.log('HIT LOCATION RIGHT AFTER DECIDED: ', hitLocation);
-    util.log('was targeting ', targetedLocation);
-
+    const hitLocation = CombatUtil.decideHitLocation(defender.getBodyParts(), attacker.combat.getTarget(), isPrecise());
 
     function isPrecise() {
       return Type.isPlayer(attacker) ?
