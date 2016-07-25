@@ -85,6 +85,7 @@ const Effects = {
 	fatigued: {
 		duration: 5000,
 		activate: () => {
+			const fatigue = { name: 'fatigue' };
 			if (!attacker.getEffects('fatigued')) {
 				attacker.combat.addSpeedMod({
 					name:  'fatigued',
