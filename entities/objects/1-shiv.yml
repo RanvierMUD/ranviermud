@@ -10,6 +10,6 @@
     script: "1-shiv.js"
     behaviors: "wieldable"
     attributes:
-        speed: 1.5
+        speed: 10
         damage: 1-15
     load_max: 4

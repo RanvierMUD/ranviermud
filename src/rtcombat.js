@@ -1,172 +1,337 @@
+'use strict';
+
 module.exports.initCombat = _initCombat;
 
 //TODO: Add strings for sanity damage
 //TODO: Enhance for co-op, allow for setInCombat of NPC with multiple players.
-//FIXME: For the love of all that is unholy, refactor this:
 
-var Random = require('./random.js').Random;
-var LevelUtil = require('./levels')
-  .LevelUtil;
-var CommandUtil = require('./command_util')
-  .CommandUtil;
-var util = require('util');
-var statusUtils = require('./status');
-var Commands = require('./commands').Commands;
+const util = require('util');
+const _    = require('./helpers');
+
+const Random      = require('./random.js').Random;
+const LevelUtil   = require('./levels').LevelUtil;
+const CommandUtil = require('./command_util').CommandUtil;
+const statusUtils = require('./status');
+const Commands    = require('./commands').Commands;
+const CombatUtil  = require('./combat_util').CombatUtil;
+const Type        = require('./type').Type;
+
+function _initCombat(l10n, target, player, room, npcs, players, rooms, callback) {
+  const locale = Type.isPlayer(player) ? player.getLocale() : 'en';
+  player.setInCombat(target);
+  target.setInCombat(player);
+
+  player.sayL10n(l10n, 'ATTACK', target.combat.getDesc());
 
 
-function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
-  var locale = player.getLocale();
-  player.setInCombat(npc);
-  npc.setInCombat(player.getName());
+  /*
+    Ideas:
 
-  player.sayL10n(l10n, 'ATTACK', npc.getShortDesc(locale));
+    To hit vs. Dodge:
+      Dodge = chance of auto-dodge, or does it need to be manual?
+              Leave open to potential manual dodging in future.
+              (manual dodging = temp. increase to dodge and lowered toHit/attackSpeed)
+      ToHit = chance of hitting the enemy
+              chance of hitting = attacker.toHit vs. target.dodge
 
-  var playerBodyParts = [
-    'legs',
-    'feet',
-    'torso',
-    'hands',
-    'head'
-  ];
+    Damage vs. Defense:
+      Defense soaks up damage depending on where the hit lands.
+      It is possible for a blow to hit but then do zero damage.
+      Defenses should be able to stack.
 
-  var p = {
-    isPlayer: true,
-    name: player.getName(),
-    speed: player.getAttackSpeed,
-    weapon: player.getEquipped('wield', true),
-    offhand: player.getEquipped('offhand', true),
-    locations: playerBodyParts,
-    target: player.getPreference('target') || 'body',
-  };
+    Have different messaging for a dodged blow vs. a blow that hits
+    yet does no damage.
 
-  var n = {
-    name: npc.getShortDesc(locale),
-    speed: npc.getAttackSpeed,
-    weapon: npc.getAttack(locale),
-    target: npc.getAttribute('target'),
-    locations: npc.getLocations(),
-  };
+    Also have different messaging for a near miss and a complete miss,
+    as well as varieties of damage done.
 
-  try {
-    util.log("Combat begins between " + p.name + " and " + n.name);
-    util.log("Weapons are " + p.weapon.getShortDesc('en') + ' and ' + n.weapon);
-    util.log("Speeds are " + p.speed() + ' vs. ' + n.speed());
-  } catch (e) { util.log(e); }
+    Consider having primary and secondary attacks for each npc, with varying
+    amounts of damage.
 
-  var playerCombat = combatRound.bind(null, player, npc, p, n);
-  var npcCombat = combatRound.bind(null, npc, player, n, p);
+    Consider allowing npcs to be equipped with armor and such at some point
+    (this will be easier to implement with new API)
+  */
 
-  p.attackRound = playerCombat;
-  n.attackRound = npcCombat;
 
-  setTimeout(npcCombat, n.speed());
-  setTimeout(playerCombat, p.speed());
 
-  var isDualWielding = CommandUtil.hasScript(p.offhand, 'wield');
-  var dualWieldSpeed = () => p.speed() * (2.1 - player.getSkills('dual') / 10);
-  var dualWieldDamage = damage => Math.round(damage * (0.5 + player.getSkills('dual') / 10));
-  var dualWieldCancel = null;
+  /**
+   * Create attack round functions, then attach them
+   * to the context for the combat round.
+   * Sounds circular (and it is), but it works.
+   * Then, invoke a timeout for each combatant's round.
+   */
+  const playerCombatContext = { combatRound: null };
+  const targetCombatContext = { combatRound: null };
+  const playerCombat = combatRound.bind(playerCombatContext, player, target);
+  const targetCombat = combatRound.bind(targetCombatContext, target, player);
+
+  playerCombatContext.combatRound = playerCombat;
+  targetCombatContext.combatRound = targetCombat;
+
+  const targetCombatCancel = setTimeout(targetCombat, target.combat.getAttackSpeed());
+  const playerCombatCancel = setTimeout(playerCombat, player.combat.getAttackSpeed());
+
+  /**
+   * Detect if the attacker is dual wielding.
+   * Then, figure out the speed and damage -- since
+   * both are decreased depending on the player's skill level in
+   * dual-wielding.
+   *
+   * Then, create another combat round so the attacker can dual-attack.
+   * //TODO: Do the same for the defender once NPC dual attacks are a thing.
+   * //TODO: Do the same once PvP is a thing, too.
+   */
+
+  const dualWieldBaseSpeed   = 2.1;
+  const dualWieldSpeedFactor = dualWieldBaseSpeed - (player.getSkills('dual') / 10);
+
+  //TODO: What if they swap weapons mid-fight?
+  let isDualWielding = CommandUtil.hasScript(player.combat.getOffhand(), 'wield');
+  const getDuelWieldSpeed = ()   => player.combat.getAttackSpeed(isDualWielding) * dualWieldSpeedFactor;
+  const dualWieldDamage = damage => Math.round(damage * (0.5 + player.getSkills('dual') / 10));
+  let dualWieldCancel = null;
 
   if (isDualWielding) {
     util.log("Player is using dual wield!");
-    var pWithDual = Object.assign({}, p, { weapon: p.offhand });
-    var dualWieldCombat = combatRound.bind({ secondAttack: true }, player, npc, pWithDual, n);
-    pWithDual.attackRound = dualWieldCombat;
-    dualWieldCancel = setTimeout(dualWieldCombat, dualWieldSpeed());
+    const secondAttack = {
+      isSecondAttack: true,
+    }
+    const dualWieldCombat = combatRound.bind(secondAttack, player, npc);
+    secondAttack.combatRound = dualWieldCombat;
+    dualWieldCancel = setTimeout(dualWieldCombat, getDuelWieldSpeed());
   }
 
-  function combatRound(attacker, defender, a, d) {
+  /**
+   * Main combat round
+   * Flow:
+   * ======
+   * Check if already in combat.
+   * Determine speeds and effects. (tired, stressed, insane)
+   * Set constants for this round. (speeds, descs, starting health, etc.)
+   * Determine hit location.
+   * See if the attack hits (toHit vs Dodge)
+   * If it misses, see if it is parried, dodged, or just misses.
+   * If it hits, see how much damage it does.
+   * Appy damage to defender & broadcast/emit hitting.
+   * See if defender is dead.
+   * Apply sanity damage
+   * Check for auto-flee.
+   * Do combat prompt.
+   * Broadcast to surrounding area.
+   * Do it all again.
+   *
+   * @param attacker
+   * @param defender
+   */
 
-    if (attacker.hasEnergy && !attacker.hasEnergy(2)) {
-      a.speed = () => attacker.getAttackSpeed() * 4;
-    }
+  function combatRound(attacker, defender) {
 
-    util.log("Speeds are " + a.speed() + ' vs. ' + d.speed());
-
+    // Handle if attacker or defender is already in combat...
+    //TODO: Remove this when allowing for multicombat.
+    //TODO: Use an array of targets for multicombat.
     if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
 
-    var starting_health = defender.getAttribute('health');
-    util.log(a.name + ' health: ' + attacker.getAttribute('health'));
-    util.log(d.name + ' health: ' + defender.getAttribute('health'));
-
-    if (d.isPlayer) { checkWimpiness(starting_health) }
-
-    if (this.isSecondAttack) { util.log('Offhand attack: '); }
-
-    var damage = this.isSecondAttack ?
-      dualWieldDamage(attacker.getDamage('offhand')) : attacker.getDamage();
-    var defender_sanity = defender.getAttribute('sanity');
-    var sanityDamage = a.isPlayer ?
-      0 : attacker.getSanityDamage();
-    var hitLocation = decideHitLocation(d.locations, a.target, isPrecise());
-
-    function isPrecise() {
-      return a.isPlayer ? attacker.checkStance('precise') : false;
+    // Handle attacker fatigue...
+    const energyCost   = 2;
+    const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
+    if (slowAttacker) {
+      attacker.addEffect('fatigued', Effects.fatigued);
     }
 
-    if (!damage) {
+    // Handle attacker sanity effects...
+    const stressedLimit = 40;
+    const stressedAttacker = Type.isPlayer(attacker) && attacker.getAttribute('sanity') <= stressedLimit;
+    if (stressedAttacker) {
+      attacker.addEffect('stressed', Effects.stressed);
 
-      if (d.weapon && typeof d.weapon == 'object') {
-        d.weapon.emit('parry', defender);
+      const insanityLimit = 20;
+      if (attacker.getAttribute('sanity') > insanityLimit) {
+        attacker.addEffect('insane', Effects.insane);
       }
+    }
 
-      if (a.isPlayer) {
-        player.sayL10n(l10n, 'PLAYER_MISS', n.name, damage);
+    // Assign constants for this round...
+    const attackerSpeed = attacker.combat.getAttackSpeed(this.isSecondAttack);
+    const attackerDesc  = attacker.combat.getDesc();
+    const defenderDesc  = defender.combat.getDesc();
+    const attackDesc    = this.isSecondAttack ?
+      attacker.combat.getSecondaryAttackName() :
+      attacker.combat.getPrimaryAttackName();
+
+    const attackerWeapon = this.isSecondAttack ?
+      attacker.combat.getOffhand() :
+      attacker.combat.getWeapon();
+
+    const defenderStartingHealth = defender.getAttribute('health');
+
+    // Log constants for this round...
+    util.log(attackerDesc + ' has speed of ' + attackerSpeed + '.');
+    util.log(attackerDesc + ' health: ' + attacker.getAttribute('health'));
+    util.log(defenderDesc + ' health: ' + defenderStartingHealth + '.\n');
+    util.log(attackerDesc + ' is attacking... ');
+    this.isSecondAttack ?
+      util.log('** Offhand attack: ') :
+      util.log('** Primary attack: ')
+
+    // Assign possible sanity damage (for now, only npcs do sanity dmg)...
+    const defenderSanity = defender.getAttribute('sanity');
+    const sanityDamage = Type.isPlayer(defender) ?
+      attacker.getSanityDamage() : 0; //TODO: Extract into module.
+
+    // Decide where the hit lands
+    const hitLocation = CombatUtil.decideHitLocation(defender.getBodyParts(), attacker.combat.getTarget(), isPrecise());
+
+    function isPrecise() {
+      return Type.isPlayer(attacker) ?
+        attacker.checkStance('precise') : false;
+    }
+
+    const missed = attacker.combat.getToHitChance() <= defender.combat.getDodgeChance();
+
+    // If their attack misses!
+    if (missed) {
+
+      // Do they dodge, parry, or is it just a straight up miss?
+      //TODO: Improve the parry, dodge, and miss scripts.
+      const defenderWeapon = defender.combat.getWeapon();
+      const canParry = defenderWeapon ?
+        CommandUtil.hasScript(defenderWeapon, 'parry') :
+        CommandUtil.hasScript(defender, 'parry');
+      const canDodge = CommandUtil.hasScript(defender, 'dodge');
+
+      let missMessage = ' misses.';
+
+      //TODO: Consider adding a parry skill/modifier.
+      //TODO: Consider making this less random.
+      if (canParry && Random.coinFlip()) {
+        util.log('The attack is parried!');
+        missMessage = ' it is parried.';
+        defenderWeapon.emit('parry', defender, attacker);
+      } else if (canDodge && Random.coinFlip()) {
+        util.log('They dodge!');
+        missMessage = ' it is dodged.';
+        defender.emit('dodge', defender, attacker)
       } else {
-        player.sayL10n(l10n, 'NPC_MISS', a.name);
+
+        // If it is just a regular ole miss...
+        //TODO: What if there are no players involved in combat?
+        //TODO: Create a utility func for broadcasting to first, second, and 3rd parties.
+        // Make it hella configurable.
+        if (Type.isPlayer(attacker)) {
+          player.sayL10n(l10n, 'PLAYER_MISS', defenderDesc);
+        } else if (Type.isPlayer(defender)) {
+          player.sayL10n(l10n, 'NPC_MISS', attackerDesc);
+        }
       }
 
       broadcastExceptPlayer(
-        '<bold>' + a.name + ' attacks ' + d.name +
-        ' and misses!' + '</bold>');
+        '<bold>'
+        + attackerDesc
+        + ' attacks '
+        + defenderDesc
+        + ' and '
+        + missMessage
+        + '</bold>');
 
-      util.log(a.name + ' misses ' + d.name);
-
-    } else {
-
-      damage = defender.damage(
-        calcRawDamage(damage, defender.getAttribute('health')),
-        hitLocation);
-
-      util.log('Targeted ' + a.target + ' and hit ' + hitLocation);
-      var damageStr = getDamageString(damage, defender.getAttribute('health'));
-
-      if (a.weapon && typeof a.weapon == 'object') {
-        a.weapon.emit('hit', player);
-      }
-
-      if (d.isPlayer) {
-        player.sayL10n(l10n, 'DAMAGE_TAKEN', a.name, damageStr, a.weapon, hitLocation);
-      } else {
-        player.sayL10n(l10n, 'DAMAGE_DONE', d.name, damageStr, hitLocation);
-      }
-
-      broadcastExceptPlayer('<bold><red>' + a.name + ' attacks ' + d.name +
-        ' and ' + damageStr + ' them!' + '</red></bold>');
+      util.log(attackerDesc + ' misses ' + defenderDesc);
 
     }
 
+    // If it hits...
+    if (!missed) {
+
+      // Begin assigning damage...
+      const damage = this.isSecondAttack ?
+        dualWieldDamage(attacker.combat.getDamage('offhand')) :
+        attacker.combat.getDamage();
+      util.log('Base damage for the ' + attackDesc + ': ', damage);
+
+      // Actual damage based on location hit and armor...
+      // The damage func has side effect of depleting defender's health.
+      //TODO: Extract damage funcs to combat helper class.
+
+      const damageDealt = defender.damage(damage, hitLocation);
+
+      util.log(attackerDesc + ' targeted ' + attacker.combat.getTarget() + ' and hit ' + defenderDesc + ' in the ' + hitLocation + '.');
+      let damageStr = getDamageString(damageDealt, defender.getAttribute('health'));
+
+      //TODO: Add scripts for hitting with weapons.
+      if (attackerWeapon && typeof attackerWeapon === 'object') {
+        attackerWeapon.emit('hit', attacker, defender, damage);
+      }
+
+      //TODO: Add scripts for hitting and getting damaged to NPCs.
+      attacker.emit('hit', attackerWeapon, defender, damage);
+      defender.emit('damaged', attackerWeapon, attacker, damage);
+
+      //TODO: This could be a method of util since this pattern is used in a couple of spots.
+      if (Type.isPlayer(defender)) {
+        util.log('wtf is hit location');
+        util.log(hitLocation);
+        player.sayL10n(l10n, 'DAMAGE_TAKEN', attackerDesc, damageStr, attackDesc, hitLocation);
+      } else if (Type.isPlayer(attacker)) {
+        player.sayL10n(l10n, 'DAMAGE_DONE', defenderDesc, damageStr, hitLocation);
+      }
+
+      broadcastExceptPlayer(
+        '<bold><red>'
+        + attackerDesc
+        + ' attacks '
+        + defender.combat.getDesc() +
+        ' and '
+        + damageStr
+        + ' them!'
+        + '</red></bold>');
+
+        // If the defender is dealt a deathblow, end combat...
+        if (defenderStartingHealth <= damage) {
+          defender.setAttribute('health', 1);
+          defender.setAttribute('sanity', 1);
+          return combatEnd(Type.isPlayer(attacker));
+        }
+
+    }
+
+    // Do sanity damage if applicable...
     if (sanityDamage) {
-      sanityDamage = calcRawDamage(sanityDamage, defender_sanity);
-      defender.setAttribute('sanity', Math.max(defender_sanity - sanityDamage, 0));
+      defender.setAttribute('sanity', Math.max(defenderSanity - sanityDamage, 0));
     }
 
-    if (starting_health <= damage) {
-      defender.setAttribute('health', 1);
-      defender.setAttribute('sanity', 1);
-      return combat_end(a.isPlayer);
+    // If the player is defending and still alive, see if they auto-flee.
+    if (Type.isPlayer(defender)) {
+      //FIXME: Check at end
+      checkWimpiness(defenderStartingHealth);
     }
 
-    player.combatPrompt({
-      target_condition: statusUtils.getHealthText(
-        npc.getAttribute('max_health'),
-        player, npc)(npc.getAttribute('health')),
-      player_condition: statusUtils.getHealthText(
-        player.getAttribute('max_health'),
-        player, false)(player.getAttribute('health'))
-    });
+    // Display combat prompt.
+    //TODO: Put into combatUtils
+    const getCondition = entity => {
+        //FIXME: This could be a problem if the combat is between two NPCs or two players.
+        //FIXME: The fix might have to go in statusUtils?
+        const npc    = Type.isPlayer(entity) ? target : false;
+        const max    = entity.getAttribute('max_health');
+        return statusUtils.getHealthText(max, player, npc);
+    };
 
-    var nearbyFight = [
+    //FIXME: This is really jacked up right now.
+    const getTargetCondition   = getCondition(defender);
+    const getAttackerCondition = getCondition(attacker);
+
+    //FIXME: Prompt should show after all attacks, not just player's.
+    if (Type.isPlayer(player)) {
+      player.combatPrompt({
+        target_condition: statusUtils.getHealthText(
+          target.getAttribute('max_health'),
+          player, target)(target.getAttribute('health')),
+        player_condition: statusUtils.getHealthText(
+          player.getAttribute('max_health'),
+          player, false)(player.getAttribute('health'))
+      });
+    }
+
+
+    // Make those in area aware of nearby combat...
+    const nearbyFight = [
       "The sounds of a nearby struggle fill the air.",
       "From the sound of it, a mortal struggle is happening nearby.",
       "A cry from nearby! What could it be?",
@@ -176,28 +341,12 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     ];
 
     broadcastToArea(Random.fromArray(nearbyFight));
-    setTimeout(a.attackRound, a.speed());
+
+    // Do it all over again...
+    setTimeout(this.combatRound, attackerSpeed);
   }
 
-  function decideHitLocation(locations, target, precise) {
-    if (precise || Random.coinFlip()) {
-      return target;
-    } else return Random.fromArray(locations);
-  }
-
-  function calcRawDamage(damage, attr) {
-    var range = damage.max - damage.min;
-    with(Math) {
-      return min(
-        attr,
-        damage.min + max(
-          0,
-          floor(random() * (range))
-        )
-      );
-    }
-  }
-
+  //TODO: Add to utils helper.js file
   function getPercentage(numerator, denominator) {
     return Math.round((numerator / denominator) * 100);
   }
@@ -222,42 +371,42 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     return 'crushes';
   }
 
-  function combat_end(success) {
+  function combatEnd(success) {
 
     util.log("*** Combat Over ***");
 
     player.setInCombat(false);
-    npc.setInCombat(false);
+    target.setInCombat(false);
 
+    //TODO: Handle PvP or NvN combat ending differently.
     if (success) {
       if (dualWieldCancel) { clearTimeout(dualWieldCancel); }
 
-      var hasKilled = player.hasKilled(npc);
+      const hasKilled = player.hasKilled(target);
 
-      room.removeNpc(npc.getUuid());
-      npcs.destroy(npc);
-      player.sayL10n(l10n, 'WIN', npc.getShortDesc(locale));
-      broadcastExceptPlayer('<bold>' + npc.getShortDesc(locale) +
+      room.removeNpc(target.getUuid());
+      npcs.destroy(target);
+      player.sayL10n(l10n, 'WIN', target.getShortDesc(locale));
+      broadcastExceptPlayer('<bold>'
+        + target.getShortDesc(locale) +
         ' dies.</bold>');
 
-      // hand out experience
-      var exp = npc.getAttribute('experience') !== false ?
-        npc.getAttribute('experience') : LevelUtil.mobExp(npc.getAttribute('level'));
+      const exp = target.getAttribute('experience') ?
+        target.getAttribute('experience') : LevelUtil.mobExp(target.getAttribute('level'));
       util.log("Player wins, exp gain: ", exp);
       player.emit('experience', exp);
 
     } else {
-      util.log("Player death: ", player.getName());
-      player.sayL10n(l10n, 'LOSE', npc.getShortDesc(locale));
+      util.log("** Player death: ", player.getName());
+      player.sayL10n(l10n, 'LOSE', target.getShortDesc(locale));
       player.emit('die');
 
       broadcastExceptPlayer(player.getName() +
-        ' collapses to the ground, life fleeing their body before your eyes.'
-      );
+        ' collapses to the ground, life fleeing their body before your eyes.');
 
       //TODO: consider doing sanity damage to all other players in the room.
       broadcastExceptPlayer('<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
-      npc.setAttribute('health', npc.getAttribute('max_health'));
+      target.setAttribute('health', npc.getAttribute('max_health'));
 
       broadcastToArea('The gurgles of a dying ' +
         statusUtils.getGenderNoun(player) +
@@ -268,6 +417,7 @@ function _initCombat(l10n, npc, player, room, npcs, players, rooms, callback) {
     callback(success);
   }
 
+  //TODO: Extract this to combat utils.
   function checkWimpiness(health) {
     var percentage = getPercentage(health, player.getAttribute('max_health'));
     var wimpiness = player.getPreference('wimpy')

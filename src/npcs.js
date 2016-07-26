@@ -10,6 +10,8 @@ const npcs_dir = __dirname + '/../entities/npcs/';
 const npcs_scripts_dir = __dirname + '/../scripts/npcs/';
 const l10n_dir = __dirname + '/../l10n/scripts/npcs/';
 
+const CombatUtil = require('./combat_util').CombatUtil;
+
 
 /**
  * Npc container class. Loads/finds npcs
@@ -182,7 +184,7 @@ const Npc = function NpcConstructor(config) {
   self.getRoom = () => self.room;
   self.getUuid = () => self.uuid;
   self.getDefenses = () => self.defenses;
-  self.getLocations = () => Object.keys(self.defenses);
+  self.getBodyParts = () => Object.keys(self.defenses);
   self.getAttribute = attr =>
     typeof self.attributes[attr] !== 'undefined' ?
     self.attributes[attr] :
@@ -202,6 +204,8 @@ const Npc = function NpcConstructor(config) {
   self.setContainer = uid => self.container = uid;
   self.setAttribute = (attr, val) => self.attributes[attr] = val;
   self.removeEffect = eff => { delete self.effects[eff]; };
+
+  self.combat = CombatUtil.getHelper(self);
 
   self.isInCombat = () => self.inCombat;
   self.isPacifist = () => !self.listeners('combat').length;
@@ -289,24 +293,6 @@ const Npc = function NpcConstructor(config) {
    */
   self.hasKeyword = (keyword, locale) =>
     self.getKeywords(locale).some( word => keyword === word );
-
-  /**
-   * Get attack speed of an npc in ms
-   * @return float
-   */
-  self.getAttackSpeed = () => self.getAttribute('speed') * 1000 || 1000;
-
-  /**
-   * Get the damage an npc can do
-   * @return obj {min: int, max: int}
-   */
-  self.getDamage = () => {
-    const defaultDamage = [1, 20];
-    const damage = self.getAttribute('damage') ?
-      self.getAttribute('damage').split('-').map(n => parseInt(n, 10)) :
-      defaultDamage;
-    return { min: damage[0], max: damage[1] };
-  };
 
   /**
    * Get the damage to sanity an npc can do

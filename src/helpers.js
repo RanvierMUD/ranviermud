@@ -26,6 +26,8 @@ const values = obj => {
   return vals;
 }
 
+const hasKeys = obj => !!Object.keys(obj).length;
+
 const leftPad = amt => {
   let pad = '';
   while (amt) {
@@ -35,10 +37,21 @@ const leftPad = amt => {
   return pad;
 }
 
+const is = (typeclass, thing) => thing ? thing instanceof typeclass : false;
+
+const reduceValues = (obj, callback, starter) => values(obj).reduce(callback, starter);
+
 const firstWord = args => splitArgs(args)[0];
 
 const splitArgs = args => args.toLowerCase().split(' ');
 
+const setBounds = (min, max) => stat =>
+  Math.max(Math.min(max, stat), min);
+
 module.exports = {
-  has, values, hasNot, leftPad, firstWord, splitArgs
+  has,       hasNot,
+  firstWord, splitArgs,
+  hasKeys,   leftPad,
+  values,    reduceValues,
+  setBounds, is
 };

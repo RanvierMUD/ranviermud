@@ -13,9 +13,10 @@ const Data = require('./data').Data,
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
 const l10n_dir         = __dirname + '/../l10n/scripts/player/';
 const statusUtil       = require('./status');
+const CombatUtil       = require('./combat_util').CombatUtil;
 
 const Player = function PlayerConstructor(socket) {
-  const self       = this;
+  const self = this;
 
   self.name        = '';
   self.description = '';
@@ -81,6 +82,14 @@ const Player = function PlayerConstructor(socket) {
   // Training data
   self.training = { time: 0 };
 
+  self.bodyParts = [
+    'legs',
+    'feet',
+    'torso',
+    'hands',
+    'head'
+  ];
+
   /**#@+
    * Mutators
    */
@@ -88,9 +97,11 @@ const Player = function PlayerConstructor(socket) {
   self.getCombatPrompt = () => self.combat_prompt;
   self.getLocale       = () => self.locale;
   self.getName         = () => self.name;
+  self.getShortDesc    = () => self.name;
   self.getAccountName  = () => self.accountName;
   self.getDescription  = () => self.attributes.description;
   self.getLocation     = () => self.location;
+  self.getBodyParts    = () => self.bodyParts;
   self.getSocket       = () => socket;
   self.getInventory    = () => self.inventory;
   self.getAttributes   = () => self.attributes || {};
@@ -484,6 +495,7 @@ const Player = function PlayerConstructor(socket) {
     self.name = data.name;
     self.accountName = data.accountName;
     self.location = data.location;
+    self.bodyParts = data.bodyParts;
     self.locale = data.locale;
     self.prompt_string = data.prompt_string;
     self.password = data.password;
@@ -526,10 +538,17 @@ const Player = function PlayerConstructor(socket) {
     Data.savePlayer(self, callback);
   };
 
+  /*
+   * Gets a suite of combat helper functions.
+   * getAttackSpeed, getDamage, damage, etc.
+   */
+  self.combat = CombatUtil.getHelper(self);
+
   /**
    * Get attack speed of a player
    * @return float milliseconds between attacks
    */
+   //TODO: Remove all of these leftover combat funcs.
   self.getAttackSpeed = () => {
     let weapon = self.getEquipped('wield', true);
     let minimum = 100;
@@ -561,42 +580,6 @@ const Player = function PlayerConstructor(socket) {
   };
 
 
-
-  /**
-   * Get the damage a player can do
-   * @return int
-   */
-  self.getDamage = location => {
-    location = location || 'wield';
-    const weapon = self.getEquipped(location, true);
-    const base = [1, self.getAttribute('stamina') + 5];
-
-    let damage = weapon ?
-      (weapon.getAttribute('damage') ?
-        weapon.getAttribute('damage')
-        .split('-')
-        .map(dmg => {
-          return parseInt(dmg, 10);
-        }) : base
-      ) : base;
-
-    damage = damage.map(dmg => dmg + addDamageBonus(dmg));
-
-    return { min: damage[0], max: damage[1] };
-  };
-
-
-
-  function addDamageBonus(d) {
-    let stance = self.getPreference('stance');
-    let bonuses = {
-      'berserk': self.getAttribute('stamina') * self.getAttribute('quickness'),
-      'cautious': -(Math.round(d / 2)),
-      'precise': 1
-    }
-    return bonuses[stance] || 0;
-  }
-
   /**
    * Turn the player into a JSON string for storage
    * @return string
@@ -627,6 +610,7 @@ const Player = function PlayerConstructor(socket) {
       explored: self.explored,
       killed:   self.killed,
       training: self.training,
+      bodyParts: self.bodyParts,
     });
   };
 
@@ -691,6 +675,7 @@ const Player = function PlayerConstructor(socket) {
 
     defense += self.getAttribute('stamina');
 
+    //FIXME: Use mods instead. Verify.
     const stanceToDefense = {
       'cautious': self.getAttribute('cleverness') + (self.getSkills('dodging') * 2),
       'precise': self.getAttribute('cleverness') + self.getSkills('dodging'),
@@ -724,7 +709,4 @@ const Player = function PlayerConstructor(socket) {
 };
 
 util.inherits(Player, events.EventEmitter);
-
-// Export the Player class so you can use it in
-// other files by using require("Player").Player
 exports.Player = Player;

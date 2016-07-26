@@ -1,17 +1,18 @@
-const Player  = require('./player').Player;
-const Npc     = require('./npcs').Npc;
-const Item    = require('./items').Item;
-const Account = require('./accounts').Account;
+'use strict';
 
-const isPlayer  = is(Player);
-const isNpc     = is(Npc);
-const isItem    = is(Item);
-const isAccount = is(Account);
 
-exports.Type = {
-  isPlayer, isNpc,
-  isItem,   isAccount,
-};
+const Type = { config };
+
+function config(Player, Npc, Item, Account) {
+  Type.isPlayer  = is(Player);
+  Type.isNpc     = is(Npc);
+  Type.isItem    = is(Item);
+  Type.isAccount = is(Account);
+}
+
+exports.Type = Type;
+
+
 
 /**
  * Takes a constructor and a thing and returns function
@@ -22,5 +23,7 @@ exports.Type = {
  */
 
 function is(typeClass) {
-  return thing => thing instanceof typeClass;
+  return thing => thing ?
+    thing instanceof typeClass :
+    false;
 }
