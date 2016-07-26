@@ -33,6 +33,7 @@ var net = require('net'),
 	PlayerManager = require('./src/player_manager').PlayerManager,
 	CommandUtil   = require('./src/command_util').CommandUtil,
 	Time          = require('./src/time').Time,
+	Type          = require('./src/type').Type,
 
 	// third party
 	Localize  = require('jall'),
@@ -45,17 +46,24 @@ var net = require('net'),
  */
 
 	//storage of main game entities
-	var players,
+var players,
 	rooms    = new Rooms(),
 	items    = new Items(),
 	npcs     = new Npcs(),
 	accounts = new Accounts(),
 	server,
+	Player  = require('./src/player').Player,
+	Npc     = require('./src/npcs').Npc,
+	Item    = require('./src/items').Item,
+	Account = require('./src/accounts').Account,
 
 	// Stuff for the server executable
 	l10n,
 	respawnint,
 	saveint;
+
+Type.config(Player, Npc, Item, Account);
+
 
 // cmdline options
 commander
