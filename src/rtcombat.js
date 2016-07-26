@@ -110,11 +110,17 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
    * Check if already in combat.
    * Determine speeds and effects. (tired, stressed, insane)
    * Set constants for this round. (speeds, descs, starting health, etc.)
-   * Determine potential damage/sanity damage.
    * Determine hit location.
-   *
-   *
-   *
+   * See if the attack hits (toHit vs Dodge)
+   * If it misses, see if it is parried, dodged, or just misses.
+   * If it hits, see how much damage it does.
+   * Appy damage to defender & broadcast/emit hitting.
+   * See if defender is dead.
+   * Apply sanity damage
+   * Check for auto-flee.
+   * Do combat prompt.
+   * Broadcast to surrounding area.
+   * Do it all again.
    *
    * @param attacker
    * @param defender
@@ -300,6 +306,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     }
 
     // Display combat prompt.
+    //TODO: Put into combatUtils
     const getCondition = entity => {
         //FIXME: This could be a problem if the combat is between two NPCs or two players.
         //FIXME: The fix might have to go in statusUtils?
@@ -312,13 +319,20 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     const getTargetCondition   = getCondition(defender);
     const getAttackerCondition = getCondition(attacker);
 
-    if (Type.isPlayer(attacker)) {
-      attacker.combatPrompt({
-        target_condition: getTargetCondition(target.getAttribute('health')),
-        player_condition: getAttackerCondition(attacker.getAttribute('health'))
+    //FIXME: Prompt should show after all attacks, not just player's.
+    if (Type.isPlayer(player)) {
+      player.combatPrompt({
+        target_condition: statusUtils.getHealthText(
+          target.getAttribute('max_health'),
+          player, target)(target.getAttribute('health')),
+        player_condition: statusUtils.getHealthText(
+          player.getAttribute('max_health'),
+          player, false)(player.getAttribute('health'))
       });
     }
 
+
+    // Make those in area aware of nearby combat...
     const nearbyFight = [
       "The sounds of a nearby struggle fill the air.",
       "From the sound of it, a mortal struggle is happening nearby.",
@@ -330,6 +344,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     broadcastToArea(Random.fromArray(nearbyFight));
 
+    // Do it all over again...
     setTimeout(this.combatRound, attackerSpeed);
   }
 
