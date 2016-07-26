@@ -171,7 +171,7 @@ function CombatHelper(entity) {
       const attributesSpeed = unarmedSpeed * 500
         + this._entity.getAttribute('cleverness') * 250;
 
-      const baseSpeed = maximum - weaponSpeed - attributesSpeed;
+      const baseSpeed = Math.min(maximum - weaponSpeed - attributesSpeed, 6000);
 
       util.log("Their base speed is ", baseSpeed);
 
