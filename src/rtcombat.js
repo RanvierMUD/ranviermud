@@ -56,10 +56,9 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
   /**
    * Create attack round functions, then attach them
-   * to the combat helper objects for each entity.
-   *
+   * to the context for the combat round.
+   * Sounds circular (and it is), but it works.
    * Then, invoke a timeout for each combatant's round.
-   * //TODO: Cancel the timeouts when combat ends due to fleeing/death/etc.
    */
   const playerCombatContext = { combatRound: null };
   const targetCombatContext = { combatRound: null };
