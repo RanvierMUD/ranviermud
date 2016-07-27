@@ -15,7 +15,6 @@ const hasNot = (collection, value) => !has(collection, value);
  * @param  Obj
  * @return Array of values
  */
-
 const values = obj => {
   let vals = [];
   for (const key in obj) {
@@ -26,10 +25,16 @@ const values = obj => {
   return vals;
 }
 
+/**
+ * Does the object have an array of keys?
+ */
 const hasKeys = obj => !!Object.keys(obj).length;
 
-const leftPad = amt => {
-  let pad = '';
+/**
+ * Pads leftly.
+ */
+const leftPad = (amt, pad) => {
+  pad = pad || '';
   while (amt) {
     pad += ' ';
     amt--;
@@ -37,14 +42,42 @@ const leftPad = amt => {
   return pad;
 }
 
+/*
+ * Takes a constructor and a value and tells you if the thing is an instance of the constructor.
+ */
 const is = (typeclass, thing) => thing ? thing instanceof typeclass : false;
 
+/*
+ * Shortcut for reducing all the values of an object to a single value.
+ * Makes parsing objects a bit more functional.
+ */
 const reduceValues = (obj, callback, starter) => values(obj).reduce(callback, starter);
 
+/*
+ * Gets the first word of a string.
+ * For parsing command args.
+ */
 const firstWord = args => splitArgs(args)[0];
 
+/*
+ * Splits a string into an array of words.
+ * For parsing command args.
+ */
 const splitArgs = args => args.toLowerCase().split(' ');
 
+/**
+ * Allows you to set min and max range for a number.
+ * Mostly for preventing semi-random results from getting wacky.
+ * Usage:
+ * const arbitraryWithinBounds = setBounds(0, 100);
+ * const arbitrarySmallNumber = arbitraryWithinBounds(Math.random() * 1000);
+ * @param Number minimum bound
+ * @param Number maximum bound
+
+ * @return Function withinBoundsReturner
+ *   @param stat Number
+ *   @return Number stat, unless stat is out of bounds, then it will be the nearest bound.
+ */
 const setBounds = (min, max) => stat =>
   Math.max(Math.min(max, stat), min);
 
