@@ -69,6 +69,7 @@ const splitArgs = args => args.toLowerCase().split(' ');
  * Allows you to set min and max range for a number.
  * Mostly for preventing semi-random results from getting wacky.
  * Usage:
+ * // Returns a number guaranteed to be between 0 and 100 inclusive but probably tending toward 100.
  * const arbitraryWithinBounds = setBounds(0, 100);
  * const arbitrarySmallNumber = arbitraryWithinBounds(Math.random() * 1000);
  * @param Number minimum bound
