@@ -406,7 +406,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
       //TODO: consider doing sanity damage to all other players in the room.
       broadcastExceptPlayer('<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
-      target.setAttribute('health', npc.getAttribute('max_health'));
 
       broadcastToArea('The gurgles of a dying ' +
         statusUtils.getGenderNoun(player) +
