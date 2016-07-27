@@ -131,7 +131,6 @@ const Account = function() {
 
   this.save = () => Data.saveAccount(this);
 
-  //TODO: Use this in the accountmanager when loading all accounts
   this.load = data => {
     this.username   = data.username;
     this.characters = data.characters;
