@@ -140,7 +140,7 @@ exports.listeners = {
 
       util.log(this.getName() + ' died.');
       Commands.player_commands.remove('all', this, true);
-      Commands.player_commands.drop('all', this);
+      Commands.player_commands.drop('all', this, true);
 
       this.setLocation(startLocation);
       this.emit('regen');
