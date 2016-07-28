@@ -188,6 +188,18 @@ function CombatHelper(entity) {
       location = location || 'body';
       const self = this._entity;
 
+      const armor = location => {
+        const base  = 0; //TODO: Defense skill?
+        const bonus = self.checkStance('precise') ?
+          self.getAttribute('willpower') + self.getAttribute('stamina') :
+          base;
+        const item = self.getEquipped(location, true);
+
+        return item ?
+          item.getAttribute('defense') * bonus :
+          base;
+      }
+
       let defense = armor(location);
 
       if (location !== 'body') {
@@ -201,19 +213,6 @@ function CombatHelper(entity) {
       util.log(self.getName() + ' ' + location + 'modified defense: ' + defense);
 
       return defense;
-    }
-
-    function armor(location) {
-      const self = this._entity;
-      const base = 0; //TODO: Defense skill?
-      const bonus = self.checkStance('precise') ?
-        self.getAttribute('willpower') + self.getAttribute('stamina') :
-        base;
-      const item = self.getEquipped(location, true);
-
-      return item ?
-        item.getAttribute('defense') * bonus :
-        base;
     }
 
   this.getDodgeChance = () => {
