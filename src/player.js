@@ -545,42 +545,6 @@ const Player = function PlayerConstructor(socket) {
   self.combat = CombatUtil.getHelper(self);
 
   /**
-   * Get attack speed of a player
-   * @return float milliseconds between attacks
-   */
-   //TODO: Remove all of these leftover combat funcs.
-  self.getAttackSpeed = () => {
-    let weapon = self.getEquipped('wield', true);
-    let minimum = 100;
-
-    let speedFactor = weapon ? weapon.getAttribute('speed') || 2 : 2;
-    let speedDice = (self.getAttribute('quickness') + self.getAttribute(
-      'cleverness'));
-
-    let speedRoll = 5000 - Random.roll(speedDice, 100 / speedFactor);
-
-    let speed = Math.max(speedRoll, minimum);
-    util.log("Player's speed is ", speed);
-
-    const stanceToSpeed = {
-      'precise': 1.25,
-      'cautious': 2,
-      'berserk': .5,
-    };
-
-    for (const stance in stanceToSpeed){
-      if (self.checkStance(stance)) {
-        const speedModifier = stanceToSpeed[stance];
-        util.log(self.getName() + '\'s speed is modified: x' + speedModifier);
-        speed = speed * speedModifier;
-      }
-    }
-
-    return speed;
-  };
-
-
-  /**
    * Turn the player into a JSON string for storage
    * @return string
    */
@@ -657,7 +621,7 @@ const Player = function PlayerConstructor(socket) {
     if (!dmg) return;
     location = location || 'body';
 
-    let damageDone = Math.max(1, dmg - soak(location));
+    let damageDone = Math.max(1, dmg - self.combat.soak(location));
 
     self.setAttribute('health',
       Math.max(0, self.getAttribute('health') - damageDone));
@@ -666,44 +630,6 @@ const Player = function PlayerConstructor(socket) {
 
     return damageDone;
   };
-
-  function soak(location) {
-    let defense = armor(location);
-
-    if (location !== 'body')
-      defense += armor('body');
-
-    defense += self.getAttribute('stamina');
-
-    //FIXME: Use mods instead. Verify.
-    const stanceToDefense = {
-      'cautious': self.getAttribute('cleverness') + (self.getSkills('dodging') * 2),
-      'precise': self.getAttribute('cleverness') + self.getSkills('dodging'),
-      'default': self.getSkills('dodging'),
-      'berserk': defense / 2,
-    };
-
-    for (const stance in stanceToDefense) {
-      if (self.checkStance(stance)) {
-        const defenseBonus = stanceToDefense[stance];
-        util.log(self.getName() + '\'s defense bonus is ' + defenseBonus);
-        defense += defenseBonus;
-      }
-    }
-
-    util.log(self.getName() + ' ' + location + ' def: ' + defense);
-
-    return defense;
-  }
-
-  function armor(location) {
-    let bonus = self.checkStance('precise') ? self.getAttribute('willpower') + self.getAttribute('stamina') : 0
-    let item = self.getEquipped(location, true);
-    if (item) {
-      return item.getAttribute('defense') * bonus;
-    }
-    return 0;
-  }
 
   self.init();
 };

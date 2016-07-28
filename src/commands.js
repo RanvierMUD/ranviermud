@@ -226,7 +226,7 @@ function move(exit, player) {
           .getAt(exitLoc)
           .getTitle(locale);
 
-      const getDestinatonTitle = getExitTitle(exit.location);
+      const getDestinationTitle = getExitTitle(exit.location);
       const roomTitle = getDestinationTitle(player.getLocale());
 
       player.sayL10n(l10n, 'LOCKED', roomTitle);

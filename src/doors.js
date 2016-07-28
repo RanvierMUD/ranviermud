@@ -1,7 +1,5 @@
-//TODO: Implement helper functions for:
-// open/close, lock/unlock, and other player and NPC interactions with doors.
-
 'use strict';
+
 const util = require('util');
 const _    = require('./helpers');
 const CommandUtil = require('./command_util').CommandUtil;
