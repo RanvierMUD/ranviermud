@@ -299,12 +299,10 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     // If the player is defending and still alive, see if they auto-flee.
     if (Type.isPlayer(defender)) {
-      //FIXME: Check at end
       checkWimpiness(defenderStartingHealth);
     }
 
     // Display combat prompt.
-    //TODO: Put into combatUtils
     const getCondition = entity => {
         //FIXME: This could be a problem if the combat is between two NPCs or two players.
         //FIXME: The fix might have to go in statusUtils?
@@ -313,11 +311,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         return statusUtils.getHealthText(max, player, npc);
     };
 
-    //FIXME: This is really jacked up right now.
-    const getTargetCondition   = getCondition(defender);
-    const getAttackerCondition = getCondition(attacker);
 
-    //FIXME: Prompt should show after all attacks, not just player's.
     if (Type.isPlayer(player)) {
       player.combatPrompt({
         target_condition: statusUtils.getHealthText(
@@ -417,6 +411,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
   }
 
   //TODO: Extract this to combat utils.
+  //TODO: Make NPCs have fleeing behavior, too.
+  //TODO: Emit flee?
   function checkWimpiness(health) {
     var percentage = getPercentage(health, player.getAttribute('max_health'));
     var wimpiness = player.getPreference('wimpy')
