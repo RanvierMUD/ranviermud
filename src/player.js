@@ -621,7 +621,7 @@ const Player = function PlayerConstructor(socket) {
     if (!dmg) return;
     location = location || 'body';
 
-    let damageDone = Math.max(1, dmg - soak(location));
+    let damageDone = Math.max(1, dmg - self.combat.soak(location));
 
     self.setAttribute('health',
       Math.max(0, self.getAttribute('health') - damageDone));
@@ -630,32 +630,6 @@ const Player = function PlayerConstructor(socket) {
 
     return damageDone;
   };
-
-  function soak(location) {
-    location = location || 'body';
-
-    let defense = armor(location);
-
-    if (location !== 'body') {
-      defense += armor('body');
-    }
-
-    defense += self.getAttribute('stamina');
-    defense  = self.combat.applyMods(defense, self.combat.defenseMods);
-
-    util.log(self.getName() + ' ' + location + ' def: ' + defense);
-
-    return defense;
-  }
-
-  function armor(location) {
-    let bonus = self.checkStance('precise') ? self.getAttribute('willpower') + self.getAttribute('stamina') : 0
-    let item = self.getEquipped(location, true);
-    if (item) {
-      return item.getAttribute('defense') * bonus;
-    }
-    return 0;
-  }
 
   self.init();
 };

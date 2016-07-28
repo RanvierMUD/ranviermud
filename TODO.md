@@ -3,12 +3,8 @@
 |:------|:------:|:------
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 82 | Can be done better with changes to npc class.
 | /Users/seanodonohue/myForks/ranviermud/src/items.js | 12 | Refactor plz;
-| /Users/seanodonohue/myForks/ranviermud/src/rooms.js | 216 | 
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 302 | Check at end
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 309 | This could be a problem if the combat is between two NPCs or two players.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 310 | The fix might have to go in statusUtils?
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 316 | This is really jacked up right now.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 320 | Prompt should show after all attacks, not just player's.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 307 | This could be a problem if the combat is between two NPCs or two players.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 308 | The fix might have to go in statusUtils?
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 71 | This does not really seem to be working.
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 72 | Consider making it a 'scout' command/skill.
 | /Users/seanodonohue/myForks/ranviermud/commands/wear.js | 69 | Add wear scripts to items.
@@ -33,6 +29,7 @@
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 291 | Consider using Random.roll instead.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 513 | Probably a better way to do this than toLowerCase.
+| /Users/seanodonohue/myForks/ranviermud/src/rooms.js | 3 | Refactor
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 6 | Enhance for co-op, allow for setInCombat of NPC with multiple players.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 88 | What if they swap weapons mid-fight?
@@ -47,12 +44,13 @@
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 258 | Add scripts for hitting with weapons.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 263 | Add scripts for hitting and getting damaged to NPCs.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 267 | This could be a method of util since this pattern is used in a couple of spots.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 307 | Put into combatUtils
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 349 | Add to utils helper.js file
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 381 | Handle PvP or NvN combat ending differently.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 407 | consider doing sanity damage to all other players in the room.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 419 | Extract this to combat utils.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 431 | More candidates for utilification, I suppose.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 343 | Add to utils helper.js file
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 375 | Handle PvP or NvN combat ending differently.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 401 | consider doing sanity damage to all other players in the room.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 413 | Extract this to combat utils.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 414 | Make NPCs have fleeing behavior, too.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 415 | Emit flee?
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 427 | More candidates for utilification, I suppose.
 | /Users/seanodonohue/myForks/ranviermud/src/skills.js | 30 | Pull into own files.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 134 | Permadeath, add it.
