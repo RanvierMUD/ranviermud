@@ -247,8 +247,8 @@ function CombatHelper(entity) {
     return toHitWithinBounds(toHitChance);
   }
 
-  this.getDefense = () => Type.isPlayer(this._entity) ?
-      this.soak() :
+  this.getDefense = location => Type.isPlayer(this._entity) ?
+      this.soak(location) :
       this._entity.getAttribute('level') * 2;
 
   this.getTarget = () => Type.isPlayer(this._entity) ?
