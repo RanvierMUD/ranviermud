@@ -6,5 +6,5 @@
         en: [ "cellar", "cell", "cellar key", "key" ]
     description:
         en: "A large brass key."
-    room: 7
+    room: 6
     load_max: 1
