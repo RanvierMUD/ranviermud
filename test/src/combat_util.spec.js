@@ -31,7 +31,7 @@ describe('Player/NPC Combat Helper', () => {
 
     it('should be able to apply modifiers', () => {
       const speed = testPlayer.combat.getAttackSpeed();
-      const expected = 4375;
+      const expected = 3000;
       expect(speed).to.equal(expected);
     });
 
@@ -41,7 +41,7 @@ describe('Player/NPC Combat Helper', () => {
         effect: speed => speed * 2
       });
       const speed = testPlayer.combat.getAttackSpeed();
-      const expected = 4375 * 2;
+      const expected = 3000 * 2;
       expect(speed).to.equal(expected);
     });
 
@@ -55,7 +55,7 @@ describe('Player/NPC Combat Helper', () => {
     it('should still work without any mods', () => {
       testPlayer.combat.removeSpeedMod('slow');
       const speed = testPlayer.combat.getAttackSpeed();
-      const expected = 4375 * 2;
+      const expected = 3000 * 2;
       expect(speed).to.equal(expected);
     });
 
