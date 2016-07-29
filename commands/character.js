@@ -2,6 +2,8 @@
 
 const statusUtil = require('../src/status.js');
 const Random = require('../src/random.js').Random;
+const _ = require('../src/helpers.js');
+
 const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
@@ -27,7 +29,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         }
       }
     }
-    
+
     function getLabel(str) {
       str = str.toUpperCase();
       const relabel = {

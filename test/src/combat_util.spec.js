@@ -109,11 +109,8 @@ describe('Player/NPC Combat Helper', () => {
         expect(attackName).to.equal('Yey');
       });
 
-
     });
 
   });
-
-
 
 });
