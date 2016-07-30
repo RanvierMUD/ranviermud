@@ -20,7 +20,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
     }
 
-    return wearItem(thing);
+    wearItem(thing);
 
     function wearAll() {
       const items = player.getInventory();
@@ -29,7 +29,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function wearItem(item) {
-      if (isWeapon(item)) { Commands.player_commands.wield(args, player); }
+      if (isWeapon(item)) { return Commands.player_commands.wield(args, player); }
       if (isWearable(item) && hasOpenSpot(item)) {
         broadCastWearing(item);
         return putOn(item);
