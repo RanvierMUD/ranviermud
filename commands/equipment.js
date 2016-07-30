@@ -15,7 +15,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       if (!item) {
         util.log("Something doesn't exist: ", equipped[slot]);
-        equipped[slot] = null;
+        delete equipped[slot];
       } else {
       player.say(sprintf("%-15s %s", "<" + slot + ">", item.getShortDesc(
         player.getLocale())));
