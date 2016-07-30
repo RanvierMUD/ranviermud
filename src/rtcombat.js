@@ -136,9 +136,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       attacker.combat.getOffhand() :
       attacker.combat.getWeapon();
     const baseEnergyCost = 2;
-    const energyCost = Type.isPlayer(attacker) ?
+    const isPlayerWithWeapon = Type.isPlayer(attacker) && attackerWeapon && attackerWeapon.getAttribute;
+    const energyCost = isPlayerWithWeapon ?
       attackerWeapon.getAttribute('weight') || baseEnergyCost :
       baseEnergyCost;
+    util.log('Attack energy cost for ' + attacker.combat.getDesc() + ' is ' + energyCost);
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
     if (slowAttacker) {
       attacker.addEffect('fatigued', Effects.fatigued);
