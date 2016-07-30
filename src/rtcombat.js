@@ -132,7 +132,13 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
 
     // Handle attacker fatigue...
-    const energyCost   = 2;
+    const attackerWeapon = this.isSecondAttack ?
+      attacker.combat.getOffhand() :
+      attacker.combat.getWeapon();
+    const baseEnergyCost = 2;
+    const energyCost = Type.isPlayer(attacker) ?
+      attackerWeapon.getAttribute('weight') || baseEnergyCost :
+      baseEnergyCost;
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
     if (slowAttacker) {
       attacker.addEffect('fatigued', Effects.fatigued);
@@ -157,10 +163,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     const attackDesc    = this.isSecondAttack ?
       attacker.combat.getSecondaryAttackName() :
       attacker.combat.getPrimaryAttackName();
-
-    const attackerWeapon = this.isSecondAttack ?
-      attacker.combat.getOffhand() :
-      attacker.combat.getWeapon();
 
     const defenderStartingHealth = defender.getAttribute('health');
 
