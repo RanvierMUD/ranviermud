@@ -139,6 +139,7 @@ exports.listeners = {
       const newTrainingTime = this.getTraining('time') + skillGain;
       util.log(name + ' can train x', newTrainingTime);
       this.setTraining('time', newTrainingTime);
+      this.say('<cyan>You may train your skills for ' + newTrainingTime + ' hours.</cyan>')
     }
   },
 
