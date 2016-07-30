@@ -1,15 +1,17 @@
 'use strict';
-const Skills = require('../src/skills').Skills;
+
 const util = require('util');
+
+const _ = require('../src/helpers');
+const Skills = require('../src/skills').Skills;
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     if (!args) {
-      displayTrainingQueue(player);
-      return;
+      return displayTrainingQueue(player);
     }
 
-    let targetSkill = args.split(' ')[0].toLowerCase();
+    const targetSkill = _.firstWord(args);
 
     if (targetSkill === 'clear') {
       return player.clearTraining();
@@ -24,13 +26,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         const skillCap = 10;
 
         if (player.getSkills(id) >= skillCap) {
-          player.say('You have already mastered ' + skillName + '.');
-          return;
+          return player.say('You have already mastered ' + skillName + '.');
         }
 
         if (player.getTraining(id)) {
-          player.say('You are already planning to train ' + skillName + '.');
-          return;
+          return player.say('You are already planning to train ' + skillName + '.');
         }
 
         util.log(player.getName() + ' is training ' + targetSkill);
@@ -40,11 +40,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     player.say("You don't have that skill.");
     player.say("Which of your skills would you like to train?");
-    for (let skill in Skills) {
+    for (const skill in Skills) {
       player.write('    ');
       player.say('<yellow>' + Skills[skill].name + '</yellow>');
     }
-    return;
   }
 }
 

@@ -5,7 +5,7 @@ const CommandUtil = require('../src/command_util').CommandUtil;
 const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
-  return (args, player) => {
+  return (args, player, isDead) => {
     const room = rooms.getAt(player.getLocation());
 
     args = args.toLowerCase();
@@ -17,16 +17,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     let item = CommandUtil.findItemInInventory(args, player, true);
 
-    if (!item) {
-      player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-      return;
+    if (!item && !isDead) {
+      return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
     }
 
     if (item.isEquipped()) {
       item = CommandUtil.findItemInInventory('2.' + args, player, true) || item;
-      if (item.isEquipped()) {
-        player.sayL10n(l10n, 'ITEM_WORN');
-        return;
+      if (item.isEquipped() && !isDead) {
+        return player.sayL10n(l10n, 'ITEM_WORN');
       }
     }
 
@@ -46,7 +44,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
 
       let itemName = item.getShortDesc(player.getLocale());
-      player.sayL10n(l10n, 'ITEM_DROP', itemName, false);
+      if (!isDead) { player.sayL10n(l10n, 'ITEM_DROP', itemName, false); }
       util.log(playerName + " drops " + itemName + " at " + room.getLocation() + ".");
 
       room.getNpcs().forEach( id => {

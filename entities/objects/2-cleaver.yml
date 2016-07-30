@@ -10,6 +10,6 @@
     script: '2-cleaver.js'
     behaviors: "wieldable"
     attributes:
-        speed: 2.5
+        speed: 4
         damage: 5-21
     load_max: 3

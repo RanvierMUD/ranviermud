@@ -56,7 +56,6 @@ const buffWithMax = (attribute, config) => {
 		},
 		duration: config.duration,
 		event: config.event
-
 	};
 };
 
@@ -81,6 +80,82 @@ const multiply = (attribute, config) => {
 };
 
 const Effects = {
+
+	// If player runs out of energy during combat...
+	fatigued: {
+		duration: 5000,
+		activate: () => {
+			const fatigue = { name: 'fatigue' };
+			if (!attacker.getEffects('fatigued')) {
+				attacker.combat.addSpeedMod({
+					name:  'fatigued',
+					effect: speed => speed * 2,
+				});
+				attacker.combat.addDamageMod({
+					name:  'fatigued',
+					effect: damage => damage * .75,
+				});
+				attacker.combat.addToHitMod({
+					name:  'fatigued',
+					effect: toHit => toHit * .75,
+				});
+				attacker.combat.addDodgeMod({
+					name:  'fatigued',
+					effect: dodge => dodge * .5
+				});
+			}
+		},
+		deactivate: () => attacker.combat.removeAllMods('fatigued'),
+	},
+
+	// If player is stressed during combat...
+	stressed: {
+		duration: 5000,
+		activate: () => {
+			if (!attacker.getEffects('stressed')) {
+				attacker.combat.addSpeedMod({
+					name:  'stressed',
+					effect: speed => speed / 1.5,
+				});
+				attacker.combat.addToHitMod({
+					name:  'stressed',
+					effect: toHit => toHit * .75,
+				});
+				attacker.combat.addDodgeMod({
+					name:  'stressed',
+					effect: dodge => dodge * .75
+				});
+			}
+		},
+		deactivate: () => attacker.combat.removeAllMods('stressed'),
+	},
+
+	// If player is insane during combat...
+	insane: {
+		duration: 5000,
+		activate: () => {
+			if (!attacker.getEffects('insane')) {
+				attacker.combat.addSpeedMod({
+					name:  'insane',
+					effect: speed => speed / 1.5,
+				});
+				attacker.combat.addToHitMod({
+					name:  'insane',
+					effect: toHit => toHit * .5,
+				});
+				attacker.combat.addDamageMod({
+					name:  'insane',
+					effect: damage => damage * 1.75,
+				});
+				attacker.combat.addDodgeMod({
+					name:  'insane',
+					effect: dodge => dodge * .75
+				});
+			}
+		},
+		deactivate: () => attacker.combat.removeAllMods('insane'),
+	},
+
   /**
    * Slow
 	 * config.target: NPC to slow
