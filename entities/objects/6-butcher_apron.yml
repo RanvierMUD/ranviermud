@@ -11,4 +11,5 @@
     attributes:
         defense: 3
         wearLocation: 'torso'
+        weight: 3
     load_max: 4
