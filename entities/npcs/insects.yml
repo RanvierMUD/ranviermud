@@ -22,7 +22,7 @@
   defenses:
     body: 1
     torso: 2
-    head: -3
+    head: '-3'
     legs: 2
     arms: 2
   load_max: 9
