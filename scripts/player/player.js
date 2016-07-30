@@ -1,4 +1,5 @@
 'use strict';
+//TODO: Refactor into individual files.
 var LevelUtil = require('../../src/levels').LevelUtil,
   Skills = require('../../src/skills').Skills,
   CommandUtil = require('../../src/command_util').CommandUtil,
@@ -35,12 +36,17 @@ exports.listeners = {
   action: function(l10n) {
     return function(cost) {
 
+      // If there is a cost to the emitted action,
+      // reduce it based on their athletics skill.
+      // Then, subtract it from their energy.
       if (cost) {
+        cost = Math.ceil(cost / this.getSkills('athletics'));
         const currentEnergy = this.getAttribute('energy');
         const newEnergy = Math.max(0, currentEnergy - cost);
         this.setAttribute('energy', newEnergy);
       }
 
+      // Finally, end any recovery states and their effects.
       const recovery = ['resting', 'meditating', 'recuperating'];
       recovery.forEach(state => {
         const effect = this.getEffects(state);
@@ -53,8 +59,11 @@ exports.listeners = {
     }
   },
 
+  //TODO: Improve player messaging for this by:
+  // telling them that they are gaining experience for
+  // not telling them a number
   experience: function(l10n) {
-    return function(experience) {
+    return function(experience, reason) {
 
       const maxLevel = 60;
       if (this.getAttribute('level') >= maxLevel) {
