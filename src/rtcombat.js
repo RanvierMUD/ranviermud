@@ -264,10 +264,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       attacker.emit('hit', attackerWeapon, defender, damage);
       defender.emit('damaged', attackerWeapon, attacker, damage);
 
+      util.log(defender.combat.getDesc()' is hit at location:');
+      util.log(hitLocation);
+
       //TODO: This could be a method of util since this pattern is used in a couple of spots.
       if (Type.isPlayer(defender)) {
-        util.log('wtf is hit location');
-        util.log(hitLocation);
         player.sayL10n(l10n, 'DAMAGE_TAKEN', attackerDesc, damageStr, attackDesc, hitLocation);
       } else if (Type.isPlayer(attacker)) {
         player.sayL10n(l10n, 'DAMAGE_DONE', defenderDesc, damageStr, hitLocation);

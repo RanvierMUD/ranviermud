@@ -207,10 +207,10 @@ function CombatHelper(entity) {
       }
 
       defense += self.getAttribute('stamina');
-      util.log(self.getName() + ' ' + location + 'base defense: ' + defense);
+      util.log(self.getName() + ' ' + location + ' base defense: ' + defense);
 
       defense  = applyMods(defense, self.combat.defenseMods);
-      util.log(self.getName() + ' ' + location + 'modified defense: ' + defense);
+      util.log(self.getName() + ' ' + location + ' modified defense: ' + defense);
 
       return defense;
     }
@@ -243,7 +243,7 @@ function CombatHelper(entity) {
       + Math.round(this._entity.getAttribute('quickness') / 2);
     const toHitChance = applyMods(toHitSkill + toHitBonus, this.toHitMods);
     const toHitWithinBounds = _.setBounds(5, 90);
-    util.log('To hit chance is ', toHitChance);
+    util.log(this.getDesc() + ': To hit chance is ', toHitChance);
     return toHitWithinBounds(toHitChance);
   }
 
