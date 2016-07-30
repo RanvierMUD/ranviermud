@@ -388,7 +388,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       const exp = target.getAttribute('experience') ?
         target.getAttribute('experience') : LevelUtil.mobExp(target.getAttribute('level'));
       util.log("Player wins, exp gain: ", exp);
-      player.emit('experience', exp);
+      player.emit('experience', exp, 'killing and survival');
 
     } else {
       util.log("** Player death: ", player.getName());
