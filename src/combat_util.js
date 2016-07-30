@@ -85,7 +85,7 @@ function CombatHelper(entity) {
    //FIXME: Can be done better with changes to npc class.
    // Works, since this will let you get damage attr.
   this.getWeapon  = location => Type.isPlayer(this._entity) ?
-    this._entity.getEquipped(location || 'wield', true) || unarmed :
+    this._entity.getEquipped(location || 'wield', true) :
     () => this._entity;
 
   this.getOffhand = () => this.getWeapon('offhand');

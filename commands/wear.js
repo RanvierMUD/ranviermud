@@ -29,8 +29,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function wearItem(item) {
-      util.log(item);
-      if (isWeapon(item)) { return Commands.player_commands.wield(args, player); }
+      if (isWeapon(item)) {
+        const keyword = item.getKeywords('en')[0];
+        return Commands.player_commands.wield(keyword, player);
+      }
       if (isWearable(item) && hasOpenSpot(item)) {
         broadCastWearing(item);
         return putOn(item);
