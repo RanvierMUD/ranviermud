@@ -1,7 +1,7 @@
 ### FIXMEs
 | Filename | line # | FIXME
 |:------|:------:|:------
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 82 | Can be done better with changes to npc class.
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 84 | Can be done better with changes to npc class.
 | /Users/seanodonohue/myForks/ranviermud/src/items.js | 12 | Refactor plz;
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 307 | This could be a problem if the combat is between two NPCs or two players.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 308 | The fix might have to go in statusUtils?
@@ -12,9 +12,8 @@
 ### TODOs
 | Filename | line # | TODO
 |:------|:------:|:------
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 205 | Weapon skills related to weapon type?
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 206 | General combat skills?
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 218 | Replace with defense func from player.
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 238 | Weapon skills related to weapon type?
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 239 | General combat skills?
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 84 | boostAttr
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 85 | invis
@@ -53,7 +52,9 @@
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 427 | More candidates for utilification, I suppose.
 | /Users/seanodonohue/myForks/ranviermud/src/skills.js | 30 | Pull into own files.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
-| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 134 | Permadeath, add it.
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 62 | Improve player messaging for this by:
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 143 | Permadeath, add it.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 62 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 70 | Improve based on player stats/skills?
 | /Users/seanodonohue/myForks/ranviermud/commands/whisper.js | 2 | Refactor to be a channel.
