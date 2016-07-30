@@ -17,7 +17,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     thing = CommandUtil.findItemInInventory(thing, player, true);
     if (!thing) {
-      retur nplayer.sayL10n(l10n, 'ITEM_NOT_FOUND');
+      return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
     }
 
     return wearItem(thing);
