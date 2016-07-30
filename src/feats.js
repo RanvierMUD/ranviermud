@@ -42,7 +42,6 @@ const Feats = {
         player: player,
         event: 'quit'
       }));
-      player.say('Your skin hardens.');
     },
   },
 
