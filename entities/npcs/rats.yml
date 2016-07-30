@@ -21,7 +21,7 @@
     level: 2
   defenses:
     body: 1
-    head: -3
+    head: '-3'
     torso: 1
   load_max: 7
 - *rat

@@ -21,7 +21,7 @@
     level: 4
   defenses:
     body: 1
-    head: -4
+    head: '-4'
     torso: 1
   load_max: 7
 - <<: *serpent

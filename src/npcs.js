@@ -309,7 +309,7 @@ const Npc = function NpcConstructor(config) {
    * Helper to get just one area's defense
    * @param string location
    */
-  self.getDefense = location => self.defenses[location || 'body'] || 0;
+  self.getDefense = location => parseInt(self.defenses[location || 'body'], 10) || 0;
 
   /**
    * Method to apply physical damage
