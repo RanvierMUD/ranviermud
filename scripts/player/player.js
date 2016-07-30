@@ -71,7 +71,7 @@ exports.listeners = {
       }
 
       util.log(this.getName() + ' has gained ' + experience + ' XP.');
-      this.sayL10n(l10n, 'EXPGAIN', experience);
+      this.say("<bold><blue>You have learned a bit about " + reason + ".</bold></blue>");
 
       const tnl = LevelUtil.expToLevel(this.getAttribute('level')) - this.getAttribute('experience');
 

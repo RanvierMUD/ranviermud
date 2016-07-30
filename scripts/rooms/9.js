@@ -37,7 +37,7 @@ exports.listeners = {
         let alreadyFound = player.explore('foundnote_' + rand);
 
         if (!alreadyFound) {
-          player.emit('experience', 150);
+          player.emit('experience', 150, 'something lost before the Quarantine');
 
           player.sayL10n(l10n, 'NOTE_FOUND_' + rand);
           players.eachIf(
