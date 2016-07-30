@@ -96,7 +96,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     const secondAttack = {
       isSecondAttack: true,
     }
-    const dualWieldCombat = combatRound.bind(secondAttack, player, npc);
+    const dualWieldCombat = combatRound.bind(secondAttack, player, target);
     secondAttack.combatRound = dualWieldCombat;
     dualWieldCancel = setTimeout(dualWieldCombat, getDuelWieldSpeed());
   }
