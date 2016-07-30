@@ -78,13 +78,14 @@ function CombatHelper(entity) {
     this.removeDefenseMod(name);
   };
 
+
   /**
    * Get hydrated primary or offhand weapon of player/npc.
    */
    //FIXME: Can be done better with changes to npc class.
    // Works, since this will let you get damage attr.
   this.getWeapon  = location => Type.isPlayer(this._entity) ?
-    this._entity.getEquipped(location || 'wield', true) :
+    this._entity.getEquipped(location || 'wield', true) || unarmed :
     () => this._entity;
 
   this.getOffhand = () => this.getWeapon('offhand');
