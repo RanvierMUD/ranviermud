@@ -131,6 +131,9 @@ exports.listeners = {
         this.say('<blue>You have gained ' + attr + '.</blue>');
       }
 
+      if (gainedMutation) { this.say('<blue>You may be able to `manifest` new mutations.</blue>'); }
+      if (attrPoints) { this.say('<blue>You may boost your stamina, quickness, cleverness, or willpower.</blue>'); }
+
       // Add points for skills
       const skillGain = LevelUtil.getTrainingTime(newLevel);
       const newTrainingTime = this.getTraining('time') + skillGain;
