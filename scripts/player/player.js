@@ -60,7 +60,6 @@ exports.listeners = {
   },
 
   //TODO: Improve player messaging for this by:
-  // telling them that they are gaining experience for
   // not telling them a number
   experience: function(l10n) {
     return function(experience, reason) {
@@ -71,10 +70,10 @@ exports.listeners = {
       }
 
       util.log(this.getName() + ' has gained ' + experience + ' XP.');
-      this.say("<bold><blue>You have learned a bit about " + reason + ".</bold></blue>");
-
       const tnl = LevelUtil.expToLevel(this.getAttribute('level')) - this.getAttribute('experience');
+      const relativeExp = (experience / tnl) >= .5 ? 'lot' : 'bit';
 
+      this.say("<bold><blue>You have learned a " + relativeExp + " about " + reason + ".</bold></blue>");
       if (experience >= tnl) {
         return this.emit('level');
       }
