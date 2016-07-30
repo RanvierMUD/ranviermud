@@ -1,5 +1,7 @@
 'use strict';
 
+const _ = require('../src/helpers');
+
 exports.command = (rooms, items, players, npcs, Commands) => {
 	return (args, player) => {
     args = args.trim().toLowerCase();
@@ -20,7 +22,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return;
     }
 
-    if (attrs.indexOf(args) > -1) {
+    if (_.has(attrs, args)) {
       if (points) {
         player.setAttribute('attrPoints', points - 1);
         player.setAttribute(args, player.getAttribute(args) + 1);

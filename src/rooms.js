@@ -1,4 +1,6 @@
 'use strict';
+
+//TODO: Refactor
 var fs = require('fs'),
   util = require('util'),
   events = require('events'),
@@ -213,7 +215,6 @@ var Room = function(config) {
     return self.npcs;
   };
 
-  //FIXME:
   self.getBiome = () => self.biome;
 
   /**

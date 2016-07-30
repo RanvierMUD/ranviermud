@@ -1,8 +1,11 @@
 'use strict';
+
+const util = require('util');
+
 const CommandUtil = require('../src/command_util').CommandUtil;
 const l10nFile = __dirname + '/../l10n/commands/wield.yml';
 const l10n = require('../src/l10n')(l10nFile);
-const util = require('util');
+const _ = require('../src/helpers');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
 	return (args, player) => {
@@ -21,7 +24,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 		wield(location);
 
 		function wield(location) {
-			let weapon = args.split(' ')[0];
+			let weapon = _.firstWord(args);
 			weapon = CommandUtil.findItemInInventory(weapon, player, true);
 
 			if (!weapon || !weapon.getAttribute('damage')) {
@@ -36,7 +39,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 			} else {
 				player.say('You wield the ' + weapon.getShortDesc(player.getLocale()) + '.');
 			}
-			
+
 			player.equip(location, weapon);
 		}
 	};

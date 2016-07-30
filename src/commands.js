@@ -5,6 +5,8 @@ const util = require('util'),
   CommandUtil = require('./command_util').CommandUtil,
   l10nHelper = require('./l10n');
 
+const Doors = require('./doors').Doors;
+const _ = require('./helpers');
 
 // "Globals" to be specified later during config.
 let rooms = null;
@@ -36,7 +38,7 @@ const Commands = {
     addSkill: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const Skills = require('./skills').Skills;
-        args = args.toLowerCase().split(' ');
+        args = _.splitArgs(args);
 
         const skill = Skills[args[0]] ? Skills[args[0]].id : null;
         const number = args[1] || 1;
@@ -50,7 +52,7 @@ const Commands = {
     addFeat: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const Feats = require('./feats').Feats;
-        args = args.toLowerCase().split(' ');
+        args = _.splitArgs(args);
 
         const feat = Feats[args[0]] ? Feats[args[0]] : null;
 
@@ -73,8 +75,7 @@ const Commands = {
         if (rooms.getAt(vnum)) {
           player.setLocation(vnum);
           player.say("<red>ADMIN: You have teleported.");
-          Commands.player_commands.look(null, player);
-          return;
+          return Commands.player_commands.look(null, player);
         }
 
         player.say("<red>ADMIN: 404: Room not found.</red>");
@@ -214,29 +215,31 @@ function move(exit, player) {
     .getAt(player.getLocation())
     .emit('playerLeave', player, players);
 
-  const closedDoor = exit.door && !exit.door.open;
-  const lockedDoor = exit.door && exit.door.locked;
-
-  util.log(exit);
+  const closedDoor = !Doors.isOpen(exit);
+  const lockedDoor = Doors.isLocked(exit);
 
   if (closedDoor && lockedDoor) {
     const key = exit.door.key;
 
     if (!CommandUtil.findItemInInventory(key, player)) {
+      const getExitTitle = exitLoc => locale => rooms
+          .getAt(exitLoc)
+          .getTitle(locale);
 
-      const roomTitle = rooms.getAt(exit.location).getTitle(player.getLocale());
+      const getDestinationTitle = getExitTitle(exit.location);
+      const roomTitle = getDestinationTitle(player.getLocale());
 
       player.sayL10n(l10n, 'LOCKED', roomTitle);
       players.eachIf(
         p => CommandUtil.inSameRoom(player, p),
         p => {
-          let roomTitle = rooms.getAt(exit.location).getTitle(p.getLocale());
+          let roomTitle = getDestinationTitle(p.getLocale());
           p.sayL10n(l10n, 'OTHER_LOCKED', player.getName(), roomTitle);
         });
       return false;
     }
 
-    exit.door.locked = false;
+    Doors.unlockDoor(exit);
 
     player.sayL10n(l10n, 'UNLOCKED', key);
     players.eachIf(
@@ -250,11 +253,18 @@ function move(exit, player) {
     return true;
   }
 
+  const moveCost = exit.cost ? exit.cost : 1;
+  if (!player.hasEnergy(moveCost)) { return player.noEnergy(); }
+
+  if (closedDoor) {
+    Commands.player_commands.open(exit.direction, player);
+  }
+
   // Send the room leave message
   players.eachExcept(
     player,
     p => {
-      if (p.getLocation() === player.getLocation()) {
+      if (CommandUtil.inSameRoom(p, player)) {
         try {
           const exitLeaveMessage = exit.leave_message[p.getLocale()];
           const leaveMessage = exitLeaveMessage ?
@@ -269,14 +279,9 @@ function move(exit, player) {
       }
     });
 
-  if (closedDoor) {
-    Commands.player_commands.open(exit.direction, player);
-  }
+
 
   player.setLocation(exit.location);
-
-  const moveCost = exit.cost ? exit.cost : 1;
-  if (!player.hasEnergy(moveCost)) { return player.noEnergy(); }
 
   // Add room to list of explored rooms
   const hasExplored = player.explore(room.getLocation());
@@ -286,11 +291,12 @@ function move(exit, player) {
 
   // Trigger the playerEnter event
   // See example in scripts/npcs/1.js
-  room.getNpcs().forEach(id => {
-    const npc = npcs.get(id);
-    if (!npc) { return; }
-    npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
-  });
+  room.getNpcs()
+      .forEach(id => {
+        const npc = npcs.get(id);
+        if (!npc) { return; }
+        npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
+      });
 
   room.emit('playerEnter', player, players);
 
@@ -298,7 +304,7 @@ function move(exit, player) {
   players.eachExcept(
     player,
     p => {
-      if (p.getLocation() === player.getLocation()) {
+      if (CommandUtil.inSameRoom(p, player)) {
         p.say(player.getName() + ' enters.');
       }
   });

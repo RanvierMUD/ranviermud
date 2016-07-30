@@ -2,12 +2,12 @@
 const Effects = require('./effects.js').Effects;
 const util = require('util');
 const CommandUtil = require('./command_util').CommandUtil;
+const _ = require('./helpers');
 
 
 /*
  * Feats -- in-game stylized as 'mutations' or whatever.
  */
-
 
 /**
  * Localization helper
@@ -17,8 +17,7 @@ const CommandUtil = require('./command_util').CommandUtil;
 // For activate functions:
 // Command event passes in player, args, rooms, npcs, players.
 
-
-exports.Feats = {
+const Feats = {
 
 
   /// Passive feats
@@ -190,7 +189,7 @@ exports.Feats = {
     activate: (player, args, rooms, npcs, players) => {
       util.log(player.getName() + ' activates Siphon.');
       const combatant = player.isInCombat();
-      const target = args.toLowerCase().split(' ')[0];
+      const target = _.firstWord(args);
 
       // Can hit combatant with no args, if possible.
       // Otherwise looks for target npc in room.
@@ -321,7 +320,6 @@ exports.Feats = {
 
 };
 
-exports.meetsPrerequisites = _meetsPrerequisites;
 
 /**
  * Does the player meet the prereqs for the feat, including cost?
@@ -329,7 +327,7 @@ exports.meetsPrerequisites = _meetsPrerequisites;
  * @param  Feat
  * @return  bool True if they meet all conditions and can afford the feat.
  */
-function _meetsPrerequisites(player, feat) {
+function meetsPrerequisites(player, feat) {
   if (!feat.prereqs && !feat.cost) { return true; }
   const attributes = player.getAttributes();
 
@@ -343,7 +341,7 @@ function _meetsPrerequisites(player, feat) {
     const meets = req <= stat;
     util.log(player.getName() + '\'s ' + attr + ': ' + stat + ' vs. ' + req);
 
-    if (!meets) { return false; }
+    return meets;
   }
 
   const isAffordable = feat.cost && attributes.mutagens >= feat.cost;
@@ -361,3 +359,6 @@ function deductSanity(player, cost) {
   player.setAttribute('sanity', sanityCost);
   return sanityCost;
 }
+
+exports.Feats = Feats;
+exports.meetsPrerequisites = meetsPrerequisites;

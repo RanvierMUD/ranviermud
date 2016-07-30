@@ -3,6 +3,8 @@ const util = require('util');
 const sprintf = require('sprintf')
   .sprintf;
 
+const _ = require('../src/helpers');
+
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     util.log(player.getName() + '\'s equipment: ');
@@ -21,7 +23,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }
     }
 
-    if (!Object.keys(equipped).length) player.say("You are naked.");
+    if (!_.hasKeys(equipped)) { player.say("You are naked."); }
 
     util.log(equipped);
 

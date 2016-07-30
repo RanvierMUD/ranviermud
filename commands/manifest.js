@@ -2,11 +2,12 @@
 const Feats = require('../src/feats').Feats;
 const meetsPrerequisites = require('../src/feats').meetsPrerequisites;
 const util = require('util');
+const _ = require('../src/helpers');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     if (args) {
-      const featToManifest = args.split(' ')[0].toLowerCase();
+      const featToManifest = _.firstWord(args);
 
       if (featToManifest in player.getFeats()) {
         player.say('You already have manifested ' + featToManifest + '.');
@@ -20,11 +21,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           player.say('You manifest ' + feat.name.toLowerCase() + '.');
           util.log(player.getName() + ' manifests ' + feat.name);
 
-          purchaseFeat(player, feat);
-          return;
+          return purchaseFeat(player, feat);
         } else {
-          player.say('You are not yet powerful enough to manifest ' + featToManifest + '.');
-          return;
+          return player.say('You are not yet powerful enough to manifest ' + featToManifest + '.');
         }
       }
     }
@@ -41,4 +40,5 @@ function purchaseFeat(player, feat) {
 
   player.gainFeat(feat);
   if (feat.type === 'passive') { feat.activate(player); }
+  return true;
 }

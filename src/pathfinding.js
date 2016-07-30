@@ -2,15 +2,14 @@
 const CommandUtil = require('./command_util.js')
   .CommandUtil;
 const Random = require('./random.js').Random;
-const util = require('util');
+const Doors  = require('./doors.js').Doors;
+const util   = require('util');
 
 module.exports = {
-
-  chooseRandomExit: _chooseRandomExit,
-
+  chooseRandomExit,
 };
 
-function _chooseRandomExit(chance) {
+function chooseRandomExit(chance) {
   return () => {
     return (room, rooms, player, players, npc) => {
 
@@ -24,13 +23,10 @@ function _chooseRandomExit(chance) {
 
         util.log(npc.getShortDesc('en') + " moves to room #" + chosen.location);
 
-        const mobsAllowed = !chosen.hasOwnProperty('mob_locked');
-        const openDoor = chosen.door ?
-          chosen.door.open === 'true' : true;
+        const openDoor     = Doors.isOpen(chosen);
         const canOpenDoors = npc.hasType('humanoid');
-        const doorLocked = chosen.door && chosen.door.locked;
 
-        const canMove = mobsAllowed && (openDoor || canOpenDoors) && !doorLocked;
+        const canMove = (openDoor || canOpenDoors) && Doors.isNpcPassable(chosen);
 
         if (canMove) {
           const uid = npc.getUuid();
@@ -43,27 +39,29 @@ function _chooseRandomExit(chance) {
               player.say(npc.getShortDesc(locale) + msg);
             }
 
+            const broadcastNpcMovement = getMsg => p => {
+              const locale = p.getLocale();
+              const msg    = getMsg(p, chosenRoom);
+              p.say(npc.getShortDesc(locale) + msg);
+            };
+
+            const broadcastLeave = broadcastNpcMovement(getLeaveMessage);
+            const broadcastEntry = broadcastNpcMovement(getEntryMessage);
+
             players.eachIf(
-              CommandUtil.inSameRoom.bind(null, player || npc),
-              p => {
-                const locale = p.getLocale();
-                const msg = getLeaveMessage(p, chosenRoom);
-                p.say(npc.getShortDesc(locale) + msg);
-              });
+              p => CommandUtil.inSameRoom(player || npc, p),
+              broadcastLeave);
 
             npc.setRoom(chosen.location);
             room.removeNpc(uid);
             chosenRoom.addNpc(uid);
 
-
             const npcInRoomWithPlayer = CommandUtil.inSameRoom.bind(null, npc);
 
-            players.eachIf(npcInRoomWithPlayer,
-              p => {
-                const locale = p.getLocale();
-                const msg = getEntryMessage();
-                p.say(npc.getShortDesc(locale) + msg);
-              });
+            players.eachIf(
+              npcInRoomWithPlayer,
+              broadcastEntry);
+
           } catch (e) {
             console.log("EXCEPTION: ", e);
             console.log("NPC: ", npc);
@@ -75,9 +73,9 @@ function _chooseRandomExit(chance) {
 }
 
 function getLeaveMessage(player, chosenRoom) {
-  if (chosenRoom && chosenRoom.title)
-    return ' leaves for ' + chosenRoom.title[player.getLocale()] + '.';
-  return ' leaves.'
+  return chosenRoom && chosenRoom.title ?
+    ' leaves for ' + chosenRoom.title[player.getLocale()] + '.' :
+    ' leaves.';
 }
 
 //TODO: Custom entry messages for NPCs.
