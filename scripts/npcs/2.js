@@ -10,13 +10,7 @@ exports.listeners = {
     return (room, rooms, player, players, npc) => {
       const rand = Math.floor(Math.random() * 5 + 1);
       if (rand === 3) {
-        const msg = '<bold>The roach waggles its antennae.</bold>';
-        const toRoom = Broadcast.toRoom(room, this, player, players);
-        toRoom({
-          secondPartyMessage: msg,
-          thirdPartyMessage: msg
-        });
-
+        player.say('<bold>The serpent uncoils, hissing.</bold>');
       }
     }
   },
@@ -26,7 +20,7 @@ exports.listeners = {
       const rand = Math.floor(Math.random() * 5 + 1);
       if (rand === 3) {
         const itemDesc = item.getShortDesc();
-        const msg = '<bold>The roach scurries over to the ' + itemDesc +'</bold>';
+        const msg = '<bold>The python\'s tongue flickers over the ' + itemDesc + '</bold>';
         const toRoom = Broadcast.toRoom(room, this, player, players);
         toRoom({
           secondPartyMessage: msg,

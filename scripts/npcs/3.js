@@ -9,13 +9,23 @@ exports.listeners = {
     return (room, rooms, player, players, npc) => {
       const rand = Math.floor(Math.random() * 5 + 1);
       if (rand === 3) {
-        player.say('The defiler\'s maw glistens with spittle as it eyes its prey.');
+        const msg = 'The defiler\'s maw glistens with spittle as it eyes fresh prey.';
+        const toRoom = Broadcast.toRoom(room, this, player, players);
+        toRoom({
+          secondPartyMessage: msg,
+          thirdPartyMessage: msg
+        });
       }
     }
   },
   playerDropItem: l10n  => {
     return (room, player) => {
-      player.say('The defiler croaks, its tongue lolling obscenely.');
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+      msg = 'The defiler croaks, its tongue lolling obscenely.';
+      toRoom({
+        secondPartyMessage: msg,
+        thirdPartyMessage: msg
+      });
     }
   },
 
