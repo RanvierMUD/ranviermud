@@ -72,8 +72,17 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         socket.write('Enter your account password: ');
         socket.once('data', pass => {
             pass = pass.toString().trim();
+
             if (!pass) {
               socket.write('You must use a password.\r\n');
+              return repeat();
+            }
+            if (pass.length <= 5) {
+              socket.write('Your password must be 6 characters or longer.\r\n');
+              return repeat();
+            }
+            if (pass.length > 30) {
+              socket.write('Your password must be less than or equal to 30 characters.\r\n');
               return repeat();
             }
 

@@ -30,7 +30,7 @@ function seeDisturbance(player, players) {
     .explore('noticed bloodstains in cage');
 
   if (!alreadyFound) {
-    player.emit('experience', 100);
+    player.emit('experience', 100, 'the violent nature of humanity.');
   }
 
   var sanity = player.getAttribute('sanity') - 5;

@@ -30,25 +30,18 @@ const reduction = level => {
  * @return int
  */
 const diff = level => {
-	let val;
 	switch (true) {
-		case (level <= 28):
-			val = 0;
-			break;
-		case (level === 29):
-			val = 1;
-			break;
-		case (level === 30):
-			val = 3;
-			break;
-		case (level === 31):
-			val = 6;
-			break;
+		case (level <= 5):
+			return 0;
+		case (level <= 10):
+			return 2;
+		case (level >= 15):
+			return 4;
+		case (level >= 20):
+			return 6;
 		case (level >= 32):
-			val = 5 * level - 30;
-			break;
+			return 5 + level - 30;
 	}
-	return val;
 };
 
 /**
@@ -56,14 +49,14 @@ const diff = level => {
  * @param int level
  * @return int
  */
-const mob_exp = level => 45 + (5 * level);
+const mobExp = level => 45 + (5 * level);
 
 /**
  * Get the amount of 'hours' a PC can train skills after levelup
  * @param int Player level
  * @return number of times they may train skills.
  */
-const training = level => Math.floor(level / 4 + 1);
+const getTrainingTime = level => Math.floor(level / 4 + 1);
 
 
 /**
@@ -71,11 +64,12 @@ const training = level => Math.floor(level / 4 + 1);
  * @param int level Target level
  * @return int
  */
-const level_exp_formula = level =>
-	((8 * level) + diff(level)) * mob_exp(level) * reduction(level);
+const expToLevel = level =>
+	((2 * level) + diff(level)) * mobExp(level) * reduction(level);
+
 
 exports.LevelUtil = {
-	expToLevel: level_exp_formula,
-	mobExp: mob_exp,
-	getTrainingTime: training,
+	expToLevel,
+	mobExp,
+	getTrainingTime,
 };

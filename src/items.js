@@ -167,7 +167,7 @@ var Item = function (config)
 		self.uuid              = config.uuid        || null;
 		self.vnum              = config.vnum;
 		self.script            = config.script      || null;
-		self.attributes        = config.attributes;
+		self.attributes        = config.attributes  || {};
 		if (self !== null)
 		  Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
 	};

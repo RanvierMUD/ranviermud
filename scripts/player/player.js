@@ -1,4 +1,5 @@
 'use strict';
+//TODO: Refactor into individual files.
 var LevelUtil = require('../../src/levels').LevelUtil,
   Skills = require('../../src/skills').Skills,
   CommandUtil = require('../../src/command_util').CommandUtil,
@@ -35,12 +36,17 @@ exports.listeners = {
   action: function(l10n) {
     return function(cost) {
 
+      // If there is a cost to the emitted action,
+      // reduce it based on their athletics skill.
+      // Then, subtract it from their energy.
       if (cost) {
+        cost = Math.ceil(cost / this.getSkills('athletics'));
         const currentEnergy = this.getAttribute('energy');
         const newEnergy = Math.max(0, currentEnergy - cost);
         this.setAttribute('energy', newEnergy);
       }
 
+      // Finally, end any recovery states and their effects.
       const recovery = ['resting', 'meditating', 'recuperating'];
       recovery.forEach(state => {
         const effect = this.getEffects(state);
@@ -53,8 +59,10 @@ exports.listeners = {
     }
   },
 
+  //TODO: Improve player messaging for this by:
+  // not telling them a number
   experience: function(l10n) {
-    return function(experience) {
+    return function(experience, reason) {
 
       const maxLevel = 60;
       if (this.getAttribute('level') >= maxLevel) {
@@ -62,10 +70,10 @@ exports.listeners = {
       }
 
       util.log(this.getName() + ' has gained ' + experience + ' XP.');
-      this.sayL10n(l10n, 'EXPGAIN', experience);
-
       const tnl = LevelUtil.expToLevel(this.getAttribute('level')) - this.getAttribute('experience');
+      const relativeExp = (experience / tnl) >= .5 ? 'lot' : 'bit';
 
+      this.say("<bold><blue>You have learned a " + relativeExp + " about " + reason + ".</bold></blue>");
       if (experience >= tnl) {
         return this.emit('level');
       }
@@ -123,11 +131,15 @@ exports.listeners = {
         this.say('<blue>You have gained ' + attr + '.</blue>');
       }
 
+      if (gainedMutation) { this.say('\n<blue>You may be able to `manifest` new mutations.</blue>'); }
+      this.say('<blue>You may boost your stamina, quickness, cleverness, or willpower.</blue>');
+
       // Add points for skills
       const skillGain = LevelUtil.getTrainingTime(newLevel);
       const newTrainingTime = this.getTraining('time') + skillGain;
       util.log(name + ' can train x', newTrainingTime);
       this.setTraining('time', newTrainingTime);
+      this.say('<cyan>You may train your skills for ' + newTrainingTime + ' hours.</cyan>')
     }
   },
 

@@ -1,6 +1,7 @@
 'use strict';
 const util = require('util');
 const CommandUtil = require('../src/command_util').CommandUtil;
+const Commands    = require('../src/commands.js');
 const l10nFile = __dirname + '/../l10n/commands/wear.yml';
 const l10n = require('../src/l10n')(l10nFile);
 
@@ -16,11 +17,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     thing = CommandUtil.findItemInInventory(thing, player, true);
     if (!thing) {
-      player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-      return;
+      return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
     }
 
-    return wearItem(thing);
+    wearItem(thing);
 
     function wearAll() {
       const items = player.getInventory();
@@ -29,11 +29,19 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function wearItem(item) {
+      if (isWeapon(item)) {
+        const keyword = item.getKeywords('en')[0];
+        return Commands.player_commands.wield(keyword, player);
+      }
       if (isWearable(item) && hasOpenSpot(item)) {
         broadCastWearing(item);
         return putOn(item);
       }
       return false;
+    }
+
+    function isWeapon(item) {
+      return !!item.getAttribute('damage');
     }
 
     function isWearable(item) {
