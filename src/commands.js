@@ -284,7 +284,7 @@ function move(exit, player) {
   player.setLocation(exit.location);
 
   // Add room to list of explored rooms
-  const hasExplored = player.explore(room.getLocation());
+  const hasExplored = player.hasExplored(room.getLocation());
 
   // Force a re-look of the room
   Commands.player_commands.look(null, player, hasExplored);

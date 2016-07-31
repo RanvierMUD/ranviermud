@@ -19,7 +19,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     if (!args) {
       displayHelpFile('HELP');
-      return;
+      if (!player.hasExplored('help')) { return displayHelpFile('NEW'); }
     }
 
     args = args.toUpperCase().trim();
@@ -49,7 +49,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const maybeForEach = (txt, fn) => Array.isArray(txt) ? txt.forEach(fn) : fn(txt);
 
       hr();
-      
+
       if (file.title)   { title(file.title); }
       if (file.body)    { print(file.body); }
       if (file.usage)   { maybeForEach(file.usage, usage); }

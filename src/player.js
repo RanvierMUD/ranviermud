@@ -67,7 +67,7 @@ const Player = function PlayerConstructor(socket) {
     roomdescs: 'default' //default = verbose 1st time, short after.
   };
 
-  self.explored = [];
+  self.hasExploredd = [];
   self.killed   = { length: 0 };
 
   // Anything affecting the player
@@ -243,9 +243,10 @@ const Player = function PlayerConstructor(socket) {
   * @param int Vnum of room explored...
   * @return boolean True if they have already been there. Otherwise false.
   */
-  self.explore = vnum => {
-    if (_.hasNot(self.explored, vnum)) {
-      self.explored.push(vnum);
+
+  self.hasExplored = vnum => {
+    if (_.hasNot(self.hasExploredd, vnum)) {
+      self.hasExploredd.push(vnum);
       util.log(self.getName() + ' explored room #' + vnum + ' for the first time.');
       return false;
     }
@@ -506,7 +507,7 @@ const Player = function PlayerConstructor(socket) {
     self.feats = data.feats || {};
     self.preferences = data.preferences || {};
     self.killed   = data.killed   || { length: 0 };
-    self.explored = data.explored || [];
+    self.hasExploredd = data.explored || [];
     self.training = data.training || { time: 0 };
 
     // Activate any passive skills the player has
@@ -571,7 +572,7 @@ const Player = function PlayerConstructor(socket) {
       feats: self.feats,
       gender: self.gender,
       preferences: self.preferences,
-      explored: self.explored,
+      explored: self.hasExploredd,
       killed:   self.killed,
       training: self.training,
       bodyParts: self.bodyParts,
