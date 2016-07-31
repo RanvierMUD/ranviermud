@@ -52,7 +52,7 @@ exports.Skills = {
     attribute: "quickness",
     type: "passive",
     activate: player => util.log(player.getName() + ' can parry.')
-  }
+  },
 
   athletics: {
     id: "athletics",
