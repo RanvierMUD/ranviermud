@@ -273,11 +273,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
       util.log(attackerDesc + ' targeted ' + attacker.combat.getTarget() + ' and hit ' + defenderDesc + ' in the ' + hitLocation + '.');
 
-
-
-      util.log(defender.combat.getDesc() + ' is hit at location:');
-      util.log(hitLocation);
-
         // If the defender is dealt a deathblow, end combat...
         if (defenderStartingHealth <= damage) {
           defender.setAttribute('health', 1);
