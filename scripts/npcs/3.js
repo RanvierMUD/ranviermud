@@ -5,6 +5,7 @@ const Random    = require('../../src/random').Random;
 const util = require('util');
 
 exports.listeners = {
+  
   playerEnter: l10n => {
     return (room, rooms, player, players, npc) => {
       const rand = Math.floor(Math.random() * 5 + 1);
@@ -18,6 +19,7 @@ exports.listeners = {
       }
     }
   },
+
   playerDropItem: l10n  => {
     return (room, player) => {
       const toRoom = Broadcast.toRoom(room, this, player, players);
