@@ -2,6 +2,7 @@
 
 const Broadcast = require('../../src/broadcast').Broadcast;
 const Random    = require('../../src/random').Random;
+const util = require('util');
 
 exports.listeners = {
 
@@ -26,19 +27,21 @@ exports.listeners = {
 
   hit: function(l10n) {
     return function(room, player, players, hitLocation, damage) {
-      const toRoom = Broadcast.toRoom(room, this, player, players)
-
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+      util.log('HIT EMIT!!!!!!');
+      const secondPartyMessage = Random.fromArray([
+        'The rat\'s claws rake your ' + hitLocation + ', drawing lines of blood.',
+        'The rat gnaws your ' + hitLocation + '.',
+        'Foaming at the mouth, the rat sinks its fangs into your ' + hitLocation + '.'
+      ]);
+      const thirdPartyMessage = Random.fromArray([
+        'The rat rakes ' + player.combat.getDesc() + ' in the ' + hitLocation + ' with its jagged claws.',
+        'The rat bites ' + player.combat.getDesc() + '\'s ' + hitLocation + ' and refuses to let go.',
+        'The rat screeches at ' + player.combat.getDesc() + ' and sinks its fangs in.'
+      ]);
       toRoom({
-        secondParty: Random.fromArray([
-          'The rat\'s claws rake your ' + hitLocation + ', drawing lines of blood.',
-          'The rat gnaws your ' + hitLocation + '.',
-          'Foaming at the mouth, the rat sinks its fangs into your ' + hitLocation + '.'
-        ]),
-        thirdParty: Random.fromArray([
-          'The rat rakes ' + player.combat.getDesc() + ' in the ' + hitLocation + ' with its jagged claws.',
-          'The rat bites ' + player.combat.getDesc() + '\'s ' + hitLocation + ' and refuses to let go.',
-          'The rat screeches at ' + player.combat.getDesc() + ' and sinks its fangs in.'
-        ]),
+        secondPartyMessage,
+        thirdPartyMessage,
       });
 
     }
@@ -46,7 +49,7 @@ exports.listeners = {
 
   damaged: function(l10n) {
     return function(room, player, players, hitLocation, damage) {
-      const toRoom = Broadcast.toRoom(room, this, player, players)
+      const toRoom = Broadcast.toRoom(room, this, player, players);
       const secondPartyMessage = Random.fromArray([
         'The rat screeches in pain, a bloody foam spraying from its maw.',
         'A gash opens across the feral rat\'s matted fur.',
