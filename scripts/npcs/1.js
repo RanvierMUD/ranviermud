@@ -2,6 +2,7 @@
 
 const Broadcast = require('../../src/broadcast').Broadcast;
 const Random    = require('../../src/random').Random;
+const util = require('util');
 
 exports.listeners = {
 
@@ -26,17 +27,19 @@ exports.listeners = {
 
   hit: function(l10n) {
     return function(room, player, players, hitLocation, damage) {
-      const toRoom = Broadcast.toRoom(room, this, player, players)
-
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+      util.log('HIT EMIT!!!!!!');
+      const secondPartyMessage = Random.fromArray([
+        'The roach\'s pincers nip your ' + hitLocation + '.',
+        'The roach bites your ' + hitLocation + ', drawing a pinprick of blood.',
+      ]);
+      const thirdPartyMessage = Random.fromArray([
+        'The roach\'s pincers nip ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
+        'The roach bites ' + player.combat.getDesc() + ' in the ' + hitLocation + ' and a tiny pinprick of blood wells forth.',
+      ]);
       toRoom({
-        secondParty: Random.fromArray([
-          'The roach\'s pincers nip your ' + hitLocation + '.',
-          'The roach bites your ' + hitLocation + ', drawing a pinprick of blood.',
-        ]),
-        thirdParty: Random.fromArray([
-          'The roach\'s pincers nip ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
-          'The roach bites ' + player.combat.getDesc() + ' in the ' + hitLocation + ' and a tiny pinprick of blood wells forth.',
-        ]),
+        secondPartyMessage,
+        thirdPartyMessage,
       });
 
     }
@@ -44,7 +47,7 @@ exports.listeners = {
 
   damaged: function(l10n) {
     return function(room, player, players, hitLocation, damage) {
-      const toRoom = Broadcast.toRoom(room, this, player, players)
+      const toRoom = Broadcast.toRoom(room, this, player, players);
       const secondPartyMessage = Random.fromArray([
         'The roach chitters as its antennae are bent at an odd angle.',
         'The roach\'s chitin splinters and cracks around its ' + hitLocation + '.',
