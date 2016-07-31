@@ -233,6 +233,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         }
       }
 
+      attacker.emit('missedAttack', defender, room, players, hitLocation);
+
       broadcastExceptPlayer(
         '<bold>'
         + attackerDesc
