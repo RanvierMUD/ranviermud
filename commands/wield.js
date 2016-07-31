@@ -11,12 +11,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 	return (args, player) => {
 		let location = 'wield';
 		const wielded = player.getEquipped(location);
-		const offhand = player.getEquipped('offhand')
-		const canDual = player.getSkills('dual')
+		util.log(wielded);
+		const offhand = player.getEquipped('offhand');
+		const canDual = player.getSkills('dual');
 
-		if (wielded && offhand || !canDual) {
-			player.sayL10n(l10n, 'CANT_WIELD', items.get(wielded).getShortDesc(player.getLocale()));
-			return;
+		if (wielded && (offhand || !canDual)) {
+			return player.sayL10n(l10n, 'CANT_WIELD', items.get(wielded).getShortDesc(player.getLocale()));
 		} else if (wielded && canDual && !offhand) {
 		  location = 'offhand';
 		}
