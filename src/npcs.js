@@ -182,6 +182,7 @@ const Npc = function NpcConstructor(config) {
   self.getVnum = () => self.vnum;
   self.getInv = () => self.inventory;
   self.getRoom = () => self.room;
+  self.getLocation = self.getRoom;
   self.getUuid = () => self.uuid;
   self.getDefenses = () => self.defenses;
   self.getBodyParts = () => Object.keys(self.defenses);
