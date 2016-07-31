@@ -206,10 +206,10 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       let missMessage = ' misses.';
 
       const parrySkill = Type.isPlayer(defender) ?
-        defender.getSkill('parrying') * 2 :
+        defender.getSkills('parrying') * 2 :
         defender.getAttribute('speed') * 2;
       const dodgeSkill = Type.isPlayer(defender) ?
-        defender.getSkill('dodging') * 2 :
+        defender.getSkills('dodging') * 2 :
         defender.getAttribute('speed') * 2;
       //TODO: Consider adding a parry skill/modifier.
       //TODO: Consider making this less random.
