@@ -35,7 +35,7 @@ exports.listeners = {
         ]),
         thirdParty: Random.fromArray([
           'The roach\'s pincers nip ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
-          'The roach bites ' + player.combat.getDesc() + 'in the ' + hitLocation + ' and a tiny pinprick of blood wells forth.',
+          'The roach bites ' + player.combat.getDesc() + ' in the ' + hitLocation + ' and a tiny pinprick of blood wells forth.',
         ]),
       });
 
@@ -60,5 +60,6 @@ exports.listeners = {
           thirdPartyMessage,
       });
     }
-  }
+  },
+
 };
