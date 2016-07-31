@@ -1,3 +1,5 @@
+const Type = require('./type').Type;
+
 const noop = function() {}
 const toRoom = (location, firstParty, secondParty, players) => config => {
 
