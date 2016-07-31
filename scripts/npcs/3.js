@@ -8,7 +8,7 @@ exports.listeners = {
 
   playerEnter: l10n => {
     return (room, rooms, player, players, npc) => {
-      const rand = Random.inRange(1, 5));
+      const rand = Random.inRange(1, 5);
       if (rand === 3) {
         const msg = 'The defiler\'s maw glistens with spittle as it eyes fresh prey.';
         const toRoom = Broadcast.toRoom(room, this, player, players);
