@@ -51,7 +51,7 @@ exports.Skills = {
     usage: "Use a shield or wield a weapon.",
     attribute: "quickness",
     type: "passive",
-    activate: player => util.log(player.getName() + ' can parry.');
+    activate: player => util.log(player.getName() + ' can parry.')
   }
 
   athletics: {
