@@ -50,7 +50,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
             return repeat();
           }
 
-          const firstLetter = data.split('')[0].toLowerCase();
+          const firstLetter = data[0].toLowerCase();
           if (data && firstLetter === 'y') {
             socket.write('Creating account...\r\n');
             newAccount = new Account();
