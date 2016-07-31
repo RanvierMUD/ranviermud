@@ -9,7 +9,18 @@ const toRoom = (location, firstParty, secondParty, players) => config => {
     firstParty.say : noop;
   const secondPartyMsger = Type.isPlayer(secondParty) ?
     secondParty.say : noop;
-  const thirdPartyMsger = msg => players.broadcastAt(msg, firstParty);
+  const thirdPartyMsger = msg => players.eachIf(
+    player => {
+      const isSpecificParty = party =>
+        Type.isPlayer(party) && party.getAccountName() === player.getAccountName();
+      const isFirstParty = isSpecificParty(firstParty);
+      const isSecondParty = isSpecificParty(secondParty);
+      if (!isFirstParty && !isSecondParty) {
+        player.say(msg);
+      }
+    });
+
+
 
   if (config.firstPartyMessage) {
     firstPartyMsger(config.firstPartyMessage);
