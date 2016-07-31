@@ -3,17 +3,23 @@ const util = require('util');
 
 const noop = function() {}
 const toRoom = (location, firstParty, secondParty, players) => config => {
+
   util.log('broadcast ->>>>', config);
   const firstPartyMsger = Type.isPlayer(firstParty) ?
     firstParty.say : noop;
   const secondPartyMsger = Type.isPlayer(secondParty) ?
     secondParty.say : noop;
-
   const thirdPartyMsger = msg => players.broadcastAt(msg, firstParty);
 
-  firstPartyMsger(config.firstPartyMessage);
-  secondPartyMsger(config.secondPartyMessage);
-  thirdPartyMsger(config.thirdPartyMessage);
+  if (config.firstPartyMessage) {
+    firstPartyMsger(config.firstPartyMessage);
+  }
+  if (config.secondPartyMessage) {
+    secondPartyMsger(config.secondPartyMessage);
+  }
+  if (config.thirdPartyMessage) {
+    thirdPartyMsger(config.thirdPartyMessage);
+  }
 
 };
 
