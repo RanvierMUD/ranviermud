@@ -7,6 +7,10 @@ exports.listeners = {
         name: 'cleaver ' + this.getUuid(),
         effect: toHit => toHit + 1
       });
+      player.combat.addToDodgeMod({
+        name: 'cleaver ' + this.getUuid(),
+        effect: dodge => dodge - 1
+      });
     }
   },
 
@@ -25,5 +29,15 @@ exports.listeners = {
         effect: damage => damage + .5
       });
 		}
-	}
+	},
+
+  parry: function(l10n) {
+    return function (player) {
+      player.say('<bold><white>The blade of your cleaver halts their attack.</white></bold>');
+      player.combat.addDamageMod({
+        name: 'cleaver' + this.getUuid(),
+        effect: damage => damage - .5
+      });
+    }
+  }
 };
