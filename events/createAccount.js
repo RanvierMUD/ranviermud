@@ -70,7 +70,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
 
       //TODO: Validate password creation.
       case 'password':
-        socket.write('Enter your account password: ');
+        socket.write('Your password must be between 6 and 30 characters.\n<cyan>Enter your account password:</cyan> ');
         socket.once('data', pass => {
             pass = pass.toString().trim();
 
