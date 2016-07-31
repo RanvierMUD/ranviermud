@@ -283,7 +283,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     }
 
     // Do sanity damage if applicable...
-    if (sanityDamage) {
+    if (sanityDamage && defenderSanity) {
       defender.setAttribute('sanity', Math.max(defenderSanity - sanityDamage, 0));
     }
 
