@@ -1,3 +1,5 @@
+const Random = require('../../src/random').Random;
+
 exports.listeners = {
 
   wield: function (l10n) {
