@@ -220,12 +220,15 @@ function CombatHelper(entity) {
     const dodgeSkill = Type.isPlayer(this._entity) ?
       this._entity.getSkills('dodging') + Random.roll() :
       this._entity.getAttribute('speed') + Random.roll();
+    const parrySkill = Type.isPlayer(this._entity) ?
+      this._entity.getSkills('parrying') :
+      this._entity.getAttribute('speed');
     const dodgeBonus = Type.isPlayer(this._entity) ?
       this._entity.getAttribute('quickness')
       + Math.round(this._entity.getAttribute('cleverness') / 2) :
       this._entity.getAttribute('level') || 1;
 
-    const dodgeChance = applyMods(dodgeSkill + dodgeBonus, this.dodgeMods);
+    const dodgeChance = applyMods(dodgeSkill + parrySkill + dodgeBonus, this.dodgeMods);
     const dodgeWithinBounds = _.setBounds(5, 90);
 
     util.log('Base dodge chance is ', dodgeChance);
