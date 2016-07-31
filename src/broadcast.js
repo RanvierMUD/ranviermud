@@ -7,6 +7,8 @@ const toRoom = (location, firstParty, secondParty, players) => config => {
     firstParty.say : noop;
   const secondPartyMsger = Type.isPlayer(secondParty) ?
     secondParty.say : noop;
+  const location = Type.isPlayer(firstParty) ?
+    firstParty.getLocation() : firstParty.getRoom();
   const thirdPartyMsger = msg => players.eachAt(firstParty.getLocation(), player => player.say(msg));
 
   firstPartyMsger(config.firstPartyMessage);
