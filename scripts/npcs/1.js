@@ -49,7 +49,7 @@ exports.listeners = {
             'The roach hisses as ichor oozes from its wounds.'
           ]),
           thirdPartyMessage: Random.fromArray([
-            'The roach chitters in pain as its ' + hitLocation ' shatters.',
+            'The roach chitters in pain as its ' + hitLocation + ' shatters.',
             'Hissing furiously, the roach rears its pincer-covered maw.',
             'Ichor oozes from the injured roach.'
           ]),
