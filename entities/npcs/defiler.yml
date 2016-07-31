@@ -1,7 +1,7 @@
 - &defiler
   vnum: 3
   room: 10
-  #script: '3.js'
+  script: '3.js'
   keywords:
     en: ['defiler', 'def']
   types: ['humanoid', 'eldritch']
