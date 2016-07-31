@@ -106,7 +106,7 @@ const Effects = {
 				});
 			}
 		},
-		deactivate: config => config.attacker.combat.removeAllMods('fatigued'),
+		deactivate: config => config.attacker.combat.deleteAllMods('fatigued'),
 	},
 
 	// If player is stressed during combat...
@@ -129,7 +129,7 @@ const Effects = {
 				});
 			}
 		},
-		deactivate: config => config.attacker.combat.removeAllMods('stressed'),
+		deactivate: config => config.attacker.combat.deleteAllMods('stressed'),
 	},
 
 	// If player is insane during combat...
@@ -156,7 +156,7 @@ const Effects = {
 				});
 			}
 		},
-		deactivate: config => config.attacker.combat.removeAllMods('insane'),
+		deactivate: config => config.attacker.combat.deleteAllMods('insane'),
 	},
 
   /**
