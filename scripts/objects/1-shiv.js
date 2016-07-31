@@ -28,6 +28,6 @@ exports.listeners = {
 		return function(player) {
 			player.say('You deftly knock your opponent\'s strike away with the point of your blade.');
 		}
-	}
+	},
 
 };

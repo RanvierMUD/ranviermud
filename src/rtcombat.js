@@ -211,6 +211,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       const dodgeSkill = Type.isPlayer(defender) ?
         defender.getSkills('dodging') + defender.getAttribute('quickness') :
         defender.getAttribute('speed') * 2;
+
       if (canParry && parrySkill > Random.roll()) {
         util.log('The attack is parried!');
         missMessage = ' it is parried.';
@@ -219,12 +220,12 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         util.log('They dodge!');
         missMessage = ' it is dodged.';
         defender.emit('dodge', defender, attacker)
-      } else {
 
-        // If it is just a regular ole miss...
-        //TODO: What if there are no players involved in combat?
-        //TODO: Create a utility func for broadcasting to first, second, and 3rd parties.
-        // Make it hella configurable.
+      // If it is just a regular ole miss...
+      //TODO: What if there are no players involved in combat?
+      //TODO: Create a utility func for broadcasting to first, second, and 3rd parties.
+      // Make it hella configurable.
+      } else {
         if (Type.isPlayer(attacker)) {
           player.sayL10n(l10n, 'PLAYER_MISS', defenderDesc);
         } else if (Type.isPlayer(defender)) {
@@ -436,7 +437,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
   //TODO: More candidates for utilification, I suppose.
 
   function broadcastExceptPlayer(msg) {
-    players.eachExcept(player, function(p) {
+    players.eachExcept(player, p => {
       if (p.getLocation() === player.getLocation()) {
         p.say(msg);
         p.prompt();
@@ -446,9 +447,9 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
   function broadcastToArea(msg) {
     players.eachExcept(player, p => {
-      const otherRoom = rooms.getAt(p.getLocation());
-      const playerRoom = rooms.getAt(player.getLocation());
-      const sameArea = otherRoom.getArea() === playerRoom.getArea();
+      const otherRoom   = rooms.getAt(p.getLocation());
+      const playerRoom  = rooms.getAt(player.getLocation());
+      const sameArea    = otherRoom.getArea() === playerRoom.getArea();
       const notSameRoom = otherRoom !== playerRoom;
 
       if (sameArea && notSameRoom) {
