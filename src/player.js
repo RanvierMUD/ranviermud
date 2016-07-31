@@ -336,6 +336,10 @@ const Player = function PlayerConstructor(socket) {
   };
 
   self.removeEffect = eff => {
+    if (!eff || !self.effect[eff]) {
+      return util.log("ERROR: Effect " + eff + " not found on " + self.getName());
+    }
+
     if (self.effects[eff].event) {
       self.removeListener(self.effects[eff].event, self.effects[eff].deactivate);
     } else {
