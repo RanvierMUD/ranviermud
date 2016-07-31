@@ -6,8 +6,8 @@
     "url": "git://github.com/shawncplus/ranviermud.git"
   },
   "scripts": {
-    "start": "sudo ./ranvier -v --save=10 --respawn=10",
-    "test": "npm run-script test:coverage",
+    "start": "gulp && sudo ./ranvier -v --save=10 --respawn=10",
+    "test": "gulp && npm run-script test:coverage",
     "test:coverage": "./node_modules/.bin/istanbul cover --root ./src mocha -- './test/**/*.spec.js'"
   },
   "dependencies": {
