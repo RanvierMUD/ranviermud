@@ -264,15 +264,16 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       const damageDealt = defender.damage(damage, hitLocation);
 
       // Emit events for scriptability.
+      //TODO: Add scripts for hitting with weapons.
+      if (attackerWeapon && typeof attackerWeapon === 'object') {
+        attackerWeapon.emit('hit', attacker, defender, damage);
+      }
       attacker.emit('hit', room, defender, players, hitLocation, damageDealt);
       defender.emit('damaged', room, attacker, players, hitLocation, damageDealt);
 
       util.log(attackerDesc + ' targeted ' + attacker.combat.getTarget() + ' and hit ' + defenderDesc + ' in the ' + hitLocation + '.');
 
-      //TODO: Add scripts for hitting with weapons.
-      if (attackerWeapon && typeof attackerWeapon === 'object') {
-        attackerWeapon.emit('hit', attacker, defender, damage);
-      }
+
 
       util.log(defender.combat.getDesc() + ' is hit at location:');
       util.log(hitLocation);
