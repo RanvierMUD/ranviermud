@@ -5,10 +5,10 @@ const Random    = require('../../src/random').Random;
 const util = require('util');
 
 exports.listeners = {
-  
+
   playerEnter: l10n => {
     return (room, rooms, player, players, npc) => {
-      const rand = Math.floor(Math.random() * 5 + 1);
+      const rand = Random.inRange(1, 5));
       if (rand === 3) {
         const msg = 'The defiler\'s maw glistens with spittle as it eyes fresh prey.';
         const toRoom = Broadcast.toRoom(room, this, player, players);

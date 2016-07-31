@@ -8,7 +8,7 @@ exports.listeners = {
 
   playerEnter: l10n => {
     return (room, rooms, player, players, npc) => {
-      const rand = Math.floor(Math.random() * 5 + 1);
+      const rand = Random.inRange(1, 5));
       if (rand === 3) {
         const msg = '<bold>The roach waggles its antennae.</bold>';
         const toRoom = Broadcast.toRoom(room, this, player, players);
