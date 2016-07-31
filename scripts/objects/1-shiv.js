@@ -1,4 +1,4 @@
-const Random = require('../../src/random');
+const Random = require('../../src/random').Random;
 
 exports.listeners = {
 
