@@ -273,10 +273,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         attackerWeapon.emit('hit', attacker, defender, damage);
       }
 
-      //TODO: Add scripts for hitting and getting damaged to NPCs.
-      attacker.emit('hit', attackerWeapon, defender, damage);
-      defender.emit('damaged', attackerWeapon, attacker, damage);
-
       util.log(defender.combat.getDesc() + ' is hit at location:');
       util.log(hitLocation);
 
