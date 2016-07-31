@@ -248,7 +248,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     // If it hits...
     if (!missed) {
-
       // Begin assigning damage...
       const damage = this.isSecondAttack ?
         dualWieldDamage(attacker.combat.getDamage('offhand')) :
@@ -260,6 +259,9 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       //TODO: Extract damage funcs to combat helper class.
 
       const damageDealt = defender.damage(damage, hitLocation);
+
+      attacker.emit('hit', defender, hitLocation, damageDealt);
+      defender.emit('damaged', attacker, hitLocation, damageDealt);
 
       util.log(attackerDesc + ' targeted ' + attacker.combat.getTarget() + ' and hit ' + defenderDesc + ' in the ' + hitLocation + '.');
       let damageStr = getDamageString(damageDealt, defender.getAttribute('health'));
