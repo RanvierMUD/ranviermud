@@ -49,7 +49,7 @@ exports.Skills = {
     name: "Parrying",
     description: "Your ability to parry with weapons or shields.",
     usage: "Use a shield or wield a weapon.",
-    attribute: "quickness",
+    attribute: "cleverness",
     type: "passive",
     activate: player => util.log(player.getName() + ' can parry.')
   },
