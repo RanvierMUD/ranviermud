@@ -34,7 +34,7 @@ exports.listeners = {
           'The roach bites ' + player.combat.getDesc() + 'in the ' + hitLocation + ' and a tiny pinprick of blood wells forth.',
         ]),
       });
-      
+
     }
   },
 

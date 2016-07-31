@@ -24,7 +24,7 @@
     torso: 2
     head: '-3'
     legs: 2
-    arms: 2
+    pincers: '-1'
   load_max: 9
 - *roach
 - <<: *roach
