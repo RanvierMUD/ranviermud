@@ -1,3 +1,5 @@
+const Random = require('../../src/random');
+
 exports.listeners = {
 
 	wield: function (l10n) {
@@ -20,7 +22,12 @@ exports.listeners = {
 
 	hit: function (l10n) {
 		return function (player) {
-			player.say('<bold>Your shank finds purchase in flesh.</bold>');
+			const msg = Random.fromArray([
+				'Your shank finds purchase in flesh.',
+				'You nimbly dart forth and knick your opponent.',
+				'You dash and slash, crimson spraying in miniature fountains.'
+			]);
+			player.say('<bold>' + msg + '</bold>');
 		}
 	},
 

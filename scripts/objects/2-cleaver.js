@@ -23,7 +23,12 @@ exports.listeners = {
 
   hit: function (l10n) {
 		return function (player) {
-			player.say('<bold>The blade of your cleaver <red>does its job.</red></bold>');
+      const msg = Random.fromArray([
+        'The blade of your cleaver <red>does its job.</red>',
+        'The heft of your blade <red>cleaves</red> bone and sinew.',
+        'You rend meat from bone with the weighty blade.'
+      ]);
+			player.say('<bold>' + msg + '</bold>');
       player.combat.addDamageMod({
         name: 'cleaver' + this.getUuid(),
         effect: damage => damage + .5
@@ -41,5 +46,5 @@ exports.listeners = {
     }
   },
 
-  
+
 };
