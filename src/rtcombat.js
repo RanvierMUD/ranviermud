@@ -144,18 +144,18 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     util.log('Attack energy cost for ' + attacker.combat.getDesc() + ' is ' + energyCost);
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
     if (slowAttacker) {
-      attacker.addEffect('fatigued', Effects.fatigued);
+      attacker.addEffect('fatigued', Effects.fatigued, { attacker });
     }
 
     // Handle attacker sanity effects...
     const stressedLimit = 40;
     const stressedAttacker = Type.isPlayer(attacker) && attacker.getAttribute('sanity') <= stressedLimit;
     if (stressedAttacker) {
-      attacker.addEffect('stressed', Effects.stressed);
+      attacker.addEffect('stressed', Effects.stressed, { attacker });
 
       const insanityLimit = 20;
       if (attacker.getAttribute('sanity') > insanityLimit) {
-        attacker.addEffect('insane', Effects.insane);
+        attacker.addEffect('insane', Effects.insane, { attacker });
       }
     }
 
