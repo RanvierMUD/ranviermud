@@ -7,7 +7,7 @@ const HelpFiles = {
 
   NEW: {
     title: 'Welcome to Ranvier',
-    body: '<bold>Important topics include:</bold>',
+    body: 'These help files will include a description, a usage (in the case of commands), and some related help topics.\n<bold>Important topics include:</bold>',
     related: ['commands', 'levels', 'attributes', 'mutants', 'mental', 'physical', 'energy', 'combat', 'social', 'skills'],
   },
 
