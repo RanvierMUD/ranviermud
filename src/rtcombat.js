@@ -216,7 +216,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       if (canParry && parrySkill > Random.roll()) {
         util.log('The attack is parried!');
         missMessage = ' it is parried.';
-        defenderWeapon.emit('parry', defender, attacker);
+        if (defenderWeapon && _.hasScript(defenderWeapon, 'parry') {
+          defenderWeapon.emit('parry', defender, attacker, players);
+        } else {
+          defender.emit('parry', attacker, room, players)
+        }
       } else if (canDodge && dodgeSkill > Random.roll()) {
         util.log('They dodge!');
         missMessage = ' it is dodged.';
@@ -227,23 +231,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       //TODO: Create a utility func for broadcasting to first, second, and 3rd parties.
       // Make it hella configurable.
       } else {
-        if (Type.isPlayer(attacker)) {
-          player.sayL10n(l10n, 'PLAYER_MISS', defenderDesc);
-        } else if (Type.isPlayer(defender)) {
-          player.sayL10n(l10n, 'NPC_MISS', attackerDesc);
-        }
+        attacker.emit('missedAttack', defender, room, players, hitLocation);
       }
-
-      attacker.emit('missedAttack', defender, room, players, hitLocation);
-
-      broadcastExceptPlayer(
-        '<bold>'
-        + attackerDesc
-        + ' attacks '
-        + defenderDesc
-        + ' and '
-        + missMessage
-        + '</bold>');
 
       util.log(attackerDesc + ' misses ' + defenderDesc);
 
