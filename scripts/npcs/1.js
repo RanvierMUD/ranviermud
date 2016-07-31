@@ -28,7 +28,6 @@ exports.listeners = {
   hit: function(l10n) {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-      util.log('HIT EMIT!!!!!!');
       const secondPartyMessage = Random.fromArray([
         'The roach\'s pincers nip your ' + hitLocation + '.',
         'The roach bites your ' + hitLocation + ', drawing a pinprick of blood.',
