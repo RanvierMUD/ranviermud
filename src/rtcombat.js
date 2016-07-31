@@ -262,8 +262,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       const damageDealt = defender.damage(damage, hitLocation);
 
       // Emit events for scriptability.
-      attacker.emit('hit', room, defender, hitLocation, players, damageDealt);
-      defender.emit('damaged', room, attacker, hitLocation, players, damageDealt);
+      attacker.emit('hit', room, defender, players, hitLocation, damageDealt);
+      defender.emit('damaged', room, attacker, players, hitLocation, damageDealt);
 
       util.log(attackerDesc + ' targeted ' + attacker.combat.getTarget() + ' and hit ' + defenderDesc + ' in the ' + hitLocation + '.');
       let damageStr = getDamageString(damageDealt, defender.getAttribute('health'));
