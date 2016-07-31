@@ -230,14 +230,14 @@ const Npc = function NpcConstructor(config) {
    * @param string name
    * @param object affect
    */
-  self.addEffect = (name, effect) => {
+  self.addEffect = (name, effect, config) => {
     if (effect.activate) {
-      effect.activate();
+      effect.activate(config);
     }
 
     setTimeout(() => {
       if (effect.deactivate) {
-        effect.deactivate();
+        effect.deactivate(config);
       }
       self.removeEffect(name);
     }, effect.duration * 1000);

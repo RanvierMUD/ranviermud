@@ -25,7 +25,7 @@ exports.listeners = {
       const secondPartyMessage = Random.fromArray([
         'The defiler swings its tentacles, bashing your ' + hitLocation + '.',
         'The defiler\'s sucker-mouthed hand latches onto your ' + hitLocation + ', gnawing away a patch of flesh.',
-        'The defiler\'s burbling neck-maw runs its fangs across your ' + hitLocation + ', leaving jagged tears.'
+        'The defiler\'s burbling neck-maw clamps its fangs into your ' + hitLocation + ', leaving jagged tears.'
       ]);
       const thirdPartyMessage = Random.fromArray([
         'The defiler\'s bloody sucker mouths latch onto ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
