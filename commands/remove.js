@@ -26,7 +26,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function remove(item) {
-      if (!item && !isDead) {
+      if (!item && isDead) {
         return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
       }
 

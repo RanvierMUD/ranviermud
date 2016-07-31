@@ -96,7 +96,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     const secondAttack = {
       isSecondAttack: true,
     }
-    const dualWieldCombat = combatRound.bind(secondAttack, player, npc);
+    const dualWieldCombat = combatRound.bind(secondAttack, player, target);
     secondAttack.combatRound = dualWieldCombat;
     dualWieldCancel = setTimeout(dualWieldCombat, getDuelWieldSpeed());
   }
@@ -132,7 +132,15 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
 
     // Handle attacker fatigue...
-    const energyCost   = 2;
+    const attackerWeapon = this.isSecondAttack ?
+      attacker.combat.getOffhand() :
+      attacker.combat.getWeapon();
+    const baseEnergyCost = 2;
+    const isPlayerWithWeapon = Type.isPlayer(attacker) && attackerWeapon && attackerWeapon.getAttribute;
+    const energyCost = isPlayerWithWeapon ?
+      attackerWeapon.getAttribute('weight') || baseEnergyCost :
+      baseEnergyCost;
+    util.log('Attack energy cost for ' + attacker.combat.getDesc() + ' is ' + energyCost);
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
     if (slowAttacker) {
       attacker.addEffect('fatigued', Effects.fatigued);
@@ -157,10 +165,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     const attackDesc    = this.isSecondAttack ?
       attacker.combat.getSecondaryAttackName() :
       attacker.combat.getPrimaryAttackName();
-
-    const attackerWeapon = this.isSecondAttack ?
-      attacker.combat.getOffhand() :
-      attacker.combat.getWeapon();
 
     const defenderStartingHealth = defender.getAttribute('health');
 
@@ -264,10 +268,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       attacker.emit('hit', attackerWeapon, defender, damage);
       defender.emit('damaged', attackerWeapon, attacker, damage);
 
+      util.log(defender.combat.getDesc() + ' is hit at location:');
+      util.log(hitLocation);
+
       //TODO: This could be a method of util since this pattern is used in a couple of spots.
       if (Type.isPlayer(defender)) {
-        util.log('wtf is hit location');
-        util.log(hitLocation);
         player.sayL10n(l10n, 'DAMAGE_TAKEN', attackerDesc, damageStr, attackDesc, hitLocation);
       } else if (Type.isPlayer(attacker)) {
         player.sayL10n(l10n, 'DAMAGE_DONE', defenderDesc, damageStr, hitLocation);
@@ -388,7 +393,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       const exp = target.getAttribute('experience') ?
         target.getAttribute('experience') : LevelUtil.mobExp(target.getAttribute('level'));
       util.log("Player wins, exp gain: ", exp);
-      player.emit('experience', exp);
+      player.emit('experience', exp, 'killing and survival');
 
     } else {
       util.log("** Player death: ", player.getName());

@@ -11,4 +11,5 @@
     attributes:
         defense: 3
         wearLocation: 'feet'
+        weight: 2
     load_max: 4

@@ -12,4 +12,5 @@
     attributes:
         speed: 4
         damage: 5-21
+        weight: 4
     load_max: 3
