@@ -15,6 +15,7 @@ const statusUtils = require('./status');
 const Commands    = require('./commands').Commands;
 const CombatUtil  = require('./combat_util').CombatUtil;
 const Type        = require('./type').Type;
+const Effects     = require('./effects').Effects;
 
 function _initCombat(l10n, target, player, room, npcs, players, rooms, callback) {
   const locale = Type.isPlayer(player) ? player.getLocale() : 'en';
