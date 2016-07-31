@@ -3,8 +3,7 @@ const util = require('util');
 
 const noop = function() {}
 const toRoom = (location, firstParty, secondParty, players) => config => {
-  util.log(players);
-  util.log(config);
+  util.log('broadcast ->>>>', config);
   const firstPartyMsger = Type.isPlayer(firstParty) ?
     firstParty.say : noop;
   const secondPartyMsger = Type.isPlayer(secondParty) ?
