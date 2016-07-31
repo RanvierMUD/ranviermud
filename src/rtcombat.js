@@ -268,7 +268,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       defender.emit('damaged', room, attacker, players, hitLocation, damageDealt);
 
       util.log(attackerDesc + ' targeted ' + attacker.combat.getTarget() + ' and hit ' + defenderDesc + ' in the ' + hitLocation + '.');
-      let damageStr = getDamageString(damageDealt, defender.getAttribute('health'));
 
       //TODO: Add scripts for hitting with weapons.
       if (attackerWeapon && typeof attackerWeapon === 'object') {
@@ -277,23 +276,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
       util.log(defender.combat.getDesc() + ' is hit at location:');
       util.log(hitLocation);
-
-      //TODO: This could be a method of util since this pattern is used in a couple of spots.
-      if (Type.isPlayer(defender)) {
-        player.sayL10n(l10n, 'DAMAGE_TAKEN', attackerDesc, damageStr, attackDesc, hitLocation);
-      } else if (Type.isPlayer(attacker)) {
-        player.sayL10n(l10n, 'DAMAGE_DONE', defenderDesc, damageStr, hitLocation);
-      }
-
-      broadcastExceptPlayer(
-        '<bold><red>'
-        + attackerDesc
-        + ' attacks '
-        + defender.combat.getDesc() +
-        ' and '
-        + damageStr
-        + ' them!'
-        + '</red></bold>');
 
         // If the defender is dealt a deathblow, end combat...
         if (defenderStartingHealth <= damage) {
