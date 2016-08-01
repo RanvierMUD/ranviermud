@@ -13,4 +13,4 @@
         speed: 10
         damage: 1-15
         weight: 1
-    load_max: 4
+    load_max: 1
