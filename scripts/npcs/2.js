@@ -40,12 +40,12 @@ exports.listeners = {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const secondPartyMessage = Random.fromArray([
-        'The roach\'s pincers nip your ' + hitLocation + '.',
-        'The roach bites your ' + hitLocation + ', drawing a pinprick of blood.',
+        'The enormous serpent wraps itself around your ' + hitLocation + ' and constricts...',
+        'The snake clamps its fangs around your ' + hitLocation + ', refusing to let go.',
       ]);
       const thirdPartyMessage = Random.fromArray([
-        'The roach\'s pincers nip ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
-        'The roach bites ' + player.combat.getDesc() + ' in the ' + hitLocation + ' and a tiny pinprick of blood wells forth.',
+        'The python wraps itself around ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
+        'The python bites ' + player.combat.getDesc() + ' in the ' + hitLocation + ' and clamps down.',
       ]);
       toRoom({
         secondPartyMessage,
