@@ -317,7 +317,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       "A thud, a muffled groan. Fighting nearby?"
     ];
 
-    broadcastToArea(Random.fromArray(nearbyFight));
+    if (Random.coinFlip()) { broadcastToArea(Random.fromArray(nearbyFight)); }
 
     // Do it all over again...
     setTimeout(this.combatRound, attackerSpeed);
