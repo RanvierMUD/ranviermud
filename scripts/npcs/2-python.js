@@ -64,9 +64,9 @@ exports.listeners = {
         'The python hisses as its scales and bones <bold><yellow>crack.</yellow></bold>'
       ]);
       const thirdPartyMessage = Random.fromArray([
-        'The serpent ' + hitLocation + ' shatters.',
-        'Hissing furiously, the snake recoils from ' + player.combat.getDesc() + '.',
-        'Ichor oozes from the injured roach.'
+        'The serpent\'s ' + hitLocation + ' is crushed by ' + player.combat.getDesc() + '.',
+        'Hissing furiously, the snake recoils from ' + player.combat.getDesc() + '\'s blow.',
+        '<bold><green>Scales</green> and <red>blood</red></bold> fill the air as ' + player.combat.getDesc() ' strikes the serpent\'s ' + hitLocation + '.'
       ]);
       toRoom({
           secondPartyMessage,
