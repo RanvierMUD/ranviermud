@@ -89,10 +89,32 @@ exports.listeners = {
         'The hungry python tries to constrict ' + player.combat.getDesc() + ', but they break free.'
       ]);
       toRoom({
+          '<yellow>' + secondPartyMessage + '</yellow>',
+          '<yellow>' + thirdPartyMessage  + '</yellow>',
+      });
+    }
+  },
+
+  dodge: function(l10n) {
+    return function(room, player, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+      const secondPartyMessage = Random.fromArray([
+        'The snake recoils, out of the way of your strike.',
+        'The serpent\'s ' + hitLocation + ' twists out of the path of your attack.',
+        'Hissing, the python jerks its' + hitLocation + ' out of the way.'
+      ]);
+      const thirdPartyMessage = Random.fromArray([
+        'The snake recoils away from ' + player.combat.getDesc() + '.'
+        'Hissing furiously, the serpent twists away from ' + player.combat.getDesc() + '\'s  strike.',
+        'The hungry python slithers out of ' + player.combat.getDesc() + '\'s reach.'
+      ]);
+      toRoom({
           secondPartyMessage,
           thirdPartyMessage,
       });
     }
   },
+
+  
 
 };
