@@ -3,28 +3,26 @@ const util = require('util');
 const Random = require('./random').Random;
 
 const Time = {
-
-  isDay: _isDay,
-  isNight: _isNight,
-  checkWeather: _checkWeather
-
+  isDay, isNight,
+  checkWeather
 };
 
 /**
  * @return boolean isDay
  */
-function _isDay() {
-  const time = new Date().getHours();
-  const daytime = time % 2;
+function isDay() {
+  const hours = new Date().getHours();
+  const isDaytime = hours % 2;
 
-  return !!daytime;
+  return !!isDaytime;
 }
 
 /**
  * @return boolean isNight
  */
-function _isNight() {
-  return !_isDay(); }
+function isNight() {
+  return !isDay();
+}
 
 
 /**
@@ -33,11 +31,11 @@ function _isNight() {
  * @param players  See above, except all players.
  * @return boolean WeatherHappened | string Weather that happened.
  */
-function _checkWeather(rooms, players) {
+function checkWeather(rooms, players) {
   const shouldEmitWeather = Random.roll(1, 100) >= 98;
 
   if (shouldEmitWeather) {
-    const cycle = _isDay() ? 'day' : 'night';
+    const cycle = isDay() ? 'day' : 'night';
     return selectWeather(cycle, rooms, players);
   }
   return false;
