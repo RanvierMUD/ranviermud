@@ -39,39 +39,32 @@ exports.listeners = {
   hit: function(l10n) {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-      const secondPartyMessage = Random.fromArray([
+      const secondPartyMessages = [
         'The enormous serpent wraps itself around your ' + hitLocation + ' and constricts...',
         'The snake clamps its fangs around your ' + hitLocation + ', refusing to let go.',
-      ]);
-      const thirdPartyMessage = Random.fromArray([
+      ];
+      const thirdPartyMessages = [
         'The python wraps itself around ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
         'The python bites ' + player.combat.getDesc() + ' in the ' + hitLocation + ' and clamps down.',
-      ]);
-      toRoom({
-        secondPartyMessage,
-        thirdPartyMessage,
-      });
-
+      ];
+      Broadcast.consistentMessage(toRoom, secondPartyMessages, thirdPartyMessages);
     }
   },
 
   damaged: function(l10n) {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-      const secondPartyMessage = Random.fromArray([
+      const secondPartyMessages = [
         'The snake hisses and recoils.',
         'The serpent\'s scales split around their ' + hitLocation + ' and <red>blood</red> spatters forth.',
         'The python hisses as its scales and bones <bold><yellow>crack.</yellow></bold>'
-      ]);
-      const thirdPartyMessage = Random.fromArray([
+      ];
+      const thirdPartyMessages = [
         'The serpent\'s ' + hitLocation + ' is crushed by ' + player.combat.getDesc() + '.',
         'Hissing furiously, the snake recoils from ' + player.combat.getDesc() + '\'s blow.',
         '<bold><green>Scales</green> and <red>blood</red></bold> fill the air as ' + player.combat.getDesc() ' strikes the serpent\'s ' + hitLocation + '.'
-      ]);
-      toRoom({
-          secondPartyMessage,
-          thirdPartyMessage,
-      });
+      ];
+      Broadcast.consistentMessage(toRoom, secondPartyMessages, thirdPartyMessages);
     }
   },
 
@@ -115,6 +108,6 @@ exports.listeners = {
     }
   },
 
-  
+
 
 };
