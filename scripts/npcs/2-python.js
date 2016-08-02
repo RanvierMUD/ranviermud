@@ -71,43 +71,35 @@ exports.listeners = {
   missedAttack: function(l10n) {
     return function(room, player, players, hitLocation) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-      const secondPartyMessage = Random.fromArray([
+      const secondPartyMessages = [
         'The snake lunges at you and whiffs.',
         'The serpent\'s fangs barely misses your ' + hitLocation + '.',
         'The hungry python tries to constrict around your ' + hitLocation + ', but you break free.'
-      ]);
-      const thirdPartyMessage = Random.fromArray([
+      ];
+      const thirdPartyMessages = [
         'The snake lunges at ' + player.combat.getDesc() + ' and flies past, missing completely.'
         'Hissing furiously, the serpent tries to clamp its fangs around ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
         'The hungry python tries to constrict ' + player.combat.getDesc() + ', but they break free.'
-      ]);
-      toRoom({
-          '<yellow>' + secondPartyMessage + '</yellow>',
-          '<yellow>' + thirdPartyMessage  + '</yellow>',
-      });
+      ];
+      Broadcast.consistentMessage(toRoom, secondPartyMessages, thirdPartyMessages);
     }
   },
 
   dodge: function(l10n) {
     return function(room, player, players, hitLocation) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-      const secondPartyMessage = Random.fromArray([
+      const secondPartyMessages = [
         'The snake recoils, out of the way of your strike.',
         'The serpent\'s ' + hitLocation + ' twists out of the path of your attack.',
         'Hissing, the python jerks its' + hitLocation + ' out of the way.'
-      ]);
-      const thirdPartyMessage = Random.fromArray([
+      ];
+      const thirdPartyMessages = [
         'The snake recoils away from ' + player.combat.getDesc() + '.'
         'Hissing furiously, the serpent twists away from ' + player.combat.getDesc() + '\'s  strike.',
         'The hungry python slithers out of ' + player.combat.getDesc() + '\'s reach.'
-      ]);
-      toRoom({
-          secondPartyMessage,
-          thirdPartyMessage,
-      });
+      ]
+      Broadcast.consistentMessage(toRoom, secondPartyMessages, thirdPartyMessages);
     }
   },
-
-
 
 };
