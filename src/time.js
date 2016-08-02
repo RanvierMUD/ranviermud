@@ -1,4 +1,5 @@
 'use strict';
+
 const util = require('util');
 const Random = require('./random').Random;
 
