@@ -50,4 +50,16 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
 
 };
 
-exports.Broadcast = { toRoom, toArea };
+const consistentMessage = (broadcaster, secondPartyMessages, thirdPartyMessages)  => {
+  if (secondPartyMessages.length !== thirdPartyMessages.length) {
+    throw new Error("Arrays must have the same number of messages.");
+  }
+
+  const selection = Random.inRange(0, secondPartyMessages.length);
+  const secondPartyMessage = secondPartyMessages[selection];
+  const thirdPartyMessage  = thirdPartyMessages[selection];
+
+  broadcaster({ secondPartyMessage, thirdPartyMessage });
+};
+
+exports.Broadcast = { toRoom, toArea, consistentMessage };
