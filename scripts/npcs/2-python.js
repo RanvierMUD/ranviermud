@@ -62,7 +62,7 @@ exports.listeners = {
       const thirdPartyMessages = [
         'The serpent\'s ' + hitLocation + ' is crushed by ' + player.combat.getDesc() + '.',
         'Hissing furiously, the snake recoils from ' + player.combat.getDesc() + '\'s blow.',
-        '<bold><green>Scales</green> and <red>blood</red></bold> fill the air as ' + player.combat.getDesc() ' strikes the serpent\'s ' + hitLocation + '.'
+        '<bold><green>Scales</green> and <red>blood</red></bold> fill the air as ' + player.combat.getDesc() + ' strikes the serpent\'s ' + hitLocation + '.'
       ];
       Broadcast.consistentMessage(toRoom, secondPartyMessages, thirdPartyMessages);
     }
@@ -77,7 +77,7 @@ exports.listeners = {
         'The hungry python tries to constrict around your ' + hitLocation + ', but you break free.'
       ];
       const thirdPartyMessages = [
-        'The snake lunges at ' + player.combat.getDesc() + ' and flies past, missing completely.'
+        'The snake lunges at ' + player.combat.getDesc() + ' and flies past, missing completely.',
         'Hissing furiously, the serpent tries to clamp its fangs around ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
         'The hungry python tries to constrict ' + player.combat.getDesc() + ', but they break free.'
       ];
@@ -94,7 +94,7 @@ exports.listeners = {
         'Hissing, the python jerks its' + hitLocation + ' out of the way.'
       ];
       const thirdPartyMessages = [
-        'The snake recoils away from ' + player.combat.getDesc() + '.'
+        'The snake recoils away from ' + player.combat.getDesc() + '.',
         'Hissing furiously, the serpent twists away from ' + player.combat.getDesc() + '\'s  strike.',
         'The hungry python slithers out of ' + player.combat.getDesc() + '\'s reach.'
       ]
