@@ -1,7 +1,7 @@
 - &roach
   vnum: 1
   room: 2
-  script: '1.js'
+  script: '1-roach.js'
   types: ['insect', 'beast']
   keywords:
     en: ['roach', 'cockroach', 'bug', 'cock', 'ro']
