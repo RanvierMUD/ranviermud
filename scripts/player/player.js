@@ -82,6 +82,10 @@ exports.listeners = {
     }
   },
 
+  tick: function(l10n) {
+    return function() { /*TODO: Emit sanity loss event here if applicable.*/ }
+  }
+
   level: function(l10n) {
     return function() {
       const name = this.getName();

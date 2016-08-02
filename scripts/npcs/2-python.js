@@ -60,8 +60,28 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const secondPartyMessage = Random.fromArray([
         'The snake hisses and recoils.',
-        'The snake\'s scales split around their ' + hitLocation + ' and <red>blood</red> spatters forth.',
-        'The roach hisses as ichor oozes from its wounds.'
+        'The serpent\'s scales split around their ' + hitLocation + ' and <red>blood</red> spatters forth.',
+        'The python hisses as its scales and bones <bold><yellow>crack.</yellow></bold>'
+      ]);
+      const thirdPartyMessage = Random.fromArray([
+        'The serpent ' + hitLocation + ' shatters.',
+        'Hissing furiously, the snake recoils from ' + player.combat.getDesc() + '.',
+        'Ichor oozes from the injured roach.'
+      ]);
+      toRoom({
+          secondPartyMessage,
+          thirdPartyMessage,
+      });
+    }
+  },
+
+  missedAttack: function(l10n) {
+    return function(room, player, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+      const secondPartyMessage = Random.fromArray([
+        'The snake lunges at you and whiffs.',
+        'The serpent\'s fangs barely miss you.',
+        'The hungry python tries to constrict around you, but you break free.'
       ]);
       const thirdPartyMessage = Random.fromArray([
         'The roach chitters in pain as its ' + hitLocation + ' shatters.',
@@ -74,9 +94,5 @@ exports.listeners = {
       });
     }
   },
-
-  missedAttack: function(l10n) {
-    return function(room, player, players, hitLocation)
-  }
 
 };
