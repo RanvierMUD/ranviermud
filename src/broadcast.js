@@ -3,7 +3,7 @@ const util = require('util');
 
 const noop = function() {}
 
-const toArea = (player, players) => msg => {
+const toArea = (player, players, rooms) => msg => {
   players.eachExcept(player, p => {
     const otherRoom   = rooms.getAt(p.getLocation());
     const playerRoom  = rooms.getAt(player.getLocation());

@@ -23,7 +23,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
   player.setInCombat(target);
   target.setInCombat(player);
 
-  const broadcastToArea = Broadcast.toArea(player, players);
+  const broadcastToArea = Broadcast.toArea(player, players, rooms);
 
   player.sayL10n(l10n, 'ATTACK', target.combat.getDesc());
 
