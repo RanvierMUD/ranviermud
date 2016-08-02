@@ -35,7 +35,7 @@ exports.listeners = {
     }
   },
 
-  hit: function(l10n) {
+  hit: l10n => {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       util.log('HIT EMIT!!!!!!');
