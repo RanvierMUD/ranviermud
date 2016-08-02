@@ -80,13 +80,13 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const secondPartyMessage = Random.fromArray([
         'The snake lunges at you and whiffs.',
-        'The serpent\'s fangs barely miss you.',
-        'The hungry python tries to constrict around you, but you break free.'
+        'The serpent\'s fangs barely misses your ' + hitLocation + '.',
+        'The hungry python tries to constrict around your ' + hitLocation + ', but you break free.'
       ]);
       const thirdPartyMessage = Random.fromArray([
-        'The roach chitters in pain as its ' + hitLocation + ' shatters.',
-        'Hissing furiously, the roach rears its pincer-covered maw.',
-        'Ichor oozes from the injured roach.'
+        'The snake lunges at ' + player.combat.getDesc() + ' and flies past, missing completely.'
+        'Hissing furiously, the serpent tries to clamp its fangs around ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
+        'The hungry python tries to constrict ' + player.combat.getDesc() + ', but they break free.'
       ]);
       toRoom({
           secondPartyMessage,
