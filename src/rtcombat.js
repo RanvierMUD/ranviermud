@@ -328,30 +328,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     return Math.round((numerator / denominator) * 100);
   }
 
-  function getDamageString(damage, health) {
-    var percentage = getPercentage(damage, health);
-
-    var damageStrings = {
-      1: 'tickles',
-      3: 'scratches',
-      8: 'grazes',
-      20: 'hits',
-      35: 'wounds',
-      85: 'maims',
-    };
-
-    for (var cutoff in damageStrings) {
-      if (percentage <= cutoff) {
-        return damageStrings[cutoff];
-      }
-    }
-    return 'crushes';
-  }
-
   function combatEnd(success) {
 
     util.log("*** Combat Over ***");
 
+    //TODO: Use filter to remove the combatants from an array. Probably do this inside the player/npc objs.
     player.setInCombat(false);
     target.setInCombat(false);
 
