@@ -222,12 +222,12 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         if (defenderWeapon && CommandUtil.hasScript(defenderWeapon, 'parry')) {
           defenderWeapon.emit('parry', defender, attacker, players);
         } else {
-          defender.emit('parry', attacker, room, players)
+          defender.emit('parry', attacker, room, players, hitLocation);
         }
       } else if (canDodge && dodgeSkill > Random.roll()) {
         util.log('They dodge!');
         missMessage = ' it is dodged.';
-        defender.emit('dodge', defender, attacker)
+        defender.emit('dodge', room, attacker, players, hitLocation);
 
       // If it is just a regular ole miss...
       //TODO: What if there are no players involved in combat?
