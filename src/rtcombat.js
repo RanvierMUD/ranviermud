@@ -16,11 +16,14 @@ const Commands    = require('./commands').Commands;
 const CombatUtil  = require('./combat_util').CombatUtil;
 const Type        = require('./type').Type;
 const Effects     = require('./effects').Effects;
+const Broadcast   = require('./broadcast').Broadcast;
 
 function _initCombat(l10n, target, player, room, npcs, players, rooms, callback) {
   const locale = Type.isPlayer(player) ? player.getLocale() : 'en';
   player.setInCombat(target);
   target.setInCombat(player);
+
+  const broadcastToArea = Broadcast.toArea(player, players);
 
   player.sayL10n(l10n, 'ATTACK', target.combat.getDesc());
 
@@ -231,7 +234,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       //TODO: Create a utility func for broadcasting to first, second, and 3rd parties.
       // Make it hella configurable.
       } else {
-        attacker.emit('missedAttack', defender, room, players, hitLocation);
+        attacker.emit('missedAttack', room, defender, players, hitLocation);
       }
 
       util.log(attackerDesc + ' misses ' + defenderDesc);
@@ -404,7 +407,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     }
   }
 
-  //TODO: More candidates for utilification, I suppose.
+  //TODO: Use Broadcast module or extract to the Broadcast file.
 
   function broadcastExceptPlayer(msg) {
     players.eachExcept(player, p => {
@@ -415,17 +418,4 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     });
   }
 
-  function broadcastToArea(msg) {
-    players.eachExcept(player, p => {
-      const otherRoom   = rooms.getAt(p.getLocation());
-      const playerRoom  = rooms.getAt(player.getLocation());
-      const sameArea    = otherRoom.getArea() === playerRoom.getArea();
-      const notSameRoom = otherRoom !== playerRoom;
-
-      if (sameArea && notSameRoom) {
-        p.say(msg);
-        p.prompt();
-      }
-    });
-  }
 }

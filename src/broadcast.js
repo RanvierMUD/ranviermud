@@ -2,6 +2,21 @@ const Type = require('./type').Type;
 const util = require('util');
 
 const noop = function() {}
+
+const toArea = (player, players) => msg => {
+  players.eachExcept(player, p => {
+    const otherRoom   = rooms.getAt(p.getLocation());
+    const playerRoom  = rooms.getAt(player.getLocation());
+    const sameArea    = otherRoom.getArea() === playerRoom.getArea();
+    const notSameRoom = otherRoom !== playerRoom;
+
+    if (sameArea && notSameRoom) {
+      p.say(msg);
+      p.prompt();
+    }
+  });
+}
+
 const toRoom = (room, firstParty, secondParty, players) => config => {
 
   const firstPartyMsger = Type.isPlayer(firstParty) ?
@@ -35,4 +50,4 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
 
 };
 
-exports.Broadcast = { toRoom };
+exports.Broadcast = { toRoom, toArea };

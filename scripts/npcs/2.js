@@ -59,8 +59,8 @@ exports.listeners = {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const secondPartyMessage = Random.fromArray([
-        'The roach chitters as its antennae are bent at an odd angle.',
-        'The roach\'s chitin splinters and cracks around its ' + hitLocation + '.',
+        'The snake hisses and recoils.',
+        'The snake\'s scales split around their ' + hitLocation + ' and <red>blood</red> spatters forth.',
         'The roach hisses as ichor oozes from its wounds.'
       ]);
       const thirdPartyMessage = Random.fromArray([
@@ -74,5 +74,9 @@ exports.listeners = {
       });
     }
   },
+
+  missedAttack: function(l10n) {
+    return function(room, player, players, hitLocation)
+  }
 
 };
