@@ -1,4 +1,5 @@
-const Type = require('./type').Type;
+const Type   = require('./type').Type;
+const Random = require('./random').Random;
 const util = require('util');
 
 const noop = function() {}
