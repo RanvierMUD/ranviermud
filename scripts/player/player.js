@@ -203,7 +203,6 @@ exports.listeners = {
       const firstPartyMessage = getMessage('firstPartyMessage');
       const thirdPartyMessage = getMessage('thirdPartyMessage');
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
-
     }
   },
 
