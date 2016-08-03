@@ -53,17 +53,19 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
 };
 
 const consistentMessage = (broadcaster, messageLists)  => {
-  const sameLength = _
+  const listLengths = _
     .values(messageLists)
-    .reduce((msg, len) => len ?
-      msg.length === len :
-      msg.length, 0);
+    .map(list => list.length);
 
-  if (sameLength !== true) {
+  const sameLength = listLengths
+    .reduce((prev, length) => prev === undefined ? length : prev === length);
+
+
+  if (!sameLength) {
     throw new Error("Arrays must have the same number of messages.");
   }
 
-  const selection = Random.inRange(0, messageLists.thirdPartyMessages.length);
+  const selection = Random.inRange(0, messageLists.thirdPartyMessage.length);
   const messages = {};
   for (const messageList in messageLists) {
     messages[messageList] = messageLists[messageList][selection];

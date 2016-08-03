@@ -39,11 +39,11 @@ exports.listeners = {
   hit: function(l10n) {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-      const secondPartyMessages = [
+      const secondPartyMessage = [
         'The enormous serpent wraps itself around your ' + hitLocation + ' and constricts...',
         'The snake clamps its fangs around your ' + hitLocation + ', refusing to let go.',
       ];
-      const thirdPartyMessages = [
+      const thirdPartyMessage = [
         'The python wraps itself around ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
         'The python bites ' + player.combat.getDesc() + ' in the ' + hitLocation + ' and clamps down.',
       ];
@@ -98,8 +98,21 @@ exports.listeners = {
         'Hissing furiously, the serpent twists away from ' + player.combat.getDesc() + '\'s  strike.',
         'The hungry python slithers out of ' + player.combat.getDesc() + '\'s reach.'
       ];
-      Broadcast.consistentMessage(toRoom, { secondPartyMessages, thirdPartyMessages });
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
   },
+
+  parry: function(l10n) {
+    return function(room, player, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+      const secondPartyMessage = [
+        'The snake reels, knocking your attack away with its heft.',
+      ];
+      const thirdPartyMessage = [
+        'The snake reels and knocks away ' + player.combat.getDesc() + '\'s attack.',
+      ];
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
+    }
+  }
 
 };
