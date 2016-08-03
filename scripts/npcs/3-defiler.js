@@ -34,41 +34,57 @@ exports.listeners = {
   hit: function(l10n) {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-      const secondPartyMessage = Random.fromArray([
+      const secondPartyMessage = [
         'The defiler swings its tentacles, bashing your ' + hitLocation + '.',
         'The defiler\'s sucker-mouthed hand latches onto your ' + hitLocation + ', gnawing away a patch of flesh.',
         'The defiler\'s <red>burbling neck-maw</red> <bold>clamps</bold> its fangs into your ' + hitLocation + ', leaving jagged tears.'
-      ]);
-      const thirdPartyMessage = Random.fromArray([
+      ];
+      const thirdPartyMessage = [
+        'The defiler bashes ' + player.combat.getDesc() + ' with its tentacular suckers.',
         'The defiler\'s <red>bloody sucker mouths</red> latch onto ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
         'The defiler bites ' + player.combat.getDesc() + ' in the ' + hitLocation + ' and rends.',
-        'The defiler bashes ' + player.combat.getDesc() + ' with its tentacular suckers.'
-      ]);
-      toRoom({
-        secondPartyMessage,
-        thirdPartyMessage,
-      });
-
+      ];
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
   },
 
   damaged: function(l10n) {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-      const secondPartyMessage = Random.fromArray([
+      const spilledGuts = hitLocation === 'torso' && damage > this.getAttribute('health') - 5
+
+
+      const secondPartyMessage = spilledGuts ?
+      [ 'The defiler\'s <red>intestines</red> spill onto the floor in a steaming heap.' ] :
+      [
         'The defiler croaks.',
-        'The eldritch abomination oozes pus from its split ' + hitLocation + '.',
+        'The eldritch abomination oozes <white>pus</white> from its split ' + hitLocation + '.',
         'Staggering, the defiler roars, its fanged neck-maw slavering hungrily.'
-      ]);
-      const thirdPartyMessage = Random.fromArray([
+      ];
+      const thirdPartyMessage = spilledGuts ?
+      [ 'The defiler\'s <red>intestines</red> spill onto the floor in a steaming heap.' ] :
+      [
         'The defiler gives a pained croak.',
-        'Tentacles wave furiously as the defiler staggers under the force of ' + player.combat.getDesc() + '\'s blow.',
-        'Pus oozes from the defiler\'s torn ' + hitLocation + '.'
-      ]);
-      toRoom({
-          secondPartyMessage,
-          thirdPartyMessage,
-      });
+        '<white>Pus</white> oozes from the defiler\'s torn ' + hitLocation + '.',
+        'Tentacles wave and a <white>roar</white> splits the air as the defiler staggers under the force of ' + player.combat.getDesc() + '\'s blow.',
+      ];
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
+    }
+  },
+
+  parry: function(l10n) {
+    return function(room, player, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+
+      const secondPartyMessage = [
+        'The defiler smacks your attack out of the way with its massive tentacle.',
+      ];
+      const thirdPartyMessage = [
+        'The defiler smacks ' + player.combat.getDesc() + '\'s attack out of the way with its furrowed tentacle.'
+      ];
+
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
+
     }
   },
 
