@@ -1,5 +1,6 @@
 const Type   = require('./type').Type;
 const Random = require('./random').Random;
+const _ = require('./helpers');
 const util = require('util');
 
 const noop = function() {}
@@ -51,16 +52,24 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
 
 };
 
-const consistentMessage = (broadcaster, secondPartyMessages, thirdPartyMessages)  => {
-  if (secondPartyMessages.length !== thirdPartyMessages.length) {
+const consistentMessage = (broadcaster, messageLists)  => {
+  const sameLength = _
+    .values(messageLists)
+    .reduce((msg, len) => len ?
+      msg.length === len :
+      msg.length, 0);
+
+  if (sameLength !== true) {
     throw new Error("Arrays must have the same number of messages.");
   }
 
-  const selection = Random.inRange(0, secondPartyMessages.length);
-  const secondPartyMessage = secondPartyMessages[selection];
-  const thirdPartyMessage  = thirdPartyMessages[selection];
+  const selection = Random.inRange(0, messageLists.thirdPartyMessages.length);
+  const messages = {};
+  for (const messageList in messageLists) {
+    messages[messageList] = messageLists[messageList][selection];
+  }
 
-  broadcaster({ secondPartyMessage, thirdPartyMessage });
+  broadcaster(messages);
 };
 
 exports.Broadcast = { toRoom, toArea, consistentMessage };
