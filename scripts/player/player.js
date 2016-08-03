@@ -198,7 +198,7 @@ exports.listeners = {
       ];
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
     }
-  }
+  },
 
   changeTime: function(l10n) {
     return function (wasDaytime, rooms) {
