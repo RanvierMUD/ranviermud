@@ -165,6 +165,48 @@ exports.listeners = {
     }
   },
 
+  damaged: function(l10n) {
+    return function(room, npc, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, npc, players);
+      const messageMap: {
+        'head': {
+          firstPartyMessage: [
+            'You wince as the blow smashes into your skull.',
+            'You see stars as ' + npc.combat.getDesc() + ' wracks your brain for you.'
+          ],
+          secondPartyMessage: [
+            this.combat.getDesc() + 'winces as the blow smashes into their skull.',
+            this.combat.getDesc() + 'is staggered by ' + npc.combat.getDesc() + '\'s blow to the head.'
+          ],
+        },
+        'legs': {
+          firstPartyMessage: [
+            'You stagger as ' + npc.combat.getDesc() + ' nearly knocks your legs out from under you.',
+            'Your knees buckle under the force of ' + npc.combat.getDesc() + '\'s blow.'
+          ],
+          secondPartyMessage: [
+            this.combat.getDesc() + ' staggers and nearly trips.',
+            this.combat.getDesc() + '\'s knees buckle.'
+          ]
+        },
+        'default': {
+          firstPartyMessage: [
+            'Pain tears through your' + hitLocation + ' as ' + npc.combat.getDesc() + ' strikes true.',
+          ],
+          secondPartyMessage: [
+            player.combat.getDesc() + ' takes a hit to the ' + hitLocation,
+          ],
+        }
+      };
+
+      const getMessage = which => messageMap[hitLocation] ? messageMap[hitLocation][which] : messageMap.default[which];
+      const firstPartyMessage = getMessage('firstPartyMessage');
+      const secondPartyMessage = getMessage('secondPartyMessage');
+      Broadcast.consistentMessage(toRoom, { firstPartyMessage, secondPartyMessage });
+
+    }
+  },
+
   dodge: function(l10n) {
     return function(room, npc, players, hitLocation) {
       const toRoom = Broadcast.toRoom(room, this, npc, players);
