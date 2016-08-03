@@ -184,7 +184,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     // Assign possible sanity damage (for now, only npcs do sanity dmg)...
     const defenderSanity = defender.getAttribute('sanity');
     const sanityDamage = Type.isPlayer(defender) ?
-      attacker.getSanityDamage() : 0; //TODO: Extract into module.
+      attacker.combat.getSanityDamage() || 0 :
+      0;
 
     // Decide where the hit lands
     const hitLocation = CombatUtil.decideHitLocation(defender.getBodyParts(), attacker.combat.getTarget(), isPrecise());

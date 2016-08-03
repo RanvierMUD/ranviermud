@@ -303,7 +303,7 @@ const Npc = function NpcConstructor(config) {
     const damage = self.getAttribute('sanity_damage') ?
       self.getAttribute('sanity_damage').split('-').map(n => parseInt(n, 10)) :
       false;
-    return damage ? { min: damage[0], max: damage[1] } : false;
+    return damage;
   };
 
   /**
