@@ -73,7 +73,7 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const secondPartyMessage = [
         'The snake lunges at you and whiffs.',
-        'The serpent\'s fangs barely misses your ' + hitLocation + '.',
+        'The serpent\'s fangs barely miss your ' + hitLocation + '.',
         'The hungry python tries to constrict around your ' + hitLocation + ', but you break free.'
       ];
       const thirdPartyMessage = [

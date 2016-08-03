@@ -168,7 +168,7 @@ exports.listeners = {
   damaged: function(l10n) {
     return function(room, npc, players, hitLocation) {
       const toRoom = Broadcast.toRoom(room, this, npc, players);
-      const messageMap: {
+      const messageMap = {
         'head': {
           firstPartyMessage: [
             'You wince as the blow smashes into your skull.',
@@ -194,7 +194,7 @@ exports.listeners = {
             'Pain tears through your' + hitLocation + ' as ' + npc.combat.getDesc() + ' strikes true.',
           ],
           secondPartyMessage: [
-            player.combat.getDesc() + ' takes a hit to the ' + hitLocation,
+            this.combat.getDesc() + ' takes a hit to the ' + hitLocation,
           ],
         }
       };
