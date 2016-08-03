@@ -164,6 +164,26 @@ exports.listeners = {
     }
   },
 
+  doddge: function(l10n) {
+    return function(room, npc, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, npc, players);
+
+      const firstPartyMessages = hitLocation === 'head' ?
+      [ 'You duck out of the way as ' + npc.combat.getDesc() + ' goes for your head.' ] :
+      [
+        'You twist out of the way as ' + npc.combat.getDesc() + ' attacks.',
+        'You barely get your ' + hitLocation + ' out of the way in time.'
+      ];
+      const thirdPartyMessages = hitLocation === 'head' ?
+      [ this.combat.getDesc() + ' ducks under ' + npc.combat.getDesc() + '\'s attack.' ] :
+      [
+        this.combat.getDesc() + ' twists out of the way of ' + npc.combat.getDesc() + '.',
+        this.combat.getDesc() + ' nimbly evades ' + npc.combat.getDesc() + '.'
+      ];
+      Broadcast.consistentMessage(toRoom, { firstPartyMessages, thirdPartyMessages });
+    }
+  }
+
   changeTime: function(l10n) {
     return function (wasDaytime, rooms) {
       const playerIsOutside = rooms.getAt(this.getLocation()).biome === 'outdoors';
