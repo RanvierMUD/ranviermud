@@ -207,8 +207,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         CommandUtil.hasScript(defender, 'parry');
       const canDodge = CommandUtil.hasScript(defender, 'dodge');
 
-      let missMessage = ' misses.';
-
       const parrySkill = Type.isPlayer(defender) ?
         defender.getSkills('parrying') + defender.getAttribute('cleverness') :
         defender.getAttribute('speed') * 2;
@@ -218,7 +216,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
       if (canParry && parrySkill > Random.roll()) {
         util.log('The attack is parried!');
-        missMessage = ' it is parried.';
         if (defenderWeapon && CommandUtil.hasScript(defenderWeapon, 'parry')) {
           defenderWeapon.emit('parry', defender, attacker, players);
         } else {
@@ -226,13 +223,10 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         }
       } else if (canDodge && dodgeSkill > Random.roll()) {
         util.log('They dodge!');
-        missMessage = ' it is dodged.';
         defender.emit('dodge', room, attacker, players, hitLocation);
 
       // If it is just a regular ole miss...
       //TODO: What if there are no players involved in combat?
-      //TODO: Create a utility func for broadcasting to first, second, and 3rd parties.
-      // Make it hella configurable.
       } else {
         if (attackerWeapon && CommandUtil.hasScript(attackerWeapon, 'missedAttack')) {
           attackerWeapon.emit('missedAttack', room, defender, attacker, players, hitLocation);
@@ -245,23 +239,19 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     }
 
-    // If it hits...
     if (!missed) {
-
+      util.log('The attack hits!');
       // Begin assigning damage...
       const damage = this.isSecondAttack ?
         dualWieldDamage(attacker.combat.getDamage('offhand')) :
         attacker.combat.getDamage();
       util.log('Base damage for the ' + attackDesc + ': ', damage);
 
-      // Actual damage based on location hit and armor...
+      // Actual damage based on hitLocation and armor...
       // The damage func has side effect of depleting defender's health.
-      //TODO: Extract damage funcs to combat helper class.
-
       const damageDealt = defender.damage(damage, hitLocation);
 
       // Emit events for scriptability.
-      //TODO: Add scripts for hitting with weapons.
       if (attackerWeapon && typeof attackerWeapon === 'object') {
         attackerWeapon.emit('hit', attacker, defender, damage);
       }
