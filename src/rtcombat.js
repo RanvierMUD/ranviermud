@@ -234,7 +234,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       //TODO: Create a utility func for broadcasting to first, second, and 3rd parties.
       // Make it hella configurable.
       } else {
-        attacker.emit('missedAttack', room, defender, players, hitLocation);
+        if (attackerWeapon && CommandUtil.hasScript(attackerWeapon, 'missedAttack')) {
+          attackerWeapon.emit('missedAttack', room, defender, attacker, players, hitLocation);
+        } else {
+          attacker.emit('missedAttack', room, defender, players, hitLocation);
+        }
       }
 
       util.log(attackerDesc + ' misses ' + defenderDesc);

@@ -67,7 +67,35 @@ exports.listeners = {
         'Hissing furiously, the roach rears its pincer-covered maw.',
         'Ichor oozes from the injured roach.'
       ];
-      
+
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
+    }
+  },
+
+  missedAttack: function(l10n) {
+    return function(room, player, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+      const secondPartyMessage = [
+        'The roach scuttles over your feet harmlessly.',
+        'The roach darts in your direction and you step out of the way.'
+      ];
+      const thirdPartyMessage = [
+        'The roach scuttles over ' + player.combat.getDesc() + '\'s feet harmlessly.',
+        'The roach darts at ' + player.combat.getDesc() + ' but they step out of the way effortlessly.'
+      ];
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
+    }
+  },
+
+  parry: function(l10n) {
+    return function (room, plaer, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+      const secondPartyMessage = [
+        '<white>The roach\'s abnormally tough chitin deflects your blow!</white>'
+      ];
+      const thirdPartyMessage = [
+        '<white>' + player.combat.getDesc() + '\'s blow is deflected by the roach\'s thick shell.</white>'
+      ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
   },

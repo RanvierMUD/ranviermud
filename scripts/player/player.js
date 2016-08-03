@@ -5,7 +5,8 @@ var LevelUtil = require('../../src/levels').LevelUtil,
   CommandUtil = require('../../src/command_util').CommandUtil,
   util = require('util'),
   Commands = require('../../src/commands').Commands,
-  Effects = require('../../src/effects').Effects;
+  Effects = require('../../src/effects').Effects,
+  Broadcast = require('../../src/broadcast').Broadcast;
 
 exports.listeners = {
 
@@ -164,23 +165,38 @@ exports.listeners = {
     }
   },
 
-  doddge: function(l10n) {
+  dodge: function(l10n) {
     return function(room, npc, players, hitLocation) {
       const toRoom = Broadcast.toRoom(room, this, npc, players);
 
-      const firstPartyMessages = hitLocation === 'head' ?
+      const firstPartyMessage = hitLocation === 'head' ?
       [ 'You duck out of the way as ' + npc.combat.getDesc() + ' goes for your head.' ] :
       [
         'You twist out of the way as ' + npc.combat.getDesc() + ' attacks.',
         'You barely get your ' + hitLocation + ' out of the way in time.'
       ];
-      const thirdPartyMessages = hitLocation === 'head' ?
+      const thirdPartyMessage = hitLocation === 'head' ?
       [ this.combat.getDesc() + ' ducks under ' + npc.combat.getDesc() + '\'s attack.' ] :
       [
         this.combat.getDesc() + ' twists out of the way of ' + npc.combat.getDesc() + '.',
         this.combat.getDesc() + ' nimbly evades ' + npc.combat.getDesc() + '.'
       ];
-      Broadcast.consistentMessage(toRoom, { firstPartyMessages, thirdPartyMessages });
+      Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
+    }
+  },
+
+  missedAttack: function(l10n) {
+    return function(room, npc, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, npc, players);
+      const firstPartyMessage = [
+        'You swing and miss.',
+        'You whiff completely.'
+      ];
+      const thirdPartyMessage = [
+        this.combat.getDesc() + ' swings and misses.',
+        this.combat.getDesc() + ' tries to attack ' + npc.combat.getDesc() + ' and whiffs.'
+      ];
+      Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
     }
   }
 
