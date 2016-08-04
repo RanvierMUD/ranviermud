@@ -145,8 +145,6 @@ function parseDot(arg, objects, filterFunc) {
 
   const found = objects.filter(filterFunc, { keyword, nth });
 
-  util.log('Parsed dot, found: ', found);
-
   if (!found.length) { return false; }
 
   const areMultiples = multi && !isNaN(nth) && nth && nth <= found.length
