@@ -38,22 +38,19 @@ exports.listeners = {
   hit: l10n => {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-      util.log('HIT EMIT!!!!!!');
-      const secondPartyMessage = Random.fromArray([
+
+      const secondPartyMessage = [
         'The rat\'s claws rake your ' + hitLocation + ', drawing lines of blood.',
         'The rat gnaws your ' + hitLocation + '.',
-        'Foaming at the mouth, the rat sinks its fangs into your ' + hitLocation + '.'
-      ]);
-      const thirdPartyMessage = Random.fromArray([
+        'Foaming at the mouth and screeching, the rat sinks its fangs into your ' + hitLocation + '.'
+      ];
+      const thirdPartyMessage = [
         'The rat rakes ' + player.combat.getDesc() + ' in the ' + hitLocation + ' with its jagged claws.',
         'The rat bites ' + player.combat.getDesc() + '\'s ' + hitLocation + ' and refuses to let go.',
-        'The rat screeches at ' + player.combat.getDesc() + ' and sinks its fangs in.'
-      ]);
-      toRoom({
-        secondPartyMessage,
-        thirdPartyMessage,
-      });
+        'The rat screeches at ' + player.combat.getDesc() + ' and sinks its fangs in their' + hitLocation + '.'
+      ];
 
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
   },
 
@@ -77,5 +74,25 @@ exports.listeners = {
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
   },
+
+  dodge: function(l10n) {
+    return function(room, player, players, hitLocation, damage) {
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+
+      const secondPartyMessage = [
+        'The rat scurries away from you.',
+        'Your attack hits nothing but fur.',
+        'The rabid rodent leaps past you as you make your move, and you miss.',
+      ];
+      const thirdPartyMessage = [
+        'The rat scurries away from ' + player.combat.getDesc()'\'s attack.',
+        player.combat.getDesc() + '\'s attack hits only the rat\'s fur.',
+        'The fierce rat leaps past ' + player.combat.getDesc() + ' and they whiff.',
+      ];
+
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
+    }
+  },
+
 
 };
