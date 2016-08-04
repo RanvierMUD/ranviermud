@@ -25,4 +25,4 @@
     body: 4
     torso: 1
     legs: '-1'
-  load_max: 3
+  load_max: 1

@@ -191,7 +191,7 @@ exports.listeners = {
         },
         'default': {
           firstPartyMessage: [
-            'Pain tears through your' + hitLocation + ' as ' + npc.combat.getDesc() + ' strikes true.',
+            'Pain tears through your ' + hitLocation + ' as ' + npc.combat.getDesc() + ' strikes true.',
           ],
           thirdPartyMessage: [
             this.combat.getDesc() + ' takes a hit to the ' + hitLocation,
