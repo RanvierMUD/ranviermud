@@ -2,12 +2,12 @@ const HelpFiles = {
 
   HELP:  {
     title: 'Getting help',
-    body: 'Type \'commands\' to see a list of possible commands.\nType \'help (command)\' to see more information about that command.\nAlso try \'help new\' for a list of introductory topics.',
+    body: 'Type \'commands\' to see a list of possible commands.\nType \'help (command)\' to see more information about that command.\nAlso try \'help new\' for a list of introductory topics.\n\nThese help files will include a description, a usage (in the case of commands), and some related help topics.',
   },
 
   NEW: {
     title: 'Welcome to Ranvier',
-    body: 'These help files will include a description, a usage (in the case of commands), and some related help topics.\n<bold>Important topics include:</bold>',
+    body: '<bold>Important topics include:</bold>',
     related: ['commands', 'levels', 'attributes', 'mutants', 'mental', 'physical', 'energy', 'combat', 'social', 'skills'],
   },
 
