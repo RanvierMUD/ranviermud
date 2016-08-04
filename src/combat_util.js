@@ -125,7 +125,9 @@ function CombatHelper(entity) {
 
   this.getSanityDamage = () => {
     const damageRange = this._entity.getSanityDamage();
-    return Random.inRange(...damageRange);
+    return damageRange ?
+      Random.inRange(...damageRange) :
+      damageRange;
   }
 
   /**
