@@ -88,4 +88,40 @@ exports.listeners = {
     }
   },
 
+  dodge: function(l10n) {
+    return function(room, player, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+
+      const secondPartyMessage = [
+        'The abomination\'s body bends in a horrific manner to avoid your attack.',
+        'The defiler leaps backwards, dodging, its knees bending at impossible angles.'
+      ];
+      const thirdPartyMessage = [
+        'The defiler nearly bends in half to avoid ' + player.combat.getDesc() + '\'s attack.'
+        'The defiler leaps backwards, dodging ' + player.combat.getDesc() + ', its knees bending at impossible angles.'
+      ];
+
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
+
+    }
+  },
+
+  missedAttack: function(l10n) {
+    return function(room, player, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+
+      const secondPartyMessage = [
+        'The defilers tentacles swing towards you, but connect only with air.',
+        'Croaking, the defiler lunges at you but falls short.'
+      ];
+      const thirdPartyMessage = [
+        'The defiler swings its tentacle-mouths at ' + player.combat.getDesc() + ' but is left hungering.'
+        'Croaking, the defiler attempts to chow on ' + player.combat.getDesc() + ', but misses.'
+      ];
+
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
+
+    }
+  },
+
 };
