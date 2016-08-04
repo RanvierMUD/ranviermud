@@ -65,7 +65,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }
 
       if (file.related) {
-        player.say('<blue>RELATED TOPICS:</blue>');
+        var defaultTopicsHeader = '<blue>RELATED TOPICS:</blue>';
+        player.say(file.topicsHeader || defaultTopicsHeader);
         maybeForEach(file.related, related);
         hr();
       }
