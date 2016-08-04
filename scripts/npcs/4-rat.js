@@ -60,21 +60,21 @@ exports.listeners = {
   damaged: function(l10n) {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-      const secondPartyMessage = Random.fromArray([
+
+      const secondPartyMessage = [
         'The rat screeches in pain, a bloody foam spraying from its maw.',
         'A gash opens across the feral rat\'s matted fur.',
         'The rabid rodent is knocked back by the blow, a ball of furry fury.',
         'The rat\'s ' + hitLocation + ' tears under the force of the blow.'
-      ]);
-      const thirdPartyMessage = Random.fromArray([
+      ];
+      const thirdPartyMessage = [
         'The rat screeches in pain as its ' + hitLocation + ' crumples.',
-        'Foaming at the maw, the rat recoils ' + player.combat.getDesc() + '\'s blow.',
+        'Foaming at the maw, the rat is gashed by ' + player.combat.getDesc() + '\'s attack.',
+        'The fierce rat is bashed away by ' + player.combat.getDesc() + '.',
         'Blood sprays across the ground as the feral rat\'s ' + hitLocation + ' is sundered.'
-      ]);
-      toRoom({
-          secondPartyMessage,
-          thirdPartyMessage,
-      });
+      ];
+
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
   },
 
