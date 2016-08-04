@@ -85,7 +85,7 @@ exports.listeners = {
         'The rabid rodent leaps past you as you make your move, and you miss.',
       ];
       const thirdPartyMessage = [
-        'The rat scurries away from ' + player.combat.getDesc()'\'s attack.',
+        'The rat scurries away from ' + player.combat.getDesc() + '\'s attack.',
         player.combat.getDesc() + '\'s attack hits only the rat\'s fur.',
         'The fierce rat leaps past ' + player.combat.getDesc() + ' and they whiff.',
       ];
@@ -94,5 +94,23 @@ exports.listeners = {
     }
   },
 
+  missedAttack: function(l10n) {
+    return function(room, player, players, hitLocation, damage) {
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+
+      const secondPartyMessage = [
+        '<yellow>The rat leaps for your ' + hitLocation + ', but flies past in a ball of fur and fangs.</yellow>',
+        '<yellow>The rat\'s claws bounce harmlessly off your ' + hitLocation + '.</yellow>',
+        '<yellow>The rabid rodent sprays bloody foam on your ' + hitLocation + ' as they try to bite and miss.</yellow>',
+      ];
+      const thirdPartyMessage = [
+        '<yellow>The rat leaps for ' + player.combat.getDesc() + '\s ' + hitLocation + ', but flies past in a ball of fur and fangs.</yellow>',
+        '<yellow>The rat claws uselessly at ' + player.combat.getDesc() + ', missing.</yellow>',
+        '<yellow>The rabid critter sprays bloody foam on' + player.combat.getDesc() + ' but fails to do any real damage.</yellow>',
+      ];
+
+      Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
+    }
+  },
 
 };
