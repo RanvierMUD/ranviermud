@@ -58,18 +58,25 @@ exports.listeners = {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
 
-      const secondPartyMessage = [
+      const moderateDamage = damage < this.getAttribute('health') - 1;
+
+      const secondPartyMessage = moderateDamage ?
+      [
         'The rat screeches in pain, a bloody foam spraying from its maw.',
         'A gash opens across the feral rat\'s matted fur.',
         'The rabid rodent is knocked back by the blow, a ball of furry fury.',
         'The rat\'s ' + hitLocation + ' tears under the force of the blow.'
-      ];
-      const thirdPartyMessage = [
+      ] :
+      ['The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur and bones.'];
+      const thirdPartyMessage = moderateDamage ?
+      [
         'The rat screeches in pain as its ' + hitLocation + ' crumples.',
         'Foaming at the maw, the rat is gashed by ' + player.combat.getDesc() + '\'s attack.',
         'The fierce rat is bashed away by ' + player.combat.getDesc() + '.',
         'Blood sprays across the ground as the feral rat\'s ' + hitLocation + ' is sundered.'
-      ];
+      ] :
+      ['The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur, thanks to ' + player.combat.getDesc() + '.'];
+;
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
