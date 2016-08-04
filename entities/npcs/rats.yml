@@ -23,7 +23,7 @@
     body: 1
     head: '-3'
     torso: 1
-  load_max: 7
+  load_max: 4
 - *rat
 - *rat
 - <<: *rat

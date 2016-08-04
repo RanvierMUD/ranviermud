@@ -115,7 +115,7 @@ function openOrClose(verb, args, player, players, rooms) {
 }
 
 function useKey(verb, args, player, players, rooms) {
-
+  util.log('USING KEY....')
   const isLocking = verb === 'lock';
 
   player.emit('action');
@@ -153,6 +153,8 @@ function useKey(verb, args, player, players, rooms) {
     return player.say('That door is already ' + verb + 'ed.');
   }
 
+  util.log('WHAT IS DOOR ', exit.door);
+  util.log('WHAT IS KEY', exit.door.key);
   const key = CommandUtil.findItemInInventory(exit.door.key, player, true);
 
   if (!key) {

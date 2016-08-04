@@ -25,7 +25,7 @@
     head: '-3'
     legs: 2
     pincers: '-1'
-  load_max: 9
+  load_max: 5
 - *roach
 - <<: *roach
   room: 3

@@ -97,7 +97,7 @@ exports.listeners = {
         'The defiler leaps backwards, dodging, its knees bending at impossible angles.'
       ];
       const thirdPartyMessage = [
-        'The defiler nearly bends in half to avoid ' + player.combat.getDesc() + '\'s attack.'
+        'The defiler nearly bends in half to avoid ' + player.combat.getDesc() + '\'s attack.',
         'The defiler leaps backwards, dodging ' + player.combat.getDesc() + ', its knees bending at impossible angles.'
       ];
 
@@ -115,7 +115,7 @@ exports.listeners = {
         'Croaking, the defiler lunges at you but falls short.'
       ];
       const thirdPartyMessage = [
-        'The defiler swings its tentacle-mouths at ' + player.combat.getDesc() + ' but is left hungering.'
+        'The defiler swings its tentacle-mouths at ' + player.combat.getDesc() + ' but is left hungering.',
         'Croaking, the defiler attempts to chow on ' + player.combat.getDesc() + ', but misses.'
       ];
 
