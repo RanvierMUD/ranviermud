@@ -21,8 +21,8 @@ const toArea = (player, players, rooms) => msg => {
 
 const toRoom = (room, firstParty, secondParty, players) => config => {
 
-  const firstPartyMsger = Type.isPlayer(firstParty) ?
-    firstParty.say : noop;
+  const firstPartyMsger  = Type.isPlayer(firstParty)  ?
+    firstParty.say :  noop;
   const secondPartyMsger = Type.isPlayer(secondParty) ?
     secondParty.say : noop;
 
@@ -58,7 +58,9 @@ const consistentMessage = (broadcaster, messageLists)  => {
     .map(list => list.length);
 
   const sameLength = listLengths
-    .reduce((prev, length) => prev === undefined ? length : prev === length);
+    .reduce((prev, length) => prev === undefined ?
+      length :
+      prev === length ? length : false);
 
 
   if (!sameLength) {
