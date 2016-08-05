@@ -1,7 +1,7 @@
 - &defiler
   vnum: 3
   room: 10
-  #script: '3.js'
+  script: '3-defiler.js'
   keywords:
     en: ['defiler', 'def']
   types: ['humanoid', 'eldritch']
@@ -25,4 +25,4 @@
     body: 4
     torso: 1
     legs: '-1'
-  load_max: 3
+  load_max: 1

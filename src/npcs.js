@@ -182,6 +182,7 @@ const Npc = function NpcConstructor(config) {
   self.getVnum = () => self.vnum;
   self.getInv = () => self.inventory;
   self.getRoom = () => self.room;
+  self.getLocation = self.getRoom;
   self.getUuid = () => self.uuid;
   self.getDefenses = () => self.defenses;
   self.getBodyParts = () => Object.keys(self.defenses);
@@ -229,14 +230,14 @@ const Npc = function NpcConstructor(config) {
    * @param string name
    * @param object affect
    */
-  self.addEffect = (name, effect) => {
+  self.addEffect = (name, effect, config) => {
     if (effect.activate) {
-      effect.activate();
+      effect.activate(config);
     }
 
     setTimeout(() => {
       if (effect.deactivate) {
-        effect.deactivate();
+        effect.deactivate(config);
       }
       self.removeEffect(name);
     }, effect.duration * 1000);
@@ -302,7 +303,7 @@ const Npc = function NpcConstructor(config) {
     const damage = self.getAttribute('sanity_damage') ?
       self.getAttribute('sanity_damage').split('-').map(n => parseInt(n, 10)) :
       false;
-    return damage ? { min: damage[0], max: damage[1] } : false;
+    return damage;
   };
 
   /**

@@ -339,7 +339,7 @@ function tick() {
 
 	npcs.each( npc => {
 		let room = rooms.getAt(npc.getRoom());
-		npc.emit('tick', room, rooms, null, players, npc);
+		npc.emit('tick', room, rooms, null, players, npc, npcs);
 	});
 
 	let weatherHappened = Time.checkWeather(rooms, players);

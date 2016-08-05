@@ -1,7 +1,7 @@
 - &roach
   vnum: 1
   room: 2
-  #script: '1.js'
+  script: '1-roach.js'
   types: ['insect', 'beast']
   keywords:
     en: ['roach', 'cockroach', 'bug', 'cock', 'ro']
@@ -24,8 +24,8 @@
     torso: 2
     head: '-3'
     legs: 2
-    arms: 2
-  load_max: 9
+    pincers: '-1'
+  load_max: 5
 - *roach
 - <<: *roach
   room: 3

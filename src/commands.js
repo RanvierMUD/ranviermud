@@ -219,32 +219,7 @@ function move(exit, player) {
   const lockedDoor = Doors.isLocked(exit);
 
   if (closedDoor && lockedDoor) {
-    const key = exit.door.key;
-
-    if (!CommandUtil.findItemInInventory(key, player)) {
-      const getExitTitle = exitLoc => locale => rooms
-          .getAt(exitLoc)
-          .getTitle(locale);
-
-      const getDestinationTitle = getExitTitle(exit.location);
-      const roomTitle = getDestinationTitle(player.getLocale());
-
-      player.sayL10n(l10n, 'LOCKED', roomTitle);
-      players.eachIf(
-        p => CommandUtil.inSameRoom(player, p),
-        p => {
-          let roomTitle = getDestinationTitle(p.getLocale());
-          p.sayL10n(l10n, 'OTHER_LOCKED', player.getName(), roomTitle);
-        });
-      return false;
-    }
-
     Doors.unlockDoor(exit);
-
-    player.sayL10n(l10n, 'UNLOCKED', key);
-    players.eachIf(
-      p => CommandUtil.inSameRoom(player, p),
-      p => p.sayL10n(l10n, 'OTHER_UNLOCKED', player.getName(), key));
   }
 
   const room = rooms.getAt(exit.location);
