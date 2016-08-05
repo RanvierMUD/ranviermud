@@ -15,11 +15,15 @@ const statusUtils = require('./status');
 const Commands    = require('./commands').Commands;
 const CombatUtil  = require('./combat_util').CombatUtil;
 const Type        = require('./type').Type;
+const Effects     = require('./effects').Effects;
+const Broadcast   = require('./broadcast').Broadcast;
 
 function _initCombat(l10n, target, player, room, npcs, players, rooms, callback) {
   const locale = Type.isPlayer(player) ? player.getLocale() : 'en';
   player.setInCombat(target);
   target.setInCombat(player);
+
+  const broadcastToArea = Broadcast.toArea(player, players, rooms);
 
   player.sayL10n(l10n, 'ATTACK', target.combat.getDesc());
 
@@ -143,18 +147,18 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     util.log('Attack energy cost for ' + attacker.combat.getDesc() + ' is ' + energyCost);
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
     if (slowAttacker) {
-      attacker.addEffect('fatigued', Effects.fatigued);
+      attacker.addEffect('fatigued', Effects.fatigued, { attacker });
     }
 
     // Handle attacker sanity effects...
     const stressedLimit = 40;
     const stressedAttacker = Type.isPlayer(attacker) && attacker.getAttribute('sanity') <= stressedLimit;
     if (stressedAttacker) {
-      attacker.addEffect('stressed', Effects.stressed);
+      attacker.addEffect('stressed', Effects.stressed, { attacker });
 
       const insanityLimit = 20;
       if (attacker.getAttribute('sanity') > insanityLimit) {
-        attacker.addEffect('insane', Effects.insane);
+        attacker.addEffect('insane', Effects.insane, { attacker });
       }
     }
 
@@ -180,7 +184,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     // Assign possible sanity damage (for now, only npcs do sanity dmg)...
     const defenderSanity = defender.getAttribute('sanity');
     const sanityDamage = Type.isPlayer(defender) ?
-      attacker.getSanityDamage() : 0; //TODO: Extract into module.
+      attacker.combat.getSanityDamage() || 0 :
+      0;
 
     // Decide where the hit lands
     const hitLocation = CombatUtil.decideHitLocation(defender.getBodyParts(), attacker.combat.getTarget(), isPrecise());
@@ -203,8 +208,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         CommandUtil.hasScript(defender, 'parry');
       const canDodge = CommandUtil.hasScript(defender, 'dodge');
 
-      let missMessage = ' misses.';
-
       const parrySkill = Type.isPlayer(defender) ?
         defender.getSkills('parrying') + defender.getAttribute('cleverness') :
         defender.getAttribute('speed') * 2;
@@ -214,84 +217,49 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
       if (canParry && parrySkill > Random.roll()) {
         util.log('The attack is parried!');
-        missMessage = ' it is parried.';
-        defenderWeapon.emit('parry', defender, attacker);
+        if (defenderWeapon && CommandUtil.hasScript(defenderWeapon, 'parry')) {
+          defenderWeapon.emit('parry', defender, attacker, players);
+        } else {
+          defender.emit('parry', attacker, room, players, hitLocation);
+        }
       } else if (canDodge && dodgeSkill > Random.roll()) {
         util.log('They dodge!');
-        missMessage = ' it is dodged.';
-        defender.emit('dodge', defender, attacker)
+        defender.emit('dodge', room, attacker, players, hitLocation);
 
       // If it is just a regular ole miss...
       //TODO: What if there are no players involved in combat?
-      //TODO: Create a utility func for broadcasting to first, second, and 3rd parties.
-      // Make it hella configurable.
       } else {
-        if (Type.isPlayer(attacker)) {
-          player.sayL10n(l10n, 'PLAYER_MISS', defenderDesc);
-        } else if (Type.isPlayer(defender)) {
-          player.sayL10n(l10n, 'NPC_MISS', attackerDesc);
+        if (attackerWeapon && CommandUtil.hasScript(attackerWeapon, 'missedAttack')) {
+          attackerWeapon.emit('missedAttack', room, defender, attacker, players, hitLocation);
+        } else {
+          attacker.emit('missedAttack', room, defender, players, hitLocation);
         }
       }
-
-      broadcastExceptPlayer(
-        '<bold>'
-        + attackerDesc
-        + ' attacks '
-        + defenderDesc
-        + ' and '
-        + missMessage
-        + '</bold>');
 
       util.log(attackerDesc + ' misses ' + defenderDesc);
 
     }
 
-    // If it hits...
     if (!missed) {
-
+      util.log('The attack hits!');
       // Begin assigning damage...
       const damage = this.isSecondAttack ?
         dualWieldDamage(attacker.combat.getDamage('offhand')) :
         attacker.combat.getDamage();
       util.log('Base damage for the ' + attackDesc + ': ', damage);
 
-      // Actual damage based on location hit and armor...
+      // Actual damage based on hitLocation and armor...
       // The damage func has side effect of depleting defender's health.
-      //TODO: Extract damage funcs to combat helper class.
-
       const damageDealt = defender.damage(damage, hitLocation);
 
-      util.log(attackerDesc + ' targeted ' + attacker.combat.getTarget() + ' and hit ' + defenderDesc + ' in the ' + hitLocation + '.');
-      let damageStr = getDamageString(damageDealt, defender.getAttribute('health'));
-
-      //TODO: Add scripts for hitting with weapons.
+      // Emit events for scriptability.
       if (attackerWeapon && typeof attackerWeapon === 'object') {
         attackerWeapon.emit('hit', attacker, defender, damage);
       }
+      attacker.emit('hit', room, defender, players, hitLocation, damageDealt);
+      defender.emit('damaged', room, attacker, players, hitLocation, damageDealt);
 
-      //TODO: Add scripts for hitting and getting damaged to NPCs.
-      attacker.emit('hit', attackerWeapon, defender, damage);
-      defender.emit('damaged', attackerWeapon, attacker, damage);
-
-      util.log(defender.combat.getDesc() + ' is hit at location:');
-      util.log(hitLocation);
-
-      //TODO: This could be a method of util since this pattern is used in a couple of spots.
-      if (Type.isPlayer(defender)) {
-        player.sayL10n(l10n, 'DAMAGE_TAKEN', attackerDesc, damageStr, attackDesc, hitLocation);
-      } else if (Type.isPlayer(attacker)) {
-        player.sayL10n(l10n, 'DAMAGE_DONE', defenderDesc, damageStr, hitLocation);
-      }
-
-      broadcastExceptPlayer(
-        '<bold><red>'
-        + attackerDesc
-        + ' attacks '
-        + defender.combat.getDesc() +
-        ' and '
-        + damageStr
-        + ' them!'
-        + '</red></bold>');
+      util.log(attackerDesc + ' targeted ' + attacker.combat.getTarget() + ' and hit ' + defenderDesc + ' in the ' + hitLocation + '.');
 
         // If the defender is dealt a deathblow, end combat...
         if (defenderStartingHealth <= damage) {
@@ -303,7 +271,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     }
 
     // Do sanity damage if applicable...
-    if (sanityDamage) {
+    if (sanityDamage && defenderSanity) {
       defender.setAttribute('sanity', Math.max(defenderSanity - sanityDamage, 0));
     }
 
@@ -344,7 +312,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       "A thud, a muffled groan. Fighting nearby?"
     ];
 
-    broadcastToArea(Random.fromArray(nearbyFight));
+    if (Random.coinFlip()) { broadcastToArea(Random.fromArray(nearbyFight)); }
 
     // Do it all over again...
     setTimeout(this.combatRound, attackerSpeed);
@@ -355,30 +323,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     return Math.round((numerator / denominator) * 100);
   }
 
-  function getDamageString(damage, health) {
-    var percentage = getPercentage(damage, health);
-
-    var damageStrings = {
-      1: 'tickles',
-      3: 'scratches',
-      8: 'grazes',
-      20: 'hits',
-      35: 'wounds',
-      85: 'maims',
-    };
-
-    for (var cutoff in damageStrings) {
-      if (percentage <= cutoff) {
-        return damageStrings[cutoff];
-      }
-    }
-    return 'crushes';
-  }
-
   function combatEnd(success) {
 
     util.log("*** Combat Over ***");
 
+    //TODO: Use filter to remove the combatants from an array. Probably do this inside the player/npc objs.
     player.setInCombat(false);
     target.setInCombat(false);
 
@@ -434,7 +383,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     }
   }
 
-  //TODO: More candidates for utilification, I suppose.
+  //TODO: Use Broadcast module or extract to the Broadcast file.
 
   function broadcastExceptPlayer(msg) {
     players.eachExcept(player, p => {
@@ -445,17 +394,4 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     });
   }
 
-  function broadcastToArea(msg) {
-    players.eachExcept(player, p => {
-      const otherRoom   = rooms.getAt(p.getLocation());
-      const playerRoom  = rooms.getAt(player.getLocation());
-      const sameArea    = otherRoom.getArea() === playerRoom.getArea();
-      const notSameRoom = otherRoom !== playerRoom;
-
-      if (sameArea && notSameRoom) {
-        p.say(msg);
-        p.prompt();
-      }
-    });
-  }
 }

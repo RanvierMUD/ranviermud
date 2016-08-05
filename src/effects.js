@@ -84,7 +84,8 @@ const Effects = {
 	// If player runs out of energy during combat...
 	fatigued: {
 		duration: 5000,
-		activate: () => {
+		activate: config => {
+			const attacker = config.attacker;
 			const fatigue = { name: 'fatigue' };
 			if (!attacker.getEffects('fatigued')) {
 				attacker.combat.addSpeedMod({
@@ -105,13 +106,14 @@ const Effects = {
 				});
 			}
 		},
-		deactivate: () => attacker.combat.removeAllMods('fatigued'),
+		deactivate: config => config.attacker.combat.deleteAllMods('fatigued'),
 	},
 
 	// If player is stressed during combat...
 	stressed: {
 		duration: 5000,
-		activate: () => {
+		activate: config => {
+			const attacker = config.attacker;
 			if (!attacker.getEffects('stressed')) {
 				attacker.combat.addSpeedMod({
 					name:  'stressed',
@@ -127,13 +129,14 @@ const Effects = {
 				});
 			}
 		},
-		deactivate: () => attacker.combat.removeAllMods('stressed'),
+		deactivate: config => config.attacker.combat.deleteAllMods('stressed'),
 	},
 
 	// If player is insane during combat...
 	insane: {
 		duration: 5000,
-		activate: () => {
+		activate: config => {
+			const attacker = config.attacker;
 			if (!attacker.getEffects('insane')) {
 				attacker.combat.addSpeedMod({
 					name:  'insane',
@@ -153,7 +156,7 @@ const Effects = {
 				});
 			}
 		},
-		deactivate: () => attacker.combat.removeAllMods('insane'),
+		deactivate: config => config.attacker.combat.deleteAllMods('insane'),
 	},
 
   /**

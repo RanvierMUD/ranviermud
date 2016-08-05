@@ -104,6 +104,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const status = {
         1: ['sluggish', 'slothly', 'slovenly', 'pitiable'],
         2: ['trudging', 'like an old ' + gender, 'awkward'],
+        4: ['average', 'unimpressive'],
         5: ['nimble', 'speedy'],
         7: ['athletic', 'graceful'],
         8: ['acrobatic', 'fleet'],

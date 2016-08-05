@@ -19,7 +19,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     if (!args) {
       displayHelpFile('HELP');
-      if (!player.hasExplored('help')) { return displayHelpFile('NEW'); }
+      return displayHelpFile('NEW');
     }
 
     args = args.toUpperCase().trim();
@@ -33,20 +33,22 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function displayHelpFile(topic) {
       const file = HelpFiles[topic];
-
       if ( !file) {
         return args in Commands.player_commands  ?
-          player.writeL10n(l10n, 'NO_HELP_FILE') : player.writeL10n(l10n, 'NOT_FOUND');
+          player.writeL10n(l10n, 'NO_HELP_FILE') :
+          player.writeL10n(l10n, 'NOT_FOUND');
       }
+
+      // --- Helpers for printing out the help files. Help helpers.
 
       const hr      = ()     => print('<green>---------------------------------'
                                       + '------------------------------</green>');
-      const title   = txt    => print('<bold>' + txt + '</bold>');
-      const usage   = usage  => print('<cyan>    USAGE:</cyan> ' + usage);
-      const options = option => print('<red> - </red>' + option);
-      const related = topic  => print('<magenta> * </magenta>' + topic);
+      const title   = txt    => print('<bold>'   +       txt     +     '</bold>');
+      const usage   = usage  => print('<cyan>    USAGE: </cyan>' +       usage);
+      const options = option => print('<red> - </red>'           +       option);
+      const related = topic  => print('<magenta> * </magenta>'   +       topic);
 
-      const maybeForEach = (txt, fn) => Array.isArray(txt) ? txt.forEach(fn) : fn(txt);
+      const maybeForEach = (txt, fn) => [].concat(txt).forEach(fn);
 
       hr();
 
@@ -63,13 +65,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }
 
       if (file.related) {
-        player.say('<blue>RELATED TOPICS:</blue>');
+        var defaultTopicsHeader = '<blue>RELATED TOPICS:</blue>';
+        player.say(file.topicsHeader || defaultTopicsHeader);
         maybeForEach(file.related, related);
         hr();
       }
 
     }
-
 
   };
 };

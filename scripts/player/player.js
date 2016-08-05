@@ -5,7 +5,8 @@ var LevelUtil = require('../../src/levels').LevelUtil,
   CommandUtil = require('../../src/command_util').CommandUtil,
   util = require('util'),
   Commands = require('../../src/commands').Commands,
-  Effects = require('../../src/effects').Effects;
+  Effects = require('../../src/effects').Effects,
+  Broadcast = require('../../src/broadcast').Broadcast;
 
 exports.listeners = {
 
@@ -80,6 +81,10 @@ exports.listeners = {
 
       this.setAttribute('experience', this.getAttribute('experience') + experience);
     }
+  },
+
+  tick: function(l10n) {
+    return function() { /*TODO: Emit sanity loss event here if applicable.*/ }
   },
 
   level: function(l10n) {
@@ -157,6 +162,82 @@ exports.listeners = {
       this.setLocation(startLocation);
       this.emit('regen');
       this.setAttribute('experience', experiencePenalty);
+    }
+  },
+
+  damaged: function(l10n) {
+    return function(room, npc, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, npc, players);
+      const messageMap = {
+        'head': {
+          firstPartyMessage: [
+            'You wince as the blow smashes into your skull.',
+            'You see stars as ' + npc.combat.getDesc() + ' wracks your brain for you.'
+          ],
+          thirdPartyMessage: [
+            this.combat.getDesc() + 'winces as the blow smashes into their skull.',
+            this.combat.getDesc() + 'is staggered by ' + npc.combat.getDesc() + '\'s blow to the head.'
+          ],
+        },
+        'legs': {
+          firstPartyMessage: [
+            'You stagger as ' + npc.combat.getDesc() + ' nearly knocks your legs out from under you.',
+            'Your knees buckle under the force of ' + npc.combat.getDesc() + '\'s blow.'
+          ],
+          thirdPartyMessage: [
+            this.combat.getDesc() + ' staggers and nearly trips.',
+            this.combat.getDesc() + '\'s knees buckle.'
+          ]
+        },
+        'default': {
+          firstPartyMessage: [
+            'Pain tears through your ' + hitLocation + ' as ' + npc.combat.getDesc() + ' strikes true.',
+          ],
+          thirdPartyMessage: [
+            this.combat.getDesc() + ' takes a hit to the ' + hitLocation,
+          ],
+        }
+      };
+
+      const getMessage = which => messageMap[hitLocation] ? messageMap[hitLocation][which] : messageMap.default[which];
+      const firstPartyMessage = getMessage('firstPartyMessage');
+      const thirdPartyMessage = getMessage('thirdPartyMessage');
+      Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
+    }
+  },
+
+  dodge: function(l10n) {
+    return function(room, npc, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, npc, players);
+
+      const firstPartyMessage = hitLocation === 'head' ?
+      [ 'You duck out of the way as ' + npc.combat.getDesc() + ' goes for your head.' ] :
+      [
+        'You twist out of the way as ' + npc.combat.getDesc() + ' attacks.',
+        'You barely get your ' + hitLocation + ' out of the way in time.'
+      ];
+      const thirdPartyMessage = hitLocation === 'head' ?
+      [ this.combat.getDesc() + ' ducks under ' + npc.combat.getDesc() + '\'s attack.' ] :
+      [
+        this.combat.getDesc() + ' twists out of the way of ' + npc.combat.getDesc() + '.',
+        this.combat.getDesc() + ' nimbly evades ' + npc.combat.getDesc() + '.'
+      ];
+      Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
+    }
+  },
+
+  missedAttack: function(l10n) {
+    return function(room, npc, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, npc, players);
+      const firstPartyMessage = [
+        'You swing and miss.',
+        'You whiff completely.'
+      ];
+      const thirdPartyMessage = [
+        this.combat.getDesc() + ' swings and misses.',
+        this.combat.getDesc() + ' tries to attack ' + npc.combat.getDesc() + ' and whiffs.'
+      ];
+      Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
     }
   },
 

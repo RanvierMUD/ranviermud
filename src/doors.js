@@ -115,7 +115,7 @@ function openOrClose(verb, args, player, players, rooms) {
 }
 
 function useKey(verb, args, player, players, rooms) {
-
+  util.log('USING KEY....')
   const isLocking = verb === 'lock';
 
   player.emit('action');

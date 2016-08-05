@@ -1,7 +1,7 @@
 - &rat
   vnum: 4
   room: 2
-  #script: '4.js'
+  script: '4-rat.js'
   types: ['beast', 'diseased']
   keywords:
     en: ['rat', 'feral rat', 'feral']
@@ -23,7 +23,7 @@
     body: 1
     head: '-3'
     torso: 1
-  load_max: 7
+  load_max: 4
 - *rat
 - *rat
 - <<: *rat

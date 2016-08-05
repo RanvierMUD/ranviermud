@@ -315,14 +315,14 @@ const Player = function PlayerConstructor(socket) {
    * @param string name
    * @param object effect
    */
-  self.addEffect = (name, effect) => {
+  self.addEffect = (name, effect, config) => {
     if (effect.activate) {
-      effect.activate();
+      effect.activate(config);
     }
 
     let deact = function() {
       if (effect.deactivate && self.getSocket()) {
-        effect.deactivate();
+        effect.deactivate(config);
       }
       self.removeEffect(name);
     };
@@ -336,6 +336,10 @@ const Player = function PlayerConstructor(socket) {
   };
 
   self.removeEffect = eff => {
+    if (!eff || !self.effects[eff]) {
+      return util.log("ERROR: Effect " + eff + " not found on " + self.getName());
+    }
+
     if (self.effects[eff].event) {
       self.removeListener(self.effects[eff].event, self.effects[eff].deactivate);
     } else {
