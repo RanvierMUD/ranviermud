@@ -253,7 +253,7 @@ const Npc = function NpcConstructor(config) {
   const getTranslatedString = (thing, locale) =>
     typeof self[thing] === 'string' ?
       self[thing] :
-      (locale in self[thing] ? self[thing][locale] : 'UNTRANSLATED - Contact an admin');
+      (locale || 'en' in self[thing] ? self[thing][locale || 'en'] : 'UNTRANSLATED - Contact an admin');
 
   /**
    * Get the description, localized if possible
