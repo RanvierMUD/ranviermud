@@ -27,8 +27,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 			const weapon = CommandUtil.findItemInInventory(_.firstWord(args), player, true);
 
 			if (!weapon || !weapon.getAttribute('damage')) {
-				player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-				return;
+				return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
 			}
 
 			util.log(player.getName() + ' ' + location + ' wields ' + weapon.getShortDesc('en'));

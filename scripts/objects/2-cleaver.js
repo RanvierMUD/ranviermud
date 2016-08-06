@@ -4,7 +4,7 @@ const Broadcast = require('../../src/broadcast').Broadcast;
 exports.listeners = {
 
   wield: function (l10n) {
-    return function (location, player, players) {
+    return function (location, room, player, players) {
       player.say('You ready the weighty cleaver.');
       player.combat.addToHitMod({
         name: 'cleaver ' + this.getUuid(),
@@ -38,6 +38,8 @@ exports.listeners = {
         'The heft of ' + attacker.getShortDesc() + '\'s blade <red>cleaves</red> bone and sinew from ' + defender.getShortDesc() + '.',
         'You rend meat from ' + defender.getShortDesc() + '\'s bone with the weighty blade.'
       ];
+
+      util.log('======emitting hit thing stuff for cleavuh * * ');
 
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
 

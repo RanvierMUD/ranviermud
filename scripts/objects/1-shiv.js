@@ -12,7 +12,7 @@ exports.listeners = {
 			toRoom({ firstPartyMessage, thirdPartyMessage });
 
 			//TODO: Test to make sure this gets removed on quit.
-			const uid = this.getUuid();
+			const id = this.getUuid();
 			player.combat.addDodgeMod({
 				name: 'shiv' + id,
 				effect: dodge => dodge + 1
@@ -29,7 +29,7 @@ exports.listeners = {
 			toRoom({ firstPartyMessage, thirdPartyMessage });
 
 			//TODO: Test to make sure this gets removed on quit.
-			const uid = this.getUuid();
+			const id = this.getUuid();
 			player.combat.addDodgeMod({
 				name: 'shiv' + id,
 				effect: dodge => dodge + 1
@@ -55,6 +55,8 @@ exports.listeners = {
 				attacker.getShortDesc() + ' nimbly darts forth and knicks ' + defender.getShortDesc() + '.',
 				attacker.getShortDesc() + ' dashes in and slashes,' + defender.getShortDesc() + ', crimson spraying in miniature fountains.'
 			].map(msg => '<bold>' + msg + '</bold>');
+
+			util.log('======emitting hit thing stuff for shiv');
 
 			Broadcast.consistentMessage(toRoom, { firstPartyMessage, secondPartyMessage });
 		}
