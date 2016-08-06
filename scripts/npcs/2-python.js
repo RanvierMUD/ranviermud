@@ -44,8 +44,8 @@ exports.listeners = {
         'The snake clamps its fangs around your ' + hitLocation + ', refusing to let go.',
       ];
       const thirdPartyMessage = [
-        'The python wraps itself around ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
-        'The python bites ' + player.combat.getDesc() + ' in the ' + hitLocation + ' and clamps down.',
+        'The python wraps itself around ' + player.getShortDesc() + '\'s ' + hitLocation + '.',
+        'The python bites ' + player.getShortDesc() + ' in the ' + hitLocation + ' and clamps down.',
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
@@ -60,9 +60,9 @@ exports.listeners = {
         'The python hisses as its scales and bones <bold><yellow>crack.</yellow></bold>'
       ];
       const thirdPartyMessage = [
-        'The serpent\'s ' + hitLocation + ' is crushed by ' + player.combat.getDesc() + '.',
-        'Hissing furiously, the snake recoils from ' + player.combat.getDesc() + '\'s blow.',
-        '<bold><green>Scales</green> and <red>blood</red></bold> fill the air as ' + player.combat.getDesc() + ' strikes the serpent\'s ' + hitLocation + '.'
+        'The serpent\'s ' + hitLocation + ' is crushed by ' + player.getShortDesc() + '.',
+        'Hissing furiously, the snake recoils from ' + player.getShortDesc() + '\'s blow.',
+        '<bold><green>Scales</green> and <red>blood</red></bold> fill the air as ' + player.getShortDesc() + ' strikes the serpent\'s ' + hitLocation + '.'
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
@@ -77,9 +77,9 @@ exports.listeners = {
         'The hungry python tries to constrict around your ' + hitLocation + ', but you break free.'
       ];
       const thirdPartyMessage = [
-        'The snake lunges at ' + player.combat.getDesc() + ' and flies past, missing completely.',
-        'Tongue darting to and fro, the serpent tries to clamp its fangs around ' + player.combat.getDesc() + '\'s ' + hitLocation + '.',
-        'The hungry python tries to constrict ' + player.combat.getDesc() + ', but they break free.'
+        'The snake lunges at ' + player.getShortDesc() + ' and flies past, missing completely.',
+        'Tongue darting to and fro, the serpent tries to clamp its fangs around ' + player.getShortDesc() + '\'s ' + hitLocation + '.',
+        'The hungry python tries to constrict ' + player.getShortDesc() + ', but they break free.'
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
@@ -94,9 +94,9 @@ exports.listeners = {
         'Hissing, the python jerks its ' + hitLocation + ' out of the way.'
       ];
       const thirdPartyMessage = [
-        'The snake recoils away from ' + player.combat.getDesc() + '.',
-        'Hissing furiously, the serpent twists away from ' + player.combat.getDesc() + '\'s  strike.',
-        'The hungry python slithers out of ' + player.combat.getDesc() + '\'s reach.'
+        'The snake recoils away from ' + player.getShortDesc() + '.',
+        'Hissing furiously, the serpent twists away from ' + player.getShortDesc() + '\'s  strike.',
+        'The hungry python slithers out of ' + player.getShortDesc() + '\'s reach.'
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
@@ -109,7 +109,7 @@ exports.listeners = {
         'The snake reels, knocking your attack away with its heft.',
       ];
       const thirdPartyMessage = [
-        'The snake reels and knocks away ' + player.combat.getDesc() + '\'s attack.',
+        'The snake reels and knocks away ' + player.getShortDesc() + '\'s attack.',
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }

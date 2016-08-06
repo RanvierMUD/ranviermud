@@ -172,29 +172,29 @@ exports.listeners = {
         'head': {
           firstPartyMessage: [
             'You wince as the blow smashes into your skull.',
-            'You see stars as ' + npc.combat.getDesc() + ' wracks your brain for you.'
+            'You see stars as ' + npc.getShortDesc() + ' wracks your brain for you.'
           ],
           thirdPartyMessage: [
-            this.combat.getDesc() + 'winces as the blow smashes into their skull.',
-            this.combat.getDesc() + 'is staggered by ' + npc.combat.getDesc() + '\'s blow to the head.'
+            this.getShortDesc() + 'winces as the blow smashes into their skull.',
+            this.getShortDesc() + 'is staggered by ' + npc.getShortDesc() + '\'s blow to the head.'
           ],
         },
         'legs': {
           firstPartyMessage: [
-            'You stagger as ' + npc.combat.getDesc() + ' nearly knocks your legs out from under you.',
-            'Your knees buckle under the force of ' + npc.combat.getDesc() + '\'s blow.'
+            'You stagger as ' + npc.getShortDesc() + ' nearly knocks your legs out from under you.',
+            'Your knees buckle under the force of ' + npc.getShortDesc() + '\'s blow.'
           ],
           thirdPartyMessage: [
-            this.combat.getDesc() + ' staggers and nearly trips.',
-            this.combat.getDesc() + '\'s knees buckle.'
+            this.getShortDesc() + ' staggers and nearly trips.',
+            this.getShortDesc() + '\'s knees buckle.'
           ]
         },
         'default': {
           firstPartyMessage: [
-            'Pain tears through your ' + hitLocation + ' as ' + npc.combat.getDesc() + ' strikes true.',
+            'Pain tears through your ' + hitLocation + ' as ' + npc.getShortDesc() + ' strikes true.',
           ],
           thirdPartyMessage: [
-            this.combat.getDesc() + ' takes a hit to the ' + hitLocation,
+            this.getShortDesc() + ' takes a hit to the ' + hitLocation,
           ],
         }
       };
@@ -211,16 +211,16 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, this, npc, players);
 
       const firstPartyMessage = hitLocation === 'head' ?
-      [ 'You duck out of the way as ' + npc.combat.getDesc() + ' goes for your head.' ] :
+      [ 'You duck out of the way as ' + npc.getShortDesc() + ' goes for your head.' ] :
       [
-        'You twist out of the way as ' + npc.combat.getDesc() + ' attacks.',
+        'You twist out of the way as ' + npc.getShortDesc() + ' attacks.',
         'You barely get your ' + hitLocation + ' out of the way in time.'
       ];
       const thirdPartyMessage = hitLocation === 'head' ?
-      [ this.combat.getDesc() + ' ducks under ' + npc.combat.getDesc() + '\'s attack.' ] :
+      [ this.getShortDesc() + ' ducks under ' + npc.getShortDesc() + '\'s attack.' ] :
       [
-        this.combat.getDesc() + ' twists out of the way of ' + npc.combat.getDesc() + '.',
-        this.combat.getDesc() + ' nimbly evades ' + npc.combat.getDesc() + '.'
+        this.getShortDesc() + ' twists out of the way of ' + npc.getShortDesc() + '.',
+        this.getShortDesc() + ' nimbly evades ' + npc.getShortDesc() + '.'
       ];
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
     }
@@ -234,8 +234,8 @@ exports.listeners = {
         'You whiff completely.'
       ];
       const thirdPartyMessage = [
-        this.combat.getDesc() + ' swings and misses.',
-        this.combat.getDesc() + ' tries to attack ' + npc.combat.getDesc() + ' and whiffs.'
+        this.getShortDesc() + ' swings and misses.',
+        this.getShortDesc() + ' tries to attack ' + npc.getShortDesc() + ' and whiffs.'
       ];
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
     }

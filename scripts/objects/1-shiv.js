@@ -1,9 +1,12 @@
 const Random = require('../../src/random').Random;
+const Broadcast = require('../../src/broadcast').Broadcast;
 
 exports.listeners = {
 
 	wield: function (l10n) {
 		return function (location, player, players) {
+			const toRoom = Broadcast.toRoom(player, null, players);
+			const firstPartyMessage = '<yellow>You clench the shiv tightly in your fist.</yellow>';
 			player.say('<yellow>You clench the shiv tightly in your fist.</yellow>');
 			player.equip(location, this);
 			player.combat.addDodgeMod({

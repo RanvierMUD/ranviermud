@@ -25,7 +25,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
   const broadcastToArea = Broadcast.toArea(player, players, rooms);
 
-  player.sayL10n(l10n, 'ATTACK', target.combat.getDesc());
+  player.sayL10n(l10n, 'ATTACK', target.getShortDesc());
 
 
   /*
@@ -144,7 +144,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     const energyCost = isPlayerWithWeapon ?
       attackerWeapon.getAttribute('weight') || baseEnergyCost :
       baseEnergyCost;
-    util.log('Attack energy cost for ' + attacker.combat.getDesc() + ' is ' + energyCost);
+    util.log('Attack energy cost for ' + attacker.getShortDesc() + ' is ' + energyCost);
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
     if (slowAttacker) {
       attacker.addEffect('fatigued', Effects.fatigued, { attacker });
@@ -164,8 +164,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     // Assign constants for this round...
     const attackerSpeed = attacker.combat.getAttackSpeed(this.isSecondAttack);
-    const attackerDesc  = attacker.combat.getDesc();
-    const defenderDesc  = defender.combat.getDesc();
+    const attackerDesc  = attacker.getShortDesc();
+    const defenderDesc  = defender.getShortDesc();
     const attackDesc    = this.isSecondAttack ?
       attacker.combat.getSecondaryAttackName() :
       attacker.combat.getPrimaryAttackName();
