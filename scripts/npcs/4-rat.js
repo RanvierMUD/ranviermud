@@ -45,9 +45,9 @@ exports.listeners = {
         'Foaming at the mouth and screeching, the rat sinks its fangs into your ' + hitLocation + '.'
       ];
       const thirdPartyMessage = [
-        'The rat rakes ' + player.combat.getDesc() + ' in the ' + hitLocation + ' with its jagged claws.',
-        'The rat bites ' + player.combat.getDesc() + '\'s ' + hitLocation + ' and refuses to let go.',
-        'The rat screeches at ' + player.combat.getDesc() + ' and sinks its fangs in their' + hitLocation + '.'
+        'The rat rakes ' + player.getShortDesc() + ' in the ' + hitLocation + ' with its jagged claws.',
+        'The rat bites ' + player.getShortDesc() + '\'s ' + hitLocation + ' and refuses to let go.',
+        'The rat screeches at ' + player.getShortDesc() + ' and sinks its fangs in their' + hitLocation + '.'
       ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
@@ -71,11 +71,11 @@ exports.listeners = {
       const thirdPartyMessage = moderateDamage ?
       [
         'The rat screeches in pain as its ' + hitLocation + ' crumples.',
-        'Foaming at the maw, the rat is gashed by ' + player.combat.getDesc() + '\'s attack.',
-        'The fierce rat is bashed away by ' + player.combat.getDesc() + '.',
+        'Foaming at the maw, the rat is gashed by ' + player.getShortDesc() + '\'s attack.',
+        'The fierce rat is bashed away by ' + player.getShortDesc() + '.',
         'Blood sprays across the ground as the feral rat\'s ' + hitLocation + ' is sundered.'
       ] :
-      ['The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur, thanks to ' + player.combat.getDesc() + '.'];
+      ['The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur, thanks to ' + player.getShortDesc() + '.'];
 ;
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
@@ -92,9 +92,9 @@ exports.listeners = {
         'The rabid rodent leaps past you as you make your move, and you miss.',
       ];
       const thirdPartyMessage = [
-        'The rat scurries away from ' + player.combat.getDesc() + '\'s attack.',
-        player.combat.getDesc() + '\'s attack hits only the rat\'s fur.',
-        'The fierce rat leaps past ' + player.combat.getDesc() + ' and they whiff.',
+        'The rat scurries away from ' + player.getShortDesc() + '\'s attack.',
+        player.getShortDesc() + '\'s attack hits only the rat\'s fur.',
+        'The fierce rat leaps past ' + player.getShortDesc() + ' and they whiff.',
       ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
@@ -111,9 +111,9 @@ exports.listeners = {
         '<yellow>The rabid rodent sprays bloody foam on your ' + hitLocation + ' as they try to bite and miss.</yellow>',
       ];
       const thirdPartyMessage = [
-        '<yellow>The rat leaps for ' + player.combat.getDesc() + '\s ' + hitLocation + ', but flies past in a ball of fur and fangs.</yellow>',
-        '<yellow>The rat claws uselessly at ' + player.combat.getDesc() + ', missing.</yellow>',
-        '<yellow>The rabid critter sprays bloody foam on' + player.combat.getDesc() + ' but fails to do any real damage.</yellow>',
+        '<yellow>The rat leaps for ' + player.getShortDesc() + '\s ' + hitLocation + ', but flies past in a ball of fur and fangs.</yellow>',
+        '<yellow>The rat claws uselessly at ' + player.getShortDesc() + ', missing.</yellow>',
+        '<yellow>The rabid critter sprays bloody foam on' + player.getShortDesc() + ' but fails to do any real damage.</yellow>',
       ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
