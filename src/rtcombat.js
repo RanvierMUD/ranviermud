@@ -254,7 +254,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
       // Emit events for scriptability.
       if (attackerWeapon && typeof attackerWeapon === 'object') {
-        attackerWeapon.emit('hit', attacker, defender, damage);
+        attackerWeapon.emit('hit', room, attacker, defender, players, hitLocation, damage);
       }
       attacker.emit('hit', room, defender, players, hitLocation, damageDealt);
       defender.emit('damaged', room, attacker, players, hitLocation, damageDealt);
