@@ -245,7 +245,6 @@ function CombatHelper(entity) {
   this.getToHitChance = () => {
     //TODO: Weapon skills related to weapon type?
     //TODO: General combat skills?
-    // Replace 1 with skill get.
     const toHitSkill = this._entity.getAttribute('level') + Random.roll(); //For now, 1-20.
     const toHitBonus = this._entity.getAttribute('cleverness')
       + Math.round(this._entity.getAttribute('quickness') / 2);
