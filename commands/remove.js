@@ -35,7 +35,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       player.unequip(item);
 
       if (isDead) { return; }
-      if (CommandUtil.hasScript(item, 'remove')) { return item.emit('remove', room, player, players); }
+      if (CommandUtil.hasScript(item, 'remove')) {
+        const room = rooms.getAt(player.getLocation());
+        return item.emit('remove', room, player, players);
+      }
       return player.sayL10n(l10n, 'REMOVED', item.getShortDesc(player.getLocale()));
     }
   };
