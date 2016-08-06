@@ -218,7 +218,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       if (canParry && parrySkill > Random.roll()) {
         util.log('The attack is parried!');
         if (defenderWeapon && CommandUtil.hasScript(defenderWeapon, 'parry')) {
-          defenderWeapon.emit('parry', defender, attacker, players);
+          defenderWeapon.emit('parry', room, defender, attacker, players);
         } else {
           defender.emit('parry', attacker, room, players, hitLocation);
         }
