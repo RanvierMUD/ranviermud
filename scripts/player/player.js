@@ -226,6 +226,24 @@ exports.listeners = {
     }
   },
 
+  hit: function(l10n) {
+    return function (room, defender, players, hitLocation, damageDealt) {
+			const toRoom = Broadcast.toRoom(room, this, null, players);
+
+			const firstPartyMessage = [
+				'You punch the ' + defender.getShortDesc() + ' in the ' + hitLocation + '.'
+			].map(msg => '<bold>' + msg + '</bold>');
+
+      const thirdPartyMessage = [
+				this.getShortDesc() + ' punches the ' + defender.getShortDesc() + '.'
+			].map(msg => '<bold>' + msg + '</bold>');
+
+			util.log('======emitting hit thing stuff for punch');
+
+			Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
+		}
+  },
+
   missedAttack: function(l10n) {
     return function(room, npc, players, hitLocation) {
       const toRoom = Broadcast.toRoom(room, this, npc, players);

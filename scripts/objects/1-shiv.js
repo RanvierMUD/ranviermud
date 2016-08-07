@@ -1,5 +1,6 @@
 const Random = require('../../src/random').Random;
 const Broadcast = require('../../src/broadcast').Broadcast;
+const util = require('util');
 
 exports.listeners = {
 
@@ -58,7 +59,7 @@ exports.listeners = {
 
 			util.log('======emitting hit thing stuff for shiv');
 
-			Broadcast.consistentMessage(toRoom, { firstPartyMessage, secondPartyMessage });
+			Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
 		}
 	},
 
@@ -71,7 +72,7 @@ exports.listeners = {
 			const thirdPartyMessage = [player.getShortDesc() + ' somehow manages to knock away ' + attacker.getShortDesc() + '\'s attack with their tiny blade!']
 				.map(msg => '<white>' + msg + '</white>');
 
-			Broadcast.consistentMessage(toRoom, { firstPartyMessage, secondPartyMessage });
+			Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
 		}
 	},
 
