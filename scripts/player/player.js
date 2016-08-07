@@ -231,11 +231,11 @@ exports.listeners = {
 			const toRoom = Broadcast.toRoom(room, this, null, players);
 
 			const firstPartyMessage = [
-				'You punch the ' + defender.getShortDesc() + ' in the ' + hitLocation + '.'
+				'You punch ' + defender.getShortDesc() + ' in the ' + hitLocation + '.'
 			].map(msg => '<bold>' + msg + '</bold>');
 
       const thirdPartyMessage = [
-				this.getShortDesc() + ' punches the ' + defender.getShortDesc() + '.'
+				this.getShortDesc() + ' punches ' + defender.getShortDesc() + '.'
 			].map(msg => '<bold>' + msg + '</bold>');
 
 			util.log('======emitting hit thing stuff for punch');
