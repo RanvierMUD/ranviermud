@@ -10,7 +10,6 @@ exports.listeners = {
     return (room, rooms, player, players, npc) => {
       const rand = Random.inRange(1, 5);
       if (rand === 3) {
-        const itemDesc = item.getShortDesc();
         const msg = '<bold>The serpent uncoils, hissing.</bold>';
         const toRoom = Broadcast.toRoom(room, this, player, players);
         toRoom({
