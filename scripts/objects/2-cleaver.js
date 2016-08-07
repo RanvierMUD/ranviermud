@@ -40,8 +40,6 @@ exports.listeners = {
         'You rend meat from ' + defender.getShortDesc() + '\'s bone with the weighty blade.'
       ];
 
-      util.log('======emitting hit thing stuff for cleavuh * * ');
-
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
 
       // BLOODLUSTTTTTT
