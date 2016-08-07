@@ -73,6 +73,9 @@ const consistentMessage = (broadcaster, messageLists)  => {
     messages[messageList] = messageLists[messageList][selection];
   }
 
+  util.log('Broadcasting........');
+  util.log(messages);
+
   broadcaster(messages);
 };
 

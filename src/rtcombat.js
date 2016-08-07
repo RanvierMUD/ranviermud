@@ -135,16 +135,23 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     //TODO: Use an array of targets for multicombat.
     if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
 
-    // Handle attacker fatigue...
+    // Assign weapon obj and name.
     const attackerWeapon = this.isSecondAttack ?
       attacker.combat.getOffhand() :
       attacker.combat.getWeapon();
+    const attackerWeaponName = this.isSecondAttack ?
+      attacker.combat.getSecondaryAttackName() :
+      attacker.combat.getPrimaryAttackName();
+
+    // Handle energy costs for attacking.
     const baseEnergyCost = 2;
     const isPlayerWithWeapon = Type.isPlayer(attacker) && attackerWeapon && attackerWeapon.getAttribute;
     const energyCost = isPlayerWithWeapon ?
       attackerWeapon.getAttribute('weight') || baseEnergyCost :
       baseEnergyCost;
     util.log('Attack energy cost for ' + attacker.getShortDesc() + ' is ' + energyCost);
+
+    // Handle attacker fatigue
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
     if (slowAttacker) {
       attacker.addEffect('fatigued', Effects.fatigued, { attacker });
@@ -169,6 +176,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     const attackDesc    = this.isSecondAttack ?
       attacker.combat.getSecondaryAttackName() :
       attacker.combat.getPrimaryAttackName();
+
+    const attackerSay = Type.isPlayer(attacker) ?
+      attacker.say : function(){};
+    const defenderSay = Type.isPlayer(defender) ?
+      defender.say : function(){};
 
     const defenderStartingHealth = defender.getAttribute('health');
 
@@ -201,7 +213,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     if (missed) {
 
       // Do they dodge, parry, or is it just a straight up miss?
-      //TODO: Improve the parry, dodge, and miss scripts.
       const defenderWeapon = defender.combat.getWeapon();
       const canParry = defenderWeapon ?
         CommandUtil.hasScript(defenderWeapon, 'parry') :
@@ -216,6 +227,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         defender.getAttribute('speed') * 2;
 
       if (canParry && parrySkill > Random.roll()) {
+        attackerSay('<white>Your attack is parried!</white>');
+        defenderSay('<white>You parry the attack!</white>');
         util.log('The attack is parried!');
         if (defenderWeapon && CommandUtil.hasScript(defenderWeapon, 'parry')) {
           defenderWeapon.emit('parry', room, defender, attacker, players);
@@ -223,12 +236,16 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
           defender.emit('parry', attacker, room, players, hitLocation);
         }
       } else if (canDodge && dodgeSkill > Random.roll()) {
+        attackerSay('<yellow>' + defenderDesc + ' dodges!</yellow>');
+        defenderSay('<yellow>You dodge ' + attackDesc + '\'s attack!</yellow>');
         util.log('They dodge!');
         defender.emit('dodge', room, attacker, players, hitLocation);
 
       // If it is just a regular ole miss...
       //TODO: What if there are no players involved in combat?
       } else {
+        attackerSay('<yellow>You miss!</yellow>');
+        defenderSay('<yellow>' + attackerDesc + ' attacks and misses!</yellow>');
         if (attackerWeapon && CommandUtil.hasScript(attackerWeapon, 'missedAttack')) {
           attackerWeapon.emit('missedAttack', room, defender, attacker, players, hitLocation);
         } else {
@@ -242,6 +259,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     if (!missed) {
       util.log('The attack hits!');
+
       // Begin assigning damage...
       const damage = this.isSecondAttack ?
         dualWieldDamage(attacker.combat.getDamage('offhand')) :
@@ -252,7 +270,9 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       // The damage func has side effect of depleting defender's health.
       const damageDealt = defender.damage(damage, hitLocation);
 
-      // Emit events for scriptability.
+      attackerSay('<bold>You connect with ' + defenderDesc + '!</bold>');
+      defenderSay('<bold>You\'ve been hit by ' + attackerDesc + '!</bold>');
+
       if (attackerWeapon && typeof attackerWeapon === 'object') {
         attackerWeapon.emit('hit', room, attacker, defender, players, hitLocation, damageDealt);
       } else {

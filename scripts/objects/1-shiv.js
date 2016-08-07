@@ -67,7 +67,7 @@ exports.listeners = {
 		return function(room, player, attacker, players) {
 			const toRoom = Broadcast.toRoom(room, player, null, players);
 
-			const firstPartyMessage = ['You deftly knock' + attacker.getShortDesc() + '\'s strike away with the point of your blade.']
+			const firstPartyMessage = ['You deftly knock ' + attacker.getShortDesc() + '\'s strike away with the point of your blade.']
 				.map(msg => '<white>' + msg + '</white>');
 			const thirdPartyMessage = [player.getShortDesc() + ' somehow manages to knock away ' + attacker.getShortDesc() + '\'s attack with their tiny blade!']
 				.map(msg => '<white>' + msg + '</white>');
