@@ -255,8 +255,9 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       // Emit events for scriptability.
       if (attackerWeapon && typeof attackerWeapon === 'object') {
         attackerWeapon.emit('hit', room, attacker, defender, players, hitLocation, damageDealt);
+      } else {
+        attacker.emit('hit', room, defender, players, hitLocation, damageDealt);
       }
-      attacker.emit('hit', room, defender, players, hitLocation, damageDealt);
       defender.emit('damaged', room, attacker, players, hitLocation, damageDealt);
 
       util.log(attackerDesc + ' targeted ' + attacker.combat.getTarget() + ' and hit ' + defenderDesc + ' in the ' + hitLocation + '.');
