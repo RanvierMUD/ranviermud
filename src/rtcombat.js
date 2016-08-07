@@ -177,11 +177,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       attacker.combat.getSecondaryAttackName() :
       attacker.combat.getPrimaryAttackName();
 
-    const attackerSay = Type.isPlayer(attacker) ?
-      attacker.say : function(){};
-    const defenderSay = Type.isPlayer(defender) ?
-      defender.say : function(){};
-
     const defenderStartingHealth = defender.getAttribute('health');
 
     // Log constants for this round...
@@ -227,8 +222,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         defender.getAttribute('speed') * 2;
 
       if (canParry && parrySkill > Random.roll()) {
-        attackerSay('<white>Your attack is parried!</white>');
-        defenderSay('<white>You parry the attack!</white>');
         util.log('The attack is parried!');
         if (defenderWeapon && CommandUtil.hasScript(defenderWeapon, 'parry')) {
           defenderWeapon.emit('parry', room, defender, attacker, players);
@@ -236,16 +229,12 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
           defender.emit('parry', attacker, room, players, hitLocation);
         }
       } else if (canDodge && dodgeSkill > Random.roll()) {
-        attackerSay('<yellow>' + defenderDesc + ' dodges!</yellow>');
-        defenderSay('<yellow>You dodge ' + attackDesc + '\'s attack!</yellow>');
         util.log('They dodge!');
         defender.emit('dodge', room, attacker, players, hitLocation);
 
       // If it is just a regular ole miss...
       //TODO: What if there are no players involved in combat?
       } else {
-        attackerSay('<yellow>You miss!</yellow>');
-        defenderSay('<yellow>' + attackerDesc + ' attacks and misses!</yellow>');
         if (attackerWeapon && CommandUtil.hasScript(attackerWeapon, 'missedAttack')) {
           attackerWeapon.emit('missedAttack', room, defender, attacker, players, hitLocation);
         } else {
@@ -254,7 +243,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       }
 
       util.log(attackerDesc + ' misses ' + defenderDesc);
-
     }
 
     if (!missed) {
@@ -269,9 +257,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       // Actual damage based on hitLocation and armor...
       // The damage func has side effect of depleting defender's health.
       const damageDealt = defender.damage(damage, hitLocation);
-
-      attackerSay('<bold>You connect with ' + defenderDesc + '!</bold>');
-      defenderSay('<bold>You\'ve been hit by ' + attackerDesc + '!</bold>');
 
       if (attackerWeapon && typeof attackerWeapon === 'object') {
         attackerWeapon.emit('hit', room, attacker, defender, players, hitLocation, damageDealt);

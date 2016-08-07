@@ -67,7 +67,7 @@ const consistentMessage = (broadcaster, messageLists)  => {
     throw new Error("Arrays must have the same number of messages.");
   }
 
-  const selection = Random.inRange(0, messageLists.thirdPartyMessage.length);
+  const selection = Random.inRange(0, messageLists.thirdPartyMessage.length - 1);
   const messages = {};
   for (const messageList in messageLists) {
     messages[messageList] = messageLists[messageList][selection];
