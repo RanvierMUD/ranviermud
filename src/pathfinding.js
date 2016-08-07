@@ -14,11 +14,11 @@ function chooseRandomExit(chance) {
     return (room, rooms, player, players, npc) => {
 
       if (npc.isInCombat()) { return; }
-
-      chance = chance || 10 // Roll to beat on 1d20
-
-      if (chance < Random.roll()) {
-        const exits = room.getExits();
+      util.log('CHANCE TO MOVE IS ', chance);
+      chance = chance || 10; // Roll to beat on 1d100
+      
+      if (chance > Random.inRange(1, 100)) {
+        const exits  = room.getExits();
         const chosen = Random.fromArray(exits);
 
         util.log(npc.getShortDesc('en') + " moves to room #" + chosen.location);
