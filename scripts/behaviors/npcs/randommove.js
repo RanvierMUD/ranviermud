@@ -1,10 +1,9 @@
 'use strict';
-const CommandUtil = require('../../../src/command_util.js')
-  .CommandUtil;
+const Random = require('../../../src/random.js').Random;
 const chooseRandomExit = require('../../../src/pathfinding.js').chooseRandomExit;
 
-const successRoll = 18;
+const failureRoll = 10;
 
 exports.listeners = {
-  tick: chooseRandomExit(successRoll),
+  tick: chooseRandomExit(failureRoll)
 };

@@ -28,16 +28,21 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
 
 
   const isThirdPartyInRoom = player => {
-    const isSpecificParty = party =>
-      Type.isPlayer(party) && party.getAccountName() === player.getAccountName();
-    const isFirstParty  = isSpecificParty(firstParty);
-    const isSecondParty = isSpecificParty(secondParty);
+
+    const isFirstParty  = player === firstParty;
+    const isSecondParty = player === secondParty;
+    const name = player.getShortDesc();
+    util.log(name + ' is 1stparty? ',isFirstParty);
+    util.log(name + ' is 2ndparty? ',isSecondParty);
     const inSameRoom    = room.getLocation() === player.getLocation();
+    util.log('is in same room??? ', inSameRoom);
     return !isFirstParty && !isSecondParty && inSameRoom;
   };
 
+  util.log(config);
+
   const thirdPartyMsger = msg => players.eachIf(
-    isThirdPartyInRoom,
+    player => isThirdPartyInRoom(player),
     player => player.say(msg));
 
   if (config.firstPartyMessage) {
@@ -47,6 +52,7 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
     secondPartyMsger(config.secondPartyMessage);
   }
   if (config.thirdPartyMessage) {
+    util.log('should see STUFF, OKAY');
     thirdPartyMsger(config.thirdPartyMessage);
   }
 
