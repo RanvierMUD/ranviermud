@@ -12,7 +12,7 @@ exports.listeners = {
       if (rand === 3) {
         const msg = '<bold>The serpent uncoils, hissing.</bold>';
         const toRoom = Broadcast.toRoom(room, this, player, players);
-        toRoom({
+        Broadcast.consistentMessage(toRoom, {
           secondPartyMessage: msg,
           thirdPartyMessage: msg
         });
@@ -27,7 +27,7 @@ exports.listeners = {
         const itemDesc = item.getShortDesc();
         const msg = '<bold>The python\'s tongue flickers over the ' + itemDesc + '</bold>';
         const toRoom = Broadcast.toRoom(room, this, player, players);
-        toRoom({
+        Broadcast.consistentMessage(toRoom, {
           secondPartyMessage: msg,
           thirdPartyMessage: msg
         });
