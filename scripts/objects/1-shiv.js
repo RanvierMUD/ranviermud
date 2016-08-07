@@ -57,8 +57,6 @@ exports.listeners = {
 				attacker.getShortDesc() + ' dashes in and slashes,' + defender.getShortDesc() + ', crimson spraying in miniature fountains.'
 			].map(msg => '<bold>' + msg + '</bold>');
 
-			util.log('======emitting hit thing stuff for shiv');
-
 			Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
 		}
 	},
