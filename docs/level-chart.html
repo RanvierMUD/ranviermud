@@ -7,13 +7,14 @@
   </head>
   <body>
     <h3>Experience needed by level</h3>
-    <svg class="tnl-chart"></svg>
+    <svg class="tnl-chart" width="1000" heigh="500"></svg>
     <h3>Attribute points earned by level</h3>
-    <svg class="attr-chart"></svg>
+    <svg class="attr-chart" width="1000" heigh="500"></svg>
     <h3>Skill points earned by level</h3>
-    <svg class="skill-chart"></svg>
+    <svg class="skill-chart" width="1000" heigh="500"></svg>
     <h3>Mutagens earned by level</h3>
-    <svg class="mut-chart"></svg>
+    <svg class="mut-chart" width="1000" heigh="500"></svg>
+    <h3>Cost in skill points per skill level</h3>
     <script>
       /**
        * These formulas are stolen straight from WoW.
@@ -83,13 +84,48 @@
 
       const fillArray = (n, v) => [...Array(parseInt(n, 10))].map(() => v);
 
-      const maxLevel = 60
-      const tnlChartData = fillArray(maxLevel, {})
-        .map((element, index) => ({
-          x: index + 1,
-          y: expToLevel(index + 1)
-        }));
+      const maxLevel      = 60;
+      const maxLevelArray = fillArray(maxLevel, {});
+      const tnlChartData  = maxLevelArray
+        .reduce((acc, _, index) => {
+          const previous = acc[index];
+          const cumulativeXPNeeded = previous.y + expToLevel(index + 1);
+          return acc.concat({
+            x: index + 1,
+            y: cumulativeXPNeeded
+          });
+        }, [{ x: 0, y: 0 }]);
+
       console.log('TNL:', tnlChartData);
+
+      const attrChartData = maxLevelArray
+        .map((_, index) => ({ x: index + 1, y: index + 1 }));
+
+      const skillChartData = maxLevelArray
+        .reduce((acc, _, index) => {
+          const previous = acc[index];
+          const cumulativeTrainingTime = previous.y + getTrainingTime(index + 1);
+          return acc.concat({
+            x: index + 1,
+            y: cumulativeTrainingTime
+          });
+        }, [{ x: 0, y: 0 }]);
+
+      console.log('Skills:', skillChartData);
+
+      const maxSkillLevel = 10;
+      const skillGainChartData = fillArray(maxSkillLevel, {})
+        .reduce((acc, _, index) => {
+          const previous = acc[index];
+          const cumulativeSkillPointsSpent = previous.x ?
+            previous.y + index + 1 : 0;
+          return acc.concat({
+            x: index + 1,
+            y: cumulativeSkillPointsSpent
+          });
+        }, [{ x: 0, y: 0 }]);
+      console.log('SP spent to max skill: ', skillGainChartData);
+
     </script>
 
   </body>
