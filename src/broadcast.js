@@ -1,3 +1,5 @@
+'use strict';
+
 const Type   = require('./type').Type;
 const Random = require('./random').Random;
 const _ = require('./helpers');
@@ -28,17 +30,19 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
 
 
   const isThirdPartyInRoom = player => {
-    const isSpecificParty = party =>
-      Type.isPlayer(party) && party.getAccountName() === player.getAccountName();
-    const isFirstParty  = isSpecificParty(firstParty);
-    const isSecondParty = isSpecificParty(secondParty);
+    const isFirstParty  = player === firstParty;
+    const isSecondParty = player === secondParty;
     const inSameRoom    = room.getLocation() === player.getLocation();
     return !isFirstParty && !isSecondParty && inSameRoom;
   };
 
-  const thirdPartyMsger = msg => players.eachIf(
-    isThirdPartyInRoom,
-    player => player.say(msg));
+  util.log(config);
+
+  const thirdPartyMsger = msg => {
+    players.eachIf(
+      player => isThirdPartyInRoom(player),
+      player => player.say(msg));
+  }
 
   if (config.firstPartyMessage) {
     firstPartyMsger(config.firstPartyMessage);
@@ -60,16 +64,19 @@ const consistentMessage = (broadcaster, messageLists)  => {
   const sameLength = listLengths
     .reduce((prev, length) => prev === undefined ?
       length :
-      prev === length ? length : false);
+      prev === length ?
+        length :
+        false);
 
 
   if (!sameLength) {
     throw new Error("Arrays must have the same number of messages.");
   }
 
-  const selection = Random.inRange(0, messageLists.thirdPartyMessage.length);
+  const selection = Random.inRange(0, messageLists.thirdPartyMessage.length - 1);
   const messages = {};
-  for (const messageList in messageLists) {
+  for (let messageList in messageLists) {
+
     messages[messageList] = messageLists[messageList][selection];
   }
 
