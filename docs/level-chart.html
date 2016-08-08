@@ -17,8 +17,7 @@
     <h3>Cost in skill points per skill level</h3>
     <script>
       /**
-       * These formulas are stolen straight from WoW.
-       * See: http://www.wowwiki.com/Formulas:XP_To_Level
+       * Level utils...
        */
 
       const reduction = level => {
@@ -82,6 +81,8 @@
       const expToLevel = level =>
         ((2 * level) + diff(level)) * mobExp(level) * reduction(level);
 
+
+      // Set up helpers, and create char data.
       const fillArray = (n, v) => [...Array(parseInt(n, 10))].map(() => v);
 
       const maxLevel      = 60;
@@ -139,7 +140,38 @@
             y: cumulativeSkillPointsSpent
           });
         }, [{ x: 0, y: 0 }]);
+
       console.log('SP spent to max skill: ', skillGainChartData);
+
+      // Use d3.js to create the charts....
+      const width = 1000;
+      const height = 500;
+      const margins = {
+        top: 50,
+        left: 20,
+        right: 20,
+        bottom: 100
+      };
+
+      const getDomain = (data, axis) => [
+        d3.min(data, data => data[axis]),
+        d3.max(data, data => data[axis])
+      ];
+      const getLinearXRange =
+        (data) => d3.scaleLinear()
+          .range([ margins.left, width - margins.right ])
+          .domain(getDomain(data, 'x'));
+      const getLinearYRange =
+        (data) => d3.scaleLinear()
+          .range([ height - margins.top, margins.bottom ])
+          .domain(getDomain(data, 'y'));
+
+      const tnlChart = {
+        xRange: getLinearXRange(tnlChartData),
+        yRange: getLinearYRange(tnlChartData),
+        xAxis: '',
+        yAxis: ''
+      };
 
     </script>
 
