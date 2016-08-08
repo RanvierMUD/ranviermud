@@ -39,7 +39,6 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
   util.log(config);
 
   const thirdPartyMsger = msg => {
-    util.log('oh hai in msger k');
     players.eachIf(
       player => isThirdPartyInRoom(player),
       player => player.say(msg));
@@ -73,8 +72,6 @@ const consistentMessage = (broadcaster, messageLists)  => {
   if (!sameLength) {
     throw new Error("Arrays must have the same number of messages.");
   }
-
-  util.log('message Lists in general i guess::-->', messageLists);
 
   const selection = Random.inRange(0, messageLists.thirdPartyMessage.length - 1);
   const messages = {};
