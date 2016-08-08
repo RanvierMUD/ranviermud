@@ -113,6 +113,21 @@
 
       console.log('Skills:', skillChartData);
 
+      const mutaChartData = maxLevelArray
+        .reduce((acc, _, index) => {
+          const previous = acc[index];
+          const level = index + 1;
+          const gainedMutagen = level % 2 === 0;
+          const cumulativeMutagens = gainedMutagen ?
+            previous.y + Math.ceil(level / 10) : previous.y;
+          return acc.concat({
+            x: index + 1,
+            y: cumulativeMutagens
+          });
+        }, [{ x: 0, y: 0 }]);
+
+      console.log('mutations', mutaChartData);
+
       const maxSkillLevel = 10;
       const skillGainChartData = fillArray(maxSkillLevel, {})
         .reduce((acc, _, index) => {

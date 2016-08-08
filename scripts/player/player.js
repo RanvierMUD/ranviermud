@@ -106,17 +106,18 @@ exports.listeners = {
       util.log(name + ' gained energy ' + energyGain);
       util.log(name + ' gained sanity' + sanityGain);
 
-      const gainedMutation = newLevel % 2 === 0;
 
-      let mutationPoints = this.getAttribute('mutagens');
 
       util.log(name + ' is now level ' + newLevel);
 
       this.sayL10n(l10n, 'LEVELUP');
 
+      const gainedMutation = newLevel % 2 === 0;
+      let mutationPoints = this.getAttribute('mutagens');
+
       if (gainedMutation) {
         this.sayL10n(l10n, 'MUTAGEN_GAIN');
-        mutationPoints++;
+        mutationPoints += Math.ceil(level / 10);
         this.setAttribute('mutagens', mutationPoints);
       }
 
