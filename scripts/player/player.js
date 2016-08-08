@@ -194,7 +194,7 @@ exports.listeners = {
             'Pain tears through your ' + hitLocation + ' as ' + npc.getShortDesc() + ' strikes true.',
           ],
           thirdPartyMessage: [
-            this.getShortDesc() + ' takes a hit to the ' + hitLocation,
+            this.getShortDesc() + ' takes a hit to the ' + hitLocation + '.',
           ],
         }
       };
@@ -237,8 +237,6 @@ exports.listeners = {
       const thirdPartyMessage = [
 				this.getShortDesc() + ' punches ' + defender.getShortDesc() + '.'
 			].map(msg => '<bold>' + msg + '</bold>');
-
-			util.log('======emitting hit thing stuff for punch');
 
 			Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
 		}
