@@ -47,7 +47,7 @@ exports.listeners = {
       const thirdPartyMessage = [
         'The rat rakes ' + player.getShortDesc() + ' in the ' + hitLocation + ' with its jagged claws.',
         'The rat bites ' + player.getShortDesc() + '\'s ' + hitLocation + ' and refuses to let go.',
-        'The rat screeches at ' + player.getShortDesc() + ' and sinks its fangs in their' + hitLocation + '.'
+        'The rat screeches at ' + player.getShortDesc() + ' and sinks its fangs in their ' + hitLocation + '.'
       ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
