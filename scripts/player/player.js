@@ -87,6 +87,8 @@ exports.listeners = {
     return function() { /*TODO: Emit sanity loss event here if applicable.*/ }
   },
 
+  //TODO: Extract all stuff for determining stat gain into level utils.
+
   level: function(l10n) {
     return function() {
       const name = this.getName();
