@@ -1,3 +1,5 @@
+'use strict';
+
 const Type   = require('./type').Type;
 const Random = require('./random').Random;
 const _ = require('./helpers');
@@ -28,22 +30,20 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
 
 
   const isThirdPartyInRoom = player => {
-
     const isFirstParty  = player === firstParty;
     const isSecondParty = player === secondParty;
-    const name = player.getShortDesc();
-    util.log(name + ' is 1stparty? ',isFirstParty);
-    util.log(name + ' is 2ndparty? ',isSecondParty);
     const inSameRoom    = room.getLocation() === player.getLocation();
-    util.log('is in same room??? ', inSameRoom);
     return !isFirstParty && !isSecondParty && inSameRoom;
   };
 
   util.log(config);
 
-  const thirdPartyMsger = msg => players.eachIf(
-    player => isThirdPartyInRoom(player),
-    player => player.say(msg));
+  const thirdPartyMsger = msg => {
+    util.log('oh hai in msger k');
+    players.eachIf(
+      player => isThirdPartyInRoom(player),
+      player => player.say(msg));
+  }
 
   if (config.firstPartyMessage) {
     firstPartyMsger(config.firstPartyMessage);
@@ -52,7 +52,6 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
     secondPartyMsger(config.secondPartyMessage);
   }
   if (config.thirdPartyMessage) {
-    util.log('should see STUFF, OKAY');
     thirdPartyMsger(config.thirdPartyMessage);
   }
 
@@ -66,16 +65,21 @@ const consistentMessage = (broadcaster, messageLists)  => {
   const sameLength = listLengths
     .reduce((prev, length) => prev === undefined ?
       length :
-      prev === length ? length : false);
+      prev === length ?
+        length :
+        false);
 
 
   if (!sameLength) {
     throw new Error("Arrays must have the same number of messages.");
   }
 
+  util.log('message Lists in general i guess::-->', messageLists);
+
   const selection = Random.inRange(0, messageLists.thirdPartyMessage.length - 1);
   const messages = {};
-  for (const messageList in messageLists) {
+  for (let messageList in messageLists) {
+
     messages[messageList] = messageLists[messageList][selection];
   }
 
