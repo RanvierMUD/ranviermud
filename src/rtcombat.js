@@ -25,7 +25,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
   const broadcastToArea = Broadcast.toArea(player, players, rooms);
 
-  player.sayL10n(l10n, 'ATTACK', target.combat.getDesc());
+  player.sayL10n(l10n, 'ATTACK', target.getShortDesc());
 
 
   /*
@@ -135,16 +135,23 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     //TODO: Use an array of targets for multicombat.
     if (!defender.isInCombat() || !attacker.isInCombat()) { return; }
 
-    // Handle attacker fatigue...
+    // Assign weapon obj and name.
     const attackerWeapon = this.isSecondAttack ?
       attacker.combat.getOffhand() :
       attacker.combat.getWeapon();
+    const attackerWeaponName = this.isSecondAttack ?
+      attacker.combat.getSecondaryAttackName() :
+      attacker.combat.getPrimaryAttackName();
+
+    // Handle energy costs for attacking.
     const baseEnergyCost = 2;
     const isPlayerWithWeapon = Type.isPlayer(attacker) && attackerWeapon && attackerWeapon.getAttribute;
     const energyCost = isPlayerWithWeapon ?
       attackerWeapon.getAttribute('weight') || baseEnergyCost :
       baseEnergyCost;
-    util.log('Attack energy cost for ' + attacker.combat.getDesc() + ' is ' + energyCost);
+    util.log('Attack energy cost for ' + attacker.getShortDesc() + ' is ' + energyCost);
+
+    // Handle attacker fatigue
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
     if (slowAttacker) {
       attacker.addEffect('fatigued', Effects.fatigued, { attacker });
@@ -164,8 +171,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     // Assign constants for this round...
     const attackerSpeed = attacker.combat.getAttackSpeed(this.isSecondAttack);
-    const attackerDesc  = attacker.combat.getDesc();
-    const defenderDesc  = defender.combat.getDesc();
+    const attackerDesc  = attacker.getShortDesc();
+    const defenderDesc  = defender.getShortDesc();
     const attackDesc    = this.isSecondAttack ?
       attacker.combat.getSecondaryAttackName() :
       attacker.combat.getPrimaryAttackName();
@@ -201,7 +208,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     if (missed) {
 
       // Do they dodge, parry, or is it just a straight up miss?
-      //TODO: Improve the parry, dodge, and miss scripts.
       const defenderWeapon = defender.combat.getWeapon();
       const canParry = defenderWeapon ?
         CommandUtil.hasScript(defenderWeapon, 'parry') :
@@ -218,7 +224,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       if (canParry && parrySkill > Random.roll()) {
         util.log('The attack is parried!');
         if (defenderWeapon && CommandUtil.hasScript(defenderWeapon, 'parry')) {
-          defenderWeapon.emit('parry', defender, attacker, players);
+          defenderWeapon.emit('parry', room, defender, attacker, players);
         } else {
           defender.emit('parry', attacker, room, players, hitLocation);
         }
@@ -237,11 +243,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       }
 
       util.log(attackerDesc + ' misses ' + defenderDesc);
-
     }
 
     if (!missed) {
       util.log('The attack hits!');
+
       // Begin assigning damage...
       const damage = this.isSecondAttack ?
         dualWieldDamage(attacker.combat.getDamage('offhand')) :
@@ -252,11 +258,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       // The damage func has side effect of depleting defender's health.
       const damageDealt = defender.damage(damage, hitLocation);
 
-      // Emit events for scriptability.
       if (attackerWeapon && typeof attackerWeapon === 'object') {
-        attackerWeapon.emit('hit', attacker, defender, damage);
+        attackerWeapon.emit('hit', room, attacker, defender, players, hitLocation, damageDealt);
+      } else {
+        attacker.emit('hit', room, defender, players, hitLocation, damageDealt);
       }
-      attacker.emit('hit', room, defender, players, hitLocation, damageDealt);
       defender.emit('damaged', room, attacker, players, hitLocation, damageDealt);
 
       util.log(attackerDesc + ' targeted ' + attacker.combat.getTarget() + ' and hit ' + defenderDesc + ' in the ' + hitLocation + '.');
