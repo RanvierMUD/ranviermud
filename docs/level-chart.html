@@ -72,6 +72,12 @@
        */
       const getTrainingTime = level => Math.floor(level / 4 + 1);
 
+      const getMutagenGain = level => {
+      	const gainedMutagen = level % 2 === 0;
+       	return gainedMutagen ?
+      		Math.ceil(level / 10) :
+      		0;
+      };
 
       /**
        * Helper to get the amount of experience a player needs to level
@@ -87,61 +93,37 @@
 
       const maxLevel      = 60;
       const maxLevelArray = fillArray(maxLevel, {});
-      const tnlChartData  = maxLevelArray
-        .reduce((acc, _, index) => {
-          const previous = acc[index];
-          const cumulativeXPNeeded = previous.y + expToLevel(index + 1);
-          return acc.concat({
-            x: index + 1,
-            y: cumulativeXPNeeded
-          });
-        }, [{ x: 0, y: 0 }]);
 
-      console.log('TNL:', tnlChartData);
+      const extrapolate = formula =>
+        (acc, _, index) => {
+          const previous = acc[index];
+          const level = index + 1;
+          const cumulative = previous.y + formula(level);
+          return acc.concat({
+            x: level,
+            y: cumulative
+          });
+        }
+
+      const getAccumulator = () => [{ x: 0, y: 0 }];
+
+      const tnlChartData = maxLevelArray
+        .reduce(extrapolate(expToLevel), getAccumulator();
 
       const attrChartData = maxLevelArray
         .map((_, index) => ({ x: index + 1, y: index + 1 }));
 
       const skillChartData = maxLevelArray
-        .reduce((acc, _, index) => {
-          const previous = acc[index];
-          const cumulativeTrainingTime = previous.y + getTrainingTime(index + 1);
-          return acc.concat({
-            x: index + 1,
-            y: cumulativeTrainingTime
-          });
-        }, [{ x: 0, y: 0 }]);
-
-      console.log('Skills:', skillChartData);
+        .reduce(extrapolate(getTrainingTime), getAccumulator();
 
       const mutaChartData = maxLevelArray
-        .reduce((acc, _, index) => {
-          const previous = acc[index];
-          const level = index + 1;
-          const gainedMutagen = level % 2 === 0;
-          const cumulativeMutagens = gainedMutagen ?
-            previous.y + Math.ceil(level / 10) : previous.y;
-          return acc.concat({
-            x: index + 1,
-            y: cumulativeMutagens
-          });
-        }, [{ x: 0, y: 0 }]);
+        .reduce(extrapolate(getMutagenGain), getAccumulator());
 
-      console.log('mutations', mutaChartData);
+      const calcSkillGainCost = level => level === 1 ? 0 : level;
 
       const maxSkillLevel = 10;
       const skillGainChartData = fillArray(maxSkillLevel, {})
-        .reduce((acc, _, index) => {
-          const previous = acc[index];
-          const cumulativeSkillPointsSpent = previous.x ?
-            previous.y + index + 1 : 0;
-          return acc.concat({
-            x: index + 1,
-            y: cumulativeSkillPointsSpent
-          });
-        }, [{ x: 0, y: 0 }]);
-
-      console.log('SP spent to max skill: ', skillGainChartData);
+        .reduce(extrapolate(calcSkillGainCost), getAccumulator());
 
       /*
         How do d3.js????
@@ -151,9 +133,9 @@
       const width = 1000;
       const height = 500;
       const margins = {
-        top: 50,
-        left: 20,
-        right: 20,
+        top:    50,
+        left:   20,
+        right:  20,
         bottom: 100
       };
 
@@ -175,6 +157,9 @@
       const getXAxis = range => d3.axisBottom(range);
 
       const getYAxis = range => d3.axisRight(range);
+
+      // TODO: Helper functon to create chart obj
+      // and attach to element.
 
       const tnlChart = {
         xRange: getLinearXRange(tnlChartData),
