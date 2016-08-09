@@ -3,17 +3,35 @@
   <head>
     <script type="text/javascript" src="../node_modules/d3/build/d3.js"></script>
     <meta charset="utf-8">
+    <style media="screen">
+    body {
+      font: 10px sans-serif;
+      background-color: steelblue;
+      text-align: left;
+      padding: 3px;
+      margin: 1px;
+      color: white;
+    }
+    </style>
     <title>Leveling Charts</title>
   </head>
   <body>
     <h3>Experience needed by level</h3>
-    <svg class="tnl-chart" width="1000" heigh="500"></svg>
+    <svg class="tnl-chart" width="1000" height="500">
+      <g></g>
+    </svg>
     <h3>Attribute points earned by level</h3>
-    <svg class="attr-chart" width="1000" heigh="500"></svg>
+    <svg class="attr-chart" width="1000" height="500">
+      <g></g>
+    </svg>
     <h3>Skill points earned by level</h3>
-    <svg class="skill-chart" width="1000" heigh="500"></svg>
+    <svg class="skill-chart" width="1000" height="500">
+      <g></g>
+    </svg>
     <h3>Mutagens earned by level</h3>
-    <svg class="mut-chart" width="1000" heigh="500"></svg>
+    <svg class="mut-chart" width="1000" height="500">
+      <g></g>
+    </svg>
     <h3>Cost in skill points per skill level</h3>
     <script>
       /**
@@ -108,13 +126,13 @@
       const getAccumulator = () => [{ x: 0, y: 0 }];
 
       const tnlChartData = maxLevelArray
-        .reduce(extrapolate(expToLevel), getAccumulator();
+        .reduce(extrapolate(expToLevel), getAccumulator());
 
       const attrChartData = maxLevelArray
         .map((_, index) => ({ x: index + 1, y: index + 1 }));
 
       const skillChartData = maxLevelArray
-        .reduce(extrapolate(getTrainingTime), getAccumulator();
+        .reduce(extrapolate(getTrainingTime), getAccumulator());
 
       const mutaChartData = maxLevelArray
         .reduce(extrapolate(getMutagenGain), getAccumulator());
@@ -124,6 +142,12 @@
       const maxSkillLevel = 10;
       const skillGainChartData = fillArray(maxSkillLevel, {})
         .reduce(extrapolate(calcSkillGainCost), getAccumulator());
+
+      console.log('Cumulative XP to level: ', tnlChartData);
+      console.log('Cumulative attr points by level: ', attrChartData);
+      console.log('Cumulative skill points by level: ', skillChartData);
+      console.log('Cumulative mutagens by level: ', mutaChartData);
+      console.log('Cost to train skill by skill level: ', skillGainChartData);
 
       /*
         How do d3.js????
@@ -161,29 +185,36 @@
       // TODO: Helper functon to create chart obj
       // and attach to element.
 
-      const tnlChart = {
-        xRange: getLinearXRange(tnlChartData),
-        yRange: getLinearYRange(tnlChartData),
-      };
+      const getChart = data =>{
+        const chart = {
+          xRange: getLinearXRange(data),
+          yRange: getLinearYRange(data),
+        };
+        chart.xAxis = getXAxis(chart.xRange);
+        chart.yAxis = getYAxis(chart.yRange);
+        return chart;
+      }
 
-      tnlChart.xAxis = getXAxis(tnlChart.xRange);
-      tnlChart.yAxis = getYAxis(tnlChart.yRange);
-
+      const tnlChart = getChart(tnlChartData);
       const tnlElement = d3.select('.tnl-chart');
-
 
       console.log('tnle', tnlElement);
 
-      tnlElement.append('svg')
-        .attr('class', 'x axis')
-        .attr('transform', 'translate(0,' + (height - margins.bottom) + ')')
-        .call(tnlChart.xAxis);
-
+      const getTransformation = trans => 'translate(0, ' + trans + ')';
 
       tnlElement.append('svg')
         .attr('class', 'y axis')
-        .attr('transform', 'translate(0,' + (margins.left) + ')')
+        .attr('transform', getTransformation(width - margins.right))
+        .style('height', data => tnlChart.yRange(data) + 'px')
         .call(tnlChart.yAxis);
+
+      tnlElement.append('svg')
+        .attr('class', 'x axis')
+        .attr('transform', getTransformation(height - margins.bottom))
+        .style('width', data => tnlChart.xRange(data) + 'px')
+        .call(tnlChart.xAxis);
+
+        tnlElement.data(tnlChartData);
 
     </script>
 
