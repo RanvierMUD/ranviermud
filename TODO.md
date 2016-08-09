@@ -54,7 +54,7 @@
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 63 | Improve player messaging for this by:
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 87 | Emit sanity loss event here if applicable.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 90 | Extract all stuff for determining stat gain into level utils.
-| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 154 | Permadeath, add it.
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 153 | Permadeath, add it.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 62 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 70 | Improve based on player stats/skills?
 | /Users/seanodonohue/myForks/ranviermud/commands/whisper.js | 2 | Refactor to be a channel.
