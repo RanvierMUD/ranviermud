@@ -190,6 +190,21 @@ const Effects = {
    */
   health_boost:  config => buffWithMax('health', config),
 
+	defenseBoost: config => {
+		return {
+			activate: () => {
+				config.player.combat.addDefenseMod({
+					name: config.name,
+					effect: defense => defense * config.magnitude
+				});
+			},
+			deactivate: () => {
+				config.player.combat.removeDefenseMod(config.name);
+			},
+			event: config.event
+		}
+	}
+
 	fortify: config => {
 		if (!config.target) { config.target = config.player; }
 		return buff('stamina', config);

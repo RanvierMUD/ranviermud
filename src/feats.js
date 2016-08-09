@@ -37,9 +37,9 @@ const Feats = {
       if (player.getEffects('leatherskin')) {
         player.removeEffect('leatherskin');
       }
-      player.addEffect('leatherskin', Effects.health_boost({
-        magnitude: 50,
-        player: player,
+      player.addEffect('leatherskin', Effects.defenseBoost({
+        magnitude: 1.15,
+        player,
         event: 'quit'
       }));
     },
@@ -58,34 +58,20 @@ const Feats = {
     id: 'ironskin',
     description: 'Your skin hardens further, into a layer of heavy metallic chitin.',
     activate: player => {
-      util.log(player.getName() + ' activates Ironskin.');
-
-      if (player.getEffects('ironskin0')) {
-        player.removeEffect('ironskin0');
-        player.removeEffect('ironskin1');
-        player.removeEffect('ironskin2');
+      if (player.getEffects('ironskin')) {
+        player.removeEffect('leatherskin');
+        player.removeEffect('leatherskin_slow');
       }
-
-      const ironSkinEffects = [
-        Effects.health_boost({
-          magnitude: 100,
-          player,
-          target: player,
-        }),
-        Effects.haste({
-          magnitude: .5,
-          player,
-        }),
-        Effects.fortify({
-          magnitude: 2,
-          player,
-        })
-      ];
-
-      ironSkinEffects.forEach((effect, i) => {
-          player.addEffect('ironskin' + i, effect);
-      });
-
+      player.addEffect('ironskin', Effects.defenseBoost({
+        player,
+        magnitude: 2.05,
+        event: 'quit'
+      }));
+      player.addEffect('ironskin_slow', Effects.haste({
+        target: player,
+        magnitude: .5,
+        effect: 'quit'
+      }));
       player.say('<cyan><bold>Clank.</bold></cyan>');
     }
   },
