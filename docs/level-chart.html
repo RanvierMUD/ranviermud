@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script type="text/javascript" src="../node_modules/d3/build/d3.min.js"></script>
+    <script type="text/javascript" src="../node_modules/d3/build/d3.js"></script>
     <meta charset="utf-8">
     <title>Leveling Charts</title>
   </head>
@@ -157,6 +157,7 @@
         d3.min(data, data => data[axis]),
         d3.max(data, data => data[axis])
       ];
+
       const getLinearXRange =
         (data) => d3.scaleLinear()
           .range([ margins.left, width - margins.right ])
@@ -166,12 +167,34 @@
           .range([ height - margins.top, margins.bottom ])
           .domain(getDomain(data, 'y'));
 
+
+      const getXAxis = range => d3.axisBottom(range);
+
+      const getYAxis = range => d3.axisRight(range);
+
       const tnlChart = {
         xRange: getLinearXRange(tnlChartData),
         yRange: getLinearYRange(tnlChartData),
-        xAxis: '',
-        yAxis: ''
       };
+
+      tnlChart.xAxis = getXAxis(tnlChart.xRange);
+      tnlChart.yAxis = getYAxis(tnlChart.yRange);
+
+      const tnlElement = d3.select('.tnl-chart');
+
+
+      console.log('tnle', tnlElement);
+
+      tnlElement.append('svg')
+        .attr('class', 'x axis')
+        .attr('transform', 'translate(0,' + (height - margins.bottom) + ')')
+        .call(tnlChart.xAxis);
+
+
+      tnlElement.append('svg')
+        .attr('class', 'y axis')
+        .attr('transform', 'translate(0,' + (margins.left) + ')')
+        .call(tnlChart.yAxis);
 
     </script>
 
