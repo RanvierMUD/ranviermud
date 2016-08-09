@@ -112,13 +112,12 @@ exports.listeners = {
 
       this.sayL10n(l10n, 'LEVELUP');
 
-      const gainedMutation = newLevel % 2 === 0;
-      let mutationPoints = this.getAttribute('mutagens');
+      const mutationPointsEarned = LevelUtil.getMutagenGain(newLevel);
 
-      if (gainedMutation) {
+      if (mutationPointsEarned) {
         this.sayL10n(l10n, 'MUTAGEN_GAIN');
-        mutationPoints += Math.ceil(level / 10);
-        this.setAttribute('mutagens', mutationPoints);
+        const mutationPoints = this.getAttribute('mutagens');
+        this.setAttribute('mutagens', mutationPoints + mutationPointsEarned);
       }
 
       this.setAttribute('level', newLevel);
