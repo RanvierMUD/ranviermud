@@ -1,6 +1,10 @@
 'use strict';
 const util = require('util');
 
+//TODO: Extract into own directory. Too many effects.
+//TODO: Make an atom snippet for this?
+//TODO: Effects_utils?
+
 /**
  * Reusable helper functions and defaults for effects.
  * Pass in the attribute/whatever else changes, along with the config.
@@ -203,7 +207,7 @@ const Effects = {
 			},
 			event: config.event
 		}
-	}
+	},
 
 	fortify: config => {
 		if (!config.target) { config.target = config.player; }

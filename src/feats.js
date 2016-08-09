@@ -76,6 +76,24 @@ const Feats = {
     }
   },
 
+  assense: {
+    type: 'passive',
+    cost: 1,
+    prereqs: {
+      stamina:    2,
+      willpower:  3,
+      cleverness: 2,
+      level:      7,
+    },
+
+    name: 'Assense Auras',
+    id: 'assense',
+    description: 'You are sensitive to the auras of others.',
+    activate: () => {},
+    deactivate: () => {},
+
+  },
+
   /// Active feats
   charm: {
     type: 'active',
@@ -96,8 +114,14 @@ const Feats = {
 
       const turnOnCharm = () => player.addEffect('charming', {
         duration: 30 * 1000,
-        deactivate: () => player.say('<yellow>You are no longer radiating calm and peace.</yellow>'),
-        activate: () => player.say('<magenta>You radiate a calming, peaceful aura.</magenta>')
+        deactivate: () => {
+          player.say('<yellow>You are no longer radiating calm and peace.</yellow>');
+          player.setAttribute('cleverness', player.getAttribute('cleverness') - 1);
+        },
+        activate: () => {
+          player.setAttribute('cleverness', player.getAttribute('cleverness') + 1);
+          player.say('<magenta>You radiate a calming, peaceful aura.</magenta>');
+        }
       });
 
       if (combatant && !charming) {
