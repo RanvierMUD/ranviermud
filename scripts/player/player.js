@@ -132,9 +132,9 @@ exports.listeners = {
         'sanity': sanityGain,
       };
 
-      for (const attr in attrToLevel) {
-        const max = 'max_' + attr;
-        this.setAttribute(max, healthGain);
+      for (const gain in attrToLevel) {
+        const max = 'max_' + gain;
+        this.setAttribute(max, attrToLevel[gain]);
         this.setAttribute(attr, this.getAttribute(max));
         this.say('<blue>You have gained ' + attr + '.</blue>');
       }
