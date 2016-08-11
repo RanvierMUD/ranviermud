@@ -177,13 +177,10 @@
           .range([ height - margins.top, margins.bottom ])
           .domain(getDomain(data, 'y'));
 
-
+      // Create axes and a chart object.
       const getXAxis = range => d3.axisBottom(range);
 
       const getYAxis = range => d3.axisRight(range);
-
-      // TODO: Helper functon to create chart obj
-      // and attach to element.
 
       const getChart = data =>{
         const chart = {
@@ -195,52 +192,42 @@
         return chart;
       }
 
-      const tnlChart = getChart(tnlChartData);
-      const tnlElement = d3.select('.tnl-chart');
-
-      console.log('tnle', tnlElement);
-
+      // Return string for SVG transforms.
       const getTransformation = trans => 'translate(0, ' + trans + ')';
+
+      // Renders axis... generic, returns a helper based on 'x' or 'y'.
       const renderAxis = axis => (element, chart) => {
         const isX         = axis === 'x';
         const attr        = isX ? 'width'  : 'height';
-        const className   = isX ? 'x axis' : 'y axis';
         const transformer = isX ? height - margins.bottom : width - margins.right;
 
-        element.append('svg')
-          .attr('class', className)
+        return element.append('svg')
+          .attr('class', axis + ' axis')
           .attr('transform', getTransformation(transformer))
-          .style(attr, data => tnlChart[axis + 'Range'](data) + 'px')
-          .call(tnlChart[axis + 'Axis']);
+          .style(attr, data => chart[axis + 'Range'](data) + 'px')
+          .call(chart[axis + 'Axis']);
       };
 
-      const yAxisRenderer = renderAxis('y');
       const xAxisRenderer = renderAxis('x');
+      const yAxisRenderer = renderAxis('y');
 
-      // Create SVG Axes
-      tnlElement.append('svg')
-        .attr('class', 'y axis')
-        .attr('transform', getTransformation(width - margins.right))
-        .style('height', data => tnlChart.yRange(data) + 'px')
-        .call(tnlChart.yAxis);
+      const tnlChart = getChart(tnlChartData);
+      const tnlElement = d3.select('.tnl-chart');
+      const tnlXAxis = xAxisRenderer(tnlElement, tnlChart);
+      const tnlYAxis = yAxisRenderer(tnlElement, tnlChart);
 
-      tnlElement.append('svg')
-        .attr('class', 'x axis')
-        .attr('transform', getTransformation(height - margins.bottom))
-        .style('width', data => tnlChart.xRange(data) + 'px')
-        .call(tnlChart.xAxis);
+      const attrChart = getChart(attrChartData);
+      const attrElement = d3.select('.attr-chart');
+      const attrXAxis = xAxisRenderer(attrElement, attrChart);
+      const attrYAxis = yAxisRenderer(attrElement, attrChart);
 
       const lineGenerator = d3.line()
         .x(point => point.x)
         .y(point => point.y)
         .defined(point => point.x && point.y);
+      console.log(lineGenerator);
 
-
-        tnlElement.selectAll('g')
-          .data(tnlChartData)
-          .enter().append('g')
-            .attr('transform', function() { return 'translate(0, ' + + ') '; })
-          ;
+      const tnlLine = lineGenerator(tnlChartData);
 
     </script>
 
