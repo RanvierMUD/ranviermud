@@ -37,7 +37,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function pickUp(item) {
       item = items.get(item);
-      player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc(player.getLocale()));
+      player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc('en'));
       item.setRoom(null);
       item.setInventory(playerName);
       player.addItem(item);

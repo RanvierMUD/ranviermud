@@ -40,9 +40,9 @@ exports.listeners = {
         'The defiler\'s <red>burbling neck-maw</red> <bold>clamps</bold> its fangs into your ' + hitLocation + ', leaving jagged tears.'
       ];
       const thirdPartyMessage = [
-        'The defiler bashes ' + player.getShortDesc() + ' with its tentacular suckers.',
-        'The defiler\'s <red>bloody sucker mouths</red> latch onto ' + player.getShortDesc() + '\'s ' + hitLocation + '.',
-        'The defiler bites ' + player.getShortDesc() + ' in the ' + hitLocation + ' and rends.',
+        'The defiler bashes ' + player.getShortDesc('en') + ' with its tentacular suckers.',
+        'The defiler\'s <red>bloody sucker mouths</red> latch onto ' + player.getShortDesc('en') + '\'s ' + hitLocation + '.',
+        'The defiler bites ' + player.getShortDesc('en') + ' in the ' + hitLocation + ' and rends.',
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
@@ -66,7 +66,7 @@ exports.listeners = {
       [
         'The defiler gives a pained croak.',
         '<white>Pus</white> oozes from the defiler\'s torn ' + hitLocation + '.',
-        'Tentacles wave and a <white>roar</white> splits the air as the defiler staggers under the force of ' + player.getShortDesc() + '\'s blow.',
+        'Tentacles wave and a <white>roar</white> splits the air as the defiler staggers under the force of ' + player.getShortDesc('en') + '\'s blow.',
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
@@ -80,7 +80,7 @@ exports.listeners = {
         'The defiler smacks your attack out of the way with its massive tentacle.',
       ];
       const thirdPartyMessage = [
-        'The defiler smacks ' + player.getShortDesc() + '\'s attack out of the way with its furrowed tentacle.'
+        'The defiler smacks ' + player.getShortDesc('en') + '\'s attack out of the way with its furrowed tentacle.'
       ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
@@ -97,8 +97,8 @@ exports.listeners = {
         'The defiler leaps backwards, dodging, its knees bending at impossible angles.'
       ];
       const thirdPartyMessage = [
-        'The defiler nearly bends in half to avoid ' + player.getShortDesc() + '\'s attack.',
-        'The defiler leaps backwards, dodging ' + player.getShortDesc() + ', its knees bending at impossible angles.'
+        'The defiler nearly bends in half to avoid ' + player.getShortDesc('en') + '\'s attack.',
+        'The defiler leaps backwards, dodging ' + player.getShortDesc('en') + ', its knees bending at impossible angles.'
       ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
@@ -115,8 +115,8 @@ exports.listeners = {
         'Croaking, the defiler lunges at you but falls short.'
       ];
       const thirdPartyMessage = [
-        'The defiler swings its tentacle-mouths at ' + player.getShortDesc() + ' but is left hungering.',
-        'Croaking, the defiler attempts to chow on ' + player.getShortDesc() + ', but misses.'
+        'The defiler swings its tentacle-mouths at ' + player.getShortDesc('en') + ' but is left hungering.',
+        'Croaking, the defiler attempts to chow on ' + player.getShortDesc('en') + ', but misses.'
       ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });

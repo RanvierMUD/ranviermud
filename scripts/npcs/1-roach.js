@@ -25,7 +25,7 @@ exports.listeners = {
     return (room, player, players, item) => {
       const rand = Random.inRange(1, 5);
       if (rand === 3) {
-        const itemDesc = item.getShortDesc();
+        const itemDesc = item.getShortDesc('en');
         const msg = '<bold>The roach scurries over to the ' + itemDesc +'</bold>';
         const toRoom = Broadcast.toRoom(room, this, player, players);
         toRoom({
@@ -45,8 +45,8 @@ exports.listeners = {
         'The roach bites your ' + hitLocation + ', drawing a pinprick of blood.',
       ];
       const thirdPartyMessage = [
-        'The roach\'s pincers nip ' + player.getShortDesc() + '\'s ' + hitLocation + '.',
-        'The roach bites ' + player.getShortDesc() + ' in the ' + hitLocation + ' and a tiny pinprick of blood wells forth.',
+        'The roach\'s pincers nip ' + player.getShortDesc('en') + '\'s ' + hitLocation + '.',
+        'The roach bites ' + player.getShortDesc('en') + ' in the ' + hitLocation + ' and a tiny pinprick of blood wells forth.',
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
@@ -80,8 +80,8 @@ exports.listeners = {
         'The roach darts in your direction and you step out of the way.'
       ];
       const thirdPartyMessage = [
-        'The roach scuttles over ' + player.getShortDesc() + '\'s feet harmlessly.',
-        'The roach darts at ' + player.getShortDesc() + ' but they step out of the way effortlessly.'
+        'The roach scuttles over ' + player.getShortDesc('en') + '\'s feet harmlessly.',
+        'The roach darts at ' + player.getShortDesc('en') + ' but they step out of the way effortlessly.'
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
@@ -94,7 +94,7 @@ exports.listeners = {
         '<white>The roach\'s abnormally tough chitin deflects your blow!</white>'
       ];
       const thirdPartyMessage = [
-        '<white>' + player.getShortDesc() + '\'s blow is deflected by the roach\'s thick shell.</white>'
+        '<white>' + player.getShortDesc('en') + '\'s blow is deflected by the roach\'s thick shell.</white>'
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }

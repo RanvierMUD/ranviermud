@@ -250,7 +250,7 @@ function CombatHelper(entity) {
       + Math.round(this._entity.getAttribute('quickness') / 2);
     const toHitChance = applyMods(toHitSkill + toHitBonus, this.toHitMods);
     const toHitWithinBounds = _.setBounds(5, 90);
-    util.log(this._entity.getShortDesc() + ': To hit chance is ', toHitChance);
+    util.log(this._entity.getShortDesc('en') + ': To hit chance is ', toHitChance);
     return toHitWithinBounds(toHitChance);
   }
 

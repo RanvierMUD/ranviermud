@@ -43,7 +43,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       );
 
 
-      let itemName = item.getShortDesc(player.getLocale());
+      let itemName = item.getShortDesc('en');
       if (!isDead) { player.sayL10n(l10n, 'ITEM_DROP', itemName, false); }
       util.log(playerName + " drops " + itemName + " at " + room.getLocation() + ".");
 
