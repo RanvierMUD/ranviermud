@@ -173,29 +173,29 @@ exports.listeners = {
         'head': {
           firstPartyMessage: [
             'You wince as the blow smashes into your skull.',
-            'You see stars as ' + npc.getShortDesc() + ' wracks your brain for you.'
+            'You see stars as ' + npc.getShortDesc('en') + ' wracks your brain for you.'
           ],
           thirdPartyMessage: [
-            this.getShortDesc() + 'winces as the blow smashes into their skull.',
-            this.getShortDesc() + 'is staggered by ' + npc.getShortDesc() + '\'s blow to the head.'
+            this.getShortDesc('en') + 'winces as the blow smashes into their skull.',
+            this.getShortDesc('en') + 'is staggered by ' + npc.getShortDesc('en') + '\'s blow to the head.'
           ],
         },
         'legs': {
           firstPartyMessage: [
-            'You stagger as ' + npc.getShortDesc() + ' nearly knocks your legs out from under you.',
-            'Your knees buckle under the force of ' + npc.getShortDesc() + '\'s blow.'
+            'You stagger as ' + npc.getShortDesc('en') + ' nearly knocks your legs out from under you.',
+            'Your knees buckle under the force of ' + npc.getShortDesc('en') + '\'s blow.'
           ],
           thirdPartyMessage: [
-            this.getShortDesc() + ' staggers and nearly trips.',
-            this.getShortDesc() + '\'s knees buckle.'
+            this.getShortDesc('en') + ' staggers and nearly trips.',
+            this.getShortDesc('en') + '\'s knees buckle.'
           ]
         },
         'default': {
           firstPartyMessage: [
-            'Pain tears through your ' + hitLocation + ' as ' + npc.getShortDesc() + ' strikes true.',
+            'Pain tears through your ' + hitLocation + ' as ' + npc.getShortDesc('en') + ' strikes true.',
           ],
           thirdPartyMessage: [
-            this.getShortDesc() + ' takes a hit to the ' + hitLocation + '.',
+            this.getShortDesc('en') + ' takes a hit to the ' + hitLocation + '.',
           ],
         }
       };
@@ -212,16 +212,16 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, this, npc, players);
 
       const firstPartyMessage = hitLocation === 'head' ?
-      [ 'You duck out of the way as ' + npc.getShortDesc() + ' goes for your head.' ] :
+      [ 'You duck out of the way as ' + npc.getShortDesc('en') + ' goes for your head.' ] :
       [
-        'You twist out of the way as ' + npc.getShortDesc() + ' attacks.',
+        'You twist out of the way as ' + npc.getShortDesc('en') + ' attacks.',
         'You barely get your ' + hitLocation + ' out of the way in time.'
       ];
       const thirdPartyMessage = hitLocation === 'head' ?
-      [ this.getShortDesc() + ' ducks under ' + npc.getShortDesc() + '\'s attack.' ] :
+      [ this.getShortDesc('en') + ' ducks under ' + npc.getShortDesc('en') + '\'s attack.' ] :
       [
-        this.getShortDesc() + ' twists out of the way of ' + npc.getShortDesc() + '.',
-        this.getShortDesc() + ' nimbly evades ' + npc.getShortDesc() + '.'
+        this.getShortDesc('en') + ' twists out of the way of ' + npc.getShortDesc('en') + '.',
+        this.getShortDesc('en') + ' nimbly evades ' + npc.getShortDesc('en') + '.'
       ];
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
     }
@@ -232,11 +232,11 @@ exports.listeners = {
 			const toRoom = Broadcast.toRoom(room, this, null, players);
 
 			const firstPartyMessage = [
-				'You punch ' + defender.getShortDesc() + ' in the ' + hitLocation + '.'
+				'You punch ' + defender.getShortDesc('en') + ' in the ' + hitLocation + '.'
 			].map(msg => '<bold>' + msg + '</bold>');
 
       const thirdPartyMessage = [
-				this.getShortDesc() + ' punches ' + defender.getShortDesc() + '.'
+				this.getShortDesc('en') + ' punches ' + defender.getShortDesc('en') + '.'
 			].map(msg => '<bold>' + msg + '</bold>');
 
 			Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
@@ -251,8 +251,8 @@ exports.listeners = {
         'You whiff completely.'
       ];
       const thirdPartyMessage = [
-        this.getShortDesc() + ' swings and misses.',
-        this.getShortDesc() + ' tries to attack ' + npc.getShortDesc() + ' and whiffs.'
+        this.getShortDesc('en') + ' swings and misses.',
+        this.getShortDesc('en') + ' tries to attack ' + npc.getShortDesc('en') + ' and whiffs.'
       ];
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
     }

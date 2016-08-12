@@ -9,7 +9,7 @@ exports.listeners = {
 			const toRoom = Broadcast.toRoom(room, player, null, players);
 
 			const firstPartyMessage = '<yellow>You clench the shiv tightly in your fist.</yellow>';
-			const thirdPartyMessage = '<yellow>' + player.getShortDesc() + ' draws and clenches a shiv tightly.</yellow>'
+			const thirdPartyMessage = '<yellow>' + player.getShortDesc('en') + ' draws and clenches a shiv tightly.</yellow>'
 			toRoom({ firstPartyMessage, thirdPartyMessage });
 
 			//TODO: Test to make sure this gets removed on quit.
@@ -26,7 +26,7 @@ exports.listeners = {
 			const toRoom = Broadcast.toRoom(room, player, null, players);
 
 			const firstPartyMessage = '<yellow>You carefully stow the shiv away, avoiding the rusty blade.</yellow>';
-			const thirdPartyMessage = '<yellow>' + player.getShortDesc() + ' carefully stows away their rusty shiv.</yellow>'
+			const thirdPartyMessage = '<yellow>' + player.getShortDesc('en') + ' carefully stows away their rusty shiv.</yellow>'
 			toRoom({ firstPartyMessage, thirdPartyMessage });
 
 			//TODO: Test to make sure this gets removed on quit.
@@ -52,9 +52,9 @@ exports.listeners = {
 			].map(msg => '<bold>' + msg + '</bold>');
 
 			const thirdPartyMessage = [
-				attacker.getShortDesc() + '\'s shank finds purchase in ' + defender.getShortDesc() + '\'s flesh.',
-				attacker.getShortDesc() + ' nimbly darts forth and knicks ' + defender.getShortDesc() + '.',
-				attacker.getShortDesc() + ' dashes in and slashes,' + defender.getShortDesc() + ', crimson spraying in miniature fountains.'
+				attacker.getShortDesc('en') + '\'s shank finds purchase in ' + defender.getShortDesc('en') + '\'s flesh.',
+				attacker.getShortDesc('en') + ' nimbly darts forth and knicks ' + defender.getShortDesc('en') + '.',
+				attacker.getShortDesc('en') + ' dashes in and slashes,' + defender.getShortDesc('en') + ', crimson spraying in miniature fountains.'
 			].map(msg => '<bold>' + msg + '</bold>');
 
 			Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
@@ -65,9 +65,9 @@ exports.listeners = {
 		return function(room, player, attacker, players) {
 			const toRoom = Broadcast.toRoom(room, player, null, players);
 
-			const firstPartyMessage = ['You deftly knock ' + attacker.getShortDesc() + '\'s strike away with the point of your blade.']
+			const firstPartyMessage = ['You deftly knock ' + attacker.getShortDesc('en') + '\'s strike away with the point of your blade.']
 				.map(msg => '<white>' + msg + '</white>');
-			const thirdPartyMessage = [player.getShortDesc() + ' somehow manages to knock away ' + attacker.getShortDesc() + '\'s attack with their tiny blade!']
+			const thirdPartyMessage = [player.getShortDesc('en') + ' somehow manages to knock away ' + attacker.getShortDesc('en') + '\'s attack with their tiny blade!']
 				.map(msg => '<white>' + msg + '</white>');
 
 			Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });

@@ -24,7 +24,7 @@ exports.listeners = {
     return (room, player, players, item) => {
       const rand = Random.inRange(1, 5);
       if (rand === 3) {
-        const itemDesc = item.getShortDesc();
+        const itemDesc = item.getShortDesc('en');
         const msg = '<bold>The rat sniffs at the' + itemDesc +'</bold>';
         const toRoom = Broadcast.toRoom(room, this, player, players);
         toRoom({
@@ -45,9 +45,9 @@ exports.listeners = {
         'Foaming at the mouth and screeching, the rat sinks its fangs into your ' + hitLocation + '.'
       ];
       const thirdPartyMessage = [
-        'The rat rakes ' + player.getShortDesc() + ' in the ' + hitLocation + ' with its jagged claws.',
-        'The rat bites ' + player.getShortDesc() + '\'s ' + hitLocation + ' and refuses to let go.',
-        'The rat screeches at ' + player.getShortDesc() + ' and sinks its fangs in their ' + hitLocation + '.'
+        'The rat rakes ' + player.getShortDesc('en') + ' in the ' + hitLocation + ' with its jagged claws.',
+        'The rat bites ' + player.getShortDesc('en') + '\'s ' + hitLocation + ' and refuses to let go.',
+        'The rat screeches at ' + player.getShortDesc('en') + ' and sinks its fangs in their ' + hitLocation + '.'
       ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
@@ -71,11 +71,11 @@ exports.listeners = {
       const thirdPartyMessage = moderateDamage ?
       [
         'The rat screeches in pain as its ' + hitLocation + ' crumples.',
-        'Foaming at the maw, the rat is gashed by ' + player.getShortDesc() + '\'s attack.',
-        'The fierce rat is bashed away by ' + player.getShortDesc() + '.',
+        'Foaming at the maw, the rat is gashed by ' + player.getShortDesc('en') + '\'s attack.',
+        'The fierce rat is bashed away by ' + player.getShortDesc('en') + '.',
         'Blood sprays across the ground as the feral rat\'s ' + hitLocation + ' is sundered.'
       ] :
-      ['The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur, thanks to ' + player.getShortDesc() + '.'];
+      ['The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur, thanks to ' + player.getShortDesc('en') + '.'];
 ;
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
@@ -92,9 +92,9 @@ exports.listeners = {
         'The rabid rodent leaps past you as you make your move, and you miss.',
       ];
       const thirdPartyMessage = [
-        'The rat scurries away from ' + player.getShortDesc() + '\'s attack.',
-        player.getShortDesc() + '\'s attack hits only the rat\'s fur.',
-        'The fierce rat leaps past ' + player.getShortDesc() + ' and they whiff.',
+        'The rat scurries away from ' + player.getShortDesc('en') + '\'s attack.',
+        player.getShortDesc('en') + '\'s attack hits only the rat\'s fur.',
+        'The fierce rat leaps past ' + player.getShortDesc('en') + ' and they whiff.',
       ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
@@ -111,9 +111,9 @@ exports.listeners = {
         '<yellow>The rabid rodent sprays bloody foam on your ' + hitLocation + ' as they try to bite and miss.</yellow>',
       ];
       const thirdPartyMessage = [
-        '<yellow>The rat leaps for ' + player.getShortDesc() + '\s ' + hitLocation + ', but flies past in a ball of fur and fangs.</yellow>',
-        '<yellow>The rat claws uselessly at ' + player.getShortDesc() + ', missing.</yellow>',
-        '<yellow>The rabid critter sprays bloody foam on' + player.getShortDesc() + ' but fails to do any real damage.</yellow>',
+        '<yellow>The rat leaps for ' + player.getShortDesc('en') + '\s ' + hitLocation + ', but flies past in a ball of fur and fangs.</yellow>',
+        '<yellow>The rat claws uselessly at ' + player.getShortDesc('en') + ', missing.</yellow>',
+        '<yellow>The rabid critter sprays bloody foam on' + player.getShortDesc('en') + ' but fails to do any real damage.</yellow>',
       ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
