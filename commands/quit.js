@@ -9,8 +9,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
 		if (player.isInCombat()) {
 			util.log(playerName + ' tried to quit during combat.');
-			player.sayL10n(l10n, 'COMBAT_COMMAND_FAIL');
-			return;
+			return player.sayL10n(l10n, 'COMBAT_COMMAND_FAIL');
 		}
 
 		player.setTraining('beginTraining', Date.now());
