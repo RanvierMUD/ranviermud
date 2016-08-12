@@ -59,7 +59,7 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
 const consistentMessage = (broadcaster, messageLists)  => {
   const listLengths = _
     .values(messageLists)
-    .map(list => list.length);
+    .map(list => _.toArray(list).length);
 
   const sameLength = listLengths
     .reduce((prev, length) => prev === undefined ?
@@ -76,8 +76,8 @@ const consistentMessage = (broadcaster, messageLists)  => {
   const selection = Random.inRange(0, messageLists.thirdPartyMessage.length - 1);
   const messages = {};
   for (let messageList in messageLists) {
-
-    messages[messageList] = messageLists[messageList][selection];
+    const chosenList = _.toArray(messageLists[messageList]);
+    messages[messageList] = chosenList[selection];
   }
 
   broadcaster(messages);
