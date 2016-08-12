@@ -176,8 +176,8 @@ exports.listeners = {
             'You see stars as ' + npc.getShortDesc('en') + ' wracks your brain for you.'
           ],
           thirdPartyMessage: [
-            this.getShortDesc('en') + 'winces as the blow smashes into their skull.',
-            this.getShortDesc('en') + 'is staggered by ' + npc.getShortDesc('en') + '\'s blow to the head.'
+            this.getShortDesc('en') + ' winces as the blow smashes into their skull.',
+            this.getShortDesc('en') + ' is staggered by ' + npc.getShortDesc('en') + '\'s blow to the head.'
           ],
         },
         'legs': {
