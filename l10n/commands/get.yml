@@ -1,6 +1,6 @@
 GET_COMBAT:
-  en: "You can do that while you're fighting."
-  es: "ES-You can do that while you're fighting."
+  en: "You cannot do that while you're fighting."
+  es: "ES-You cannot do that while you're fighting."
 CARRY_MAX:
   en: "You can't carry anymore."
   es: "ES-You can't carry anymore."
