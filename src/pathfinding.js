@@ -33,7 +33,7 @@ function chooseRandomExit(chance) {
 
           try {
             if (player) {
-              const locale = player.getLocale();
+              const locale = 'en';
               const msg = getLeaveMessage(player, chosenRoom);
               player.say(npc.getShortDesc(locale) + msg);
             }
@@ -73,7 +73,7 @@ function chooseRandomExit(chance) {
 
 function getLeaveMessage(player, chosenRoom) {
   return chosenRoom && chosenRoom.title ?
-    ' leaves for ' + chosenRoom.title[player.getLocale()] + '.' :
+    ' leaves for ' + chosenRoom.title['en'] + '.' :
     ' leaves.';
 }
 

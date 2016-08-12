@@ -47,7 +47,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function isWearable(item) {
       if (!item.getAttribute('wearLocation')) {
         util.log("No wear location:" , item.getShortDesc('en'), item.wearLocation);
-        player.sayL10n(l10n, 'NO_WEAR_LOCATION', item.getShortDesc('en');
+        player.sayL10n(l10n, 'NO_WEAR_LOCATION', item.getShortDesc('en'));
         return false;
       }
       return true;

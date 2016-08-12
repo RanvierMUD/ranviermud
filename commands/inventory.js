@@ -27,7 +27,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           let amount = itemCounts[vnum];
           let prefix = amount > 1 ? '(' + amount + ') ' : '';
           util.log(prefix + item.getShortDesc('en'));
-          player.say(prefix + item.getShortDesc(player.getLocale()));
+          player.say(prefix + item.getShortDesc('en'));
         }
       });
 
