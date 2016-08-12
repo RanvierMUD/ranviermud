@@ -240,7 +240,7 @@ const Feats = {
         player.setAttribute('health', healed);
         deductSanity(player, siphoned);
 
-        util.log(player.getName() + ' drains a ' + target.getShortDesc() + ' for ' + siphoned);
+        util.log(player.getName() + ' drains a ' + target.getShortDesc('en') + ' for ' + siphoned);
 
         const cooldown = 150 * 1000;
         player.addEffect('siphoning', { duration: cooldown });

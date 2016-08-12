@@ -25,7 +25,7 @@ exports.listeners = {
         'You place the bulky cleaver in your pack.'
       ];
       const thirdPartyMessage = [
-        player.getShortDesc() + ' places the bulky cleaver in their pack.'
+        player.getShortDesc('en') + ' places the bulky cleaver in their pack.'
       ];
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
       player.combat.deleteAllMods('cleaver' + this.getUuid());
@@ -38,13 +38,13 @@ exports.listeners = {
 
       const firstPartyMessage = [
         'The blade of your cleaver <red>does its job.</red>',
-        'The heft of your blade <red>cleaves</red> bone and sinew from ' + defender.getShortDesc() + '.',
-        'You rend meat from ' + defender.getShortDesc() + '\'s bone with the weighty blade.'
+        'The heft of your blade <red>cleaves</red> bone and sinew from ' + defender.getShortDesc('en') + '.',
+        'You rend meat from ' + defender.getShortDesc('en') + '\'s bone with the weighty blade.'
       ];
       const thirdPartyMessage = [
-        'The blade of ' + attacker.getShortDesc() + '\'s cleaver <red>is buried in ' + defender.getShortDesc() + ' .</red>',
-        'The heft of ' + attacker.getShortDesc() + '\'s blade <red>cleaves</red> bone and sinew from ' + defender.getShortDesc() + '.',
-        'You rend meat from ' + defender.getShortDesc() + '\'s bone with the weighty blade.'
+        'The blade of ' + attacker.getShortDesc('en') + '\'s cleaver <red>is buried in ' + defender.getShortDesc('en') + ' .</red>',
+        'The heft of ' + attacker.getShortDesc('en') + '\'s blade <red>cleaves</red> bone and sinew from ' + defender.getShortDesc('en') + '.',
+        'You rend meat from ' + defender.getShortDesc('en') + '\'s bone with the weighty blade.'
       ];
 
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
@@ -61,8 +61,8 @@ exports.listeners = {
     return function (room, player, attacker, players) {
       const toRoom = Broadcast.toRoom(room, player, null, players);
 
-      const firstPartyMessage = ['<bold><white>The blade of your cleaver halts ' + attacker.getShortDesc() + '\'s attack.</white></bold>'];
-      const thirdPartyMessage = ['<bold><white>The blade of ' + player.getShortDesc() + '\'s cleaver halts ' + attacker.getShortDesc() + '\'s attack.</white></bold>'];
+      const firstPartyMessage = ['<bold><white>The blade of your cleaver halts ' + attacker.getShortDesc('en') + '\'s attack.</white></bold>'];
+      const thirdPartyMessage = ['<bold><white>The blade of ' + player.getShortDesc('en') + '\'s cleaver halts ' + attacker.getShortDesc('en') + '\'s attack.</white></bold>'];
 
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
 
