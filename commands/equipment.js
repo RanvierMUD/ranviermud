@@ -18,7 +18,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         delete equipped[slot];
       } else {
       player.say(sprintf("%-15s %s", "<" + slot + ">", item.getShortDesc(
-        player.getLocale())));
+        'en')));
         util.log(item.getShortDesc('en'));
       }
     }

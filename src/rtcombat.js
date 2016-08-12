@@ -19,7 +19,7 @@ const Effects     = require('./effects').Effects;
 const Broadcast   = require('./broadcast').Broadcast;
 
 function _initCombat(l10n, target, player, room, npcs, players, rooms, callback) {
-  const locale = Type.isPlayer(player) ? player.getLocale() : 'en';
+  const locale = Type.isPlayer(player) ? 'en' : 'en';
   player.setInCombat(target);
   target.setInCombat(player);
 

@@ -106,8 +106,6 @@ exports.listeners = {
       util.log(name + ' gained energy ' + energyGain);
       util.log(name + ' gained sanity' + sanityGain);
 
-
-
       util.log(name + ' is now level ' + newLevel);
 
       this.sayL10n(l10n, 'LEVELUP');

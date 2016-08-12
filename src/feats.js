@@ -125,7 +125,7 @@ const Feats = {
       });
 
       if (combatant && !charming) {
-        player.say('<bold>' + combatant.getShortDesc(player.getLocale()) + ' stops fighting you.</bold>');
+        player.say('<bold>' + combatant.getShortDesc('en') + ' stops fighting you.</bold>');
         combatant.setInCombat(false);
         player.setInCombat(false);
         turnOnCharm();

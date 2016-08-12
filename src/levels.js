@@ -76,6 +76,7 @@ const expToLevel = level =>
 
 
 exports.LevelUtil = {
+	getMutagenGain,
 	expToLevel,
 	mobExp,
 	getTrainingTime,

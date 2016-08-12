@@ -11,7 +11,7 @@ exports.listeners = {
         name: 'cleaver ' + this.getUuid(),
         effect: toHit => toHit + 1
       });
-      player.combat.addToDodgeMod({
+      player.combat.addDodgeMod({
         name: 'cleaver ' + this.getUuid(),
         effect: dodge => dodge - 1
       });

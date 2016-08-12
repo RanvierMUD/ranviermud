@@ -39,7 +39,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         const room = rooms.getAt(player.getLocation());
         return item.emit('remove', room, player, players);
       }
-      return player.sayL10n(l10n, 'REMOVED', item.getShortDesc(player.getLocale()));
+      return player.sayL10n(l10n, 'REMOVED', item.getShortDesc('en'));
     }
   };
 };
