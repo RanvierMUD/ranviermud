@@ -75,7 +75,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const hasWearScript = CommandUtil.hasScript(item, 'wear');
 
       //FIXME: Add wear scripts to items.
-      if (hasWearScript) { item.emit('wear', location, player, players); }
+      if (hasWearScript) {
+        const room = rooms.getAt(player.getLocation());
+        item.emit('wear', location, room, player, players);
+      }
       player.equip(location, item);
     }
 
