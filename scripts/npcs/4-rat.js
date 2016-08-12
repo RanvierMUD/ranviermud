@@ -67,7 +67,9 @@ exports.listeners = {
         'The rabid rodent is knocked back by the blow, a ball of furry fury.',
         'The rat\'s ' + hitLocation + ' tears under the force of the blow.'
       ] :
-      ['The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur and bones.'];
+      [
+        'The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur and bones.'
+      ];
       const thirdPartyMessage = moderateDamage ?
       [
         'The rat screeches in pain as its ' + hitLocation + ' crumples.',
@@ -75,8 +77,9 @@ exports.listeners = {
         'The fierce rat is bashed away by ' + player.getShortDesc('en') + '.',
         'Blood sprays across the ground as the feral rat\'s ' + hitLocation + ' is sundered.'
       ] :
-      ['The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur, thanks to ' + player.getShortDesc('en') + '.'];
-;
+      [
+        'The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur, thanks to ' + player.getShortDesc('en') + '.'
+      ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
