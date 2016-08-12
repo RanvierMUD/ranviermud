@@ -11,7 +11,7 @@ module.exports = {
 
 function getHealthText(maxHealth, player, npc) {
   return function(health) {
-    var locale = player ? player.getLocale() : 'en';
+    var locale = player ? 'en' : 'en';
     var isPlayer = !npc;
     var percentage = getPercentage(health, maxHealth);
     var descriptor = isPlayer ?

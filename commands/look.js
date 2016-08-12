@@ -20,7 +20,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
   return (args, player, hasExplored) => {
     const room = rooms.getAt(player.getLocation());
-    const locale = player.getLocale();
+    const locale = 'en';
 
     if (args) {
       args = args.toLowerCase();
@@ -147,7 +147,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           const color = getNpcColor(difference)
 
           player.say('<' + color + '>'
-            + npc.getShortDesc(player.getLocale())
+            + npc.getShortDesc('en')
             + '</' + color + '>');
         }
       });

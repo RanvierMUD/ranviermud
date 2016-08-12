@@ -18,14 +18,16 @@ const Type        = require('./type').Type;
 const Effects     = require('./effects').Effects;
 const Broadcast   = require('./broadcast').Broadcast;
 
+let dualWieldCancel = null;
+
 function _initCombat(l10n, target, player, room, npcs, players, rooms, callback) {
-  const locale = Type.isPlayer(player) ? player.getLocale() : 'en';
+  const locale = Type.isPlayer(player) ? 'en' : 'en';
   player.setInCombat(target);
   target.setInCombat(player);
 
   const broadcastToArea = Broadcast.toArea(player, players, rooms);
 
-  player.sayL10n(l10n, 'ATTACK', target.getShortDesc());
+  player.sayL10n(l10n, 'ATTACK', target.getShortDesc('en'));
 
 
   /*
@@ -93,7 +95,6 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
   let isDualWielding = CommandUtil.hasScript(player.combat.getOffhand(), 'wield');
   const getDuelWieldSpeed = ()   => player.combat.getAttackSpeed(isDualWielding) * dualWieldSpeedFactor;
   const dualWieldDamage = damage => Math.round(damage * (0.5 + player.getSkills('dual') / 10));
-  let dualWieldCancel = null;
 
   if (isDualWielding) {
     util.log("Player is using dual wield!");
@@ -149,7 +150,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     const energyCost = isPlayerWithWeapon ?
       attackerWeapon.getAttribute('weight') || baseEnergyCost :
       baseEnergyCost;
-    util.log('Attack energy cost for ' + attacker.getShortDesc() + ' is ' + energyCost);
+    util.log('Attack energy cost for ' + attacker.getShortDesc('en') + ' is ' + energyCost);
 
     // Handle attacker fatigue
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
@@ -171,8 +172,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     // Assign constants for this round...
     const attackerSpeed = attacker.combat.getAttackSpeed(this.isSecondAttack);
-    const attackerDesc  = attacker.getShortDesc();
-    const defenderDesc  = defender.getShortDesc();
+    const attackerDesc  = attacker.getShortDesc('en');
+    const defenderDesc  = defender.getShortDesc('en');
     const attackDesc    = this.isSecondAttack ?
       attacker.combat.getSecondaryAttackName() :
       attacker.combat.getPrimaryAttackName();

@@ -16,7 +16,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return;
     }
 
-    const locale = player.getLocale() || 'en';
+    const locale = 'en';
     const targetLevel = target.getAttribute('level') || null;
     const playerLevel = player.getAttribute('level') || null;
     const targetName = target.getShortDesc(locale) || null;

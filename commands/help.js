@@ -4,6 +4,7 @@ const l10n      = require('../src/l10n')(l10nFile);
 const util      = require('util');
 const HelpFiles = require('../src/help_files').HelpFiles;
 const wrap      = require('wrap-ansi');
+const _         = require('../src/helpers');
 
 /*
   NEW: {
@@ -42,13 +43,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       // --- Helpers for printing out the help files. Help helpers.
 
       const hr      = ()     => print('<green>---------------------------------'
-                                      + '------------------------------</green>');
+                                      +      '---------------------------------</green>');
       const title   = txt    => print('<bold>'   +       txt     +     '</bold>');
       const usage   = usage  => print('<cyan>    USAGE: </cyan>' +       usage);
       const options = option => print('<red> - </red>'           +       option);
       const related = topic  => print('<magenta> * </magenta>'   +       topic);
 
-      const maybeForEach = (txt, fn) => [].concat(txt).forEach(fn);
+      const maybeForEach = (txt, fn) => _.toArray(txt).forEach(fn);
 
       hr();
 

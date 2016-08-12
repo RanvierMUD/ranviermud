@@ -73,7 +73,7 @@ function findItemInRoom(items, lookString, room, player, hydrate) {
   let thing = CommandUtil.parseDot(lookString, room.getItems(), function(
     item) {
     let found = items.get(item);
-    return found && found.hasKeyword(this.keyword, player.getLocale());
+    return found && found.hasKeyword(this.keyword, 'en');
   });
 
   return thing ? (hydrate ? items.get(thing) : thing) : false;
@@ -94,7 +94,7 @@ function findNpcInRoom(npcs, lookString, room, player, hydrate) {
   let thing = CommandUtil.parseDot(lookString, room.getNpcs(),
     function (id) {
       let npc = npcs.get(id);
-      return npc && npc.hasKeyword(this.keyword, player.getLocale());
+      return npc && npc.hasKeyword(this.keyword, 'en');
     }
   );
 
