@@ -47,7 +47,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function isWearable(item) {
       if (!item.getAttribute('wearLocation')) {
         util.log("No wear location:" , item.getShortDesc('en'), item.wearLocation);
-        player.sayL10n(l10n, 'NO_WEAR_LOCATION', item.getShortDesc(player.getLocale()));
+        player.sayL10n(l10n, 'NO_WEAR_LOCATION', item.getShortDesc('en');
         return false;
       }
       return true;
@@ -57,7 +57,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const worn = player.getEquipped(item.getAttribute('wearLocation'));
       if (worn) {
         util.log("Cannot wear due to already wearing an item.");
-        player.sayL10n(l10n, 'CANT_WEAR', items.get(worn).getShortDesc(player.getLocale()));
+        player.sayL10n(l10n, 'CANT_WEAR', items.get(worn).getShortDesc('en'));
         return false;
       }
       return true;
@@ -66,7 +66,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function broadCastWearing(item) {
       players.eachIf(
         p => CommandUtil.inSameRoom(p, player),
-        p => p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), item.getShortDesc(p.getLocale()))
+        p => p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), item.getShortDesc('en'))
       );
     }
 
