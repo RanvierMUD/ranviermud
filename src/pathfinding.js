@@ -39,7 +39,7 @@ function chooseRandomExit(chance) {
             }
 
             const broadcastNpcMovement = getMsg => p => {
-              const locale = p.getLocale();
+              const locale = 'en';
               const msg    = getMsg(p, chosenRoom);
               p.say(npc.getShortDesc(locale) + msg);
             };
