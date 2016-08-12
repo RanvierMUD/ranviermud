@@ -137,7 +137,7 @@ exports.listeners = {
         this.say('<blue>You have gained ' + attr + '.</blue>');
       }
 
-      if (gainedMutation) { this.say('\n<blue>You may be able to `manifest` new mutations.</blue>'); }
+      if (mutationPointsEarned) { this.say('\n<blue>You may be able to `manifest` new mutations.</blue>'); }
       this.say('<blue>You may boost your stamina, quickness, cleverness, or willpower.</blue>');
 
       // Add points for skills
