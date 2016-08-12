@@ -33,7 +33,12 @@
       <g></g>
     </svg>
     <h3>Cost in skill points per skill level</h3>
+    <svg class="skill-cost-chart" width="1000" height="500">
+      <g></g>
+    </svg>
     <script>
+      //TODO: Use require or whatever to pull these in.
+      //FIXME: Don't put the js in the html file. Nerd.
       /**
        * Level utils...
        */
@@ -221,13 +226,19 @@
       const attrXAxis = xAxisRenderer(attrElement, attrChart);
       const attrYAxis = yAxisRenderer(attrElement, attrChart);
 
+      const skillChart = getChart(skillChartData);
+      const skillElement = d3.select('.skill-chart');
+      const skillXAxis = xAxisRenderer(skillElement, skillChart);
+      const skillYAxis = yAxisRenderer(skillElement, skillChart);
+
+
       const lineGenerator = d3.line()
         .x(point => point.x)
         .y(point => point.y)
         .defined(point => point.x && point.y);
-      console.log(lineGenerator);
 
       const tnlLine = lineGenerator(tnlChartData);
+      console.log('tnl-ln', tnlLine);
 
     </script>
 
