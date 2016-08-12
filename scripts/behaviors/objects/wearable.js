@@ -3,7 +3,6 @@ const Broadcast = require('../../../src/broadcast').Broadcast;
 exports.listeners = {
 	wear: function (l10n) {
 		return function (location, room, player, players) {
-			console.log('wear emitted', arguments);
 		  const toRoom = Broadcast.toRoom(room, player, null, players);
 			const desc   = this.getShortDesc('en');
 			const name   = player.getName();

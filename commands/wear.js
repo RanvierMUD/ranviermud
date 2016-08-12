@@ -73,7 +73,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function putOn(item) {
       const location = item.getAttribute('wearLocation');
       const room = rooms.getAt(player.getLocation());
-      console.log('about to emit that wear');
       item.emit('wear', location, room, player, players);
       player.equip(location, item);
     }
