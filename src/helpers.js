@@ -25,6 +25,8 @@ const values = obj => {
   return vals;
 }
 
+const toArray = thing => [].concat(thing);
+
 /**
  * Does the object have an array of keys?
  */
@@ -86,5 +88,6 @@ module.exports = {
   firstWord, splitArgs,
   hasKeys,   leftPad,
   values,    reduceValues,
-  setBounds, is
+  setBounds, is,
+  toArray,
 };
