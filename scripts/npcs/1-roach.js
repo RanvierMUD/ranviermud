@@ -56,17 +56,23 @@ exports.listeners = {
   damaged: function(l10n) {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-
-      const secondPartyMessage = [
-        'The roach chitters as its antennae are bent at an odd angle.',
-        'The roach\'s chitin splinters and cracks around its ' + hitLocation + '.',
-        'The roach hisses as ichor oozes from its wounds.'
-      ];
-      const thirdPartyMessage = [
-        'The roach chitters in pain as its ' + hitLocation + ' shatters.',
-        'Hissing furiously, the roach rears its pincer-covered maw.',
-        'Ichor oozes from the injured roach.'
-      ];
+      const hitInHead = hitLocation === 'head';
+      const secondPartyMessage = hitInHead ?
+        [
+          'The roach chitters as its antennae are bent at an odd angle.',
+        ] :
+        [
+          'The roach\'s chitin splinters and cracks around its ' + hitLocation + '.',
+          'The roach hisses as ichor oozes from its wounds.'
+        ];
+      const thirdPartyMessage = hitInHead ?
+        [
+          'The roach chitters as ' + player.getShortDesc() + ' bends its antennae at an odd angle.'
+        ] :
+        [
+          'The roach chitters in pain as its ' + hitLocation + ' shatters.',
+          'Ichor oozes from the injured roach.'
+        ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
