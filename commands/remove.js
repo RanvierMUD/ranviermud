@@ -20,7 +20,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     /// Helper functions ///
 
     function removeAll() {
-      _.values(player.getEquipped())
+      const equipment = _.values(player.getEquipped());
+      if (!equipment.length) { return player.say('You have nothing to remove.'); }
+
+      equipment
        .map(id => items.get(id))
        .forEach(remove);
     }

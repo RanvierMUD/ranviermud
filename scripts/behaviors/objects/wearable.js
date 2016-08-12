@@ -15,6 +15,7 @@ exports.listeners = {
 
 	remove: function (l10n) {
 		return function (room, player, players) {
+			console.log(this);
 			const toRoom = Broadcast.toRoom(room, player, null, players);
 			const desc   = this.getShortDesc('en');
 			const name   = player.getName();
