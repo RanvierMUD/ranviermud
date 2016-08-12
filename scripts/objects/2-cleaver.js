@@ -19,8 +19,15 @@ exports.listeners = {
   },
 
   remove: function (l10n) {
-    return function (player) {
-      player.say('You place the bulky cleaver in your pack.');
+    return function (room, player, players) {
+      const toRoom = Broadcast.toRoom(room, player, null, players);
+      const firstPartyMessage = [
+        'You place the bulky cleaver in your pack.'
+      ];
+      const thirdPartyMessage = [
+        player.getShortDesc() + ' places the bulky cleaver in their pack.'
+      ];
+      Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
       player.combat.deleteAllMods('cleaver' + this.getUuid());
     }
   },
