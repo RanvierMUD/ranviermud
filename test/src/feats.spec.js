@@ -34,7 +34,7 @@ describe('The Feat Prereq Checking Functionality Happens Thusly:\n', () => {
 
     it('should be true if the player does meet all feat prereqs', () => {
       const moreHeroicPlayer = Object.assign(heroicPlayer, {
-        getFeats: () => ({ 'leatherskin': true })
+        getFeats: () => ({ leatherskin: true })
       });
 
       expect(meetsPrerequisites(moreHeroicPlayer, Feats.ironskin)).to.be.false;
