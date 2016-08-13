@@ -86,7 +86,7 @@ exports.listeners = {
         'The roach darts in your direction and you step out of the way.'
       ];
       const thirdPartyMessage = [
-        'The roach scuttles over ' + player.getShortDesc('en') + '\'s feet harmlessly.',
+        'The roach scuttles over ' + player.getShortDesc('en') + "'s feet harmlessly.",
         'The roach darts at ' + player.getShortDesc('en') + ' but they step out of the way effortlessly.'
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });

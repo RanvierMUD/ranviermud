@@ -66,7 +66,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       player.say('You wear the ' + item.getShortDesc('en') + '.');
       players.eachIf(
         p => CommandUtil.inSameRoom(p, player),
-        p => p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), item.getShortDesc('en'))
+        p => p.say(player.getName() + ' puts on the ' + item.getShortDesc('en'))
       );
     }
 

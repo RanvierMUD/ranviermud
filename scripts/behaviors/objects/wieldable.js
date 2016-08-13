@@ -4,10 +4,6 @@ exports.listeners = {
 			checkForCrit(attacker, defender, damageDealt);
 		}
 	},
-
-	wield: function(l10n) {
-		return function() {}
-	},
 };
 
 function checkForCrit(attacker, defender, damageDealt) {
