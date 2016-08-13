@@ -15,7 +15,8 @@ describe('The Feat Prereq Checking Functionality Happens Thusly:\n', () => {
     expect(meetsPrerequisites(fakePlayer, Feats.stun)).to.be.false;
   });
 
-  
-
+  it('should be false if the player only meets some prereqs', () => {
+    expect(meetsPrerequisites(fakePlayer, Feats.leatherskin)).to.be.false;
+  })
 
 });
