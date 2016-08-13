@@ -363,7 +363,7 @@ function meetsPrerequisites(player, feat) {
   }
 
   const isAffordable = feat.cost && attributes.mutagens >= feat.cost;
-  return isAffordable && meets;
+  return isAffordable && meetsAllPrerequisites;
 }
 
 function meetsFeatPrerequisites(player, featList) {
