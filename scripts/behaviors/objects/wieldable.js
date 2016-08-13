@@ -4,10 +4,21 @@ exports.listeners = {
 			checkForCrit(attacker, defender, damageDealt);
 		}
 	},
+
+	wield: function(l10n) {
+		return function() {}
+	},
 };
 
 function checkForCrit(attacker, defender, damageDealt) {
-	if (damageDealt > defender.getAttribute('max_health') * .5) {
-		attacker.say('<bold><cyan>You have dealt a critical blow!</cyan><b/old>')
+	var defenderHealth    = defender.getAttribute('health');
+	var defenderMaxHealth = defender.getAttribute('max_health');
+
+	var massiveDamage = damageDealt > defenderMaxHealth * .5;
+	var almostDead  = defenderHealth <= defenderMaxHealth * .2;
+	var coupDeGrace = almostDead && damageDealt >= defenderHealth;
+
+	if (massiveDamage || coupDeGrace) {
+		attacker.say('<bold><cyan>You have dealt a critical blow!</cyan></bold>');
 	}
 }
