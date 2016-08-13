@@ -11,8 +11,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     let thing = cmds[0];
     if (thing === 'all') {
-      wearAll();
-      return;
+      return wearAll();
     }
 
     thing = CommandUtil.findItemInInventory(thing, player, true);
@@ -64,21 +63,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function broadCastWearing(item) {
+      player.say('You wear the ' + item.getShortDesc('en') + '.');
       players.eachIf(
         p => CommandUtil.inSameRoom(p, player),
-        p => p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), item.getShortDesc('en'))
+        p => p.say(player.getName() + ' puts on the ' + item.getShortDesc('en'))
       );
     }
 
     function putOn(item) {
       const location = item.getAttribute('wearLocation');
-      const hasWearScript = CommandUtil.hasScript(item, 'wear');
-
-      //FIXME: Add wear scripts to items.
-      if (hasWearScript) {
-        const room = rooms.getAt(player.getLocation());
-        item.emit('wear', location, room, player, players);
-      }
+      const room = rooms.getAt(player.getLocation());
+      item.emit('wear', location, room, player, players);
       player.equip(location, item);
     }
 

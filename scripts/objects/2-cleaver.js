@@ -6,7 +6,12 @@ exports.listeners = {
 
   wield: function (l10n) {
     return function (location, room, player, players) {
-      player.say('You ready the weighty cleaver.');
+      const toRoom = Broadcast.toRoom(room, player, null, players);
+
+      const firstPartyMessage = '<red>You ready the weighty cleaver.</red>';
+      const thirdPartyMessage = '<red>' + player.getShortDesc('en') + ' readies a serious cleaver.</red>'
+      toRoom({ firstPartyMessage, thirdPartyMessage });
+
       player.combat.addToHitMod({
         name: 'cleaver ' + this.getUuid(),
         effect: toHit => toHit + 1

@@ -2,10 +2,10 @@
 
 const Type   = require('./type').Type;
 const Random = require('./random').Random;
-const _ = require('./helpers');
-const util = require('util');
+const _      = require('./helpers');
+const util   = require('util');
 
-const noop = function() {}
+const noop   = function() {}
 
 const toArea = (player, players, rooms) => msg => {
   players.eachExcept(player, p => {
@@ -35,8 +35,6 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
     const inSameRoom    = room.getLocation() === player.getLocation();
     return !isFirstParty && !isSecondParty && inSameRoom;
   };
-
-  util.log(config);
 
   const thirdPartyMsger = msg => {
     players.eachIf(
@@ -68,7 +66,6 @@ const consistentMessage = (broadcaster, messageLists)  => {
         length :
         false);
 
-
   if (!sameLength) {
     throw new Error("Arrays must have the same number of messages.");
   }
@@ -76,7 +73,7 @@ const consistentMessage = (broadcaster, messageLists)  => {
   const selection = Random.inRange(0, messageLists.thirdPartyMessage.length - 1);
   const messages = {};
   for (let messageList in messageLists) {
-    const chosenList = _.toArray(messageLists[messageList]);
+    let chosenList = _.toArray(messageLists[messageList]);
     messages[messageList] = chosenList[selection];
   }
 

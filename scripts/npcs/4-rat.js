@@ -67,7 +67,9 @@ exports.listeners = {
         'The rabid rodent is knocked back by the blow, a ball of furry fury.',
         'The rat\'s ' + hitLocation + ' tears under the force of the blow.'
       ] :
-      ['The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur and bones.'];
+      [
+        'The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur and bones.'
+      ];
       const thirdPartyMessage = moderateDamage ?
       [
         'The rat screeches in pain as its ' + hitLocation + ' crumples.',
@@ -75,8 +77,9 @@ exports.listeners = {
         'The fierce rat is bashed away by ' + player.getShortDesc('en') + '.',
         'Blood sprays across the ground as the feral rat\'s ' + hitLocation + ' is sundered.'
       ] :
-      ['The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur, thanks to ' + player.getShortDesc('en') + '.'];
-;
+      [
+        'The rat\'s '+ hitLocation + ' is crushed, a matted ball of bloody fur, thanks to ' + player.getShortDesc('en') + '.'
+      ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
@@ -113,7 +116,7 @@ exports.listeners = {
       const thirdPartyMessage = [
         '<yellow>The rat leaps for ' + player.getShortDesc('en') + '\s ' + hitLocation + ', but flies past in a ball of fur and fangs.</yellow>',
         '<yellow>The rat claws uselessly at ' + player.getShortDesc('en') + ', missing.</yellow>',
-        '<yellow>The rabid critter sprays bloody foam on' + player.getShortDesc('en') + ' but fails to do any real damage.</yellow>',
+        '<yellow>The rabid critter sprays bloody foam on ' + player.getShortDesc('en') + ' but fails to do any real damage.</yellow>',
       ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });

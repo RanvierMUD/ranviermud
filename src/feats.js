@@ -340,26 +340,35 @@ function meetsPrerequisites(player, feat) {
   if (!feat.prereqs && !feat.cost) { return true; }
   const attributes = player.getAttributes();
 
+  let meetsAllPrerequisites = true;
   for (const attr in feat.prereqs || {}) {
-    if (attr === 'feats') {
-      return meetsFeatPrerequisites(player, feat.prereqs.feats);
-    }
-    const req = feat.prereqs[attr];
+    const checkingFeats  = attr === 'feats';
+    const hasNeededFeats = checkingFeats?
+      meetsFeatPrerequisites(player, feat.prereqs.feats) :
+      true;
+    if (checkingFeats) { util.log('Meets feat reqs? ', hasNeededFeats); }
+    const req  = feat.prereqs[attr];
     const stat = attributes[attr];
 
-    const meets = req <= stat;
-    util.log(player.getName() + '\'s ' + attr + ': ' + stat + ' vs. ' + req);
+    const meets = checkingFeats ?
+      hasNeededFeats :
+      req <= stat;
 
-    return meets;
+    if (!checkingFeats) {
+      util.log(player.getName() + '\'s ' + attr + ': ' + stat + ' vs. ' + req + '-- meets prereq? \n\t', meets);
+    }
+
+    meetsAllPrerequisites = meetsAllPrerequisites ?
+      meets : false;
   }
 
   const isAffordable = feat.cost && attributes.mutagens >= feat.cost;
-  return isAffordable;
+  return isAffordable && meetsAllPrerequisites;
 }
 
 function meetsFeatPrerequisites(player, featList) {
   const featsOwned = player.getFeats();
-  return featList.filter(feat => feat in featsOwned).length > 0;
+  return featList.every(feat => featsOwned[feat]);
 }
 
 function deductSanity(player, cost) {
