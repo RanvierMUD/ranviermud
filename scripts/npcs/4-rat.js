@@ -116,7 +116,7 @@ exports.listeners = {
       const thirdPartyMessage = [
         '<yellow>The rat leaps for ' + player.getShortDesc('en') + '\s ' + hitLocation + ', but flies past in a ball of fur and fangs.</yellow>',
         '<yellow>The rat claws uselessly at ' + player.getShortDesc('en') + ', missing.</yellow>',
-        '<yellow>The rabid critter sprays bloody foam on' + player.getShortDesc('en') + ' but fails to do any real damage.</yellow>',
+        '<yellow>The rabid critter sprays bloody foam on ' + player.getShortDesc('en') + ' but fails to do any real damage.</yellow>',
       ];
 
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
