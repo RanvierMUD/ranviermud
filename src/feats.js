@@ -342,14 +342,21 @@ function meetsPrerequisites(player, feat) {
 
   let meetsAllPrerequisites = true;
   for (const attr in feat.prereqs || {}) {
-    const hasNeededFeats = attr === 'feats' ?
+    const checkingFeats  = attr === 'feats';
+    const hasNeededFeats = checkingFeats?
       meetsFeatPrerequisites(player, feat.prereqs.feats) :
       true;
+    if (checkingFeats) { util.log('Meets feat reqs? ', hasNeededFeats); }
     const req  = feat.prereqs[attr];
     const stat = attributes[attr];
 
-    const meets = req <= stat;
-    util.log(player.getName() + '\'s ' + attr + ': ' + stat + ' vs. ' + req + '-- meets prereq? \n\t', meets);
+    const meets = checkingFeats ?
+      hasNeededFeats :
+      req <= stat;
+
+    if (!checkingFeats) {
+      util.log(player.getName() + '\'s ' + attr + ': ' + stat + ' vs. ' + req + '-- meets prereq? \n\t', meets);
+    }
 
     meetsAllPrerequisites = meetsAllPrerequisites ?
       meets : false;
