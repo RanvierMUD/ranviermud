@@ -15,7 +15,7 @@ function chooseRandomExit(chance) {
 
       if (npc.isInCombat()) { return; }
 
-      chance = chance || 10; // Roll to beat on 1d100
+      chance = chance || 5; // Roll to beat on 1d100
       if (chance > Random.inRange(1, 100)) {
         const exits  = room.getExits();
         const chosen = Random.fromArray(exits);
