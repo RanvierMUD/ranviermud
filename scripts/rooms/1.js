@@ -1,22 +1,23 @@
-var CommandUtil = require('../../src/command_util')
+const CommandUtil = require('../../src/command_util')
   .CommandUtil;
-var l10nFile = __dirname + '/../../l10n/scripts/rooms/1.js.yml';
-var l10n = require('../../src/l10n')(l10nFile);
-var examiner = require('../../src/examine').examine;
+const l10nFile = __dirname + '/../../l10n/scripts/rooms/1.js.yml';
+const l10n = require('../../src/l10n')(l10nFile);
+const examiner = require('../../src/examine').examine;
 
 exports.listeners = {
 
   examine: l10n => {
     return (args, player, players) => {
 
-      var config = {
+      const config = {
         poi: {
-          vats: found.bind(null, 'BEER'),
-          taps: found.bind(null, 'BEER'),
-          hoses: found.bind(null, 'BEER'),
-          bar: found.bind(null, 'BEER'),
+          vats:     found.bind(null, 'BEER'),
+          taps:     found.bind(null, 'BEER'),
+          hoses:    found.bind(null, 'BEER'),
+          bar:      found.bind(null, 'BEER'),
+          
           lanterns: found.bind(null, 'LIGHTS'),
-          lights: found.bind(null, 'LIGHTS')
+          lights:   found.bind(null, 'LIGHTS')
         }
       };
 
