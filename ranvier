@@ -224,6 +224,7 @@ function load(callback)
 						var room = rooms.getAt(npcRoom);
 						if (!room.hasNpc(npc.getUuid())) {
 							room.addNpc(npc.getUuid());
+							npc.emit('spawn', room, rooms, players);
 						}
 					} else {
 						throw Error('Npc initialized without a room.');
@@ -343,7 +344,7 @@ function tick() {
 	});
 
 	let weatherHappened = Time.checkWeather(rooms, players);
-	if (weatherHappened) util.log("WEATHER REPORT: " + weatherHappened);
+	if (weatherHappened) { util.log("WEATHER REPORT: " + weatherHappened); }
 }
 
 process.stdin.on('data', function (data)
