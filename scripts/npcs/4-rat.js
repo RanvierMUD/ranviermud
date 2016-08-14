@@ -6,6 +6,14 @@ const util = require('util');
 
 exports.listeners = {
 
+  spawn: l10n => {
+    return function (room, rooms, players) {
+      const toRoom = Broadcast.toRoom(room, this, null, players);
+      const msg = this.getShortDesc('en') + ' skitters out from a dark corner.';
+      toRoom({ thirdPartyMessage: msg });
+    }
+  },
+
   playerEnter: l10n => {
     return (room, rooms, player, players, npc) => {
       const rand = Random.inRange(1, 15);

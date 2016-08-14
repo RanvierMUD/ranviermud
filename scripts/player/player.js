@@ -11,6 +11,20 @@ var LevelUtil = require('../../src/levels').LevelUtil,
 exports.listeners = {
 
   //// Function wrappers needed to access "this" (Player obj)
+
+
+  //TODO: Use this for all sanity loss incidents.
+  sanityLoss: function(l10n) {
+    return function(cost, reason) {
+      reason = reason || 'experiencing terror';
+      const currentSanity = this.getAttribute('sanity');
+      this.setAttribute('sanity', Math.max(currentSanity - cost, 0));
+
+      //TODO: Different messages for different relative amounts of sanity loss.
+      this.say('You feel your sanity slipping after ' + reason + '.');
+    }
+  },
+
   regen: function(l10n) {
       return function(bonus) {
         bonus = bonus || this.getSkills('recovery');
