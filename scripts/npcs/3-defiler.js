@@ -1,10 +1,29 @@
 'use strict';
 
-const Broadcast = require('../../src/broadcast').Broadcast;
-const Random    = require('../../src/random').Random;
+const Broadcast   = require('../../src/broadcast').Broadcast;
+const Random      = require('../../src/random').Random;
+const CommandUtil = require('../../src/command_util').CommandUtil;
 const util = require('util');
 
 exports.listeners = {
+
+  spawn: l10n => {
+    return function (room, rooms, players) {
+      const toRoom = Broadcast.toRoom(room, this, null, players);
+      const msg = this.getShortDesc('en') + ' appears from the shadows, a pulsating purple light throbbing dully from whence it came.';
+      toRoom({ thirdPartyMessage: msg });
+
+      players.eachIf(
+        p => CommandUtil.inSameRoom(this, p),
+        p => {
+          const multiplier = Math.max(10 - p.getAttribute('level'), 2);
+          const cost = this.getAttribute('level') * multiplier;
+          const reason = 'seeing a horror emerge from the abyss';
+          p.emit('sanityLoss', cost, reason);
+        }
+      )
+    }
+  },
 
   playerEnter: l10n => {
     return (room, rooms, player, players, npc) => {
