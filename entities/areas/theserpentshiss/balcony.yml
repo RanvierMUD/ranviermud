@@ -1,0 +1,17 @@
+- title:
+    en: the balcony outside the Adder room
+  area: "The Serpent's Hiss"
+  location: 13
+  #script: '13.js'
+  description:
+    en: ''
+  short_desc:
+    en: ''
+  dark_desc:
+    en: ''
+  exits:
+    -
+      location: 5
+      direction: 'inside'
+      door:
+        open: false

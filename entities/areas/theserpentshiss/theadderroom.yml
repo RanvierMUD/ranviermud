@@ -4,14 +4,19 @@
   location: 5
   script: '5.js'
   description:
-    en: 'This room consists of a double bed, a trunk, and a small table, missing a leg. There is a small hole in the ceiling surrounded by ruddy stains. The small window to the outdoors is blocked with a heavy curtain. A wooden door leads outside.'
+    en: 'This room consists of a double bed, a trunk, and a small table, missing a leg. There is a small hole in the ceiling surrounded by ruddy stains. A door with leaded glass leads to a small balcony. Another door leads to the hall.'
   short_desc:
-    en: 'A large double room, which has seen better times. You can head back to the hallway.'
+    en: 'A large double room, which has seen better times. You can head back to the hallway, or onto the balcony.'
   dark_desc:
     en: 'You can barely make out anything. A dark shape suggests a double bed in the middle of the room. A small amount of light creeps in under the door to the hallway.'
   exits:
     -
       location: 4
       direction: 'out'
+      door:
+        open: false
+    -
+      location: 13
+      direction: 'balcony'
       door:
         open: false
