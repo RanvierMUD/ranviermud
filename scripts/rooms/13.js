@@ -4,6 +4,7 @@ const CommandUtil = require('../../src/command_util')
 const Random = require('../../src/random').Random;
 const examiner = require('../../src/examine').examine;
 const Broadcast = require('../../src/broadcast').Broadcast;
+const util = require('util');
 
 exports.listeners = {
 
@@ -43,14 +44,16 @@ exports.listeners = {
 
     playerEnter: l10n => {
       return function (player, players) {
-        const chance = Random.inRange(1, 100);
-        if (chance > 75) {
-          const toRoom = Broadcast.toRoom(this, player, null, players);
-          const makeYellow = str => '<yellow>' + str + '</yellow>';
-          const firstPartyMessage = makeYellow('The planks creak as you step onto the balcony.');
-          const thirdPartyMessage = makeYellow('The planks creak as ' + player.getShortDesc() + 'steps onto the balcony.');
+        if (Random.coinFlip()) {
 
-          Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
+          util.log('crick');
+
+          const makeYellow = str => '<yellow>' + str + '</yellow>';
+          player.say(makeYellow('The planks creak as you step onto the balcony.'));
+
+          players.eachIf(
+            p => CommandUtil.inSameRoom(player, p),
+            p => p.say(makeYellow('The planks creak as ' + player.getShortDesc() + 'steps onto the balcony.')));
         }
       }
     },
