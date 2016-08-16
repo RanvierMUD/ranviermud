@@ -46,8 +46,9 @@ exports.listeners = {
         const chance = Random.inRange(1, 100);
         if (chance > 75) {
           const toRoom = Broadcast.toRoom(this, player, null, players);
-          const firstPartyMessage = 'The planks creak as you step onto the balcony.';
-          const thirdPartyMessage = 'The planks cread as ' + player.getShortDesc() + 'steps onto the balcony.';
+          const makeYellow = str => '<yellow>' + str + '</yellow>';
+          const firstPartyMessage = makeYellow('The planks creak as you step onto the balcony.');
+          const thirdPartyMessage = makeYellow('The planks creak as ' + player.getShortDesc() + 'steps onto the balcony.');
 
           Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
         }
