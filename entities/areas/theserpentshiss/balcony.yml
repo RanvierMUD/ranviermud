@@ -1,0 +1,17 @@
+- title:
+    en: the balcony outside the Adder room
+  area: "The Serpent's Hiss"
+  location: 13
+  script: '13.js'
+  description:
+    en: 'The balcony leans out over a narrow, cobblestoned alleyway. You can see over the roofs of some neighboring buildings, and can almost make out the horizon in the distance, beyond the shimmering indigo dome. Thick planks support the balcony, which has a thin metal railing surrounding it. Behind you is the door back into the Adder room. On one side of the balcony, the railing is bent outwards and down. On the opposite side is a thin ledge on the side of the tavern, leading to another, identical balcony.'
+  short_desc:
+    en: 'The balcony is made up of solid wood and iron, except for a portion of the railing that is bent horribly. On the opposite side of the balcony, a thin ledge runs along the side of the building, to an identical balcony.'
+  dark_desc:
+    en: 'The balcony leans out over a narrow alleyway populated by shifting shadows. In the distance, the moon hovers beyond the indigo dome. The railing on one side of this balcony is bent oddly, while a ledge runs alongside the building on the other side of the balcony.'
+  exits:
+    -
+      location: 5
+      direction: 'inside'
+      door:
+        open: false

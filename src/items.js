@@ -171,7 +171,6 @@ var Item = function (config)
 		if (self !== null) {
 		  Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
     }
-    console.log('event listeners for ' + self.getShortDesc('en'), self._events);
 	};
 
 	/**#@+
