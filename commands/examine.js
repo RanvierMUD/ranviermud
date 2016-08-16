@@ -8,7 +8,6 @@ const util = require('util');
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
 
-
     if (!player.hasEnergy(1)) { return player.noEnergy(); }
 
     if (args) {
@@ -17,17 +16,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       util.log(player.getName() + ' is searching for ' + args);
       util.log('  in ' + room.getTitle('en'));
-      util.log(room);
 
-      const examinableRoom = room._events && room._events.examine;
-
-      if (examinableRoom) {
-        room.emit('examine', args, player, players);
-        return;
-      }
+      room.emit('examine', args, player, players);
+      return;
     }
 
-    player.sayL10n(l10n, 'NOTHING_EXAMINED');
-    return;
+    return player.sayL10n(l10n, 'NOTHING_EXAMINED');
   }
 };
