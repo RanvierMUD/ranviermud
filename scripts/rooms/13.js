@@ -3,6 +3,7 @@ const CommandUtil = require('../../src/command_util')
   .CommandUtil;
 const Random = require('../../src/random').Random;
 const examiner = require('../../src/examine').examine;
+const Broadcast = require('../../src/broadcast').Broadcast;
 
 exports.listeners = {
 
@@ -35,9 +36,21 @@ exports.listeners = {
           p => {
             p.say(player.getName() + ' closely examines the balcony\'s guardrail');
           });
-          
+
+        }
+      };
+    },
+
+    playerEnter: l10n =>
+      return function (player, players) {
+        const chance = Random.inRange(1, 100);
+        if (chance > 75) {
+          const toRoom = Broadcast.toRoom(this, player, null, players);
+          const firstPartyMessage = 'The planks creak as you step onto the balcony.';
+          const thirdPartyMessage = 'The planks cread as ' + player.getShortDesc() + 'steps onto the balcony.';
+
+          Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
         }
       }
-    };
   },
 };
