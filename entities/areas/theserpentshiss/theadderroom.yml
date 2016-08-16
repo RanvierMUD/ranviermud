@@ -12,7 +12,7 @@
   exits:
     -
       location: 4
-      direction: 'out'
+      direction: 'hallway'
       door:
         open: false
     -
