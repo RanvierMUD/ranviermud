@@ -1,0 +1,17 @@
+- title:
+    en: an alley beside the tavern
+  area: "The Saltare District"
+  location: 14
+  #script: '14.js'
+  description:
+    en: 'Cobblestones pave this narrow, crooked alley. On one side is the outside of a tavern, old wooden shingles greyed from neglect. On the other is a tall brick wall separating this district from the next.'
+  short_desc:
+    en: 'You are in the alley next to the tavern.'
+  dark_desc:
+    en: 'You can barely make out anything. Above you, a dim light leaks out of the tavern windows.'
+  exits:
+    -
+      location: 12
+      direction: 'courtyard'
+      door:
+        open: false
