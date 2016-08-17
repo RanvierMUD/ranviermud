@@ -13,5 +13,3 @@
     -
       location: 12
       direction: 'courtyard'
-      door:
-        open: false

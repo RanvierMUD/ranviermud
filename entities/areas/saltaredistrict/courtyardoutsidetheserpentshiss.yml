@@ -15,6 +15,6 @@
       leaveMessage:
         en: ' opens the creaking front door to the tavern and steps inside.'
       door:
-        open: n
+        open: false
     - location: 14
       direction: alley
