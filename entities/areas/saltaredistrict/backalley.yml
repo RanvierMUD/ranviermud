@@ -4,11 +4,11 @@
   location: 16
   #script: '16.js'
   description:
-    en: 'This alley ends abruptly with a hole, leading into what appears to be a well or sewers. Around the corner is another alley, leading down the side of the creaky old tavern.'
+    en: 'This alley ends abruptly at a small well surrounded by crumbling brick. Around the corner is another alley, leading down the side of the creaky old tavern.'
   short_desc:
-    en: 'You are in an alley behind the tavern. There is a hole here.'
+    en: 'You are in an alley behind the tavern. There is a well here.'
   dark_desc:
-    en: 'You can barely make out anything. Above you, a dim light leaks out of the tavern windows.'
+    en: 'You can barely make out anything. Above you, a dim light leaks out of the tavern windows. There is a well here.'
   biome: 'outdoors'
 
   exits:
