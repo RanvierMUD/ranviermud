@@ -9,5 +9,5 @@
     en: 'Above you is the piercing circle of the moon.'
   exits:
     -
-      location: 15
+      location: 16
       direction: 'up'

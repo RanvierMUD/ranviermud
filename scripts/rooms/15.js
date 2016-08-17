@@ -10,11 +10,11 @@ exports.listeners = {
   playerEnter: l10n => {
     return function splat(player, players, rooms) {
       const dead = 0;
-      player.say('You splatter against the bottom of the well.');
+      player.say('<bold><white>You <red>splatter</red> against the bottom of the well.</bold></white>');
       player.setAttribute('health', 0);
       // player.kill();
       const toArea = Broadcast.toArea(player, players, rooms)
-      toArea('You hear a series of sharp crackling sounds.');
+      toArea('<white>You hear a series of <bold>sharp crackling sounds.</white></bold>');
     }
   }
 };
