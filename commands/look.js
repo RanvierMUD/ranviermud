@@ -60,7 +60,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         if (args === p.getName().toLowerCase()) {
           thing = p;
           player.sayL10n(l10n, 'IN_ROOM', thing.getName());
-          thingIsPlayer = true;
           p.sayL10n(l10n, 'BEING_LOOKED_AT', player.getName());
         }
       }
