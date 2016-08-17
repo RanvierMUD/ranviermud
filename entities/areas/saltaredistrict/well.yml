@@ -1,0 +1,15 @@
+- title:
+    en: inside of a well
+  area: "The Saltare District"
+  location: 15
+  script: '15.js'
+  description:
+    en: 'You are deep inside a well.'
+  dark_desc:
+    en: 'Above you is the piercing circle of the moon.'
+  exits:
+    -
+      location: 16
+      direction: 'up'
+      cost: 70
+      leave_message: ' climbs up the ladder to the alley above.'

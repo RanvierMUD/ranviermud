@@ -273,7 +273,7 @@ function move(exit, player) {
         npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
       });
 
-  room.emit('playerEnter', player, players);
+  room.emit('playerEnter', player, players, rooms);
 
   // Broadcast player entrance to new room.
   players.eachExcept(
