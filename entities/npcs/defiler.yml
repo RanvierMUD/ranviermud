@@ -1,12 +1,12 @@
-- &defiler
+- &kazuul
   vnum: 3
   room: 10
-  script: '3-defiler.js'
+  script: '3-kazuul.js'
   keywords:
-    en: ['defiler', 'def']
+    en: ['kazuul', 'kaz']
   types: ['humanoid', 'eldritch']
   short_description:
-    en: 'a defiler'
+    en: 'a kazuul.'
   attack:
     en: 'gnashing teeth'
   description:
