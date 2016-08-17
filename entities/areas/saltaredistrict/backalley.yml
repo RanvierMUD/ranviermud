@@ -1,8 +1,8 @@
 - title:
     en: an alley behind the tavern
   area: "The Saltare District"
-  location: 15
-  #script: '15.js'
+  location: 16
+  #script: '16.js'
   description:
     en: 'This alley ends abruptly with a hole, leading into what appears to be a well or sewers. Around the corner is another alley, leading down the side of the creaky old tavern.'
   short_desc:
