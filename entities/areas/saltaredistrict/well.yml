@@ -11,3 +11,5 @@
     -
       location: 16
       direction: 'up'
+      cost: 45
+      leave_message: ' climbs up the ladder to the alley above.'
