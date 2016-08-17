@@ -9,6 +9,8 @@
     en: 'You are in an alley behind the tavern. There is a hole here.'
   dark_desc:
     en: 'You can barely make out anything. Above you, a dim light leaks out of the tavern windows.'
+  biome: 'outdoors'
+
   exits:
     -
       location: 14
