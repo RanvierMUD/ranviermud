@@ -16,3 +16,5 @@
     -
       location: 15
       direction: 'well'
+      leave_message:
+        en: ' jumps down the well.'
