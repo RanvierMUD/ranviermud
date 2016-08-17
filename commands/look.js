@@ -145,7 +145,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
           const color = getNpcColor(difference)
 
-          player.say('<' + color + '>'
+          player.say(
+              '<'  + color + '>'
             + npc.getShortDesc('en')
             + '</' + color + '>');
         }
@@ -161,14 +162,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const equipped = playerTarget.getEquipped();
       for (const slot in equipped) {
         const item = items.get(equipped[slot]);
-        playerLooking.say(
-          sprintf(
+        playerLooking.say( sprintf(
             "%-15s %s", "<" + slot + ">",
             item.getShortDesc(playerLooking.getLocale())
           ));
       }
 
-      const naked = Object.keys(equipped).length;
+      const naked = Object.keys(equipped).length === 0;
       if (naked) { playerLooking.sayL10n(l10n, "NAKED"); }
     }
 
