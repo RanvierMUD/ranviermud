@@ -4,12 +4,15 @@
   location: 14
   #script: '14.js'
   description:
-    en: 'Cobblestones pave this narrow, crooked alley. On one side is the outside of a tavern, old wooden shingles greyed from neglect. On the other is a tall brick wall separating this district from the next.'
+    en: 'Cobblestones pave this narrow, crooked alley. On one side is the outside of a tavern, old wooden shingles greyed from neglect. On the other is a tall brick wall separating this district from the next. The alley continues around to the back of the tavern.'
   short_desc:
-    en: 'You are in the alley next to the tavern.'
+    en: 'You are in the alley next to the tavern. You can head to the courtyard in front of the tavern, or another alley behind it.'
   dark_desc:
     en: 'You can barely make out anything. Above you, a dim light leaks out of the tavern windows.'
   exits:
     -
       location: 12
       direction: 'courtyard'
+    -
+      location: 15
+      direction: 'back-alley'
