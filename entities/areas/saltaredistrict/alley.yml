@@ -9,6 +9,8 @@
     en: 'You are in the alley next to the tavern. You can head to the courtyard in front of the tavern, or another alley behind it.'
   dark_desc:
     en: 'You can barely make out anything. Above you, a dim light leaks out of the tavern windows.'
+  biome: 'outdoors'
+
   exits:
     -
       location: 12
