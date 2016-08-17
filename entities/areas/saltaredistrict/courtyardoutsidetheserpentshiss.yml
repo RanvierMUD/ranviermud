@@ -1,5 +1,6 @@
 - title:
-    en: "the courtyard"
+    en: "the courtyard outside the tavern"
+  area: "The Saltare District"
   location: 12
   description:
     en: "To your west is a two-story tavern, covered in rotting wood shingles. An ornate brass sign hangs from the awning jutting from its front like a crooked mustache, spelling the words \"The Serpent's Hiss\" in complex, winding script. To the east is an alleyway."
@@ -14,5 +15,6 @@
       leaveMessage:
         en: ' opens the creaking front door to the tavern and steps inside.'
       door:
-        open: n
-  area: Outside The Serpent's Hiss
+        open: false
+    - location: 14
+      direction: alley

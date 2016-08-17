@@ -9,6 +9,8 @@
     en: 'The balcony is made up of solid wood and iron, except for a portion of the railing that is bent horribly. On the opposite side of the balcony, a thin ledge runs along the side of the building, to an identical balcony.'
   dark_desc:
     en: 'The balcony leans out over a narrow alleyway populated by shifting shadows. In the distance, the moon hovers beyond the indigo dome. The railing on one side of this balcony is bent oddly, while a ledge runs alongside the building on the other side of the balcony.'
+  biome: 'outdoors'
+
   exits:
     -
       location: 5
