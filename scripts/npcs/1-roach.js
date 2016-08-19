@@ -131,9 +131,9 @@ exports.listeners = {
     return function(room, rooms, players, npcs, src) {
       const toRoom = Broadcast.toRoom(room, this, null, players);
       const thirdPartyMessage = Random.fromArray([
-        'A cockroach leaves for ' + dest + ', leaving a trail of ooze.',
-        'A roach heads to ' + dest + ', antennae jittering.',
-        'An oozing coackroach scuttles over to ' + dest + '.'
+        'A cockroach leaves for ' + src + ', leaving a trail of ooze.',
+        'A roach heads to ' + src + ', antennae jittering.',
+        'An oozing coackroach scuttles over to ' + src + '.'
       ]);
       toRoom({thirdPartyMessage});
     }

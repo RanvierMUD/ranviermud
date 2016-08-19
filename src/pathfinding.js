@@ -55,5 +55,4 @@ function chooseRandomExit(chance) {
         }
       }
     }
-  }
 }
