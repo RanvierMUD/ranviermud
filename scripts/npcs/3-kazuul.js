@@ -143,4 +143,28 @@ exports.listeners = {
     }
   },
 
+  npcLeave: l10n => {
+    return function(room, rooms, players, npcs, dest) {
+      const toRoom = Broadcast.toRoom(room, this, null, players);
+      const thirdPartyMessage = Random.fromArray([
+        'Tentacles swinging and pulsing, the kazuul lurks onwards to ' + dest + '.',
+        'Reality seems to bend around the kazuul as it leaves for ' + dest + '.',
+        'The kazuul croaks and staggers off to ' + dest + '.'
+      ]);
+      toRoom({thirdPartyMessage});
+    }
+  },
+
+  npcEnter: l10n => {
+    return function(room, rooms, players, npcs, src) {
+      const toRoom = Broadcast.toRoom(room, this, null, players);
+      const thirdPartyMessage = Random.fromArray([
+        'A kazuul lurks in from '+ src + ', tentacles swinging.',
+        'A dim violet light pulses from ' + src + ' and a kazuul appears...',
+        'A croak echoes from nearby as a kazuul staggers in from ' + src + '.'
+      ]);
+      toRoom({thirdPartyMessage});
+    }
+  },
+
 };
