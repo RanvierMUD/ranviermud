@@ -11,7 +11,7 @@ module.exports = {
 
 function chooseRandomExit(chance) {
   return () => {
-    return (room, rooms, player, players, npc) => {
+    return (room, rooms, player, players, npc, npcs) => {
 
       if (npc.isInCombat()) { return; }
 
@@ -44,22 +44,13 @@ function chooseRandomExit(chance) {
               p.say(npc.getShortDesc(locale) + msg);
             };
 
-            const broadcastLeave = broadcastNpcMovement(getLeaveMessage);
-            const broadcastEntry = broadcastNpcMovement(getEntryMessage);
-
-            players.eachIf(
-              p => CommandUtil.inSameRoom(player || npc, p),
-              broadcastLeave);
+            npc.emit('npcLeave', room, rooms, players, npcs)
 
             npc.setRoom(chosen.location);
             room.removeNpc(uid);
             chosenRoom.addNpc(uid);
 
-            const npcInRoomWithPlayer = CommandUtil.inSameRoom.bind(null, npc);
-
-            players.eachIf(
-              npcInRoomWithPlayer,
-              broadcastEntry);
+            npc.emit('npcEnter', room, rooms, players, npcs);
 
           } catch (e) {
             console.log("EXCEPTION: ", e);
@@ -69,15 +60,4 @@ function chooseRandomExit(chance) {
       }
     }
   }
-}
-
-function getLeaveMessage(player, chosenRoom) {
-  return chosenRoom && chosenRoom.title ?
-    ' leaves for ' + chosenRoom.title['en'] + '.' :
-    ' leaves.';
-}
-
-//TODO: Custom entry messages for NPCs.
-function getEntryMessage() {
-  return ' enters.';
 }
