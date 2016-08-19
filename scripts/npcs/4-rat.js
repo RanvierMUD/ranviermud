@@ -134,26 +134,26 @@ exports.listeners = {
   npcLeave: l10n => {
     return function(room, rooms, players, npcs, dest) {
       const toRoom = Broadcast.toRoom(room, this, null, players);
-      const thirdPartyMessage = [
+      const thirdPartyMessage = Random.fromArray([
         'Sniffing for crumbs, the rat leaves for ' + dest + '.',
         'Leaving a trail of bloody foam, the rat leaves for ' + dest + '.',
         'The feral rat leaves for ' + dest + ', chittering and growling to itself.',
         'The rat darts into ' + dest + ', whiskers twitching.'
-      ];
-      toRoom(Random.fromArray(thirdPartyMessage));
+      ]);
+      toRoom({thirdPartyMessage});
     }
   },
 
   npcEnter: l10n => {
     return function(room, rooms, players, npcs, src) {
       const toRoom = Broadcast.toRoom(room, this, null, players);
-      const thirdPartyMessage = [
-        'Sniffing for crumbs, the rat leaves for ' + dest + '.',
-        'Leaving a trail of bloody foam, the rat leaves for ' + dest + '.',
-        'The feral rat leaves for ' + dest + ', chittering and growling to itself.',
-        'The rat darts into ' + dest + ', whiskers twitching.'
-      ];
-      toRoom(Random.fromArray(thirdPartyMessage));
+      const thirdPartyMessage = Random.fromArray([
+        'Sniffing for crumbs, the rat comes from ' + src + '.',
+        'Foaming at the mouth, a feral rat crawls in from ' + src + '.',
+        'The feral rat skitters in from ' + src + '.',
+        'The rat darts in from ' + src + ', whiskers twitching.'
+      ]);
+      toRoom({thirdPartyMessage});
     }
   },
 
