@@ -10,8 +10,8 @@ module.exports = {
 };
 
 function chooseRandomExit(chance) {
-  return () => {
-    return (room, rooms, player, players, npc, npcs) => {
+  return () =>
+    (room, rooms, player, players, npc, npcs) => {
 
       if (npc.isInCombat()) { return; }
 
@@ -38,19 +38,15 @@ function chooseRandomExit(chance) {
               player.say(npc.getShortDesc(locale) + msg);
             }
 
-            const broadcastNpcMovement = getMsg => p => {
-              const locale = 'en';
-              const msg    = getMsg(p, chosenRoom);
-              p.say(npc.getShortDesc(locale) + msg);
-            };
-
-            npc.emit('npcLeave', room, rooms, players, npcs)
+            const dest = chosenRoom.getTitle('en');
+            npc.emit('npcLeave', room, rooms, players, npcs, dest);
 
             npc.setRoom(chosen.location);
             room.removeNpc(uid);
             chosenRoom.addNpc(uid);
 
-            npc.emit('npcEnter', room, rooms, players, npcs);
+            const src = room.getTitle('en');
+            npc.emit('npcEnter', room, rooms, players, npcs, src);
 
           } catch (e) {
             console.log("EXCEPTION: ", e);
