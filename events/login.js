@@ -31,7 +31,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
     socket.on('error', err => util.log('error: ', err));
     socket.on('uncaughtException', err => util.log('uncaughtException: ', err));
 
-
     util.log("Login event detected... ", stage);
 
     dontwelcome = EventUtil.swallowGarbage(dontwelcome);

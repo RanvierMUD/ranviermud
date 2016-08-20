@@ -141,6 +141,8 @@ var init = function (restart_server)
 			process.exit(1);
 		});
 
+		server.on('error', err => util.log('SERVER ERROR: ', err));
+
 		// save every 10 minutes
 		util.log("Setting autosave to " + commander.save + " minutes.");
 		clearInterval(saveint);
