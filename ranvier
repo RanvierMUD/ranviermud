@@ -142,6 +142,7 @@ var init = function (restart_server)
 		});
 
 		server.on('error', err => util.log('SERVER ERROR: ', err));
+		server.on('unhandledException', err => util.log('UNHANDLED SERVER ERR: ', err));
 
 		// save every 10 minutes
 		util.log("Setting autosave to " + commander.save + " minutes.");
