@@ -6,8 +6,8 @@
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 292 | This could be a problem if the combat is between two NPCs or two players.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 293 | The fix might have to go in statusUtils?
 | /Users/seanodonohue/myForks/ranviermud/scripts/behaviors/objects/wearable.js | 2 | For some reason this is not working. Why?
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 71 | This does not really seem to be working.
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 72 | Consider making it a 'scout' command/skill.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 70 | This does not really seem to be working.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 71 | Consider making it a 'scout' command/skill.
 
 ### TODOs
 | Filename | line # | TODO
@@ -27,7 +27,6 @@
 | /Users/seanodonohue/myForks/ranviermud/src/examine.js | 18 | Change command so that it can work on any item, npc, or room by emitting.
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 39 | Dynamically pull in list of admins
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 202 | Have spawn inventory but also add same inv functionality as player
-| /Users/seanodonohue/myForks/ranviermud/src/pathfinding.js | 80 | Custom entry messages for NPCs.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 292 | Consider using Random.roll instead.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 518 | Probably a better way to do this than toLowerCase.
@@ -48,13 +47,16 @@
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 393 | Use Broadcast module or extract to the Broadcast file.
 | /Users/seanodonohue/myForks/ranviermud/src/skills.js | 30 | Pull into own files.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
-| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
-| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 63 | Improve player messaging for this by:
-| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 87 | Emit sanity loss event here if applicable.
-| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 90 | Extract all stuff for determining stat gain into level utils.
-| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 152 | Permadeath, add it.
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 16 | Use this for all sanity loss incidents.
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 23 | Different messages for different relative amounts of sanity loss.
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 77 | Improve player messaging for this by:
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 101 | Emit sanity loss event here if applicable.
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 104 | Extract all stuff for determining stat gain into level utils.
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 166 | Permadeath, add it.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 62 | Change to calculate based on character's strength and pack size vs. item weight/size.
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 70 | Improve based on player stats/skills?
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 69 | Improve based on player stats/skills?
 | /Users/seanodonohue/myForks/ranviermud/commands/whisper.js | 2 | Refactor to be a channel.

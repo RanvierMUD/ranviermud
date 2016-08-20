@@ -120,6 +120,28 @@ exports.listeners = {
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
     }
-  }
+  },
+
+  npcLeave: l10n => {
+    return function(room, rooms, players, npcs, dest) {
+      const toRoom = Broadcast.toRoom(room, this, null, players);
+      const thirdPartyMessage = Random.fromArray([
+        'The python slithers onward to ' + dest + '.',
+        'Hissing and swiveling its head, the python leaves for ' + dest + '.'
+      ]);
+      toRoom({thirdPartyMessage});
+    }
+  },
+
+  npcEnter: l10n => {
+    return function(room, rooms, players, npcs, src) {
+      const toRoom = Broadcast.toRoom(room, this, null, players);
+      const thirdPartyMessage = Random.fromArray([
+        'The python slithers in from ' + src + '.',
+        'Hissing and swiveling its head, the python arrives from ' + src + '.'
+      ]);
+      toRoom({thirdPartyMessage});
+    }
+  },
 
 };

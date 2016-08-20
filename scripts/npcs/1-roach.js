@@ -6,6 +6,8 @@ const util = require('util');
 
 exports.listeners = {
 
+  //TODO: Consider modifying this to use dep injection that is more like the commands.
+  // So that "globals" are injected instead of l10n at startup, then specific vars are sent via emitters.
   spawn: l10n => {
     return function (room, rooms, players) {
       const toRoom = Broadcast.toRoom(room, this, null, players);
@@ -110,6 +112,30 @@ exports.listeners = {
         '<white>' + player.getShortDesc('en') + '\'s blow is deflected by the roach\'s thick shell.</white>'
       ];
       Broadcast.consistentMessage(toRoom, { secondPartyMessage, thirdPartyMessage });
+    }
+  },
+
+  npcLeave: l10n => {
+    return function(room, rooms, players, npcs, dest) {
+      const toRoom = Broadcast.toRoom(room, this, null, players);
+      const thirdPartyMessage = Random.fromArray([
+        'A cockroach leaves for ' + dest + ', leaving a trail of ooze.',
+        'A roach heads to ' + dest + ', antennae jittering.',
+        'An oozing coackroach scuttles over to ' + dest + '.'
+      ]);
+      toRoom({thirdPartyMessage});
+    }
+  },
+
+  npcEnter: l10n => {
+    return function(room, rooms, players, npcs, src) {
+      const toRoom = Broadcast.toRoom(room, this, null, players);
+      const thirdPartyMessage = Random.fromArray([
+        'A cockroach leaves for ' + src + ', leaving a trail of ooze.',
+        'A roach heads to ' + src + ', antennae jittering.',
+        'An oozing coackroach scuttles over to ' + src + '.'
+      ]);
+      toRoom({thirdPartyMessage});
     }
   },
 

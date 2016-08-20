@@ -71,6 +71,7 @@ function openOrClose(verb, args, player, players, rooms) {
   if (!args) {
     return player.say("Which door do you want to " + verb + "?");
   }
+  
   const room  = rooms.getAt(player.getLocation());
   const dir   = args[0];
   const exits = findExit(room, dir);
