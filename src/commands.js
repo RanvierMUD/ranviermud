@@ -219,7 +219,8 @@ function move(exit, player) {
   const lockedDoor = Doors.isLocked(exit);
 
   if (closedDoor && lockedDoor) {
-    Doors.unlockDoor(exit);
+    util.log("DOOR LOCKED, ATTEMPTING UNLOCK...");
+    Doors.useKey('unlock', exit.direction, player, players, rooms);
   }
 
   const room = rooms.getAt(exit.location);
