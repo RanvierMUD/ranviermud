@@ -81,7 +81,10 @@ commander
 var init = function (restart_server)
 {
 
-	process.on('uncaughtException', err => util.log('uncaught exception for process: ', err));
+	process.on('uncaughtException', err =>  {
+		util.log('uncaught exception for process: ', err)
+		init(true);
+	});
 
 	util.log("START - Loading entities");
 	players = new PlayerManager([]);
