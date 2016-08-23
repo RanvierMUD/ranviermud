@@ -162,7 +162,7 @@ var Rooms = function() {
 
 }
 
-var Room = function(config) {
+var Room = function Room(config) {
   var self = this;
 
   self.title = '';
