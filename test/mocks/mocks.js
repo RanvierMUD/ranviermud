@@ -2,7 +2,7 @@ const defaultAttributes = {
   max_health: 100,
   health:     90,
   max_sanity: 100,
-  sanity:     70,
+  sanity:     90,
   energy:     90,
   max_energy: 100,
 
