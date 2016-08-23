@@ -356,3 +356,4 @@ var Room = function(config) {
 util.inherits(Room, events.EventEmitter);
 
 exports.Rooms = Rooms;
+exports.Room = Room;
