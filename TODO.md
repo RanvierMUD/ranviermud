@@ -28,9 +28,11 @@
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 39 | Dynamically pull in list of admins
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 202 | Have spawn inventory but also add same inv functionality as player
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 294 | Consider using Random.roll instead.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 519 | Probably a better way to do this than toLowerCase.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 533 | Use chalk node module to create color-coded logging messages.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 300 | Consider using Random.roll instead.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 561 | Use chalk node module to create color-coded logging messages.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 617 | Make a similar function but for NPCs::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 643 | Should go in other module::::::::::::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 654 | Put this as a function in the combatUtils module.
 | /Users/seanodonohue/myForks/ranviermud/src/rooms.js | 3 | Refactor
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 6 | Enhance for co-op, allow for setInCombat of NPC with multiple players.
@@ -49,8 +51,6 @@
 | /Users/seanodonohue/myForks/ranviermud/src/skills.js | 30 | Pull into own files.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 16 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 23 | Different messages for different relative amounts of sanity loss.
@@ -58,6 +58,8 @@
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 101 | Emit sanity loss event here if applicable.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 104 | Extract all stuff for determining stat gain into level utils.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 166 | Permadeath, add it.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 62 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 69 | Improve based on player stats/skills?
 | /Users/seanodonohue/myForks/ranviermud/commands/whisper.js | 2 | Refactor to be a channel.

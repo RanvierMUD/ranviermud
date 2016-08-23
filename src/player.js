@@ -67,7 +67,7 @@ const Player = function PlayerConstructor(socket) {
     roomdescs: 'default' //default = verbose 1st time, short after.
   };
 
-  self.hasExploredd = [];
+  self.explored = [];
   self.killed   = { length: 0 };
 
   // Anything affecting the player
@@ -124,12 +124,6 @@ const Player = function PlayerConstructor(socket) {
 
   self.getPreferences = () => self.preferences;
 
-  self.getSkills = skill => self.skills[skill] ?
-    parseInt(self.skills[skill], 10) : self.skills;
-
-  self.setSkill = (skill, level) => self.skills[skill] = level;
-  self.incrementSkill = skill => self.setSkill(skill, self.skills[skill] + 1);
-
   self.getFeats = feat => self.feats && self.feats[feat] ?
     self.feats[feat] : self.feats;
 
@@ -164,7 +158,15 @@ const Player = function PlayerConstructor(socket) {
   self.setInCombat   = combatant     => self.inCombat = combatant;
   self.setAttribute  = (attr, val)   => self.attributes[attr] = val;
   self.setPreference = (pref, val)   => self.preferences[pref] = val;
-  self.addSkill      = (name, skill) => self.skills[name] = skill;
+
+  ///// ----- Skills and Training. ----- ///////
+
+  self.getSkills = skill => self.skills[skill] ?
+    parseInt(self.skills[skill], 10) : self.skills;
+
+  self.setSkill = (skill, level) => self.skills[skill] = level;
+  self.incrementSkill = skill => self.setSkill(skill, self.skills[skill] + 1);
+
 
   // Used to set up skill training business.
   self.setTraining = (key, value) => self.training[key] = value;
@@ -240,6 +242,8 @@ const Player = function PlayerConstructor(socket) {
   /**#@-*/
 
 
+  ///// ----- Experiences. ----- ///////
+
   /**
   * To keep track of which rooms the player has already explored.
   * @param int Vnum of room explored...
@@ -281,6 +285,8 @@ const Player = function PlayerConstructor(socket) {
     return true;
   };
 
+  ///// ----- Should be in Skills module -------- //////
+
   /**
   * Spot checks
   * @param int Difficulty -- What they need to beat with their roll
@@ -298,6 +304,9 @@ const Player = function PlayerConstructor(socket) {
     util.log("Spot check success: ", spotted);
     return spotted;
   }
+
+  ///// ----- Handle Effects. ----- ///////
+
 
   /**
    * Get currently applied effects
@@ -350,6 +359,9 @@ const Player = function PlayerConstructor(socket) {
     self.effects[eff] = null;
   };
 
+  ///// ----- Handle Inventory && Equipment. ----- ///////
+
+
   /**
    * Get and possibly hydrate an equipped item
    * @param string  slot    Slot the item is equipped in
@@ -397,6 +409,9 @@ const Player = function PlayerConstructor(socket) {
     }
   };
 
+  ///// ----- Communicate with the player. ----- ///////
+
+
   /**
    * Write to a player's socket
    * @param string data Stuff to write
@@ -409,11 +424,14 @@ const Player = function PlayerConstructor(socket) {
   };
 
   /**
-   * Write based on player's locale
+   * Write based on player's locale -- DEPRECATED
    * @param Localize l10n
    * @param string   key
    */
-  self.writeL10n = function (l10n, key) {
+
+  self.writeL10n = __deprecatedWrite;
+
+  function __deprecatedWrite(l10n, key) {
     let locale = l10n.locale;
     if (self.getLocale()) {
       l10n.setLocale(self.getLocale());
@@ -421,8 +439,8 @@ const Player = function PlayerConstructor(socket) {
 
     self.write(l10n.translate.apply(null, [].slice.call(arguments).slice(1)));
 
-    if (locale) l10n.setLocale(locale);
-  };
+    if (locale) { l10n.setLocale(locale); }
+  }
 
   /**
    * write() + newline
@@ -439,7 +457,9 @@ const Player = function PlayerConstructor(socket) {
    * writeL10n() + newline
    * @see self.writeL10n
    */
-  self.sayL10n = function (l10n, key) {
+  self.sayL10n = __deprecatedSay;
+
+  function __deprecatedSay(l10n, key) {
     let locale = l10n.locale;
     if (self.getLocale()) {
       l10n.setLocale(self.getLocale());
@@ -447,8 +467,12 @@ const Player = function PlayerConstructor(socket) {
 
     let translated = l10n.translate.apply(null, [].slice.call(arguments).slice(1));
     self.say(translated, true);
-    if (locale) l10n.setLocale(locale);
-  };
+    if (locale) { l10n.setLocale(locale); }
+  }
+
+
+  ///// ----- Prompts: ----- ///////
+
 
   /**
    * Display the configured prompt to the player
@@ -492,6 +516,7 @@ const Player = function PlayerConstructor(socket) {
     self.write("\r\n" + pstring);
   };
 
+  ///// ----- Set up us the data. ----- ///////
 
   /**
    * Not really a "load" as much as a constructor but we really need any
@@ -499,24 +524,27 @@ const Player = function PlayerConstructor(socket) {
    * @param object data Object should have all the things a player needs. Like spinach.
    */
   self.load = data => {
-    const empties = {
-      inventory: [],
-      equipment: {},
 
-      feats: {},
-      preferences: {},
-      skills: {},
+   self.name = data.name;
+   self.accountName = data.accountName;
+   self.password = data.password;
 
-      training: { time: 0 },
-      killed: { length: 0 },
+   self.location = data.location;
+   self.locale = data.locale;
 
-      explored: [],
-    };
-
-    self = Object.extend(empties, self, data, {});
+   self.bodyParts = data.bodyParts || {};
+   self.inventory = data.inventory || [];
+   self.equipment = data.equipment || {};
+   self.prompt_string = data.prompt_string || '';
+   self.attributes = data.attributes   || {};
+   self.skills = data.skills           || {};
+   self.feats = data.feats             || {};
+   self.preferences = data.preferences || {};
+   self.killed   = data.killed   || { length: 0 };
+   self.training = data.training || { time: 0 };
+   self.explored = data.explored || { length: 0 };
 
     // Activate any passive skills the player has
-    //TODO: Probably a better way to do this than toLowerCase.
     for (let feat in self.feats) {
       feat = feat.toLowerCase();
       let featType = Feats[feat].type;
@@ -579,23 +607,14 @@ const Player = function PlayerConstructor(socket) {
       feats: self.feats,
       gender: self.gender,
       preferences: self.preferences,
-      explored: self.hasExploredd,
+      explored: self.explored,
       killed:   self.killed,
       training: self.training,
       bodyParts: self.bodyParts,
     });
   };
 
-  /**
-   * Players will have some defined events so load them on creation
-   */
-  self.init = () =>
-    Data.loadListeners(
-      { script: "player.js" },
-      l10n_dir,
-      npcs_scripts_dir,
-      self);
-
+  //TODO: Make a similar function but for NPCs::::::::::::::
 
   /**
    * Helpers to activate skills or feats
@@ -621,7 +640,7 @@ const Player = function PlayerConstructor(socket) {
     Feats[feat].activate.apply(null, args);
   };
 
-
+  //TODO: Should go in other module::::::::::::::::::::::::
 
   /**
    * Helper to calculate physical damage
@@ -632,7 +651,8 @@ const Player = function PlayerConstructor(socket) {
     if (!dmg) return;
     location = location || 'body';
 
-    let damageDone = Math.max(1, dmg - self.combat.soak(location));
+    //TODO: Put this as a function in the combatUtils module.
+    const damageDone = Math.max(1, dmg - self.combat.soak(location));
 
     self.setAttribute('health',
       Math.max(0, self.getAttribute('health') - damageDone));
@@ -642,8 +662,19 @@ const Player = function PlayerConstructor(socket) {
     return damageDone;
   };
 
-  self.init();
+  /**
+   * Players will have some defined events so load them on creation
+   */
+  self._init = () =>
+    Data.loadListeners(
+      { script: "player.js" },
+      l10n_dir,
+      npcs_scripts_dir,
+      self);
+
+  self._init();
 };
 
 util.inherits(Player, events.EventEmitter);
+
 exports.Player = Player;
