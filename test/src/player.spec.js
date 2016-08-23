@@ -6,7 +6,6 @@ const Mocks  = require('../mocks/mocks');
 describe('New player', () => {
 
     const testPlayer = new Player();
-    testPlayer.init();
 
     beforeEach(() => {});
 
