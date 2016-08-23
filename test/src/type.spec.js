@@ -11,7 +11,7 @@ describe('Typing', () => {
   });
 
   it('Should return false otherwise', () => {
-    const testFake = { player: true };
+    const testFake = Object.create({});
     expect(Type.isPlayer(testFake)).to.be.false;
   });
 

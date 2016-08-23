@@ -122,6 +122,8 @@ const Player = function PlayerConstructor(socket) {
   self.getPreference = pref => typeof self.preferences[pref] !== 'undefined' ?
     self.preferences[pref] : false;
 
+  self.getPreferences = () => self.preferences;
+
   self.getSkills = skill => self.skills[skill] ?
     parseInt(self.skills[skill], 10) : self.skills;
 
@@ -497,22 +499,21 @@ const Player = function PlayerConstructor(socket) {
    * @param object data Object should have all the things a player needs. Like spinach.
    */
   self.load = data => {
-    self.name = data.name;
-    self.accountName = data.accountName;
-    self.location = data.location;
-    self.bodyParts = data.bodyParts;
-    self.locale = data.locale;
-    self.prompt_string = data.prompt_string;
-    self.password = data.password;
-    self.inventory = data.inventory || [];
-    self.equipment = data.equipment || {};
-    self.attributes = data.attributes;
-    self.skills = data.skills;
-    self.feats = data.feats || {};
-    self.preferences = data.preferences || {};
-    self.killed   = data.killed   || { length: 0 };
-    self.hasExploredd = data.explored || [];
-    self.training = data.training || { time: 0 };
+    const empties = {
+      inventory: [],
+      equipment: {},
+
+      feats: {},
+      preferences: {},
+      skills: {},
+
+      training: { time: 0 },
+      killed: { length: 0 },
+
+      explored: [],
+    };
+
+    self = Object.extend(empties, self, data, {});
 
     // Activate any passive skills the player has
     //TODO: Probably a better way to do this than toLowerCase.
@@ -528,6 +529,8 @@ const Player = function PlayerConstructor(socket) {
     for (let skill in Skills) {
       skill = Skills[skill];
       if (!self.skills[skill.id]) {
+
+        //TODO: Use chalk node module to create color-coded logging messages.
         util.log("Initializing skill ", skill.id);
         self.skills[skill.id] = 1;
       }
@@ -586,10 +589,13 @@ const Player = function PlayerConstructor(socket) {
   /**
    * Players will have some defined events so load them on creation
    */
-  self.init = () => {
-    Data.loadListeners({ script: "player.js" }, l10n_dir, npcs_scripts_dir,
+  self.init = () =>
+    Data.loadListeners(
+      { script: "player.js" },
+      l10n_dir,
+      npcs_scripts_dir,
       self);
-  };
+
 
   /**
    * Helpers to activate skills or feats
