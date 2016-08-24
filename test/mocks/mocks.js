@@ -30,6 +30,35 @@ const Rooms = {
   getAt: () => 'Correct',
 };
 
+
+
+const lockedDoor = {
+  door: {
+    locked: true,
+    key: 'potato',
+  },
+  direction: 'out'
+};
+
+const openedDoor = {
+  door: {
+    open: true
+  },
+  direction: 'in'
+};
+
+const Room = {
+  title:       'pants',
+  description: 'lol',
+
+  location:     Infinity,
+  area:        'PotatoLand',
+
+  exits: [
+    openedDoor, lockedDoor,
+  ],
+};
+
 const Player = {
   attributes:  defaultAttributes,
   preferences: defaultPreferences,
@@ -41,5 +70,8 @@ module.exports = {
   defaultAttributes,
   defaultPreferences,
   Rooms,
-  Player
+  Player,
+  Room,
+  openedDoor,
+  lockedDoor
 };

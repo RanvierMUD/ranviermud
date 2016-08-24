@@ -1,30 +1,15 @@
+const expect = require('chai').expect;
 const Room = require('../../src/rooms').Room;
+const Doors = require('../../src/doors').Doors;
+const Mocks = require('../mocks/mocks.js');
 
-//TODO: Extract into mocks.js
-const lockedDoor = {
-  door: {
-    locked: true,
-    key: 'potato',
-  }
-};
+const testRoom = new Room(Mocks.Room);
 
-const openedDoor = {
-  door: {
-    open: true
-  }
-};
+describe('Doors & Locks', () => {
 
+  it('Should find an exit given a direction', () => {
+    const found = Doors.findExit(testRoom, 'out');
+    expect(found.length === 1).to.be.true;
+  });
 
-const mockRoom = {
-  title:       'pants',
-  description: 'lol',
-
-  location:     Infinity,
-  area:        'PotatoLand',
-
-  exits: [
-    openedDoor, lockedDoor,
-  ],
-};
-
-const testRoom = new Room(mockRoom);
+});

@@ -192,7 +192,8 @@ var Room = function Room(config) {
     self.file_index  = config.file_index;
 
     self.exits = self.exits.map(exit => {
-      if (exit.door) { exit.door.open = false; }
+      if (exit.door && !exit.door.open) { exit.door.open = false; }
+      else if (exit.door) { exit.door.open = true; }
       return exit;
     });
 
