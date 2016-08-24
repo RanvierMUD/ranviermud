@@ -102,7 +102,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         break;
 
       case 'create':
-        say('Creating character... \nHit enter to continue.\n');
+        socket.write('Creating character... \nHit enter to continue.\n');
         socket = new Player(socket);
 
         socket.setName(name);
@@ -122,7 +122,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
       case 'gender':
         const genders = ['m', 'f', 'a'];
 
-        say('<bold>What is your character\'s gender?</bold>\n'
+        socket.write('<bold>What is your character\'s gender?</bold>\n'
         + '<cyan>[F]emale\n[M]ale\n[A]ndrogynous</cyan>\n');
 
         socket.getSocket()
@@ -133,7 +133,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
               .toLowerCase();
 
             if (!gender || _.hasNot(genders, gender)) {
-              socket.say('Please specify a gender, or [A]ndrogynous if you\'d prefer.');
+              socket.say('Please specify a gender, or <cyan>[A]ndrogynous</cyan> if you\'d prefer.');
               return repeat();
             }
 
