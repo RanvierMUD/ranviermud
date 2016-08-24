@@ -65,7 +65,9 @@ const firstWord = args => splitArgs(args)[0];
  * Splits a string into an array of words.
  * For parsing command args.
  */
-const splitArgs = args => args.toLowerCase().split(' ');
+const splitArgs = args => args.toLowerCase ?
+  toLowerCase().split(' ') :
+  util.log('Not a string: ', args);
 
 /**
  * Allows you to set min and max range for a number.
