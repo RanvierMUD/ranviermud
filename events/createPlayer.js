@@ -102,7 +102,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         break;
 
       case 'create':
-        socket.write('Creating character... \nHit enter to continue.\n');
+        socket.write('Creating character... \n');
         socket = new Player(socket);
 
         socket.setName(name);
