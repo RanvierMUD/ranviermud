@@ -10,7 +10,7 @@ const CommandUtil = require('./command_util').CommandUtil;
 
 // Returns an array of exits that match the provided direction string.
 const findExit = (room, dir) => room.getExits()
-  .filter(exit => _.has(exit.direction, dir));
+  .filter(exit => exit.direction.includes(dir));
 
 // Takes a callback to use on the destination location.
 const updateDestination = (player, dest, callback) => dest
@@ -71,7 +71,7 @@ function openOrClose(verb, args, player, players, rooms) {
   if (!args) {
     return player.say("Which door do you want to " + verb + "?");
   }
-  
+
   const room  = rooms.getAt(player.getLocation());
   const dir   = args[0];
   const exits = findExit(room, dir);
