@@ -19,6 +19,7 @@ const src       = '../src/';
 const EventUtil = require('./event_util').EventUtil;
 const Player    = require(src + 'player').Player;
 const Data      = require(src + 'data').Data;
+const Commands  = require(src + 'commands').Commands;
 
 const _ = require(src + 'helpers');
 
@@ -64,14 +65,14 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
           }
 
           if (invalid) {
-            socket.write(invalid + '\r\n');
+            say(invalid + '\r\n');
             return repeat();
           } else {
 
             const exists = players.getByName(name) || Data.loadPlayer(name);
 
             if (exists) {
-              socket.write('That name is already taken.\r\n');
+              say('That name is already taken.\r\n');
               return repeat();
             } else {
               return next(socket, 'check', account, name);
@@ -92,7 +93,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
           }
 
           if (check === 'n') {
-            socket.write("Let's try again...\r\n");
+            say("Let's try again...\r\n");
             return socket.emit('createPlayer', socket, 'name');
           }
 
@@ -101,7 +102,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         break;
 
       case 'create':
-        socket.write('Creating character...');
+        say('Creating character... \nHit enter to continue.\n');
         socket = new Player(socket);
 
         socket.setName(name);
@@ -149,6 +150,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         // create the pfile then send them on their way
         socket.save(() => {
           players.addPlayer(socket);
+          Commands.player_commands.look('', socket);
           socket.prompt();
           socket.getSocket()
             .emit('commands', socket);
