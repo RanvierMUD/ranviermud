@@ -40,7 +40,6 @@ describe('Doors & Locks', () => {
       });
 
       expect(called).to.be.true;
-
     });
 
 
