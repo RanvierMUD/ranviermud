@@ -66,7 +66,7 @@ const firstWord = args => splitArgs(args)[0];
  * For parsing command args.
  */
 const splitArgs = args => args.toLowerCase ?
-  toLowerCase().split(' ') :
+  args.toLowerCase().split(' ') :
   util.log('Not a string: ', args);
 
 /**
