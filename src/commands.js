@@ -38,7 +38,7 @@ const Commands = {
     addSkill: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const Skills = require('./skills').Skills;
-        args = _.splitArgs(args);
+        if (args) { args = _.splitArgs(args); }
 
         const skill = Skills[args[0]] ? Skills[args[0]].id : null;
         const number = args[1] || 1;
