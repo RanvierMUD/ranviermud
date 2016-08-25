@@ -42,7 +42,7 @@ const Commands = {
         const Skills = require('./skills').Skills;
         args = _.splitArgs(args);
 
-        if (!args || !args.length) { return; }
+        if (!player || !args || !args.length) { return; }
         const skill = Skills[args[0]] ? Skills[args[0]].id : null;
         const number = args[1] || 1;
         if (skill) {
@@ -57,7 +57,7 @@ const Commands = {
         const Feats = require('./feats').Feats;
         args = _.splitArgs(args);
 
-        if (!args) { return; }
+        if (!player || !args) { return; }
 
         const feat = Feats[args[0]] ? Feats[args[0]] : null;
 
@@ -72,7 +72,7 @@ const Commands = {
 
     teleport: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
-        if (!player || !args) { return; }
+        if (!player || !player.say || !args) { return; }
         const vnum = parseInt(args, 10);
         if (isNaN(vnum)) {
           return player.say("<red>ADMIN: Invalid vnum.</red>");
