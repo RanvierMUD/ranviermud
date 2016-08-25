@@ -72,6 +72,7 @@ const Commands = {
 
     teleport: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
+        if (!player || !args) { return; }
         const vnum = parseInt(args, 10);
         if (isNaN(vnum)) {
           return player.say("<red>ADMIN: Invalid vnum.</red>");
