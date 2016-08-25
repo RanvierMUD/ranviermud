@@ -57,6 +57,8 @@ const Commands = {
         const Feats = require('./feats').Feats;
         args = _.splitArgs(args);
 
+        if (!args) { return; }
+
         const feat = Feats[args[0]] ? Feats[args[0]] : null;
 
         if (feat) {
