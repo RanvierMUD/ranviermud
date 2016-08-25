@@ -111,7 +111,7 @@ function openOrClose(verb, args, player, players, rooms) {
 
   players.eachIf(
     p => CommandUtil.inSameRoom(p, player),
-    p => p.say(player.getName() + ' ' + verb + 's the door to ' + dest + '.'));
+    p => p.say(player.getName() + ' ' + verb + 's the door to ' + destTitle + '.'));
 
 }
 
