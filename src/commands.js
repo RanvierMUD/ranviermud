@@ -35,11 +35,14 @@ const Commands = {
 
   //TODO: Extract into individual files.
   admin_commands: {
+
+    //TODO: Fix this buggy stuff
     addSkill: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const Skills = require('./skills').Skills;
-        if (args) { args = _.splitArgs(args); }
+        args = _.splitArgs(args);
 
+        if (!args || !args.length) { return; }
         const skill = Skills[args[0]] ? Skills[args[0]].id : null;
         const number = args[1] || 1;
         if (skill) {
