@@ -69,7 +69,7 @@ const firstWord = args => splitArgs(args)[0];
  */
 const splitArgs = args => args.toLowerCase ?
   args.toLowerCase().split(' ') :
-  util.log('Not a string: ', args), null;
+  null;
 
 /**
  * Allows you to set min and max range for a number.
