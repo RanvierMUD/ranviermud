@@ -28,7 +28,7 @@ const defaultDifficulty = 10;
 const getLockDifficulty = exit => parseInt(exit.door.difficulty || defaultDifficulty, 10);
 
 /* Dealing with npc passage */
-const isMobLocked   = exit => exit.door.mob_locked && exit.door.mob_locked === true;
+const isMobLocked   = exit => isDoor(exit) && exit.door.mob_locked && exit.door.mob_locked === true;
 const isNpcPassable = exit => !(isMobLocked(exit) || isLocked(exit));
 
 /* Dealing with open/closed states */
