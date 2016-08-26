@@ -87,5 +87,24 @@ describe('Doors & Locks', () => {
     });
   });
 
+  describe('Is it even a door? Is it an open door?', () => {
+    const fakePassage = {};
+    const fakeClosedDoor = { door: { open: false } };
+    const fakeOpenDoor = { door: { open: true } };
+
+    it('Should recognize doors vs. passageways without a door', () => {
+      expect(Doors.isDoor(fakePassage)).to.be.false;
+      expect(Doors.isDoor(fakeClosedDoor)).to.be.true;
+      expect(Doors.isDoor(fakeOpenDoor)).to.be.true;
+    });
+
+    it('Should recognize open doors -- passages without doors are always open', () => {
+      expect(Doors.isOpen(fakePassage)).to.be.true;
+      expect(Doors.isOpen(fakeClosedDoor)).to.be.false;
+      expect(Doors.isOpen(fakeOpenDoor)).to.be.true;
+    });
+
+  });
+
 
 });
