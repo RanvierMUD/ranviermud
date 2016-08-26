@@ -31,10 +31,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     drop(item);
 
     function dropAll() {
-      player.getInventory()
-        .forEach(item => item.isEquipped() ?
-          drop(item) :
-          () => {});
+      const items = player.getInventory()
+        .map(item => !item.isEquipped());
+      if (!items.length) { return player.say('You have nothing to drop.'); }
+      items.forEach(item => drop(item));
     }
 
     function drop(item) {
