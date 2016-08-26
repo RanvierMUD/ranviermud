@@ -19,7 +19,6 @@ const updateDestination = (player, dest, callback) => dest
   .forEach(callback);
 
 /* Dealing with locked/unlocked states */
-
 const changeDoorLockState = isLocked => exit => exit.door.locked = isLocked;
 const lockDoor   = changeDoorLockState(true);
 const unlockDoor = changeDoorLockState(false);
@@ -32,9 +31,7 @@ const getLockDifficulty = exit => parseInt(exit.door.difficulty || defaultDiffic
 const isMobLocked   = exit => exit.hasOwnProperty('mob_locked');
 const isNpcPassable = exit => !(isMobLocked(exit) || isLocked(exit));
 
-
 /* Dealing with open/closed states */
-
 const isDoor = exit => exit && exit.hasOwnProperty('door');
 const isOpen = exit => exit.door ? exit.door.open : true;
 
