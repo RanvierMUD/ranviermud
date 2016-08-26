@@ -141,8 +141,11 @@ const Commands = {
 
       //TODO: Do the same way as above once you extract the admin commands.
       for (const command in Commands.admin_commands) {
-        const commandFunc = Commands.admin_commands[command](rooms, items, players, npcs, Commands);
-        Commands.admin_commands[command] = commandFunc;
+        const needsDepsInjected = Commands.admin_commands[command].length > 2;
+        if (needsDepsInjected) {
+          const commandFunc = Commands.admin_commands[command](rooms, items, players, npcs, Commands);
+          Commands.admin_commands[command] = commandFunc;
+        }
       }
   },
 
@@ -152,7 +155,7 @@ const Commands = {
    * follow the same structure
    * @param string exit direction they tried to go
    * @param Player player
-   * @return boolean
+   * @return boolean False if the exit is inaccessible.
    */
   room_exits: (exit, player) => {
 
