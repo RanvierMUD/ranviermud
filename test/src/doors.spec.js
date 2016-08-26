@@ -61,5 +61,31 @@ describe('Doors & Locks', () => {
 
   });
 
+  describe('NPC Passage', () => {
+    const fakeExit = {
+      door: {
+        mob_locked: true,
+        locked: false,
+      }
+    };
+
+    it('should not allow passage if moblocked', () => {
+      expect(Doors.isMobLocked(fakeExit)).to.be.true;
+      expect(Doors.isNpcPassable(fakeExit)).to.be.false;
+    });
+
+    it('should not allow passage if locked', () => {
+      fakeExit.door.locked = true;
+      fakeExit.door.mob_locked = false;
+      expect(Doors.isMobLocked(fakeExit)).to.be.false;
+      expect(Doors.isNpcPassable(fakeExit)).to.be.false;
+    });
+
+    it('should allow passage if totally unlocked', () => {
+      fakeExit.door.locked = false;
+      expect(Doors.isNpcPassable(fakeExit)).to.be.true;
+    });
+  });
+
 
 });
