@@ -35,13 +35,23 @@ const isNpcPassable = exit => !(isMobLocked(exit) || isLocked(exit));
 const isDoor = exit => exit && exit.hasOwnProperty('door');
 const isOpen = exit => exit.door ? exit.door.open : true;
 
+const useKeyToUnlock = useKey.bind(null, 'unlock');
+const useKeyToLock   = useKey.bind(null, 'lock');
+
+const openDoor  = openOrClose.bind(null, 'open');
+const closeDoor = openOrClose.bind(null, 'close');
+
+//TODO: Refactor to use the bound functions in external code.
 exports.Doors = {
   updateDestination,
+  useKeyToLock,
+  useKeyToUnlock,
   findExit,  openOrClose,
   lockDoor,  unlockDoor,
   useKey,    isMobLocked,
   isLocked,  isOpen,
-  isDoor,    isNpcPassable
+  isDoor,    isNpcPassable,
+  openDoor,  closeDoor,
 };
 
 /* useKey && openOrClose

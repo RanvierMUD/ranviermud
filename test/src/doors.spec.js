@@ -106,5 +106,34 @@ describe('Doors & Locks', () => {
 
   });
 
+  describe('Opening/closing & locking/unlocking', () => {
+    const noop  = () => {};
+    const fakeDoor    = {};
+    const fakeRoom    = {};
+    const fakeRooms   = {
+      getAt: () => fakeRoom
+    };
+    const fakePlayer  = {
+      emit: noop,
+      getLocation: noop,
+      isInCombat: () => false,
+    };
+    const fakePlayers = {};
+
+    describe('Opening and closing', () => {
+      const fakeDoor = {};
+
+      it('can open doors', () => {
+        Doors.openDoor('out', fakePlayer, fakePlayers, fakeRooms);
+        expect(true).to.be.false;
+      });
+    });
+
+    describe('Locking and unlocking', () => {
+
+    });
+
+  });
+
 
 });
