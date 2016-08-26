@@ -44,19 +44,19 @@ describe('Doors & Locks', () => {
 
   });
 
-  describe('Changing locked state', () => {
+  describe('Changing & checking locked state', () => {
     const fakeExit = {
       door: { locked: false }
     };
 
     it('should be able to lock', () => {
       Doors.lockDoor(fakeExit);
-      expect(fakeExit.door.locked).to.be.true;
+      expect(Doors.isLocked(fakeExit)).to.be.true;
     });
 
     it('should be able to unlock', () => {
       Doors.unlockDoor(fakeExit);
-      expect(fakeExit.door.locked).to.be.false;
+      expect(Doors.isLocked(fakeExit)).to.be.false;
     });
 
   });
