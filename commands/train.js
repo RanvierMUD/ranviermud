@@ -56,6 +56,7 @@ function displayTrainingQueue(player) {
   }
   for (let skill in training) {
     if (skill in displayMap) {
+      if (skill === 'time') { '<cyan>Training Time:</cyan>'; }
       player.say(displayMap[skill] + ': ' + training[skill]);
     } else {
 
