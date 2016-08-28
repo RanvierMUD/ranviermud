@@ -80,6 +80,7 @@ function openOrClose(verb, args, player, players, rooms) {
   }
 
   const room  = rooms.getAt(player.getLocation());
+  console.log(room);
   const dir   = args[0];
   const exits = findExit(room, dir);
 
