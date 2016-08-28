@@ -108,28 +108,49 @@ describe('Doors & Locks', () => {
 
   describe('Opening/closing & locking/unlocking', () => {
     const noop  = () => {};
-    const fakeDoor    = {};
-    const fakeRoom    = {};
-    const fakeRooms   = {
+
+    // Mocks
+    const fakeExit = {
+      direction: 'out',
+      door: {
+        locked: false
+      }
+    };
+    const fakeRoom = {
+      getTitle: () => 'fake',
+      getExits: () => [ fakeExit ],
+    };
+    const fakeRooms = {
       getAt: () => fakeRoom
     };
-    const fakePlayer  = {
-      emit: noop,
+    const fakePlayer = {
+      say:         noop,
+      emit:        noop,
       getLocation: noop,
+      getName:    () => 'Test',
       isInCombat: () => false,
     };
-    const fakePlayers = {};
+    const fakePlayers = {
+      eachIf: (pred, fn) => fn(fakePlayer)
+    };
 
     describe('Opening and closing', () => {
-      const fakeDoor = {};
 
       it('can open doors', () => {
+        fakeExit.door.open = false;
         Doors.openDoor('out', fakePlayer, fakePlayers, fakeRooms);
-        expect(true).to.be.false;
+        expect(Doors.isOpen(fakeExit) && Doors.isDoor(fakeExit)).to.be.true;
+      });
+
+      it('can close doors', () => {
+        Doors.closeDoor('out', fakePlayer, fakePlayers, fakeRooms);
+        expect(Doors.isOpen(fakeExit)).to.be.false;
       });
     });
 
     describe('Locking and unlocking', () => {
+
+
 
     });
 
