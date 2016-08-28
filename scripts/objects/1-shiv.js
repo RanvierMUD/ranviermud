@@ -46,9 +46,9 @@ exports.listeners = {
 			const toRoom = Broadcast.toRoom(room, attacker, null, players);
 
 			const firstPartyMessage = [
-				'Your shank finds purchase in flesh.',
-				'You nimbly dart forth and knick your opponent.',
-				'You dash and slash, crimson spraying in miniature fountains.'
+				'Your shank finds purchase in <red>flesh</red>.',
+				'You nimbly dart forth and <red>knick</red> your opponent.',
+				'You dash and slash, <red>crimson</red> spraying in miniature fountains.'
 			].map(msg => '<bold>' + msg + '</bold>');
 
 			const thirdPartyMessage = [

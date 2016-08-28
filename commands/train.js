@@ -17,7 +17,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return player.clearTraining();
     }
 
-
+    //TODO: Extract into own function in Skills module.
     for (let skill in Skills) {
       const skillName = Skills[skill].name.toLowerCase();
 

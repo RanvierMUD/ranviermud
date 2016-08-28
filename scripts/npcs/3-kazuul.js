@@ -130,7 +130,7 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, this, player, players);
 
       const secondPartyMessage = [
-        'The defilers tentacles swing towards you, but connect only with air.',
+        'The kazuul\'s defiled tentacles swing towards you, but connect only with air.',
         'Croaking, the kazuul lunges at you but falls short.'
       ];
       const thirdPartyMessage = [
