@@ -12,7 +12,7 @@ const CommandUtil = require('./command_util').CommandUtil;
 const findExit = (room, dir) => room.getExits()
   .filter(exit => exit.direction.includes(dir));
 
-// Takes a callback to use on the destination location.
+// Takes a callback to use on the destination room.
 const updateDestination = (player, dest, callback) => dest
   .getExits()
   .filter(exit => exit.location === player.getLocation())
@@ -80,7 +80,6 @@ function openOrClose(verb, args, player, players, rooms) {
   }
 
   const room  = rooms.getAt(player.getLocation());
-  console.log(room);
   const dir   = args[0];
   const exits = findExit(room, dir);
 
