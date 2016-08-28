@@ -146,6 +146,28 @@ describe('Doors & Locks', () => {
         Doors.closeDoor('out', fakePlayer, fakePlayers, fakeRooms);
         expect(Doors.isOpen(fakeExit)).to.be.false;
       });
+
+      const fakeDoorlessExit = Object.assign(
+        fakeExit,
+        { door: null }
+      );
+
+      const fakeRoomWithMultipleExits = Object.assign(
+        fakeRoom, {
+          getExits: () => [ fakeExit, fakeDoorlessExit ]
+        });
+
+      fakeRooms.getAt = () => fakeRoomWithMultipleExits;
+
+      it('will do nothing to a doorless exit', () => {
+        Doors.closeDoor('out', fakePlayer, fakePlayers, fakeRooms);
+        expect(Doors.isDoor(fakeDoorlessExit) && !Doors.isOpen(fakeDoorlessExit)).to.be.true;
+      });
+
+      it('will do nothing to a locked exit', () => {
+
+      });
+
     });
 
     describe('Locking and unlocking', () => {
