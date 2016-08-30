@@ -3,3 +3,4 @@ plugins/
 data/players/*.json
 data/accounts/*.json
 *.swp
+coverage/
