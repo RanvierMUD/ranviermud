@@ -16,7 +16,7 @@
     target: 'legs'
     max_health: 40
     health: 40
-    speed: 3.5
+    speed: 9
     damage: 1-37
     level: 4
   defenses:

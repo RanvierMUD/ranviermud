@@ -29,7 +29,7 @@ exports.listeners = {
   },
 
   playerDropItem: l10n  => {
-    return (room, player, players, item) => {
+    return (room, rooms, player, players, npc, npcs) => {
       const rand = Random.inRange(1, 5);
       if (rand === 3) {
         const itemDesc = item.getShortDesc('en');
@@ -96,7 +96,7 @@ exports.listeners = {
     return function(room, player, players, hitLocation) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const secondPartyMessage = [
-        'The snake recoils, out of the way of your strike.',
+        'The snake recoils out of the way of your strike.',
         'The serpent\'s ' + hitLocation + ' twists out of the path of your attack.',
         'Hissing, the python jerks its ' + hitLocation + ' out of the way.'
       ];

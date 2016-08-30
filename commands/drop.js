@@ -52,7 +52,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       room.getNpcs().forEach( id => {
         let npc = npcs.get(id);
-        npc.emit('playerDropItem', room, player, players, item);
+        npc.emit('playerDropItem', room, rooms, player, players, npc, npcs, item);
       });
 
       player.removeItem(item);

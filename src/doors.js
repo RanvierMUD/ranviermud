@@ -69,15 +69,14 @@ function openOrClose(verb, args, player, players, rooms) {
   player.emit('action', 0);
 
   if (player.isInCombat()) {
-    player.say('You are too busy for that right now.');
-    return;
+    return player.say('You are too busy for that right now.');
   }
-
-  args = args.toLowerCase().split(' ');
 
   if (!args) {
     return player.say("Which door do you want to " + verb + "?");
   }
+
+  args = args.toLowerCase().split(' ');
 
   const room  = rooms.getAt(player.getLocation());
   const dir   = args[0];
