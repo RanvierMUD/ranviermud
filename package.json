@@ -32,6 +32,7 @@
     "gulp-todo": "^4.1.0",
     "istanbul": "^0.4.4",
     "mocha": "^2.5.3",
-    "mocha-istanbul": "^0.3.0"
+    "mocha-istanbul": "^0.3.0",
+    "sinon": "^1.17.5"
   }
 }

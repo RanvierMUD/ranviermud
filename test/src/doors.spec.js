@@ -1,6 +1,7 @@
 'use strict';
 
 const expect = require('chai').expect;
+const sinon = require('sinon');
 const Room = require('../../src/rooms').Room;
 const Doors = require('../../src/doors').Doors;
 const Mocks = require('../mocks/mocks.js');
@@ -108,7 +109,7 @@ describe('Doors & Locks', () => {
 
   describe('Opening/closing & locking/unlocking', () => {
     const noop  = () => {};
-
+    const say = sinon.spy();
     // Mocks
     const fakeExit = {
       direction: 'out',
@@ -124,7 +125,7 @@ describe('Doors & Locks', () => {
       getAt: () => fakeRoom
     };
     const fakePlayer = {
-      say:         noop,
+      say,
       emit:        noop,
       getLocation: noop,
       getName:    () => 'Test',
@@ -147,6 +148,13 @@ describe('Doors & Locks', () => {
         expect(Doors.isOpen(fakeExit)).to.be.false;
       });
 
+      it('will do nothing without args', () => {
+        const originalExit = Object.assign({}, fakeExit);
+        Doors.openDoor('', fakePlayer, fakePlayers, fakeRooms);
+        expect(fakeExit).to.eql(originalExit);
+        expect(say.called).to.be.true;
+      });
+
       const fakeDoorlessExit = Object.assign({}, fakeExit);
       delete fakeDoorlessExit.door;
 
@@ -159,6 +167,7 @@ describe('Doors & Locks', () => {
 
         expect(Doors.isDoor(fakeDoorlessExit)).to.be.false;
         expect(Doors.isOpen(fakeDoorlessExit)).to.be.true;
+        expect(say.called).to.be.true;
       });
 
       it('will do nothing to a locked exit', () => {
@@ -170,6 +179,7 @@ describe('Doors & Locks', () => {
         Doors.closeDoor('out', fakePlayer, fakePlayers, fakeRooms);
 
         expect(Doors.isLocked(lockedExit)).to.be.true;
+        expect(say.called).to.be.true;
       });
 
     });
