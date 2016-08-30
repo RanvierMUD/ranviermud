@@ -10,7 +10,6 @@ const testRoom = new Room(Mocks.Room);
 
 describe('Doors & Locks', () => {
 
-
   describe('findExit', () => {
 
     it('Should find an exit given a direction', () => {

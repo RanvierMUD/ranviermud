@@ -40,9 +40,9 @@ exports.listeners = {
   },
 
   playerDropItem: l10n  => {
-    return (room, player) => {
+    return function(room, rooms, player, players, npc, npcs) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-      msg = 'The kazuul croaks, its tongue lolling obscenely.';
+      const msg = 'The kazuul croaks, its tongue lolling obscenely.';
       toRoom({
         secondPartyMessage: msg,
         thirdPartyMessage: msg

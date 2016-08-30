@@ -31,7 +31,7 @@ exports.listeners = {
   },
 
   playerDropItem: l10n => {
-    return (room, player, players, item) => {
+    return function(room, rooms, player, players, npc, npcs, item) {
       const rand = Random.inRange(1, 5);
       if (rand === 3) {
         const itemDesc = item.getShortDesc('en');
