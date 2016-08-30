@@ -157,7 +157,8 @@ describe('Doors & Locks', () => {
 
         Doors.closeDoor('out', fakePlayer, fakePlayers, fakeRooms);
 
-        expect(Doors.isDoor(fakeDoorlessExit) && !Doors.isOpen(fakeDoorlessExit)).to.be.true;
+        expect(Doors.isDoor(fakeDoorlessExit)).to.be.false;
+        expect(Doors.isOpen(fakeDoorlessExit)).to.be.true;
       });
 
       it('will do nothing to a locked exit', () => {
@@ -168,7 +169,7 @@ describe('Doors & Locks', () => {
 
         Doors.closeDoor('out', fakePlayer, fakePlayers, fakeRooms);
 
-        expect(Doors.isLocked(fakeDoorlessExit)).to.be.true;
+        expect(Doors.isLocked(lockedExit)).to.be.true;
       });
 
     });
