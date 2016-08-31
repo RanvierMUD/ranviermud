@@ -4,3 +4,6 @@ data/players/*.json
 data/accounts/*.json
 *.swp
 coverage/
+*.logs
+*.log
+*.debug
