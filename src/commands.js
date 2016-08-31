@@ -141,10 +141,14 @@ const Commands = {
 
       //TODO: Do the same way as above once you extract the admin commands.
       for (const command in Commands.admin_commands) {
-        const needsDepsInjected = Commands.admin_commands[command].length > 2;
-        if (needsDepsInjected) {
-          const commandFunc = Commands.admin_commands[command](rooms, items, players, npcs, Commands);
-          Commands.admin_commands[command] = commandFunc;
+        try {
+          const needsDepsInjected = Commands.admin_commands[command].length > 2;
+          if (needsDepsInjected) {
+            const commandFunc = Commands.admin_commands[command](rooms, items, players, npcs, Commands);
+            Commands.admin_commands[command] = commandFunc;
+          }
+        } catch (e) {
+          console.log('admin_command config -> ', e);
         }
       }
   },
