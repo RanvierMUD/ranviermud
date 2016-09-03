@@ -194,19 +194,31 @@ describe('Doors & Locks', () => {
       it('will unlock a locked exit', () => {
 
         const lockedExit = Object.assign({}, fakeExit);
-
         lockedExit.door = {
           locked: true,
           key:   'test'
-         };
+        };
         fakeRoom.getExits = () => [ lockedExit ];
         fakeRooms.getAt = () => fakeRoom;
-
         fakePlayer.getInventory = () => [ fakeKey ];
 
         Doors.useKeyToUnlock('out', fakePlayer, fakePlayers, fakeRooms);
         expect(Doors.isLocked(lockedExit)).to.be.false;
 
+      });
+
+      it('will lock an unlocked exit', () => {
+        const unlockedExit = Object.assign({}, fakeExit);
+        unlockedExit.door = {
+          locked: false,
+          key:   'test'
+        };
+        fakeRoom.getExits = () => [ unlockedExit ];
+        fakeRooms.getAt = () => fakeRoom;
+        fakePlayer.getInventory = () => [ fakeKey ];
+
+        Doors.useKeyToLock('out', fakePlayer, fakePlayers, fakeRooms);
+        expect(Doors.isLocked(unlockedExit)).to.be.true;
       });
 
     });
