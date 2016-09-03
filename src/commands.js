@@ -233,7 +233,7 @@ function move(exit, player) {
 
   if (closedDoor && lockedDoor) {
     util.log("DOOR LOCKED, ATTEMPTING UNLOCK...");
-    Doors.useKey('unlock', exit.direction, player, players, rooms);
+    Doors.useKeyToUnlock(exit.direction, player, players, rooms);
     if (Doors.isLocked(exit)) { return; }
   }
 
