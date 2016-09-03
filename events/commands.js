@@ -112,7 +112,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
             try {
               const regex = new RegExp("^" + command);
             } catch (err) {
-              util.log('Error in checking for command': err);
+              util.log('Error in checking for command: ', err);
               util.log('-> ', cmd, command);
               continue;
             }
