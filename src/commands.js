@@ -46,7 +46,7 @@ const Commands = {
         const skill = Skills[args[0]] ? Skills[args[0]].id : null;
         const number = args[1] || 1;
         if (skill) {
-          player.addSkill(skill, number);
+          player.setSkill(skill, number);
           player.say("<red>ADMIN: Added " + args + ".</red>");
         } else { player.say("<red>ADMIN: No such skill.</red>"); }
         util.log("@@Admin: " + player.getName() + " added skill:", skill);
