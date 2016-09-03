@@ -251,8 +251,8 @@ const Player = function PlayerConstructor(socket) {
   */
 
   self.hasExplored = vnum => {
-    if (_.hasNot(self.hasExploredd, vnum)) {
-      self.hasExploredd.push(vnum);
+    if (_.hasNot(self.explored, vnum)) {
+      self.explored.push(vnum);
       util.log(self.getName() + ' explored room #' + vnum + ' for the first time.');
       return false;
     }
@@ -542,7 +542,7 @@ const Player = function PlayerConstructor(socket) {
    self.preferences = data.preferences || {};
    self.killed   = data.killed   || { length: 0 };
    self.training = data.training || { time: 0 };
-   self.explored = data.explored || { length: 0 };
+   self.explored = data.explored || [];
 
     // Activate any passive skills the player has
     for (let feat in self.feats) {
