@@ -1,10 +1,10 @@
 'use strict';
 
 const expect = require('chai').expect;
-const sinon = require('sinon');
-const Room = require('../../src/rooms').Room;
-const Doors = require('../../src/doors').Doors;
-const Mocks = require('../mocks/mocks.js');
+const sinon  = require('sinon');
+const Room   = require('../../src/rooms').Room;
+const Doors  = require('../../src/doors').Doors;
+const Mocks  = require('../mocks/mocks.js');
 
 const testRoom = new Room(Mocks.Room);
 
@@ -127,6 +127,7 @@ describe('Doors & Locks', () => {
       say,
       emit:        noop,
       getLocation: noop,
+      getLocale:   noop,
       getName:    () => 'Test',
       isInCombat: () => false,
     };
@@ -185,7 +186,28 @@ describe('Doors & Locks', () => {
 
     describe('Locking and unlocking', () => {
 
+      const fakeKey = {
+        keywords: [ 'test' ],
+        hasKeyword: str => str === 'test'
+      };
 
+      it('will unlock a locked exit', () => {
+
+        const lockedExit = Object.assign({}, fakeExit);
+
+        lockedExit.door = {
+          locked: true,
+          key:   'test'
+         };
+        fakeRoom.getExits = () => [ lockedExit ];
+        fakeRooms.getAt = () => fakeRoom;
+
+        fakePlayer.getInventory = () => [ fakeKey ];
+
+        Doors.useKeyToUnlock('out', fakePlayer, fakePlayers, fakeRooms);
+        expect(Doors.isLocked(lockedExit)).to.be.false;
+
+      });
 
     });
 
