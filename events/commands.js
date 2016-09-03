@@ -109,14 +109,15 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
 
         function checkForCommandSafely(command) {
           for (let cmd in Commands.player_commands) {
+            let regex;
             try {
-              const regex = new RegExp("^" + command);
+              regex = new RegExp("^" + command);
             } catch (err) {
               util.log('Error in checking for command: ', err);
               util.log('-> ', cmd, command);
               continue;
             }
-            if (cmd.match(regex)) {
+            if (regex && cmd.match(regex)) {
               return cmd;
             }
           }
