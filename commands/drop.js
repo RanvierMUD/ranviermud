@@ -31,7 +31,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     drop(item);
 
     function dropAll() {
-      player.getInventory().forEach(item => drop(item));
+      const items = player.getInventory()
+        .filter(item => !item.isEquipped());
+      if (!items.length) { return player.say('You have nothing to drop.'); }
+      items.forEach(item => drop(item));
     }
 
     function drop(item) {
@@ -49,7 +52,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       room.getNpcs().forEach( id => {
         let npc = npcs.get(id);
-        npc.emit('playerDropItem', room, player, players, item);
+        npc.emit('playerDropItem', room, rooms, player, players, npc, npcs, item);
       });
 
       player.removeItem(item);

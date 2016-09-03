@@ -35,11 +35,14 @@ const Commands = {
 
   //TODO: Extract into individual files.
   admin_commands: {
+
+    //TODO: Fix this buggy stuff
     addSkill: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const Skills = require('./skills').Skills;
         args = _.splitArgs(args);
 
+        if (!player || !args || !args.length) { return; }
         const skill = Skills[args[0]] ? Skills[args[0]].id : null;
         const number = args[1] || 1;
         if (skill) {
@@ -54,6 +57,8 @@ const Commands = {
         const Feats = require('./feats').Feats;
         args = _.splitArgs(args);
 
+        if (!player || !args) { return; }
+
         const feat = Feats[args[0]] ? Feats[args[0]] : null;
 
         if (feat) {
@@ -67,6 +72,7 @@ const Commands = {
 
     teleport: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
+        if (!player || !player.say || !args) { return; }
         const vnum = parseInt(args, 10);
         if (isNaN(vnum)) {
           return player.say("<red>ADMIN: Invalid vnum.</red>");
@@ -135,8 +141,15 @@ const Commands = {
 
       //TODO: Do the same way as above once you extract the admin commands.
       for (const command in Commands.admin_commands) {
-        const commandFunc = Commands.admin_commands[command](rooms, items, players, npcs, Commands);
-        Commands.admin_commands[command] = commandFunc;
+        try {
+          const needsDepsInjected = Commands.admin_commands[command].length > 2;
+          if (needsDepsInjected) {
+            const commandFunc = Commands.admin_commands[command](rooms, items, players, npcs, Commands);
+            Commands.admin_commands[command] = commandFunc;
+          }
+        } catch (e) {
+          console.log('admin_command config -> ', e);
+        }
       }
   },
 
@@ -146,7 +159,7 @@ const Commands = {
    * follow the same structure
    * @param string exit direction they tried to go
    * @param Player player
-   * @return boolean
+   * @return boolean False if the exit is inaccessible.
    */
   room_exits: (exit, player) => {
 
@@ -220,7 +233,8 @@ function move(exit, player) {
 
   if (closedDoor && lockedDoor) {
     util.log("DOOR LOCKED, ATTEMPTING UNLOCK...");
-    Doors.useKey('unlock', exit.direction, player, players, rooms);
+    Doors.useKeyToUnlock(exit.direction, player, players, rooms);
+    if (Doors.isLocked(exit)) { return; }
   }
 
   const room = rooms.getAt(exit.location);
