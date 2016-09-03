@@ -16,7 +16,7 @@
     target: 'feet'
     max_health: 4
     health: 4
-    speed: 1.2
+    speed: 4.2
     damage: 1-7
     level: 2
   defenses:

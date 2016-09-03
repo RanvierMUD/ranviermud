@@ -40,9 +40,9 @@ exports.listeners = {
   },
 
   playerDropItem: l10n  => {
-    return (room, player) => {
+    return function(room, rooms, player, players, npc, npcs, item) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
-      msg = 'The kazuul croaks, its tongue lolling obscenely.';
+      const msg = 'The kazuul croaks, its tongue lolling obscenely.';
       toRoom({
         secondPartyMessage: msg,
         thirdPartyMessage: msg
@@ -130,7 +130,7 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, this, player, players);
 
       const secondPartyMessage = [
-        'The defilers tentacles swing towards you, but connect only with air.',
+        'The kazuul\'s defiled tentacles swing towards you, but connect only with air.',
         'Croaking, the kazuul lunges at you but falls short.'
       ];
       const thirdPartyMessage = [

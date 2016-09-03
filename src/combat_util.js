@@ -169,19 +169,19 @@ function CombatHelper(entity) {
   this.getAttackSpeed = Type.isNpc(this._entity) ?
     () => this._entity.getAttribute('speed') * 1000 || 1000 :
     secondAttack => {
-      const weapon  = secondAttack ? this.getWeapon() : this.getOffhand();
-
-      const minimum = secondAttack ? 750 : 500;
-      const maximum = 10 * 1000;
-
-      const speedWithinBounds = _.setBounds(minimum, maximum);
+      const weapon = secondAttack ? this.getOffhand() : this.getWeapon();
 
       const unarmedSpeed    = this._entity.getAttribute('quickness');
       const weaponSpeed     = getWeaponSpeed(weapon, unarmedSpeed, 500);
       const attributesSpeed = unarmedSpeed * 500
         + this._entity.getAttribute('cleverness') * 250;
 
-      const baseSpeed = Math.min(maximum - weaponSpeed - attributesSpeed, 6000);
+      const minimum = secondAttack ? 750 : 500;
+      const maximum = Math.max((25 - unarmedSpeed), 10) * 1000;
+      const speedWithinBounds = _.setBounds(minimum, maximum);
+
+      const median = maximum / 2;
+      const baseSpeed = Math.min(median - weaponSpeed - attributesSpeed, median);
 
       util.log("Their base speed is ", baseSpeed);
 

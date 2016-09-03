@@ -162,7 +162,7 @@ var Rooms = function() {
 
 }
 
-var Room = function(config) {
+var Room = function Room(config) {
   var self = this;
 
   self.title = '';
@@ -192,7 +192,8 @@ var Room = function(config) {
     self.file_index  = config.file_index;
 
     self.exits = self.exits.map(exit => {
-      if (exit.door) { exit.door.open = false; }
+      if (exit.door && !exit.door.open) { exit.door.open = false; }
+      else if (exit.door) { exit.door.open = true; }
       return exit;
     });
 
@@ -356,3 +357,4 @@ var Room = function(config) {
 util.inherits(Room, events.EventEmitter);
 
 exports.Rooms = Rooms;
+exports.Room = Room;

@@ -29,7 +29,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
   return function login(socket, stage, dontwelcome, name) {
 
     socket.on('error', err => util.log('error: ', err));
-    socket.on('uncaughtException', err => util.log('uncaughtException: ', err));
 
     util.log("Login event detected... ", stage);
 

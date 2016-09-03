@@ -81,11 +81,6 @@ commander
 var init = function (restart_server)
 {
 
-	process.on('uncaughtException', err =>  {
-		util.log('uncaught exception for process: ', err)
-		init(true);
-	});
-
 	util.log("START - Loading entities");
 	players = new PlayerManager([]);
 	restart_server = typeof restart_server === 'undefined' ? true : restart_server;
@@ -119,7 +114,6 @@ var init = function (restart_server)
 			});
 
 			socket.on('error', err => util.log(err));
-			socket.on('uncaughtException', err => util.log(err));
 
 			// Register all of the events
 			for (var event in Events.events) {
@@ -147,9 +141,6 @@ var init = function (restart_server)
 			}
 			process.exit(1);
 		});
-
-		server.on('error', err => util.log('SERVER ERROR: ', err));
-		server.on('unhandledException', err => util.log('UNHANDLED SERVER ERR: ', err));
 
 		// save every 10 minutes
 		util.log("Setting autosave to " + commander.save + " minutes.");

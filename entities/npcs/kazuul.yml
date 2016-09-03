@@ -6,7 +6,7 @@
     en: ['kazuul', 'kaz']
   types: ['humanoid', 'eldritch']
   short_description:
-    en: 'a kazuul.'
+    en: 'a kazuul'
   attack:
     en: 'gnashing teeth'
   description:
@@ -16,7 +16,7 @@
     target: 'head'
     max_health: 575
     health: 575
-    speed: 5
+    speed: 11
     damage: '16-80'
     sanity_damage: '1-4'
     level: 8
