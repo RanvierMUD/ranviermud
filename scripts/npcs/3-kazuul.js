@@ -40,7 +40,7 @@ exports.listeners = {
   },
 
   playerDropItem: l10n  => {
-    return function(room, rooms, player, players, npc, npcs) {
+    return function(room, rooms, player, players, npc, npcs, item) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const msg = 'The kazuul croaks, its tongue lolling obscenely.';
       toRoom({
