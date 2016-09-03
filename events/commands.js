@@ -26,7 +26,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         data = data.toString().trim();
 
         const isCommand = data ? parseCommands(data) : false;
-        if (isCommand !== false) { commandPrompt(); }
+        commandPrompt();
 
         /* Parse order is:
          * look shortcut
@@ -50,7 +50,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
           let found = false;
 
           // Kludge so that 'l' alone will always force a look,
-          // instead of mixing it up with lock.
+          // instead of mixing it up with lock or list.
           if (command === 'l') {
             return Commands.player_commands.look(args, player);
           }
@@ -85,13 +85,18 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         }
 
         function checkForDirectionAlias(command) {
-          var directions = {
-            'n': 'north',
-            'e': 'east',
-            's': 'south',
-            'w': 'west',
-            'u': 'up',
-            'd': 'down'
+          const directions = {
+            'n':  'north',
+            'e':  'east',
+            's':  'south',
+            'w':  'west',
+            'u':  'up',
+            'd':  'down',
+
+            'ne': 'northeast',
+            'se': 'southeast',
+            'nw': 'northwest',
+            'sw': 'southwest',
           };
 
           if (command.toLowerCase() in directions) {
@@ -103,10 +108,12 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
 
 
         function checkForCommandSafely(command) {
-          for (var cmd in Commands.player_commands) {
+          for (let cmd in Commands.player_commands) {
             try {
-              var regex = new RegExp("^" + command);
+              const regex = new RegExp("^" + command);
             } catch (err) {
+              util.log('Error in checking for command': err);
+              util.log('-> ', cmd, command);
               continue;
             }
             if (cmd.match(regex)) {
