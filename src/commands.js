@@ -35,15 +35,18 @@ const Commands = {
 
   //TODO: Extract into individual files.
   admin_commands: {
+
+    //TODO: Fix this buggy stuff
     addSkill: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const Skills = require('./skills').Skills;
         args = _.splitArgs(args);
 
+        if (!player || !args || !args.length) { return; }
         const skill = Skills[args[0]] ? Skills[args[0]].id : null;
         const number = args[1] || 1;
         if (skill) {
-          player.addSkill(skill, number);
+          player.setSkill(skill, number);
           player.say("<red>ADMIN: Added " + args + ".</red>");
         } else { player.say("<red>ADMIN: No such skill.</red>"); }
         util.log("@@Admin: " + player.getName() + " added skill:", skill);
@@ -53,6 +56,8 @@ const Commands = {
       (player, args) => {
         const Feats = require('./feats').Feats;
         args = _.splitArgs(args);
+
+        if (!player || !args) { return; }
 
         const feat = Feats[args[0]] ? Feats[args[0]] : null;
 
@@ -67,6 +72,7 @@ const Commands = {
 
     teleport: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
+        if (!player || !player.say || !args) { return; }
         const vnum = parseInt(args, 10);
         if (isNaN(vnum)) {
           return player.say("<red>ADMIN: Invalid vnum.</red>");
@@ -135,8 +141,15 @@ const Commands = {
 
       //TODO: Do the same way as above once you extract the admin commands.
       for (const command in Commands.admin_commands) {
-        const commandFunc = Commands.admin_commands[command](rooms, items, players, npcs, Commands);
-        Commands.admin_commands[command] = commandFunc;
+        try {
+          const needsDepsInjected = Commands.admin_commands[command].length > 2;
+          if (needsDepsInjected) {
+            const commandFunc = Commands.admin_commands[command](rooms, items, players, npcs, Commands);
+            Commands.admin_commands[command] = commandFunc;
+          }
+        } catch (e) {
+          console.log('admin_command config -> ', e);
+        }
       }
   },
 
@@ -146,7 +159,7 @@ const Commands = {
    * follow the same structure
    * @param string exit direction they tried to go
    * @param Player player
-   * @return boolean
+   * @return boolean False if the exit is inaccessible.
    */
   room_exits: (exit, player) => {
 
@@ -219,32 +232,9 @@ function move(exit, player) {
   const lockedDoor = Doors.isLocked(exit);
 
   if (closedDoor && lockedDoor) {
-    const key = exit.door.key;
-
-    if (!CommandUtil.findItemInInventory(key, player)) {
-      const getExitTitle = exitLoc => locale => rooms
-          .getAt(exitLoc)
-          .getTitle(locale);
-
-      const getDestinationTitle = getExitTitle(exit.location);
-      const roomTitle = getDestinationTitle(player.getLocale());
-
-      player.sayL10n(l10n, 'LOCKED', roomTitle);
-      players.eachIf(
-        p => CommandUtil.inSameRoom(player, p),
-        p => {
-          let roomTitle = getDestinationTitle(p.getLocale());
-          p.sayL10n(l10n, 'OTHER_LOCKED', player.getName(), roomTitle);
-        });
-      return false;
-    }
-
-    Doors.unlockDoor(exit);
-
-    player.sayL10n(l10n, 'UNLOCKED', key);
-    players.eachIf(
-      p => CommandUtil.inSameRoom(player, p),
-      p => p.sayL10n(l10n, 'OTHER_UNLOCKED', player.getName(), key));
+    util.log("DOOR LOCKED, ATTEMPTING UNLOCK...");
+    Doors.useKeyToUnlock(exit.direction, player, players, rooms);
+    if (Doors.isLocked(exit)) { return; }
   }
 
   const room = rooms.getAt(exit.location);
@@ -284,7 +274,7 @@ function move(exit, player) {
   player.setLocation(exit.location);
 
   // Add room to list of explored rooms
-  const hasExplored = player.explore(room.getLocation());
+  const hasExplored = player.hasExplored(room.getLocation());
 
   // Force a re-look of the room
   Commands.player_commands.look(null, player, hasExplored);
@@ -298,7 +288,7 @@ function move(exit, player) {
         npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
       });
 
-  room.emit('playerEnter', player, players);
+  room.emit('playerEnter', player, players, rooms);
 
   // Broadcast player entrance to new room.
   players.eachExcept(

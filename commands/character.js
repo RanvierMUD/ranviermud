@@ -35,8 +35,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const relabel = {
         'HEALTH': 'PHYSICAL',
         'SANITY': 'MENTAL',
+        'LEVEL':  'REPUTATION'
       };
-      util.log(str in relabel);
       return str in relabel ?
         relabel[str] : str;
     }
@@ -46,9 +46,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const maxSanity = character.max_sanity;
       const maxEnergy = character.max_energy;
       const status = {
-        level:       getLevelText,
         health:      statusUtil.getHealthText(maxHealth, player, null, true),
-        class:       () => {},
         sanity:      statusUtil.getSanityText(maxSanity, player),
         energy:      statusUtil.getEnergyText(maxEnergy, player),
         stamina:     getStamina,
@@ -56,9 +54,27 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         quickness:   getQuickness,
         cleverness:  getCleverness,
         mutagens:    value => value,
+        level:       getLevelText,
         description: player.getDescription,
       };
+      printSectionHeader(attr);
       return status[attr](value) || '';
+    }
+
+    function printSectionHeader(attr) {
+      const headers = {
+        'health':   'STATUS',
+        'stamina':  'ATTRIBUTES',
+        'level':    'CHARACTER'
+      };
+
+      const headerToPrint = headers[attr];
+      if (headerToPrint) {
+        const max = 16;
+        const paddingAmount = (max - headerToPrint.length) + 1;
+        const padding = _.leftPad(Math.ceil(paddingAmount / 2), '=');
+        player.say('\n<cyan>' + padding + ' ' + headerToPrint + ' ' + padding + '</cyan>');
+      }
     }
 
     function getLevelText(level) {
@@ -104,6 +120,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const status = {
         1: ['sluggish', 'slothly', 'slovenly', 'pitiable'],
         2: ['trudging', 'like an old ' + gender, 'awkward'],
+        4: ['average', 'unimpressive'],
         5: ['nimble', 'speedy'],
         7: ['athletic', 'graceful'],
         8: ['acrobatic', 'fleet'],

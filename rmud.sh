@@ -1,1 +1,1 @@
-sudo ./ranvier -v --save=10 --respawn=10
+sudo ./ranvier -v --save=2 --respawn=10

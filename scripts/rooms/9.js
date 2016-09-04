@@ -34,7 +34,7 @@ exports.listeners = {
 
       function findNote(player, players) {
         let rand = Random.coinFlip();
-        let alreadyFound = player.explore('foundnote_' + rand);
+        let alreadyFound = player.hasExplored('foundnote_' + rand);
 
         if (!alreadyFound) {
           player.emit('experience', 150, 'something lost before the Quarantine');

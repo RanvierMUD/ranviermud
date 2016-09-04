@@ -49,7 +49,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           const addMod = player.combat.addMod(modifier + 'Mods');
           addMod({
             name:   stance,
-            effect: chosenStance[modifier] || () => {}
+            effect: chosenStance[modifier] || function(){}
           });
         }
 

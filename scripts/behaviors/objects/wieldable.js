@@ -1,29 +1,20 @@
 exports.listeners = {
-	wield: function (l10n) {
-		return function (location, player, players) {
-			location = location || 'wield';
-			player.sayL10n(l10n, 'WIELD', this.getShortDesc(player.getLocale()));
-			player.equip(location, this);
-		}
-	},
-	remove: function (l10n) {
-		return function (player) {
-			player.sayL10n(l10n, 'REMOVE', this.getShortDesc(player.getLocale()));
-		}
-	},
 	hit: function (l10n) {
-		return function (player) {
-			player.sayL10n(l10n, 'HIT', this.getShortDesc(player.getLocale()));
-		}
-	},
-	miss: function (l10n) {
-		return function (player) {
-			player.sayL10n(l10n, 'MISS');
-		}
-	},
-	parry: function (l10n) {
-		return function (player) {
-			player.sayL10n(l10n, 'PARRY');
+		return function (room, attacker, defender, players, hitLocation, damageDealt) {
+			checkForCrit(attacker, defender, damageDealt);
 		}
 	},
 };
+
+function checkForCrit(attacker, defender, damageDealt) {
+	var defenderHealth    = defender.getAttribute('health');
+	var defenderMaxHealth = defender.getAttribute('max_health');
+
+	var massiveDamage = damageDealt > defenderMaxHealth * .5;
+	var almostDead  = defenderHealth <= defenderMaxHealth * .2;
+	var coupDeGrace = almostDead && damageDealt >= defenderHealth;
+
+	if (massiveDamage || coupDeGrace) {
+		attacker.say('<bold><cyan>You have dealt a critical blow!</cyan></bold>');
+	}
+}

@@ -1,5 +1,7 @@
 'use strict';
 
+const util = require('util');
+
 /*
  * Generic utility funcs.
  */
@@ -25,6 +27,8 @@ const values = obj => {
   return vals;
 }
 
+const toArray = thing => [].concat(thing);
+
 /**
  * Does the object have an array of keys?
  */
@@ -35,11 +39,12 @@ const hasKeys = obj => !!Object.keys(obj).length;
  */
 const leftPad = (amt, pad) => {
   pad = pad || '';
+  let padding = '';
   while (amt) {
-    pad += ' ';
+    padding += pad;
     amt--;
   }
-  return pad;
+  return padding;
 }
 
 /*
@@ -63,7 +68,9 @@ const firstWord = args => splitArgs(args)[0];
  * Splits a string into an array of words.
  * For parsing command args.
  */
-const splitArgs = args => args.toLowerCase().split(' ');
+const splitArgs = args => args.toLowerCase ?
+  args.toLowerCase().split(' ') :
+  null;
 
 /**
  * Allows you to set min and max range for a number.
@@ -86,5 +93,6 @@ module.exports = {
   firstWord, splitArgs,
   hasKeys,   leftPad,
   values,    reduceValues,
-  setBounds, is
+  setBounds, is,
+  toArray,
 };
