@@ -542,7 +542,7 @@ const Player = function PlayerConstructor(socket) {
    self.preferences = data.preferences || {};
    self.killed   = data.killed   || { length: 0 };
    self.training = data.training || { time: 0 };
-   self.explored = data.explored || [];
+   self.explored = data.explored || []; // TODO: Make this like killed so we can track a player's favorite spots∏
 
     // Activate any passive skills the player has
     for (let feat in self.feats) {
