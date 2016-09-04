@@ -107,8 +107,6 @@ exports.listeners = {
       const maxSanity = this.getAttribute('max_sanity');
       const maxEnergy = this.getAttribute('max_energy');
 
-      console.log('auto-recovering: ', healthRegen, sanityRegen, energyRegen);
-
       this.setAttribute('health', Math.min(this.getAttribute('health') + healthRegen, maxHealth));
       this.setAttribute('sanity', Math.min(this.getAttribute('sanity') + sanityRegen, maxSanity));
       this.setAttribute('energy', Math.min(this.getAttribute('energy') + energyRegen, maxEnergy));

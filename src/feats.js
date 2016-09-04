@@ -176,7 +176,10 @@ const Feats = {
         activate: () => {
           player.say('<magenta>You concentrate on stifling your opponent.</magenta>');
           const dodgeReduction = Math.ceil(player.getAttribute('level') / 5);
-          combatant.combat.addDodgeMod('stunned', dodge => dodge - dodgeReduction);
+          combatant.combat.addDodgeMod({
+            name: 'stunned',
+            effect: dodge => dodge - dodgeReduction
+          });
           deductSanity(player, 10);
           player.addEffect('stunning', Effects.slow({
             target: combatant,
