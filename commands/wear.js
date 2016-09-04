@@ -11,8 +11,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     let thing = cmds[0];
     if (thing === 'all') {
-      wearAll();
-      return;
+      return wearAll();
     }
 
     thing = CommandUtil.findItemInInventory(thing, player, true);
@@ -23,7 +22,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     wearItem(thing);
 
     function wearAll() {
-      const items = player.getInventory();
+      const items = player.getInventory().filter(item => !item.isEquipped());
+      if (!items.length) { return player.say("You have nothing to wear."); }
       items.forEach(wearItem);
       items.forEach(item => util.log(item.getShortDesc('en')));
     }
@@ -47,7 +47,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function isWearable(item) {
       if (!item.getAttribute('wearLocation')) {
         util.log("No wear location:" , item.getShortDesc('en'), item.wearLocation);
-        player.sayL10n(l10n, 'NO_WEAR_LOCATION', item.getShortDesc(player.getLocale()));
+        player.sayL10n(l10n, 'NO_WEAR_LOCATION', item.getShortDesc('en'));
         return false;
       }
       return true;
@@ -57,27 +57,25 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const worn = player.getEquipped(item.getAttribute('wearLocation'));
       if (worn) {
         util.log("Cannot wear due to already wearing an item.");
-        player.sayL10n(l10n, 'CANT_WEAR', items.get(worn).getShortDesc(player.getLocale()));
+        player.sayL10n(l10n, 'CANT_WEAR', items.get(worn).getShortDesc('en'));
         return false;
       }
       return true;
     }
 
     function broadCastWearing(item) {
+      player.say('You wear the ' + item.getShortDesc('en') + '.');
       players.eachIf(
         p => CommandUtil.inSameRoom(p, player),
-        p => p.sayL10n(l10n, 'OTHER_WEAR', player.getName(), item.getShortDesc(p.getLocale()))
+        p => p.say(player.getName() + ' puts on the ' + item.getShortDesc('en'))
       );
     }
 
     function putOn(item) {
       const location = item.getAttribute('wearLocation');
-      const hasWearScript = CommandUtil.hasScript(item, 'wear');
-
-      //FIXME: Add wear scripts to items.
-      if (hasWearScript) { item.emit('wear', location, player, players); }
+      const room = rooms.getAt(player.getLocation());
+      item.emit('wear', location, room, player, players);
       player.equip(location, item);
-      player.sayL10n(l10n, 'YOU_WEAR', item.getShortDesc(player.getLocale()));
     }
 
   };

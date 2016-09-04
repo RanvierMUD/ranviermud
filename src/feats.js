@@ -37,9 +37,9 @@ const Feats = {
       if (player.getEffects('leatherskin')) {
         player.removeEffect('leatherskin');
       }
-      player.addEffect('leatherskin', Effects.health_boost({
-        magnitude: 50,
-        player: player,
+      player.addEffect('leatherskin', Effects.defenseBoost({
+        magnitude: 1.15,
+        player,
         event: 'quit'
       }));
     },
@@ -58,36 +58,41 @@ const Feats = {
     id: 'ironskin',
     description: 'Your skin hardens further, into a layer of heavy metallic chitin.',
     activate: player => {
-      util.log(player.getName() + ' activates Ironskin.');
-
-      if (player.getEffects('ironskin0')) {
-        player.removeEffect('ironskin0');
-        player.removeEffect('ironskin1');
-        player.removeEffect('ironskin2');
+      if (player.getEffects('ironskin')) {
+        player.removeEffect('leatherskin');
+        player.removeEffect('leatherskin_slow');
       }
-
-      const ironSkinEffects = [
-        Effects.health_boost({
-          magnitude: 100,
-          player,
-          target: player,
-        }),
-        Effects.haste({
-          magnitude: .5,
-          player,
-        }),
-        Effects.fortify({
-          magnitude: 2,
-          player,
-        })
-      ];
-
-      ironSkinEffects.forEach((effect, i) => {
-          player.addEffect('ironskin' + i, effect);
-      });
-
+      player.addEffect('ironskin', Effects.defenseBoost({
+        player,
+        magnitude: 2.05,
+        event: 'quit'
+      }));
+      player.addEffect('ironskin_slow', Effects.haste({
+        target: player,
+        magnitude: .5,
+        effect: 'quit'
+      }));
       player.say('<cyan><bold>Clank.</bold></cyan>');
     }
+  },
+
+  //TODO: Implement
+  assense: {
+    type: 'passive', // may end up being both passive and active?
+    cost: 1,
+    prereqs: {
+      stamina:    1,
+      willpower:  3,
+      cleverness: 3,
+      level:      7,
+    },
+
+    name: 'Assense Auras',
+    id: 'assense',
+    description: 'You are sensitive to the auras of others.',
+    activate: () => {},
+    deactivate: () => {},
+
   },
 
   /// Active feats
@@ -110,12 +115,18 @@ const Feats = {
 
       const turnOnCharm = () => player.addEffect('charming', {
         duration: 30 * 1000,
-        deactivate: () => player.say('<yellow>You are no longer radiating calm and peace.</yellow>'),
-        activate: () => player.say('<magenta>You radiate a calming, peaceful aura.</magenta>')
+        deactivate: () => {
+          player.say('<yellow>You are no longer radiating calm and peace.</yellow>');
+          player.setAttribute('cleverness', player.getAttribute('cleverness') - 1);
+        },
+        activate: () => {
+          player.setAttribute('cleverness', player.getAttribute('cleverness') + 1);
+          player.say('<magenta>You radiate a calming, peaceful aura.</magenta>');
+        }
       });
 
       if (combatant && !charming) {
-        player.say('<bold>' + combatant.getShortDesc(player.getLocale()) + ' stops fighting you.</bold>');
+        player.say('<bold>' + combatant.getShortDesc('en') + ' stops fighting you.</bold>');
         combatant.setInCombat(false);
         player.setInCombat(false);
         turnOnCharm();
@@ -158,12 +169,17 @@ const Feats = {
       combatant.addEffect('stunned', {
         duration: 5 * 1000,
         deactivate: () => {
-          player.say('<yellow>Your opponent is no longer stunned.</yellow>')
+          player.say('<yellow>Your opponent is no longer stunned.</yellow>');
+          combatant.combat.removeDodgeMod('stunned');
           setTimeout(player.removeEffect.bind(null, 'stunning'), cooldown);
         },
         activate: () => {
           player.say('<magenta>You concentrate on stifling your opponent.</magenta>');
-
+          const dodgeReduction = Math.ceil(player.getAttribute('level') / 5);
+          combatant.combat.addDodgeMod({
+            name: 'stunned',
+            effect: dodge => dodge - dodgeReduction
+          });
           deductSanity(player, 10);
           player.addEffect('stunning', Effects.slow({
             target: combatant,
@@ -230,7 +246,7 @@ const Feats = {
         player.setAttribute('health', healed);
         deductSanity(player, siphoned);
 
-        util.log(player.getName() + ' drains a ' + target.getShortDesc() + ' for ' + siphoned);
+        util.log(player.getName() + ' drains a ' + target.getShortDesc('en') + ' for ' + siphoned);
 
         const cooldown = 150 * 1000;
         player.addEffect('siphoning', { duration: cooldown });
@@ -330,26 +346,35 @@ function meetsPrerequisites(player, feat) {
   if (!feat.prereqs && !feat.cost) { return true; }
   const attributes = player.getAttributes();
 
+  let meetsAllPrerequisites = true;
   for (const attr in feat.prereqs || {}) {
-    if (attr === 'feats') {
-      return meetsFeatPrerequisites(player, feat.prereqs.feats);
-    }
-    const req = feat.prereqs[attr];
+    const checkingFeats  = attr === 'feats';
+    const hasNeededFeats = checkingFeats?
+      meetsFeatPrerequisites(player, feat.prereqs.feats) :
+      true;
+    if (checkingFeats) { util.log('Meets feat reqs? ', hasNeededFeats); }
+    const req  = feat.prereqs[attr];
     const stat = attributes[attr];
 
-    const meets = req <= stat;
-    util.log(player.getName() + '\'s ' + attr + ': ' + stat + ' vs. ' + req);
+    const meets = checkingFeats ?
+      hasNeededFeats :
+      req <= stat;
 
-    return meets;
+    if (!checkingFeats) {
+      util.log(player.getName() + '\'s ' + attr + ': ' + stat + ' vs. ' + req + '-- meets prereq? \n\t', meets);
+    }
+
+    meetsAllPrerequisites = meetsAllPrerequisites ?
+      meets : false;
   }
 
   const isAffordable = feat.cost && attributes.mutagens >= feat.cost;
-  return isAffordable;
+  return isAffordable && meetsAllPrerequisites;
 }
 
 function meetsFeatPrerequisites(player, featList) {
   const featsOwned = player.getFeats();
-  return featList.filter(feat => feat in featsOwned).length > 0;
+  return featList.every(feat => featsOwned[feat]);
 }
 
 function deductSanity(player, cost) {

@@ -58,6 +58,13 @@ const mobExp = level => 45 + (5 * level);
  */
 const getTrainingTime = level => Math.floor(level / 4 + 1);
 
+const getMutagenGain = level => {
+	const gainedMutagen = level % 2 === 0;
+ 	return gainedMutagen ?
+		Math.ceil(level / 10) :
+		0;
+};
+
 
 /**
  * Helper to get the amount of experience a player needs to level
@@ -69,6 +76,7 @@ const expToLevel = level =>
 
 
 exports.LevelUtil = {
+	getMutagenGain,
 	expToLevel,
 	mobExp,
 	getTrainingTime,

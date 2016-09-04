@@ -1,12 +1,28 @@
+const Broadcast = require('../../../src/broadcast').Broadcast;
+//FIXME: For some reason this is not working. Why?
 exports.listeners = {
 	wear: function (l10n) {
-		return function (location, player, players) {
-			player.sayL10n(l10n, 'WEAR', this.getShortDesc(player.getLocale()));
+		return function (location, room, player, players) {
+		  const toRoom = Broadcast.toRoom(room, player, null, players);
+			const desc   = this.getShortDesc('en');
+			const name   = player.getName();
+			Broadcast.consistentMessage(toRoom, {
+				firstPartyMessage: 'You wear the ' + desc + '.',
+				thirdPartyMessage: name + ' wears the ' + desc + '.'
+			});
 		};
 	},
+
 	remove: function (l10n) {
-		return function (player) {
-			player.sayL10n(l10n, 'REMOVE', this.getShortDesc(player.getLocale()));
+		return function (room, player, players) {
+			console.log(this);
+			const toRoom = Broadcast.toRoom(room, player, null, players);
+			const desc   = this.getShortDesc('en');
+			const name   = player.getName();
+			Broadcast.consistentMessage(toRoom, {
+				firstPartyMessage: 'You remove the ' + desc + '.',
+				thirdPartyMessage: name + ' removes the ' + desc + '.'
+			});
 		};
 	}
 };

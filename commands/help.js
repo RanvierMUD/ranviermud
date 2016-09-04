@@ -4,6 +4,7 @@ const l10n      = require('../src/l10n')(l10nFile);
 const util      = require('util');
 const HelpFiles = require('../src/help_files').HelpFiles;
 const wrap      = require('wrap-ansi');
+const _         = require('../src/helpers');
 
 /*
   NEW: {
@@ -19,7 +20,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     if (!args) {
       displayHelpFile('HELP');
-      return;
+      return displayHelpFile('NEW');
     }
 
     args = args.toUpperCase().trim();
@@ -33,23 +34,25 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function displayHelpFile(topic) {
       const file = HelpFiles[topic];
-
       if ( !file) {
         return args in Commands.player_commands  ?
-          player.writeL10n(l10n, 'NO_HELP_FILE') : player.writeL10n(l10n, 'NOT_FOUND');
+          player.writeL10n(l10n, 'NO_HELP_FILE') :
+          player.writeL10n(l10n, 'NOT_FOUND');
       }
 
-      const hr      = ()     => print('<green>---------------------------------'
-                                      + '------------------------------</green>');
-      const title   = txt    => print('<bold>' + txt + '</bold>');
-      const usage   = usage  => print('<cyan>    USAGE:</cyan> ' + usage);
-      const options = option => print('<red> - </red>' + option);
-      const related = topic  => print('<magenta> * </magenta>' + topic);
+      // --- Helpers for printing out the help files. Help helpers.
 
-      const maybeForEach = (txt, fn) => Array.isArray(txt) ? txt.forEach(fn) : fn(txt);
+      const hr      = ()     => print('<green>---------------------------------'
+                                      +      '---------------------------------</green>');
+      const title   = txt    => print('<bold>'   +       txt     +     '</bold>');
+      const usage   = usage  => print('<cyan>    USAGE: </cyan>' +       usage);
+      const options = option => print('<red> - </red>'           +       option);
+      const related = topic  => print('<magenta> * </magenta>'   +       topic);
+
+      const maybeForEach = (txt, fn) => _.toArray(txt).forEach(fn);
 
       hr();
-      
+
       if (file.title)   { title(file.title); }
       if (file.body)    { print(file.body); }
       if (file.usage)   { maybeForEach(file.usage, usage); }
@@ -63,13 +66,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }
 
       if (file.related) {
-        player.say('<blue>RELATED TOPICS:</blue>');
+        const defaultTopicsHeader = '<blue>RELATED TOPICS:</blue>';
+        player.say(file.topicsHeader || defaultTopicsHeader);
         maybeForEach(file.related, related);
         hr();
       }
 
     }
-
 
   };
 };

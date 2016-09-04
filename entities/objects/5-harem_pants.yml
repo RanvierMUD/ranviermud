@@ -12,4 +12,4 @@
         defense: 1
         wearLocation: 'legs'
         weight: 2
-    load_max: 4
+    load_max: 1

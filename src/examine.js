@@ -23,7 +23,10 @@ const _ = require('./helpers');
 
 module.exports.examine = (args, player, players, config) => {
 
+
+
   const target = _.firstWord(args);
+
   // Check to make sure config is valid.
   if (!config.poi || (!config.found && config.poi.length)) {
     util.log("Invalid config for examine event: ", config);
@@ -47,9 +50,11 @@ module.exports.examine = (args, player, players, config) => {
     return;
   }
 
-  const valid = _.has(config.poi, target);
+  const foundIt = _.has(config.poi, target);
 
-  return valid && config.check() ?
+  util.log('found what they were looking for? ', foundIt);
+
+  return foundIt && config.check() ?
     config.found() :
     config.nothingFound();
 

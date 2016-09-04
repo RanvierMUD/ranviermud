@@ -11,18 +11,22 @@ describe('New player', () => {
 
     afterEach(() => {});
 
+    describe('Typing', () => {
 
-    it('Should be of the Player class', () => {
-      const testPlayer = new Player();
-      expect(testPlayer instanceof Player).to.be.true;
+      it('Should be of the Player class', () => {
+        expect(testPlayer instanceof Player).to.be.true;
+      });
+
     });
 
-    it('Should get a prompt string.', () => {
-      expect(testPlayer.getPrompt()).to.be.a('String');
-      expect(testPlayer.getCombatPrompt()).to.be.a('String');
+    describe('Prompting', () => {
+
+      it('Should get a prompt string.', () => {
+        expect(testPlayer.getPrompt()).to.be.a('String');
+        expect(testPlayer.getCombatPrompt()).to.be.a('String');
+      });
+
     });
-
-
 
     describe('Attributes', () => {
 
@@ -67,19 +71,16 @@ describe('New player', () => {
     describe('Preferences', () => {
 
       it('Should have default preferences', () => {
-        const preferences = ['stance' , 'wimpy', 'target', 'roomdescs'];
-        const actual = {};
-        preferences.forEach(pref => {
-          actual[pref] = testPlayer.getPreference(pref);
-        });
-
+        const actual = testPlayer.getPreferences();
         expect(actual).to.eql(Mocks.defaultPreferences);
       });
 
       it('Should be able to set and get preferences', () => {
-        testPlayer.setPreference('wimpy', 5);
+        const wimpySetting = 5;
+        testPlayer.setPreference('wimpy', wimpySetting);
+
         const actual = testPlayer.getPreference('wimpy');
-        expect(actual).to.equal(5);
+        expect(actual).to.equal(wimpySetting);
       });
 
     });

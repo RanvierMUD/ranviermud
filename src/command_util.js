@@ -73,7 +73,7 @@ function findItemInRoom(items, lookString, room, player, hydrate) {
   let thing = CommandUtil.parseDot(lookString, room.getItems(), function(
     item) {
     let found = items.get(item);
-    return found && found.hasKeyword(this.keyword, player.getLocale());
+    return found && found.hasKeyword(this.keyword, 'en');
   });
 
   return thing ? (hydrate ? items.get(thing) : thing) : false;
@@ -94,7 +94,7 @@ function findNpcInRoom(npcs, lookString, room, player, hydrate) {
   let thing = CommandUtil.parseDot(lookString, room.getNpcs(),
     function (id) {
       let npc = npcs.get(id);
-      return npc && npc.hasKeyword(this.keyword, player.getLocale());
+      return npc && npc.hasKeyword(this.keyword, 'en');
     }
   );
 
@@ -129,7 +129,7 @@ function findItemInInventory(lookString, being, hydrate) {
  */
 function parseDot(arg, objects, filterFunc) {
   if (!arg) {
-    util.log(arguments);
+    util.log("ERROR: No arg passed into parseDot: ", arguments);
     return;
   }
   let keyword = _.firstWord(arg);
@@ -143,25 +143,15 @@ function parseDot(arg, objects, filterFunc) {
     multi = true;
   }
 
-  let found = objects.filter(filterFunc, {
-    keyword: keyword,
-    nth: nth
-  });
+  const found = objects.filter(filterFunc, { keyword, nth });
 
-  util.log(found);
+  if (!found.length) { return false; }
 
-  if (!found.length) {
-    return false;
-  }
+  const areMultiples = multi && !isNaN(nth) && nth && nth <= found.length
+  return areMultiples ?
+    found[nth - 1] :
+    found[0];
 
-  let item = null;
-  if (multi && !isNaN(nth) && nth && nth <= found.length) {
-    item = found[nth - 1];
-  } else {
-    item = found[0];
-  }
-
-  return item;
 }
 
 

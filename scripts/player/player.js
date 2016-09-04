@@ -5,11 +5,26 @@ var LevelUtil = require('../../src/levels').LevelUtil,
   CommandUtil = require('../../src/command_util').CommandUtil,
   util = require('util'),
   Commands = require('../../src/commands').Commands,
-  Effects = require('../../src/effects').Effects;
+  Effects = require('../../src/effects').Effects,
+  Broadcast = require('../../src/broadcast').Broadcast;
 
 exports.listeners = {
 
   //// Function wrappers needed to access "this" (Player obj)
+
+
+  //TODO: Use this for all sanity loss incidents.
+  sanityLoss: function(l10n) {
+    return function(cost, reason) {
+      reason = reason || 'experiencing terror';
+      const currentSanity = this.getAttribute('sanity');
+      this.setAttribute('sanity', Math.max(currentSanity - cost, 0));
+
+      //TODO: Different messages for different relative amounts of sanity loss.
+      this.say('You feel your sanity slipping after ' + reason + '.');
+    }
+  },
+
   regen: function(l10n) {
       return function(bonus) {
         bonus = bonus || this.getSkills('recovery');
@@ -59,8 +74,6 @@ exports.listeners = {
     }
   },
 
-  //TODO: Improve player messaging for this by:
-  // not telling them a number
   experience: function(l10n) {
     return function(experience, reason) {
 
@@ -82,6 +95,26 @@ exports.listeners = {
     }
   },
 
+  tick: function(l10n) {
+    return function() { /*TODO: Emit sanity loss event here if applicable.*/
+
+      /* Autoregen all the things */
+      const healthRegen = Math.ceil((this.getAttribute('level') + this.getSkills('recovery')) / 5) - 1;
+      const sanityRegen = Math.ceil((this.getAttribute('level') + this.getSkills('concentration')) / 5) - 1;
+      const energyRegen = Math.ceil((this.getAttribute('level') + this.getSkills('athletics')) / 2) - 1;
+
+      const maxHealth = this.getAttribute('max_health');
+      const maxSanity = this.getAttribute('max_sanity');
+      const maxEnergy = this.getAttribute('max_energy');
+
+      this.setAttribute('health', Math.min(this.getAttribute('health') + healthRegen, maxHealth));
+      this.setAttribute('sanity', Math.min(this.getAttribute('sanity') + sanityRegen, maxSanity));
+      this.setAttribute('energy', Math.min(this.getAttribute('energy') + energyRegen, maxEnergy));
+    }
+  },
+
+  //TODO: Extract all stuff for determining stat gain into level utils.
+
   level: function(l10n) {
     return function() {
       const name = this.getName();
@@ -99,18 +132,16 @@ exports.listeners = {
       util.log(name + ' gained energy ' + energyGain);
       util.log(name + ' gained sanity' + sanityGain);
 
-      const gainedMutation = newLevel % 2 === 0;
-
-      let mutationPoints = this.getAttribute('mutagens');
-
       util.log(name + ' is now level ' + newLevel);
 
       this.sayL10n(l10n, 'LEVELUP');
 
-      if (gainedMutation) {
+      const mutationPointsEarned = LevelUtil.getMutagenGain(newLevel);
+
+      if (mutationPointsEarned) {
         this.sayL10n(l10n, 'MUTAGEN_GAIN');
-        mutationPoints++;
-        this.setAttribute('mutagens', mutationPoints);
+        const mutationPoints = this.getAttribute('mutagens');
+        this.setAttribute('mutagens', mutationPoints + mutationPointsEarned);
       }
 
       this.setAttribute('level', newLevel);
@@ -125,13 +156,14 @@ exports.listeners = {
       };
 
       for (const attr in attrToLevel) {
+        const gain = attrToLevel[attr];
         const max = 'max_' + attr;
-        this.setAttribute(max, healthGain);
+        this.setAttribute(max, gain);
         this.setAttribute(attr, this.getAttribute(max));
         this.say('<blue>You have gained ' + attr + '.</blue>');
       }
 
-      if (gainedMutation) { this.say('\n<blue>You may be able to `manifest` new mutations.</blue>'); }
+      if (mutationPointsEarned) { this.say('\n<blue>You may be able to `manifest` new mutations.</blue>'); }
       this.say('<blue>You may boost your stamina, quickness, cleverness, or willpower.</blue>');
 
       // Add points for skills
@@ -157,6 +189,98 @@ exports.listeners = {
       this.setLocation(startLocation);
       this.emit('regen');
       this.setAttribute('experience', experiencePenalty);
+    }
+  },
+
+  damaged: function(l10n) {
+    return function(room, npc, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, npc, players);
+      const messageMap = {
+        'head': {
+          firstPartyMessage: [
+            'You wince as the blow smashes into your skull.',
+            'You see stars as ' + npc.getShortDesc('en') + ' wracks your brain for you.'
+          ],
+          thirdPartyMessage: [
+            this.getShortDesc('en') + ' winces as the blow smashes into their skull.',
+            this.getShortDesc('en') + ' is staggered by ' + npc.getShortDesc('en') + '\'s blow to the head.'
+          ],
+        },
+        'legs': {
+          firstPartyMessage: [
+            'You stagger as ' + npc.getShortDesc('en') + ' nearly knocks your legs out from under you.',
+            'Your knees buckle under the force of ' + npc.getShortDesc('en') + '\'s blow.'
+          ],
+          thirdPartyMessage: [
+            this.getShortDesc('en') + ' staggers and nearly trips.',
+            this.getShortDesc('en') + '\'s knees buckle.'
+          ]
+        },
+        'default': {
+          firstPartyMessage: [
+            'Pain tears through your ' + hitLocation + ' as ' + npc.getShortDesc('en') + ' strikes true.',
+          ],
+          thirdPartyMessage: [
+            this.getShortDesc('en') + ' takes a hit to the ' + hitLocation + '.',
+          ],
+        }
+      };
+
+      const getMessage = which => messageMap[hitLocation] ? messageMap[hitLocation][which] : messageMap.default[which];
+      const firstPartyMessage = getMessage('firstPartyMessage');
+      const thirdPartyMessage = getMessage('thirdPartyMessage');
+      Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
+    }
+  },
+
+  dodge: function(l10n) {
+    return function(room, npc, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, npc, players);
+
+      const firstPartyMessage = hitLocation === 'head' ?
+      [ 'You duck out of the way as ' + npc.getShortDesc('en') + ' goes for your head.' ] :
+      [
+        'You twist out of the way as ' + npc.getShortDesc('en') + ' attacks.',
+        'You barely get your ' + hitLocation + ' out of the way in time.'
+      ];
+      const thirdPartyMessage = hitLocation === 'head' ?
+      [ this.getShortDesc('en') + ' ducks under ' + npc.getShortDesc('en') + '\'s attack.' ] :
+      [
+        this.getShortDesc('en') + ' twists out of the way of ' + npc.getShortDesc('en') + '.',
+        this.getShortDesc('en') + ' nimbly evades ' + npc.getShortDesc('en') + '.'
+      ];
+      Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
+    }
+  },
+
+  hit: function(l10n) {
+    return function (room, defender, players, hitLocation, damageDealt) {
+			const toRoom = Broadcast.toRoom(room, this, null, players);
+
+			const firstPartyMessage = [
+				'You punch ' + defender.getShortDesc('en') + ' in the ' + hitLocation + '.'
+			].map(msg => '<bold>' + msg + '</bold>');
+
+      const thirdPartyMessage = [
+				this.getShortDesc('en') + ' punches ' + defender.getShortDesc('en') + '.'
+			].map(msg => '<bold>' + msg + '</bold>');
+
+			Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
+		}
+  },
+
+  missedAttack: function(l10n) {
+    return function(room, npc, players, hitLocation) {
+      const toRoom = Broadcast.toRoom(room, this, npc, players);
+      const firstPartyMessage = [
+        'You swing and miss.',
+        'You whiff completely.'
+      ];
+      const thirdPartyMessage = [
+        this.getShortDesc('en') + ' swings and misses.',
+        this.getShortDesc('en') + ' tries to attack ' + npc.getShortDesc('en') + ' and whiffs.'
+      ];
+      Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
     }
   },
 

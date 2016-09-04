@@ -1,0 +1,22 @@
+- title:
+    en: an alley behind the tavern
+  area: "The Saltare District"
+  location: 16
+  #script: '16.js'
+  description:
+    en: 'This alley ends abruptly at a small well surrounded by crumbling brick. Around the corner is another alley, leading down the side of the creaky old tavern.'
+  short_desc:
+    en: 'You are in an alley behind the tavern. There is a well here.'
+  dark_desc:
+    en: 'You can barely make out anything. Above you, a dim light leaks out of the tavern windows. There is a well here.'
+  biome: 'outdoors'
+
+  exits:
+    -
+      location: 14
+      direction: 'alley'
+    -
+      location: 15
+      direction: 'well'
+      leave_message:
+        en: ' jumps down the well.'

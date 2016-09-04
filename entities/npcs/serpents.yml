@@ -1,7 +1,7 @@
 - &serpent
   vnum: 2
   room: 6
-  script: '2.js'
+  script: '2-python.js'
   types: ['beast', 'reptilian']
   keywords:
     en: ['python', 'snake', 'hungry', 'py']
@@ -16,13 +16,13 @@
     target: 'legs'
     max_health: 40
     health: 40
-    speed: 3.5
+    speed: 9
     damage: 1-37
     level: 4
   defenses:
     body: 1
     head: '-4'
     torso: 1
-  load_max: 7
+  load_max: 3
 - <<: *serpent
   room: 11

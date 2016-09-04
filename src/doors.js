@@ -10,16 +10,15 @@ const CommandUtil = require('./command_util').CommandUtil;
 
 // Returns an array of exits that match the provided direction string.
 const findExit = (room, dir) => room.getExits()
-  .filter(exit => _.has(exit.direction, dir));
+  .filter(exit => exit.direction.includes(dir));
 
-// Takes a callback to use on the destination location.
+// Takes a callback to use on the destination room.
 const updateDestination = (player, dest, callback) => dest
   .getExits()
   .filter(exit => exit.location === player.getLocation())
   .forEach(callback);
 
 /* Dealing with locked/unlocked states */
-
 const changeDoorLockState = isLocked => exit => exit.door.locked = isLocked;
 const lockDoor   = changeDoorLockState(true);
 const unlockDoor = changeDoorLockState(false);
@@ -29,22 +28,30 @@ const defaultDifficulty = 10;
 const getLockDifficulty = exit => parseInt(exit.door.difficulty || defaultDifficulty, 10);
 
 /* Dealing with npc passage */
-const isMobLocked   = exit => exit.hasOwnProperty('mob_locked');
+const isMobLocked   = exit => isDoor(exit) && exit.door.mob_locked && exit.door.mob_locked === true;
 const isNpcPassable = exit => !(isMobLocked(exit) || isLocked(exit));
 
-
 /* Dealing with open/closed states */
-
 const isDoor = exit => exit && exit.hasOwnProperty('door');
 const isOpen = exit => exit.door ? exit.door.open : true;
 
+const useKeyToUnlock = useKey.bind(null, 'unlock');
+const useKeyToLock   = useKey.bind(null, 'lock');
+
+const openDoor  = openOrClose.bind(null, 'open');
+const closeDoor = openOrClose.bind(null, 'close');
+
+//TODO: Refactor to use the bound functions in external code.
 exports.Doors = {
   updateDestination,
+  useKeyToLock,
+  useKeyToUnlock,
   findExit,  openOrClose,
   lockDoor,  unlockDoor,
   useKey,    isMobLocked,
   isLocked,  isOpen,
-  isDoor,    isNpcPassable
+  isDoor,    isNpcPassable,
+  openDoor,  closeDoor,
 };
 
 /* useKey && openOrClose
@@ -62,15 +69,15 @@ function openOrClose(verb, args, player, players, rooms) {
   player.emit('action', 0);
 
   if (player.isInCombat()) {
-    player.say('You are too busy for that right now.');
-    return;
+    return player.say('You are too busy for that right now.');
   }
-
-  args = args.toLowerCase().split(' ');
 
   if (!args) {
     return player.say("Which door do you want to " + verb + "?");
   }
+
+  args = args.toLowerCase().split(' ');
+
   const room  = rooms.getAt(player.getLocation());
   const dir   = args[0];
   const exits = findExit(room, dir);
@@ -110,12 +117,12 @@ function openOrClose(verb, args, player, players, rooms) {
 
   players.eachIf(
     p => CommandUtil.inSameRoom(p, player),
-    p => p.say(player.getName() + ' ' + verb + 's the door to ' + dest + '.'));
+    p => p.say(player.getName() + ' ' + verb + 's the door to ' + destTitle + '.'));
 
 }
 
 function useKey(verb, args, player, players, rooms) {
-
+  util.log('USING KEY....')
   const isLocking = verb === 'lock';
 
   player.emit('action');

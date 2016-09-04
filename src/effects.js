@@ -1,6 +1,10 @@
 'use strict';
 const util = require('util');
 
+//TODO: Extract into own directory. Too many effects.
+//TODO: Make an atom snippet for this?
+//TODO: Effects_utils?
+
 /**
  * Reusable helper functions and defaults for effects.
  * Pass in the attribute/whatever else changes, along with the config.
@@ -84,7 +88,8 @@ const Effects = {
 	// If player runs out of energy during combat...
 	fatigued: {
 		duration: 5000,
-		activate: () => {
+		activate: config => {
+			const attacker = config.attacker;
 			const fatigue = { name: 'fatigue' };
 			if (!attacker.getEffects('fatigued')) {
 				attacker.combat.addSpeedMod({
@@ -105,13 +110,14 @@ const Effects = {
 				});
 			}
 		},
-		deactivate: () => attacker.combat.removeAllMods('fatigued'),
+		deactivate: config => config.attacker.combat.deleteAllMods('fatigued'),
 	},
 
 	// If player is stressed during combat...
 	stressed: {
 		duration: 5000,
-		activate: () => {
+		activate: config => {
+			const attacker = config.attacker;
 			if (!attacker.getEffects('stressed')) {
 				attacker.combat.addSpeedMod({
 					name:  'stressed',
@@ -127,13 +133,14 @@ const Effects = {
 				});
 			}
 		},
-		deactivate: () => attacker.combat.removeAllMods('stressed'),
+		deactivate: config => config.attacker.combat.deleteAllMods('stressed'),
 	},
 
 	// If player is insane during combat...
 	insane: {
 		duration: 5000,
-		activate: () => {
+		activate: config => {
+			const attacker = config.attacker;
 			if (!attacker.getEffects('insane')) {
 				attacker.combat.addSpeedMod({
 					name:  'insane',
@@ -153,7 +160,7 @@ const Effects = {
 				});
 			}
 		},
-		deactivate: () => attacker.combat.removeAllMods('insane'),
+		deactivate: config => config.attacker.combat.deleteAllMods('insane'),
 	},
 
   /**
@@ -186,6 +193,21 @@ const Effects = {
    * [config.event]: event to trigger health boost
    */
   health_boost:  config => buffWithMax('health', config),
+
+	defenseBoost: config => {
+		return {
+			activate: () => {
+				config.player.combat.addDefenseMod({
+					name: config.name,
+					effect: defense => defense * config.magnitude
+				});
+			},
+			deactivate: () => {
+				config.player.combat.removeDefenseMod(config.name);
+			},
+			event: config.event
+		}
+	},
 
 	fortify: config => {
 		if (!config.target) { config.target = config.player; }

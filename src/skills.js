@@ -43,6 +43,17 @@ exports.Skills = {
     activate: player => util.log(player.getName() + ' can dual wield.'),
   },
 
+  parrying: {
+    id: "parrying",
+    cost: 1,
+    name: "Parrying",
+    description: "Your ability to parry with weapons or shields.",
+    usage: "Use a shield or wield a weapon.",
+    attribute: "cleverness",
+    type: "passive",
+    activate: player => util.log(player.getName() + ' can parry.')
+  },
+
   athletics: {
     id: "athletics",
     cost: 1,

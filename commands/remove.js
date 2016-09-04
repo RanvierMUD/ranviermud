@@ -20,7 +20,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     /// Helper functions ///
 
     function removeAll() {
-      _.values(player.getEquipped())
+      const equipment = _.values(player.getEquipped());
+      if (!equipment.length) { return player.say('You have nothing to remove.'); }
+
+      equipment
        .map(id => items.get(id))
        .forEach(remove);
     }
@@ -35,8 +38,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       player.unequip(item);
 
       if (isDead) { return; }
-      if (CommandUtil.hasScript(item, 'remove')) { return item.emit('remove', player); }
-      return player.sayL10n(l10n, 'REMOVED', item.getShortDesc(player.getLocale()));
+      const room = rooms.getAt(player.getLocation());
+      item.emit('remove', room, player, players);
+      return player.sayL10n(l10n, 'REMOVED', item.getShortDesc('en'));
     }
   };
 };

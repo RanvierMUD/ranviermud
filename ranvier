@@ -80,6 +80,7 @@ commander
  */
 var init = function (restart_server)
 {
+
 	util.log("START - Loading entities");
 	players = new PlayerManager([]);
 	restart_server = typeof restart_server === 'undefined' ? true : restart_server;
@@ -193,17 +194,20 @@ function save()
  * Load rooms, items, npcs. Register items and npcs to their base locations.
  * Configure the event and command modules after load. Doubles as a "respawn"
  */
+
+//TODO: Refactor and test?
+//TODO: Are the events/command modules being configed after load? Or only once on server startup?
 function load(callback)
 {
 	util.log("Loading rooms...");
-	rooms.load(commander.verbose, function () {
+	rooms.load(commander.verbose, function loadItems() {
 		util.log("Done.");
 		util.log("Loading items...");
-		items.load(commander.verbose, function () {
+		items.load(commander.verbose, function addItems() {
 			util.log("Done.");
 
 			util.log("Adding items to rooms...");
-			items.each(function (item) {
+			items.each(function addToRoom(item) {
 				if (item.getRoom()) {
 					var room = rooms.getAt(item.getRoom());
 					if (!room.hasItem(item.getUuid())) {
@@ -214,7 +218,7 @@ function load(callback)
 			util.log("Done.");
 
 			util.log("Loading npcs...");
-			npcs.load(commander.verbose, function () {
+			npcs.load(commander.verbose, function addNpcs() {
 				util.log("Done.");
 
 				util.log("Adding npcs to rooms...");
@@ -224,6 +228,7 @@ function load(callback)
 						var room = rooms.getAt(npcRoom);
 						if (!room.hasNpc(npc.getUuid())) {
 							room.addNpc(npc.getUuid());
+							npc.emit('spawn', room, rooms, players);
 						}
 					} else {
 						throw Error('Npc initialized without a room.');
@@ -336,14 +341,16 @@ function tick() {
 		wasDaytime = !wasDaytime;
 		util.log("The times, they are a-changin'...");
 	}
+	
+	players.each( p => p.emit('tick'));
 
 	npcs.each( npc => {
 		let room = rooms.getAt(npc.getRoom());
-		npc.emit('tick', room, rooms, null, players, npc);
+		npc.emit('tick', room, rooms, null, players, npc, npcs);
 	});
 
 	let weatherHappened = Time.checkWeather(rooms, players);
-	if (weatherHappened) util.log("WEATHER REPORT: " + weatherHappened);
+	if (weatherHappened) { util.log("WEATHER REPORT: " + weatherHappened); }
 }
 
 process.stdin.on('data', function (data)

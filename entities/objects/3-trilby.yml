@@ -12,4 +12,4 @@
         defense: 1
         wearLocation: 'head'
         weight: 1
-    load_max: 4
+    load_max: 1

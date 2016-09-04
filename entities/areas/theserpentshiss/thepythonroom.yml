@@ -14,5 +14,4 @@
       direction: 'out'
       door:
         locked: 'python key'
-        mob_locked: 'true'
         open: false
