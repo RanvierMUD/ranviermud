@@ -82,7 +82,7 @@ exports.Channels = {
 			} else {
 				player.say("<bold><magenta>" + target + " is not logged in.</magenta></bold>", player);
 			}
-			players.eachIf( p => p.getName() === name || p.getName().toLowerCase() === target,
+			players.eachIf( p.getName().toLowerCase() === target,
 			 p => p.prompt());
 		}
 	}
