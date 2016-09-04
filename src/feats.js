@@ -76,13 +76,14 @@ const Feats = {
     }
   },
 
+  //TODO: Implement
   assense: {
-    type: 'passive',
+    type: 'passive', // may end up being both passive and active?
     cost: 1,
     prereqs: {
-      stamina:    2,
+      stamina:    1,
       willpower:  3,
-      cleverness: 2,
+      cleverness: 3,
       level:      7,
     },
 
@@ -168,12 +169,14 @@ const Feats = {
       combatant.addEffect('stunned', {
         duration: 5 * 1000,
         deactivate: () => {
-          player.say('<yellow>Your opponent is no longer stunned.</yellow>')
+          player.say('<yellow>Your opponent is no longer stunned.</yellow>');
+          combatant.combat.removeDodgeMod('stunned');
           setTimeout(player.removeEffect.bind(null, 'stunning'), cooldown);
         },
         activate: () => {
           player.say('<magenta>You concentrate on stifling your opponent.</magenta>');
-
+          const dodgeReduction = Math.ceil(player.getAttribute('level') / 5);
+          combatant.combat.addDodgeMod('stunned', dodge => dodge - dodgeReduction);
           deductSanity(player, 10);
           player.addEffect('stunning', Effects.slow({
             target: combatant,
