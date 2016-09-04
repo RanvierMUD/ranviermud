@@ -99,9 +99,9 @@ exports.listeners = {
     return function() { /*TODO: Emit sanity loss event here if applicable.*/
 
       /* Autoregen all the things */
-      const healthRegen = Math.ceil((this.getAttribute('level') + this.getSkill('recovery')) / 5) - 1;
-      const sanityRegen = Math.ceil((this.getAttribute('level') + this.getSkill('concentration')) / 5) - 1;
-      const energyRegen = Math.ceil((this.getAttribute('level') + this.getSkill('athletics')) / 2) - 1;
+      const healthRegen = Math.ceil((this.getAttribute('level') + this.getSkills('recovery')) / 5) - 1;
+      const sanityRegen = Math.ceil((this.getAttribute('level') + this.getSkills('concentration')) / 5) - 1;
+      const energyRegen = Math.ceil((this.getAttribute('level') + this.getSkills('athletics')) / 2) - 1;
 
       const maxHealth = this.getAttribute('max_health');
       const maxSanity = this.getAttribute('max_sanity');
