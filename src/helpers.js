@@ -39,11 +39,12 @@ const hasKeys = obj => !!Object.keys(obj).length;
  */
 const leftPad = (amt, pad) => {
   pad = pad || '';
+  let padding = '';
   while (amt) {
-    pad += ' ';
+    padding += pad;
     amt--;
   }
-  return pad;
+  return padding;
 }
 
 /*
