@@ -27,4 +27,9 @@ describe('Basic keyword parsing', () => {
   it('should be false if the keyword is not in the string', () => {
     expect(Dialogue.hasKeyword('potatoes', mockConfig['thieves guild'])).to.be.false;
   });
+
+  it('should return a list of a single topic if there is only one', () => {
+    const tokens = Dialogue.tokenizeSentence('thieves guild');
+    expect(Dialogue.findPotentialTopics(tokens, mockConfig).length === 1).to.be.true;
+  });
 });
