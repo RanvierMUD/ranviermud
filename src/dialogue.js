@@ -8,8 +8,7 @@ const hasKeyword = (tokens, topic) => {
   return found;
 };
 
-const parseSentence = (sentence, config) => {
-  const tokens = tokenizeSentence(sentence);
+const findPotentialTopics = (tokens, config) => {
   const topics = [];
 
   for (let topic in config) {
@@ -17,13 +16,18 @@ const parseSentence = (sentence, config) => {
     if (found) { topics.push(topic); }
   }
 
-
+  return topics;
 };
-
-
 
 const tokenizeSentence = sentence => sentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,'').split(' ');
 
+const parseSentence = (sentence, config) => {
+  const tokens = tokenizeSentence(sentence);
+  const topics = findPotentialTopics(tokens, config);
+};
+
+
 exports.Dialogue = {
-  hasKeyword, tokenizeSentence
+  hasKeyword,          tokenizeSentence,
+  findPotentialTopics,
 };

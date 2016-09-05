@@ -53,9 +53,9 @@
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 393 | Use Broadcast module or extract to the Broadcast file.
 | /Users/seanodonohue/myForks/ranviermud/src/skills.js | 30 | Pull into own files.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
-| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 16 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 23 | Different messages for different relative amounts of sanity loss.
