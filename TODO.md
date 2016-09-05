@@ -60,8 +60,8 @@
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 16 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 23 | Different messages for different relative amounts of sanity loss.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 99 | Emit sanity loss event here if applicable.
-| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 118 | Extract all stuff for determining stat gain into level utils.
-| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 180 | Permadeath, add it.
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 116 | Extract all stuff for determining stat gain into level utils.
+| /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 178 | Permadeath, add it.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 62 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 69 | Improve based on player stats/skills?
 | /Users/seanodonohue/myForks/ranviermud/commands/train.js | 20 | Extract into own function in Skills module.
