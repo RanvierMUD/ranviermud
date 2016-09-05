@@ -1,3 +1,5 @@
+'use strict';
+
 const Dialogue = require('../../src/dialogue').Dialogue;
 const expect = require('chai').expect;
 
@@ -14,8 +16,15 @@ describe('Basic keyword parsing', () => {
     }
   };
 
+  it('should be able to break a string into words', () => {
+    expect(Dialogue.tokenizeSentence('hello world!')).to.eql(['hello', 'world']);
+  });
 
   it('should be true if the keyword is in the string', () => {
-    expect(Dialogue.hasKeyword('thief', mockConfig)).to.be.true;
+    expect(Dialogue.hasKeyword('thief', mockConfig['thieves guild'])).to.be.true;
+  });
+
+  it('should be false if the keyword is not in the string', () => {
+    expect(Dialogue.hasKeyword('potatoes', mockConfig['thieves guild'])).to.be.false;
   });
 });
