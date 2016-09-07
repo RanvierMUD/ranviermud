@@ -8,11 +8,19 @@ describe.only('Basic keyword parsing', () => {
   const mockConfig = {
     'thieves guild': {
       keywords: ['thieves', 'thief', 'stealing', 'guild'],
-      priority: 4,
+      priority: 2,
       prereqs: {
         introduced: true
       },
       dialogue: 'I need you to infiltrate the thieves guild for me, and find their roster.'
+    },
+    'murder': {
+      keywords: ['murder', 'killings', 'assassin', 'assassination'],
+      priority: 4,
+      prereqs: {
+        introduced: true
+      },
+      dialogue: 'The thieves have become assassins? We cannot have two assassin\'s guilds...'
     }
   };
 
@@ -42,6 +50,15 @@ describe.only('Basic keyword parsing', () => {
     it('should return an empty array if there are no relevant topics', () => {
       const tokens = Dialogue.tokenizeSentence('pants helicopter');
       expect(Dialogue.findPotentialTopics(tokens, mockConfig).length === 0).to.be.true;
+    });
+  });
+
+  describe('prioritizing dialogue', () => {
+    it('should be able to pick out the highest priority topic from a list', () => {
+      const tokens = Dialogue.tokenizeSentence('the thieves guild is doing a murder!');
+      const topics = Dialogue.findPotentialTopics(tokens, mockConfig);
+
+      expect(Dialogue.getPriorityTopic(topics, mockConfig)).to.eql(mockConfig['murder']);
     });
   });
 
