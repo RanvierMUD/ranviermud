@@ -21,6 +21,17 @@ describe.only('Basic keyword parsing', () => {
         introduced: true
       },
       dialogue: 'The thieves have become assassins? We cannot have two assassin\'s guilds...'
+    },
+    'here': {
+      keywords: ['here'],
+      priority: 1,
+      prereqs: {
+        introduced: true
+      },
+      dialogue: [
+        'This is my favorite place.',
+        'It is so great here.'
+      ]
     }
   };
 
@@ -63,13 +74,26 @@ describe.only('Basic keyword parsing', () => {
   });
 
   describe('Getting next NPC dialogue choice', () => {
+
     it('should return a string as the next dialogue choice', () => {
       const npcDialogue = Dialogue.getNpcResponse('what is the thieves guild?', mockConfig);
       expect(npcDialogue).to.equal(mockConfig['thieves guild'].dialogue);
     });
+
     it('should return null if no NPC dialogue is found', () => {
       const npcDialogue = Dialogue.getNpcResponse('potatos?', mockConfig);
       expect(npcDialogue).not.to.be.ok;
+    });
+
+    it('should still return a string or series of strings if the NPC can say multiple things', () => {
+      const dialogueArray = mockConfig['here'].dialogue;
+      let dialogueSpoken = [];
+      while (dialogueSpoken.length < 100) {
+        dialogueSpoken.push(Dialogue.getNpcResponse('here', mockConfig));
+      }
+      dialogueArray.forEach(blurb => {
+        expect(dialogueSpoken.indexOf(blurb) > -1).to.be.true;
+      });
     });
   });
 

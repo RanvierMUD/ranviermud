@@ -1,7 +1,7 @@
 'use strict';
 
+const Random = require('./random').Random;
 const _ = require('./helpers');
-
 /**
  * Did the tokenized dialogue contain a keyword?
  * @param  tokens -- array of strings to search
@@ -52,6 +52,13 @@ const tokenizeSentence = sentence => sentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~(
 // It will say the dialogue once every `delay` ms.
 // Unless the player leaves the room.
 
+const dialogueFrom = topic => {
+  if (topic.dialogue.substring) { return topic.dialogue; }
+  if (Array.isArray(topic.dialogue)) {
+    return Random.fromArray(topic.dialogue);
+  }
+}
+
 /**
  *
  * @param
@@ -65,8 +72,9 @@ const getNpcResponse = (sentence, config) => {
   if (!topics.length) { return null; }
   const priorityTopic = getPriorityTopic(topics, config);
 
-  return priorityTopic.dialogue;
+  return dialogueFrom(priorityTopic);
 };
+
 
 
 
