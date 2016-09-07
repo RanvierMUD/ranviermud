@@ -44,12 +44,28 @@ const getPriorityTopic = (topicList, config) => {
 // Turns a string into an array of tokens (words)
 const tokenizeSentence = sentence => sentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,'').split(' ');
 
-//TODO: Consider swapping config and args in these functions, so you can bind the config for re-use.
-/** *  * @param  * @param  * @return  */
-const parseSentence = (sentence, config) => {
+//TODO: Consider using an iterator or generator to iterate through NPC dialogue.
+// Example -- the 1st time you mention a topic, they say one thing. Then another.
+// Or return a function to pass the player obj into.
+// Or configure dialogue so if the .dialogue property is an array,
+// And the config has a delay setting,
+// It will say the dialogue once every `delay` ms.
+// Unless the player leaves the room.
+
+/**
+ *
+ * @param
+ * @param
+ * @return
+ */
+const getNpcResponse = (sentence, config) => {
   const tokens = tokenizeSentence(sentence);
   const topics = findPotentialTopics(tokens, config);
+
+  if (!topics.length) { return null; }
   const priorityTopic = getPriorityTopic(topics, config);
+
+  return priorityTopic.dialogue;
 };
 
 
@@ -57,4 +73,5 @@ const parseSentence = (sentence, config) => {
 exports.Dialogue = {
   hasKeyword,          tokenizeSentence,
   findPotentialTopics, getPriorityTopic,
+  getNpcResponse,
 };
