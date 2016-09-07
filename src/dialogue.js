@@ -34,6 +34,7 @@ const getPriorityTopic = (topicList, config) => {
   const priorityTopic = topicList.reduce((highest, topic) => {
     const currentTopic = config[topic];
     if (!highest) { return currentTopic; }
+
     if (currentTopic.priority > highest.priority) { return currentTopic; }
     return highest;
   }, null);
@@ -43,10 +44,12 @@ const getPriorityTopic = (topicList, config) => {
 // Turns a string into an array of tokens (words)
 const tokenizeSentence = sentence => sentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,'').split(' ');
 
+//TODO: Consider swapping config and args in these functions, so you can bind the config for re-use.
 /** *  * @param  * @param  * @return  */
 const parseSentence = (sentence, config) => {
   const tokens = tokenizeSentence(sentence);
   const topics = findPotentialTopics(tokens, config);
+  const priorityTopic = getPriorityTopic(topics, config);
 };
 
 
