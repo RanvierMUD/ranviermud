@@ -70,12 +70,14 @@ const getNpcResponse = (sentence, config) => {
   const topics = findPotentialTopics(tokens, config);
 
   if (!topics.length) { return null; }
-  const priorityTopic = getPriorityTopic(topics, config);
 
+  const priorityTopic = getPriorityTopic(topics, config);
   return dialogueFrom(priorityTopic);
 };
 
-
+const handleInteraction = (player, sentence, config) => {
+  
+}
 
 
 exports.Dialogue = {
