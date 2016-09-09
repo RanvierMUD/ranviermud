@@ -8,7 +8,7 @@ describe.only('Basic keyword parsing', () => {
   const mockConfig = {
     'thieves guild': {
       keywords: ['thieves', 'thief', 'stealing', 'guild'],
-      priority: 2,
+      priority: Dialogue.Priority.LOW,
       prereqs: {
         introduced: true
       },
@@ -16,7 +16,7 @@ describe.only('Basic keyword parsing', () => {
     },
     'murder': {
       keywords: ['murder', 'killings', 'assassin', 'assassination'],
-      priority: 4,
+      priority: Dialogue.Priority.HIGH,
       prereqs: {
         introduced: true
       },
@@ -24,7 +24,7 @@ describe.only('Basic keyword parsing', () => {
     },
     'here': {
       keywords: ['here'],
-      priority: 1,
+      priority: Dialogue.Priority.LOWEST,
       prereqs: {
         introduced: true
       },
@@ -32,6 +32,13 @@ describe.only('Basic keyword parsing', () => {
         'This is my favorite place.',
         'It is so great here.'
       ]
+    },
+    'quest': {
+      keywords: ['quest', 'mission'],
+      priority: Dialogue.Priority.HIGH,
+      prereqs: {
+        introduced: true
+      }
     }
   };
 

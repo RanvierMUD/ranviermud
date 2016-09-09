@@ -76,12 +76,21 @@ const getNpcResponse = (sentence, config) => {
 };
 
 const handleInteraction = (player, sentence, config) => {
-  
+
 }
 
+const Priority = {
+  'LOWEST':  1,
+  'LOW':     2,
+  'MEDIUM':  3,
+  'HIGH':    4,
+  'HIGHEST': 5
+};
 
 exports.Dialogue = {
   hasKeyword,          tokenizeSentence,
   findPotentialTopics, getPriorityTopic,
-  getNpcResponse,
+  getNpcResponse,      handleInteraction,
+
+  Priority
 };
