@@ -1,5 +1,8 @@
 'use strict';
-
+//TODO: Consider implementing ES6 maps instead so I can use arrays of keywords as keywords
+//////  That way, a check can be done for all of the keywords in the key array, and if they
+/////   all match (.every) the sentence, then the value (dialogue config) will be used.
+////    NOTE: use map.entries to iterate over the entries in a for of loop...
 const Dialogue = require('../../src/dialogue').Dialogue;
 const expect = require('chai').expect;
 
