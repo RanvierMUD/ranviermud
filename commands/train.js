@@ -103,7 +103,7 @@ function addSkillToQueue(skill, player) {
     player.setTraining('time', training.time - cost);
     player.setTraining(skill.id, trainingSession);
     player.say(
-      'On resting, you will train ' +
+      'In your downtime, you will train ' +
       skill.name.toLowerCase() +
       ' for ' + cost + ' hours.'
     );
