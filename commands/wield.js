@@ -8,15 +8,18 @@ const l10n = require('../src/l10n')(l10nFile);
 const _ = require('../src/helpers');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
+
 	return (args, player) => {
 		let location = 'wield';
+
 		const wielded = player.getEquipped(location);
-		util.log(wielded);
 		const offhand = player.getEquipped('offhand');
 		const canDual = player.getSkills('dual');
 
 		if (wielded && (offhand || !canDual)) {
-			return player.sayL10n(l10n, 'CANT_WIELD', items.get(wielded).getShortDesc('en'));
+			const wieldedDesc = items.get(wielded).getShortDesc('en');
+			const offhandDesc = offhand ? ' and ' + items.get(offhand).getShortDesc('en') : '';
+			return player.say('You are already wielding ' + wieldedDesc + offhandDesc + '.');
 		} else if (wielded && canDual && !offhand) {
 		  location = 'offhand';
 		}
