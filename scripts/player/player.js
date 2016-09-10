@@ -1,6 +1,6 @@
 'use strict';
 //TODO: Refactor into individual files.
-var LevelUtil = require('../../src/levels').LevelUtil,
+const LevelUtil = require('../../src/levels').LevelUtil,
   Skills = require('../../src/skills').Skills,
   CommandUtil = require('../../src/command_util').CommandUtil,
   util = require('util'),
