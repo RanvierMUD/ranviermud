@@ -1,49 +1,47 @@
 'use strict';
-//TODO: Consider implementing ES6 maps instead so I can use arrays of keywords as keywords
-//////  That way, a check can be done for all of the keywords in the key array, and if they
-/////   all match (.every) the sentence, then the value (dialogue config) will be used.
+//TODO: Consider implementing ES6 maps instead so I can use arrays of keywords as keys
+//////  Map predicates to dialogue config. If the predicate is true,
+/////   add to an array of possible dialogue branches. Then sort by priority...
 ////    NOTE: use map.entries to iterate over the entries in a for of loop...
+///     or map.forEach((key, value) => // do stuff)
 const Dialogue = require('../../src/dialogue').Dialogue;
 const expect = require('chai').expect;
 
 describe.only('Basic keyword parsing', () => {
-
   const mockConfig = {
     'thieves guild': {
-      keywords: ['thieves', 'thief', 'stealing', 'guild'],
       priority: Dialogue.Priority.LOW,
-      prereqs: {
-        introduced: true
-      },
+      keywords: {
+        every: 'guild',
+        some:  ['thief', 'thieves', 'what']
+      }
       dialogue: 'I need you to infiltrate the thieves guild for me, and find their roster.'
     },
     'murder': {
-      keywords: ['murder', 'killings', 'assassin', 'assassination'],
       priority: Dialogue.Priority.HIGH,
-      prereqs: {
-        introduced: true
-      },
+      keywords: {
+        every: 'guild',
+        some: ['murder', 'killing', 'killings', 'dead']
+        find: ['assassin']
+      }
       dialogue: 'The thieves have become assassins? We cannot have two assassin\'s guilds...'
     },
     'here': {
-      keywords: ['here'],
       priority: Dialogue.Priority.LOWEST,
-      prereqs: {
-        introduced: true
-      },
+      keywords: {
+        some: ['here', 'this place', 'where']
+      }
       dialogue: [
         'This is my favorite place.',
         'It is so great here.'
       ]
     },
     'quest': {
-      keywords: ['quest', 'mission'],
       priority: Dialogue.Priority.HIGH,
-      prereqs: {
-        introduced: true
-      }
     }
   };
+
+
 
   describe('tokenization', () => {
     it('should be able to break a string into words', () => {
