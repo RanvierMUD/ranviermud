@@ -1,9 +1,5 @@
 'use strict';
-//TODO: Consider implementing ES6 maps instead so I can use arrays of keywords as keys
-//////  Map predicates to dialogue config. If the predicate is true,
-/////   add to an array of possible dialogue branches. Then sort by priority...
-////    NOTE: use map.entries to iterate over the entries in a for of loop...
-///     or map.forEach((key, value) => // do stuff)
+ggytffty7
 const Dialogue = require('../../src/dialogue').Dialogue;
 const expect = require('chai').expect;
 
@@ -13,36 +9,54 @@ describe.only('Basic keyword parsing', () => {
       priority: Dialogue.Priority.LOW,
       keywords: {
         every: 'guild',
-        some:  ['thief', 'thieves', 'what']
-      }
-      dialogue: 'I need you to infiltrate the thieves guild for me, and find their roster.'
+        some:  ['thief', 'thieves', 'what'],
+      },
+      dialogue: 'I need you to infiltrate the thieves guild for me, and find their roster.',
     },
     'murder': {
       priority: Dialogue.Priority.HIGH,
       keywords: {
         every: 'guild',
-        some: ['murder', 'killing', 'killings', 'dead']
-        find: ['assassin']
-      }
-      dialogue: 'The thieves have become assassins? We cannot have two assassin\'s guilds...'
+        some: ['murder', 'killing', 'killings', 'dead'],
+        find: ['assassin'],
+      },
+      dialogue: 'The thieves have become assassins? We cannot have two assassin\'s guilds...',
     },
     'here': {
       priority: Dialogue.Priority.LOWEST,
       keywords: {
-        some: ['here', 'this place', 'where']
-      }
+        some: ['here', 'this place', 'where'],
+        find: ['wh'],
+      },
       dialogue: [
         'This is my favorite place.',
-        'It is so great here.'
-      ]
+        'It is so great here.',
+      ],
     },
     'quest': {
-      priority: Dialogue.Priority.HIGH,
+      priority:
+      ({ key, player, level }) =>
+        player.getAttribute('level') < level.min ||
+        player.getAttribute('level') > level.max ?
+          Dialogue.Priority.HIGHEST : Dialogue.Priority.LOW,
+      keywords: {
+        some: Dialogue.Keywords.QUEST.concat(['two']),
+        find: Dialogue.Keywords.QUEST.concat(['two']),
+      },
+      dialogue: Dialogue.sequence([{
+        say:   'We must seek vengeance.',
+        delay: 2.5 * 1000
+      }, {
+        say:   'They have overstepped their bounds and must be put down.'
+      }, {
+        say:   'Go.'
+      }]);
     }
   };
 
+  const player = {};
 
-
+  
   describe('tokenization', () => {
     it('should be able to break a string into words', () => {
       expect(Dialogue.tokenizeSentence('hello world!')).to.eql(['hello', 'world']);

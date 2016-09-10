@@ -76,21 +76,31 @@ const getNpcResponse = (sentence, config) => {
 };
 
 const handleInteraction = (player, sentence, config) => {
-
+  console.log('stuff');
 }
 
-const Priority = {
+const Priority = Object.freeze({
   'LOWEST':  1,
   'LOW':     2,
   'MEDIUM':  3,
   'HIGH':    4,
   'HIGHEST': 5
-};
+});
+
+const Keywords = Object.freeze({
+  'QUEST': [
+    'quest',
+    'mission',
+    'explore',
+    'journey',
+    'adventure'
+  ]
+});
 
 exports.Dialogue = {
   hasKeyword,          tokenizeSentence,
   findPotentialTopics, getPriorityTopic,
   getNpcResponse,      handleInteraction,
-
-  Priority
+  /*           Constants                */
+  Priority,            Keywords,
 };
