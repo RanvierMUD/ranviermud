@@ -146,7 +146,7 @@ function CombatHelper(entity) {
       [ 1, 20 ];
 
     const damageRange = getWeaponDamage(weapon, base);
-    const damageRoll  = Random.inRange(...damageRange);
+    const damageRoll  = Random.inRange(...damageRange) + this._entity.getAttribute('level');
 
     const min = damageRange[0];
     const modifiedDamageRoll = applyMods(damageRoll, this.damageMods);
@@ -224,12 +224,13 @@ function CombatHelper(entity) {
     }
 
   this.getDodgeChance = () => {
+    const bonus = Math.round(Random.inRange(1, this._entity.getAttribute('level'))) * .8;
     const dodgeSkill = Type.isPlayer(this._entity) ?
-      this._entity.getSkills('dodging') + Random.roll() :
-      this._entity.getAttribute('speed') + Random.roll();
+      this._entity.getSkills('dodging')  + bonus :
+      this._entity.getAttribute('speed') + bonus;
     const parrySkill = Type.isPlayer(this._entity) ?
       this._entity.getSkills('parrying') :
-      this._entity.getAttribute('speed');
+      Math.round(this._entity.getAttribute('speed') / 2);
     const dodgeBonus = Type.isPlayer(this._entity) ?
       this._entity.getAttribute('quickness')
       + Math.round(this._entity.getAttribute('cleverness') / 2) :
@@ -245,9 +246,10 @@ function CombatHelper(entity) {
   this.getToHitChance = () => {
     //TODO: Weapon skills related to weapon type?
     //TODO: General combat skills?
-    const toHitSkill = this._entity.getAttribute('level') + Random.roll(); //For now, 1-20.
-    const toHitBonus = this._entity.getAttribute('cleverness')
-      + Math.round(this._entity.getAttribute('quickness') / 2);
+    const bonus = Random.inRange(1, this._entity.getAttribute('level'));
+    const toHitSkill = this._entity.getAttribute('level') + bonus; //For now, 1-20.
+    const toHitBonus = this._entity.getAttribute('cleverness') + bonus
+      + Math.round(this._entity.getAttribute('quickness') / 2  + bonus);
     const toHitChance = applyMods(toHitSkill + toHitBonus, this.toHitMods);
     const toHitWithinBounds = _.setBounds(5, 90);
     util.log(this._entity.getShortDesc('en') + ': To hit chance is ', toHitChance);
@@ -256,7 +258,8 @@ function CombatHelper(entity) {
 
   this.getDefense = location => Type.isPlayer(this._entity) ?
     this.soak(location) :
-    this._entity.getAttribute('level') * 2;
+    this._entity.getDefenses(location) ||
+    this._entity.getDefenses('body')   || 1;
 
   this.getTarget = () => Type.isPlayer(this._entity) ?
     this._entity.getPreference('target') :
