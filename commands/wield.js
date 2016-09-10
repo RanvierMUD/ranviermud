@@ -19,7 +19,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 		if (wielded && (offhand || !canDual)) {
 			const wieldedDesc = items.get(wielded).getShortDesc('en');
 			const offhandDesc = offhand ? ' and ' + items.get(offhand).getShortDesc('en') : '';
-			return player.say('You are already wielding ' + wieldedDesc + offhandDesc + '.');
+			const both = offhand ? 'both ' : '';
+			return player.say('You are already wielding ' + both + wieldedDesc + offhandDesc + '.');
 		} else if (wielded && canDual && !offhand) {
 		  location = 'offhand';
 		}
