@@ -270,18 +270,43 @@ const Feats = {
       const cooldownNotOver = player.getEffects('secondwind');
 
       if (cooldownNotOver) {
-        player.say("You must wait before doing that again.");
+        player.say("Your heart would surely explode. You must wait.");
         return;
       }
 
       deductSanity(player, 15);
       player.setAttribute('energy', player.getAttribute('max_energy'));
 
+      const modifier = Math.ceil(player.getAttribute('level') / 10) + 1;
+      player.combat.addSpeedMod({
+        name: 'secondwind',
+        effect: speed => speed * modifier
+      });
+
       const cooldown = 120 * 1000;
+
       player.addEffect('secondwind', {
         duration: cooldown,
-        deactivate: () => {},
         activate: () => player.say('<magenta>You feel a fell energy coursing through your veins.</magenta>'),
+        deactivate: () => {
+          player.combat.removeSpeedMod('secondwind');
+          player.addEffect('secondwind_hangover', {
+            duration: cooldown / 4,
+
+            activate: () => {
+              player.combat.addSpeedMod({
+                name: 'secondwind_hangover',
+                effect: speed => speed * .80
+              });
+              player.say('<magenta>Your heartbeat is erratic...</magenta>');
+            },
+
+            deactivate: () => {
+              player.combat.removeSpeedMod('secondwind_hangover');
+              player.say('<magenta>You feel normal again.</magenta>');
+            },
+          })
+        },
       });
     },
   },
