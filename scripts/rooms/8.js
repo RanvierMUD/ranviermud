@@ -16,7 +16,8 @@ exports.listeners = {
             'bags',
             'food',
             'sack',
-            'sacks'
+            'sacks',
+            'storage'
           ],
         found: findFood.bind(null, player, players),
         check: player.spot.bind(null, 3, 1)

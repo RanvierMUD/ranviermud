@@ -14,11 +14,13 @@ exports.listeners = {
 
       const config = {
         poi: [
-          "windows",
-          "window",
-          "curtains",
-          "outside",
-          "outdoors"
+          'windows',
+          'window',
+          'curtains',
+          'outside',
+          'outdoors',
+          'balcony',
+          'wall'
         ],
         found: lookOutside,
         nothingFound: nothingFound
