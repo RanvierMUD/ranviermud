@@ -16,11 +16,29 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 		const offhand = player.getEquipped('offhand');
 		const canDual = player.getSkills('dual');
 
+		const getOffhandDesc = (offhand, wielded) => {
+			if (offhand && offhand === wielded) {
+				return 's';
+			} else if (offhand) {
+				return	' and the ' + items.get(offhand).getShortDesc('en')
+			} else return '';
+		}
+
+		const getAdjective = (offhand, wielded) => {
+			if (offhand && offhand === wielded) {
+				return 'two ';
+			} else if (offhand) {
+				return 'both the ';
+			} else return ' the';
+		}
+
 		if (wielded && (offhand || !canDual)) {
 			const wieldedDesc = items.get(wielded).getShortDesc('en');
-			const offhandDesc = offhand ? ' and ' + items.get(offhand).getShortDesc('en') : '';
-			const both = offhand ? 'both ' : '';
-			return player.say('You are already wielding ' + both + wieldedDesc + offhandDesc + '.');
+
+			const offhandDesc = getOffhandDesc(offhand, wielded);
+			const adjective   = getAdjective(offhand, wielded);
+
+			return player.say('You are already wielding ' + adjective + wieldedDesc + offhandDesc + '.');
 		} else if (wielded && canDual && !offhand) {
 		  location = 'offhand';
 		}
