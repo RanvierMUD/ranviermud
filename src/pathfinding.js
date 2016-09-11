@@ -46,7 +46,7 @@ function chooseRandomExit(chance) {
             chosenRoom.addNpc(uid);
 
             const src = room.getTitle('en');
-            npc.emit('npcEnter', room, rooms, players, npcs, src);
+            setTimeout(npc.emit.bind(npc, 'npcEnter', room, rooms, players, npcs, src), 555);
 
           } catch (e) {
             console.log("EXCEPTION: ", e);

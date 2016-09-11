@@ -8,14 +8,17 @@ exports.listeners = {
 
   examine: l10n => {
     return (args, player, players) => {
-
+      //TODO: Now, this would be a good case for an ES6 map.
+      // For example, all of the beer ones could be an array mapped to the single function.
       const config = {
         poi: {
           vats:     found.bind(null, 'BEER'),
+          vat:      found.bind(null, 'BEER'),
           taps:     found.bind(null, 'BEER'),
           hoses:    found.bind(null, 'BEER'),
           bar:      found.bind(null, 'BEER'),
-          
+          beer:     found.bind(null, 'BEER'),
+
           lanterns: found.bind(null, 'LIGHTS'),
           lights:   found.bind(null, 'LIGHTS')
         }
