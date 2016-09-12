@@ -69,6 +69,7 @@ const Player = function PlayerConstructor(socket) {
 
   self.explored = [];
   self.killed   = { length: 0 };
+  self.met      = { length: 0 };
 
   // Anything affecting the player
   self.effects = {};
@@ -284,6 +285,32 @@ const Player = function PlayerConstructor(socket) {
     util.log(self.getName() + ' has slain ' + name + ' for the #' + nth + ' time');
     return true;
   };
+
+  /**
+  * To keep track of sentient creatures the player has met.
+  * @param obj of NPC met...
+  * @return boolean True if they have already met it, or cannot meet it. Otherwise false.
+  */
+
+  self.hasMet = entity => {
+    let name = entity.getName();
+
+    if (!name) {
+      self.say('No response.');
+      return true;
+    }
+
+    if (!self.met.hasOwnProperty(name)) {
+      self.met[name] = {
+        reputation: 0
+      }
+      self.met.length++;
+      return false
+    }
+    
+    self.say('You already know them quite well.');
+    return false;
+  }
 
   ///// ----- Should be in Skills module -------- //////
 
