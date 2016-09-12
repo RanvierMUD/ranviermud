@@ -571,6 +571,7 @@ const Player = function PlayerConstructor(socket) {
    self.feats = data.feats             || {};
    self.preferences = data.preferences || {};
    self.killed   = data.killed   || { length: 0 };
+   self.met      = data.met      || { length: 0 };
    self.training = data.training || { time: 0 };
    self.explored = data.explored || []; // TODO: Make this like killed so we can track a player's favorite spots∏
 
@@ -639,6 +640,7 @@ const Player = function PlayerConstructor(socket) {
       preferences: self.preferences,
       explored: self.explored,
       killed:   self.killed,
+      met:      self.met,
       training: self.training,
       bodyParts: self.bodyParts,
     });
