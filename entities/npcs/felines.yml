@@ -1,0 +1,29 @@
+- &baxter
+  vnum: 5
+  room: 1
+  script: '5-feline.js'
+  keywords:
+    en: ['cat', 'bax', 'baxter', 'xyxxyx', 'feline']
+  types: ['feline']
+  short_description:
+    en: 'a ginger cat with three tails, sporting a monocle and sharpened claws'
+  name: 'Baxter Xyxxyx, Esq.'
+  attack:
+    en: 'sharpened claws'
+  description:
+    en: "A stylish ginger tabby with a monocle perched on one eye. His three tails curl and dart in myriad directions, as though they have minds of their own."
+  behaviors: "rtcombat"
+  attributes:
+    target: 'head'
+    max_health: 200
+    health: 200
+    speed: 4
+    damage: '16-36'
+    level: 10
+  defenses:
+    head: 2
+    body: 5
+    torso: 2
+    legs: 2
+    arms: 2
+  load_max: 1
