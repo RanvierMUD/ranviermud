@@ -18,8 +18,8 @@
     max_health: 200
     health: 200
     speed: 4
-    damage: '16-36'
-    level: 10
+    damage: '16-46'
+    level: 14
   defenses:
     head: 2
     body: 5
