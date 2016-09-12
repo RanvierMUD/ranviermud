@@ -292,24 +292,27 @@ const Player = function PlayerConstructor(socket) {
   * @return boolean True if they have already met it, or cannot meet it. Otherwise false.
   */
 
-  self.hasMet = entity => {
+  self.hasMet = (entity, introducing) => {
     let name = entity.getName();
 
     if (!name) {
-      self.say('No response.');
+      if (introducing) { self.say('No response.'); }
       return true;
     }
 
     if (!self.met.hasOwnProperty(name)) {
-      self.met[name] = {
-        reputation: 0
+      if (introducing) {
+        self.met[name] = {
+          reputation: 0
+        }
+        self.met.length++;
       }
-      self.met.length++;
+
       return false
     }
-    
-    self.say('You already know them quite well.');
-    return false;
+
+    if (introducing) { self.say('You already know them quite well.'); }
+    return true;
   }
 
   ///// ----- Should be in Skills module -------- //////
