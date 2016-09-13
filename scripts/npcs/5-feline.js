@@ -197,29 +197,29 @@ exports.listeners = {
 
       const secondPartyMessage =
         '<bold>The cat rears up on his hind legs and considers you for a moment.</bold>\n' +
-        '<blue>"Welcome to my tavern, human,"</blue> he mews in a droll tone.\n' +
-        '<blue>"I know not why you have come here. But I do have a proposition for you...."</blue>\n' +
+        '<magenta>"Welcome to my tavern, human,"</magenta> he mews in a droll tone.\n' +
+        '<magenta>"I know not why you have come here. But I do have a proposition for you...."</magenta>\n' +
         'He trails off, licking his paws.\n' +
-        '<blue>"Say, do you like salmon?"<blue>';
+        '<magenta>"Say, do you like salmon?"<magenta>';
       const thirdPartyMessage =
         '<bold>The cat rears up on his hind legs and considers ' + playerName + ' for a moment.\n<bold>' +
-        '<blue>"Welcome to my tavern, human,"</blue> he mews in a droll tone.\n' +
-        '<blue>"I know not why you have come here. But I do have a proposition for you...."</blue>\n' +
+        '<magenta>"Welcome to my tavern, human,"</magenta> he mews in a droll tone.\n' +
+        '<magenta>"I know not why you have come here. But I do have a proposition for you...."</magenta>\n\n' +
         'He trails off, licking his paws while staring at ' + playerName + '.\n' +
-        '<blue>"Say, do you like salmon?"<blue>';
+        '<magenta>"Say, do you like salmon?"<magenta>';
 
       toRoom({ secondPartyMessage, thirdPartyMessage });
 
       const doMoreDialogue = () => {
         if (player.getLocation() === this.getLocation()) {
           const secondPartyMessage =
-            '<blue>"Sorry, a non-sequitir,"</blue> the tomcat mumbles, half to himself.\n' +
-            '<blue>"I can also answer any questions you have about this tavern,"<blue>\n' +
-            '<blue>"...or the creatures in the basement."</blue>';
+            '<magenta>"Sorry, a non-sequitir,"</magenta> the tomcat mumbles, half to himself.\n' +
+            '<magenta>"I can also answer any questions you have about this tavern,"<magenta>\n' +
+            '<magenta>"...or the creatures in the basement."</magenta>';
           const thirdPartyMessage =
-            '<blue>"Sorry, a non-sequitir,"</blue> the tomcat mumbles, half to himself and half to ' + playerName + '.\n' +
-            '<blue>"I can also answer any questions you have about this tavern,"<blue>\n' +
-            '<blue>"...or the creatures in the basement."</blue>';
+            '<magenta>"Sorry, a non-sequitir,"</magenta> the tomcat mumbles, half to himself and half to ' + playerName + '.\n' +
+            '<magenta>"I can also answer any questions you have about this tavern,"<magenta>\n' +
+            '<magenta>"...or the creatures in the basement."</magenta>';
 
           toRoom({ secondPartyMessage, thirdPartyMessage });
         }
