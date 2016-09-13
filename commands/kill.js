@@ -20,6 +20,15 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         if (!player.hasEnergy(5)) { return player.noEnergy(); }
 
         util.log(player.getName() + ' is on the offensive...');
+
+        if (npc.isInCombat() === player) {
+          player.say('You are already fighting them!');
+          return;
+        }
+        if (npc.isInCombat()) {
+          player.say('They are busy fighting someone else, no fair!');
+          return;
+        }
         npc.emit('combat', player, room, players, npcs, rooms, cleanup);
 
         function cleanup(success) {

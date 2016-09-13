@@ -1,24 +1,26 @@
 // A file of helper functions for getting player/npc status-related strings.
 //TODO: Dry this up more.
+//TODO: Refactor.
 module.exports = {
-  getHealthText: getHealthText,
-  getSanityText: getSanityText,
-  getGenderNoun: getGenderNoun,
-  getStatusColor: getStatusColor,
-  getPercentage: getPercentage,
-  getEnergyText: getEnergyText,
+  getHealthText,
+  getSanityText,
+  getGenderNoun,
+  getStatusColor,
+  getPercentage,
+  getEnergyText,
 };
 
 function getHealthText(maxHealth, player, npc) {
   return function(health) {
-    var locale = player ? 'en' : 'en';
-    var isPlayer = !npc;
-    var percentage = getPercentage(health, maxHealth);
-    var descriptor = isPlayer ?
-      '' : '<cyan>' + npc.getShortDesc(locale).toUpperCase() + ':</cyan> ';
-    var color = getStatusColor(percentage);
+    const locale = 'en';
+    const isPlayer = !npc;
+    const percentage = getPercentage(health, maxHealth);
+    const npcNameGetter = npc && player.hasMet(npc) ? npc.getName : npc && npc.getShortDesc;
+    const descriptor = isPlayer ?
+      '' : '<cyan>' + getNpcLabel(npc, player, locale).toUpperCase() + ':</cyan> ';
+    const color = getStatusColor(percentage);
 
-    var healthStatus = {
+    const healthStatus = {
       0: 'dead',
       5: 'near death',
       10: 'excruciating',
@@ -41,6 +43,16 @@ function getHealthText(maxHealth, player, npc) {
       }
     }
   }
+}
+
+function getNpcLabel(npc, player, locale) {
+  if (npc && player.hasMet(npc)) {
+    return npc.getName();
+  }
+  if (npc) {
+    return npc.getShortDesc();
+  }
+  return '';
 }
 
 function getSanityText(maxSanity, player) {
@@ -97,14 +109,14 @@ function getEnergyText(maxEnergy, player) {
   }
 }
 
-
+//TODO: Use in player/npc class.
 function getGenderNoun(gender) {
   var nouns = {
     M: 'man',
     F: 'woman',
     A: 'person'
   };
-  return nouns[gender] || nouns.A;
+  return nouns[gender] || nouns['A'];
 }
 
 function getStatusColor(percentage) {
