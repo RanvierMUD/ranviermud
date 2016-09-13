@@ -6,7 +6,7 @@
     en: ['cat', 'bax', 'baxter', 'truthteller', 'feline']
   types: ['feline']
   short_description:
-    en: 'a ginger cat with three tails, sporting a monocle and sharpened claws'
+    en: 'a three-tailed, monocled ginger cat'
   name: 'Baxter Truthteller'
   attack:
     en: 'sharpened claws'
