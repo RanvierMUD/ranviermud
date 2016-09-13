@@ -48,14 +48,26 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const playerName = player.getShortDesc('en');
 
-      this.combat.addSpeedMod({
-        name: 'ferocious feline',
-        effect: speed => Math.round(speed * .75)
-      });
-      this.combat.addDamageMod({
-        name: 'ferocious feline',
-        effect: damage => damage + 10
-      });
+      if (!this.getEffects('flurry')) {
+        player.say('<yellow>The cat pounces on you with a flurry of blows!');
+        this.addEffect('flurry', {
+          duration: 6 * 1000,
+          activate: () => {
+            this.combat.addSpeedMod({
+              name: 'ferocious feline',
+              effect: speed => Math.round(speed * .75)
+            });
+            this.combat.addDamageMod({
+              name: 'ferocious feline',
+              effect: damage => damage + 10
+            });
+          },
+          deactivate () => {
+            this.combat.deleteAllMods('ferocious feline');
+          }
+        })
+      }
+
 
       let secondPartyMessage, thirdPartyMessage;
 
@@ -93,7 +105,7 @@ exports.listeners = {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
 
-      const moderateDamage = damage < this.getAttribute('health') - 1;
+      const moderateDamage = damage < (this.getAttribute('health') * .8);
 
       const whackedInHead = hitLocation === 'head' && damage > 10;
       if (whackedInHead && !this.getEffects('monocle broke')) {
@@ -163,8 +175,6 @@ exports.listeners = {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
 
-      this.combat.removeAllMods('ferocious feline');
-
       const secondPartyMessage = [
         '<yellow>The tomcat leaps for your ' + hitLocation + ', but flies past in a blur of claws.</yellow>',
         '<yellow>The tomcat\'s claws miss your ' + hitLocation + '.</yellow>',
@@ -180,30 +190,6 @@ exports.listeners = {
     }
   },
 
-  npcLeave: l10n => {
-    return function(room, rooms, players, npcs, dest) {
-      const toRoom = Broadcast.toRoom(room, this, null, players);
-      const thirdPartyMessage = Random.fromArray([
-        'Sniffing for crumbs, the rat leaves for ' + dest + '.',
-        'Leaving a trail of bloody foam, the rat leaves for ' + dest + '.',
-        'The feral rat leaves for ' + dest + ', chittering and growling to itself.',
-        'The rat darts into ' + dest + ', whiskers twitching.'
-      ]);
-      toRoom({thirdPartyMessage});
-    }
-  },
-
-  npcEnter: l10n => {
-    return function(room, rooms, players, npcs, src) {
-      const toRoom = Broadcast.toRoom(room, this, null, players);
-      const thirdPartyMessage = Random.fromArray([
-        'Sniffing for crumbs, the rat comes from ' + src + '.',
-        'Foaming at the mouth, a feral rat crawls in from ' + src + '.',
-        'The feral rat skitters in from ' + src + '.',
-        'The rat darts in from ' + src + ', whiskers twitching.'
-      ]);
-      toRoom({thirdPartyMessage});
-    }
-  },
+  /* No enter and leave script since this NPC is stationary for now. */
 
 };
