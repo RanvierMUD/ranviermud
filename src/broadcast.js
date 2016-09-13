@@ -22,7 +22,6 @@ const toArea = (player, players, rooms) => msg => {
 }
 
 const toRoom = (room, firstParty, secondParty, players) => config => {
-
   const firstPartyMsger  = Type.isPlayer(firstParty)  ?
     firstParty.say :  noop;
   const secondPartyMsger = Type.isPlayer(secondParty) ?

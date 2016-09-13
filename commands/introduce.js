@@ -30,7 +30,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         if (!player.hasMet(npc, true)) {
           player.say('You introduce yourself to ' + npc.getShortDesc('en') + ' and they introduce themselves as ' + npc.getName() + '.');
         }
-        npc.emit('introductions', player, players, room);
+        npc.emit('introduction', player, players, room);
 
     };
 };

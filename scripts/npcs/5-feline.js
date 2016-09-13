@@ -190,18 +190,43 @@ exports.listeners = {
     }
   },
 
-  introductions: function(l10n) {
+  introduction: function(l10n) {
     return function(player, players, room) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const playerName = player.getName();
-      
-      const firstPartyMessage =
-        'The cat rears up on his hind legs and considers you for a moment.\n' +
-        '"Welcome to my tavern, human," he mews in a droll tone.\n' +
-        '"I know not why you have come here. But I do have a proposition for you...."\n' +
+
+      const secondPartyMessage =
+        '<bold>The cat rears up on his hind legs and considers you for a moment.</bold>\n' +
+        '<blue>"Welcome to my tavern, human,"</blue> he mews in a droll tone.\n' +
+        '<blue>"I know not why you have come here. But I do have a proposition for you...."</blue>\n' +
         'He trails off, licking his paws.\n' +
-        '"Say, do you like salmon?"'
+        '<blue>"Say, do you like salmon?"<blue>';
       const thirdPartyMessage =
+        '<bold>The cat rears up on his hind legs and considers ' + playerName + ' for a moment.\n<bold>' +
+        '<blue>"Welcome to my tavern, human,"</blue> he mews in a droll tone.\n' +
+        '<blue>"I know not why you have come here. But I do have a proposition for you...."</blue>\n' +
+        'He trails off, licking his paws while staring at ' + playerName + '.\n' +
+        '<blue>"Say, do you like salmon?"<blue>';
+
+      toRoom({ secondPartyMessage, thirdPartyMessage });
+
+      const doMoreDialogue = () => {
+        if (player.getLocation() === this.getLocation()) {
+          const secondPartyMessage =
+            '<blue>"Sorry, a non-sequitir,"</blue> the tomcat mumbles, half to himself.\n' +
+            '<blue>"I can also answer any questions you have about this tavern,"<blue>\n' +
+            '<blue>"...or the creatures in the basement."</blue>';
+          const thirdPartyMessage =
+            '<blue>"Sorry, a non-sequitir,"</blue> the tomcat mumbles, half to himself and half to ' + playerName + '.\n' +
+            '<blue>"I can also answer any questions you have about this tavern,"<blue>\n' +
+            '<blue>"...or the creatures in the basement."</blue>';
+
+          toRoom({ secondPartyMessage, thirdPartyMessage });
+        }
+      }
+
+      setTimeout(doMoreDialogue, 3500);
+
     }
   },
 
