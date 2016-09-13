@@ -62,7 +62,7 @@ exports.listeners = {
               effect: damage => damage + 10
             });
           },
-          deactivate () => {
+          deactivate: () => {
             this.combat.deleteAllMods('ferocious feline');
           }
         })
