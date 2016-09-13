@@ -12,6 +12,8 @@ const l10n_dir = __dirname + '/../l10n/scripts/npcs/';
 
 const CombatUtil = require('./combat_util').CombatUtil;
 
+//TODO: Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
+//     then more will spawn at the proper interval.
 
 /**
  * Npc container class. Loads/finds npcs
@@ -157,6 +159,7 @@ const Npc = function NpcConstructor(config) {
    */
   self.init = function (config) {
     self.short_description = config.short_description || '';
+    self.name = config.name || '';
     self.keywords = config.keywords || [];
     self.attack = config.attack || { en: 'strike' };
     self.description = config.description || '';
@@ -273,9 +276,11 @@ const Npc = function NpcConstructor(config) {
    * Get the title, localized if possible
    * @param string locale
    * @return string
-   */
+   */ //TODO: Consider passing in player object to see if player recognizes the item
+   // //      IS that an observer pattern?
   self.getShortDesc = locale => getTranslatedString('short_description', locale);
 
+  self.getName = () => self.name;
   /**
    * Get the title, localized if possible
    * @param string locale

@@ -6,6 +6,8 @@ const Type   = require('./type').Type;
 const Random = require('./random').Random;
 const _ = require('./helpers');
 
+/* Various helper functions for combat */
+
 /**
  * Helper func to decide where an attack lands
  * Unless the attacker is putting effort in being precise,
@@ -21,11 +23,6 @@ function decideHitLocation(locations, target, precise) {
   return Random.fromArray(locations);
 }
 
-/** OVERVIEW ** //////////////////////////////
-* The purpose of this class is to standardize
-* the realtime combat API between players & NPCs.
-*/
-
 /**
 * Generic func to apply all mods to a stat,
 * starting with the base stat.
@@ -33,6 +30,11 @@ function decideHitLocation(locations, target, precise) {
 const applyMod  = (stat, modifier) => modifier(stat)
 const applyMods = (base, modsObj)  => _
   .reduceValues(modsObj, applyMod, base);
+
+/** CombatHelper ** //////////////////////////////
+* The purpose of this class is to standardize
+* the realtime combat API between players & NPCs.
+*/
 
 function CombatHelper(entity) {
   this._entity = entity;
