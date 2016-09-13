@@ -69,6 +69,7 @@ const Player = function PlayerConstructor(socket) {
 
   self.explored = [];
   self.killed   = { length: 0 };
+  self.met      = { length: 0 };
 
   // Anything affecting the player
   self.effects = {};
@@ -284,6 +285,35 @@ const Player = function PlayerConstructor(socket) {
     util.log(self.getName() + ' has slain ' + name + ' for the #' + nth + ' time');
     return true;
   };
+
+  /**
+  * To keep track of sentient creatures the player has met.
+  * @param obj of NPC met...
+  * @return boolean True if they have already met it, or cannot meet it. Otherwise false.
+  */
+
+  self.hasMet = (entity, introducing) => {
+    let name = entity.getName();
+
+    if (!name) {
+      if (introducing) { self.say('No response.'); }
+      return true;
+    }
+
+    if (!self.met.hasOwnProperty(name)) {
+      if (introducing) {
+        self.met[name] = {
+          reputation: 0
+        }
+        self.met.length++;
+      }
+
+      return false
+    }
+
+    if (introducing) { self.say('You already know them quite well.'); }
+    return true;
+  }
 
   ///// ----- Should be in Skills module -------- //////
 
@@ -541,6 +571,7 @@ const Player = function PlayerConstructor(socket) {
    self.feats = data.feats             || {};
    self.preferences = data.preferences || {};
    self.killed   = data.killed   || { length: 0 };
+   self.met      = data.met      || { length: 0 };
    self.training = data.training || { time: 0 };
    self.explored = data.explored || []; // TODO: Make this like killed so we can track a player's favorite spots∏
 
@@ -609,6 +640,7 @@ const Player = function PlayerConstructor(socket) {
       preferences: self.preferences,
       explored: self.explored,
       killed:   self.killed,
+      met:      self.met,
       training: self.training,
       bodyParts: self.bodyParts,
     });
