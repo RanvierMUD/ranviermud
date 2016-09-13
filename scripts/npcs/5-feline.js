@@ -190,6 +190,21 @@ exports.listeners = {
     }
   },
 
+  introductions: function(l10n) {
+    return function(player, players, room) {
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+      const playerName = player.getName();
+      
+      const firstPartyMessage =
+        'The cat rears up on his hind legs and considers you for a moment.\n' +
+        '"Welcome to my tavern, human," he mews in a droll tone.\n' +
+        '"I know not why you have come here. But I do have a proposition for you...."\n' +
+        'He trails off, licking his paws.\n' +
+        '"Say, do you like salmon?"'
+      const thirdPartyMessage =
+    }
+  },
+
   /* No enter and leave script since this NPC is stationary for now. */
 
 };
