@@ -3,11 +3,11 @@
   room: 1
   script: '5-feline.js'
   keywords:
-    en: ['cat', 'bax', 'baxter', 'xyxxyx', 'feline']
+    en: ['cat', 'bax', 'baxter', 'truthteller', 'feline']
   types: ['feline']
   short_description:
     en: 'a ginger cat with three tails, sporting a monocle and sharpened claws'
-  name: 'Baxter Esquire Xyxxyx'
+  name: 'Baxter Truthteller'
   attack:
     en: 'sharpened claws'
   description:

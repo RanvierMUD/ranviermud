@@ -276,7 +276,8 @@ const Npc = function NpcConstructor(config) {
    * Get the title, localized if possible
    * @param string locale
    * @return string
-   */
+   */ //TODO: Consider passing in player object to see if player recognizes the item
+   // //      IS that an observer pattern?
   self.getShortDesc = locale => getTranslatedString('short_description', locale);
 
   self.getName = () => self.name;
