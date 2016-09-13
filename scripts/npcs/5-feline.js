@@ -95,11 +95,23 @@ exports.listeners = {
 
       const moderateDamage = damage < this.getAttribute('health') - 1;
 
-      if (hitLocation === 'head' && damage > 10) {
-        player.say('<bold>You whack the cat in the head and his monocle cracks.</bold>');
-        this.combat.addToHitMod({
-          name: 'monocle broke' + damage,
-          effect: toHit => toHit - 3
+      const whackedInHead = hitLocation === 'head' && damage > 10;
+      if (whackedInHead && !this.getEffects('monocle broke')) {
+        this.addEffect('monocle broke', {
+          duration: 15 * 1000,
+
+          activate: () => {
+            player.say('<bold>You whack the cat in the head and his monocle cracks.</bold>');
+            this.combat.addToHitMod({
+              name: 'monocle broke' + damage,
+              effect: toHit => toHit - 3
+            });
+          },
+
+          deactivate: () => {
+            this.combat.removeToHitMod('monocle broke' + damage);
+            player.say('<white>The sassy feline swaps out their broken monocle for a fresh one.</white>')
+          }
         });
       }
 
