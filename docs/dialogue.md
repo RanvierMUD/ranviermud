@@ -41,7 +41,7 @@ So, if given the string ``"What can I do about the dead thief from the thieves g
 - 2 from `find`
 
 
-## Dialogue types
+# Dialogue Types
 
 As seen above, the `dialogue` property can have a string as a value. In this case, it would be a single line of dialogue where the NPC responds every single time using that same dialogue bit, if that topic ends up being highest priority.
 
@@ -99,11 +99,11 @@ So, the dialogue here is defined as an array of objects, with a `say` property a
 Before each blurb, the npc checks to see if the player who triggered the dialogue is still in the same room.
 If they are not, the dialogue process ends.
 
-### Priority
+### More on Priority
 
-You noticed that the priority values were different above. So, leverage that.
-The priority can be an integer from 1 to 5 (expressed here using enum-like variables)
-or a function that returns one of those integers.
+You noticed that the priority values were different in those past few examples. So, leverage that.
+The priority can be an integer from 1 to 5 (expressed using enum-like variables)
+or a function that returns one of those integers/enums.
 
 ### Prerequisites
 
@@ -121,3 +121,5 @@ Prereqs.hasMet = ({ player, npc }) => player.hasMet(npc);
 ```
 
 Each prereq is passed a config object which is then destructured. Thanks, ES6!
+
+## Sequenced Dialogue
