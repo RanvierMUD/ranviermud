@@ -43,7 +43,7 @@ describe.only('Basic keyword parsing', () => {
         some: Dialogue.Keywords.QUEST.concat(['two']),
         find: Dialogue.Keywords.QUEST.concat(['two']),
       },
-      dialogue: Dialogue.sequence([{
+      dialogue: Dialogue.timed([{
         say:   'We must seek vengeance.',
         delay: 2.5 * 1000
       }, {
@@ -51,12 +51,21 @@ describe.only('Basic keyword parsing', () => {
       }, {
         say:   'Go.'
       }]);
+    },
+    'awakening': {
+      priority: Dialogue.Priority.MEDIUM,
+      keywords: {
+        every: 'how was the tavern',
+        some: Dialogue.Keywords.BACKSTORY,
+        find: Dialogue.Keywords.BACKSTORY,
+      }
+      dialogue: Dialogue.sequence(),
     }
   };
 
   const player = {};
 
-  
+
   describe('tokenization', () => {
     it('should be able to break a string into words', () => {
       expect(Dialogue.tokenizeSentence('hello world!')).to.eql(['hello', 'world']);
