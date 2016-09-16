@@ -65,6 +65,8 @@ If the dialogue is a plain array (as determined by `Array.isArray`), then it wil
 
 Another type:
 
+## Timed Dialogue
+
 ``` javascript
 'quest': {
   priority:
@@ -93,6 +95,9 @@ So, the dialogue here is defined as an array of objects, with a `say` property a
 `say`: The string the player will see. No say or action property will throw an error.
 `action`: A function determining what the NPC will do. This function will be passed the npc, the player who triggered the initial dialogue, the player manager, the rooms manager, and [maybe?] the arg
 `delay`: The amount of time that the NPC will wait before moving on to their next line or action, in milliseconds. Defaults to 1000 ms, or one second.
+
+Before each blurb, the npc checks to see if the player who triggered the dialogue is still in the same room.
+If they are not, the dialogue process ends.
 
 ### Priority
 
