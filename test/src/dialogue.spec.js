@@ -35,10 +35,12 @@ describe.only('Basic keyword parsing', () => {
     },
     'quest': {
       priority:
-      ({ key, player, level }) =>
-        player.getAttribute('level') < level.min ||
-        player.getAttribute('level') > level.max ?
-          Dialogue.Priority.HIGHEST : Dialogue.Priority.LOW,
+        () => {
+          const level = { min: 5, max: 10 };
+          const playerLevel = player.getAttribute('level');
+          const withinLevelRestriction = playerLevel < level.min || playerLevel > level.max;
+          return withinLevelRestriction ? Dialogue.Priority.HIGHEST : Dialogue.Priority.LOW;
+        },
       keywords: {
         some: Dialogue.Keywords.QUEST.concat(['two']),
         find: Dialogue.Keywords.QUEST.concat(['two']),
@@ -62,7 +64,7 @@ describe.only('Basic keyword parsing', () => {
       dialogue: Dialogue.sequence([
         '"This tavern was the most popular in the city, before the Awakening," he said.',
         '"I was a bit taller, then. More real," mutters the metahuman.',
-        'He sighes heavily, "It was not a good time for me."'
+        'He sighs heavily, "It was not a good time for me."'
       ]),
     },
   };

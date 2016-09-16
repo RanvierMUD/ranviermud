@@ -34,8 +34,6 @@ const toArray = thing => [].concat(thing);
  */
 const hasKeys = obj => !!Object.keys(obj).length;
 
-const tail = [first, ...rest] => rest;
-const head = [first, ...rest] => first;
 
 /**
  * Pads leftly.
@@ -98,5 +96,4 @@ module.exports = {
   values,    reduceValues,
   setBounds, is,
   toArray,
-  tail,      head
 };
