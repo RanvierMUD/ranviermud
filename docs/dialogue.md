@@ -70,10 +70,12 @@ Another type:
 ``` javascript
 'quest': {
   priority:
-  ({ key, player, level }) =>
-    player.getAttribute('level') < level.min ||
-    player.getAttribute('level') > level.max ?
-      Dialogue.Priority.HIGHEST : Dialogue.Priority.LOW,
+    () => {
+      const level = { min: 5, max: 10 };
+      const playerLevel = player.getAttribute('level');
+      const withinLevelRestriction = playerLevel < level.min || playerLevel > level.max;
+      return withinLevelRestriction ? Dialogue.Priority.HIGHEST : Dialogue.Priority.LOW;
+    },
   keywords: {
     some: Dialogue.Keywords.QUEST.concat(['two']),
     find: Dialogue.Keywords.QUEST.concat(['two']),
@@ -105,6 +107,9 @@ You noticed that the priority values were different in those past few examples. 
 The priority can be an integer from 1 to 5 (expressed using enum-like variables)
 or a function that returns one of those integers/enums.
 
+The above `quest` example uses a function to check the player's level and set the priority based on whether or not they are in an appropriate level range for the quest.
+
+
 ### Prerequisites
 
 Prerequisites are a function or array of functions, that returns a boolean. If it is undefined, then the dialogue has no prereqs. If it is an array of functions, each must resolve to true for the prereq to be met.
@@ -113,14 +118,12 @@ Some are predefined:
 
 Example:
 ``` javascript
-  'prerequisites': [ Prereqs.hasMet ],
+  'prerequisites': [ Prereqs.hasMet(player, npc) ],
 ```
 
 ``` javascript
-Prereqs.hasMet = ({ player, npc }) => player.hasMet(npc);
+Prereqs.hasMet = (player, npc) => () => player.hasMet(npc);
 ```
-
-Each prereq is passed a config object which is then de-structured. Thanks, ES6!
 
 ## Sequenced Dialogue
 ``` javascript

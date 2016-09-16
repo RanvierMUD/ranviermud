@@ -93,7 +93,19 @@ const Keywords = Object.freeze({
     'mission',
     'explore',
     'journey',
-    'adventure'
+    'adventure',
+    'job',
+    'gig',
+    'opportunity'
+  ],
+  'BACKSTORY': [
+    'history',
+    'backstory',
+    'awaken',
+    'past',
+    'before',
+    'quarantine',
+    'ended'
   ]
 });
 
@@ -101,6 +113,7 @@ exports.Dialogue = {
   hasKeyword,          tokenizeSentence,
   findPotentialTopics, getPriorityTopic,
   getNpcResponse,      handleInteraction,
+  
   /*           Constants                */
   Priority,            Keywords,
 };
