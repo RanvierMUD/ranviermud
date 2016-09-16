@@ -123,3 +123,18 @@ Prereqs.hasMet = ({ player, npc }) => player.hasMet(npc);
 Each prereq is passed a config object which is then destructured. Thanks, ES6!
 
 ## Sequenced Dialogue
+``` javascript
+'awakening': {
+  priority: Dialogue.Priority.MEDIUM,
+  keywords: {
+    every: 'how was the tavern',
+    some: Dialogue.Keywords.BACKSTORY,
+    find: Dialogue.Keywords.BACKSTORY,
+  }
+  dialogue: Dialogue.sequence([
+    '"This tavern was the most popular in the city, before the Awakening," he said.',
+    '"I was a bit taller, then. More real," mutters the metahuman.',
+    'He sighes heavily, "It was not a good time for me."'
+  ]),
+}
+```
