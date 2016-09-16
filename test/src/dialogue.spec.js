@@ -52,7 +52,7 @@ describe.only('Basic keyword parsing', () => {
         say:   'Go.'
       }]);
     },
-    'awakening': {
+    'the awakening': {
       priority: Dialogue.Priority.MEDIUM,
       keywords: {
         every: 'how was the tavern',
