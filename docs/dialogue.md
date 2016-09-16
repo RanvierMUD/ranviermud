@@ -142,4 +142,6 @@ Prereqs.hasMet = (player, npc) => () => player.hasMet(npc);
 }
 ```
 
-This is an array of dialogue choices that will be cycled through from beginning to end for each player based on the last one the NPC said. Try storing the iterator object on the player object, even if only in server memory.
+This is an array of dialogue choices that will be cycled through from beginning to end based on the last one the NPC said. So, each time that this dialogue topic is triggered, the NPC will say the next bit of dialogue.
+
+Not sure if this will be done on a per-player basis or if the NPC will just rotate between dialogue choices regardless of which player triggered the dialogue, or if it will reset based on a timer. Will do a simple implementation for now.
