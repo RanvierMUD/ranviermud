@@ -120,11 +120,11 @@ Example:
 Prereqs.hasMet = ({ player, npc }) => player.hasMet(npc);
 ```
 
-Each prereq is passed a config object which is then destructured. Thanks, ES6!
+Each prereq is passed a config object which is then de-structured. Thanks, ES6!
 
 ## Sequenced Dialogue
 ``` javascript
-'awakening': {
+'the awakening': {
   priority: Dialogue.Priority.MEDIUM,
   keywords: {
     every: 'how was the tavern',
@@ -138,3 +138,5 @@ Each prereq is passed a config object which is then destructured. Thanks, ES6!
   ]),
 }
 ```
+
+This is an array of dialogue choices that will be cycled through from beginning to end for each player based on the last one the NPC said. Try storing the iterator object on the player object, even if only in server memory.
