@@ -11,7 +11,9 @@ describe.only('Basic keyword parsing', () => {
         every: 'guild',
         some:  ['thief', 'thieves', 'what'],
       },
-      dialogue: 'I need you to infiltrate the thieves guild for me, and find their roster.',
+      dialogue: {
+        type: Dialogue.Type.SIMPLE,
+        say: 'The man nods, "I need you to infiltrate the thieves guild for me, and find their roster."',
     },
     'murder': {
       priority: Dialogue.Priority.HIGH,
@@ -20,7 +22,11 @@ describe.only('Basic keyword parsing', () => {
         some: ['murder', 'killing', 'killings', 'dead'],
         find: ['assassin'],
       },
-      dialogue: 'The thieves have become assassins? We cannot have two assassin\'s guilds...',
+      dialogue: {
+        type: Dialogue.Type.SIMPLE,
+        say: '"The thieves have become assassins? We cannot have two assassin\'s guilds," the man says, grimacing.',
+        action: () => player.emit('experience', 500, 'the frail politics between the two guilds')
+      }
     },
     'here': {
       priority: Dialogue.Priority.LOWEST,
@@ -28,10 +34,12 @@ describe.only('Basic keyword parsing', () => {
         some: ['here', 'this place', 'where'],
         find: ['wh'],
       },
-      dialogue: [
-        'This is my favorite place.',
-        'It is so great here.',
-      ],
+      dialogue: {
+        type: Dialogue.Type.RANDOM
+        say: [
+        '"This is my favorite place," he said.',
+        '"It is so great here," he mumbled unconvincingly.',
+      ]},
     },
     'quest': {
       priority:
@@ -45,14 +53,17 @@ describe.only('Basic keyword parsing', () => {
         some: Dialogue.Keywords.QUEST.concat(['two']),
         find: Dialogue.Keywords.QUEST.concat(['two']),
       },
-      dialogue: Dialogue.timed([{
-        say:   'We must seek vengeance.',
-        delay: 2.5 * 1000
-      }, {
-        say:   'They have overstepped their bounds and must be put down.'
-      }, {
-        say:   'Go.'
-      }])
+      dialogue: {
+        type: Dialogue.Type.TIMED,
+        sequence: [{
+          say:   '"We must seek vengeance.", he proclaims.',
+          delay: 2.5 * 1000
+        }, {
+          say:   '"They have overstepped their bounds and must be put down."'
+        }, {
+          say:   '"Go," he utters, filled with seething rage.'
+          action: () => player.emit('experience', 50, 'vengeance')
+        }]
     },
     'the awakening': {
       priority: Dialogue.Priority.MEDIUM,
@@ -61,11 +72,17 @@ describe.only('Basic keyword parsing', () => {
         some: Dialogue.Keywords.BACKSTORY,
         find: Dialogue.Keywords.BACKSTORY,
       },
-      dialogue: Dialogue.sequence([
-        '"This tavern was the most popular in the city, before the Awakening," he said.',
-        '"I was a bit taller, then. More real," mutters the metahuman.',
-        'He sighs heavily, "It was not a good time for me."'
-      ]),
+      dialogue: {
+        type: Dialogue.Type.SEQUENCED,
+        sequence: [{
+          say: '"This tavern was the most popular in the city, before the Awakening," he said.',
+          action: () => player.emit('experience', 75, 'the Awakening')
+        },
+        {
+          say: 'He sighs heavily, "It was a good time for me."'
+        }, {
+          say: '"I was a bit taller, then. More real," mutters the metahuman.'
+      }],
     },
   };
 
@@ -78,16 +95,6 @@ describe.only('Basic keyword parsing', () => {
     });
   });
 
-  describe('keyword finding', () => {
-    it('should be true if the keyword is in the string', () => {
-      expect(Dialogue.hasKeyword('thief', mockConfig['thieves guild'])).to.be.true;
-    });
-
-    it('should be false if the keyword is not in the string', () => {
-      expect(Dialogue.hasKeyword('potatoes', mockConfig['thieves guild'])).to.be.false;
-    });
-
-  });
 
   describe('finding topics', () => {
     it('should return a list of a single topic if there is only one', () => {
