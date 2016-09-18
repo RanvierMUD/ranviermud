@@ -109,11 +109,17 @@ const Keywords = Object.freeze({
   ]
 });
 
+const timed = (sentence, config) => {};
+const sequence = (sentence, config) => {};
+
+
 exports.Dialogue = {
   hasKeyword,          tokenizeSentence,
   findPotentialTopics, getPriorityTopic,
   getNpcResponse,      handleInteraction,
-  
+
+  timed,               sequence,
+
   /*           Constants                */
   Priority,            Keywords,
 };

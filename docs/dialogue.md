@@ -137,7 +137,7 @@ Prereqs.hasMet = (player, npc) => () => player.hasMet(npc);
   dialogue: Dialogue.sequence([
     '"This tavern was the most popular in the city, before the Awakening," he said.',
     '"I was a bit taller, then. More real," mutters the metahuman.',
-    'He sighes heavily, "It was not a good time for me."'
+    'He sighs heavily, "It was not a good time for me."'
   ]),
 }
 ```
