@@ -19,7 +19,7 @@
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 90 | boostAttr
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 91 | invis
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 142 | Do the same way as above once you extract the admin commands.
-| /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 47 | Consider using an iterator or generator to iterate through NPC dialogue.
+| /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 37 | Consider using an iterator or generator to iterate through NPC dialogue.
 | /Users/seanodonohue/myForks/ranviermud/src/doors.js | 44 | Refactor to use the bound functions in external code.
 | /Users/seanodonohue/myForks/ranviermud/src/effects.js | 4 | Extract into own directory. Too many effects.
 | /Users/seanodonohue/myForks/ranviermud/src/effects.js | 5 | Make an atom snippet for this?
@@ -59,14 +59,14 @@
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 112 | Use in player/npc class.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 74 | Extract this to some kind of combat messaging helper?
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 16 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 23 | Different messages for different relative amounts of sanity loss.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 99 | Emit sanity loss event here if applicable.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 116 | Extract all stuff for determining stat gain into level utils.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 178 | Permadeath, add it.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 62 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 69 | Improve based on player stats/skills?

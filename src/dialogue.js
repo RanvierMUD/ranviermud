@@ -2,17 +2,8 @@
 
 const Random = require('./random').Random;
 const _ = require('./helpers');
-/**
- * Did the tokenized dialogue contain a keyword?
- * @param  tokens -- array of strings to search
- * @param  topic -- a string describing a topic
- * @return boolean isFound
- */
-const hasKeyword = (tokens, topic) => {
-  const keywords = topic.keywords;
-  const found = keywords.reduce((found, keyword) => found || _.has(tokens, keyword), false);
-  return found;
-};
+
+
 /**
  * Get a list of potential topics based on dialogue.
  * @param tokens -- array of strings to search
@@ -20,11 +11,10 @@ const hasKeyword = (tokens, topic) => {
  * @return [] topics the dialogue might be about
  */
 const findPotentialTopics = (tokens, config) => {
-  const topics = [];
+  const topics = {};
 
   for (let topic in config) {
-    const found = hasKeyword(tokens, config[topic]);
-    if (found) { topics.push(topic); }
+
   }
 
   return topics;
@@ -42,7 +32,7 @@ const getPriorityTopic = (topicList, config) => {
 };
 
 // Turns a string into an array of tokens (words)
-const tokenizeSentence = sentence => sentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,'').split(' ');
+const tokenizeSentence = sentence => sentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '').split(' ');
 
 //TODO: Consider using an iterator or generator to iterate through NPC dialogue.
 // Example -- the 1st time you mention a topic, they say one thing. Then another.
@@ -109,12 +99,19 @@ const Keywords = Object.freeze({
   ]
 });
 
+const Type = Object.freeze({
+  'SIMPLE':    'simple',
+  'RANDOM':    'random',
+  'TIMED':     'timed',
+  'SEQUENCED': 'sequenced'
+});
+
 const timed = (sentence, config) => {};
 const sequence = (sentence, config) => {};
 
 
 exports.Dialogue = {
-  hasKeyword,          tokenizeSentence,
+  tokenizeSentence,
   findPotentialTopics, getPriorityTopic,
   getNpcResponse,      handleInteraction,
 
@@ -122,4 +119,5 @@ exports.Dialogue = {
 
   /*           Constants                */
   Priority,            Keywords,
+  Type
 };
