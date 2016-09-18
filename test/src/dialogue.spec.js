@@ -1,5 +1,5 @@
 'use strict';
-ggytffty7
+
 const Dialogue = require('../../src/dialogue').Dialogue;
 const expect = require('chai').expect;
 
@@ -52,7 +52,7 @@ describe.only('Basic keyword parsing', () => {
         say:   'They have overstepped their bounds and must be put down.'
       }, {
         say:   'Go.'
-      }]);
+      }])
     },
     'the awakening': {
       priority: Dialogue.Priority.MEDIUM,
@@ -60,7 +60,7 @@ describe.only('Basic keyword parsing', () => {
         every: 'how was the tavern',
         some: Dialogue.Keywords.BACKSTORY,
         find: Dialogue.Keywords.BACKSTORY,
-      }
+      },
       dialogue: Dialogue.sequence([
         '"This tavern was the most popular in the city, before the Awakening," he said.',
         '"I was a bit taller, then. More real," mutters the metahuman.',
