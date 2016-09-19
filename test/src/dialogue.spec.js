@@ -127,6 +127,12 @@ describe.only('Parsing Player/NPC Dialogue', () => {
       const expectedLine = 'The man nods, "I need you to infiltrate the thieves guild for me, and find their roster."';
       expect(player.say.calledWith(expectedLine)).to.be.true;
     });
+
+    it('should do an action if present on simple dialogue', () => {
+      mockConfig['murder'].dialogue.action = sinon.spy();
+      Dialogue.handleInteraction(mockConfig, 'the thieves guild is doing a murder!');
+      expect(mockConfig['murder'].dialogue.action.called).to.be.true;
+    });
   });
 
 });
