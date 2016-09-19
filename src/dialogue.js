@@ -15,17 +15,20 @@ const getTopicWeight = (topic, name, sentence) => {
     topic.priority() :
     topic.priority;
 
-  const foundEvery = topic.keywords.every &&
+  const foundEvery = topic.keywords.every ?
    _.toArray(topic.keywords.every)
-    .every(str => sentence.includes(str));
+    .every(str => sentence.includes(str)) :
+    false;
 
-  const foundSome = topic.keywords.some &&
+  const foundSome = topic.keywords.some ?
    _.toArray(topic.keywords.some)
-    .some(str => sentence.includes(str));
+    .some(str => sentence.includes(str)) :
+    false;
 
-  const foundEach = topic.keywords.find &&
+  const foundEach = topic.keywords.find ?
    _.toArray(topic.keywords.find)
-    .reduce((sum, str) => sentence.includes(str) ? sum + 1 : sum, 0);
+    .reduce((sum, str) => sentence.includes(str) ? sum + 1 : sum, 0) :
+    0;
 
   if (sentence.includes(name)) { points++; }
 
@@ -45,6 +48,7 @@ const getPriorityTopic = (config, sentence) => {
     if (Type.isPlayer(topic) || Type.isNpc(topic)) { continue; }
 
     const topicWeight = getTopicWeight(topic, prop, sentence);
+    console.log(prop.toUpperCase() + ' WEIGHT: ', topicWeight);
     if (topicWeight > priority.points) {
       priority.points = topicWeight;
       priority.topic  = topic;
@@ -57,13 +61,6 @@ const getPriorityTopic = (config, sentence) => {
 // Turns a string into an array of tokens (words)
 const stripPunctuation = sentence => sentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
 const tokenizeSentence = sentence => stripPunctuation(sentence).split(' ');
-//TODO: Consider using an iterator or generator to iterate through NPC dialogue.
-// Example -- the 1st time you mention a topic, they say one thing. Then another.
-// Or return a function to pass the player obj into.
-// Or configure dialogue so if the .dialogue property is an array,
-// And the config has a delay setting,
-// It will say the dialogue once every `delay` ms.
-// Unless the player leaves the room.
 
 const dialogueFrom = topic => {
   if (topic.dialogue.substring) { return topic.dialogue; }
