@@ -3,6 +3,7 @@
 const Dialogue = require('../../src/dialogue').Dialogue;
 const expect = require('chai').expect;
 const sinon = require('sinon');
+const sandbox = sinon.sandbox.create();
 
 const Npc = require('../../src/npcs').Npc;
 const Player = require('../../src/player').Player;
@@ -50,9 +51,12 @@ describe.only('Parsing Player/NPC Dialogue', () => {
       },
       dialogue: {
         type: Dialogue.Types.RANDOM,
-        say: [
-          '"This is my favorite place," he said.',
-          '"It is so great here," he mumbled unconvincingly.',
+        options: {[
+          say: '"This is my favorite place," he lies.',
+          action: () => player.emit('experience', 500, 'lying');
+        ], [
+          say: '"There is a horrible creature in the basement," he warns.',
+          action: () => player.emit('experience', 500, 'the basement');
         ]
       },
     },
@@ -121,18 +125,30 @@ describe.only('Parsing Player/NPC Dialogue', () => {
   });
 
   describe('displaying dialogue to player', () => {
-    it('should say simple dialogue to player', () => {
-      player.say = sinon.spy();
-      Dialogue.handleInteraction(mockConfig, 'What is the thieves guild?');
-      const expectedLine = 'The man nods, "I need you to infiltrate the thieves guild for me, and find their roster."';
-      expect(player.say.calledWith(expectedLine)).to.be.true;
+    beforeEach(() => {
+      player.say = sandbox.spy();
+      player.emit = sandbox.spy();
+    });
+    afterEach(sandbox.restore);
+
+    describe('simple dialogue', () => {
+      it('should say simple dialogue to player', () => {
+        Dialogue.handleInteraction(mockConfig, 'What is the thieves guild?');
+        const expectedLine = 'The man nods, "I need you to infiltrate the thieves guild for me, and find their roster."';
+        expect(player.say.calledWith(expectedLine)).to.be.true;
+      });
+
+      it('should do an action if present on simple dialogue', () => {
+        mockConfig['murder'].dialogue.action = sandbox.spy();
+        Dialogue.handleInteraction(mockConfig, 'the thieves guild is doing a murder!');
+        expect(mockConfig['murder'].dialogue.action.called).to.be.true;
+      });
     });
 
-    it('should do an action if present on simple dialogue', () => {
-      mockConfig['murder'].dialogue.action = sinon.spy();
-      Dialogue.handleInteraction(mockConfig, 'the thieves guild is doing a murder!');
-      expect(mockConfig['murder'].dialogue.action.called).to.be.true;
+    describe('randomized dialogue', () => {
+
     });
+
   });
 
 });
