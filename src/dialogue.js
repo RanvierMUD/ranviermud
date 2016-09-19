@@ -76,7 +76,31 @@ const handleInteraction = (config, sentence) => {
   if (!npc || !player) {
     throw new ReferenceError('You must include an NPC and a Player in your dialogue config.');
   }
+
+  const priorityTopic = getPriorityTopic(config, sentence);
+
+  if (!priorityTopic) { return; }
+
+  const dialogueHandler = getDialogueHandler(priorityTopic.dialogue.type);
+  dialogueHandler(player, npc, priorityTopic);
+
 };
+
+const getDialogueHandler = type => {
+  switch(type) {
+    case Types.SIMPLE:
+      return simpleDialogueHandler;
+    default:
+      throw new ReferenceError("Unsupported dialogue type.");
+  }
+}
+
+const simpleDialogueHandler = (player, npc, topic) => {
+  const spoken = topic.dialogue.say;
+  const action = topic.dialogue.action;
+  if (spoken) { player.say(spoken); }
+  if (action) { action(); }
+}
 
 const Priority = Object.freeze({
   'LOWEST':  1,

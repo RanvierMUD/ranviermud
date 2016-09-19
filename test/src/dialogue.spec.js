@@ -2,11 +2,12 @@
 
 const Dialogue = require('../../src/dialogue').Dialogue;
 const expect = require('chai').expect;
+const sinon = require('sinon');
 
 const Npc = require('../../src/npcs').Npc;
 const Player = require('../../src/player').Player;
 
-describe('Parsing Player/NPC Dialogue', () => {
+describe.only('Parsing Player/NPC Dialogue', () => {
   const npc = new Npc({});
   const player = new Player({});
 
@@ -26,6 +27,7 @@ describe('Parsing Player/NPC Dialogue', () => {
         say: 'The man nods, "I need you to infiltrate the thieves guild for me, and find their roster."',
       },
     },
+
     'murder': {
       priority: Dialogue.Priority.HIGH,
       keywords: {
@@ -39,6 +41,7 @@ describe('Parsing Player/NPC Dialogue', () => {
         action: () => player.emit('experience', 500, 'the frail politics between the two guilds')
       }
     },
+
     'here': {
       priority: Dialogue.Priority.LOWEST,
       keywords: {
@@ -53,6 +56,7 @@ describe('Parsing Player/NPC Dialogue', () => {
         ]
       },
     },
+
     'quest': {
       priority:
         () => {
@@ -78,6 +82,7 @@ describe('Parsing Player/NPC Dialogue', () => {
         }]
       },
     },
+
     'the awakening': {
       priority: Dialogue.Priority.MEDIUM,
       keywords: {
@@ -102,41 +107,26 @@ describe('Parsing Player/NPC Dialogue', () => {
   };
 
 
-describe('tokenization', () => {
-  it('should be able to break a string into words', () => {
-    expect(Dialogue.stripPunctuation('hello world!')).to.eql(['hello', 'world']);
-  });
-});
-
-describe.only('prioritizing dialogue', () => {
-  it('should be able to pick out the highest priority topic from a list', () => {
-    const tokens = Dialogue.stripPunctuation('the thieves guild is doing a murder!');
-    expect(Dialogue.getPriorityTopic(mockConfig, tokens)).to.eql(mockConfig['murder']); //TODO: Fix.
-  });
-});
-
-describe('Getting next NPC dialogue choice', () => {
-
-  it('should return a string as the next dialogue choice', () => {
-    const npcDialogue = Dialogue.getNpcResponse('what is the thieves guild?', mockConfig);
-    expect(npcDialogue).to.equal(mockConfig['thieves guild'].dialogue);
-  });
-
-  it('should return null if no NPC dialogue is found', () => {
-    const npcDialogue = Dialogue.getNpcResponse('potatos?', mockConfig);
-    expect(npcDialogue).not.to.be.ok;
-  });
-
-  it('should still return a string or series of strings if the NPC can say multiple things', () => {
-    const dialogueArray = mockConfig['here'].dialogue;
-    let dialogueSpoken = [];
-    while (dialogueSpoken.length < 100) {
-      dialogueSpoken.push(Dialogue.getNpcResponse('here', mockConfig));
-    }
-    dialogueArray.forEach(blurb => {
-      expect(dialogueSpoken.indexOf(blurb) > -1).to.be.true;
+  describe('tokenization', () => {
+    it('should be able to remove punctuation that might confuse the npc', () => {
+      expect(Dialogue.stripPunctuation('hello world!')).to.eql('hello world');
     });
   });
-});
+
+  describe('prioritizing dialogue', () => {
+    it('should be able to pick out the highest priority topic from a list', () => {
+      const tokens = Dialogue.stripPunctuation('the thieves guild is doing a murder!');
+      expect(Dialogue.getPriorityTopic(mockConfig, tokens)).to.eql(mockConfig['murder']); //TODO: Fix.
+    });
+  });
+
+  describe('displaying dialogue to player', () => {
+    it('should say simple dialogue to player', () => {
+      player.say = sinon.spy();
+      Dialogue.handleInteraction(mockConfig, 'What is the thieves guild?');
+      const expectedLine = 'The man nods, "I need you to infiltrate the thieves guild for me, and find their roster."';
+      expect(player.say.calledWith(expectedLine)).to.be.true;
+    });
+  });
 
 });
