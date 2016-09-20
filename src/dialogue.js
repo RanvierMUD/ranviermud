@@ -3,6 +3,7 @@
 const Random = require('./random').Random;
 const Type = require('./type').Type;
 const _ = require('./helpers');
+const util = require('util');
 
 const getTopicWeight = (topic, name, sentence) => {
   let points = 0;
@@ -48,7 +49,7 @@ const getPriorityTopic = (config, sentence) => {
     if (prop === 'player' || prop === 'npc') { continue; }
 
     const topicWeight = getTopicWeight(topic, prop, sentence);
-    console.log(prop.toUpperCase() + ' WEIGHT: ', topicWeight);
+
     if (topicWeight > priority.points) {
       priority.points = topicWeight;
       priority.topic  = topic;
@@ -151,10 +152,6 @@ const Types = Object.freeze({
   'TIMED':     'timed',
   'SEQUENCED': 'sequenced'
 });
-
-const timed = (sentence, config) => {};
-const sequence = (sentence, config) => {};
-
 
 exports.Dialogue = {
   stripPunctuation,
