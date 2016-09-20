@@ -3,12 +3,13 @@
 const Dialogue = require('../../src/dialogue').Dialogue;
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const sandbox = sinon.sandbox.create();
 
 const Npc = require('../../src/npcs').Npc;
 const Player = require('../../src/player').Player;
 
 describe.only('Parsing Player/NPC Dialogue', () => {
+  const sandbox = sinon.sandbox.create();
+
   const npc = new Npc({});
   const player = new Player({});
 
@@ -51,13 +52,13 @@ describe.only('Parsing Player/NPC Dialogue', () => {
       },
       dialogue: {
         type: Dialogue.Types.RANDOM,
-        options: {[
+        choices: [{
           say: '"This is my favorite place," he lies.',
-          action: () => player.emit('experience', 500, 'lying');
-        ], [
+          action: () => player.emit('experience', 500, 'lying')
+        }, {
           say: '"There is a horrible creature in the basement," he warns.',
-          action: () => player.emit('experience', 500, 'the basement');
-        ]
+          action: () => player.emit('experience', 500, 'the basement')
+        }]
       },
     },
 
@@ -129,7 +130,8 @@ describe.only('Parsing Player/NPC Dialogue', () => {
       player.say = sandbox.spy();
       player.emit = sandbox.spy();
     });
-    afterEach(sandbox.restore);
+
+    afterEach(() => sandbox.restore());
 
     describe('simple dialogue', () => {
       it('should say simple dialogue to player', () => {
@@ -146,7 +148,19 @@ describe.only('Parsing Player/NPC Dialogue', () => {
     });
 
     describe('randomized dialogue', () => {
+      it('should choose option at random', () => {
+        mockConfig['here'].dialogue.choices[0].action = sinon.spy();
+        mockConfig['here'].dialogue.choices[1].action = sinon.spy();
+        let i = 0;
+        while(i++ < 10) {
+          Dialogue.handleInteraction(mockConfig, 'Where am I, what is this place?');
+        }
 
+        expect(player.say.called).to.be.true;
+        expect(mockConfig['here'].dialogue.choices[0].action.called).to.be.true;
+        expect(mockConfig['here'].dialogue.choices[1].action.called).to.be.true;
+
+      });
     });
 
   });
