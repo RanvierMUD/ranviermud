@@ -85,28 +85,50 @@ const getDialogueHandler = type => {
       return simpleDialogueHandler;
     case Types.RANDOM:
       return randomDialogueHandler;
+    case Types.TIMED:
+      return timedDialogueHandler;
     default:
       throw new ReferenceError("Unsupported dialogue type.");
   }
-}
+};
 
 const simpleDialogueHandler = (player, npc, topic) => {
   const spoken = topic.dialogue.say;
   const action = topic.dialogue.action;
   enactDialogue(player, spoken, action);
-}
+};
 
 const randomDialogueHandler = (player, npc, topic) => {
   const choice = Random.fromArray(topic.dialogue.choices);
   const spoken = choice.say;
   const action = choice.action;
   enactDialogue(player, spoken, action);
+};
+
+const timedDialogueHandler = (player, npc, topic) => {
+  const sequence = topic.dialogue.sequence;
+  if (!sequence) { throw new ReferenceError("You need a sequence to use timed dialogue."); }
+  enactDialogueSequence(player, npc, sequence);
+};
+
+const enactDialogueSequence = (player, npc, sequence, index) => {
+  if (player.getLocation() === npc.getLocation()) {
+    index = index || 0;
+    const interaction = sequence[index];
+    if (!interaction) { return; }
+
+    const spoken = interaction.say;
+    const action = interaction.action;
+    const delay  = interaction.delay || 1000;
+    enactDialogue(player, spoken, action);
+    setTimeout(enactDialogueSequence(player, npc, sequence, index + 1), delay);
+  }
 }
 
 const enactDialogue = (player, spoken, action) => {
   if (spoken) { player.say(spoken); }
   if (action) { action(); }
-}
+};
 
 //TODO: Consider extracting these enums/consts from the main dialogue script file.
 const Priority = Object.freeze({
