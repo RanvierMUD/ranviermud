@@ -45,7 +45,7 @@ const getPriorityTopic = (config, sentence) => {
 
   for (let prop in config) {
     const topic = config[prop];
-    if (Type.isPlayer(topic) || Type.isNpc(topic)) { continue; }
+    if (prop === 'player' || prop === 'npc') { continue; }
 
     const topicWeight = getTopicWeight(topic, prop, sentence);
     console.log(prop.toUpperCase() + ' WEIGHT: ', topicWeight);
@@ -90,6 +90,8 @@ const getDialogueHandler = type => {
   switch(type) {
     case Types.SIMPLE:
       return simpleDialogueHandler;
+    case Types.RANDOM:
+      return randomDialogueHandler;
     default:
       throw new ReferenceError("Unsupported dialogue type.");
   }
@@ -98,6 +100,17 @@ const getDialogueHandler = type => {
 const simpleDialogueHandler = (player, npc, topic) => {
   const spoken = topic.dialogue.say;
   const action = topic.dialogue.action;
+  enactDialogue(player, spoken, action);
+}
+
+const randomDialogueHandler = (player, npc, topic) => {
+  const choice = Random.fromArray(topic.dialogue.choices);
+  const spoken = choice.say;
+  const action = choice.action;
+  enactDialogue(player, spoken, action);
+}
+
+const enactDialogue = (player, spoken, action) => {
   if (spoken) { player.say(spoken); }
   if (action) { action(); }
 }
