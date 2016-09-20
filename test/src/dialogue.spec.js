@@ -170,7 +170,7 @@ describe.only('Parsing Player/NPC Dialogue', () => {
       const badConfig = Object.assign({}, mockConfig);
       delete badConfig['murder'].keywords;
       const badConfigTry = () => Dialogue.handleInteraction(badConfig, 'the thieves guild is doing a murder!');
-      expect(badConfigTry).to.throw;
+      expect(badConfigTry).to.throw(ReferenceError);
     });
 
     it('should throw if no player or npc', () => {
@@ -179,12 +179,20 @@ describe.only('Parsing Player/NPC Dialogue', () => {
       delete horribleConfig.player;
       const horribleConfigTry = () => Dialogue.handleInteraction(horribleConfig, 'stuff and things');
 
-      expect(horribleConfigTry).to.throw;
+      expect(horribleConfigTry).to.throw(ReferenceError);
 
       horribleConfig.player = player;
       delete horribleConfig.npc;
 
-      expect(horribleConfigTry).to.throw;
+      expect(horribleConfigTry).to.throw(ReferenceError);
+    });
+
+    it('should throw if dialogue type is unsupported', () => {
+      const awfulConfig = Object.assign({}, mockConfig);
+      awfulConfig['murder'].dialogue.type = "POTATOES";
+      const awfulConfigTry = () => Dialogue.handleInteraction(awfulConfig, 'the thieves guild is doing a murder!');
+
+      expect(awfulConfigTry).to.throw(ReferenceError);
     });
   });
 
