@@ -20,7 +20,7 @@
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 91 | invis
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 142 | Do the same way as above once you extract the admin commands.
 | /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 82 | Consider using a map instead?
-| /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 111 | Consider extracting these enums/consts from the main dialogue script file.
+| /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 133 | Consider extracting these enums/consts from the main dialogue script file.
 | /Users/seanodonohue/myForks/ranviermud/src/doors.js | 44 | Refactor to use the bound functions in external code.
 | /Users/seanodonohue/myForks/ranviermud/src/effects.js | 4 | Extract into own directory. Too many effects.
 | /Users/seanodonohue/myForks/ranviermud/src/effects.js | 5 | Make an atom snippet for this?
