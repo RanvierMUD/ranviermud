@@ -1,7 +1,6 @@
 'use strict';
 
 const Random = require('./random').Random;
-const Type = require('./type').Type;
 const _ = require('./helpers');
 const util = require('util');
 
@@ -63,14 +62,6 @@ const getPriorityTopic = (config, sentence) => {
 const stripPunctuation = sentence => sentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
 const tokenizeSentence = sentence => stripPunctuation(sentence).split(' ');
 
-const dialogueFrom = topic => {
-  if (topic.dialogue.substring) { return topic.dialogue; }
-  if (Array.isArray(topic.dialogue)) {
-    return Random.fromArray(topic.dialogue);
-  }
-};
-
-
 const handleInteraction = (config, sentence) => {
   const npc    = config.npc;
   const player = config.player;
@@ -88,6 +79,7 @@ const handleInteraction = (config, sentence) => {
 };
 
 const getDialogueHandler = type => {
+  //TODO: Consider using a map instead?
   switch(type) {
     case Types.SIMPLE:
       return simpleDialogueHandler;
@@ -116,6 +108,7 @@ const enactDialogue = (player, spoken, action) => {
   if (action) { action(); }
 }
 
+//TODO: Consider extracting these enums/consts from the main dialogue script file.
 const Priority = Object.freeze({
   'LOWEST':  1,
   'LOW':     2,
