@@ -165,4 +165,27 @@ describe.only('Parsing Player/NPC Dialogue', () => {
 
   });
 
+  describe('Error handling', () => {
+    it('should throw if topic has no keywords', () => {
+      const badConfig = Object.assign({}, mockConfig);
+      delete badConfig['murder'].keywords;
+      const badConfigTry = () => Dialogue.handleInteraction(badConfig, 'the thieves guild is doing a murder!');
+      expect(badConfigTry).to.throw;
+    });
+
+    it('should throw if no player or npc', () => {
+      const horribleConfig = Object.assign({}, mockConfig);
+
+      delete horribleConfig.player;
+      const horribleConfigTry = () => Dialogue.handleInteraction(horribleConfig, 'stuff and things');
+
+      expect(horribleConfigTry).to.throw;
+
+      horribleConfig.player = player;
+      delete horribleConfig.npc;
+
+      expect(horribleConfigTry).to.throw;
+    });
+  });
+
 });

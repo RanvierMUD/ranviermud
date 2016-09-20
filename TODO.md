@@ -19,6 +19,8 @@
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 90 | boostAttr
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 91 | invis
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 142 | Do the same way as above once you extract the admin commands.
+| /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 82 | Consider using a map instead?
+| /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 111 | Consider extracting these enums/consts from the main dialogue script file.
 | /Users/seanodonohue/myForks/ranviermud/src/doors.js | 44 | Refactor to use the bound functions in external code.
 | /Users/seanodonohue/myForks/ranviermud/src/effects.js | 4 | Extract into own directory. Too many effects.
 | /Users/seanodonohue/myForks/ranviermud/src/effects.js | 5 | Make an atom snippet for this?
@@ -56,10 +58,10 @@
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 3 | Refactor.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 112 | Use in player/npc class.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 74 | Extract this to some kind of combat messaging helper?
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 16 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 23 | Different messages for different relative amounts of sanity loss.
