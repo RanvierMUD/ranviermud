@@ -34,6 +34,7 @@ const toArray = thing => [].concat(thing);
  */
 const hasKeys = obj => !!Object.keys(obj).length;
 
+
 /**
  * Pads leftly.
  */
