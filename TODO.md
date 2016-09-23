@@ -1,17 +1,8 @@
-### FIXMEs
-| Filename | line # | FIXME
-|:------|:------:|:------
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 87 | Can be done better with changes to npc class.
-| /Users/seanodonohue/myForks/ranviermud/src/items.js | 12 | Refactor plz;
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 292 | This could be a problem if the combat is between two NPCs or two players.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 293 | The fix might have to go in statusUtils?
-| /Users/seanodonohue/myForks/ranviermud/scripts/behaviors/objects/wearable.js | 2 | For some reason this is not working. Why?
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 70 | This does not really seem to be working.
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 71 | Consider making it a 'scout' command/skill.
-
 ### TODOs
 | Filename | line # | TODO
 |:------|:------:|:------
+| /Users/seanodonohue/myForks/ranviermud/src/channels.js | 30 | Modify yell to emit on all NPCs in area.
+| /Users/seanodonohue/myForks/ranviermud/src/channels.js | 69 | Modify tell to work with NPCs in same room.
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 249 | Weapon skills related to weapon type?
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 250 | General combat skills?
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
@@ -73,3 +64,14 @@
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 69 | Improve based on player stats/skills?
 | /Users/seanodonohue/myForks/ranviermud/commands/train.js | 20 | Extract into own function in Skills module.
 | /Users/seanodonohue/myForks/ranviermud/commands/whisper.js | 2 | Refactor to be a channel.
+
+### FIXMEs
+| Filename | line # | FIXME
+|:------|:------:|:------
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 87 | Can be done better with changes to npc class.
+| /Users/seanodonohue/myForks/ranviermud/src/items.js | 12 | Refactor plz;
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 292 | This could be a problem if the combat is between two NPCs or two players.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 293 | The fix might have to go in statusUtils?
+| /Users/seanodonohue/myForks/ranviermud/scripts/behaviors/objects/wearable.js | 2 | For some reason this is not working. Why?
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 70 | This does not really seem to be working.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 71 | Consider making it a 'scout' command/skill.
