@@ -12,6 +12,11 @@
 ### TODOs
 | Filename | line # | TODO
 |:------|:------:|:------
+<<<<<<< Updated upstream
+=======
+| /Users/seanodonohue/myForks/ranviermud/src/channels.js | 34 | Modify yell to emit on all NPCs in area.
+| /Users/seanodonohue/myForks/ranviermud/src/channels.js | 73 | Modify tell to work with NPCs in same room.
+>>>>>>> Stashed changes
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 249 | Weapon skills related to weapon type?
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 250 | General combat skills?
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
@@ -32,13 +37,14 @@
 | /Users/seanodonohue/myForks/ranviermud/src/feats.js | 79 | Implement
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 39 | Dynamically pull in list of admins
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 15 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
-| /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 205 | Have spawn inventory but also add same inv functionality as player
+| /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 214 | Have spawn inventory but also add same inv functionality as player
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 330 | Consider using Random.roll instead.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 592 | Use chalk node module to create color-coded logging messages.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 649 | Make a similar function but for NPCs::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 675 | Should go in other module::::::::::::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 686 | Put this as a function in the combatUtils module.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 331 | Put in perception skill helper file
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 342 | Consider using Random.roll instead.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 604 | Use chalk node module to create color-coded logging messages.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 661 | Make a similar function but for NPCs::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 687 | Should go in other module::::::::::::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 698 | Put this as a function in the combatUtils module.
 | /Users/seanodonohue/myForks/ranviermud/src/rooms.js | 3 | Refactor
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 6 | Enhance for co-op, allow for setInCombat of NPC with multiple players.
@@ -58,10 +64,12 @@
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 3 | Refactor.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 112 | Use in player/npc class.
-| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
-| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 74 | Extract this to some kind of combat messaging helper?
 | /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 134 | Extract this to some kind of combat messaging helper?
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 258 | Use the timed dialogue method for this bit, if possible.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 16 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 23 | Different messages for different relative amounts of sanity loss.
