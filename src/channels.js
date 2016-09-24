@@ -14,6 +14,10 @@ exports.Channels = {
 					p.prompt();
 				}
 			});
+			npcs.eachIf(
+				npc => npc.getLocation() === player.getLocation(),
+				npc => npc.emit('playerSay', player, players, rooms, npcs, args)
+			);
 		}
 	},
 
