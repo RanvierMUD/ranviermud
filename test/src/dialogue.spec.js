@@ -111,6 +111,7 @@ describe.only('Parsing Player/NPC Dialogue', () => {
     }
   };
 
+  //TODO: Prerequisites for each dialogue topic.
 
   describe('tokenization', () => {
     it('should be able to remove punctuation that might confuse the npc', () => {

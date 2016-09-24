@@ -302,21 +302,33 @@ const Player = function PlayerConstructor(socket) {
 
     if (!self.met.hasOwnProperty(name)) {
       if (introducing) {
-        self.met[name] = {
-          reputation: 0
-        }
+        self.met[name] = { reputation: 0 };
         self.met.length++;
       }
 
-      return false
+      return false;
     }
 
     if (introducing) { self.say('You already know them quite well.'); }
     return true;
   }
 
-  ///// ----- Should be in Skills module -------- //////
+  self.hasDiscussed = (entity, topic, discussing) => {
+    const name = entity.getName();
 
+    if (self.met[name] && self.met[name][topic]) {
+      return true;
+    } else {
+      if (self.met[name] && discussing) {
+        self.met[name][topic] = true;
+      }
+      return false;
+    }
+
+  }
+
+  ///// ----- Should be in Skills module -------- //////
+  //TODO: Put in perception skill helper file
   /**
   * Spot checks
   * @param int Difficulty -- What they need to beat with their roll
