@@ -114,10 +114,19 @@ const Npcs = function NpcManager() {
    * @param function callback
    */
   self.each = callback => {
-    for (const npc in self.npcs) {
+    for (let npc in self.npcs) {
       callback(self.npcs[npc]);
     }
   };
+
+  self.eachIf = (predicate, callback) => {
+    for (let one in self.npcs) {
+      const npc = self.npcs[one];
+      if (predicate(npc)) {
+        callback(npc);
+      }
+    }
+  }
 
   /**
    * Blows away an NPC

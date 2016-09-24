@@ -72,7 +72,7 @@ exports.listeners = {
         say: '"My humans used to run this place," the cat says, glancing up at you. "Their kit is still in the basement."',
         action: giveExpFor('learning of the former owners of the Serpent\'s Hiss', 75),
       }, {
-        say: '"Since the Quarantine, I\'ve been taking care of the place," the cat purrs, "I locked the upstairs room and the cellar door.  For good reason."'
+        say: '"Since the Quarantine, I\'ve been taking care of the place," the cat purrs, "I locked the upstairs room and the cellar door.  For good reason."',
         action: giveExpFor('learning of the Quarantine from a curious cat', 100)
       }];
 
