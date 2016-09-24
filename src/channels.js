@@ -6,7 +6,7 @@ exports.Channels = {
 	say: {
 		name: 'say',
 		description: 'Talk to those around you',
-		use: (args, player, players) => {
+		use: (args, player, players, rooms, npcs) => {
 			args = args.replace(newLine, '');
 			players.broadcastAt("<bold><cyan>" + player.getName() + "</cyan></bold> says '" + args + "'", player);
 			players.eachExcept(player, p => {
@@ -14,6 +14,10 @@ exports.Channels = {
 					p.prompt();
 				}
 			});
+			npcs.eachIf(
+				npc => npc.getLocation() === player.getLocation(),
+				npc => npc.emit('playerSay', player, players, rooms, npcs, args)
+			);
 		}
 	},
 
@@ -27,10 +31,11 @@ exports.Channels = {
 		}
 	},
 
+	//TODO: Modify yell to emit on all NPCs in area.
 	yell: {
 		name: 'yell',
 		description: 'Yell to everyone in the same area',
-		use: (args, player, players, rooms) => {
+		use: (args, player, players, rooms, npcs) => {
 			args = args.replace(newLine, '').toUpperCase();
 
 			const playerRoom = rooms.getAt(player.getLocation());
@@ -65,10 +70,11 @@ exports.Channels = {
 		}
 	},
 
+	//TODO: Modify tell to work with NPCs in same room.
 	tell: {
 		name: 'tell',
 		description: 'Talk to a specific person',
-		use: (args, player, players) => {
+		use: (args, player, players, rooms, npcs) => {
 			const nameEnd = args.indexOf(" ");
 			const target = args.substring(0, nameEnd).toLowerCase();
 			const text = args.substring(nameEnd /* to end of args */);

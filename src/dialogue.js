@@ -158,6 +158,15 @@ const Keywords = Object.freeze({
     'before',
     'quarantine',
     'ended'
+  ],
+  'HERE': [
+    'here',
+    'where am i',
+    'where is this',
+    'this place',
+    'location',
+    'area',
+    'place'
   ]
 });
 

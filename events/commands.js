@@ -137,7 +137,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
                 player.say(command + " is not a valid command.");
                 return true;
               } else {
-                Channels[command].use(args, player, players, rooms);
+                Channels[command].use(args, player, players, rooms, npcs);
                 return true
               }
             } else {
