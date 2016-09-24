@@ -56,13 +56,15 @@ exports.listeners = {
         'fang',
         'downstairs'
       ];
+
+      //TODO: Extract to dialogue or level utils?
       const giveExpFor = (topic, points) => () => {
         if (!player.hasDiscussed(npc, topic, true)) {
           player.emit('experience', points || 50, 'the history of the tavern');
         }
       };
 
-      const hasMet = player.hasMet(npc);
+      const hasMet = () => player.hasMet(npc);
       const serpentsHissDialogue = [{
         say: '"This tavern has been around for as long as I\'ve been around, for what that\'s worth," the cat murmurs, licking its paws.',
         action: giveExpFor('the age of the half-abandoned tavern, the Serpent\'s Hiss'),
@@ -73,6 +75,8 @@ exports.listeners = {
         say: '"Since the Quarantine, I\'ve been taking care of the place," the cat purrs, "I locked the upstairs room and the cellar door.  For good reason."'
         action: giveExpFor('learning of the Quarantine from a curious cat', 100)
       }];
+
+
       const npcDialogueTree = {
         npc, player,
 
@@ -87,9 +91,15 @@ exports.listeners = {
             type:    Dialogue.Types.RANDOM,
             choices: serpentsHissDialogue
           },
+          prerequisite: hasMet
         },
 
+        // Next dialogue branch...
+
       };
+
+      Dialogue.handleInteraction(npcDialogueTree, args);
+
     }
   },
 
