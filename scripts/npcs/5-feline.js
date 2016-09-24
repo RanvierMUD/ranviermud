@@ -2,6 +2,7 @@
 
 const Broadcast = require('../../src/broadcast').Broadcast;
 const Random    = require('../../src/random').Random;
+const Dialogue  = require('../../src/dialogue').Dialogue;
 const util = require('util');
 
 exports.listeners = {
@@ -40,6 +41,65 @@ exports.listeners = {
           thirdPartyMessage: msg
         });
       }
+    }
+  },
+
+  playerSay: l10n => {
+    return function _talk(player, players, rooms, npcs, args) {
+      const npc = this;
+      const serpentsHissKeywords = [
+        'serpent',
+        'serpents',
+        'hiss',
+        'tavern',
+        'bar',
+        'fang',
+        'downstairs'
+      ];
+
+      //TODO: Extract to dialogue or level utils?
+      const giveExpFor = (topic, points) => () => {
+        if (!player.hasDiscussed(npc, topic, true)) {
+          player.emit('experience', points || 50, 'the history of the tavern');
+        }
+      };
+
+      const hasMet = () => player.hasMet(npc);
+      const serpentsHissDialogue = [{
+        say: '"This tavern has been around for as long as I\'ve been around, for what that\'s worth," the cat murmurs, licking its paws.',
+        action: giveExpFor('the age of the half-abandoned tavern, the Serpent\'s Hiss'),
+      }, {
+        say: '"My humans used to run this place," the cat says, glancing up at you. "Their kit is still in the basement."',
+        action: giveExpFor('learning of the former owners of the Serpent\'s Hiss', 75),
+      }, {
+        say: '"Since the Quarantine, I\'ve been taking care of the place," the cat purrs, "I locked the upstairs room and the cellar door.  For good reason."',
+        action: giveExpFor('learning of the Quarantine from a curious cat', 100)
+      }];
+
+
+      const npcDialogueTree = {
+        npc, player,
+
+        'where am i': {
+          priority: Dialogue.Priority.LOW,
+          keywords: {
+            every: 'this place',
+            some:   serpentsHissKeywords,
+            find:   Dialogue.Keywords.HERE.concat(serpentsHissKeywords)
+          },
+          dialogue: {
+            type:    Dialogue.Types.RANDOM,
+            choices: serpentsHissDialogue
+          },
+          prerequisite: hasMet
+        },
+
+        // Next dialogue branch...
+
+      };
+
+      Dialogue.handleInteraction(npcDialogueTree, args);
+
     }
   },
 
@@ -195,6 +255,7 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const playerName = player.getName();
 
+      //TODO: Use the timed dialogue method for this bit, if possible.
       const secondPartyMessage =
         '<bold>The cat rears up on his hind legs and considers you for a moment.</bold>\n' +
         '<magenta>"Welcome to my tavern, human,"</magenta> he mews in a droll tone.\n' +
