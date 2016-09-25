@@ -29,7 +29,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
                    + args + ".";
 
     if (args === 'TOPICS') {
-      for (topic in HelpFiles) {
+      for (let topic in HelpFiles) {
         if (topic === 'NOT_FOUND' || topic === 'NO_HELP_FILE') { continue; }
         player.say(topic.toLowerCase());
       }
