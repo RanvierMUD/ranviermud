@@ -5,6 +5,7 @@ const util      = require('util');
 const HelpFiles = require('../src/help_files').HelpFiles;
 const wrap      = require('wrap-ansi');
 const _         = require('../src/helpers');
+const sprintf = require('sprintf').sprintf;
 
 /*
   NEW: {
@@ -27,6 +28,25 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const errMsg = "" + player.getName() +
                    " attempted to get a helpfile for "
                    + args + ".";
+
+    if (args === 'TOPICS') {
+      let topics = [];
+      let maxLength = 0;
+      for (let topic in HelpFiles) {
+        if (topic === 'NOT_FOUND' || topic === 'NO_HELP_FILE') { continue; }
+        if (topic.length > maxLength) { maxLength = topic.length; }
+        topics.push(topic.toLowerCase());
+      }
+
+      //TODO: Extract this (its also used in commands)
+      let len = topics.length + 1;
+      for (let i = 1; i < len; i++) {
+        let endOfColumn = i % 5 === 0;
+        player[endOfColumn ? 'say' : 'write'](sprintf('%-' + (maxLength + 1) + 's', topics[i-1]));
+      }
+
+      return;
+    }
 
     try      { displayHelpFile(args); }
     catch(e) { util.log(e); }

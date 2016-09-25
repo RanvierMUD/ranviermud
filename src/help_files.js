@@ -2,7 +2,7 @@ const HelpFiles = {
 
   HELP:  {
     title: 'Getting help',
-    body: 'Type \'commands\' to see a list of possible commands.\nType \'help (command)\' to see more information about that command.\nAlso try \'help new\' for a list of introductory topics.\n\nThese help files will include a description, a usage (in the case of commands), and some related help topics.',
+    body: 'Type \'commands\' to see a list of possible commands.\nType \'help (command)\' to see more information about that command.\nAlso try \'help new\' for a list of introductory topics, and `help topics` for a list of all topics.\n\nThese help files will include a description, a usage (in the case of commands), and some related help topics.',
   },
 
   NEW: {
@@ -21,6 +21,19 @@ const HelpFiles = {
     title: 'Sticking Together',
     body: 'Communication in Ranvier can happen through many channels. Tell and chat are considered out-of-character.',
     related: ['channels', 'whisper', 'emote', 'say', 'tell']
+  },
+
+  DIALOGUE: {
+    title: 'Dialogue with NPCs',
+    body:  'Some non-player characters will react to things you say, whisper, or yell. You may find out if NPCs are capable of dialogue by using `introduce` on them. \nSome beings around the city will be shy until certain conditions are met.',
+    related: ['channels', 'introduce', 'npcs']
+  },
+
+  INTRODUCE: {
+    title: 'Introducing Yourself',
+    body:  'To see if a person or creature is capable of engaging in dialogue, `introduce` yourself to them. \nDon\'t be shy!',
+    usage: ['introduce [npc name]'],
+    related: ['dialogue', 'channels', 'npcs']
   },
 
   LEVELS: {
