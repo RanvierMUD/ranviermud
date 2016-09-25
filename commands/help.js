@@ -28,6 +28,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
                    " attempted to get a helpfile for "
                    + args + ".";
 
+    if (args === 'TOPICS') {
+      for (topic in HelpFiles) {
+        if (topic === 'NOT_FOUND' || topic === 'NO_HELP_FILE') { continue; }
+        player.say(topic.toLowerCase());
+      }
+      return;
+    }
+
     try      { displayHelpFile(args); }
     catch(e) { util.log(e); }
     finally  { util.log(errMsg); }
