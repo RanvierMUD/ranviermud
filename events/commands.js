@@ -55,6 +55,11 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
             return Commands.player_commands.look(args, player);
           }
 
+          // Same with 'i' and inventory.
+          if (command === 'i') {
+            return Commands.player_commands.inventory(args, player);
+          }
+
           if (command[0] === '@') {
             const adminCommand = command.slice(1);
             if (adminCommand in Commands.admin_commands) {
