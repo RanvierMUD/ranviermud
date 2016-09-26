@@ -60,7 +60,6 @@ const Feats = {
     activate: player => {
       if (player.getEffects('ironskin')) {
         player.removeEffect('leatherskin');
-        player.removeEffect('leatherskin_slow');
       }
       player.addEffect('ironskin', Effects.defenseBoost({
         player,
