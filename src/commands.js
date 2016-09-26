@@ -77,7 +77,7 @@ const Commands = {
         const attr = args[0];
 
         if (attr in attributes) {
-          const score = parseInt(args[2], 10);
+          const score = parseInt(args[1], 10);
           if (!score || isNaN(score)) {
             player.say('<red>ADMIN: Not a real number.</red>');
             return;
