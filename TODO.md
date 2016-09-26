@@ -6,7 +6,6 @@
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 249 | Weapon skills related to weapon type?
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 250 | General combat skills?
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
-| /Users/seanodonohue/myForks/ranviermud/src/commands.js | 113 | boostAttr
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 114 | invis
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 165 | Do the same way as above once you extract the admin commands.
 | /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 82 | Consider using a map instead?
@@ -37,14 +36,14 @@
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 135 | Remove this when allowing for multicombat.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 136 | Use an array of targets for multicombat.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 237 | What if there are no players involved in combat?
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 328 | Add to utils helper.js file
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 337 | Use filter to remove the combatants from an array. Probably do this inside the player/npc objs.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 341 | Handle PvP or NvN combat ending differently.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 367 | consider doing sanity damage to all other players in the room.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 379 | Extract this to combat utils.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 380 | Make NPCs have fleeing behavior, too.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 381 | Emit flee?
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 393 | Use Broadcast module or extract to the Broadcast file.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 327 | Add to utils helper.js file
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 336 | Use filter to remove the combatants from an array. Probably do this inside the player/npc objs.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 340 | Handle PvP or NvN combat ending differently.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 366 | consider doing sanity damage to all other players in the room.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 378 | Extract this to combat utils.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 379 | Make NPCs have fleeing behavior, too.
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 380 | Emit flee?
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 392 | Use Broadcast module or extract to the Broadcast file.
 | /Users/seanodonohue/myForks/ranviermud/src/skills.js | 30 | Pull into own files.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 3 | Refactor.
@@ -73,8 +72,6 @@
 |:------|:------:|:------
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 87 | Can be done better with changes to npc class.
 | /Users/seanodonohue/myForks/ranviermud/src/items.js | 12 | Refactor plz;
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 292 | This could be a problem if the combat is between two NPCs or two players.
-| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 293 | The fix might have to go in statusUtils?
-| /Users/seanodonohue/myForks/ranviermud/scripts/behaviors/objects/wearable.js | 2 | For some reason this is not working. Why?
+| /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 292 | In statusUtils: This could be a problem if the combat is between two NPCs or two players.
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 70 | This does not really seem to be working.
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 71 | Consider making it a 'scout' command/skill.

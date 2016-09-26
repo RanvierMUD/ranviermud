@@ -289,8 +289,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     // Display combat prompt.
     const getCondition = entity => {
-        //FIXME: This could be a problem if the combat is between two NPCs or two players.
-        //FIXME: The fix might have to go in statusUtils?
+        //FIXME: In statusUtils: This could be a problem if the combat is between two NPCs or two players.
         const npc    = Type.isPlayer(entity) ? target : false;
         const max    = entity.getAttribute('max_health');
         return statusUtils.getHealthText(max, player, npc);

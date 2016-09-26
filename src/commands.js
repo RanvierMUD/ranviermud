@@ -110,7 +110,7 @@ const Commands = {
         player.say("<red>ADMIN: 404: Room not found.</red>");
 
       },
-    //TODO: boostAttr
+      
     //TODO: invis
   },
 

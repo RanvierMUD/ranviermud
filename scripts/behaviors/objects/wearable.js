@@ -1,5 +1,4 @@
 const Broadcast = require('../../../src/broadcast').Broadcast;
-//FIXME: For some reason this is not working. Why?
 exports.listeners = {
 	wear: function (l10n) {
 		return function (location, room, player, players) {
