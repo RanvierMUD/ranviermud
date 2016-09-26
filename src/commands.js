@@ -71,23 +71,27 @@ const Commands = {
 
     setAttribute: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
+        args = _.splitArgs(args);
+
         const attributes = player.getAttributes();
-        args = splitArgs(args);
         const attr = args[0];
+
         if (attr in attributes) {
           const score = parseInt(args[2], 10);
           if (!score || isNaN(score)) {
             player.say('<red>ADMIN: Not a real number.</red>');
             return;
           }
+
           player.setAttribute(attr, score);
+
           player.say("<red>ADMIN: Set " + attr + " to " + score + ".</red>");
           util.log("@@Admin: " + player.getName() + " set attr " + attr + " to " + score + ".");
           return;
         }
 
         player.say('<red>ADMIN: No such attribute.</red>');
-      }
+      },
 
     teleport: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
