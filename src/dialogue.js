@@ -178,11 +178,12 @@ const Types = Object.freeze({
 });
 
 exports.Dialogue = {
-  stripPunctuation,
-  getPriorityTopic,
-  handleInteraction,
+  /* Handlers */
+  simpleDialogueHandler, randomDialogueHandler, timedDialogueHandler,
 
-  /*           Constants                */
-  Priority,            Keywords,
-  Types
+  /* Utilities and main handler */
+  stripPunctuation,      getPriorityTopic,      handleInteraction,
+
+  /* Constants */
+  Priority,              Keywords,              Types
 };
