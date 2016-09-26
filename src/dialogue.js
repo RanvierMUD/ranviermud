@@ -45,8 +45,8 @@ const getPriorityTopic = (config, sentence) => {
 
   for (let prop in config) {
     const topic = config[prop];
-    if (_.has(['npc', 'player', 'prereq'], prop)) { continue; }
-
+    if (_.has(['npc', 'player', 'prerequisite'], prop)) { continue; }
+    if (topic.prerequisite && !topic.prerequisite()) { continue; }
     const topicWeight = getTopicWeight(topic, prop, sentence);
 
     if (topicWeight > priority.points) {

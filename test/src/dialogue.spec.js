@@ -28,6 +28,7 @@ describe.only('Parsing Player/NPC Dialogue', () => {
         type: Dialogue.Types.SIMPLE,
         say: 'The man nods, "I need you to infiltrate the thieves guild for me, and find their roster."',
       },
+      prerequisite: () => player.hasMet(npc)
     },
 
     'murder': {
