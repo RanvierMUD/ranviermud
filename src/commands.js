@@ -36,7 +36,6 @@ const Commands = {
   //TODO: Extract into individual files.
   admin_commands: {
 
-    //TODO: Fix this buggy stuff
     addSkill: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const Skills = require('./skills').Skills;
@@ -69,6 +68,26 @@ const Commands = {
         }
         util.log("@@Admin: " + player.getName() + " added feat:", feat.name);
       },
+
+    setAttribute: (rooms, items, players, npcs, Commands) =>
+      (player, args) => {
+        const attributes = player.getAttributes();
+        args = splitArgs(args);
+        const attr = args[0];
+        if (attr in attributes) {
+          const score = parseInt(args[2], 10);
+          if (!score || isNaN(score)) {
+            player.say('<red>ADMIN: Not a real number.</red>');
+            return;
+          }
+          player.setAttribute(attr, score);
+          player.say("<red>ADMIN: Set " + attr + " to " + score + ".</red>");
+          util.log("@@Admin: " + player.getName() + " set attr " + attr + " to " + score + ".");
+          return;
+        }
+
+        player.say('<red>ADMIN: No such attribute.</red>');
+      }
 
     teleport: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
