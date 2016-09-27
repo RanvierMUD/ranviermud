@@ -1,5 +1,5 @@
 'use strict';
-const LevelUtil = require('../../src/levels').LevelUtil;
+const LevelUtil = require('../../../src/levels').LevelUtil;
 
 
 exports.listeners = {
@@ -13,7 +13,7 @@ exports.listeners = {
 		return function (room, attacker, defender, players, hitLocation) {
 			players.eachIf(
 				p => p.getLocation() === defender.getLocation() && p !== attacker,
-				p => p.emit('experience', LevelUtils.mobExp(defender.getAttribute('level')) \ 3, 'dying')
+				p => p.emit('experience', LevelUtils.mobExp(defender.getAttribute('level')) * .33, 'dying')
 			);
 		}
 	}
