@@ -1,7 +1,20 @@
+'use strict';
+const LevelUtil = require('../../../src/levels').LevelUtil;
+
+
 exports.listeners = {
 	hit: function (l10n) {
 		return function (room, attacker, defender, players, hitLocation, damageDealt) {
 			checkForCrit(attacker, defender, damageDealt);
+		}
+	},
+
+	deathblow: function(l10n) {
+		return function (room, attacker, defender, players, hitLocation) {
+			players.eachIf(
+				p => p.getLocation() === defender.getLocation() && p !== attacker,
+				p => p.emit('experience', LevelUtil.mobExp(defender.getAttribute('level')) * .33, 'dying')
+			);
 		}
 	},
 };
