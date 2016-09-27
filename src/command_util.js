@@ -49,7 +49,6 @@ function inSameRoom(entity, target) {
 
 function findItemInEquipment(lookString, being, hydrate) {
   const equipment = being.getInventory().filter(i => i.isEquipped());
-  util.log('eq::::::', equipment);
   const thing = CommandUtil.parseDot(lookString, equipment,
     function(item) {
       return item && item.hasKeyword(this.keyword, being.getLocale());
