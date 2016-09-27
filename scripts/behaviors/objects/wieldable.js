@@ -1,9 +1,17 @@
+'use strict';
+
 exports.listeners = {
 	hit: function (l10n) {
 		return function (room, attacker, defender, players, hitLocation, damageDealt) {
 			checkForCrit(attacker, defender, damageDealt);
 		}
 	},
+
+	deathblow: function(l10n) {
+		return function (room, attacker, defender, players, hitLocation) {
+
+		}
+	}
 };
 
 function checkForCrit(attacker, defender, damageDealt) {
