@@ -16,7 +16,7 @@ exports.listeners = {
 				p => p.emit('experience', LevelUtils.mobExp(defender.getAttribute('level')) * .33, 'dying')
 			);
 		}
-	}
+	},
 };
 
 function checkForCrit(attacker, defender, damageDealt) {

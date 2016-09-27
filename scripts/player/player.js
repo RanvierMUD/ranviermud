@@ -192,6 +192,15 @@ exports.listeners = {
     }
   },
 
+  deathblow: function(l10n) {
+    return function (room, attacker, defender, players, hitLocation) {
+      players.eachIf(
+        p => p.getLocation() === defender.getLocation() && p !== attacker,
+        p => p.emit('experience', LevelUtils.mobExp(defender.getAttribute('level')) * .33, 'dying')
+      );
+    }
+  },
+
   damaged: function(l10n) {
     return function(room, npc, players, hitLocation) {
       const toRoom = Broadcast.toRoom(room, this, npc, players);
