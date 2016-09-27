@@ -259,7 +259,9 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       // The damage func has side effect of depleting defender's health.
       const damageDealt = defender.damage(damage, hitLocation);
 
-      if (attackerWeapon && typeof attackerWeapon === 'object') {
+      const attackerWeaponCanEmit = () => attackerWeapon && typeof attackerWeapon === 'object';
+
+      if (attackerWeaponCanEmit()) {
         attackerWeapon.emit('hit', room, attacker, defender, players, hitLocation, damageDealt);
       } else {
         attacker.emit('hit', room, defender, players, hitLocation, damageDealt);
@@ -272,6 +274,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         if (defenderStartingHealth <= damage) {
           defender.setAttribute('health', 1);
           defender.setAttribute('sanity', 1);
+          if (attackerWeaponCanEmit()) {
+            attackerWeapon.emit('deathblow', room, attacker, defender, players, hitLocation);
+          } else {
+            attacker.emit('deathblow', room, attacker, defender, players, hitLocation);
+          }
           return combatEnd(Type.isPlayer(attacker));
         }
 
