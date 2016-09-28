@@ -57,10 +57,11 @@ exports.listeners = {
         'downstairs'
       ];
 
+      //TODO: Refactor dialogue to use consistent broadcasting :( :(
       //TODO: Extract to dialogue or level utils?
       const giveExpFor = (topic, points) => () => {
         if (!player.hasDiscussed(npc, topic, true)) {
-          player.emit('experience', points || 50, 'the history of the tavern');
+          player.emit('experience', points || 50, topic || 'the history of the tavern');
         }
       };
 
@@ -70,10 +71,10 @@ exports.listeners = {
         action: giveExpFor('the age of the half-abandoned tavern, the Serpent\'s Hiss'),
       }, {
         say: '"My humans used to run this place," the cat says, glancing up at you. "Their kit is still in the basement."',
-        action: giveExpFor('learning of the former owners of the Serpent\'s Hiss', 75),
+        action: giveExpFor('the former owners of the Serpent\'s Hiss', 75),
       }, {
         say: '"Since the Quarantine, I\'ve been taking care of the place," the cat purrs, "I locked the upstairs room and the cellar door.  For good reason."',
-        action: giveExpFor('learning of the Quarantine from a curious cat', 100)
+        action: giveExpFor('the Quarantine, and the duties of a curious cat', 100)
       }];
 
 
