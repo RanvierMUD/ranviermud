@@ -32,6 +32,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
   }
 
+  //FIXME: There has to be a better way...
   function getRelativeLevel(playerLevel, targetLevel) {
     const difference = playerLevel - targetLevel;
     if (difference < -3) {
