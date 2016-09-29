@@ -57,7 +57,6 @@ exports.listeners = {
         'downstairs'
       ];
 
-      //TODO: Refactor dialogue to use consistent broadcasting :( :(
       //TODO: Extract to dialogue or level utils?
       const giveExpFor = (topic, points) => () => {
         if (!player.hasDiscussed(npc, topic, true)) {
