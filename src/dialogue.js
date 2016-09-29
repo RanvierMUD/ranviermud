@@ -79,7 +79,7 @@ const handleInteraction = (config, sentence, broadcaster) => {
 
   const dialogueHandler = getDialogueHandler(priorityTopic.dialogue.type);
   dialogueHandler(player, npc, priorityTopic);
-  broadcaster({ thirdPartyMessage: npc.getShortDesc('en') + ' is speaking with ' + player.getName() });
+  broadcaster({ thirdPartyMessage: '<blue>' + npc.getShortDesc('en') + ' is speaking with ' + player.getName() + '.</blue>' });
 
 };
 
