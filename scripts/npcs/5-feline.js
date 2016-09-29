@@ -59,8 +59,10 @@ exports.listeners = {
 
       //TODO: Extract to dialogue or level utils?
       const giveExpFor = (topic, points) => () => {
-        if (!player.hasDiscussed(npc, topic, true)) {
-          player.emit('experience', points || 50, topic || 'the history of the tavern');
+        topic = topic || 'the history of the tavern';
+        const isDiscussing = true;
+        if (!player.hasDiscussed(npc, topic, isDiscussing)) {
+          player.emit('experience', points || 50, topic);
         }
       };
 
