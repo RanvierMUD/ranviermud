@@ -45,10 +45,9 @@ exports.Channels = {
 			const getAreaOf = entity => rooms.getAt(entity.getLocation()).getArea();
 
 			npcs.eachIf(
-				npc => getAreaOf(npc) === getAreaOf(player),
+				npc => getAreaOf(npc) === playerArea,
 				npc => npc.emit('playerYell', player, players, rooms, npcs, args)
 			);
-
 
 			players.broadcastIf("<bold><red>You hear " + vagueDesc + " yelling '" + args + "!'</red></bold>",
 				p => {
