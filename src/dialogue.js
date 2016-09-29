@@ -62,7 +62,7 @@ const getPriorityTopic = (config, sentence) => {
 const stripPunctuation = sentence => sentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
 const tokenizeSentence = sentence => stripPunctuation(sentence).split(' ');
 
-const handleInteraction = (config, sentence) => {
+const handleInteraction = (config, sentence, broadcaster) => {
   const npc    = config.npc;
   const player = config.player;
   if (!npc || !player) {
@@ -70,7 +70,7 @@ const handleInteraction = (config, sentence) => {
   }
 
   if (npc.isInDialogue()) {
-    return player.say(npc.getShortDesc('en') + ' is speaking with someone already.');
+    return player.say('<blue>' + npc.getShortDesc('en') + ' is speaking with someone already.</blue>');
   }
 
   const priorityTopic = getPriorityTopic(config, sentence);
@@ -79,6 +79,7 @@ const handleInteraction = (config, sentence) => {
 
   const dialogueHandler = getDialogueHandler(priorityTopic.dialogue.type);
   dialogueHandler(player, npc, priorityTopic);
+  broadcaster({ thirdPartyMessage: npc.getName() + ' is speaking with ' + player.getName() });
 
 };
 
