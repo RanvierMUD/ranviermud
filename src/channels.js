@@ -42,6 +42,14 @@ exports.Channels = {
 			const playerArea = playerRoom.getArea();
 			const vagueDesc = "a nearby " + getGenderNoun(player) + '\'s voice';
 
+			const getAreaOf = entity => rooms.getAt(entity.getLocation()).getArea();
+
+			npcs.eachIf(
+				npc => getAreaOf(npc) === getAreaOf(player),
+				npc => npc.emit('playerYell', player, players, rooms, npcs, args)
+			);
+
+
 			players.broadcastIf("<bold><red>You hear " + vagueDesc + " yelling '" + args + "!'</red></bold>",
 				p => {
 					const otherPlayerRoom = rooms.getAt(p.getLocation());
