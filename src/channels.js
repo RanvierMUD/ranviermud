@@ -43,11 +43,6 @@ exports.Channels = {
 
 			const getAreaOf = entity => rooms.getAt(entity.getLocation()).getArea();
 
-			npcs.eachIf(
-				npc => getAreaOf(npc) === playerArea,
-				npc => npc.emit('playerYell', player, players, rooms, npcs, args)
-			);
-
 			players.broadcastIf("<bold><red>You hear " + vagueDesc + " yelling '" + args + "!'</red></bold>",
 				p => {
 					const otherPlayerRoom = rooms.getAt(p.getLocation());
@@ -71,6 +66,11 @@ exports.Channels = {
 					return sameRoom && notSamePlayer;
 				});
 			player.say("<bold><red>You yell, \""+args+"!\"</red></bold>");
+
+			npcs.eachIf(
+				npc => getAreaOf(npc) === playerArea,
+				npc => npc.emit('playerYell', player, players, rooms, npcs, args)
+			);
 		}
 	},
 
