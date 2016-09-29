@@ -65,13 +65,11 @@ exports.Channels = {
 			players.broadcastIf("<bold><red>" + player.getName() + " yells '" + args + "!'</red></bold>",
 				p => {
 					const otherPlayerRoom = rooms.getAt(p.getLocation());
-					const otherPlayerArea = otherPlayerRoom.getArea();
 
-					const sameArea = playerArea === otherPlayerArea;
 					const sameRoom = playerRoom === otherPlayerRoom;
 					const notSamePlayer = player !== p;
 
-					return sameArea && sameRoom && notSamePlayer;
+					return sameRoom && notSamePlayer;
 				});
 			player.say("<bold><red>You yell, \""+args+"!\"</red></bold>");
 		}
