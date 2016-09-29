@@ -98,6 +98,8 @@ exports.listeners = {
         // Next dialogue branch...
 
       };
+
+      const room   = rooms.getAt(this.getLocation());
       const toRoom = Broadcast.toRoom(room, this, player, players);
       Dialogue.handleInteraction(npcDialogueTree, args, toRoom);
 

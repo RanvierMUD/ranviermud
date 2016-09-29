@@ -8,8 +8,7 @@
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 114 | invis
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 165 | Do the same way as above once you extract the admin commands.
-| /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 82 | Consider using a map instead?
-| /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 133 | Consider extracting these enums/consts from the main dialogue script file.
+| /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 140 | Consider extracting these enums/consts from the main dialogue script file.
 | /Users/seanodonohue/myForks/ranviermud/src/doors.js | 44 | Refactor to use the bound functions in external code.
 | /Users/seanodonohue/myForks/ranviermud/src/effects.js | 4 | Extract into own directory. Too many effects.
 | /Users/seanodonohue/myForks/ranviermud/src/effects.js | 5 | Make an atom snippet for this?
@@ -21,7 +20,7 @@
 | /Users/seanodonohue/myForks/ranviermud/src/feats.js | 78 | Implement
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 52 | Dynamically pull in list of admins
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 15 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
-| /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 214 | Have spawn inventory but also add same inv functionality as player
+| /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 215 | Have spawn inventory but also add same inv functionality as player
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 331 | Put in perception skill helper file
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 342 | Consider using Random.roll instead.
@@ -48,19 +47,19 @@
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 3 | Refactor.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 112 | Use in player/npc class.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 60 | Refactor dialogue to use consistent broadcasting :( :(
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 61 | Extract to dialogue or level utils?
-| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 135 | Extract this to some kind of combat messaging helper?
-| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 259 | Use the timed dialogue method for this bit, if possible.
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 137 | Extract this to some kind of combat messaging helper?
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 261 | Use the timed dialogue method for this bit, if possible.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 15 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 22 | Different messages for different relative amounts of sanity loss.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 98 | Emit sanity loss event here if applicable.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 115 | Extract all stuff for determining stat gain into level utils.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 177 | Permadeath, add it.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 62 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)

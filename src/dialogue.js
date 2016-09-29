@@ -79,12 +79,11 @@ const handleInteraction = (config, sentence, broadcaster) => {
 
   const dialogueHandler = getDialogueHandler(priorityTopic.dialogue.type);
   dialogueHandler(player, npc, priorityTopic);
-  broadcaster({ thirdPartyMessage: npc.getName() + ' is speaking with ' + player.getName() });
+  broadcaster({ thirdPartyMessage: npc.getShortDesc('en') + ' is speaking with ' + player.getName() });
 
 };
 
 const getDialogueHandler = type => {
-  //TODO: Consider using a map instead?
   switch(type) {
     case Types.SIMPLE:
       return simpleDialogueHandler;
