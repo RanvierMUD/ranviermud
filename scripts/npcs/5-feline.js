@@ -98,8 +98,8 @@ exports.listeners = {
         // Next dialogue branch...
 
       };
-
-      Dialogue.handleInteraction(npcDialogueTree, args);
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+      Dialogue.handleInteraction(npcDialogueTree, args, toRoom);
 
     }
   },
