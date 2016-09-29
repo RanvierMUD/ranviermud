@@ -86,7 +86,8 @@ exports.Channels = {
 			const name = player.getName();
 
 			if (exists) {
-				players.broadcastIf("<bold><magenta>" + player.getName() + " told you: " + text + "</magenta></bold>",
+				players.broadcastIf(
+					"<bold><magenta>" + player.getName() + " told you: " + text + "</magenta></bold>",
 					p => p.getName().toLowerCase() === target);
 				player.say("<bold><magenta>You told " + target + ": " + text + "</magenta></bold>", player);
 			} else {
