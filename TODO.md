@@ -1,8 +1,7 @@
 ### TODOs
 | Filename | line # | TODO
 |:------|:------:|:------
-| /Users/seanodonohue/myForks/ranviermud/src/channels.js | 34 | Modify yell to emit on all NPCs in area.
-| /Users/seanodonohue/myForks/ranviermud/src/channels.js | 73 | Modify tell to work with NPCs in same room.
+| /Users/seanodonohue/myForks/ranviermud/src/channels.js | 77 | Modify tell to work with NPCs in same room.
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 249 | Weapon skills related to weapon type?
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 250 | General combat skills?
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
@@ -50,16 +49,17 @@
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 60 | Refactor dialogue to use consistent broadcasting :( :(
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 61 | Extract to dialogue or level utils?
-| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 137 | Extract this to some kind of combat messaging helper?
-| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 261 | Use the timed dialogue method for this bit, if possible.
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 115 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 151 | Extract this to some kind of combat messaging helper?
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 275 | Use the timed dialogue method for this bit, if possible.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 15 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 22 | Different messages for different relative amounts of sanity loss.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 98 | Emit sanity loss event here if applicable.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 115 | Extract all stuff for determining stat gain into level utils.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 177 | Permadeath, add it.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 62 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)

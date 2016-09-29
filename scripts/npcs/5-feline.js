@@ -106,6 +106,20 @@ exports.listeners = {
     }
   },
 
+  playerYell: l10n => {
+    return function _respond(player, players, rooms, npcs, args) {
+      const npcRoom = this.getLocation();
+
+      if (player.getLocation() === npcRoom) {
+        player.say('<yellow>The cat looks at you, annoyed, and hisses.</yellow>');
+        //TODO: Lower reputation with cat. Use emitter to handle this. Use a behavior file.
+      }
+
+      players.broadcastIf(
+        '<blue>The cat looks annoyed, and hisses.</yellow>',
+        p => p !== player && p.getLocation() === npcRoom);
+    }
+  },
   hit: l10n => {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);

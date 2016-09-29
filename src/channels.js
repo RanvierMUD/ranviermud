@@ -31,7 +31,6 @@ exports.Channels = {
 		}
 	},
 
-	//TODO: Modify yell to emit on all NPCs in area.
 	yell: {
 		name: 'yell',
 		description: 'Yell to everyone in the same area',
@@ -66,7 +65,7 @@ exports.Channels = {
 				p => {
 					const otherPlayerRoom = rooms.getAt(p.getLocation());
 
-					const sameRoom = playerRoom === otherPlayerRoom;
+					const sameRoom      = playerRoom === otherPlayerRoom;
 					const notSamePlayer = player !== p;
 
 					return sameRoom && notSamePlayer;
