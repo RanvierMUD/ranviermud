@@ -69,6 +69,10 @@ const handleInteraction = (config, sentence) => {
     throw new ReferenceError('You must include an NPC and a Player in your dialogue config.');
   }
 
+  if (npc.isInDialogue()) {
+    return player.say(npc.getShortDesc('en') + ' is speaking with someone already.');
+  }
+
   const priorityTopic = getPriorityTopic(config, sentence);
 
   if (!priorityTopic) { return; }
@@ -106,6 +110,7 @@ const randomDialogueHandler = (player, npc, topic) => {
 };
 
 const timedDialogueHandler = (player, npc, topic) => {
+  npc.startDialogue();
   const sequence = topic.dialogue.sequence;
   if (!sequence) { throw new ReferenceError("You need a sequence to use timed dialogue."); }
   enactDialogueSequence(player, npc, sequence);
@@ -115,7 +120,9 @@ const enactDialogueSequence = (player, npc, sequence, index) => {
   if (player.getLocation() === npc.getLocation()) {
     index = index || 0;
     const interaction = sequence[index];
-    if (!interaction) { return; }
+    if (!interaction) {
+      return npc.endDialogue();
+    }
 
     const spoken = interaction.say;
     const action = interaction.action;
