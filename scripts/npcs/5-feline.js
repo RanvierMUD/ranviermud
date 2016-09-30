@@ -67,6 +67,7 @@ exports.listeners = {
       };
 
       const hasMet = () => player.hasMet(npc);
+
       const serpentsHissDialogue = [{
         say: '"This tavern has been around for as long as I\'ve been around, for what that\'s worth," the cat murmurs, licking its paws.',
         action: giveExpFor('the age of the half-abandoned tavern, the Serpent\'s Hiss'),
@@ -76,6 +77,20 @@ exports.listeners = {
       }, {
         say: '"Since the Quarantine, I\'ve been taking care of the place," the cat purrs, "I locked the upstairs room and the cellar door.  For good reason."',
         action: giveExpFor('the Quarantine, and the duties of a curious cat', 100)
+      }];
+
+      const quarantineDialogue = [{
+        say: '"Ah, yes," Baxter nods, "that is what those who were left behind call it. The changed ones."'
+      },
+      {
+        say: '"The other humans all left. Or tried to leave." He looks wistful for a second.'
+      },
+      {
+        say: '"Or, they died," he finishes, licking his lips. "Some were good meat, others bad."'
+      },
+      {
+        say: '"Everything has changed, since. What was a city is now a trap," the cat waxes, adjusting his monocle.',
+        action: giveExpFor('the effects of the Quarantine, according to Baxter', 200)
       }];
 
 
@@ -104,7 +119,8 @@ exports.listeners = {
             find: Dialogue.Keywords.QUARANTINE
           },
           dialogue: {
-            //TODO: Fill in
+            type:     Dialogue.Types.TIMED,
+            sequence: quarantineDialogue
           },
           prerequisite: hasMet
         },
