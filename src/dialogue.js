@@ -68,6 +68,8 @@ const handleInteraction = (config, sentence, broadcaster) => {
   if (!npc || !player) {
     throw new ReferenceError('You must include an NPC and a Player in your dialogue config.');
   }
+  const noop = () => {};
+  broadcaster = broadcaster || noop;
 
   if (npc.isInDialogue()) {
     return player.say('<blue>' + npc.getShortDesc('en') + ' is speaking with someone already.</blue>');
