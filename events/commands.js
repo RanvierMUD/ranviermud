@@ -84,8 +84,9 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
           try {
             return Commands.player_commands[cmd](args, player);
           } catch (e) {
-            util.log(cmd);
+            util.log('Command failed: ', cmd);
             util.log(e);
+            if (e.stack) { util.log(e.stack); }
           }
         }
 

@@ -75,9 +75,8 @@ const Feats = {
     }
   },
 
-  //TODO: Implement
   assense: {
-    type: 'passive', // may end up being both passive and active?
+    type: 'passive', // may end up being active instead?
     cost: 1,
     prereqs: {
       stamina:    1,
@@ -89,9 +88,14 @@ const Feats = {
     name: 'Assense Auras',
     id: 'assense',
     description: 'You are sensitive to the auras of others.',
-    activate: () => {},
-    deactivate: () => {},
-
+    activate: player => {
+      player.setAttribute('willpower',  player.getAttribute('willpower')  + 1);
+      player.setAttribute('cleverness', player.getAttribute('cleverness') + 1);
+    },
+    deactivate: player => {
+      player.setAttribute('willpower',  player.getAttribute('willpower')  - 1);
+      player.setAttribute('cleverness', player.getAttribute('cleverness') - 1);
+    },
   },
 
   /// Active feats
@@ -149,13 +153,17 @@ const Feats = {
     name: 'Stun',
     description: 'Use your will to temporarily daze an opponent, slowing their reaction time.',
     activate: (player, args, rooms, npcs, players) => {
-      util.log(player.getName() + ' activates Charm.');
-      const combatant = player.isInCombat();
+      const targets = player
+        .getInCombat()
+        .filter(enemy =>
+          enemy.getShortDesc('en').includes(args) || enemy.getName().toString().includes(args));
 
-      if (!combatant) {
-        player.say('You have no target to stun.');
+      if (!args || !targets.length) {
+        player.say('Stun whom?');
         return;
       }
+
+      const combatant = targets[0];
 
       const stunning = player.getEffects('stunning') || combatant.getEffects('stunned');
 
@@ -167,23 +175,31 @@ const Feats = {
       const cooldown = 15 * 1000;
       combatant.addEffect('stunned', {
         duration: 5 * 1000,
-        deactivate: () => {
-          player.say('<yellow>Your opponent is no longer stunned.</yellow>');
-          combatant.combat.removeDodgeMod('stunned');
-          setTimeout(player.removeEffect.bind(null, 'stunning'), cooldown);
-        },
+
         activate: () => {
           player.say('<magenta>You concentrate on stifling your opponent.</magenta>');
-          const dodgeReduction = Math.ceil(player.getAttribute('level') / 5);
+          const strongestMentalAttr = Math.max(player.getAttribute('willpower'), player.getAttribute('cleverness'));
+          const stunPower = player.getAttribute('level') + strongestMentalAttr;
           combatant.combat.addDodgeMod({
             name: 'stunned',
-            effect: dodge => dodge - dodgeReduction
+            effect: dodge => Math.max(dodge - stunPower, 0)
           });
-          deductSanity(player, 10);
+          combatant.combat.addToHitMod({
+            name: 'stunned',
+            effect: toHit => Math.max(toHit - stunPower, 0)
+          })
           player.addEffect('stunning', Effects.slow({
             target: combatant,
             magnitude: 5,
           }));
+          const sanityCost = 11 + Math.round(stunPower / 2);
+          deductSanity(player, sanityCost);
+        },
+
+        deactivate: () => {
+          player.say('<yellow>Your opponent is no longer stunned.</yellow>');
+          combatant.combat.removeDodgeMod('stunned');
+          setTimeout(player.removeEffect.bind(null, 'stunning'), cooldown);
         },
       });
     }
@@ -401,9 +417,10 @@ function meetsFeatPrerequisites(player, featList) {
   return featList.every(feat => featsOwned[feat]);
 }
 
+//TODO: Use an event emitter instead.
 function deductSanity(player, cost) {
-  const sanityCost = Math
-    .max(player.getAttribute('sanity') - cost, 0);
+  cost = Math.max(cost - player.getSkills('concentration'), 0);
+  const sanityCost = Math.max(player.getAttribute('sanity') - cost, 0);
   player.setAttribute('sanity', sanityCost);
   return sanityCost;
 }
