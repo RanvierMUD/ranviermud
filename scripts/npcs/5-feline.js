@@ -59,8 +59,10 @@ exports.listeners = {
 
       //TODO: Extract to dialogue or level utils?
       const giveExpFor = (topic, points) => () => {
-        if (!player.hasDiscussed(npc, topic, true)) {
-          player.emit('experience', points || 50, 'the history of the tavern');
+        topic = topic || 'the history of the tavern';
+        const isDiscussing = true;
+        if (!player.hasDiscussed(npc, topic, isDiscussing)) {
+          player.emit('experience', points || 50, topic);
         }
       };
 
@@ -70,10 +72,10 @@ exports.listeners = {
         action: giveExpFor('the age of the half-abandoned tavern, the Serpent\'s Hiss'),
       }, {
         say: '"My humans used to run this place," the cat says, glancing up at you. "Their kit is still in the basement."',
-        action: giveExpFor('learning of the former owners of the Serpent\'s Hiss', 75),
+        action: giveExpFor('the former owners of the Serpent\'s Hiss', 75),
       }, {
         say: '"Since the Quarantine, I\'ve been taking care of the place," the cat purrs, "I locked the upstairs room and the cellar door.  For good reason."',
-        action: giveExpFor('learning of the Quarantine from a curious cat', 100)
+        action: giveExpFor('the Quarantine, and the duties of a curious cat', 100)
       }];
 
 
@@ -98,11 +100,27 @@ exports.listeners = {
 
       };
 
-      Dialogue.handleInteraction(npcDialogueTree, args);
+      const room   = rooms.getAt(this.getLocation());
+      const toRoom = Broadcast.toRoom(room, this, player, players);
+      Dialogue.handleInteraction(npcDialogueTree, args, toRoom);
 
     }
   },
 
+  playerYell: l10n => {
+    return function _respond(player, players, rooms, npcs, args) {
+      const npcRoom = this.getLocation();
+
+      if (player.getLocation() === npcRoom) {
+        player.say('<yellow>The cat looks at you, annoyed, and hisses.</yellow>');
+        //TODO: Lower reputation with cat. Use emitter to handle this. Use a behavior file.
+      }
+
+      players.broadcastIf(
+        '<blue>The cat looks annoyed, and hisses.</yellow>',
+        p => p !== player && p.getLocation() === npcRoom);
+    }
+  },
   hit: l10n => {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);

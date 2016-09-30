@@ -176,6 +176,7 @@ const Npc = function NpcConstructor(config) {
     self.vnum = config.vnum;
     self.types = config.types || [];
     self.defenses = {};
+    self.inDialogue = false;
 
     for (const stat in config.attributes || {}) {
       self.attributes[stat] = config.attributes[stat];
@@ -223,6 +224,10 @@ const Npc = function NpcConstructor(config) {
   self.isInCombat = () => self.inCombat;
   self.isPacifist = () => !self.listeners('combat').length;
   /**#@-*/
+
+  self.startDialogue = () => self.inDialogue = true;
+  self.endDialogue   = () => self.inDialogue = false;
+  self.isInDialogue  = () => self.inDialogue;
 
   /**
    * Get specific currently applied effect, or all current effects

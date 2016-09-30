@@ -31,7 +31,6 @@ exports.Channels = {
 		}
 	},
 
-	//TODO: Modify yell to emit on all NPCs in area.
 	yell: {
 		name: 'yell',
 		description: 'Yell to everyone in the same area',
@@ -41,6 +40,8 @@ exports.Channels = {
 			const playerRoom = rooms.getAt(player.getLocation());
 			const playerArea = playerRoom.getArea();
 			const vagueDesc = "a nearby " + getGenderNoun(player) + '\'s voice';
+
+			const getAreaOf = entity => rooms.getAt(entity.getLocation()).getArea();
 
 			players.broadcastIf("<bold><red>You hear " + vagueDesc + " yelling '" + args + "!'</red></bold>",
 				p => {
@@ -58,15 +59,18 @@ exports.Channels = {
 			players.broadcastIf("<bold><red>" + player.getName() + " yells '" + args + "!'</red></bold>",
 				p => {
 					const otherPlayerRoom = rooms.getAt(p.getLocation());
-					const otherPlayerArea = otherPlayerRoom.getArea();
 
-					const sameArea = playerArea === otherPlayerArea;
-					const sameRoom = playerRoom === otherPlayerRoom;
+					const sameRoom      = playerRoom === otherPlayerRoom;
 					const notSamePlayer = player !== p;
 
-					return sameArea && sameRoom && notSamePlayer;
+					return sameRoom && notSamePlayer;
 				});
 			player.say("<bold><red>You yell, \""+args+"!\"</red></bold>");
+
+			npcs.eachIf(
+				npc => getAreaOf(npc) === playerArea,
+				npc => npc.emit('playerYell', player, players, rooms, npcs, args)
+			);
 		}
 	},
 
@@ -82,7 +86,8 @@ exports.Channels = {
 			const name = player.getName();
 
 			if (exists) {
-				players.broadcastIf("<bold><magenta>" + player.getName() + " told you: " + text + "</magenta></bold>",
+				players.broadcastIf(
+					"<bold><magenta>" + player.getName() + " told you: " + text + "</magenta></bold>",
 					p => p.getName().toLowerCase() === target);
 				player.say("<bold><magenta>You told " + target + ": " + text + "</magenta></bold>", player);
 			} else {
