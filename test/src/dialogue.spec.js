@@ -12,6 +12,7 @@ describe.only('Parsing Player/NPC Dialogue', () => {
 
   const npc = new Npc({});
   const player = new Player({});
+  const broadcaster = () => {};
 
   const mockConfig = {
 
