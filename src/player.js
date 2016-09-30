@@ -162,6 +162,7 @@ const Player = function PlayerConstructor(socket) {
 
   self.fleeFromCombat   = ()          => self.inCombat = [];
   self.setInCombat      = combatant   => self.inCombat.push(combatant);
+  self.getInCombat      = ()          => self.inCombat;
   self.removeFromCombat = combatant   => {
     const combatantIndex = self.inCombat.indexOf(combatant);
     if (combatantIndex === -1) { return; }
