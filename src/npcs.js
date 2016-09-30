@@ -152,7 +152,7 @@ const Npc = function NpcConstructor(config) {
   self.description;
   self.room; // Vnum of current location
   self.vnum;
-  self.inCombat = false;
+  self.inCombat = [];
   self.uuid = null;
 
   self.attributes = {

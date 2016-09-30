@@ -375,7 +375,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       );
       players.eachIf(
         p => p.getLocation() === room.getVnum(),
-        p => p.emit('sanityLoss', 'witnessing gruesome death first-hand', 50);
+        p => p.emit('sanityLoss', 'witnessing gruesome death first-hand', 50)
       );
     }
     player.prompt();
