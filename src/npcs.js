@@ -14,6 +14,7 @@ const CombatUtil = require('./combat_util').CombatUtil;
 
 //TODO: Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
 //     then more will spawn at the proper interval.
+//TODO: Extract npc from this file like player/player_manager
 
 /**
  * Npc container class. Loads/finds npcs
@@ -214,14 +215,22 @@ const Npc = function NpcConstructor(config) {
 
   //TODO: Have spawn inventory but also add same inv functionality as player
   self.setInventory = identifier => self.inventory = identifier;
-  self.setInCombat  = combat => self.inCombat = combat;
   self.setContainer = uid => self.container = uid;
   self.setAttribute = (attr, val) => self.attributes[attr] = val;
   self.removeEffect = eff => { delete self.effects[eff]; };
 
   self.combat = CombatUtil.getHelper(self);
 
-  self.isInCombat = () => self.inCombat;
+  self.isInCombat       = ()        => self.inCombat.length > 0;
+  self.setInCombat      = combatant => self.inCombat.push(combat);
+  self.getInCombat      = ()        => self.inCombat;
+  self.fleeFromCombat   = ()        => self.inCombat = [];
+  self.removeFromCombat = combatant => {
+    const combatantIndex = self.inCombat.indexOf(combatant);
+    if (combatantIndex === -1) { return; }
+    self.inCombat.splice(combatantIndex, 1);
+  }
+
   self.isPacifist = () => !self.listeners('combat').length;
   /**#@-*/
 
