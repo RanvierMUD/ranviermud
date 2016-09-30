@@ -17,16 +17,18 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return;
     }
 
-    util.log(player.getName() + ' is trying to flee.');
-    util.log(player.isInCombat().getShortDesc('en'));
+    util.log(player.getName() + ' is trying to flee from:');
 
-    const opponent = npcs.get(player.isInCombat().getUuid());
-    const fleed = Random.coinFlip();
-    const room = rooms.getAt(player.getLocation());
-    const exit = Random.fromArray(room.getExits());
+    const opponents = player.getInCombat();
+
+    opponents.forEach( o => util.log(o.getShortDesc('en')) );
+
+    const fleed     = Random.coinFlip();
+    const room      = rooms.getAt(player.getLocation());
+    const exit      = Random.fromArray(room.getExits());
 
     if (fleed && move(exit, player)) {
-      opponent.removeAllFromCombat();
+      opponents.forEach(removeFromCombat.bind(null, player));
       player.removeAllFromCombat();
 
       player.sayL10n(l10n, 'FLEE_SUCCEED');
