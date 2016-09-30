@@ -62,11 +62,15 @@ const getPriorityTopic = (config, sentence) => {
 const stripPunctuation = sentence => sentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
 const tokenizeSentence = sentence => stripPunctuation(sentence).split(' ');
 
-const handleInteraction = (config, sentence) => {
+const handleInteraction = (config, sentence, broadcaster) => {
   const npc    = config.npc;
   const player = config.player;
   if (!npc || !player) {
     throw new ReferenceError('You must include an NPC and a Player in your dialogue config.');
+  }
+
+  if (npc.isInDialogue()) {
+    return player.say('<blue>' + npc.getShortDesc('en') + ' is speaking with someone already.</blue>');
   }
 
   const priorityTopic = getPriorityTopic(config, sentence);
@@ -75,11 +79,11 @@ const handleInteraction = (config, sentence) => {
 
   const dialogueHandler = getDialogueHandler(priorityTopic.dialogue.type);
   dialogueHandler(player, npc, priorityTopic);
+  broadcaster({ thirdPartyMessage: '<blue>' + npc.getShortDesc('en') + ' is speaking with ' + player.getName() + '.</blue>' });
 
 };
 
 const getDialogueHandler = type => {
-  //TODO: Consider using a map instead?
   switch(type) {
     case Types.SIMPLE:
       return simpleDialogueHandler;
@@ -106,6 +110,7 @@ const randomDialogueHandler = (player, npc, topic) => {
 };
 
 const timedDialogueHandler = (player, npc, topic) => {
+  npc.startDialogue();
   const sequence = topic.dialogue.sequence;
   if (!sequence) { throw new ReferenceError("You need a sequence to use timed dialogue."); }
   enactDialogueSequence(player, npc, sequence);
@@ -115,7 +120,9 @@ const enactDialogueSequence = (player, npc, sequence, index) => {
   if (player.getLocation() === npc.getLocation()) {
     index = index || 0;
     const interaction = sequence[index];
-    if (!interaction) { return; }
+    if (!interaction) {
+      return npc.endDialogue();
+    }
 
     const spoken = interaction.say;
     const action = interaction.action;
