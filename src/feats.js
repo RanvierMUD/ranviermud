@@ -175,14 +175,10 @@ const Feats = {
       const cooldown = 15 * 1000;
       combatant.addEffect('stunned', {
         duration: 5 * 1000,
-        deactivate: () => {
-          player.say('<yellow>Your opponent is no longer stunned.</yellow>');
-          combatant.combat.removeDodgeMod('stunned');
-          setTimeout(player.removeEffect.bind(null, 'stunning'), cooldown);
-        },
+
         activate: () => {
           player.say('<magenta>You concentrate on stifling your opponent.</magenta>');
-          const dodgeReduction = Math.ceil(player.getAttribute('level') / 5);
+          const dodgeReduction = player.getAttribute('level');
           combatant.combat.addDodgeMod({
             name: 'stunned',
             effect: dodge => dodge - dodgeReduction
@@ -192,6 +188,12 @@ const Feats = {
             target: combatant,
             magnitude: 5,
           }));
+        },
+
+        deactivate: () => {
+          player.say('<yellow>Your opponent is no longer stunned.</yellow>');
+          combatant.combat.removeDodgeMod('stunned');
+          setTimeout(player.removeEffect.bind(null, 'stunning'), cooldown);
         },
       });
     }
