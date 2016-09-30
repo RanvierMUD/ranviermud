@@ -15,6 +15,7 @@
 | /Users/seanodonohue/myForks/ranviermud/src/events.js | 24 | Deprecate this if possible.
 | /Users/seanodonohue/myForks/ranviermud/src/events.js | 82 | Extract stuff like this into Data module as util funcs.
 | /Users/seanodonohue/myForks/ranviermud/src/examine.js | 18 | Change command so that it can work on any item, npc, or room by emitting.
+| /Users/seanodonohue/myForks/ranviermud/src/feats.js | 420 | Use an event emitter instead.
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 52 | Dynamically pull in list of admins
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 15 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 17 | Extract npc from this file like player/player_manager

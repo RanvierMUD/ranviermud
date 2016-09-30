@@ -188,11 +188,12 @@ const Feats = {
             name: 'stunned',
             effect: toHit => Math.max(toHit - stunPower, 0)
           })
-          deductSanity(player, 10);
           player.addEffect('stunning', Effects.slow({
             target: combatant,
             magnitude: 5,
           }));
+          const sanityCost = 11 + Math.round(stunPower / 2);
+          deductSanity(player, sanityCost);
         },
 
         deactivate: () => {
@@ -416,7 +417,9 @@ function meetsFeatPrerequisites(player, featList) {
   return featList.every(feat => featsOwned[feat]);
 }
 
+//TODO: Use an event emitter instead.
 function deductSanity(player, cost) {
+  cost = Math.max(cost - player.getSkills('concentration'), 0);
   const sanityCost = Math.max(player.getAttribute('sanity') - cost, 0);
   player.setAttribute('sanity', sanityCost);
   return sanityCost;
