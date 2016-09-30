@@ -26,8 +26,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const exit = Random.fromArray(room.getExits());
 
     if (fleed && move(exit, player)) {
-      opponent.setInCombat(false);
-      player.setInCombat(false);
+      opponent.removeAllFromCombat();
+      player.removeAllFromCombat();
 
       player.sayL10n(l10n, 'FLEE_SUCCEED');
       util.log(player.getName() + " fled successfully.");

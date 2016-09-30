@@ -3,7 +3,6 @@
 module.exports.initCombat = _initCombat;
 
 //TODO: Add strings for sanity damage
-//TODO: Enhance for co-op, allow for setInCombat of NPC with multiple players.
 
 const util = require('util');
 const _    = require('./helpers');

@@ -134,7 +134,7 @@ const Player = function PlayerConstructor(socket) {
   }
 
   self.getPassword = () => self.password; // Returns hash.
-  self.isInCombat  = () => self.inCombat;
+  self.isInCombat  = () => !!self.inCombat.length;
 
   self.setPrompt       = str => self.prompt_string = str;
   self.setCombatPrompt = str => self.combat_prompt = str;
@@ -151,14 +151,19 @@ const Player = function PlayerConstructor(socket) {
       .digest('hex');
 
   self.setGender   = gender => self.gender = gender.toUpperCase();
+
   self.addItem     = item   => self.inventory.push(item);
   self.removeItem  = item   =>
     self.inventory = self.inventory.filter(i => item !== i);
+  self.setInventory     = inv         => self.inventory = inv;
 
-  self.setInventory  = inv           => self.inventory = inv;
-  self.setInCombat   = combatant     => self.inCombat = combatant;
-  self.setAttribute  = (attr, val)   => self.attributes[attr] = val;
-  self.setPreference = (pref, val)   => self.preferences[pref] = val;
+  self.setAttribute     = (attr, val) => self.attributes[attr]  = val;
+  self.setPreference    = (pref, val) => self.preferences[pref] = val;
+
+  self.fleeFromCombat   = ()          => self.inCombat = [];
+  self.setInCombat      = combatant   => self.inCombat.push(combatant);
+  self.removeFromCombat = combatant   => self.inCombat.splice(self.inCombat.indexOf(combatant), 1);
+
 
   ///// ----- Skills and Training. ----- ///////
 
