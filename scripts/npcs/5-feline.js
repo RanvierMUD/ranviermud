@@ -96,6 +96,19 @@ exports.listeners = {
           prerequisite: hasMet
         },
 
+        'what is the quarantine': {
+          priority: Dialogue.Priority.LOW,
+          keywords: {
+            every: 'quarantine',
+            some: ['the quarantine', 'quarantining', 'history of the'],
+            find: Dialogue.Keywords.QUARANTINE
+          },
+          dialogue: {
+            //TODO: Fill in
+          },
+          prerequisite: hasMet
+        },
+
         // Next dialogue branch...
 
       };

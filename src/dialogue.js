@@ -176,7 +176,17 @@ const Keywords = Object.freeze({
     'location',
     'area',
     'place'
-  ]
+  ],
+  'QUARANTINE': [
+    'quarantine',
+    'quarant',
+    'ruin',
+    'apocalypse',
+    'experiments',
+    'evacuation',
+    'dome',
+    'force field'
+  ],
 });
 
 const Types = Object.freeze({
