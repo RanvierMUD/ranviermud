@@ -153,13 +153,17 @@ const Feats = {
     name: 'Stun',
     description: 'Use your will to temporarily daze an opponent, slowing their reaction time.',
     activate: (player, args, rooms, npcs, players) => {
-      util.log(player.getName() + ' activates Charm.');
-      const combatant = player.isInCombat();
+      const targets = player
+        .getInCombat()
+        .filter(enemy =>
+          enemy.getShortDesc('en').includes(args) || enemy.getName().toString().includes(args));
 
-      if (!combatant) {
+      if (!args || !targets.length) {
         player.say('You have no target to stun.');
         return;
       }
+
+      const combatant = targets[0];
 
       const stunning = player.getEffects('stunning') || combatant.getEffects('stunned');
 
