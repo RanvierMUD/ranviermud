@@ -162,8 +162,11 @@ const Player = function PlayerConstructor(socket) {
 
   self.fleeFromCombat   = ()          => self.inCombat = [];
   self.setInCombat      = combatant   => self.inCombat.push(combatant);
-  self.removeFromCombat = combatant   => self.inCombat.splice(self.inCombat.indexOf(combatant), 1);
-
+  self.removeFromCombat = combatant   => {
+    const combatantIndex = self.inCombat.indexOf(combatant);
+    if (combatantIndex === -1) { return; }
+    self.inCombat.splice(combatantIndex, 1);
+  }
 
   ///// ----- Skills and Training. ----- ///////
 
