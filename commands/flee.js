@@ -21,15 +21,15 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const opponents = player.getInCombat();
 
-    opponents.forEach( o => util.log(o.getShortDesc('en')) );
+    opponents.forEach( opp => util.log(opp.getShortDesc('en')) );
 
     const fleed     = Random.coinFlip();
     const room      = rooms.getAt(player.getLocation());
     const exit      = Random.fromArray(room.getExits());
 
     if (fleed && move(exit, player)) {
-      opponents.forEach(removeFromCombat.bind(null, player));
-      player.removeAllFromCombat();
+      opponents.forEach(opp => opp.removeFromCombat(player));
+      player.fleeFromCombat();
 
       player.sayL10n(l10n, 'FLEE_SUCCEED');
       util.log(player.getName() + " fled successfully.");
