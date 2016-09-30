@@ -83,10 +83,12 @@ exports.listeners = {
         say: '"Ah, yes," Baxter nods, "that is what those who were left behind call it. The changed ones."'
       },
       {
-        say: '"The other humans all left. Or tried to leave." He looks wistful for a second.'
+        say: '"The other humans all left. Or tried to leave." He looks wistful for a second.',
+        delay: 2000
       },
       {
-        say: '"Or, they died," he finishes, licking his lips. "Some were good meat, others bad."'
+        say: '"Or, they died," he finishes, licking his lips. "Some were good meat, others bad."',
+        delay: 1500
       },
       {
         say: '"Everything has changed, since. What was a city is now a trap," the cat waxes, adjusting his monocle.',
