@@ -159,7 +159,7 @@ const Feats = {
           enemy.getShortDesc('en').includes(args) || enemy.getName().toString().includes(args));
 
       if (!args || !targets.length) {
-        player.say('You have no target to stun.');
+        player.say('Stun whom?');
         return;
       }
 
@@ -178,11 +178,16 @@ const Feats = {
 
         activate: () => {
           player.say('<magenta>You concentrate on stifling your opponent.</magenta>');
-          const dodgeReduction = player.getAttribute('level');
+          const strongestMentalAttr = Math.max(player.getAttribute('willpower'), player.getAttribute('cleverness'));
+          const stunPower = player.getAttribute('level') + strongestMentalAttr;
           combatant.combat.addDodgeMod({
             name: 'stunned',
-            effect: dodge => dodge - dodgeReduction
+            effect: dodge => Math.max(dodge - stunPower, 0)
           });
+          combatant.combat.addToHitMod({
+            name: 'stunned',
+            effect: toHit => Math.max(toHit - stunPower, 0)
+          })
           deductSanity(player, 10);
           player.addEffect('stunning', Effects.slow({
             target: combatant,
