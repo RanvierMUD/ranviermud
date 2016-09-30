@@ -3,7 +3,6 @@
 module.exports.initCombat = _initCombat;
 
 //TODO: Add strings for sanity damage
-//TODO: Enhance for co-op, allow for setInCombat of NPC with multiple players.
 
 const util = require('util');
 const _    = require('./helpers');
@@ -340,9 +339,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     util.log("*** Combat Over ***");
 
-    //TODO: Use filter to remove the combatants from an array. Probably do this inside the player/npc objs.
-    player.setInCombat(false);
-    target.setInCombat(false);
+    player.removeFromCombat(target);
+    target.removeFromCombat(player);
 
     //TODO: Handle PvP or NvN combat ending differently.
     if (success) {
@@ -370,12 +368,14 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       broadcastExceptPlayer(player.getName() +
         ' collapses to the ground, life fleeing their body before your eyes.');
 
-      //TODO: consider doing sanity damage to all other players in the room.
       broadcastExceptPlayer('<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
-
       broadcastToArea('The gurgles of a dying ' +
         statusUtils.getGenderNoun(player) +
         ' echo from nearby.'
+      );
+      players.eachIf(
+        p => p.getLocation() === room.getVnum(),
+        p => p.emit('sanityLoss', 'witnessing gruesome death first-hand', 50)
       );
     }
     player.prompt();

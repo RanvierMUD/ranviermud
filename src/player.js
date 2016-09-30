@@ -32,9 +32,9 @@ const Player = function PlayerConstructor(socket) {
   self.password  = null;
   self.inventory = [];
   self.equipment = {};
-
-  // In combat is either false or an NPC vnum
-  self.inCombat  = false;
+  
+  // Array of combatants
+  self.inCombat  = [];
 
   // Attributes
   self.attributes = {
@@ -134,7 +134,6 @@ const Player = function PlayerConstructor(socket) {
   }
 
   self.getPassword = () => self.password; // Returns hash.
-  self.isInCombat  = () => self.inCombat;
 
   self.setPrompt       = str => self.prompt_string = str;
   self.setCombatPrompt = str => self.combat_prompt = str;
@@ -151,14 +150,24 @@ const Player = function PlayerConstructor(socket) {
       .digest('hex');
 
   self.setGender   = gender => self.gender = gender.toUpperCase();
+
   self.addItem     = item   => self.inventory.push(item);
   self.removeItem  = item   =>
     self.inventory = self.inventory.filter(i => item !== i);
+  self.setInventory     = inv         => self.inventory = inv;
 
-  self.setInventory  = inv           => self.inventory = inv;
-  self.setInCombat   = combatant     => self.inCombat = combatant;
-  self.setAttribute  = (attr, val)   => self.attributes[attr] = val;
-  self.setPreference = (pref, val)   => self.preferences[pref] = val;
+  self.setAttribute     = (attr, val) => self.attributes[attr]  = val;
+  self.setPreference    = (pref, val) => self.preferences[pref] = val;
+
+  self.isInCombat       = ()          => self.inCombat.length > 0;
+  self.fleeFromCombat   = ()          => self.inCombat = [];
+  self.setInCombat      = combatant   => self.inCombat.push(combatant);
+  self.getInCombat      = ()          => self.inCombat;
+  self.removeFromCombat = combatant   => {
+    const combatantIndex = self.inCombat.indexOf(combatant);
+    if (combatantIndex === -1) { return; }
+    self.inCombat.splice(combatantIndex, 1);
+  }
 
   ///// ----- Skills and Training. ----- ///////
 
