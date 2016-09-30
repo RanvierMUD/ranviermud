@@ -75,9 +75,8 @@ const Feats = {
     }
   },
 
-  //TODO: Implement
   assense: {
-    type: 'passive', // may end up being both passive and active?
+    type: 'passive', // may end up being active instead?
     cost: 1,
     prereqs: {
       stamina:    1,
@@ -89,9 +88,14 @@ const Feats = {
     name: 'Assense Auras',
     id: 'assense',
     description: 'You are sensitive to the auras of others.',
-    activate: () => {},
-    deactivate: () => {},
-
+    activate: player => {
+      player.setAttribute('willpower',  player.getAttribute('willpower')  + 1);
+      player.setAttribute('cleverness', player.getAttribute('cleverness') + 1);
+    },
+    deactivate: player => {
+      player.setAttribute('willpower',  player.getAttribute('willpower')  - 1);
+      player.setAttribute('cleverness', player.getAttribute('cleverness') - 1);
+    },
   },
 
   /// Active feats
@@ -402,8 +406,7 @@ function meetsFeatPrerequisites(player, featList) {
 }
 
 function deductSanity(player, cost) {
-  const sanityCost = Math
-    .max(player.getAttribute('sanity') - cost, 0);
+  const sanityCost = Math.max(player.getAttribute('sanity') - cost, 0);
   player.setAttribute('sanity', sanityCost);
   return sanityCost;
 }
