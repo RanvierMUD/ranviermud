@@ -304,38 +304,30 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const playerName = player.getName();
 
-      //TODO: Use the timed dialogue method for this bit, if possible.
-      const secondPartyMessage =
-        '<bold>The cat rears up on his hind legs and considers you for a moment.</bold>\n' +
-        '<magenta>"Welcome to my tavern, human,"</magenta> he mews in a droll tone.\n' +
-        '<magenta>"I know not why you have come here. But I do have a proposition for you...."</magenta>\n' +
-        'He trails off, licking his paws.\n' +
-        '<magenta>"Say, do you like salmon?"<magenta>';
-      const thirdPartyMessage =
-        '<bold>The cat rears up on his hind legs and considers ' + playerName + ' for a moment.\n<bold>' +
-        '<magenta>"Welcome to my tavern, human,"</magenta> he mews in a droll tone.\n' +
-        '<magenta>"I know not why you have come here. But I do have a proposition for you...."</magenta>\n\n' +
-        'He trails off, licking his paws while staring at ' + playerName + '.\n' +
-        '<magenta>"Say, do you like salmon?"<magenta>';
-
-      toRoom({ secondPartyMessage, thirdPartyMessage });
-
-      const doMoreDialogue = () => {
-        if (player.getLocation() === this.getLocation()) {
-          const secondPartyMessage =
-            '<magenta>"Sorry, a non-sequitir,"</magenta> the tomcat mumbles, half to himself.\n' +
-            '<magenta>"I can also answer any questions you have about this tavern,"<magenta>\n' +
-            '<magenta>"...or the creatures in the basement."</magenta>';
-          const thirdPartyMessage =
-            '<magenta>"Sorry, a non-sequitir,"</magenta> the tomcat mumbles, half to himself and half to ' + playerName + '.\n' +
-            '<magenta>"I can also answer any questions you have about this tavern,"<magenta>\n' +
-            '<magenta>"...or the creatures in the basement."</magenta>';
-
-          toRoom({ secondPartyMessage, thirdPartyMessage });
+      const introDialogue = {
+        dialogue: {
+          sequence: [{
+            say: '<bold>The cat rears up on his hind legs and considers you for a moment.</bold>',
+            delay: 1500
+          },
+          {
+            say: '"This one seems sane," he mutters to himself quietly.'
+          },
+          {
+            say: '"Welcome to my tavern, human," the cat announces to you, "My name is Baxter J. Truthteller."',
+            delay: 2000
+          },
+          {
+            say: '"Let me know if you need vittles or other sustenance," he finishes with a curt nod.',
+            delay: 750
+          },
+          {
+            say: 'Baxter resumes licking his paws and grooming himself.'
+          }]
         }
       }
 
-      setTimeout(doMoreDialogue, 3500);
+      Dialogue.timedDialogueHandler(player, this, introDialogue);
 
     }
   },
