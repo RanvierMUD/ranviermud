@@ -222,7 +222,7 @@ const Npc = function NpcConstructor(config) {
   self.combat = CombatUtil.getHelper(self);
 
   self.isInCombat       = ()        => self.inCombat.length > 0;
-  self.setInCombat      = combatant => self.inCombat.push(combat);
+  self.setInCombat      = combatant => self.inCombat.push(combatant);
   self.getInCombat      = ()        => self.inCombat;
   self.fleeFromCombat   = ()        => self.inCombat = [];
   self.removeFromCombat = combatant => {
