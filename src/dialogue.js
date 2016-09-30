@@ -130,7 +130,7 @@ const enactDialogueSequence = (player, npc, sequence, index) => {
     const action = interaction.action;
     const delay  = interaction.delay || 1000;
     enactDialogue(player, spoken, action);
-    setTimeout(enactDialogueSequence(player, npc, sequence, index + 1), delay);
+    setTimeout(() => enactDialogueSequence(player, npc, sequence, index + 1), delay);
   }
 }
 
