@@ -42,12 +42,12 @@ So, this one was a huuuuge release in terms of attention-to-detail type improvem
 - Considering putting this in its own repo as it has diverted a lot from the original ranviermud. So, watchers, stay tuned. This would also allow for a wiki and for submission of github issues and PRs more easily.
 
 #### COVERAGE:
-=============================== Coverage summary ===============================
+
 Statements   : 21.02% ( 584/2778 )
 Branches     : 6.8% ( 78/1147 )
 Functions    : 7.96% ( 16/201 )
 Lines        : 22.58% ( 568/2516 )
-================================================================================
+
 
 
 # Reshape (0.3.2)
