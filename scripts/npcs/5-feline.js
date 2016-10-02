@@ -95,6 +95,17 @@ exports.listeners = {
         action: giveExpFor('the effects of the Quarantine, according to Baxter', 200)
       }];
 
+      const cellarDialogue = [{
+        say: '"The cellar... I had to lock it to save myself from the thing... the horrible, sucking mouths... like snakes for arms... I lost the key..." he trails off, a look of horror on his face.',
+        delay: 1500
+      }, {
+        say: '"The key, to hold the beast in place. I dropped it," Baxter says, whiskers twitching, "I was attacked by my mortal nemesis, in a room upstairs."',
+        action: giveExpFor('where Baxter dropped the key to the cellar'),
+        delay: 2500
+      }, {
+        say: '"If you do find the key, be careful. That thing is not human, not of this world," Baxter replies, "I\'m not sure the cellar door can hold it forever."'
+      }];
+
 
       const npcDialogueTree = {
         npc, player,
@@ -126,6 +137,19 @@ exports.listeners = {
           },
           prerequisite: hasMet
         },
+
+        'what is in the cellar': {
+          priority: Dialogue.Priority.MEDIUM,
+          keywords: {
+            every: 'cellar',
+            some: ['basement', 'downstairs', 'trapdoor'],
+            find: ['cell', 'base', 'down', 'monster', 'key']
+          },
+          dialogue: {
+            type:     Dialogue.Types.TIMED,
+            sequence:  cellarDialogue
+          }
+        }
 
         // Next dialogue branch...
 
@@ -325,7 +349,7 @@ exports.listeners = {
             say: 'Baxter resumes licking his paws and grooming himself.'
           }]
         }
-      }
+      };
 
       Dialogue.timedDialogueHandler(player, this, introDialogue);
 
