@@ -3,6 +3,8 @@
 const Random = require('./random').Random;
 const _ = require('./helpers');
 const util = require('util');
+const wrap = require('wrap-ansi');
+
 
 const getTopicWeight = (topic, name, sentence) => {
   let points = 0;
@@ -128,14 +130,14 @@ const enactDialogueSequence = (player, npc, sequence, index) => {
 
     const spoken = interaction.say;
     const action = interaction.action;
-    const delay  = interaction.delay || 1000;
+    const delay  = interaction.delay || 1250;
     enactDialogue(player, spoken, action);
     setTimeout(() => enactDialogueSequence(player, npc, sequence, index + 1), delay);
   }
 }
 
 const enactDialogue = (player, spoken, action) => {
-  if (spoken) { player.say(spoken); }
+  if (spoken) { player.say(wrap('<yellow>' + spoken + '</yellow>', 60)); }
   if (action) { action(); }
 };
 
