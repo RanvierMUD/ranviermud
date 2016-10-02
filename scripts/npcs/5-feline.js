@@ -67,6 +67,7 @@ exports.listeners = {
       };
 
       const hasMet = () => player.hasMet(npc);
+
       const serpentsHissDialogue = [{
         say: '"This tavern has been around for as long as I\'ve been around, for what that\'s worth," the cat murmurs, licking its paws.',
         action: giveExpFor('the age of the half-abandoned tavern, the Serpent\'s Hiss'),
@@ -76,6 +77,33 @@ exports.listeners = {
       }, {
         say: '"Since the Quarantine, I\'ve been taking care of the place," the cat purrs, "I locked the upstairs room and the cellar door.  For good reason."',
         action: giveExpFor('the Quarantine, and the duties of a curious cat', 100)
+      }];
+
+      const quarantineDialogue = [{
+        say: '"Ah, yes," Baxter nods, "that is what those who were left behind call it. The changed ones."'
+      },
+      {
+        say: '"The other humans all left. Or tried to leave." He looks wistful for a second.',
+        delay: 2000
+      },
+      {
+        say: '"Or, they died," he finishes, licking his lips. "Some were good meat, others bad."',
+        delay: 1500
+      },
+      {
+        say: '"Everything has changed, since. What was a city is now a trap," the cat waxes, adjusting his monocle.',
+        action: giveExpFor('the effects of the Quarantine, according to Baxter', 200)
+      }];
+
+      const cellarDialogue = [{
+        say: '"The cellar... I had to lock it to save myself from the thing... the horrible, sucking mouths... like snakes for arms... I lost the key..." he trails off, a look of horror on his face.',
+        delay: 1500
+      }, {
+        say: '"The key, to hold the beast in place. I dropped it," Baxter says, whiskers twitching, "I was attacked by my mortal nemesis, in a room upstairs."',
+        action: giveExpFor('where Baxter dropped the key to the cellar'),
+        delay: 2500
+      }, {
+        say: '"If you do find the key, be careful. That thing is not human, not of this world," Baxter replies, "I\'m not sure the cellar door can hold it forever."'
       }];
 
 
@@ -95,6 +123,33 @@ exports.listeners = {
           },
           prerequisite: hasMet
         },
+
+        'what is the quarantine': {
+          priority: Dialogue.Priority.LOW,
+          keywords: {
+            every: 'quarantine',
+            some: ['the quarantine', 'quarantining', 'history of the'],
+            find: Dialogue.Keywords.QUARANTINE
+          },
+          dialogue: {
+            type:     Dialogue.Types.TIMED,
+            sequence: quarantineDialogue
+          },
+          prerequisite: hasMet
+        },
+
+        'what is in the cellar': {
+          priority: Dialogue.Priority.MEDIUM,
+          keywords: {
+            every: 'cellar',
+            some: ['basement', 'downstairs', 'trapdoor'],
+            find: ['cell', 'base', 'down', 'monster', 'key']
+          },
+          dialogue: {
+            type:     Dialogue.Types.TIMED,
+            sequence:  cellarDialogue
+          }
+        }
 
         // Next dialogue branch...
 
@@ -273,38 +328,30 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const playerName = player.getName();
 
-      //TODO: Use the timed dialogue method for this bit, if possible.
-      const secondPartyMessage =
-        '<bold>The cat rears up on his hind legs and considers you for a moment.</bold>\n' +
-        '<magenta>"Welcome to my tavern, human,"</magenta> he mews in a droll tone.\n' +
-        '<magenta>"I know not why you have come here. But I do have a proposition for you...."</magenta>\n' +
-        'He trails off, licking his paws.\n' +
-        '<magenta>"Say, do you like salmon?"<magenta>';
-      const thirdPartyMessage =
-        '<bold>The cat rears up on his hind legs and considers ' + playerName + ' for a moment.\n<bold>' +
-        '<magenta>"Welcome to my tavern, human,"</magenta> he mews in a droll tone.\n' +
-        '<magenta>"I know not why you have come here. But I do have a proposition for you...."</magenta>\n\n' +
-        'He trails off, licking his paws while staring at ' + playerName + '.\n' +
-        '<magenta>"Say, do you like salmon?"<magenta>';
-
-      toRoom({ secondPartyMessage, thirdPartyMessage });
-
-      const doMoreDialogue = () => {
-        if (player.getLocation() === this.getLocation()) {
-          const secondPartyMessage =
-            '<magenta>"Sorry, a non-sequitir,"</magenta> the tomcat mumbles, half to himself.\n' +
-            '<magenta>"I can also answer any questions you have about this tavern,"<magenta>\n' +
-            '<magenta>"...or the creatures in the basement."</magenta>';
-          const thirdPartyMessage =
-            '<magenta>"Sorry, a non-sequitir,"</magenta> the tomcat mumbles, half to himself and half to ' + playerName + '.\n' +
-            '<magenta>"I can also answer any questions you have about this tavern,"<magenta>\n' +
-            '<magenta>"...or the creatures in the basement."</magenta>';
-
-          toRoom({ secondPartyMessage, thirdPartyMessage });
+      const introDialogue = {
+        dialogue: {
+          sequence: [{
+            say: '<bold>The cat rears up on his hind legs and considers you for a moment.</bold>',
+            delay: 1500
+          },
+          {
+            say: '"This one seems sane," he mutters to himself quietly.'
+          },
+          {
+            say: '"Welcome to my tavern, human," the cat announces to you, "My name is Baxter J. Truthteller."',
+            delay: 2000
+          },
+          {
+            say: '"Let me know if you need vittles or other sustenance," he finishes with a curt nod.',
+            delay: 750
+          },
+          {
+            say: 'Baxter resumes licking his paws and grooming himself.'
+          }]
         }
-      }
+      };
 
-      setTimeout(doMoreDialogue, 3500);
+      Dialogue.timedDialogueHandler(player, this, introDialogue);
 
     }
   },
