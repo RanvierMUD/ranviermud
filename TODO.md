@@ -43,6 +43,10 @@
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 3 | Refactor.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 112 | Use in player/npc class.
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 171 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 207 | Extract this to some kind of combat messaging helper?
 | /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
@@ -51,10 +55,6 @@
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 98 | Emit sanity loss event here if applicable.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 115 | Extract all stuff for determining stat gain into level utils.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 177 | Permadeath, add it.
-| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
-| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
-| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 171 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
-| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 207 | Extract this to some kind of combat messaging helper?
 | /Users/seanodonohue/myForks/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 62 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)

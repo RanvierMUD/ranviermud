@@ -81,7 +81,7 @@ describe('Player/NPC Combat Helper', () => {
       while(i < limit) {
         const damage = testWarrior.getDamage();
         expect(damage >= 5).to.be.true;
-        expect(damage <= 40).to.be.true;
+        expect(damage <= 41).to.be.true;
         i++;
       }
     });
@@ -97,7 +97,7 @@ describe('Player/NPC Combat Helper', () => {
       while(i < limit) {
         const damage = testWarrior.getDamage();
         expect(damage >= 10).to.be.true;
-        expect(damage <= 80).to.be.true;
+        expect(damage <= 82).to.be.true;
         i++;
       }
 
