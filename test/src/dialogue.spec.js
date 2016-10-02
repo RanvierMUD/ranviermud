@@ -139,7 +139,8 @@ describe.only('Parsing Player/NPC Dialogue', () => {
     describe('simple dialogue', () => {
       it('should say simple dialogue to player', () => {
         Dialogue.handleInteraction(mockConfig, 'What is the thieves guild?');
-        const expectedLine = 'The man nods, "I need you to infiltrate the thieves guild for me, and find their roster."';
+        const expectedLine = '<yellow>The man nods, "I need you to infiltrate the thieves\nguild for me, and find their roster."</yellow>';
+        console.log(player.say.args);
         expect(player.say.calledWith(expectedLine)).to.be.true;
       });
 
