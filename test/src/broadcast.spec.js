@@ -1,12 +1,18 @@
+'use strict';
+
 const expect = require('chai').expect;
 const sinon  = require('sinon');
 
 const Broadcast = require('../../src/broadcast').Broadcast;
+
 const Player = require('../../src/player').Player;
 const Npc = require('../../src/npcs').Npc;
 
-const Type   = require('../../src/type.js').Type;
+const Random = require('../../src/random').Random;
+const Type   = require('../../src/type').Type;
 Type.config(Player, Npc);
+
+const sandbox = sinon.sandbox.create();
 
 describe('broadcasting to an area', () => {
 
@@ -86,6 +92,28 @@ describe('broadcasting to a single room', () => {
     expect(firstParty.say.calledWith('1st test')).to.be.true;
     expect(secondParty.say.calledWith('2nd test')).to.be.true;
     expect(thirdPartyPlayer.say.calledWith('3rd test')).to.be.true;
+  });
+
+});
+
+describe('broadcasting consistent messages', () => {
+
+  it('should call broadcaster with messages from array that match up', () => {
+    const messageLists = {
+      firstPartyMessage: ['lol', 'sup'],
+      thirdPartyMessage: ['lol3', 'sup3']
+    };
+    const oldRange = Random.inRange;
+    Random.inRange = sandbox.stub().returns(1);
+
+    const broadcaster = sinon.spy();
+    Broadcast.consistentMessage(broadcaster, messageLists);
+
+    const broadcasted = broadcaster.getCall(0).args[0];
+    expect(broadcasted.firstPartyMessage).to.equal('sup');
+    expect(broadcasted.thirdPartyMessage).to.equal('sup3');
+
+    Random.inRange = oldRange;
   });
 
 });
