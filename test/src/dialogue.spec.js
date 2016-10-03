@@ -7,7 +7,7 @@ const sinon = require('sinon');
 const Npc = require('../../src/npcs').Npc;
 const Player = require('../../src/player').Player;
 
-describe.only('Parsing Player/NPC Dialogue', () => {
+describe('Parsing Player/NPC Dialogue', () => {
   const sandbox = sinon.sandbox.create();
 
   const npc = new Npc({});
@@ -140,7 +140,6 @@ describe.only('Parsing Player/NPC Dialogue', () => {
       it('should say simple dialogue to player', () => {
         Dialogue.handleInteraction(mockConfig, 'What is the thieves guild?');
         const expectedLine = '<yellow>The man nods, "I need you to infiltrate the thieves\nguild for me, and find their roster."</yellow>';
-        console.log(player.say.args);
         expect(player.say.calledWith(expectedLine)).to.be.true;
       });
 
