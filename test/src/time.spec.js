@@ -24,6 +24,8 @@ describe('checking to see if it is day or night', () => {
 
 describe('weather stuff', () => {
 
+  afterEach(function () { this.clock.restore(); });
+
   const fakeRoom = {
     getBiome: () => 'outdoors'
   };
@@ -53,6 +55,12 @@ describe('weather stuff', () => {
 
     const emitted = Time.checkWeather(fakeRooms, fakePlayers);
     expect(possibleWeatherEvents.indexOf(emitted) > -1).to.be.true;
+  });
+
+  it('should return false when no weather emits', () => {
+    Random.roll.returns(4);
+    const emitted = Time.checkWeather(fakeRooms, fakePlayers);
+    expect(emitted).to.be.false;
   });
 
 });
