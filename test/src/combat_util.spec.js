@@ -1,7 +1,9 @@
 'use strict';
 
 const expect = require('chai').expect;
+const sinon  = require('sinon');
 
+const Random = require('../../src/random.js').Random;
 const Player = require('../../src/player.js').Player;
 const Npc    = require('../../src/npcs.js').Npc;
 const Type   = require('../../src/type.js').Type;
@@ -73,7 +75,6 @@ describe('Player/NPC Combat Helper', () => {
     });
 
     const testWarrior = new CombatHelper(warrior);
-
 
     it('should be able to get damage within a range', () => {
       let i = 0;
