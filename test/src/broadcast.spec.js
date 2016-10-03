@@ -116,4 +116,15 @@ describe('broadcasting consistent messages', () => {
     Random.inRange = oldRange;
   });
 
+  it('should throw error if the lists are mismatched', () => {
+    const messageLists = {
+      firstPartyMessage: ['l', 'o', 'l'],
+      secondPartyMessage: ['sup']
+    };
+    const broadcaster = sinon.spy();
+    const tryBrokenMessages = () => Broadcast.consistentMessage(broadcaster, messageLists);
+    expect(tryBrokenMessages).to.throw;
+    expect(broadcaster.called).to.be.false;
+  });
+
 });
