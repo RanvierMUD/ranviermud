@@ -119,7 +119,8 @@ describe('broadcasting consistent messages', () => {
   it('should throw error if the lists are mismatched', () => {
     const messageLists = {
       firstPartyMessage: ['l', 'o', 'l'],
-      secondPartyMessage: ['sup']
+      secondPartyMessage: ['sup'],
+      thirdPartyMessage: ['burritotown', 'tacoland']
     };
     const broadcaster = sinon.spy();
     const tryBrokenMessages = () => Broadcast.consistentMessage(broadcaster, messageLists);
