@@ -137,7 +137,7 @@ const enactDialogueSequence = (player, npc, sequence, index) => {
 }
 
 const enactDialogue = (player, spoken, action) => {
-  if (spoken) { player.say(wrap('<yellow>' + spoken + '</yellow>', 60)); }
+  if (spoken) { player.say(wrap('<yellow>' + spoken + '</yellow>', 70)); }
   if (action) { action(); }
 };
 
