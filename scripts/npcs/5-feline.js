@@ -72,7 +72,7 @@ exports.listeners = {
         say: '"This tavern has been around for as long as I\'ve been around, for what that\'s worth," the cat murmurs, licking its paws.',
         action: giveExpFor('the age of the half-abandoned tavern, the Serpent\'s Hiss'),
       }, {
-        say: '"My humans used to run this place," the cat says, glancing up at you. "Their kit is still in the basement."',
+        say: '"My humans used to run this place," the cat says, glancing up at you. "They were torn apart... their killer is still in the basement."',
         action: giveExpFor('the former owners of the Serpent\'s Hiss', 75),
       }, {
         say: '"Since the Quarantine, I\'ve been taking care of the place," the cat purrs, "I locked the upstairs room and the cellar door.  For good reason."',
@@ -140,6 +140,7 @@ exports.listeners = {
 
         'what is in the cellar': {
           priority: Dialogue.Priority.MEDIUM,
+          prerequisite: hasMet
           keywords: {
             every: 'cellar',
             some: ['basement', 'downstairs', 'trapdoor'],
@@ -148,6 +149,20 @@ exports.listeners = {
           dialogue: {
             type:     Dialogue.Types.TIMED,
             sequence:  cellarDialogue
+          }
+        },
+
+        'tavern name': {
+          priority: Dialogue.Priority.LOWEST,
+          prerequisite: hasMet
+          keywords: {
+            every: ['name', 'why', 'tavern'],
+            some: ['named', 'why is', 'pub', 'bar'],
+            find: ['named', 'pub', 'tavern', 'serpents', 'hiss', 'snake']
+          },
+          dialogue: {
+            type:     Dialogue.Types.SIMPLE,
+            say: '"My humans were fond of snakes... so be careful wandering about," Baxter warns. "Me, I prefer to call it \'The Cat\'s Meow\'. Unfortunately, without opposable thumbs, signcrafting is not one of my strong suits."'
           }
         }
 
