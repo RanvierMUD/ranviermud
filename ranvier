@@ -12,6 +12,8 @@
  *   --respawn Minutes between respawn
  */
 
+//TODO: Refactor
+
 	// built-ins
 var net = require('net'),
 	util = require('util'),
