@@ -29,7 +29,11 @@ Example dialogue config for a single topic:
     some:  ['thief', 'thieves', 'what'],
     find:  ['thief', 'guild']
   },
-  dialogue: 'The cloaked figure says, "I need you to infiltrate the thieves guild for me, and find their roster."',
+  dialogue: {
+    type: Dialogue.Types.SIMPLE,
+    say: 'The cloaked figure says, "I need you to infiltrate the thieves guild for me, and find their roster."',
+    action: () => beginQuest('thieves_guild_1')
+  },
 },
 ```
 
@@ -50,16 +54,18 @@ So, if given the string ``"What can I do about the dead thief from the thieves g
 
 #### Custom Priority
 
-The priority can also be a function that returns one of the Priority enums, or an integer.
-
 The following `quest` example uses a function to check the player's level and set the priority based on whether or not they are in an appropriate level range for the quest.
 
+Priorities can be a function that returns an integer OR an integer. The built-in `Dialogue.Priority` constants are really just integers 1-5 under the hood.
 
-# Dialogue Types
 
-As seen above, the `dialogue` property can have a string as a value. In this case, it would be a single line of dialogue where the NPC responds every single time using that same dialogue bit, if that topic ends up being highest priority.
+## Dialogue Types
+
+As seen above, the `dialogue` object has a `type` property. The `SIMPLE` type denotes a single line of dialogue and/or action, in response to being triggered.
 
 However, there are more complex dialogue types:
+
+### Random Dialogue
 
 ``` javascript
 'here': {
@@ -68,18 +74,21 @@ However, there are more complex dialogue types:
     some: ['here', 'this place', 'where'],
     find: ['wh'],
   },
-  dialogue: [
-    'The hobo says, "This is my favorite place."',
-    '"It is so great here," says the hobo.',
-  ],
+  dialogue: {
+    type: Dialogue.Types.RANDOM
+    choices: [
+      { say: '"I love it here," says the hobo.'},
+      { say: '"This is my favorite place," the hobo says.'}
+    ]
+  }
 },
 ```
 
-If the dialogue is a plain array (as determined by `Array.isArray`), then it will choose a random response from the array of dialogue strings.
+In this case, `RANDOM`, the dialogue object must have a `choices` property which is an array of objects. As seen in the `SIMPLE` example, the dialogue can have words to `say` or have an `action` (which must be a function). The response will be chosen randomly from the array each time it is triggered.
 
 Another type:
 
-## Timed Dialogue
+### Timed Dialogue
 
 ``` javascript
 'quest': {
@@ -94,46 +103,38 @@ Another type:
     some: Dialogue.Keywords.QUEST.concat(['two']),
     find: Dialogue.Keywords.QUEST.concat(['two']),
   },
-  dialogue: Dialogue.timed([{
-    say:   'We must seek vengeance.',
-    delay: 2.5 * 1000
-  }, {
-    say:   'They have overstepped their bounds and must be put down.'
-  }, {
-    say:   'Go.'
-  }]);
+  dialogue: {
+    type: Dialogue.Types.TIMED,
+
+    sequence: [{
+      say:   '"We must seek vengeance," she growls',
+      delay: 2.5 * 1000
+    }, {
+      say:   'She continues, "They have overstepped their bounds and must be put down."'
+    }, {
+      say:   '"Go."'
+      action: () => beginQuest('thieves_guild_2')
+    }]
+  }
 }
 ```
 
-Woah, this is some weird stuff.
-
-So, the dialogue here is defined as an array of objects, with a `say` property and a `delay` property.
-`say`: The string the player will see. No say or action property will throw an error.
-`action`: A function determining what the NPC will do. This function will be passed the npc, the player who triggered the initial dialogue, the player manager, the rooms manager, and [maybe?] the arg
-`delay`: The amount of time that the NPC will wait before moving on to their next line or action, in milliseconds. Defaults to 1000 ms, or one second.
+The `TIMED` dialogue is similar to `RANDOM` in structure. It denotes dialogue that will be said/acted on in order, from first to last, with an optional `delay` parameter (in milliseconds, defaulting to 1500).
 
 Before each blurb, the npc checks to see if the player who triggered the dialogue is still in the same room.
-If they are not, the dialogue process ends.
+If they are not, the dialogue process ends. So, if the player left before this dialogue ended, the quest would not officially start (this is probably bad design and is a totally contrived example).
 
-
-
+Also, note the use of a function to set the priority, and the use of pre-packaged keywords.
 
 ### Prerequisites
 
 Prerequisites are a function or array of functions, that returns a boolean. If it is undefined, then the dialogue has no prereqs. If it is an array of functions, each must resolve to true for the prereq to be met.
 
-Some are predefined:
-
+Eventually, commonly used functions will be prepackaged, just like Types/Keywords for Dialogue...
+``` javascript
+hasMet = (player, npc) => () => player.hasMet(npc);
+```
 Example:
-``` javascript
-  'prerequisites': [ Prereqs.hasMet(player, npc) ],
-```
-
-``` javascript
-Prereqs.hasMet = (player, npc) => () => player.hasMet(npc);
-```
-
-## Sequenced Dialogue
 ``` javascript
 'the awakening': {
   priority: Dialogue.Priority.MEDIUM,
@@ -142,14 +143,16 @@ Prereqs.hasMet = (player, npc) => () => player.hasMet(npc);
     some: Dialogue.Keywords.BACKSTORY,
     find: Dialogue.Keywords.BACKSTORY,
   }
-  dialogue: Dialogue.sequence([
-    '"This tavern was the most popular in the city, before the Awakening," he said.',
-    '"I was a bit taller, then. More real," mutters the metahuman.',
-    'He sighs heavily, "It was not a good time for me."'
-  ]),
+  prerequisite: Dialogue.Prereqs.hasMet // unimplemented as of yet...
+  dialogue: {
+    type: Dialogue.Types.RANDOM,
+    choices: [
+      { say: '"This tavern was the most popular in the city, before the Awakening," he said.' },
+      { say: '"I was a bit taller, then. More real," mutters the metahuman.' },
+      { say: 'He sighs heavily, "It was not a good time for me."' }
+    ]
+  }
 }
 ```
 
-This is an array of dialogue choices that will be cycled through from beginning to end based on the last one the NPC said. So, each time that this dialogue topic is triggered, the NPC will say the next bit of dialogue.
-
-Not sure if this will be done on a per-player basis or if the NPC will just rotate between dialogue choices regardless of which player triggered the dialogue, or if it will reset based on a timer. Will do a simple implementation for now.
+THE END... FOR NOW.
