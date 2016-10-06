@@ -1,25 +1,31 @@
 # Dialogue
 
-Non-player characters can engage in dialogue triggered by the 'say' command or the 'ask about' command.
+Players can engage NPCs in dialogue via the `say` command.
 
-Beginning dialogue is triggered with an 'introduce' command.
+For the most part, players must use the `introduce` command to initialize dialogue with an NPC and open up dialogue branches.
+This also will prompt the player as to a few potential topics the NPC may be willing to talk about.
+Introducing oneself to NPCs will also replace their room description with their name for future interactions.
 
 For example, a player in a room with an NPC named Umbra might see Umbra as "an enormous, green-skinned humanoid".
 Then, they use 'introduce humanoid' and Umbra might say, "Hello, I am Umbra. I need help dealing with thieves."
 
-An obvious dialogue choice would be triggered by either, `ask Umbra about thieves` or `say Tell me about the thieves.`, and it is possible to have these dialogue choices be triggered only after an introduction. NPCs might say some bits and pieces about things said in their presence but will mostly refuse to engage with you until you introduce yourself.
+An obvious dialogue choice would be triggered by `say Tell me about the thieves.`, and it is possible to have these dialogue choices be triggered only after an introduction. For the most part, NPCs won't engage with you much until you introduce yourself.
 
+## Configuring/Building Dialogue Trees
 
-## Dialogue priority
+There is some cruft around building dialogue, but for the most part it is done with Javascript objects, strings, and functions. Commonly used keywords and functions will be extracted for readability and ease of use for new developers/builders.
+Here are some examples of the features that are used when crafting a dialogue tree.
 
-Dialogue topics can also be prioritized, so that if you mention more than one topic in a sentence or ask about multiple topics' keywords, it will choose the highest priority topic.
+### Dialogue priority
+
+Dialogue topics are prioritized, so that if you mention more than one topic in a sentence or ask about multiple topics' keywords, it will choose the highest priority topic.
 
 Example dialogue config for a single topic:
 ``` javascript
 'thieves guild': {
   priority: Dialogue.Priority.LOW,
   keywords: {
-    every: 'guild',
+    every: ['thieves', 'guild'],
     some:  ['thief', 'thieves', 'what'],
     find:  ['thief', 'guild']
   },
@@ -28,17 +34,25 @@ Example dialogue config for a single topic:
 ```
 
 Which dialogue branch is triggered is based on the following criteria:
-- Lowest, Low, Medium, High, Highest are worth 1 to 5 points, in order. This is used as a tie breaker, dependent on the following criteria.
+- A pre-set priority (key `priority` in the example) Lowest, Low, Medium, High, Highest are worth 1 to 5 points, in order.
 - If the topic (key `'thieves guild'` in the example) is found verbatim, it is 1 point.
-- If every single word in the "every" array/string is matched by `Array.prototype.every`, it is worth 3 points.
-- If any word in the "some" array/string is matched by `Array.prototype.some`, it is worth 2 points.
-- Each word in the "find" array/string that is matched by `String.prototype.find` is worth 1 point.
+- If _every_ string in the "every" array/string is matched, it is worth 3 points.
+- If _any_ string in the "some" array/string is matched, it is worth 2 points.
+- _Each_ string in the "find" array/string that is matched is worth 1 point.
+
+These are all tallied. Tie breaker method is TBD.
 
 So, if given the string ``"What can I do about the dead thief from the thieves guild?"``, this algorithm would weight this topic with 9 points:
-- 2 from priority
+- 2 from pre-set priority
 - 1 from the key
 - 2 from `some`
 - 2 from `find`
+
+#### Custom Priority
+
+The priority can also be a function that returns one of the Priority enums, or an integer.
+
+The following `quest` example uses a function to check the player's level and set the priority based on whether or not they are in an appropriate level range for the quest.
 
 
 # Dialogue Types
@@ -101,13 +115,7 @@ So, the dialogue here is defined as an array of objects, with a `say` property a
 Before each blurb, the npc checks to see if the player who triggered the dialogue is still in the same room.
 If they are not, the dialogue process ends.
 
-### More on Priority
 
-You noticed that the priority values were different in those past few examples. So, leverage that.
-The priority can be an integer from 1 to 5 (expressed using enum-like variables)
-or a function that returns one of those integers/enums.
-
-The above `quest` example uses a function to check the player's level and set the priority based on whether or not they are in an appropriate level range for the quest.
 
 
 ### Prerequisites
