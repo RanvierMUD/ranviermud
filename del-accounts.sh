@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 mkdir ../ranvier-backups/
 sudo rm ../ranvier-backups/*.json
 cp data/accounts/*.json ../../../ranvier-account-backups/*.json
