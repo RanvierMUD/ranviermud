@@ -1,3 +1,45 @@
+TALKING BACK (0.3.3)
+========
+
+This release made NPCs slightly more than just things for you to kill for experience! Now, they talk back, as long as you kindly `introduce` yourself first.
+
+### Features:
+- A dialogue system! See /docs/dialogue.md for information on setting up dialogue for new NPCs. NPCs will react to the `say` command, as long as the player has done `introduce [npc]` first.
+- NPCs can now have Names. Their short description is shown until the player `introduces` themselves.
+
+### Enhancements:
+- Minor text fixes to:
+  - Examine scripts
+  - Trying to wield with two weapons wielded will tell you both weapons you are already holding
+- Secondwind feat: Now increases player speed for a short burst, with a 'hangover' afterwards where the player becomes slower for a duration.
+- Assense Aura feat: not fully implemented, but it increases mental attributes passively for now.
+- Improved combat balance so it's not just constant dodging.
+- Adjust attribute and level descriptions to match the soft maximum.
+- Character level is more of a factor in combat and feat powers
+- Added a 'deathblow' event, by default players can earn XP now even if another player is the one who killed the NPC, as long as they are in the same room.
+
+### Bugfixes:
+- `i` was doing the new `introduce` command rather than `inventory`, fixed.
+- Fixed a bug with leatherskin/ironskin that was being surpressed anyway.
+- Examining the booth room was buggy.
+- The script for npcs leaving a room was broadcasting both the leaving and arriving events in the room they left from.
+
+### Technical Stuff
+- Dialogue stuff is documented.
+- Added CHANGELOG.md including some past release notes.
+- Added more tests (See below)
+- Refactored NPC and Player methods for keeping track of combatants, to make it easier to eventually add multi-participant combat.
+- Made default respawn duration really long, since restarting the server disconnects all remote connections and crashes the server if anyone is connected. Goal for next release is to refactor the server respawn function.
+
+
+#### COVERAGE:
+
+Statements   : 29.77% ( 827/2778 )
+Branches     : 15.08% ( 173/1147 )
+Functions    : 14.93% ( 30/201 )
+Lines        : 30.41% ( 765/2516 )
+
+
 FLESHING (0.3.2)
 ========
 

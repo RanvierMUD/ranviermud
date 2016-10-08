@@ -154,7 +154,7 @@ exports.listeners = {
 
         'tavern name': {
           priority: Dialogue.Priority.LOWEST,
-          prerequisite: hasMet
+          prerequisite: hasMet,
           keywords: {
             every: ['name', 'why', 'tavern'],
             some: ['named', 'why is', 'pub', 'bar'],
