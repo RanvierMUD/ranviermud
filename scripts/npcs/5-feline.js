@@ -140,7 +140,7 @@ exports.listeners = {
 
         'what is in the cellar': {
           priority: Dialogue.Priority.MEDIUM,
-          prerequisite: hasMet
+          prerequisite: hasMet,
           keywords: {
             every: 'cellar',
             some: ['basement', 'downstairs', 'trapdoor'],
