@@ -80,19 +80,19 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function getLevelText(level) {
       const titles = {
         1:  'novice',
-        3:  'neonate',
-        5:  'survivor',
-        6:  'surveyor',
-        7:  'wanderer',
-        13: 'whisperer of secrets',
-        15: 'conquerer of horrors',
-        18: 'distiller of fates',
-        20: 'the perseverer',
-        24: 'the outlaster',
-        28: 'the indweller',
-        32: 'the defier of death',
-        36: 'the reviver',
-        50: 'the undying',
+        5:  'neonate',
+        7:  'survivor',
+        10:  'surveyor',
+        13:  'wanderer',
+        18: 'whisperer of secrets',
+        22: 'conquerer of horrors',
+        27: 'distiller of fates',
+        30: 'the perseverer',
+        35: 'the outlaster',
+        40: 'the indweller',
+        45: 'the defier of death',
+        50: 'the reviver',
+        55: 'the undying',
       };
 
       const topTier = "the paragon";
@@ -103,12 +103,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function getStamina(stamina) {
       const status = {
         1: ['pathetic', 'meager', 'corpselike'],
-        2: ['weak', 'sorry', 'meager', 'frail'],
-        3: ['mediocre', 'subpar', 'weak', 'short-lived', 'easily broken'],
-        5: ['steady', 'fit'],
-        7: ['athletic', 'impressive', 'long-lasting'],
-        8: ['vigorous', 'savage', 'interminable'],
-        10: ['fierce', 'interminable']
+        3: ['weak', 'sorry', 'meager', 'frail'],
+        8: ['mediocre', 'subpar', 'weak', 'short-lived', 'easily broken'],
+        10: ['steady', 'fit'],
+        15: ['athletic', 'impressive', 'long-lasting'],
+        20: ['vigorous', 'savage', 'interminable'],
+        30: ['fierce', 'interminable']
       };
 
       const topTier = 'unearthly';
@@ -119,12 +119,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const gender = statusUtil.getGenderNoun(player.getGender());
       const status = {
         1: ['sluggish', 'slothly', 'slovenly', 'pitiable'],
-        2: ['trudging', 'like an old ' + gender, 'awkward'],
-        4: ['average', 'unimpressive'],
-        5: ['nimble', 'speedy'],
-        7: ['athletic', 'graceful'],
-        8: ['acrobatic', 'fleet'],
-        10: 'tiger-like'
+        3: ['trudging', 'like an old ' + gender, 'awkward'],
+        5: ['average', 'unimpressive'],
+        10: ['nimble', 'speedy'],
+        15: ['athletic', 'graceful'],
+        20: ['acrobatic', 'fleet'],
+        30: 'tiger-like'
       };
 
       const topTier = 'lightning';
@@ -134,12 +134,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function getCleverness(cleverness) {
       const status = {
         1: ['foggy', 'murky'],
-        2: ['hazy', 'bogged down'],
+        4: ['hazy', 'bogged down'],
         5: ['mundane', 'average', 'mediocre', 'hackish'],
-        6: ['shrewd', 'bright', 'clear', 'witty'],
-        8: ['adept', 'impressive'],
-        10: ['prodigious', 'genius-level'],
-        12: 'wizardly'
+        10: ['shrewd', 'bright', 'clear', 'witty'],
+        15: ['adept', 'impressive'],
+        20: ['prodigious', 'genius-level'],
+        30: 'wizardly'
       };
 
       const topTier = 'coruscating';
@@ -150,10 +150,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const status = {
         1: ['sapped', 'broken'],
         2: ['pitiful', 'bent', 'brittle'],
-        4: ['secure', 'unbent'],
-        6: ['iron', 'unyielding'],
-        8: 'imposing',
-        10: 'uncanny'
+        6: ['secure', 'unbent'],
+        10: ['iron', 'unyielding'],
+        18: 'imposing',
+        27: 'uncanny'
       };
       const topTier = 'divine';
       return evalStatus(willpower, status, topTier, 'bold');

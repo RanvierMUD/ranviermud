@@ -12,6 +12,9 @@ const l10n_dir = __dirname + '/../l10n/scripts/npcs/';
 
 const CombatUtil = require('./combat_util').CombatUtil;
 
+//TODO: Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
+//     then more will spawn at the proper interval.
+//TODO: Extract npc from this file like player/player_manager
 
 /**
  * Npc container class. Loads/finds npcs
@@ -112,10 +115,19 @@ const Npcs = function NpcManager() {
    * @param function callback
    */
   self.each = callback => {
-    for (const npc in self.npcs) {
+    for (let npc in self.npcs) {
       callback(self.npcs[npc]);
     }
   };
+
+  self.eachIf = (predicate, callback) => {
+    for (let one in self.npcs) {
+      const npc = self.npcs[one];
+      if (predicate(npc)) {
+        callback(npc);
+      }
+    }
+  }
 
   /**
    * Blows away an NPC
@@ -140,7 +152,7 @@ const Npc = function NpcConstructor(config) {
   self.description;
   self.room; // Vnum of current location
   self.vnum;
-  self.inCombat = false;
+  self.inCombat = [];
   self.uuid = null;
 
   self.attributes = {
@@ -157,6 +169,7 @@ const Npc = function NpcConstructor(config) {
    */
   self.init = function (config) {
     self.short_description = config.short_description || '';
+    self.name = config.name || '';
     self.keywords = config.keywords || [];
     self.attack = config.attack || { en: 'strike' };
     self.description = config.description || '';
@@ -164,6 +177,7 @@ const Npc = function NpcConstructor(config) {
     self.vnum = config.vnum;
     self.types = config.types || [];
     self.defenses = {};
+    self.inDialogue = false;
 
     for (const stat in config.attributes || {}) {
       self.attributes[stat] = config.attributes[stat];
@@ -201,16 +215,28 @@ const Npc = function NpcConstructor(config) {
 
   //TODO: Have spawn inventory but also add same inv functionality as player
   self.setInventory = identifier => self.inventory = identifier;
-  self.setInCombat  = combat => self.inCombat = combat;
   self.setContainer = uid => self.container = uid;
   self.setAttribute = (attr, val) => self.attributes[attr] = val;
   self.removeEffect = eff => { delete self.effects[eff]; };
 
   self.combat = CombatUtil.getHelper(self);
 
-  self.isInCombat = () => self.inCombat;
+  self.isInCombat       = ()        => self.inCombat.length > 0;
+  self.setInCombat      = combatant => self.inCombat.push(combatant);
+  self.getInCombat      = ()        => self.inCombat;
+  self.fleeFromCombat   = ()        => self.inCombat = [];
+  self.removeFromCombat = combatant => {
+    const combatantIndex = self.inCombat.indexOf(combatant);
+    if (combatantIndex === -1) { return; }
+    self.inCombat.splice(combatantIndex, 1);
+  }
+
   self.isPacifist = () => !self.listeners('combat').length;
   /**#@-*/
+
+  self.startDialogue = () => self.inDialogue = true;
+  self.endDialogue   = () => self.inDialogue = false;
+  self.isInDialogue  = () => self.inDialogue;
 
   /**
    * Get specific currently applied effect, or all current effects
@@ -273,9 +299,11 @@ const Npc = function NpcConstructor(config) {
    * Get the title, localized if possible
    * @param string locale
    * @return string
-   */
+   */ //TODO: Consider passing in player object to see if player recognizes the item
+   // //      IS that an observer pattern?
   self.getShortDesc = locale => getTranslatedString('short_description', locale);
 
+  self.getName = () => self.name;
   /**
    * Get the title, localized if possible
    * @param string locale

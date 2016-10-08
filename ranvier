@@ -12,6 +12,8 @@
  *   --respawn Minutes between respawn
  */
 
+//TODO: Refactor
+
 	// built-ins
 var net = require('net'),
 	util = require('util'),
@@ -68,11 +70,11 @@ Type.config(Player, Npc, Item, Account);
 // cmdline options
 commander
 	.version(pkg.version)
-	.option('-s, --save [time]', 'Number of minutes between auto-save ticks [10]', 10)
-	.option('-r, --respawn [time]', 'Number of minutes between respawn tickets [20]', 20)
+	.option('-s, --save [time]', 'Number of minutes between auto-save ticks [5]', 5)
+	.option('-r, --respawn [time]', 'Number of minutes between respawn tickets [120]', 120)
 	.option('-p, --port [portNumber]', 'Port to host telnet server [23]', 23)
 	.option('-l, --locale [lang]', 'Default locale for the server', 'en')
-	.option('-v, --verbose', 'Verbose console logging.')
+	.option('-v, --verbose', 'Verbose console logging.', true)
 	.parse(process.argv);
 
 /**
@@ -341,7 +343,7 @@ function tick() {
 		wasDaytime = !wasDaytime;
 		util.log("The times, they are a-changin'...");
 	}
-	
+
 	players.each( p => p.emit('tick'));
 
 	npcs.each( npc => {

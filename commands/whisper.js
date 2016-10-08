@@ -31,7 +31,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       if (targetFound) {
         player.sayL10n(l10n, 'YOU_WHISPER', target, msg);
         return;
+      } else {
+        const room = rooms.getAt(player.getLocation());
+        const targetNpc = CommandUtil.findNpcInRoom(npcs, target, room, player, true);
+
+        targetNpc.emit('playerSay', player, players, rooms, npcs, msg);
       }
+
     }
 
     if (!targetFound) {

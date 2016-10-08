@@ -1,7 +1,9 @@
 'use strict';
 
 const expect = require('chai').expect;
+const sinon  = require('sinon');
 
+const Random = require('../../src/random.js').Random;
 const Player = require('../../src/player.js').Player;
 const Npc    = require('../../src/npcs.js').Npc;
 const Type   = require('../../src/type.js').Type;
@@ -74,14 +76,13 @@ describe('Player/NPC Combat Helper', () => {
 
     const testWarrior = new CombatHelper(warrior);
 
-
     it('should be able to get damage within a range', () => {
       let i = 0;
       let limit = 100;
       while(i < limit) {
         const damage = testWarrior.getDamage();
         expect(damage >= 5).to.be.true;
-        expect(damage <= 40).to.be.true;
+        expect(damage <= 41).to.be.true;
         i++;
       }
     });
@@ -97,7 +98,7 @@ describe('Player/NPC Combat Helper', () => {
       while(i < limit) {
         const damage = testWarrior.getDamage();
         expect(damage >= 10).to.be.true;
-        expect(damage <= 80).to.be.true;
+        expect(damage <= 82).to.be.true;
         i++;
       }
 

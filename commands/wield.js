@@ -8,15 +8,37 @@ const l10n = require('../src/l10n')(l10nFile);
 const _ = require('../src/helpers');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
+
 	return (args, player) => {
 		let location = 'wield';
+
 		const wielded = player.getEquipped(location);
-		util.log(wielded);
 		const offhand = player.getEquipped('offhand');
 		const canDual = player.getSkills('dual');
 
+		const getOffhandDesc = (offhand, wielded) => {
+			if (offhand && offhand === wielded) {
+				return 's';
+			} else if (offhand) {
+				return	' and the ' + items.get(offhand).getShortDesc('en')
+			} else return '';
+		}
+
+		const getAdjective = (offhand, wielded) => {
+			if (offhand && offhand === wielded) {
+				return 'two ';
+			} else if (offhand) {
+				return 'both the ';
+			} else return ' the';
+		}
+
 		if (wielded && (offhand || !canDual)) {
-			return player.sayL10n(l10n, 'CANT_WIELD', items.get(wielded).getShortDesc('en'));
+			const wieldedDesc = items.get(wielded).getShortDesc('en');
+
+			const offhandDesc = getOffhandDesc(offhand, wielded);
+			const adjective   = getAdjective(offhand, wielded);
+
+			return player.say('You are already wielding ' + adjective + wieldedDesc + offhandDesc + '.');
 		} else if (wielded && canDual && !offhand) {
 		  location = 'offhand';
 		}

@@ -487,6 +487,10 @@ function Server(connectionListener)
   s = net.createServer({}, connected);
 
   s.on('connected', connectionListener);
+  s.on('error', error => {
+    console.error('Error: ', error);
+    console.error('Stack Trace: ', error.stack);
+  });
 
   return s;
 }
