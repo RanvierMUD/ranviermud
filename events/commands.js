@@ -55,6 +55,11 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
             return Commands.player_commands.look(args, player);
           }
 
+          // Same with 'i' and inventory.
+          if (command === 'i') {
+            return Commands.player_commands.inventory(args, player);
+          }
+
           if (command[0] === '@') {
             const adminCommand = command.slice(1);
             if (adminCommand in Commands.admin_commands) {
@@ -79,8 +84,9 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
           try {
             return Commands.player_commands[cmd](args, player);
           } catch (e) {
-            util.log(cmd);
+            util.log('Command failed: ', cmd);
             util.log(e);
+            if (e.stack) { util.log(e.stack); }
           }
         }
 
@@ -137,7 +143,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
                 player.say(command + " is not a valid command.");
                 return true;
               } else {
-                Channels[command].use(args, player, players, rooms);
+                Channels[command].use(args, player, players, rooms, npcs);
                 return true
               }
             } else {

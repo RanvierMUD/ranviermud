@@ -1,13 +1,12 @@
 'use strict';
 //TODO: Refactor into individual files.
-var LevelUtil = require('../../src/levels').LevelUtil,
+const LevelUtil = require('../../src/levels').LevelUtil,
   Skills = require('../../src/skills').Skills,
   CommandUtil = require('../../src/command_util').CommandUtil,
   util = require('util'),
   Commands = require('../../src/commands').Commands,
   Effects = require('../../src/effects').Effects,
   Broadcast = require('../../src/broadcast').Broadcast;
-
 exports.listeners = {
 
   //// Function wrappers needed to access "this" (Player obj)
@@ -189,6 +188,15 @@ exports.listeners = {
       this.setLocation(startLocation);
       this.emit('regen');
       this.setAttribute('experience', experiencePenalty);
+    }
+  },
+
+  deathblow: function(l10n) {
+    return function (room, attacker, defender, players, hitLocation) {
+      players.eachIf(
+        p => p.getLocation() === defender.getLocation() && p !== attacker,
+        p => p.emit('experience', LevelUtil.mobExp(defender.getAttribute('level')) * .33, 'dying')
+      );
     }
   },
 

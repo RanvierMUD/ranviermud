@@ -34,8 +34,7 @@ const l10nFile = __dirname + '/../l10n/events.yml';
 // shortcut for l10n.translate
 let L = null;
 
-//TODO: Pass most of these and l10n into events.
-// Some get instantiated in events.
+// Deps to be injected into events
 let players = null;
 let player = null;
 let npcs = null;

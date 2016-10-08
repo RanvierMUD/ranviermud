@@ -3,7 +3,6 @@
 module.exports.initCombat = _initCombat;
 
 //TODO: Add strings for sanity damage
-//TODO: Enhance for co-op, allow for setInCombat of NPC with multiple players.
 
 const util = require('util');
 const _    = require('./helpers');
@@ -259,7 +258,9 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       // The damage func has side effect of depleting defender's health.
       const damageDealt = defender.damage(damage, hitLocation);
 
-      if (attackerWeapon && typeof attackerWeapon === 'object') {
+      const attackerWeaponCanEmit = () => attackerWeapon && typeof attackerWeapon === 'object';
+
+      if (attackerWeaponCanEmit()) {
         attackerWeapon.emit('hit', room, attacker, defender, players, hitLocation, damageDealt);
       } else {
         attacker.emit('hit', room, defender, players, hitLocation, damageDealt);
@@ -272,6 +273,11 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         if (defenderStartingHealth <= damage) {
           defender.setAttribute('health', 1);
           defender.setAttribute('sanity', 1);
+          if (attackerWeaponCanEmit()) {
+            attackerWeapon.emit('deathblow', room, attacker, defender, players, hitLocation);
+          } else {
+            attacker.emit('deathblow', room, attacker, defender, players, hitLocation);
+          }
           return combatEnd(Type.isPlayer(attacker));
         }
 
@@ -289,8 +295,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     // Display combat prompt.
     const getCondition = entity => {
-        //FIXME: This could be a problem if the combat is between two NPCs or two players.
-        //FIXME: The fix might have to go in statusUtils?
+        //FIXME: In statusUtils: This could be a problem if the combat is between two NPCs or two players.
         const npc    = Type.isPlayer(entity) ? target : false;
         const max    = entity.getAttribute('max_health');
         return statusUtils.getHealthText(max, player, npc);
@@ -334,9 +339,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
 
     util.log("*** Combat Over ***");
 
-    //TODO: Use filter to remove the combatants from an array. Probably do this inside the player/npc objs.
-    player.setInCombat(false);
-    target.setInCombat(false);
+    player.removeFromCombat(target);
+    target.removeFromCombat(player);
 
     //TODO: Handle PvP or NvN combat ending differently.
     if (success) {
@@ -364,12 +368,14 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
       broadcastExceptPlayer(player.getName() +
         ' collapses to the ground, life fleeing their body before your eyes.');
 
-      //TODO: consider doing sanity damage to all other players in the room.
       broadcastExceptPlayer('<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
-
       broadcastToArea('The gurgles of a dying ' +
         statusUtils.getGenderNoun(player) +
         ' echo from nearby.'
+      );
+      players.eachIf(
+        p => p.getLocation() === room.getVnum(),
+        p => p.emit('sanityLoss', 'witnessing gruesome death first-hand', 50)
       );
     }
     player.prompt();

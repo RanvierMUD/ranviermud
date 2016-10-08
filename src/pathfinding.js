@@ -39,14 +39,15 @@ function chooseRandomExit(chance) {
             }
 
             const dest = chosenRoom.getTitle('en');
+            const src = room.getTitle('en');
+
             npc.emit('npcLeave', room, rooms, players, npcs, dest);
 
             npc.setRoom(chosen.location);
             room.removeNpc(uid);
             chosenRoom.addNpc(uid);
 
-            const src = room.getTitle('en');
-            npc.emit('npcEnter', room, rooms, players, npcs, src);
+            setTimeout(npc.emit.bind(npc, 'npcEnter', chosenRoom, rooms, players, npcs, src), 200);
 
           } catch (e) {
             console.log("EXCEPTION: ", e);

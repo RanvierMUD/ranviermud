@@ -32,9 +32,9 @@ const Player = function PlayerConstructor(socket) {
   self.password  = null;
   self.inventory = [];
   self.equipment = {};
-
-  // In combat is either false or an NPC vnum
-  self.inCombat  = false;
+  
+  // Array of combatants
+  self.inCombat  = [];
 
   // Attributes
   self.attributes = {
@@ -69,6 +69,7 @@ const Player = function PlayerConstructor(socket) {
 
   self.explored = [];
   self.killed   = { length: 0 };
+  self.met      = { length: 0 };
 
   // Anything affecting the player
   self.effects = {};
@@ -133,7 +134,6 @@ const Player = function PlayerConstructor(socket) {
   }
 
   self.getPassword = () => self.password; // Returns hash.
-  self.isInCombat  = () => self.inCombat;
 
   self.setPrompt       = str => self.prompt_string = str;
   self.setCombatPrompt = str => self.combat_prompt = str;
@@ -150,14 +150,24 @@ const Player = function PlayerConstructor(socket) {
       .digest('hex');
 
   self.setGender   = gender => self.gender = gender.toUpperCase();
+
   self.addItem     = item   => self.inventory.push(item);
   self.removeItem  = item   =>
     self.inventory = self.inventory.filter(i => item !== i);
+  self.setInventory     = inv         => self.inventory = inv;
 
-  self.setInventory  = inv           => self.inventory = inv;
-  self.setInCombat   = combatant     => self.inCombat = combatant;
-  self.setAttribute  = (attr, val)   => self.attributes[attr] = val;
-  self.setPreference = (pref, val)   => self.preferences[pref] = val;
+  self.setAttribute     = (attr, val) => self.attributes[attr]  = val;
+  self.setPreference    = (pref, val) => self.preferences[pref] = val;
+
+  self.isInCombat       = ()          => self.inCombat.length > 0;
+  self.fleeFromCombat   = ()          => self.inCombat = [];
+  self.setInCombat      = combatant   => self.inCombat.push(combatant);
+  self.getInCombat      = ()          => self.inCombat;
+  self.removeFromCombat = combatant   => {
+    const combatantIndex = self.inCombat.indexOf(combatant);
+    if (combatantIndex === -1) { return; }
+    self.inCombat.splice(combatantIndex, 1);
+  }
 
   ///// ----- Skills and Training. ----- ///////
 
@@ -285,8 +295,49 @@ const Player = function PlayerConstructor(socket) {
     return true;
   };
 
-  ///// ----- Should be in Skills module -------- //////
+  /**
+  * To keep track of sentient creatures the player has met.
+  * @param obj of NPC met...
+  * @return boolean True if they have already met it, or cannot meet it. Otherwise false.
+  */
 
+  self.hasMet = (entity, introducing) => {
+    let name = entity.getName();
+
+    if (!name) {
+      if (introducing) { self.say('No response.'); }
+      return true;
+    }
+
+    if (!self.met.hasOwnProperty(name)) {
+      if (introducing) {
+        self.met[name] = { reputation: 0 };
+        self.met.length++;
+      }
+
+      return false;
+    }
+
+    if (introducing) { self.say('You already know them quite well.'); }
+    return true;
+  }
+
+  self.hasDiscussed = (entity, topic, discussing) => {
+    const name = entity.getName();
+
+    if (self.met[name] && self.met[name][topic]) {
+      return true;
+    } else {
+      if (self.met[name] && discussing) {
+        self.met[name][topic] = true;
+      }
+      return false;
+    }
+
+  }
+
+  ///// ----- Should be in Skills module -------- //////
+  //TODO: Put in perception skill helper file
   /**
   * Spot checks
   * @param int Difficulty -- What they need to beat with their roll
@@ -541,6 +592,7 @@ const Player = function PlayerConstructor(socket) {
    self.feats = data.feats             || {};
    self.preferences = data.preferences || {};
    self.killed   = data.killed   || { length: 0 };
+   self.met      = data.met      || { length: 0 };
    self.training = data.training || { time: 0 };
    self.explored = data.explored || []; // TODO: Make this like killed so we can track a player's favorite spots∏
 
@@ -609,6 +661,7 @@ const Player = function PlayerConstructor(socket) {
       preferences: self.preferences,
       explored: self.explored,
       killed:   self.killed,
+      met:      self.met,
       training: self.training,
       bodyParts: self.bodyParts,
     });
