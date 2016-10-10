@@ -13,7 +13,7 @@
   attack:
     en: 'scaly embrace'
   description:
-    en: "The snake is several strides long, its meaty, scaled hide widening to a torso powerful enough to stand on its own, winged neck flaring out as it glares at its prey."
+    en: "The snake is several strides long;\n its meaty, scaled hide widening to a torso powerful enough to stand on its own, winged neck flaring out as it glares at its prey."
   behaviors: "rtcombat,aggro,randommove"
   attributes:
     target: 'legs'
