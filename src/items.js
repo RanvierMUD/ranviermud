@@ -2,7 +2,8 @@
 
 const fs    = require('fs'),
     util    = require('util'),
-	   uuid   = require('node-uuid'),
+    yaml    = require('js-yaml'),
+    uuid    = require('node-uuid'),
     events  = require('events'),
     Data    = require('./data.js').Data;
 
@@ -35,17 +36,18 @@ const Items = function ItemsManager() {
 				if (!object_file.match(/yml$/)) continue;
 
 				// parse the object files
-        let object_def = [];
+        let objectDefinitions = [];
 				try {
-          const objectFile = fs.readFileSync(object_file).toString('utf8');
-					object_def = require('js-yaml').load();
+          const objectFile  = fs.readFileSync(object_file).toString('utf8');
+          const objectYaml  = yaml.load(objectFile)
+					objectDefinitions = objectDefinitions.concat(objectYaml);
 				} catch (e) {
 					log("\t\tError loading object - " + object_file + ' - ' + e.message);
 					continue;
 				}
 
-				// create and load the objects
-				object_def.forEach(object => {
+        // create and load the objects
+				objectDefinitions.forEach(object => {
 					const validate = ['keywords', 'short_description', 'vnum'];
 
 					for (var v in validate) {
@@ -61,7 +63,7 @@ const Items = function ItemsManager() {
 						return;
 					}
 
-					const newObject = object = new Item(object);
+					const newObject = new Item(object);
 					newObject.setUuid(uuid.v4());
 					log("\t\tLoaded item [uuid:" + newObject.getUuid() + ', vnum:' + newObject.vnum + ']');
 					self.addItem(newObject);
@@ -152,22 +154,23 @@ const Item = function ItemConstructor(config) {
 	/**#@+
 	 * Mutators
 	 */
-	self.getVnum      = () => self.vnum;
-	self.getInventory = () => self.inventory;
-	self.isNpcHeld    = () => self.npc_held;
-	self.isEquipped   = () => self.equipped;
-	self.getRoom      = () => self.room;
-	self.getContainer = () => self.container;
-	self.getUuid      = () => self.uuid;
-	self.getAttribute = () => self.attributes[attr] || null;
-  /*  Setters, these also return the value that is set */
-	self.setUuid      = uid         => self.uuid      = uid       , uid;
-	self.setRoom      = room        => self.room      = room      , room;
-	self.setInventory = identifier  => self.inventory = identifier, identifier;
-	self.setNpcHeld   = held        => self.npc_held  = held      , held;
-	self.setContainer = uid         => self.container = uid       , uid;
-	self.setEquipped  = equip       => self.equipped  = !!equip   , equip;
-	self.setAttribute = (attr, val) => self.attributes[attr] = val, val;
+	self.getVnum      = ()   => self.vnum;
+	self.getInventory = ()   => self.inventory;
+	self.isNpcHeld    = ()   => self.npc_held;
+	self.isEquipped   = ()   => self.equipped;
+	self.getRoom      = ()   => self.room;
+	self.getContainer = ()   => self.container;
+	self.getUuid      = ()   => self.uuid;
+	self.getAttribute = attr => self.attributes[attr] || null;
+
+	self.setUuid      = uid   => self.uuid      = uid;
+	self.setRoom      = room  => self.room      = room;
+	self.setInventory = id    => self.inventory = id;
+	self.setNpcHeld   = held  => self.npc_held  = held;
+	self.setContainer = uid   => self.container = uid;
+	self.setEquipped  = equip => self.equipped  = !!equip;
+
+	self.setAttribute = (attr, val) => self.attributes[attr] = val;
 	/**#@-*/
 
 	/**
