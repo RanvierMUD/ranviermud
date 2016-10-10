@@ -7,6 +7,8 @@
     en: ['roach', 'cockroach', 'bug', 'cock', 'ro']
   short_description:
     en: 'an oozing cockroach'
+  room_description:
+    en: 'a cockroach, oozing greasy ichor'
   attack:
     en: 'jittering mandibles'
   description:
