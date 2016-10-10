@@ -72,6 +72,7 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, this, player, players);
       const spilledGuts = hitLocation === 'torso' && damage > this.getAttribute('health') - 5
 
+      //TODO: Add condition where attacking the kazuul's legs will slow it greatly.
 
       const secondPartyMessage = spilledGuts ?
       [ 'The kazuul\'s <red>intestines</red> spill onto the floor in a steaming heap.' ] :

@@ -5,12 +5,15 @@
   types: ['beast', 'reptilian']
   keywords:
     en: ['python', 'snake', 'hungry', 'py']
+  name: 'a python'
   short_description:
-    en: 'a hungry python'
+    en: 'a hungry serpent'
+  room_description:
+    en: 'a serpent coiled in a thick rope, waiting to strike'
   attack:
     en: 'scaly embrace'
   description:
-    en: "The python slithers slowly across the ground, its forked tongue darting out of its mouth."
+    en: "The snake is several strides long;\n its meaty, scaled hide widening to a torso powerful enough to stand on its own, winged neck flaring out as it glares at its prey."
   behaviors: "rtcombat,aggro,randommove"
   attributes:
     target: 'legs'
