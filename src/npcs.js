@@ -196,12 +196,14 @@ const Npc = function NpcConstructor(config) {
   /**#@+
    * Mutators
    */
-  self.getVnum = () => self.vnum;
-  self.getInv = () => self.inventory;
-  self.getRoom = () => self.room;
-  self.getLocation = self.getRoom;
-  self.getUuid = () => self.uuid;
-  self.getDefenses = () => self.defenses;
+  self.getVnum    = () => self.vnum;
+  self.getUuid    = () => self.uuid;
+
+  self.getInventory = () => self.inventory;
+  self.getRoom      = () => self.room;
+  self.getLocation  = self.getRoom;
+
+  self.getDefenses  = () => self.defenses;
   self.getBodyParts = () => Object.keys(self.defenses);
   self.getAttribute = attr =>
     typeof self.attributes[attr] !== 'undefined' ?
@@ -213,14 +215,13 @@ const Npc = function NpcConstructor(config) {
   self.addType = type => self.types.push(type);
 
   self.setUuid = uid => self.uuid = uid;
-
   self.setRoom = room => self.room = room;
 
   //TODO: Have spawn inventory but also add same inv functionality as player
-  self.setInventory = identifier => self.inventory = identifier;
-  self.setContainer = uid => self.container = uid;
+  self.setInventory = identifier  => self.inventory = identifier;
+  self.setContainer = uid         => self.container = uid;
   self.setAttribute = (attr, val) => self.attributes[attr] = val;
-  self.removeEffect = eff => { delete self.effects[eff]; };
+  self.removeEffect = eff         => { delete self.effects[eff]; };
 
   self.combat = CombatUtil.getHelper(self);
 
