@@ -7,6 +7,8 @@
     en: ['rat', 'feral rat', 'feral']
   short_description:
     en: 'a feral rat'
+  room_description:
+    en: 'a mangey rat, dripping bloody foam from its fangs'
   attack:
     en: 'jagged fangs'
   description:
