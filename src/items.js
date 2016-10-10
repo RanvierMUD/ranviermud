@@ -75,8 +75,7 @@ const Items = function ItemsManager() {
 	 * Add an item and generate a uuid if necessary
 	 * @param Item item
 	 */
-	self.addItem = function (item)
-	{
+	self.addItem = item => {
 		if (!item.getUuid()) {
 			item.setUuid(uuid.v4());
 		}
@@ -85,44 +84,34 @@ const Items = function ItemsManager() {
 	};
 
 	/**
-	 * Gets all instance of an object
+	 * Gets all instance of an object by vnum
 	 * @param int vnum
 	 * @return Item
 	 */
-	self.getByVnum = function (vnum)
-	{
-		var objs = [];
-		self.each(function (o) {
-			if (o.getVnum() === vnum) {
-				objs.push(o);
-			}
-		});
-		return objs;
-	};
+	self.getByVnum = vnum => self.filter(obj => obj.getVnum() === vnum);
 
 	/**
 	 * retreive an instance of an object by uuid
 	 * @param string uid
 	 * @return Item
 	 */
-	self.get = function (uid)
-	{
-		return self.objects[uid];
-	};
+	self.get = uid => self.objects[uid];
 
 	/**
 	 * proxy Array.each
 	 * @param function callback
 	 */
-	self.each = function (callback)
-	{
-		for (var obj in self.objects) {
+	self.each = callback => {
+		for (let obj in self.objects) {
 			callback(self.objects[obj]);
 		}
 	};
+
+  self.filter = callback => _.values(self.objects).filter(callback);
+
 }
 
-var Item = function (config)
+var Item = function ItemConstructor(config)
 {
 	var self = this;
 
