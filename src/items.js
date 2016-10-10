@@ -1,49 +1,42 @@
-var fs     = require('fs'),
-    util   = require('util'),
-	uuid   = require('node-uuid'),
-    events = require('events'),
-    Data   = require('./data.js').Data;
+const fs    = require('fs'),
+    util    = require('util'),
+	   uuid   = require('node-uuid'),
+    events  = require('events'),
+    Data    = require('./data.js').Data;
 
-var objects_dir = __dirname + '/../entities/objects/';
-var l10n_dir    = __dirname + '/../l10n/scripts/objects/';
-var objects_scripts_dir = __dirname + '/../scripts/objects/';
-var _ = require('./helpers');
+const objects_dir = __dirname + '/../entities/objects/';
+const l10n_dir    = __dirname + '/../l10n/scripts/objects/';
+const objects_scripts_dir = __dirname + '/../scripts/objects/';
+const _ = require('./helpers');
 
-//FIXME: Refactor plz;
-
-var Items = function () {
-	var self = this;
+const Items = function ItemsManager() {
+	const self = this;
 	self.objects = {};
 	self.load_count = {};
 
-	self.getScriptsDir = function ()
-	{
-		return objects_scripts_dir;
-	};
+	self.getScriptsDir = () => objects_scripts_dir;
+	self.getL10nDir = () => l10n_dir;
 
-	self.getL10nDir = function ()
-	{
-		return l10n_dir;
-	};
+	self.load = (verbose, callback) => {
 
-	self.load = function (verbose, callback)
-	{
-		verbose = verbose || false;
-		var log = function (message) { if (verbose) util.log(message); };
-		var debug = function (message) { if (verbose) util.debug(message); };
+    const log   = message => { if (verbose) util.log(message); };
+    const debug = message => { if (verbose) util.debug(message); };
 
 		log("\tExamining object directory - " + objects_dir);
-		var objects = fs.readdir(objects_dir, function (err, files)
+		const objects = fs.readdir(objects_dir, (err, files) =>
 		{
 			// Load any object files
-			for (j in files) {
-				var object_file = objects_dir + files[j];
+			for (let j in files) {
+				const object_file = objects_dir + files[j];
+        //TODO: Extract to Data helper method.
 				if (!fs.statSync(object_file).isFile()) continue;
 				if (!object_file.match(/yml$/)) continue;
 
 				// parse the object files
+        let object_def = [];
 				try {
-					var object_def = require('js-yaml').load(fs.readFileSync(object_file).toString('utf8'));
+          const objectFile = fs.readFileSync(object_file).toString('utf8');
+					object_def = require('js-yaml').load();
 				} catch (e) {
 					log("\t\tError loading object - " + object_file + ' - ' + e.message);
 					continue;

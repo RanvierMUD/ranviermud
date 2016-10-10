@@ -223,8 +223,6 @@ const Npc = function NpcConstructor(config) {
   self.setAttribute = (attr, val) => self.attributes[attr] = val;
   self.removeEffect = eff         => { delete self.effects[eff]; };
 
-  self.combat = CombatUtil.getHelper(self);
-
   self.isInCombat       = ()        => self.inCombat.length > 0;
   self.setInCombat      = combatant => self.inCombat.push(combatant);
   self.getInCombat      = ()        => self.inCombat;
@@ -236,11 +234,13 @@ const Npc = function NpcConstructor(config) {
   }
 
   self.isPacifist = () => !self.listeners('combat').length;
-  /**#@-*/
 
   self.startDialogue = () => self.inDialogue = true;
   self.endDialogue   = () => self.inDialogue = false;
   self.isInDialogue  = () => self.inDialogue;
+  /**#@-*/
+
+  self.combat = CombatUtil.getHelper(self);
 
   /**
    * Get specific currently applied effect, or all current effects
