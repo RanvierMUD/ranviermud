@@ -5,12 +5,11 @@
   types: ['insect', 'beast']
   keywords:
     en: ['roach', 'cockroach', 'bug', 'cock', 'ro']
-  short_description:
-    en: 'an oozing cockroach'
+  short_description: 'an oozing cockroach'
+  room_description: 'a large roach, oozing greasy ichor'
   attack:
     en: 'jittering mandibles'
-  description:
-    en: "The roach's hairy antennae probe the ground for morsels. Its quivering thorax seems to be dripping an inky green substance, leaving the floor crisscrossed with roach tracks."
+  description: "The roach's hairy antennae probe the ground for morsels. Its quivering thorax seems to be dripping an inky green substance, leaving the floor crisscrossed with roach tracks."
   behaviors: "rtcombat,randommove"
   attributes:
     target: 'feet'

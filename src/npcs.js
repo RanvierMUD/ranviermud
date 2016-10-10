@@ -46,7 +46,8 @@ const Npcs = function NpcManager() {
         let npc_def;
 				// parse the npc files
 				try {
-          npc_def = require('js-yaml').load(fs.readFileSync(npc_file).toString('utf8'));
+          const npcDefinitionYaml = fs.readFileSync(npc_file).toString('utf8');
+          npc_def = require('js-yaml').load(npcDefinitionYaml);
 				} catch (e) {
 					log("\t\tError loading npc - " + npc_file + ' - ' + e.message);
 					continue;
@@ -178,6 +179,8 @@ const Npc = function NpcConstructor(config) {
     self.types = config.types || [];
     self.defenses = {};
     self.inDialogue = false;
+    self.room_description = config.room_description;
+    self.short_description = config.short_description;
 
     for (const stat in config.attributes || {}) {
       self.attributes[stat] = config.attributes[stat];
@@ -276,24 +279,20 @@ const Npc = function NpcConstructor(config) {
    * @param string locale Locale of player
    * @return string Translated string
    */
-  const getTranslatedString = (thing, locale) =>
-    typeof self[thing] === 'string' ?
-      self[thing] :
-      (locale || 'en' in self[thing] ? self[thing][locale || 'en'] : 'UNTRANSLATED - Contact an admin');
 
   /**
    * Get the description, localized if possible
    * @param string locale
    * @return string
    */
-  self.getDescription = locale => getTranslatedString('description', locale);
+  self.getDescription = () => self.description
 
   /**
    * Get the attack, localized if possible
    * @param string locale
    * @return string
    */
-  self.getAttack = locale => getTranslatedString('attack', locale);
+  self.getAttack = () => self.attack;
 
   /**
    * Get the title, localized if possible
@@ -301,7 +300,9 @@ const Npc = function NpcConstructor(config) {
    * @return string
    */ //TODO: Consider passing in player object to see if player recognizes the item
    // //      IS that an observer pattern?
-  self.getShortDesc = locale => getTranslatedString('short_description', locale);
+  self.getShortDesc = () => self.short_description || self.description;
+
+  self.getRoomDesc = () => self.room_description || self.short_description || self.description;
 
   self.getName = () => self.name;
   /**

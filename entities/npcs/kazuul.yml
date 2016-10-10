@@ -5,12 +5,12 @@
   keywords:
     en: ['kazuul', 'kaz']
   types: ['humanoid', 'eldritch']
-  short_description:
-    en: 'a kazuul'
+  name: 'a Kazuul'
+  short_description: 'the three-mouthed horror'
+  room_description: 'a bulky abomination with jagged fangs for a head, and sucking mouths for hands'
   attack:
     en: 'gnashing teeth'
-  description:
-    en: "a fat humanoid with a gaping maw where its neck should be, and sucking mouths in the palms of its hands."
+  description: "a corpulent humanoid with a gaping maw where its neck should be, and sucking mouths in the palms of its hands.\nIts body is dessicated, festering wounds weeping beneath its olds. But its arms are lithe ropes, twice as long as a human\'s arms.\n Around the ring of fangs inside its neck-like protrusion are another ring of glistening orbs that can only be the beast's eyes."
   behaviors: "aggro,rtcombat,randommove"
   attributes:
     target: 'head'
