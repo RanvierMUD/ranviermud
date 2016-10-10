@@ -6,6 +6,8 @@
     en: ['cat', 'bax', 'baxter', 'truthteller', 'feline']
   types: ['feline']
   short_description:
+    en: 'the ginger tomcat'
+  room_description:
     en: 'a three-tailed, monocled ginger cat'
   name: 'Baxter Truthteller'
   attack:
