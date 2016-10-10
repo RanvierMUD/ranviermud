@@ -1,3 +1,5 @@
+'use strict';
+
 const fs    = require('fs'),
     util    = require('util'),
 	   uuid   = require('node-uuid'),
@@ -11,7 +13,7 @@ const _ = require('./helpers');
 
 const Items = function ItemsManager() {
 	const self = this;
-	self.objects = {};
+	self.objects    = {};
 	self.load_count = {};
 
 	self.getScriptsDir = () => objects_scripts_dir;
@@ -85,6 +87,7 @@ const Items = function ItemsManager() {
 
 	/**
 	 * Gets all instance of an object by vnum
+   * //TODO: Consider using this when checking to see if objs should be loaded.
 	 * @param int vnum
 	 * @return Item
 	 */
@@ -101,20 +104,20 @@ const Items = function ItemsManager() {
 	 * proxy Array.each
 	 * @param function callback
 	 */
-	self.each = callback => {
-		for (let obj in self.objects) {
-			callback(self.objects[obj]);
-		}
-	};
+	self.each = callback   => _.values(self.objects).forEach(callback);
 
+  /**
+   * proxy Array.filter
+   * @param function callback
+   */
   self.filter = callback => _.values(self.objects).filter(callback);
 
 }
 
-var Item = function ItemConstructor(config)
-{
-	var self = this;
+const Item = function ItemConstructor(config) {
+	const self = this;
 
+  // Fields
 	self.keywords;
 	self.short_description
 	self.description;
@@ -128,8 +131,7 @@ var Item = function ItemConstructor(config)
 	self.script = null;
 	self.attributes = {};
 
-	self.init = function (config)
-	{
+	self.init = config => {
 		self.short_description = config.short_description || '';
 		self.keywords          = config.keywords    || [];
 		self.description       = config.description || '';
@@ -150,21 +152,22 @@ var Item = function ItemConstructor(config)
 	/**#@+
 	 * Mutators
 	 */
-	self.getVnum      = function () { return self.vnum; };
-	self.getInv       = function () { return self.inventory; };
-	self.isNpcHeld    = function () { return self.npc_held; };
-	self.isEquipped   = function () { return self.equipped; };
-	self.getRoom      = function () { return self.room; };
-	self.getContainer = function () { return self.container; };
-	self.getUuid      = function () { return self.uuid; };
-	self.getAttribute = function (attr) { return self.attributes[attr] || false; };
-	self.setUuid      = function (uid)        { self.uuid = uid; };
-	self.setRoom      = function (room)       { self.room = room; };
-	self.setInventory = function (identifier) { self.inventory = identifier; };
-	self.setNpcHeld   = function (held)       { self.npc_held = held; };
-	self.setContainer = function (uid)        { self.container = uid; };
-	self.setEquipped  = function (equip)      { self.equipped = !!equip; };
-	self.setAttribute = function (attr, val)  { self.attributes[attr] = val; };
+	self.getVnum      = () => self.vnum;
+	self.getInventory = () => self.inventory;
+	self.isNpcHeld    = () => self.npc_held;
+	self.isEquipped   = () => self.equipped;
+	self.getRoom      = () => self.room;
+	self.getContainer = () => self.container;
+	self.getUuid      = () => self.uuid;
+	self.getAttribute = () => self.attributes[attr] || null;
+  /*  Setters, these also return the value that is set */
+	self.setUuid      = uid         => self.uuid      = uid       , uid;
+	self.setRoom      = room        => self.room      = room      , room;
+	self.setInventory = identifier  => self.inventory = identifier, identifier;
+	self.setNpcHeld   = held        => self.npc_held  = held      , held;
+	self.setContainer = uid         => self.container = uid       , uid;
+	self.setEquipped  = equip       => self.equipped  = !!equip   , equip;
+	self.setAttribute = (attr, val) => self.attributes[attr] = val, val;
 	/**#@-*/
 
 	/**
@@ -172,36 +175,27 @@ var Item = function ItemConstructor(config)
 	 * @param string locale
 	 * @return string
 	 */
-	self.getDescription = function (locale)
-	{
-		return typeof self.description === 'string' ?
+	self.getDescription = () => typeof self.description === 'string' ?
 			self.description :
-			(locale in self.description ? self.description[locale] : 'UNTRANSLATED - Contact an admin');
-	};
+			self.description['en'];
 
 	/**
 	 * Get the title, localized if possible
 	 * @param string locale
 	 * @return string
 	 */
-	self.getShortDesc = function (locale)
-	{
-		return typeof self.short_description === 'string' ?
+	self.getShortDesc = () => typeof self.short_description === 'string' ?
 			self.short_description :
-			(locale in self.short_description ? self.short_description[locale] : 'UNTRANSLATED - Contact an admin');
-	};
+			self.short_description['en'];
 
 	/**
 	 * Get the title, localized if possible
 	 * @param string locale
 	 * @return string
 	 */
-	self.getKeywords = function (locale)
-	{
-		return Array.isArray(self.keywords) ?
+	self.getKeywords = () => Array.isArray(self.keywords) ?
 			self.keywords :
-			(locale in self.keywords ? self.keywords[locale] : 'UNTRANSLATED - Contact an admin');
-	}
+      self.keywords['en'] || [];
 
 	/**
 	 * check to see if an item has a specific keyword
@@ -209,32 +203,29 @@ var Item = function ItemConstructor(config)
 	 * @param string locale
 	 * @return boolean
 	 */
-	self.hasKeyword = function (keyword, locale)
-	{
-		return _.has(self.getKeywords(locale || 'en'), keyword);
-	};
+	self.hasKeyword = (keyword, locale) => _.has(self.getKeywords(locale || 'en'), keyword);
+
 
 	/**
-	 * Used when saving a copy of an item to a player
+	 * Used when persisting a copy of an item to a JSON
+   * (right now this only happens if it is in a player's inventory)
 	 * @return object
 	 */
-	self.flatten = function ()
-	{
-		return {
-			uuid: self.uuid,
-			keywords: self.keywords,
+	self.flatten = () => ({
+			uuid:              self.uuid,
+			keywords:          self.keywords,
 			short_description: self.short_description,
-			description: self.description,
-			inventory: self.inventory,     // Player or Npc object that is holding it
-			vnum: self.vnum,
-			script: self.script,
-			equipped: self.equipped,
-			attributes: self.attributes
-		};
-	};
+			description:       self.description,
+			inventory:         self.inventory,     // Player or Npc object that is holding it
+			vnum:              self.vnum,
+			script:            self.script,
+			equipped:          self.equipped,
+			attributes:        self.attributes
+		});
 
 	self.init(config);
 };
+
 util.inherits(Item, events.EventEmitter);
 
 exports.Items = Items;
