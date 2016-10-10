@@ -7,8 +7,8 @@ const fs    = require('fs'),
     events  = require('events'),
     Data    = require('./data.js').Data;
 
-const objects_dir = __dirname + '/../entities/objects/';
-const l10n_dir    = __dirname + '/../l10n/scripts/objects/';
+const objects_dir =         __dirname + '/../entities/objects/';
+const l10n_dir    =         __dirname + '/../l10n/scripts/objects/';
 const objects_scripts_dir = __dirname + '/../scripts/objects/';
 const _ = require('./helpers');
 
