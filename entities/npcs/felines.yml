@@ -5,15 +5,12 @@
   keywords:
     en: ['cat', 'bax', 'baxter', 'truthteller', 'feline']
   types: ['feline']
-  short_description:
-    en: 'the ginger tomcat'
-  room_description:
-    en: 'a three-tailed, monocled ginger cat'
+  short_description: 'the ginger tomcat'
+  room_description: 'a three-tailed, monocled ginger cat'
   name: 'Baxter Truthteller'
   attack:
     en: 'sharpened claws'
-  description:
-    en: "A stylish ginger tabby with a monocle perched on one eye. His three tails curl and dart in myriad directions, as though they have minds of their own."
+  description: "A stylish ginger tabby with a monocle perched on one eye. His three tails curl and dart in myriad directions, as though they have minds of their own."
   behaviors: "rtcombat"
   attributes:
     target: 'head'
