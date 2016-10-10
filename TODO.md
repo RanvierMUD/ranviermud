@@ -17,9 +17,10 @@
 | /Users/seanodonohue/myForks/ranviermud/src/examine.js | 18 | Change command so that it can work on any item, npc, or room by emitting.
 | /Users/seanodonohue/myForks/ranviermud/src/feats.js | 420 | Use an event emitter instead.
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 52 | Dynamically pull in list of admins
+| /Users/seanodonohue/myForks/ranviermud/src/items.js | 34 | Extract to Data helper method.
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 15 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 17 | Extract npc from this file like player/player_manager
-| /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 216 | Have spawn inventory but also add same inv functionality as player
+| /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 220 | Have spawn inventory but also add same inv functionality as player
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 340 | Put in perception skill helper file
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 351 | Consider using Random.roll instead.
@@ -44,6 +45,7 @@
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 3 | Refactor.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 112 | Use in player/npc class.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/3-kazuul.js | 75 | Add condition where attacking the kazuul's legs will slow it greatly.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 186 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 222 | Extract this to some kind of combat messaging helper?
@@ -66,7 +68,6 @@
 | Filename | line # | FIXME
 |:------|:------:|:------
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 87 | Can be done better with changes to npc class.
-| /Users/seanodonohue/myForks/ranviermud/src/items.js | 12 | Refactor plz;
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 298 | In statusUtils: This could be a problem if the combat is between two NPCs or two players.
 | /Users/seanodonohue/myForks/ranviermud/commands/appraise.js | 35 | There has to be a better way...
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 70 | This does not really seem to be working.
