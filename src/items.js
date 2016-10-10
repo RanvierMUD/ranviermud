@@ -43,38 +43,30 @@ const Items = function ItemsManager() {
 				}
 
 				// create and load the objects
-				object_def.forEach(function (object) {
-					var validate = ['keywords', 'short_description', 'vnum'];
+				object_def.forEach(object => {
+					const validate = ['keywords', 'short_description', 'vnum'];
 
-					var err = false;
 					for (var v in validate) {
 						if (!(validate[v] in object)) {
-							log("\t\tError loading object in file " + object + ' - no ' + validate[v] + ' specified');
-							err = true;
-							return;
+              throw new ReferenceError('Error loading object in file ' + object + ' - no ' + validate[v] + ' specified')
 						}
 					}
 
-					if (err) {
-						return;
-					}
-
 					// max load for items so we don't have 1000 items in a room due to respawn
-					if (self.load_count[object.vnum] && self.load_count[object.vnum] >= object.load_max) {
+          const maxLoadHit = self.load_count[object.vnum] && self.load_count[object.vnum] >= object.load_max;
+					if (maxLoadHit) {
 						log("\t\tMaxload of " + object.load_max + " hit for object " + object.vnum);
 						return;
 					}
 
-					object = new Item(object);
-					object.setUuid(uuid.v4());
-					log("\t\tLoaded item [uuid:" + object.getUuid() + ', vnum:' + object.vnum + ']');
-					self.addItem(object);
+					const newObject = object = new Item(object);
+					newObject.setUuid(uuid.v4());
+					log("\t\tLoaded item [uuid:" + newObject.getUuid() + ', vnum:' + newObject.vnum + ']');
+					self.addItem(newObject);
 				});
 			}
 
-			if (callback) {
-				callback();
-			}
+			if (callback) { callback(); }
 		});
 
 	};
