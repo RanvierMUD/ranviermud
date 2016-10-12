@@ -44,13 +44,13 @@
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 3 | Refactor.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 112 | Use in player/npc class.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/3-kazuul.js | 75 | Add condition where attacking the kazuul's legs will slow it greatly.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 186 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 222 | Extract this to some kind of combat messaging helper?
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 15 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 22 | Different messages for different relative amounts of sanity loss.

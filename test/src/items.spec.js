@@ -56,5 +56,41 @@ describe('Item manager', () => {
 });
 
 describe('Item class', () => {
-  const testItem = new Item({});
+  const testItem = new Item(testItemConfig);
+
+  it('should be able to set and get attributes', () => {
+    testItem.setAttribute('deliciousness', 7);
+    expect(testItem.getAttribute('deliciousness') === 7).to.be.true;
+  });
+
+  it('should have a desc', () => {
+    const desc = testItem.getDescription();
+    expect(desc === testItemConfig.description).to.be.true;
+  });
+
+  it('should be able to check keywords', () => {
+    const test = 'spud';
+    expect(testItem.hasKeyword(test)).to.be.true;
+  });
+
+  it('should be able to flatten itself into json obj', () => {
+    const flatObj = testItem.flatten();
+    expect(flatObj).to.deep.equal({
+        "attributes": {
+          "deliciousness": 7
+        },
+        "description": "a potato",
+        "equipped": false,
+        "inventory": [],
+        "keywords": [
+          "potato",
+          "spud"
+        ],
+        "script": null,
+        "short_description": "potato",
+        "uuid": null,
+        "vnum": 4
+      });
+  });
+
 });
