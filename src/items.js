@@ -106,7 +106,7 @@ const Items = function ItemsManager() {
 	 * proxy Array.each
 	 * @param function callback
 	 */
-	self.each = callback   => _.values(self.objects).forEach(callback);
+	self.each = callback => _.values(self.objects).forEach(callback);
 
   /**
    * proxy Array.filter

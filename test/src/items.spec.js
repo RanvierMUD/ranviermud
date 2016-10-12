@@ -35,6 +35,24 @@ describe('Item manager', () => {
     expect(count === 5).to.be.true;
   });
 
+  it('should be able to get all instances of an item by vnum', () => {
+    const testDorp = Object.assign({}, testItemConfig, { vnum: 3 });
+    items.addItem(new Item(testDorp));
+
+    const dorps = items.getByVnum(3);
+    const spuds = items.getByVnum(4);
+
+    expect(dorps.length === 1).to.be.true;
+    expect(spuds.length === 5).to.be.true;
+  });
+
+  it('should be able to get an item by its uid', () => {
+    const uid    = Object.keys(items.objects)[0];
+    const actual = items.objects[uid];
+    const item   = items.get(uid);
+    expect(actual === item).to.be.true;
+  });
+
 });
 
 describe('Item class', () => {
