@@ -18,7 +18,7 @@ const Items = function ItemsManager() {
 	self.load_count = {};
 
 	self.getScriptsDir = () => objects_scripts_dir;
-	self.getL10nDir = () => l10n_dir;
+	self.getL10nDir    = () => l10n_dir;
 
 	self.load = (verbose, callback) => {
 
@@ -106,7 +106,7 @@ const Items = function ItemsManager() {
 	 * proxy Array.each
 	 * @param function callback
 	 */
-	self.each = callback   => _.values(self.objects).forEach(callback);
+	self.each = callback => _.values(self.objects).forEach(callback);
 
   /**
    * proxy Array.filter
@@ -139,11 +139,11 @@ const Item = function ItemConstructor(config) {
 		self.description       = config.description || '';
 		self.inventory         = config.inventory   || null;
 		self.room              = config.room        || null;
-		self.npc_held          = config.npc_held    || null;
-		self.equipped          = config.equipped    || null;
+		self.npc_held          = config.npc_held    || false;
+		self.equipped          = config.equipped    || false;
 		self.container         = config.container   || null;
 		self.uuid              = config.uuid        || null;
-		self.vnum              = config.vnum;
+		self.vnum              = config.vnum;       // Required
 		self.script            = config.script      || null;
 		self.attributes        = config.attributes  || {};
 		if (self !== null) {
@@ -165,7 +165,7 @@ const Item = function ItemConstructor(config) {
 
 	self.setUuid      = uid   => self.uuid      = uid;
 	self.setRoom      = room  => self.room      = room;
-	self.setInventory = id    => self.inventory = id;
+	self.setInventory = id    => self.inventory = id; //TODO: Maybe inventory should be array of ids?
 	self.setNpcHeld   = held  => self.npc_held  = held;
 	self.setContainer = uid   => self.container = uid;
 	self.setEquipped  = equip => self.equipped  = !!equip;
