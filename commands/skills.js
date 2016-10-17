@@ -11,6 +11,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     const playerSkills = player.getSkills();
 
+    //TODO: Pull out attrs into enum of some kind for reuse?
+    //TODO: Refactor for readability by decomposing nested conditionals.
     const sortedSkills = Object
       .keys(Skills)
       .reduce((skillCategories, key) => {
