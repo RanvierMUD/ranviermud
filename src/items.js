@@ -135,7 +135,8 @@ const Item = function ItemConstructor(config) {
 
 	self.init = config => {
 		self.short_description = config.short_description || '';
-		self.keywords          = config.keywords    || [];
+    self.room_description  = config.room_description  || '';
+    self.keywords          = config.keywords    || [];
 		self.description       = config.description || '';
 		self.inventory         = config.inventory   || null;
 		self.room              = config.room        || null;
@@ -191,6 +192,15 @@ const Item = function ItemConstructor(config) {
 			self.short_description :
 			self.short_description['en'];
 
+  /**
+	 * Get the title, localized if possible
+	 * @param string locale
+	 * @return string
+	 */
+	self.getRoomDesc = () => typeof self.room_description === 'string' ?
+			self.room_description :
+			self.room_description['en'] || self.getShortDesc();
+
 	/**
 	 * Get the title, localized if possible
 	 * @param string locale
@@ -218,6 +228,7 @@ const Item = function ItemConstructor(config) {
 			uuid:              self.uuid,
 			keywords:          self.keywords,
 			short_description: self.short_description,
+      room_description:  self.room_description,
 			description:       self.description,
 			inventory:         self.inventory,     // Player or Npc object that is holding it
 			vnum:              self.vnum,

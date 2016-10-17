@@ -23,8 +23,6 @@
     head: '-3'
     torso: 1
   load_max: 4
-- *rat
-- *rat
 - <<: *rat
   room: 1
 - <<: *rat
