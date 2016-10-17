@@ -2,10 +2,11 @@
     vnum: 8
     short_description:
         en: "cellar key"
+    room_description: "a large brass key"
     keywords:
         en: [ "cellar", "cell", "cellar key", "key" ]
     description:
-        en: "A large brass key."
+        en: "A weighty brass key."
     room: 6
     load_max: 1
     attributes:
