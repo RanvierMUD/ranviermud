@@ -167,7 +167,7 @@ exports.listeners = {
         },
 
         'small talk': {
-          priority: Dialogue.Priority.MEDIUM,
+          priority: Dialogue.Priority.HIGH,
           prerequisite: hasMet,
           keywords: {},
           dialogue: {
