@@ -8,7 +8,7 @@ const wrap = require('wrap-ansi');
 
 const getTopicWeight = (topic, name, sentence) => {
   let points = 0;
-
+  util.log("TOPIC DISCUSSED IS ", name);
   if (!topic.keywords) {
     throw new ReferenceError('You must supply keywords for ' + name + '.');
   }
@@ -39,6 +39,7 @@ const getTopicWeight = (topic, name, sentence) => {
   points += foundEach;
   points += priority;
 
+  util.log("POINTS FOR WEIGHT: ", points);
   return points;
 };
 
