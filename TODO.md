@@ -61,6 +61,8 @@
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 62 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 69 | Improve based on player stats/skills?
+| /Users/seanodonohue/myForks/ranviermud/commands/skills.js | 14 | Pull out attrs into enum of some kind for reuse?
+| /Users/seanodonohue/myForks/ranviermud/commands/skills.js | 15 | Refactor for readability by decomposing nested conditionals.
 | /Users/seanodonohue/myForks/ranviermud/commands/train.js | 20 | Extract into own function in Skills module.
 | /Users/seanodonohue/myForks/ranviermud/commands/whisper.js | 2 | Refactor to be a channel.
 

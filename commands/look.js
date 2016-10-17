@@ -129,7 +129,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     room.getItems()
       .forEach(id => {
         player.say('<magenta>'
-        + items.get(id).getShortDesc(locale)
+        + items.get(id).getRoomDesc(locale)
         + '</magenta>');
       });
 

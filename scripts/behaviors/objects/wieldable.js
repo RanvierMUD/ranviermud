@@ -9,14 +9,6 @@ exports.listeners = {
 		}
 	},
 
-	deathblow: function(l10n) {
-		return function (room, attacker, defender, players, hitLocation) {
-			players.eachIf(
-				p => p.getLocation() === defender.getLocation() && p !== attacker,
-				p => p.emit('experience', LevelUtil.mobExp(defender.getAttribute('level')) * .33, 'dying')
-			);
-		}
-	},
 };
 
 function checkForCrit(attacker, defender, damageDealt) {

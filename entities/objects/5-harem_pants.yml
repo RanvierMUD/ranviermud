@@ -2,10 +2,12 @@
     vnum: 5
     short_description:
         en: "harem pants"
+    room_description:
+        en: "a deep crimson pair of loose-fitting pants"
     keywords:
         en: [ "harem pants", "pants", "harem" ]
     description:
-        en: "A pair royal crimson harem pants with an elastic waist. The material appears smooth, with a subtle sheen."
+        en: "A pair of royal crimson harem pants with an elastic waist. The material appears smooth, with a subtle sheen."
     room: 7
     behaviors: "wearable"
     attributes:
