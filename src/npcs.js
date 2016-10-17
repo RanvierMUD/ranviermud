@@ -179,7 +179,7 @@ const Npc = function NpcConstructor(config) {
     self.types = config.types || [];
     self.defenses = {};
     self.inDialogue = false;
-    self.room_description = config.room_description;
+    self.room_description  = config.room_description;
     self.short_description = config.short_description;
 
     for (const stat in config.attributes || {}) {
