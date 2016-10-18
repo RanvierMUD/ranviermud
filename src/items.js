@@ -132,12 +132,13 @@ const Item = function ItemConstructor(config) {
 	self.inventory;     // Player or Npc object that is holding it
 	self.npc_held;      // If it's in an inventory is it an NPC's?
 	self.room;          // Room that it's in (vnum)
-	self.container;     // Itemception (vnum)
+	self.container;     // Itemception (uid)
 	self.vnum;
 	self.uuid = null;
 	self.equipped = false;
 	self.script = null;
 	self.attributes = {};
+  self.prerequisites = {};
 
 	self.init = config => {
 		self.short_description = config.short_description || '';
@@ -238,7 +239,8 @@ const Item = function ItemConstructor(config) {
 			short_description: self.short_description,
       room_description:  self.room_description,
 			description:       self.description,
-			inventory:         self.inventory,     // Player or Npc object that is holding it
+			inventory:         self.inventory,
+      container:         self.container,
 			vnum:              self.vnum,
 			script:            self.script,
 			equipped:          self.equipped,
