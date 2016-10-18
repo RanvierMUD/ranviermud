@@ -75,6 +75,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const itemWeight = item.getAttribute('weight');
       if (itemWeight === Infinity) { return true; }
       const carriedWeight  = inventory.reduce((sum, item) => item.getAttribute('weight') + sum , 0);
+
+      // TODO: Put carrying capacity method on player obj.
       const maxCarryWeight = 10 + player.getAttribute('stamina') + player.getAttribute('level');
       return (carriedWeight + itemWeight) > maxCarryWeight;
     }
