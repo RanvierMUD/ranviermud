@@ -13,6 +13,8 @@
     behaviors: "wieldable"
     attributes:
         speed: 4
-        damage: 5-21
+        damage: 5-27
         weight: 4
+    prerequisites:
+        stamina: 3
     load_max: 1
