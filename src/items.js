@@ -227,6 +227,14 @@ const Item = function ItemConstructor(config) {
 	 */
 	self.hasKeyword = (keyword, locale) => _.has(self.getKeywords(locale || 'en'), keyword);
 
+  self.checkPrerequisites = player => {
+    const playerAttr = player.getAttributes();
+    for (let attr in self.prerequisites) {
+      const prereq = self.prerequisites[attr];
+
+    }
+  }
+
 
 	/**
 	 * Used when persisting a copy of an item to a JSON

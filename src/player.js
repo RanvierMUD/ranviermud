@@ -32,7 +32,7 @@ const Player = function PlayerConstructor(socket) {
   self.password  = null;
   self.inventory = [];
   self.equipment = {};
-  
+
   // Array of combatants
   self.inCombat  = [];
 
@@ -113,7 +113,7 @@ const Player = function PlayerConstructor(socket) {
 
   self.hasEnergy = cost =>
     self.getAttribute('energy') >= cost ?
-              self.emit('action', cost) : false;
+              self.emit('action', cost) || true : false;
 
   self.noEnergy = () => self.say('You need to rest first.');
 
