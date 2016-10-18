@@ -67,12 +67,15 @@ var PlayerManager = function ()
 		return self.players.some(condition);
 	};
 
+	/* Proxy array.find */
+	self.find = self.players.find
+
 	/**
 	 * Return array of players who meet the condition
 	 * @param condition
 	 * @return [players]
 	 */
-	 self.filter = condition => self.players.filter(condition);
+	 self.filter = self.players.filter;
 
 	/**
 	 * Execute a function on all players except one

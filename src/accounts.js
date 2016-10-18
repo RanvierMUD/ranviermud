@@ -8,6 +8,7 @@ const Data   = require('./data').Data;
 const Accounts = function() {
   this.accounts = [];
 
+  this.find        = this.accounts.find;
   this.addAccount  = acc  => this.accounts.push(acc);
   this.getAccounts = ()   => this.accounts;
   this.getAccount  = name => this.accounts.find(
