@@ -112,15 +112,22 @@ const Npcs = function NpcManager() {
   self.get = uid => self.npcs[uid];
 
   /**
+   * proxy Array.find
+   * @param function callback
+   */
+  self.find = callback => _.values(self.npcs).find(callback)
+
+  /**
    * proxy Array.each
    * @param function callback
    */
-  self.each = callback => {
-    for (let npc in self.npcs) {
-      callback(self.npcs[npc]);
-    }
-  };
 
+  self.each = callback => _.values(self.npcs).forEach(callback);
+
+  /**
+   * proxy Array.each with condition
+   * @param function callback
+   */
   self.eachIf = (predicate, callback) => {
     for (let one in self.npcs) {
       const npc = self.npcs[one];
