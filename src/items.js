@@ -227,12 +227,22 @@ const Item = function ItemConstructor(config) {
 	 */
 	self.hasKeyword = (keyword, locale) => _.has(self.getKeywords(locale || 'en'), keyword);
 
+  /**
+   * Takes the player and sees which prereqs it doesn't meet.
+   * @param player Obj
+   * @return Strings[] missed prerequisites 
+   */
   self.checkPrerequisites = player => {
+    const missedPrereqs = [];
     const playerAttr = player.getAttributes();
     for (let attr in self.prerequisites) {
       const prereq = self.prerequisites[attr];
-
+      const playerStat = playerAttr[attr];
+      if (!playerStat || playerStat < prereq) {
+        missedPrereqs.push(attr);
+      }
     }
+    return missedPrereqs;
   }
 
 
