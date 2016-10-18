@@ -152,8 +152,10 @@ const Item = function ItemConstructor(config) {
 		self.uuid              = config.uuid        || null;
 		self.vnum              = config.vnum;       // Required
 		self.script            = config.script      || null;
-		self.attributes        = config.attributes  || {};
-		if (self !== null) {
+		self.attributes        = config.attributes    || {};
+    self.prerequisites     = config.prerequisites || {};
+
+    if (self !== null) {
 		  Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
     }
 	};
@@ -240,7 +242,8 @@ const Item = function ItemConstructor(config) {
 			vnum:              self.vnum,
 			script:            self.script,
 			equipped:          self.equipped,
-			attributes:        self.attributes
+			attributes:        self.attributes,
+      prerequisites:     self.prerequisites
 		});
 
 	self.init(config);
