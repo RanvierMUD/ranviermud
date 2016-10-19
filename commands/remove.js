@@ -40,7 +40,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       if (isDead) { return; }
       const room = rooms.getAt(player.getLocation());
       item.emit('remove', item.getAttribute('wearLocation'), room, player, players);
-      return player.say("You remove the " + item.getShortDesc('en') + '.');
     }
   };
 };
