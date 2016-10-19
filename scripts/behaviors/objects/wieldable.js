@@ -13,18 +13,25 @@ exports.listeners = {
     return function (location, room, player, players) {
       if (missedPrerequisites.length) {
 
+				const penalize = (player, attr, callback) => {
+					const factor = player.getAttribute(attr) / this.getPrerequisite(attr); //TODO: Extract
+					callback(factor);
+				}
+				const getPenaltyDesc = (item, location, status) => status + '_by_' + item.getShortDesc() + '_' + location;
+
+
 				//TODO: Adjust or extract this as it is just copied and pasted from the default wear scripto.
         missedPrerequisites.forEach(prereq => {
           switch (prereq) {
             case 'stamina':
-              const factor = player.getAttribute('stamina') / this.getPrerequisite('stamina'); //TODO: Extract
-              player.say('You are not strong enough to wear this properly.');
-              player.addEffect('encumbered_by_' + this.getShortDesc() + location, Effects.encumbered({ player, factor }));
-              player.combat.addSpeedMod({
-                name: 'encumbered_by_' + this.getShortDesc() + '_' + location,
-                effect: speed => speed * factor //TODO: Extract
-              });
-              break;
+							return penalize(player, 'stamina', factor => {
+								player.say('You are not strong enough to wear this properly.');
+								player.addEffect(getPenaltyDesc(this, location, 'encumbered'), Effects.encumbered({ player, factor }));
+								player.combat.addSpeedMod({
+									name: 'encumbered_by_' + this.getShortDesc() + '_' + location,
+									effect: speed => speed * factor //TODO: Extract
+								});
+							}); //TODO: Refactor all to do this.
             case 'quickness':
               const factor = player.getAttribute('quickness') / this.getPrerequisite('quickness');
 
@@ -63,7 +70,7 @@ exports.listeners = {
 
       }
     }
-  }
+  },
 
 };
 
