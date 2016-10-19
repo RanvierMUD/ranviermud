@@ -116,7 +116,7 @@ const Player = function PlayerConstructor(socket) {
       self.emit('action', cost) || true :
       false;
 
-  self.noEnergy = () => self.say('You need to rest first.');
+  self.noEnergy = () => self.warn('You need to rest first.');
 
   self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
     self.attributes[attr] : false;
@@ -499,11 +499,13 @@ const Player = function PlayerConstructor(socket) {
    * @see self.write
    */
   self.say = (data, color) => {
-    color = color || true;
-    if (!color) ansi.disable();
+    const noColor = color === false;
+    if (noColor) { ansi.disable(); }
     socket.write(ansi.parse(wrap(data), 40) + "\r\n");
     ansi.enable();
   };
+
+  self.warn = data => self.say('<yellow>' + data + '</yellow>');
 
   /**
    * writeL10n() + newline

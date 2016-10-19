@@ -54,12 +54,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
 			util.log(player.getName() + ' ' + location + ' wields ' + weapon.getShortDesc('en'));
 
-			if (CommandUtil.hasScript(weapon, 'wield')) {
-				const room = rooms.getAt(player.getLocation());
-				weapon.emit('wield', location, room, player, players);
-			} else {
-				player.say('You wield the ' + weapon.getShortDesc('en') + '.');
-			}
+			const room = rooms.getAt(player.getLocation());
+			weapon.emit('wield', location, room, player, players);
 
 			player.equip(location, weapon);
 		}
