@@ -175,7 +175,7 @@ const Item = function ItemConstructor(config) {
   self.getAttributes    = ()     => self.attributes    || {};
   self.getPrerequisites = ()     => self.prerequisites || {};
 	self.getAttribute     = attr   => self.attributes[attr]    || null;
-  self.getPrerequisite  = prereq => self.prerequisites[attr] || null;
+  self.getPrerequisite  = attr   => self.prerequisites[attr] || null;
 
 	self.setUuid      = uid   => self.uuid      = uid;
 	self.setRoom      = room  => self.room      = room;

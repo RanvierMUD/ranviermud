@@ -1,6 +1,6 @@
 const util = require('util');
 
-const penalize = (player, attr, callback) => {
+const penalize = (player, item, attr, callback) => {
   const factor = player.getAttribute(attr) / item.getPrerequisite(attr);
   callback(factor);
 }
@@ -10,11 +10,10 @@ const getPenaltyDesc = (item, location, status) => status + '_by_' + item.getSho
 const useDefaultPenalties = (item, player, location, missedPrerequisites) => {
 
   missedPrerequisites.forEach(prereq => {
-
     switch (prereq) {
 
       case 'stamina':
-        return penalize(player, 'stamina', factor => {
+        return penalize(player, item, 'stamina', factor => {
           const name = getPenaltyDesc(item, location, 'encumbered');
           player.warn('You are not strong enough to wear this properly.');
 
@@ -23,7 +22,7 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites) => {
         });
 
       case 'quickness':
-        return penalize(player, 'quickness', factor => {
+        return penalize(player, item, 'quickness', factor => {
           const name = getPenaltyDesc(item, location, 'slowed');
 
           player.warn('You are not quick enough to move about deftly while wearing ' + item.getShortDesc() + '.');
@@ -31,7 +30,7 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites) => {
         });
 
       case 'cleverness':
-        return penalize(player, 'cleverness', factor => {
+        return penalize(player, item, 'cleverness', factor => {
           const name = getPenaltyDesc(item, location, 'confused');
 
           player.warn('You are not sure how to handle this piece of gear...');
@@ -39,9 +38,9 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites) => {
         });
 
       case 'willpower':
-        return penalize(player, 'willpower', factor => {
+        return penalize(player, item, 'willpower', factor => {
           const name = getPenaltyDesc(item, location, 'distracted');
-          
+
           player.say('You find yourself easily distracted as you don the ' + item.getShortDesc());
           player.combat.addDefenseMod({ name, effect: defense => defense * factor });
         });
@@ -51,6 +50,7 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites) => {
         util.log('ITEM ' + item.getShortDesc() + ' has unsupported prerequisites.');
     }
   });
+
 };
 
 const checkForCrit = (attacker, defender, damageDealt) => {
