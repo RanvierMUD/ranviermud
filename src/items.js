@@ -171,7 +171,11 @@ const Item = function ItemConstructor(config) {
 	self.getRoom      = ()   => self.room;
 	self.getContainer = ()   => self.container;
 	self.getUuid      = ()   => self.uuid;
-	self.getAttribute = attr => self.attributes[attr] || null;
+
+  self.getAttributes    = ()     => self.attributes    || {};
+  self.getPrerequisites = ()     => self.prerequisites || {};
+	self.getAttribute     = attr   => self.attributes[attr]    || null;
+  self.getPrerequisite  = prereq => self.prerequisites[attr] || null;
 
 	self.setUuid      = uid   => self.uuid      = uid;
 	self.setRoom      = room  => self.room      = room;
@@ -230,7 +234,7 @@ const Item = function ItemConstructor(config) {
   /**
    * Takes the player and sees which prereqs it doesn't meet.
    * @param player Obj
-   * @return Strings[] missed prerequisites 
+   * @return Strings[] missed prerequisites
    */
   self.checkPrerequisites = player => {
     const missedPrereqs = [];
