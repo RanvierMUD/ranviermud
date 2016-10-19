@@ -34,7 +34,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         return Commands.player_commands.wield(keyword, player);
       }
       if (isWearable(item) && hasOpenSpot(item)) {
-        broadCastWearing(item);
         return putOn(item);
       }
       return false;
@@ -63,19 +62,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return true;
     }
 
-    function broadCastWearing(item) {
-      player.say('You wear the ' + item.getShortDesc('en') + '.');
-      players.eachIf(
-        p => CommandUtil.inSameRoom(p, player),
-        p => p.say(player.getName() + ' puts on the ' + item.getShortDesc('en'))
-      );
-    }
-
     function putOn(item) {
       const location = item.getAttribute('wearLocation');
       const room = rooms.getAt(player.getLocation());
       item.emit('wear', location, room, player, players);
       player.equip(location, item);
+      return true;
     }
 
   };

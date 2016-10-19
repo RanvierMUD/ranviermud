@@ -1,4 +1,5 @@
-const util = require('util');
+const util    = require('util');
+const Effects = require('./effects').Effects;
 
 const penalize = (player, item, attr, callback) => {
   const factor = player.getAttribute(attr) / item.getPrerequisite(attr);
@@ -7,7 +8,9 @@ const penalize = (player, item, attr, callback) => {
 
 const getPenaltyDesc = (item, location, status) => status + '_by_' + item.getShortDesc() + '_' + location;
 
-const useDefaultPenalties = (item, player, location, missedPrerequisites) => {
+const useDefaultPenalties = (item, player, location, missedPrerequisites, verb) => {
+  const gerund = verb ? verb + 'ing' : 'using';
+  verb = verb || 'use';
 
   missedPrerequisites.forEach(prereq => {
     switch (prereq) {
@@ -15,7 +18,7 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites) => {
       case 'stamina':
         return penalize(player, item, 'stamina', factor => {
           const name = getPenaltyDesc(item, location, 'encumbered');
-          player.warn('You are not strong enough to wear this properly.');
+          player.warn('You are not strong enough to ' + verb + ' this properly.');
 
           player.addEffect(name , Effects.encumbered({ player, factor }));
           player.combat.addSpeedMod({ name, effect: speed => speed * factor });
@@ -25,7 +28,7 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites) => {
         return penalize(player, item, 'quickness', factor => {
           const name = getPenaltyDesc(item, location, 'slowed');
 
-          player.warn('You are not quick enough to move about deftly while wearing ' + item.getShortDesc() + '.');
+          player.warn('You are not quick enough to move about deftly while ' + gerund + ' the ' + item.getShortDesc() + '.');
           player.combat.addDodgeMod({ name, effect: dodge => dodge * factor });
         });
 
@@ -41,12 +44,12 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites) => {
         return penalize(player, item, 'willpower', factor => {
           const name = getPenaltyDesc(item, location, 'distracted');
 
-          player.say('You find yourself easily distracted as you don the ' + item.getShortDesc());
+          player.warn('You find yourself easily distracted as you ' + verb + ' the ' + item.getShortDesc());
           player.combat.addDefenseMod({ name, effect: defense => defense * factor });
         });
 
       default:
-        player.say('You have some trouble putting that on...');
+        player.warn('You have some trouble ' + gerund + ' it...');
         util.log('ITEM ' + item.getShortDesc() + ' has unsupported prerequisites.');
     }
   });
