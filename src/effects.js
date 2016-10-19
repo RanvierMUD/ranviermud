@@ -84,6 +84,26 @@ const multiply = (attribute, config) => {
 };
 
 const Effects = {
+	encumbered: config => ({
+		activate: () => {
+			const player = config.player;
+			const factor = config.factor;
+			const energy = player.getAttribute('energy');
+			const maxEnergy = player.getAttribute('max_energy');
+
+			player.setAttribute('max_energy', Math.round(maxEnergy * factor));
+			player.setAttribute('energy', Math.min(energy, maxEnergy * factor));
+		},
+		deactivate: () => {
+			const player = config.player;
+			const factor = config.factor;
+			const energy = player.getAttribute('energy');
+			const maxEnergy = player.getAttribute('max_energy');
+
+			player.setAttribute('max_energy', Math.round(maxEnergy / factor));
+			player.setAttribute('energy', Math.min(energy, maxEnergy / factor));
+		}
+	})
 
 	// If player runs out of energy during combat...
 	fatigued: {
