@@ -63,4 +63,4 @@ const checkForCrit = (attacker, defender, damageDealt) => {
   }
 }
 
-exports.ItemUtils = { penalize, getPenaltyDesc, useDefaultPenalties, checkForCrit };
+exports.ItemUtil = { penalize, getPenaltyDesc, useDefaultPenalties, checkForCrit };
