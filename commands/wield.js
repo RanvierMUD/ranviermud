@@ -52,7 +52,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 				return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
 			}
 
-			util.log(player.getName() + ' ' + location + ' wields ' + weapon.getShortDesc('en'));
+			util.log(player.getName() + ' ' + location + 's ' + weapon.getShortDesc('en'));
 
 			const room = rooms.getAt(player.getLocation());
 			weapon.emit('wield', location, room, player, players);

@@ -1,5 +1,4 @@
 const Broadcast = require('../../../src/broadcast').Broadcast;
-const Effects   = require('../../../src/effects').Effects;
 const ItemUtil  = require('../../../src/item_util').ItemUtil;
 
 
@@ -12,13 +11,13 @@ exports.listeners = {
       const missedPrerequisites = this.checkPrerequisites(player);
 
       if (missedPrerequisites.length) {
-        ItemUtil.useDefaultPenalties(this, player, location, missedPrerequisites);
+        ItemUtil.useDefaultPenalties(this, player, location, missedPrerequisites, 'wear');
       }
 
       const toRoom = Broadcast.toRoom(room, player, null, players);
       const desc = this.getShortDesc('en');
       const name = player.getName();
-      Broadcast.consistentMessage(toRoom, {
+      toRoom({
         firstPartyMessage: 'You wear the ' + desc + '.',
         thirdPartyMessage: name + ' wears the ' + desc + '.'
       });
