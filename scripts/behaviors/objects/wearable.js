@@ -24,32 +24,40 @@ exports.listeners = {
 							break;
 						case 'quickness':
 							const factor = player.getAttribute('quickness') / this.getPrerequisite('quickness');
+
 							player.say('You are not quick enough to move about deftly in this.');
 							player.combat.addDodgeMod({
 								name:   'slowed_by_' + this.getShortDesc() + '_' + location, //TODO: Extract
 								effect: dodge => dodge * factor
 							});
+
 							break;
 						case 'cleverness':
 							const factor = player.getAttribute('cleverness') / this.getPrerequisite('cleverness');
+
 							player.say('You are not sure how to handle this piece of gear...');
 							player.combat.addToHitMod({
 								name: 'confused_by_' + this.getShortDesc() + '_' + location,
 								effect: toHit => toHit * factor
 							});
+
 							break;
 						case 'willpower':
 							const factor = player.getAttribute('cleverness') / this.getPrerequisite('cleverness');
+
 							player.say('You find yourself easily distracted as you don the ' + this.getShortDesc());
 							player.combat.addDefenseMod({
 								name: 'distracted_by_' + this.getShortDesc() + '_' + location,
 								effect: defense => defense * factor
 							});
-							
+
 							break;
+						default:
+							player.say('You have some trouble putting that on...');
 
 					}
 				});
+
 			}
 
 		  const toRoom = Broadcast.toRoom(room, player, null, players);
@@ -63,8 +71,7 @@ exports.listeners = {
 	},
 
 	remove: function (l10n) {
-		return function (room, player, players) {
-			console.log(this);
+		return function (location, room, player, players) {
 			const toRoom = Broadcast.toRoom(room, player, null, players);
 			const desc   = this.getShortDesc('en');
 			const name   = player.getName();
@@ -72,7 +79,14 @@ exports.listeners = {
 				firstPartyMessage: 'You remove the ' + desc + '.',
 				thirdPartyMessage: name + ' removes the ' + desc + '.'
 			});
-			// TODO: Remove penalties or bonuses from wear.
+
+			// Remove penalties that may have been added.
+			player.removeEffect('encumbered_by_' + this.getShortDesc() + location);
+			player.removeEffect('confused_by_' + this.getShortDesc() + location);
+
+			player.combat.deleteAllMods('distracted_by_' + this.getShortDesc() + '_' + location);
+			player.combat.deleteAllMods('encumbered_by_' + this.getShortDesc() + '_' + location);
+			player.combat.deleteAllMods('slowed_by_' + this.getShortDesc() + '_' + location);
 		};
 	}
 };
