@@ -115,7 +115,7 @@ exports.Skills = {
       const exits = room.getExits();
       const name  = player.getName();
       const possibleTargets = exits
-        .filter(exit => _has(exit.direction, target));
+        .filter(exit => _.has(exit.direction, target));
 
       util.log(name + ' is trying to pick a lock...');
 
