@@ -16,7 +16,8 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites) => {
       case 'stamina':
         return penalize(player, 'stamina', factor => {
           const name = getPenaltyDesc(item, location, 'encumbered');
-          player.warn('You are not strong enough to wear item properly.');
+          player.warn('You are not strong enough to wear this properly.');
+
           player.addEffect(name , Effects.encumbered({ player, factor }));
           player.combat.addSpeedMod({ name, effect: speed => speed * factor });
         });
@@ -24,26 +25,25 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites) => {
       case 'quickness':
         return penalize(player, 'quickness', factor => {
           const name = getPenaltyDesc(item, location, 'slowed');
-          player.warn('You are not quick enough to move about deftly in item.');
+
+          player.warn('You are not quick enough to move about deftly while wearing ' + item.getShortDesc() + '.');
           player.combat.addDodgeMod({ name, effect: dodge => dodge * factor });
         });
 
       case 'cleverness':
         return penalize(player, 'cleverness', factor => {
-          player.say('You are not sure how to handle item piece of gear...');
-          player.combat.addToHitMod({
-            name: 'confused_by_' + item.getShortDesc() + '_' + location,
-            effect: toHit => toHit * factor
-          });
+          const name = getPenaltyDesc(item, location, 'confused');
+
+          player.warn('You are not sure how to handle this piece of gear...');
+          player.combat.addToHitMod({ name, effect: toHit => toHit * factor });
         });
 
       case 'willpower':
         return penalize(player, 'willpower', factor => {
+          const name = getPenaltyDesc(item, location, 'distracted');
+          
           player.say('You find yourself easily distracted as you don the ' + item.getShortDesc());
-          player.combat.addDefenseMod({
-            name: 'distracted_by_' + item.getShortDesc() + '_' + location,
-            effect: defense => defense * factor
-          });
+          player.combat.addDefenseMod({ name, effect: defense => defense * factor });
         });
 
       default:
