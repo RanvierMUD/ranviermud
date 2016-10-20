@@ -178,7 +178,7 @@ function CombatHelper(entity) {
       const attributesSpeed = unarmedSpeed * 500
         + this._entity.getAttribute('cleverness') * 250;
 
-      const minimum = secondAttack ? 750 : 500;
+      const minimum = secondAttack ? 1500 : 1000;
       const maximum = Math.max((25 - unarmedSpeed), 10) * 1000;
       const speedWithinBounds = _.setBounds(minimum, maximum);
 
