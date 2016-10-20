@@ -192,6 +192,7 @@ const Player = function PlayerConstructor(socket) {
     for (const queued in self.training) {
       if (queued !== 'time' && queued !== 'beginTraining') {
         queuedTraining.push(self.training[queued]);
+        util.log('TRAINING QUEUED FOR ', self.getName());
         util.log(queuedTraining);
       }
     }

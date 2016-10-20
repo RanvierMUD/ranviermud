@@ -14,7 +14,6 @@ exports.listeners = {
 
   wield: function (l10n) {
     return function (location, room, player, players) {
-      util.log("EMITTING WIELD", arguments);
 			const missedPrerequisites = this.checkPrerequisites(player);
 
       if (missedPrerequisites.length) {

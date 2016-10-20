@@ -56,7 +56,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 			util.log(player.getName() + ' ' + location + 's ' + weapon.getShortDesc('en'));
 
 			const room = rooms.getAt(player.getLocation());
-			util.log('weapon found: ', weapon);
 			weapon.emit('wield', location, room, player, players);
 
 			player.equip(location, weapon);
