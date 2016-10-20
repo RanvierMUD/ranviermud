@@ -450,13 +450,14 @@ const Player = function PlayerConstructor(socket) {
   /**
    * "unequip" an item
    * @param Item   item
+   * @return String slot it was equipped in (see remove commmand)
    */
   self.unequip = item => {
     item.setEquipped(false);
     for (const slot in self.equipment) {
       if (self.equipment[slot] === item.getUuid()) {
         delete self.equipment[slot];
-        break;
+        return slot;
       }
     }
   };

@@ -29,17 +29,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function remove(item) {
-      if (!item && isDead) {
+      if (!item && !isDead) {
         return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
       }
 
       util.log(player.getName() + ' removing ' + item.getShortDesc('en'));
 
-      player.unequip(item);
+      const location = player.unequip(item);
 
       if (isDead) { return; }
       const room = rooms.getAt(player.getLocation());
-      item.emit('remove', item.getAttribute('wearLocation'), room, player, players);
+      item.emit('remove', location, room, player, players);
       return player.say("You remove the " + item.getShortDesc('en') + '.');
     }
   };
