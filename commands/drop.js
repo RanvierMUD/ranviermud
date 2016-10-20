@@ -58,6 +58,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       player.removeItem(item);
       room.addItem(item.getUuid());
       item.setInventory(null);
+      item.setEquipped(false);
       item.setRoom(room.getLocation());
     }
   };
