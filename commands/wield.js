@@ -17,7 +17,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 		const canDual = player.getSkills('dual');
 
 		const getOffhandDesc = (offhand, wielded) => {
-			if (offhand && offhand === wielded) {
+			if (offhand && offhand.getShortDesc() === wielded.getShortDesc()) {
 				return 's';
 			} else if (offhand) {
 				return	' and the ' + items.get(offhand).getShortDesc('en')
@@ -46,7 +46,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 		wield(location);
 
 		function wield(location) {
-			const weapon = CommandUtil.findItemInInventory(_.firstWord(args), player, true);
+			const target = _.firstWord(args);
+			const weapon = CommandUtil.findItemInInventory(target, player, true);
 
 			if (!weapon || !weapon.getAttribute('damage')) {
 				return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
@@ -55,6 +56,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 			util.log(player.getName() + ' ' + location + 's ' + weapon.getShortDesc('en'));
 
 			const room = rooms.getAt(player.getLocation());
+			util.log('weapon found: ', weapon);
 			weapon.emit('wield', location, room, player, players);
 
 			player.equip(location, weapon);

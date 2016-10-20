@@ -29,7 +29,7 @@ exports.listeners = {
       const toRoom = Broadcast.toRoom(room, player, null, players);
       const desc = this.getShortDesc('en');
       const name = player.getName();
-      Broadcast.consistentMessage(toRoom, {
+      toRoom({
         firstPartyMessage: 'You remove the ' + desc + '.',
         thirdPartyMessage: name + ' removes the ' + desc + '.'
       });
