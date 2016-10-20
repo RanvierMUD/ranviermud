@@ -2,8 +2,9 @@
 
 const Doors = require('../src/doors').Doors;
 const CommandUtil = require('../src/command_util').CommandUtil;
+const Commands = require('../src/commands').Commands;
 
-exports = function attemptLockpick(player, players, rooms, exit) {
+module.exports = function attemptLockpick(player, players, rooms, exit) {
   const isDoor   = Doors.isDoor(exit);
   const isLocked = isDoor && Doors.isLocked(exit);
   const isClosed = !Doors.isOpen(exit);
@@ -21,7 +22,7 @@ exports = function attemptLockpick(player, players, rooms, exit) {
         p => p.say(name + ' swiftly picks the lock to ' + getExitDesc(p.getLocale()) + '.')
       );
       Doors.unlockDoor(exit);
-      move(exit, player, true);
+      Commands.move(exit, player, true);
     } else {
       util.log(name + " fails to pick lock.");
       player.say("<red>You fail to unlock the door.</red>");

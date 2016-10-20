@@ -24,7 +24,7 @@ const lockDoor   = changeDoorLockState(true);
 const unlockDoor = changeDoorLockState(false);
 
 const isLocked = exit => exit.door && exit.door.locked;
-const defaultDifficulty = 10;
+const defaultDifficulty = 5;
 const getLockDifficulty = exit => parseInt(exit.door.difficulty || defaultDifficulty, 10);
 
 /* Dealing with npc passage */
@@ -46,6 +46,7 @@ exports.Doors = {
   updateDestination,
   useKeyToLock,
   useKeyToUnlock,
+  getLockDifficulty,
   findExit,  openOrClose,
   lockDoor,  unlockDoor,
   useKey,    isMobLocked,
