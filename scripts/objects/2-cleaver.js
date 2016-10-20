@@ -4,6 +4,7 @@ const util = require('util');
 
 exports.listeners = {
 
+  //TODO: Update to account for prereqs
   wield: function (l10n) {
     return function (location, room, player, players) {
       const toRoom = Broadcast.toRoom(room, player, null, players);
@@ -24,10 +25,10 @@ exports.listeners = {
   },
 
   remove: function (l10n) {
-    return function (room, player, players) {
+    return function (location, room, player, players) {
       const toRoom = Broadcast.toRoom(room, player, null, players);
       const firstPartyMessage = [
-        'You place the bulky cleaver in your pack.'
+        '<yellow>You place the bulky cleaver in your pack.</yellow>'
       ];
       const thirdPartyMessage = [
         player.getShortDesc('en') + ' places the bulky cleaver in their pack.'

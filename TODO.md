@@ -17,6 +17,8 @@
 | /Users/seanodonohue/myForks/ranviermud/src/examine.js | 18 | Change command so that it can work on any item, npc, or room by emitting.
 | /Users/seanodonohue/myForks/ranviermud/src/feats.js | 420 | Use an event emitter instead.
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 52 | Dynamically pull in list of admins
+| /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 64 | Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
+| /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 70 | Add some kind of bonus.
 | /Users/seanodonohue/myForks/ranviermud/src/items.js | 34 | Extract to Data helper method.
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 15 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 17 | Extract npc from this file like player/player_manager
@@ -24,10 +26,10 @@
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 341 | Put in perception skill helper file
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 352 | Consider using Random.roll instead.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 614 | Use chalk node module to create color-coded logging messages.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 671 | Make a similar function but for NPCs::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 697 | Should go in other module::::::::::::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 708 | Put this as a function in the combatUtils module.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 617 | Use chalk node module to create color-coded logging messages.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 674 | Make a similar function but for NPCs::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 700 | Should go in other module::::::::::::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 711 | Put this as a function in the combatUtils module.
 | /Users/seanodonohue/myForks/ranviermud/src/rooms.js | 3 | Refactor
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 93 | What if they swap weapons mid-fight?
@@ -40,26 +42,27 @@
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 386 | Make NPCs have fleeing behavior, too.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 387 | Emit flee?
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 399 | Use Broadcast module or extract to the Broadcast file.
-| /Users/seanodonohue/myForks/ranviermud/src/skills.js | 30 | Pull into own files.
+| /Users/seanodonohue/myForks/ranviermud/src/skills.js | 28 | Pull into own files.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 3 | Refactor.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 112 | Use in player/npc class.
-| /Users/seanodonohue/myForks/ranviermud/scripts/behaviors/objects/wearable.js | 5 | Extract to file so that this functionality can be used for other items, and with special bonuses as well?
-| /Users/seanodonohue/myForks/ranviermud/scripts/behaviors/objects/wieldable.js | 18 | Adjust or extract this as it is just copied and pasted from the default wear scripto.
-| /Users/seanodonohue/myForks/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
+| /Users/seanodonohue/myForks/ranviermud/scripts/behaviors/objects/wearable.js | 6 | Extract to file so that this functionality can be used for other items, and with special bonuses as well?
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/3-kazuul.js | 75 | Add condition where attacking the kazuul's legs will slow it greatly.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 202 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 238 | Extract this to some kind of combat messaging helper?
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 7 | Update to account for prereqs
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 16 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 33 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/2-cleaver.js | 7 | Update to account for prereqs
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 15 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 22 | Different messages for different relative amounts of sanity loss.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 98 | Emit sanity loss event here if applicable.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 115 | Extract all stuff for determining stat gain into level utils.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 177 | Permadeath, add it.
+| /Users/seanodonohue/myForks/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 64 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 79 | Put carrying capacity method on player obj.
 | /Users/seanodonohue/myForks/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)
