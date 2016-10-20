@@ -15,6 +15,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       if (!item) {
         util.log("Something doesn't exist: ", equipped[slot]);
+        util.log("in: ", slot);
         delete equipped[slot];
       } else {
       player.say(sprintf("%-15s %s", "<" + slot + ">", item.getShortDesc(
@@ -22,10 +23,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         util.log(item.getShortDesc('en'));
       }
     }
-
-    if (!_.hasKeys(equipped)) { player.say("You are naked."); }
-
-    util.log(equipped);
+    const isNaked = !_.hasKeys(equipped);
+    if (isNaked) {
+      player.say("You are naked.");
+    }
 
   };
 };

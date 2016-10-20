@@ -13,7 +13,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     if (target === 'all') { return removeAll(); }
 
-    const thing = CommandUtil.findItemInEquipment(target, player, true);
+    const thing = CommandUtil.findItemInEquipment(items, target, player, true);
 
     return remove(thing);
 
@@ -40,6 +40,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       if (isDead) { return; }
       const room = rooms.getAt(player.getLocation());
       item.emit('remove', item.getAttribute('wearLocation'), room, player, players);
+      return player.say("You remove the " + item.getShortDesc('en') + '.');
     }
   };
 };
