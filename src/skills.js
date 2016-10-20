@@ -8,8 +8,6 @@ const move = require('./commands').Commands.move;
 const CommandUtil = require('./command_util').CommandUtil;
 const Doors = require('./doors').Doors;
 
-const attemptLockpick = require('../skills/lockpick');
-
 const l10n_dir = __dirname + '/../l10n/skills/';
 let l10ncache = {};
 
@@ -121,6 +119,7 @@ exports.Skills = {
 
       if (possibleTargets && possibleTargets.length === 1) {
         const exit = possibleTargets[0];
+        const attemptLockpick = require('../skills/lockpick');
         return attemptLockpick(player, players, rooms, exit);
       } else if (possibleTargets && possibleTargets.length) {
         return player.say("Which door's lock do you want to pick?");
