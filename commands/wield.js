@@ -12,38 +12,27 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 	return (args, player) => {
 		let location = 'wield';
 
-		const wielded = player.getEquipped(location);
-		const offhand = player.getEquipped('offhand');
+		const wielded = items.get(player.getEquipped(location));
+		const offhand = items.get(player.getEquipped('offhand'));
 		const canDual = player.getSkills('dual');
 
-		const getOffhandDesc = (offhand, wielded) => {
-			if (offhand && offhand.getShortDesc() === wielded.getShortDesc()) {
-				return 's';
-			} else if (offhand) {
-				return	' and the ' + items.get(offhand).getShortDesc('en')
-			} else return '';
-		}
-
-		const getAdjective = (offhand, wielded) => {
-			if (offhand && offhand === wielded) {
-				return 'two ';
-			} else if (offhand) {
-				return 'both the ';
-			} else return ' the';
-		}
-
 		if (wielded && (offhand || !canDual)) {
-			const wieldedDesc = items.get(wielded).getShortDesc('en');
-
-			const offhandDesc = getOffhandDesc(offhand, wielded);
-			const adjective   = getAdjective(offhand, wielded);
-
-			return player.say('You are already wielding ' + adjective + wieldedDesc + offhandDesc + '.');
+			return alreadyWielding();
 		} else if (wielded && canDual && !offhand) {
 		  location = 'offhand';
 		}
 
 		wield(location);
+
+		function alreadyWielding() {
+			const wieldedDesc = wielded.getShortDesc('en');
+
+			const offhandDesc = getOffhandDesc(offhand, wielded);
+			const adjective   = getAdjective(offhand, wielded);
+
+			return player.say('You are already wielding ' + adjective + wieldedDesc + offhandDesc + '.');
+		}
+
 
 		function wield(location) {
 			const target = _.firstWord(args);
@@ -60,5 +49,27 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
 			player.equip(location, weapon);
 		}
+
 	};
 };
+
+// Helper functions to build strings //
+
+const getOffhandDesc = (offhand, wielded) => {
+	const offhandDesc = offhand.getShortDesc();
+	if (offhand && offhandDesc === wielded.getShortDesc()) {
+		return 's';
+	} else if (offhand) {
+		return	' and the ' + offhandDesc
+	} else return '';
+}
+
+const getAdjective = (offhand, wielded) => {
+	if (offhand && offhand === wielded) {
+		return 'two ';
+	} else if (offhand) {
+		return 'both the ';
+	} else return ' the';
+}
+
+////
