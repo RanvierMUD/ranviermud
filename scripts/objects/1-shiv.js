@@ -1,5 +1,7 @@
 const Random = require('../../src/random').Random;
 const Broadcast = require('../../src/broadcast').Broadcast;
+const ItemUtil  = require('../../src/item_util').ItemUtil;
+
 const util = require('util');
 
 exports.listeners = {
@@ -13,12 +15,19 @@ exports.listeners = {
 			const thirdPartyMessage = '<yellow>' + player.getShortDesc('en') + ' draws and clenches a shiv tightly.</yellow>'
 			toRoom({ firstPartyMessage, thirdPartyMessage });
 
-			//TODO: Test to make sure this gets removed on quit.
-			const id = this.getUuid();
-			player.combat.addDodgeMod({
-				name: 'shiv' + id,
-				effect: dodge => dodge + 1
-			});
+			const missedPrerequisites = this.checkPrerequisites(player);
+			ItemUtil.useDefaultPenalties(this, player, location, missedPrerequisites, 'wield');
+
+			if (!missedPrerequisites.length) {
+				player.warn('You artful dodger, you...');
+				const dodgeBonus = Math.max(Math.min((player.getAttribute('level') / 2), 2), 10);
+				const id = this.getUuid();
+				player.combat.addDodgeMod({
+					name: 'shiv' + id,
+					effect: dodge => dodge + dodgeBonus //TODO: Change to use slicey weapon skill?
+				});
+			}
+
 		}
 	},
 
@@ -30,12 +39,7 @@ exports.listeners = {
 			const thirdPartyMessage = '<yellow>' + player.getShortDesc('en') + ' carefully stows away their rusty shiv.</yellow>'
 			toRoom({ firstPartyMessage, thirdPartyMessage });
 
-			//TODO: Test to make sure this gets removed on quit.
-			const id = this.getUuid();
-			player.combat.addDodgeMod({
-				name: 'shiv' + id,
-				effect: dodge => dodge + 1
-			});
+			ItemUtil.removeDefaultPenaltes(player, this, location);
 
 			const uid = this.getUuid();
 			player.combat.removeDodgeMod('shiv' + uid);

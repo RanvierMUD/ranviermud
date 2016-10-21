@@ -3,7 +3,14 @@
   room: 10
   script: '3-kazuul.js'
   keywords:
-    en: ['kazuul', 'kaz']
+    - kazuul
+    - kaz
+    - horror
+    - three
+    - abom
+    - abomination
+    - mouthed
+    - monster
   types: ['humanoid', 'eldritch']
   name: 'a Kazuul'
   short_description: 'the three-mouthed horror'
