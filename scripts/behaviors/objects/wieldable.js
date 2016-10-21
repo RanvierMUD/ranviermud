@@ -41,7 +41,6 @@ exports.listeners = {
         thirdPartyMessage: name + ' removes the ' + desc + '.'
       });
 
-      // Remove penalties that may have been added.
       ItemUtil.removeDefaultPenaltes(player, this, location);
     };
   }
