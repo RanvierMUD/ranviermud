@@ -35,11 +35,10 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
     return !isFirstParty && !isSecondParty && inSameRoom;
   };
 
-  const thirdPartyMsger = msg => {
-    players.eachIf(
-      player => isThirdPartyInRoom(player),
-      player => player.say(msg));
-  }
+  const thirdPartyMsger = msg =>
+    players.eachIf(isThirdPartyInRoom, player => player.say(msg));
+
+
 
   if (config.firstPartyMessage) {
     firstPartyMsger(config.firstPartyMessage);

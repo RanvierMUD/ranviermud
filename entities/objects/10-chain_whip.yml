@@ -1,0 +1,20 @@
+- &cleaver
+    vnum: 2
+    short_description:
+        en: "chain whip"
+    room_description:
+        en: "a length of heavy, rusted iron chain"
+    keywords:
+        en: [ "rusted", "iron", "chain", "iron chain", "whip", "chain whip", "rust", "length" ]
+    description:
+        en: "A couple yard's length of heavy chain, each link the size of the average fist. Most links are rusted but the chain itself seems sturdy. Looks like it may have broken off of a pulley or some other machinery."
+    room: 16
+    #script: '10-chain_whip.js'
+    behaviors: "wieldable"
+    attributes:
+        speed: 5
+        damage: 1-70
+        weight: 11
+    prerequisites:
+        stamina: 8
+    load_max: 1

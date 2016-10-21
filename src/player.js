@@ -32,7 +32,7 @@ const Player = function PlayerConstructor(socket) {
   self.password  = null;
   self.inventory = [];
   self.equipment = {};
-  
+
   // Array of combatants
   self.inCombat  = [];
 
@@ -112,10 +112,11 @@ const Player = function PlayerConstructor(socket) {
 
 
   self.hasEnergy = cost =>
-    self.getAttribute('energy') >= cost ?
-              self.emit('action', cost) : false;
+    (self.getAttribute('energy') >= cost) ?
+      self.emit('action', cost) || true :
+      false;
 
-  self.noEnergy = () => self.say('You need to rest first.');
+  self.noEnergy = () => self.warn('You need to rest first.');
 
   self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
     self.attributes[attr] : false;
@@ -191,6 +192,7 @@ const Player = function PlayerConstructor(socket) {
     for (const queued in self.training) {
       if (queued !== 'time' && queued !== 'beginTraining') {
         queuedTraining.push(self.training[queued]);
+        util.log('TRAINING QUEUED FOR ', self.getName());
         util.log(queuedTraining);
       }
     }
@@ -449,13 +451,14 @@ const Player = function PlayerConstructor(socket) {
   /**
    * "unequip" an item
    * @param Item   item
+   * @return String slot it was equipped in (see remove commmand)
    */
   self.unequip = item => {
     item.setEquipped(false);
     for (const slot in self.equipment) {
       if (self.equipment[slot] === item.getUuid()) {
         delete self.equipment[slot];
-        break;
+        return slot;
       }
     }
   };
@@ -498,11 +501,13 @@ const Player = function PlayerConstructor(socket) {
    * @see self.write
    */
   self.say = (data, color) => {
-    color = color || true;
-    if (!color) ansi.disable();
+    const noColor = color === false;
+    if (noColor) { ansi.disable(); }
     socket.write(ansi.parse(wrap(data), 40) + "\r\n");
     ansi.enable();
   };
+
+  self.warn = data => self.say('<yellow>' + data + '</yellow>');
 
   /**
    * writeL10n() + newline

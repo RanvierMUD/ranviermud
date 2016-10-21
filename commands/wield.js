@@ -12,56 +12,64 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 	return (args, player) => {
 		let location = 'wield';
 
-		const wielded = player.getEquipped(location);
-		const offhand = player.getEquipped('offhand');
+		const wielded = items.get(player.getEquipped(location));
+		const offhand = items.get(player.getEquipped('offhand'));
 		const canDual = player.getSkills('dual');
 
-		const getOffhandDesc = (offhand, wielded) => {
-			if (offhand && offhand === wielded) {
-				return 's';
-			} else if (offhand) {
-				return	' and the ' + items.get(offhand).getShortDesc('en')
-			} else return '';
-		}
-
-		const getAdjective = (offhand, wielded) => {
-			if (offhand && offhand === wielded) {
-				return 'two ';
-			} else if (offhand) {
-				return 'both the ';
-			} else return ' the';
-		}
-
 		if (wielded && (offhand || !canDual)) {
-			const wieldedDesc = items.get(wielded).getShortDesc('en');
-
-			const offhandDesc = getOffhandDesc(offhand, wielded);
-			const adjective   = getAdjective(offhand, wielded);
-
-			return player.say('You are already wielding ' + adjective + wieldedDesc + offhandDesc + '.');
+			return alreadyWielding();
 		} else if (wielded && canDual && !offhand) {
 		  location = 'offhand';
 		}
 
 		wield(location);
 
+		function alreadyWielding() {
+			const wieldedDesc = wielded.getShortDesc('en');
+
+			const offhandDesc = getOffhandDesc(offhand, wielded);
+			const adjective   = getAdjective(offhand, wielded);
+
+			return player.say('You are already wielding ' + adjective + wieldedDesc + offhandDesc + '.');
+		}
+
+
 		function wield(location) {
-			const weapon = CommandUtil.findItemInInventory(_.firstWord(args), player, true);
+			const target = _.firstWord(args);
+			const weapon = CommandUtil.findItemInInventory(target, player, true);
 
 			if (!weapon || !weapon.getAttribute('damage')) {
 				return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
 			}
 
-			util.log(player.getName() + ' ' + location + ' wields ' + weapon.getShortDesc('en'));
+			util.log(player.getName() + ' ' + location + 's ' + weapon.getShortDesc('en'));
 
-			if (CommandUtil.hasScript(weapon, 'wield')) {
-				const room = rooms.getAt(player.getLocation());
-				weapon.emit('wield', location, room, player, players);
-			} else {
-				player.say('You wield the ' + weapon.getShortDesc('en') + '.');
-			}
+			const room = rooms.getAt(player.getLocation());
+			weapon.emit('wield', location, room, player, players);
 
 			player.equip(location, weapon);
 		}
+
 	};
 };
+
+// Helper functions to build strings //
+
+const getOffhandDesc = (offhand, wielded) => {
+	const offhandDesc = offhand.getShortDesc();
+	if (offhand && offhandDesc === wielded.getShortDesc()) {
+		return 's';
+	} else if (offhand) {
+		return	' and the ' + offhandDesc
+	} else return '';
+}
+
+const getAdjective = (offhand, wielded) => {
+	if (offhand && offhand === wielded) {
+		return 'two ';
+	} else if (offhand) {
+		return 'both the ';
+	} else return ' the';
+}
+
+////

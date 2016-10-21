@@ -2,8 +2,9 @@
 | Filename | line # | TODO
 |:------|:------:|:------
 | /Users/seanodonohue/myForks/ranviermud/src/channels.js | 77 | Modify tell to work with NPCs in same room.
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 249 | Weapon skills related to weapon type?
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 250 | General combat skills?
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 9 | Chart this stuff out.
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 257 | Weapon skills related to weapon type?
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 258 | General combat skills?
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 114 | invis
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 165 | Do the same way as above once you extract the admin commands.
@@ -17,17 +18,19 @@
 | /Users/seanodonohue/myForks/ranviermud/src/examine.js | 18 | Change command so that it can work on any item, npc, or room by emitting.
 | /Users/seanodonohue/myForks/ranviermud/src/feats.js | 420 | Use an event emitter instead.
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 52 | Dynamically pull in list of admins
+| /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 64 | Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
+| /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 70 | Add some kind of bonus.
 | /Users/seanodonohue/myForks/ranviermud/src/items.js | 34 | Extract to Data helper method.
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 15 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 17 | Extract npc from this file like player/player_manager
-| /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 220 | Have spawn inventory but also add same inv functionality as player
+| /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 227 | Have spawn inventory but also add same inv functionality as player
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 340 | Put in perception skill helper file
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 351 | Consider using Random.roll instead.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 613 | Use chalk node module to create color-coded logging messages.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 670 | Make a similar function but for NPCs::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 696 | Should go in other module::::::::::::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 707 | Put this as a function in the combatUtils module.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 342 | Put in perception skill helper file
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 353 | Consider using Random.roll instead.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 618 | Use chalk node module to create color-coded logging messages.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 675 | Make a similar function but for NPCs::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 701 | Should go in other module::::::::::::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 712 | Put this as a function in the combatUtils module.
 | /Users/seanodonohue/myForks/ranviermud/src/rooms.js | 3 | Refactor
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 93 | What if they swap weapons mid-fight?
@@ -40,17 +43,20 @@
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 386 | Make NPCs have fleeing behavior, too.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 387 | Emit flee?
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 399 | Use Broadcast module or extract to the Broadcast file.
-| /Users/seanodonohue/myForks/ranviermud/src/skills.js | 30 | Pull into own files.
+| /Users/seanodonohue/myForks/ranviermud/src/skills.js | 28 | Pull into own files.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 3 | Refactor.
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 112 | Use in player/npc class.
+| /Users/seanodonohue/myForks/ranviermud/scripts/behaviors/objects/wearable.js | 6 | Extract to file so that this functionality can be used for other items, and with special bonuses as well?
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/3-kazuul.js | 75 | Add condition where attacking the kazuul's legs will slow it greatly.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 202 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 238 | Extract this to some kind of combat messaging helper?
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 15 | Test to make sure this gets removed on quit.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 32 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 7 | Update to account for prereqs
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 16 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 33 | Test to make sure this gets removed on quit.
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/2-cleaver.js | 7 | Update to account for prereqs
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 15 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 22 | Different messages for different relative amounts of sanity loss.
@@ -70,7 +76,7 @@
 ### FIXMEs
 | Filename | line # | FIXME
 |:------|:------:|:------
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 87 | Can be done better with changes to npc class.
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 89 | Can be done better with changes to npc class.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 298 | In statusUtils: This could be a problem if the combat is between two NPCs or two players.
 | /Users/seanodonohue/myForks/ranviermud/commands/appraise.js | 35 | There has to be a better way...
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 70 | This does not really seem to be working.
