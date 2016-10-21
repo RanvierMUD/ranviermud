@@ -42,12 +42,7 @@ exports.listeners = {
       });
 
       // Remove penalties that may have been added.
-      player.removeEffect('encumbered_by_' + this.getShortDesc() + location);
-      player.removeEffect('confused_by_' + this.getShortDesc() + location);
-
-      player.combat.deleteAllMods('distracted_by_' + this.getShortDesc() + '_' + location);
-      player.combat.deleteAllMods('encumbered_by_' + this.getShortDesc() + '_' + location);
-      player.combat.deleteAllMods('slowed_by_' + this.getShortDesc() + '_' + location);
+      ItemUtil.removeDefaultPenaltes(player, this, location);
     };
   }
 
