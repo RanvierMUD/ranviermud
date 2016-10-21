@@ -18,6 +18,7 @@
     max_health: 40
     health: 40
     speed: 9
+    dodge: 9
     damage: 1-37
     level: 4
   defenses:
