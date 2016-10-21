@@ -16,7 +16,8 @@
     target: 'head'
     max_health: 575
     health: 575
-    speed: 11
+    speed: 8
+    dodge: 4
     damage: '16-80'
     sanity_damage: '1-4'
     level: 8
