@@ -67,14 +67,14 @@ const removeDefaultPenaltes = (player, item, location) => {
 };
 
 const checkForCrit = (attacker, defender, damageDealt) => {
-  var defenderHealth = defender.getAttribute('health');
-  var defenderMaxHealth = defender.getAttribute('max_health');
+  const defenderHealth = defender.getAttribute('health');
+  const defenderMaxHealth = defender.getAttribute('max_health');
 
 
   //TODO: Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
-  var massiveDamage = damageDealt > defenderMaxHealth * .5;
-  var almostDead = defenderHealth <= defenderMaxHealth * .2;
-  var coupDeGrace = almostDead && damageDealt >= defenderHealth;
+  const massiveDamage = damageDealt > defenderMaxHealth * .5;
+  const almostDead = defenderHealth <= defenderMaxHealth * .2;
+  const coupDeGrace = almostDead && damageDealt >= defenderHealth;
 
   if (massiveDamage || coupDeGrace) {
     //TODO: Add some kind of bonus.
