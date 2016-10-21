@@ -2,8 +2,9 @@
 | Filename | line # | TODO
 |:------|:------:|:------
 | /Users/seanodonohue/myForks/ranviermud/src/channels.js | 77 | Modify tell to work with NPCs in same room.
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 249 | Weapon skills related to weapon type?
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 250 | General combat skills?
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 9 | Chart this stuff out.
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 257 | Weapon skills related to weapon type?
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 258 | General combat skills?
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 114 | invis
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 165 | Do the same way as above once you extract the admin commands.
@@ -24,12 +25,12 @@
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 17 | Extract npc from this file like player/player_manager
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 227 | Have spawn inventory but also add same inv functionality as player
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 341 | Put in perception skill helper file
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 352 | Consider using Random.roll instead.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 617 | Use chalk node module to create color-coded logging messages.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 674 | Make a similar function but for NPCs::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 700 | Should go in other module::::::::::::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 711 | Put this as a function in the combatUtils module.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 342 | Put in perception skill helper file
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 353 | Consider using Random.roll instead.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 618 | Use chalk node module to create color-coded logging messages.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 675 | Make a similar function but for NPCs::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 701 | Should go in other module::::::::::::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 712 | Put this as a function in the combatUtils module.
 | /Users/seanodonohue/myForks/ranviermud/src/rooms.js | 3 | Refactor
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 93 | What if they swap weapons mid-fight?
@@ -75,7 +76,7 @@
 ### FIXMEs
 | Filename | line # | FIXME
 |:------|:------:|:------
-| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 87 | Can be done better with changes to npc class.
+| /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 89 | Can be done better with changes to npc class.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 298 | In statusUtils: This could be a problem if the combat is between two NPCs or two players.
 | /Users/seanodonohue/myForks/ranviermud/commands/appraise.js | 35 | There has to be a better way...
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 70 | This does not really seem to be working.
