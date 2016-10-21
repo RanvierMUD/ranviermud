@@ -3,11 +3,13 @@
 const Doors = require('../src/doors').Doors;
 const CommandUtil = require('../src/command_util').CommandUtil;
 
+//TODO: Unit test this.
 module.exports = function attemptLockpick(player, players, rooms, exit) {
   const isDoor   = Doors.isDoor(exit);
   const isLocked = isDoor && Doors.isLocked(exit);
   const isClosed = !Doors.isOpen(exit);
 
+  //TODO: Decompose nested conditionals into new functions.
   if (isLocked && isClosed) {
     player.say("<yellow>You attempt to unlock the door...</yellow>");
     const lockpicking = player.getSkills('pick') + player.getAttribute('cleverness');
