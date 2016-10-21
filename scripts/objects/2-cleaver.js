@@ -6,7 +6,6 @@ const util = require('util');
 
 exports.listeners = {
 
-  //TODO: Update to account for prereqs
   wield: function (l10n) {
     return function (location, room, player, players) {
       const toRoom = Broadcast.toRoom(room, player, null, players);
