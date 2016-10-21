@@ -1,5 +1,7 @@
 const Random = require('../../src/random').Random;
 const Broadcast = require('../../src/broadcast').Broadcast;
+const ItemUtil  = require('../../src/item_util').ItemUtil;
+
 const util = require('util');
 
 exports.listeners = {
@@ -13,14 +15,22 @@ exports.listeners = {
       const thirdPartyMessage = '<red>' + player.getShortDesc('en') + ' readies a serious cleaver.</red>'
       toRoom({ firstPartyMessage, thirdPartyMessage });
 
-      player.combat.addToHitMod({
-        name: 'cleaver ' + this.getUuid(),
-        effect: toHit => toHit + 1
-      });
-      player.combat.addDodgeMod({
-        name: 'cleaver ' + this.getUuid(),
-        effect: dodge => dodge - 1
-      });
+      const missedPrerequisites = this.checkPrerequisites(player);
+			ItemUtil.useDefaultPenalties(this, player, location, missedPrerequisites, 'wield');
+
+      if (!missedPrerequisites.length) {
+        player.warn('Some butchery is in order...');
+        const butcheryBonus = Math.max(player.getAttribute('cleverness'), player.getAttribute('stamina'));
+        player.combat.addToHitMod({
+          name: 'cleaver ' + this.getUuid(),
+          effect: toHit => toHit + butcheryBonus
+        });
+        player.combat.addDodgeMod({
+          name: 'cleaver ' + this.getUuid(),
+          effect: dodge => dodge - 1
+        });
+      }
+
     }
   },
 
@@ -34,6 +44,8 @@ exports.listeners = {
         player.getShortDesc('en') + ' places the bulky cleaver in their pack.'
       ];
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
+
+      ItemUtil.removeDefaultPenaltes(player, this, location);
       player.combat.deleteAllMods('cleaver' + this.getUuid());
     }
   },

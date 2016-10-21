@@ -156,7 +156,9 @@ const Feats = {
       const targets = player
         .getInCombat()
         .filter(enemy =>
-          enemy.getShortDesc('en').includes(args) || enemy.getName().toString().includes(args));
+          enemy.hasKeyword(args) ||
+          enemy.getShortDesc().includes(args) ||
+          enemy.getName().toString().includes(args));
 
       if (!args || !targets.length) {
         player.say('Stun whom?');

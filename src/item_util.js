@@ -73,8 +73,8 @@ const checkForCrit = (attacker, defender, damageDealt) => {
 
   //TODO: Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
   const massiveDamage = damageDealt > defenderMaxHealth * .5;
-  const almostDead = defenderHealth <= defenderMaxHealth * .2;
-  const coupDeGrace = almostDead && damageDealt >= defenderHealth;
+  const almostDead    = defenderHealth <= defenderMaxHealth * .2;
+  const coupDeGrace   = almostDead && damageDealt >= defenderHealth;
 
   if (massiveDamage || coupDeGrace) {
     //TODO: Add some kind of bonus.
