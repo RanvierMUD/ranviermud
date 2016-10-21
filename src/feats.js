@@ -113,13 +113,14 @@ const Feats = {
     description: 'You are able to calm violent creatures and stop them from attacking you.',
     activate: (player, args, rooms, npcs, players) => {
       util.log(player.getName() + ' activates Charm.');
-      const combatant = player.isInCombat();
+      const combatants = player.getInCombat();
       const charming = player.getEffects('charming');
 
+      // TODO: Extract these to a skills/charm.js file
       const turnOnCharm = () => player.addEffect('charming', {
         duration: 30 * 1000,
         deactivate: () => {
-          player.say('<yellow>You are no longer radiating calm and peace.</yellow>');
+          player.warn('You are no longer radiating calm and peace.');
           player.setAttribute('cleverness', player.getAttribute('cleverness') - 1);
         },
         activate: () => {
@@ -128,16 +129,20 @@ const Feats = {
         }
       });
 
-      if (combatant && !charming) {
+      const removeFromCombat = combatant => {
         player.say('<bold>' + combatant.getShortDesc('en') + ' stops fighting you.</bold>');
-        combatant.setInCombat(false);
-        player.setInCombat(false);
+        combatant.fleeFromCombat();
+      }
+
+      if (combatants.length && !charming) {
+        player.fleeFromCombat();
+        combatants.map(removeFromCombat);
         turnOnCharm();
-        deductSanity(player, 15);
+        deductSanity(player, 15 + combatants.length);
       } else if (!charming) {
         turnOnCharm();
       } else {
-        player.say('You are already quite charming, really.');
+        player.warn('You are already quite charming, really.');
       }
     }
   },
@@ -153,21 +158,23 @@ const Feats = {
     name: 'Stun',
     description: 'Use your will to temporarily daze an opponent, slowing their reaction time.',
     activate: (player, args, rooms, npcs, players) => {
-      const targets = player
-        .getInCombat()
-        .filter(enemy =>
-          enemy.hasKeyword(args) ||
-          enemy.getShortDesc().includes(args) ||
-          enemy.getName().toString().includes(args));
+      const combatants = player.getInCombat();
+      const potentialTargets = combatants.length === 1 ?
+        combatants :
+        combatants
+          .filter(enemy =>
+            enemy.hasKeyword(args) ||
+            enemy.getShortDesc().includes(args) ||
+            enemy.getName().toString().includes(args));
 
-      if (!args || !targets.length) {
+      if (!args || !potentialTargets.length) {
         player.say('Stun whom?');
         return;
       }
 
-      const combatant = targets[0];
+      const target = potentialTargets[0];
 
-      const stunning = player.getEffects('stunning') || combatant.getEffects('stunned');
+      const stunning = player.getEffects('stunning') || target.getEffects('stunned');
 
       if (stunning) {
         player.say('You must wait before doing that again.');
@@ -175,26 +182,26 @@ const Feats = {
       }
 
       const cooldown = 15 * 1000;
-      combatant.addEffect('stunned', {
+      target.addEffect('stunned', {
         duration: 5 * 1000,
 
         activate: () => {
           player.say('<magenta>You concentrate on stifling your opponent.</magenta>');
           const strongestMentalAttr = Math.max(player.getAttribute('willpower'), player.getAttribute('cleverness'));
-          const stunPower = player.getAttribute('level') + strongestMentalAttr;
-          combatant.combat.addDodgeMod({
+          const magnitude = player.getAttribute('level') + strongestMentalAttr;
+          target.combat.addDodgeMod({
             name: 'stunned',
-            effect: dodge => Math.max(dodge - stunPower, 0)
+            effect: dodge => Math.max(dodge - magnitude, 0)
           });
-          combatant.combat.addToHitMod({
+          target.combat.addToHitMod({
             name: 'stunned',
-            effect: toHit => Math.max(toHit - stunPower, 0)
+            effect: toHit => Math.max(toHit - magnitude, 0)
           })
           player.addEffect('stunning', Effects.slow({
-            target: combatant,
-            magnitude: 5,
+            target,
+            magnitude,
           }));
-          const sanityCost = 11 + Math.round(stunPower / 2);
+          const sanityCost = 11 + Math.round(magnitude / 2);
           deductSanity(player, sanityCost);
         },
 

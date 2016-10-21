@@ -330,7 +330,9 @@ const Npc = function NpcConstructor(config) {
    * @return boolean
    */
   self.hasKeyword = (keyword, locale) =>
-    self.getKeywords(locale).some( word => keyword === word );
+    Array.isArray(self.getKeywords(locale)) ?
+      self.getKeywords(locale).some( word => keyword === word ) :
+      self.getKeywords(locale).includes(keyword);
 
   /**
    * Get the damage to sanity an npc can do
