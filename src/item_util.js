@@ -21,7 +21,7 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites, verb) 
           player.warn('You are not strong enough to ' + verb + ' this properly.');
 
           player.addEffect(name , Effects.encumbered({ player, factor }));
-          player.combat.addSpeedMod({ name, effect: speed => speed * factor });
+          player.combat.addSpeedMod({ name, effect: speed => speed / factor });
         });
 
       case 'quickness':
