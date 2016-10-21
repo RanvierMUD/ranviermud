@@ -16,10 +16,11 @@
 | /Users/seanodonohue/myForks/ranviermud/src/events.js | 24 | Deprecate this if possible.
 | /Users/seanodonohue/myForks/ranviermud/src/events.js | 82 | Extract stuff like this into Data module as util funcs.
 | /Users/seanodonohue/myForks/ranviermud/src/examine.js | 18 | Change command so that it can work on any item, npc, or room by emitting.
-| /Users/seanodonohue/myForks/ranviermud/src/feats.js | 420 | Use an event emitter instead.
+| /Users/seanodonohue/myForks/ranviermud/src/feats.js | 119 | Extract these to a skills/charm.js file
+| /Users/seanodonohue/myForks/ranviermud/src/feats.js | 429 | Use an event emitter instead.
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 52 | Dynamically pull in list of admins
-| /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 64 | Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
-| /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 70 | Add some kind of bonus.
+| /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 74 | Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
+| /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 80 | Add some kind of bonus.
 | /Users/seanodonohue/myForks/ranviermud/src/items.js | 34 | Extract to Data helper method.
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 15 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 17 | Extract npc from this file like player/player_manager
@@ -53,10 +54,8 @@
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 202 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 238 | Extract this to some kind of combat messaging helper?
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 7 | Update to account for prereqs
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 16 | Test to make sure this gets removed on quit.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 33 | Test to make sure this gets removed on quit.
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/2-cleaver.js | 7 | Update to account for prereqs
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 9 | Update to account for prereqs
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/2-cleaver.js | 9 | Update to account for prereqs
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 15 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 22 | Different messages for different relative amounts of sanity loss.
