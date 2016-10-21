@@ -6,10 +6,8 @@
   keywords:
     en: ['python', 'snake', 'hungry', 'py']
   name: 'a python'
-  short_description:
-    en: 'a hungry serpent'
-  room_description:
-    en: 'a serpent coiled in a thick rope, waiting to strike'
+  short_description: 'a hungry serpent'
+  room_description: 'a serpent coiled in a thick rope, waiting to strike'
   attack:
     en: 'scaly embrace'
   description:
@@ -20,6 +18,7 @@
     max_health: 40
     health: 40
     speed: 9
+    dodge: 9
     damage: 1-37
     level: 4
   defenses:

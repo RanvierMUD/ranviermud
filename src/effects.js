@@ -85,6 +85,54 @@ const multiply = (attribute, config) => {
 
 const Effects = {
 
+	// A function returning an effects object.
+	// Used when a player equips an item they don't have enough stamina for.
+	// Lowers energy and max energy.
+	encumbered: config => ({
+		activate: () => {
+			const player = config.player;
+			const factor = config.factor;
+			const energy = player.getAttribute('energy');
+			const maxEnergy = player.getAttribute('max_energy');
+
+			player.setAttribute('max_energy', Math.round(maxEnergy * factor));
+			player.setAttribute('energy', Math.min(energy, maxEnergy * factor));
+		},
+		deactivate: () => {
+			const player = config.player;
+			const factor = config.factor;
+			const energy = player.getAttribute('energy');
+			const maxEnergy = player.getAttribute('max_energy');
+
+			player.setAttribute('max_energy', Math.round(maxEnergy / factor));
+			player.setAttribute('energy', Math.min(energy, maxEnergy / factor));
+		}
+	}),
+
+	// A function returning an effects object.
+	// Used when a player equips an item they don't have enough willpower for.
+	// Lowers sanity and max sanity.
+	distracted: config => ({
+		activate: () => {
+			const player = config.player;
+			const factor = config.factor;
+			const sanity = player.getAttribute('sanity');
+			const maxSanity = player.getAttribute('maxSanity');
+
+			player.setAttribute('maxSanity', Math.round(maxSanity * factor));
+			player.setAttribute('sanity', Math.min(sanity, maxSanity * factor));
+		},
+		deactivate: () => {
+			const player = config.player;
+			const factor = config.factor;
+			const sanity = player.getAttribute('sanity');
+			const maxSanity = player.getAttribute('max_sanity');
+
+			player.setAttribute('max_sanity', Math.round(maxSanity / factor));
+			player.setAttribute('sanity', Math.min(sanity, maxSanity / factor));
+		}
+	}),
+
 	// If player runs out of energy during combat...
 	fatigued: {
 		duration: 5000,

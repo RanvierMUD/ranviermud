@@ -47,8 +47,8 @@ function inSameRoom(entity, target) {
  * @return string UUID of the item
  */
 
-function findItemInEquipment(lookString, being, hydrate) {
-  const equipment = being.getInventory().filter(i => i.isEquipped());
+function findItemInEquipment(items, lookString, being, hydrate) {
+  const equipment = _.values(being.getEquipped()).map(items.get);
   const thing = CommandUtil.parseDot(lookString, equipment,
     function(item) {
       return item && item.hasKeyword(this.keyword, being.getLocale());

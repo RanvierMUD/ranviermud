@@ -13,7 +13,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     if (target === 'all') { return removeAll(); }
 
-    const thing = CommandUtil.findItemInEquipment(target, player, true);
+    const thing = CommandUtil.findItemInEquipment(items, target, player, true);
 
     return remove(thing);
 
@@ -29,18 +29,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function remove(item) {
-      if (!item && isDead) {
+      if (!item && !isDead) {
         return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
       }
 
       util.log(player.getName() + ' removing ' + item.getShortDesc('en'));
 
-      player.unequip(item);
+      const location = player.unequip(item);
 
       if (isDead) { return; }
       const room = rooms.getAt(player.getLocation());
-      item.emit('remove', room, player, players);
-      return player.sayL10n(l10n, 'REMOVED', item.getShortDesc('en'));
+      item.emit('remove', location, room, player, players);
     }
   };
 };

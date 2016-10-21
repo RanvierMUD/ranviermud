@@ -4,6 +4,7 @@ const util = require('util');
 
 exports.listeners = {
 
+	//TODO: Update to account for prereqs
 	wield: function (l10n) {
 		return function (location, room, player, players) {
 			const toRoom = Broadcast.toRoom(room, player, null, players);
@@ -22,7 +23,7 @@ exports.listeners = {
 	},
 
 	remove: function (l10n) {
-		return function (room, player, players) {
+		return function (location, room, player, players) {
 			const toRoom = Broadcast.toRoom(room, player, null, players);
 
 			const firstPartyMessage = '<yellow>You carefully stow the shiv away, avoiding the rusty blade.</yellow>';

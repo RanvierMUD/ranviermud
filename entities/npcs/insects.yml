@@ -5,6 +5,7 @@
   types: ['insect', 'beast']
   keywords:
     en: ['roach', 'cockroach', 'bug', 'cock', 'ro']
+  name: 'a roach'
   short_description: 'an oozing cockroach'
   room_description: 'a large roach, oozing greasy ichor'
   attack:
@@ -16,6 +17,7 @@
     max_health: 2
     health: 2
     speed: 6.7
+    dodge: 3
     damage: 1-2
     level: 1
   defenses:

@@ -132,12 +132,13 @@ const Item = function ItemConstructor(config) {
 	self.inventory;     // Player or Npc object that is holding it
 	self.npc_held;      // If it's in an inventory is it an NPC's?
 	self.room;          // Room that it's in (vnum)
-	self.container;     // Itemception (vnum)
+	self.container;     // Itemception (uid)
 	self.vnum;
 	self.uuid = null;
 	self.equipped = false;
 	self.script = null;
 	self.attributes = {};
+  self.prerequisites = {};
 
 	self.init = config => {
 		self.short_description = config.short_description || '';
@@ -152,8 +153,10 @@ const Item = function ItemConstructor(config) {
 		self.uuid              = config.uuid        || null;
 		self.vnum              = config.vnum;       // Required
 		self.script            = config.script      || null;
-		self.attributes        = config.attributes  || {};
-		if (self !== null) {
+		self.attributes        = config.attributes    || {};
+    self.prerequisites     = config.prerequisites || {};
+
+    if (self !== null) {
 		  Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
     }
 	};
@@ -168,7 +171,11 @@ const Item = function ItemConstructor(config) {
 	self.getRoom      = ()   => self.room;
 	self.getContainer = ()   => self.container;
 	self.getUuid      = ()   => self.uuid;
-	self.getAttribute = attr => self.attributes[attr] || null;
+
+  self.getAttributes    = ()     => self.attributes    || {};
+  self.getPrerequisites = ()     => self.prerequisites || {};
+	self.getAttribute     = attr   => self.attributes[attr]    || null;
+  self.getPrerequisite  = attr   => self.prerequisites[attr] || null;
 
 	self.setUuid      = uid   => self.uuid      = uid;
 	self.setRoom      = room  => self.room      = room;
@@ -224,6 +231,24 @@ const Item = function ItemConstructor(config) {
 	 */
 	self.hasKeyword = (keyword, locale) => _.has(self.getKeywords(locale || 'en'), keyword);
 
+  /**
+   * Takes the player and sees which prereqs it doesn't meet.
+   * @param player Obj
+   * @return Strings[] missed prerequisites
+   */
+  self.checkPrerequisites = player => {
+    const missedPrereqs = [];
+    const playerAttr = player.getAttributes();
+    for (let attr in self.prerequisites) {
+      const prereq = self.prerequisites[attr];
+      const playerStat = playerAttr[attr];
+      if (!playerStat || playerStat < prereq) {
+        missedPrereqs.push(attr);
+      }
+    }
+    return missedPrereqs;
+  }
+
 
 	/**
 	 * Used when persisting a copy of an item to a JSON
@@ -236,11 +261,13 @@ const Item = function ItemConstructor(config) {
 			short_description: self.short_description,
       room_description:  self.room_description,
 			description:       self.description,
-			inventory:         self.inventory,     // Player or Npc object that is holding it
+			inventory:         self.inventory,
+      container:         self.container,
 			vnum:              self.vnum,
 			script:            self.script,
 			equipped:          self.equipped,
-			attributes:        self.attributes
+			attributes:        self.attributes,
+      prerequisites:     self.prerequisites
 		});
 
 	self.init(config);

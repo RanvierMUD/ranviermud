@@ -68,7 +68,7 @@ var PlayerManager = function ()
 	};
 
 	/* Proxy array.find */
-	self.find = self.players.find
+	self.find = self.players.find;
 
 	/**
 	 * Return array of players who meet the condition
