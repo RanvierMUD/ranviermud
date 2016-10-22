@@ -240,7 +240,7 @@ const Effects = {
    * [config.duration]: amount of time to boost health
    * [config.event]: event to trigger health boost
    */
-  health_boost:  config => buffWithMax('health', config),
+  health_boost: config => buffWithMax('health', config),
 
 	defenseBoost: config => {
 		return {
