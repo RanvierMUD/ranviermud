@@ -35,11 +35,27 @@ exports.listeners = {
         player.warn('You could sow destruction with this.')
         const bonus = Math.round(player.getAttribute('stamina') / 2);
         player.combat.addDamageMod({
-          name: 'chain_whip ' + this.getUuid(),
+          name: 'chain_whip' + this.getUuid(),
           effect: damage => damage + bonus
         });
       }
 
+    }
+  },
+
+  remove: function (l10n) {
+    return function (location, room, player, players) {
+      const toRoom = Broadcast.toRoom(room, player, null, players);
+      const firstPartyMessage = [
+        '<yellow>You stop wielding the giant chain.</yellow>'
+      ];
+      const thirdPartyMessage = [
+        player.getShortDesc('en') + ' stops brandishing the giant chain.'
+      ];
+      Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
+
+      ItemUtil.removeDefaultPenaltes(player, this, location);
+      player.combat.deleteAllMods('chain_whip' + this.getUuid());
     }
   },
 
