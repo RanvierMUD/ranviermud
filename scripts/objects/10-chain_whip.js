@@ -32,6 +32,7 @@ exports.listeners = {
       });
 
       if (!missedPrerequisites.length) {
+        player.warn('You could sow destruction with this.')
         const bonus = Math.round(player.getAttribute('stamina') / 2);
         player.combat.addDamageMod({
           name: 'chain_whip ' + this.getUuid(),
