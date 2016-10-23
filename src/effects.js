@@ -85,6 +85,28 @@ const multiply = (attribute, config) => {
 
 const Effects = {
 
+	knockdown: config => ({
+		duration: config.duration || 8000
+		activate: () => {
+			const target = config.target;
+			const magnitude = config.magnitude;
+
+			target.addDodgeMod({
+				name: 'knocked down',
+				effect: dodge => Math.max(1, dodge - 10)
+			});
+			target.addToHitMod({
+				name: 'knocked down',
+				effect: toHit => Math.max(1, toHit - 10)
+			});
+		},
+		deactivate: () => {
+			const target = config.target;
+
+			target.deleteAllMods('knocked down')
+		}
+	}),
+
 	// A function returning an effects object.
 	// Used when a player equips an item they don't have enough stamina for.
 	// Lowers energy and max energy.

@@ -1,6 +1,7 @@
-const Random = require('../../src/random').Random;
+const Random    = require('../../src/random').Random;
 const Broadcast = require('../../src/broadcast').Broadcast;
 const ItemUtil  = require('../../src/item_util').ItemUtil;
+const Effects   = require('../../src/effects').Effects;
 
 const util = require('util');
 
@@ -58,5 +59,52 @@ exports.listeners = {
       player.combat.deleteAllMods('chain_whip' + this.getUuid());
     }
   },
+
+  hit: function (l10n) {
+		return function (room, attacker, defender, players, hitLocation, damage) {
+      const toRoom = Broadcast.toRoom(room, attacker, null, players);
+
+      let firstPartyMessage, thirdPartyMessage;
+      if (hitLocation === 'head') {
+        firstPartyMessage = [
+          "You wallop " + defender.getShortDesc() + ' in the side of the head.'
+        ];
+        thirdPartyMessage = [
+          attacker.getName() + " wallops " + defender.getShortDesc() + ' in the side of the head.'
+        ];
+        player.warn(defender.getShortDesc() + ' is dazed!');
+        defender.addEffect('concussed', Effects.slow({
+          target: defender,
+          magnitude: .66,
+          duration: 15000,
+          deactivate: () => player.warn(defender.getShortDesc() + ' regains their focus.');
+        }));
+      } else if (hitLocation.includes('leg')) {
+        firstPartyMessage = [
+          ""
+        ];
+        thirdPartyMessage = [
+          ""
+        ];
+
+      } else {
+        firstPartyMessage = [
+          ""
+        ];
+        thirdPartyMessage = [
+          ""
+        ];
+
+      }
+
+
+      Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
+
+      attacker.combat.addDamageMod({
+        name: 'cleaver' + this.getUuid(),
+        effect: damage => damage + .5
+      });
+		}
+	},
 
 };
