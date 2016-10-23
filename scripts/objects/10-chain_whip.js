@@ -1,3 +1,5 @@
+'use strict';
+
 const Random    = require('../../src/random').Random;
 const Broadcast = require('../../src/broadcast').Broadcast;
 const ItemUtil  = require('../../src/item_util').ItemUtil;
@@ -77,7 +79,7 @@ exports.listeners = {
           target: defender,
           magnitude: .66,
           duration: 15000,
-          deactivate: () => player.warn(defender.getShortDesc() + ' regains their focus.');
+          deactivate: () => player.warn(defender.getShortDesc() + ' regains their focus.')
         }));
       } else if (hitLocation.includes('leg') && !defender.getEffects('knocked down')) {
         firstPartyMessage = [

@@ -86,7 +86,7 @@ const multiply = (attribute, config) => {
 const Effects = {
 
 	knockdown: config => ({
-		duration: config.duration || 8000
+		duration: config.duration || 8000,
 		activate: () => {
 			const target = config.target;
 			const magnitude = config.magnitude || 10;
