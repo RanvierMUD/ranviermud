@@ -56,7 +56,7 @@ function CombatHelper(entity) {
   this._entity.dodgeMods   = this._entity.dodgeMods   || {};
 
   this.addMod = type =>
-    modifier => this[type][modifier.name] = modifier.effect;
+    modifier => this._entity[type][modifier.name] = modifier.effect;
 
   this.addSpeedMod   = this.addMod('speedMods');
   this.addDamageMod  = this.addMod('damageMods');
@@ -65,7 +65,7 @@ function CombatHelper(entity) {
   this.addDodgeMod   = this.addMod('dodgeMods');
 
   this.deleteMod = type =>
-    name => delete this[type][name];
+    name => delete this._entity[type][name];
 
   this.removeSpeedMod   = this.deleteMod('speedMods');
   this.removeDamageMod  = this.deleteMod('damageMods');
