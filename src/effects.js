@@ -89,15 +89,15 @@ const Effects = {
 		duration: config.duration || 8000
 		activate: () => {
 			const target = config.target;
-			const magnitude = config.magnitude;
+			const magnitude = config.magnitude || 10;
 
 			target.addDodgeMod({
 				name: 'knocked down',
-				effect: dodge => Math.max(1, dodge - 10)
+				effect: dodge => Math.max(1, dodge - magnitude)
 			});
 			target.addToHitMod({
 				name: 'knocked down',
-				effect: toHit => Math.max(1, toHit - 10)
+				effect: toHit => Math.max(1, toHit - magnitude)
 			});
 		},
 		deactivate: () => {
