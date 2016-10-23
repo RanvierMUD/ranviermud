@@ -63,14 +63,14 @@ exports.listeners = {
   hit: function (l10n) {
 		return function (room, attacker, defender, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, attacker, null, players);
-
+      // TODO: Refactor by extracting to functions...
       let firstPartyMessage, thirdPartyMessage;
       if (hitLocation === 'head') {
         firstPartyMessage = [
-          "You wallop " + defender.getShortDesc() + ' in the side of the head.'
+          'You wallop ' + defender.getShortDesc() + ' in the side of the head with the giant chain.'
         ];
         thirdPartyMessage = [
-          attacker.getName() + " wallops " + defender.getShortDesc() + ' in the side of the head.'
+          attacker.getName() + ' wallops ' + defender.getShortDesc() + ' in the side of the head with a giant chain.'
         ];
         player.warn(defender.getShortDesc() + ' is dazed!');
         defender.addEffect('concussed', Effects.slow({
@@ -79,20 +79,23 @@ exports.listeners = {
           duration: 15000,
           deactivate: () => player.warn(defender.getShortDesc() + ' regains their focus.');
         }));
-      } else if (hitLocation.includes('leg')) {
+      } else if (hitLocation.includes('leg') && !defender.getEffects('knocked down')) {
         firstPartyMessage = [
-          ""
+          'You use your chain whip to sweep ' + defender.getShortDesc() + '\'s feet out from under them!'
         ];
         thirdPartyMessage = [
-          ""
+          defender.getShortDesc() + ' falls as ' + attacker.getShortDesc() + ' sweeps their feet out from under them with a giant chain.'
         ];
-
-      } else {
+        defender.addEffect('knocked down', Effects.knockdown({
+          target: defender,
+          magnitude: attacker.getAttribute('quickness') + 5
+        }));
+      } else { //TODO: Default damage messages...
         firstPartyMessage = [
-          ""
+          ''
         ];
         thirdPartyMessage = [
-          ""
+          ''
         ];
 
       }
