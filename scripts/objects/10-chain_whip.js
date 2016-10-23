@@ -92,20 +92,22 @@ exports.listeners = {
         }));
       } else { //TODO: Default damage messages...
         firstPartyMessage = [
-          ''
-        ];
+          'You smash the chain against ' + defender.getShortDesc() + '\'s ' + hitLocation + '.',
+          'A chain link hits ' + defender.getShortDesc() + ' square in the ' + hitLocation + '.',
+          'You catch ' + defender.getShortDesc() + ' with the tip of the chain whip, smashing their ' + hitLocation + '.'
+         ];
         thirdPartyMessage = [
-          ''
+          attacker.getShortDesc() + ' smashes the chain against ' + defender.getShortDesc() + '\'s ' + hitLocation + '.',
+          attacker.getShortDesc() + '\'s chain whip hits ' + defender.getShortDesc() + ' square in the ' + hitLocation + '.',
+          attacker.getShortDesc() + ' catches ' + defender.getShortDesc() + ' with the tip of the chain whip, smashing their ' + hitLocation + '.'
         ];
-
       }
-
 
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
 
-      attacker.combat.addDamageMod({
-        name: 'cleaver' + this.getUuid(),
-        effect: damage => damage + .5
+      attacker.combat.addToHitMod({
+        name: 'chainwhip ' + this.getUuid(),
+        effect: toHit => toHit + .5
       });
 		}
 	},
