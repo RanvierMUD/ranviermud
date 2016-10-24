@@ -60,9 +60,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }
       util.log(playerName + " drops " + itemName + " at " + room.getLocation() + ".");
 
-
-
-
       player.removeItem(item);
       room.addItem(item.getUuid());
       item.setInventory(null);
