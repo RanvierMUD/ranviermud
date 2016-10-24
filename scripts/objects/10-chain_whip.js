@@ -18,6 +18,8 @@ exports.listeners = {
       toRoom({ firstPartyMessage, thirdPartyMessage });
 
       const missedPrerequisites = this.checkPrerequisites(player);
+      util.log("EMITTING WIELD ON CUSTOM WEAPON SCRIPT");
+      util.log(this);
 
       missedPrerequisites.forEach(prereq => {
         switch (prereq) {
@@ -26,7 +28,6 @@ exports.listeners = {
               const name = ItemUtil.getPenaltyDesc(this, location, 'encumbered');
               player.warn('You can barely hold the chain, much less swing it properly...');
 
-              player.addEffect(name , Effects.encumbered({ player, factor }));
               player.combat.addSpeedMod({ name, effect: speed => speed / factor });
               player.combat.addToHitMod({ name, effect: toHit => toHit * factor });
               player.combat.addDodgeMod({ name, effect: dodge => dodge * factor });
@@ -58,7 +59,6 @@ exports.listeners = {
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
       const name = ItemUtil.getPenaltyDesc(this, location, 'encumbered');
 
-      player.removeEffect(name);
       player.combat.deleteAllMods(name);
       player.combat.deleteAllMods('chain_whip' + this.getUuid());
     }

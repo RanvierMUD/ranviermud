@@ -15,7 +15,6 @@ exports.listeners = {
       toRoom({ firstPartyMessage, thirdPartyMessage });
 
       const missedPrerequisites = this.checkPrerequisites(player);
-			ItemUtil.useDefaultPenalties(this, player, location, missedPrerequisites, 'wield');
 
       if (!missedPrerequisites.length) {
         player.warn('Some butchery is in order...');

@@ -91,6 +91,7 @@ const Commands = {
         });
       },
 
+
     setAttribute: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         args = _.splitArgs(args);
