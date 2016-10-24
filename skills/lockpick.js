@@ -2,6 +2,7 @@
 
 const Doors = require('../src/doors').Doors;
 const CommandUtil = require('../src/command_util').CommandUtil;
+const util = require('util');
 
 //TODO: Unit test this.
 module.exports = function attemptLockpick(player, players, rooms, exit) {
