@@ -117,7 +117,7 @@ const Effects = {
 			const energy = player.getAttribute('energy');
 			const maxEnergy = player.getAttribute('max_energy');
 			util.log("FACTOR IS ", factor);
-			player.setAttribute('max_energy', Math.round(maxEnergy * factor));
+			player.setAttribute('max_energy', maxEnergy * factor);
 			player.setAttribute('energy', Math.min(energy, maxEnergy * factor));
 		},
 		deactivate: () => {
@@ -126,7 +126,7 @@ const Effects = {
 			const energy = player.getAttribute('energy');
 			const maxEnergy = player.getAttribute('max_energy');
 			util.log("FACTOR IS ", factor);
-			player.setAttribute('max_energy', Math.round(maxEnergy / factor));
+			player.setAttribute('max_energy', maxEnergy / factor);
 			player.setAttribute('energy', Math.min(energy / factor, maxEnergy / factor));
 		}
 	}),
