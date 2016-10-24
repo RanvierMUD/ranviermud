@@ -30,7 +30,7 @@ module.exports = function attemptLockpick(player, players, rooms, exit) {
       );
       Doors.unlockDoor(exit);
     } else {
-      util.log(name + " fails to pick lock.");
+      util.log(player.getName() + " fails to pick lock.");
       player.say("<red>You fail to unlock the door.</red>");
       players.eachIf(
         p => CommandUtil.inSameRoom(player, p),
