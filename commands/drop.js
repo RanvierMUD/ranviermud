@@ -51,13 +51,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
 
       let itemName = item.getShortDesc('en');
-      if (!isDead) { player.sayL10n(l10n, 'ITEM_DROP', itemName, false); }
+      if (!isDead) {
+        player.sayL10n(l10n, 'ITEM_DROP', itemName, false);
+        room.getNpcs().forEach( id => {
+          let npc = npcs.get(id);
+          npc.emit('playerDropItem', room, rooms, player, players, npc, npcs, item);
+        });
+      }
       util.log(playerName + " drops " + itemName + " at " + room.getLocation() + ".");
 
-      room.getNpcs().forEach( id => {
-        let npc = npcs.get(id);
-        npc.emit('playerDropItem', room, rooms, player, players, npc, npcs, item);
-      });
+
+
 
       player.removeItem(item);
       room.addItem(item.getUuid());
