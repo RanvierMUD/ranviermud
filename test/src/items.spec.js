@@ -80,12 +80,15 @@ describe('Item class', () => {
           "deliciousness": 7
         },
         "description": "a potato",
+        "room_description": "",
         "equipped": false,
+        "container": null,
         "inventory": [],
         "keywords": [
           "potato",
           "spud"
         ],
+        "prerequisites": {},
         "script": null,
         "short_description": "potato",
         "uuid": null,

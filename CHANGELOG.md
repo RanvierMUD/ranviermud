@@ -1,3 +1,6 @@
+NEEDFUL THINGS (0.3.4)
+
+
 TALKING BACK (0.3.3)
 ========
 
