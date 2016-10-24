@@ -21,8 +21,8 @@
   behaviors: "aggro,rtcombat,randommove"
   attributes:
     target: 'head'
-    max_health: 575
-    health: 575
+    max_health: 375
+    health: 375
     speed: 8
     dodge: 4
     damage: '16-80'
@@ -31,6 +31,7 @@
   defenses:
     head: 8
     body: 4
-    torso: 1
+    arms: 1
+    torso: '-2'
     legs: '-1'
   load_max: 1
