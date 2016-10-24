@@ -1,10 +1,10 @@
-- &kazuul
+- &defiler
   vnum: 3
   room: 10
-  script: '3-kazuul.js'
+  script: '3-defiler.js'
   keywords:
-    - kazuul
-    - kaz
+    - defiler
+    - def
     - horror
     - three
     - abom
@@ -12,8 +12,8 @@
     - mouthed
     - monster
   types: ['humanoid', 'eldritch']
-  name: 'a Kazuul'
-  short_description: 'the three-mouthed horror'
+  name: 'a Defiled One'
+  short_description: 'the defiler'
   room_description: 'a bulky abomination with jagged fangs for a head, and sucking mouths for hands'
   attack:
     en: 'gnashing teeth'
