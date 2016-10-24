@@ -22,8 +22,8 @@ exports.listeners = {
       missedPrerequisites.forEach(prereq => {
         switch (prereq) {
           case 'stamina':
-            return ItemUtil.penalize(player, item, 'stamina', factor => {
-              const name = ItemUtil.getPenaltyDesc(item, location, 'encumbered');
+            return ItemUtil.penalize(player, this, 'stamina', factor => {
+              const name = ItemUtil.getPenaltyDesc(this, location, 'encumbered');
               player.warn('You can barely hold the chain, much less swing it properly...');
 
               player.addEffect(name , Effects.encumbered({ player, factor }));
