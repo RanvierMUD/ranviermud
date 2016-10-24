@@ -125,9 +125,9 @@ const Effects = {
 			const factor = config.factor;
 			const energy = player.getAttribute('energy');
 			const maxEnergy = player.getAttribute('max_energy');
-
+			util.log('DEACTIVATING: ', maxEnergy / factor);
 			player.setAttribute('max_energy', Math.round(maxEnergy / factor));
-			player.setAttribute('energy', Math.min(energy, maxEnergy / factor));
+			player.setAttribute('energy', Math.min(energy / factor, maxEnergy / factor));
 		}
 	}),
 
