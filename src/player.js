@@ -404,12 +404,16 @@ const Player = function PlayerConstructor(socket) {
       return util.log("ERROR: Effect " + eff + " not found on " + self.getName());
     }
 
+    if (self.effects[eff].deactivate) {
+      self.effects[eff].deactivate();
+    }
+
     if (self.effects[eff].event) {
       self.removeListener(self.effects[eff].event, self.effects[eff].deactivate);
     } else {
       clearTimeout(self.effects[eff].timer);
     }
-    self.effects[eff] = null;
+    if (self.effects[eff]) { delete self.effects[eff]; }
   };
 
   ///// ----- Handle Inventory && Equipment. ----- ///////
