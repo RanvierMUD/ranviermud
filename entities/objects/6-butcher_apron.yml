@@ -2,6 +2,8 @@
     vnum: 6
     short_description:
         en: "leather butcher's apron"
+    room_description:
+        en: "a blood-encrusted leather butcher's apron"
     keywords:
         en: [ "butcher's apron", "butchers", "apron", "smock" ]
     description:
@@ -12,4 +14,6 @@
         defense: 3
         wearLocation: 'torso'
         weight: 3
+    prerequisites:
+        stamina: 2
     load_max: 1

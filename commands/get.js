@@ -18,25 +18,30 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const room = rooms.getAt(player.getLocation());
     const playerName = player.getName();
 
-    if (inventoryFull()) {
-      player.sayL10n(l10n, 'CARRY_MAX');
-      return;
-    }
-
     if (args.toLowerCase() === "all") {
       getAllItems(room);
       return;
     }
 
-    const item = CommandUtil.findItemInRoom(items, args, room, player);
-    if (!item) {
+    const itemFound = CommandUtil.findItemInRoom(items, args, room, player);
+    if (!itemFound) {
       player.sayL10n(l10n, 'ITEM_NOT_FOUND');
       return;
     }
-    pickUp(item);
+    const item = items.get(itemFound);
+    tryToPickUp(item);
+
+    function tryToPickUp(item) {
+      if (inventoryFull(item)) {
+        player.say('You are not able to carry that.');
+        return;
+      }
+      else {
+        pickUp(item);
+      }
+    }
 
     function pickUp(item) {
-      item = items.get(item);
       player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc('en'));
       item.setRoom(null);
       item.setInventory(playerName);
@@ -46,22 +51,34 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       util.log(playerName + ' picked up ' + item.getShortDesc('en'));
 
       players.eachIf(
-        (p) => CommandUtil.inSameRoom(p, player),
-        (p) => p.sayL10n(l10n, 'OTHER_PICKUP', playerName, item.getShortDesc(p.getLocale()))
+        p => CommandUtil.inSameRoom(p, player),
+        p => p.sayL10n(l10n, 'OTHER_PICKUP', playerName, item.getShortDesc(p.getLocale()))
       );
     }
 
     function getAllItems(room) {
-      const items = room.getItems();
-      items.forEach( item => {
-        if (!inventoryFull()) pickUp(item);
-        else player.sayL10n(l10n, 'CARRY_MAX');
-      });
+      const items = room.getItems().map( id => items.get(id) );
+      items.forEach( item => tryToPickUp(item) );
     }
 
     //TODO: Change to calculate based on character's strength and pack size vs. item weight/size.
-    function inventoryFull() {
-      return player.getInventory().length >= 20;
+    function inventoryFull(item) {
+      const inventory = player.getInventory();
+      return tooManyItems(inventory) || tooHeavy(inventory, item);
+    }
+
+    function tooManyItems(inventory) {
+      return inventory.length >= 20;
+    }
+
+    function tooHeavy(inventory, item) {
+      const itemWeight = item.getAttribute('weight');
+      if (itemWeight === Infinity) { return true; }
+      const carriedWeight  = inventory.reduce((sum, item) => item.getAttribute('weight') + sum , 0);
+
+      // TODO: Put carrying capacity method on player obj.
+      const maxCarryWeight = 10 + player.getAttribute('stamina') + player.getAttribute('level');
+      return (carriedWeight + itemWeight) > maxCarryWeight;
     }
 
   };

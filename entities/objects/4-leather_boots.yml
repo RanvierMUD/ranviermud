@@ -2,6 +2,8 @@
     vnum: 4
     short_description:
         en: "leather boots"
+    room_description:
+        en: "a pair of well-worn high-top leather boots"
     keywords:
         en: [ "leather boots", "boots", "shoes" ]
     description:

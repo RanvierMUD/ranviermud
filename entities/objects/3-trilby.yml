@@ -2,6 +2,8 @@
     vnum: 3
     short_description:
         en: "rugged trilby hat"
+    room_description:
+        en: "a weatherbeaten hat with a narrow brim"
     keywords:
         en: [ "trilby", "hat" ]
     description:

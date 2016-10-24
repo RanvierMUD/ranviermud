@@ -2,10 +2,11 @@
     vnum: 1
     short_description:
         en: "rusty shiv"
+    room_description: "a razor-sharp shiv coated in rust"
     keywords:
-        en: [ "shiv", "rusty", "shank", "rus" ]
+        en: [ "shiv", "rusty", "shank", "rus", "metal", "rust" ]
     description:
-        en: "A short, jagged metal shard, discolored with red corrosion."
+        en: "A short, jagged metal shard, discolored with red corrosion. Rather than a handle, someone has wrapped grimy grip tape around the base of the instrument."
     room: 9
     script: "1-shiv.js"
     behaviors: "wieldable"
@@ -13,4 +14,6 @@
         speed: 10
         damage: 1-15
         weight: 1
+    prerequisites:
+        quickness: 2
     load_max: 1

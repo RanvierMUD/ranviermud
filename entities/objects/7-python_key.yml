@@ -2,6 +2,7 @@
     vnum: 7
     short_description:
         en: "python key"
+    room_description: "a snake-shaped copper key"
     keywords:
         en: [ "python", "py", "python key", "key" ]
     description:

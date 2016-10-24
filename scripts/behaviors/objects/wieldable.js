@@ -1,33 +1,47 @@
 'use strict';
-const LevelUtil = require('../../../src/levels').LevelUtil;
 
+const util      = require('util');
+const LevelUtil = require('../../../src/levels').LevelUtil;
+const ItemUtil  = require('../../../src/item_util').ItemUtil;
+const Broadcast = require('../../../src/broadcast').Broadcast;
 
 exports.listeners = {
-	hit: function (l10n) {
-		return function (room, attacker, defender, players, hitLocation, damageDealt) {
-			checkForCrit(attacker, defender, damageDealt);
-		}
-	},
+  hit: function (l10n) {
+    return function (room, attacker, defender, players, hitLocation, damageDealt) {
+      ItemUtil.checkForCrit(attacker, defender, damageDealt);
+    }
+  },
 
-	deathblow: function(l10n) {
-		return function (room, attacker, defender, players, hitLocation) {
-			players.eachIf(
-				p => p.getLocation() === defender.getLocation() && p !== attacker,
-				p => p.emit('experience', LevelUtil.mobExp(defender.getAttribute('level')) * .33, 'dying')
-			);
-		}
-	},
+  wield: function (l10n) {
+    return function (location, room, player, players) {
+			const missedPrerequisites = this.checkPrerequisites(player);
+
+      if (missedPrerequisites.length) {
+				ItemUtil.useDefaultPenalties(this, player, location, missedPrerequisites, 'wield');
+      }
+
+			const toRoom = Broadcast.toRoom(room, player, null, players);
+			const desc = this.getShortDesc('en');
+			const name = player.getName();
+			toRoom({
+				firstPartyMessage: 'You wield the ' + desc + '.',
+				thirdPartyMessage: name + ' wields the ' + desc + '.'
+			});
+    }
+  },
+
+  remove: function (l10n) {
+    return function (location, room, player, players) {
+      const toRoom = Broadcast.toRoom(room, player, null, players);
+      const desc = this.getShortDesc('en');
+      const name = player.getName();
+      toRoom({
+        firstPartyMessage: 'You remove the ' + desc + '.',
+        thirdPartyMessage: name + ' removes the ' + desc + '.'
+      });
+
+      ItemUtil.removeDefaultPenaltes(player, this, location);
+    };
+  }
+
 };
-
-function checkForCrit(attacker, defender, damageDealt) {
-	var defenderHealth    = defender.getAttribute('health');
-	var defenderMaxHealth = defender.getAttribute('max_health');
-
-	var massiveDamage = damageDealt > defenderMaxHealth * .5;
-	var almostDead  = defenderHealth <= defenderMaxHealth * .2;
-	var coupDeGrace = almostDead && damageDealt >= defenderHealth;
-
-	if (massiveDamage || coupDeGrace) {
-		attacker.say('<bold><cyan>You have dealt a critical blow!</cyan></bold>');
-	}
-}

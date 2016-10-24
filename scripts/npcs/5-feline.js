@@ -111,7 +111,7 @@ exports.listeners = {
         npc, player,
 
         'where am i': {
-          priority: Dialogue.Priority.LOW,
+          priority: Dialogue.Priority.MEDIUM,
           keywords: {
             every: 'this place',
             some:   serpentsHissKeywords,
@@ -139,7 +139,7 @@ exports.listeners = {
         },
 
         'what is in the cellar': {
-          priority: Dialogue.Priority.MEDIUM,
+          priority: Dialogue.Priority.LOWEST,
           prerequisite: hasMet,
           keywords: {
             every: 'cellar',
@@ -153,7 +153,7 @@ exports.listeners = {
         },
 
         'tavern name': {
-          priority: Dialogue.Priority.LOWEST,
+          priority: Dialogue.Priority.LOW,
           prerequisite: hasMet,
           keywords: {
             every: ['name', 'why', 'tavern'],
@@ -161,8 +161,24 @@ exports.listeners = {
             find: ['named', 'pub', 'tavern', 'serpents', 'hiss', 'snake']
           },
           dialogue: {
-            type:     Dialogue.Types.SIMPLE,
+            type: Dialogue.Types.SIMPLE,
             say: '"My humans were fond of snakes... so be careful wandering about," Baxter warns. "Me, I prefer to call it \'The Cat\'s Meow\'. Unfortunately, without opposable thumbs, signcrafting is not one of my strong suits."'
+          }
+        },
+
+        'small talk': {
+          priority: Dialogue.Priority.HIGH,
+          prerequisite: hasMet,
+          keywords: {},
+          dialogue: {
+            type: Dialogue.Types.RANDOM,
+            choices: [
+              { say: '"My, what lovely weather outside!" Baxter mrowls.' },
+              { say: '"How do you do, old chap?" Baxter asks, bowing.' },
+              { say: 'Baxter cocks his head.'},
+              { say: 'Baxter nods sagely, not comprehending what you\'ve said.' },
+              { say: '"What do you think of the place?" Baxter inquires.' }
+            ]
           }
         }
 
