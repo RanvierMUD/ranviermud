@@ -16,7 +16,6 @@ exports.listeners = {
 			toRoom({ firstPartyMessage, thirdPartyMessage });
 
 			const missedPrerequisites = this.checkPrerequisites(player);
-			ItemUtil.useDefaultPenalties(this, player, location, missedPrerequisites, 'wield');
 
 			if (!missedPrerequisites.length) {
 				player.warn('You artful dodger, you...');
@@ -38,8 +37,6 @@ exports.listeners = {
 			const firstPartyMessage = '<yellow>You carefully stow the shiv away, avoiding the rusty blade.</yellow>';
 			const thirdPartyMessage = '<yellow>' + player.getShortDesc('en') + ' carefully stows away their rusty shiv.</yellow>'
 			toRoom({ firstPartyMessage, thirdPartyMessage });
-
-			ItemUtil.removeDefaultPenaltes(player, this, location);
 
 			const uid = this.getUuid();
 			player.combat.removeDodgeMod('shiv' + uid);

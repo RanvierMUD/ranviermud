@@ -156,6 +156,7 @@ const Item = function ItemConstructor(config) {
 		self.attributes        = config.attributes    || {};
     self.prerequisites     = config.prerequisites || {};
 
+
     if (self !== null) {
 		  Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
     }

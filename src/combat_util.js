@@ -49,14 +49,14 @@ function CombatHelper(entity) {
    * Speed mods will affect time in between attacks
    * in milliseconds. So, doubling it will half attack speed.
    */
-  this.speedMods   = {};
-  this.damageMods  = {};
-  this.toHitMods   = {};
-  this.defenseMods = {};
-  this.dodgeMods   = {};
+  this._entity.speedMods   = this._entity.speedMods   || {};
+  this._entity.damageMods  = this._entity.damageMods  || {};
+  this._entity.toHitMods   = this._entity.toHitMods   || {};
+  this._entity.defenseMods = this._entity.defenseMods || {};
+  this._entity.dodgeMods   = this._entity.dodgeMods   || {};
 
   this.addMod = type =>
-    modifier => this[type][modifier.name] = modifier.effect;
+    modifier => this._entity[type][modifier.name] = modifier.effect;
 
   this.addSpeedMod   = this.addMod('speedMods');
   this.addDamageMod  = this.addMod('damageMods');
@@ -65,7 +65,7 @@ function CombatHelper(entity) {
   this.addDodgeMod   = this.addMod('dodgeMods');
 
   this.deleteMod = type =>
-    name => delete this[type][name];
+    name => delete this._entity[type][name];
 
   this.removeSpeedMod   = this.deleteMod('speedMods');
   this.removeDamageMod  = this.deleteMod('damageMods');
@@ -153,7 +153,7 @@ function CombatHelper(entity) {
     const damageRoll  = Random.inRange(...damageRange) + this._entity.getAttribute('level');
 
     const min = damageRange[0];
-    const modifiedDamageRoll = applyMods(damageRoll, this.damageMods);
+    const modifiedDamageRoll = applyMods(damageRoll, this._entity.damageMods);
 
     const damageWithinBounds = _.setBounds(min, Infinity);
     const damageDealt = damageWithinBounds(modifiedDamageRoll);
@@ -192,7 +192,7 @@ function CombatHelper(entity) {
 
       util.log("Their base speed is ", baseSpeed);
 
-      const speed = applyMods(baseSpeed, this.speedMods) + Random.inRange(-1000, 1000);
+      const speed = applyMods(baseSpeed, this._entity.speedMods) + Random.inRange(-1000, 1000);
 
       util.log("Their modified speed is ", speed);
 
@@ -243,7 +243,7 @@ function CombatHelper(entity) {
       level || 1;
 
 
-    const dodgeChance = applyMods(dodgeSkill + parrySkill + bonus, this.dodgeMods);
+    const dodgeChance = applyMods(dodgeSkill + parrySkill + bonus, this._entity.dodgeMods);
     const dodgeWithinBounds = _.setBounds(5, 90);
 
     util.log('Base dodge chance is ', dodgeChance);
@@ -259,7 +259,7 @@ function CombatHelper(entity) {
     const toHitSkill = level + bonus; //For now, 1-20.
     const toHitBonus = this._entity.getAttribute('cleverness') + bonus
       + Math.round(this._entity.getAttribute('quickness') / 2  + bonus);
-    const toHitChance = applyMods(toHitSkill + toHitBonus, this.toHitMods);
+    const toHitChance = applyMods(toHitSkill + toHitBonus, this._entity.toHitMods);
     const toHitWithinBounds = _.setBounds(5, 90);
     util.log(this._entity.getShortDesc('en') + ': To hit chance is ', toHitChance);
     return toHitWithinBounds(toHitChance);

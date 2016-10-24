@@ -6,7 +6,6 @@ const util = require('util');
 
 exports.listeners = {
 
-  //TODO: Update to account for prereqs
   wield: function (l10n) {
     return function (location, room, player, players) {
       const toRoom = Broadcast.toRoom(room, player, null, players);
@@ -16,7 +15,6 @@ exports.listeners = {
       toRoom({ firstPartyMessage, thirdPartyMessage });
 
       const missedPrerequisites = this.checkPrerequisites(player);
-			ItemUtil.useDefaultPenalties(this, player, location, missedPrerequisites, 'wield');
 
       if (!missedPrerequisites.length) {
         player.warn('Some butchery is in order...');

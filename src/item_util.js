@@ -2,7 +2,9 @@ const util    = require('util');
 const Effects = require('./effects').Effects;
 
 const penalize = (player, item, attr, callback) => {
+  util.log('factor for ' + attr + ' is:');
   const factor = player.getAttribute(attr) / item.getPrerequisite(attr);
+  util.log(factor);
   callback(factor);
 }
 
@@ -21,7 +23,7 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites, verb) 
           player.warn('You are not strong enough to ' + verb + ' this properly.');
 
           player.addEffect(name , Effects.encumbered({ player, factor }));
-          player.combat.addSpeedMod({ name, effect: speed => speed * factor });
+          player.combat.addSpeedMod({ name, effect: speed => speed / factor });
         });
 
       case 'quickness':
@@ -58,12 +60,18 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites, verb) 
 
 const removeDefaultPenaltes = (player, item, location) => {
   const itemDesc = item.getShortDesc();
-  player.removeEffect('encumbered_by_' + itemDesc + location);
-  player.removeEffect('confused_by_' + itemDesc + location);
 
-  player.combat.deleteAllMods('distracted_by_' + itemDesc + '_' + location);
-  player.combat.deleteAllMods('encumbered_by_' + itemDesc + '_' + location);
-  player.combat.deleteAllMods('slowed_by_' + itemDesc + '_' + location);
+  const encumbered = getPenaltyDesc(item, location, 'encumbered');
+  const confused   = getPenaltyDesc(item, location, 'confused');
+  const distracted = getPenaltyDesc(item, location, 'distracted');
+  const slowed     = getPenaltyDesc(item, location, 'slowed');
+
+  player.removeEffect(encumbered);
+  player.removeEffect(confused);
+
+  player.combat.deleteAllMods(distracted);
+  player.combat.deleteAllMods(encumbered);
+  player.combat.deleteAllMods(slowed);
 };
 
 const checkForCrit = (attacker, defender, damageDealt) => {
