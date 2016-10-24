@@ -69,6 +69,29 @@ const Commands = {
         util.log("@@Admin: " + player.getName() + " added feat:", feat.name);
       },
 
+    debugChar: (rooms, items, players, npcs, Commands) =>
+      (player, args) => {
+        const attrs = player.getAttributes();
+        player.say("<red>ADMIN: Debug Character</red>");
+        player.warn('ATTRIBUTES: ');
+        for (let attr in attrs) {
+          player.say(attr + ': ' + attrs[attr]);
+        }
+        player.warn('EFFECTS: ');
+        const effects = player.getEffects();
+        for (let eff in effects) {
+          player.say(eff + ': ' + effects[eff]);
+        }
+        ['speedMods', 'dodgeMods', 'damageMods', 'toHitMods'].forEach(mod => {
+          if (!Object.keys(mod).length) { return; };
+          player.warn(mod);
+          for (let modId in player[mod]) {
+            player.say(modId + ': ' + player[mod][modId]);
+          }
+        });
+      },
+
+
     setAttribute: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         args = _.splitArgs(args);
@@ -110,7 +133,7 @@ const Commands = {
         player.say("<red>ADMIN: 404: Room not found.</red>");
 
       },
-      
+
     //TODO: invis
   },
 

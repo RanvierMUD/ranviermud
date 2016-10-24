@@ -6,6 +6,8 @@ const Type   = require('./type').Type;
 const Random = require('./random').Random;
 const _ = require('./helpers');
 
+//TODO: Chart this stuff out.
+
 /* Various helper functions for combat */
 
 /**
@@ -47,14 +49,14 @@ function CombatHelper(entity) {
    * Speed mods will affect time in between attacks
    * in milliseconds. So, doubling it will half attack speed.
    */
-  this.speedMods   = {};
-  this.damageMods  = {};
-  this.toHitMods   = {};
-  this.defenseMods = {};
-  this.dodgeMods   = {};
+  this._entity.speedMods   = this._entity.speedMods   || {};
+  this._entity.damageMods  = this._entity.damageMods  || {};
+  this._entity.toHitMods   = this._entity.toHitMods   || {};
+  this._entity.defenseMods = this._entity.defenseMods || {};
+  this._entity.dodgeMods   = this._entity.dodgeMods   || {};
 
   this.addMod = type =>
-    modifier => this[type][modifier.name] = modifier.effect;
+    modifier => this._entity[type][modifier.name] = modifier.effect;
 
   this.addSpeedMod   = this.addMod('speedMods');
   this.addDamageMod  = this.addMod('damageMods');
@@ -63,7 +65,7 @@ function CombatHelper(entity) {
   this.addDodgeMod   = this.addMod('dodgeMods');
 
   this.deleteMod = type =>
-    name => delete this[type][name];
+    name => delete this._entity[type][name];
 
   this.removeSpeedMod   = this.deleteMod('speedMods');
   this.removeDamageMod  = this.deleteMod('damageMods');
@@ -151,7 +153,7 @@ function CombatHelper(entity) {
     const damageRoll  = Random.inRange(...damageRange) + this._entity.getAttribute('level');
 
     const min = damageRange[0];
-    const modifiedDamageRoll = applyMods(damageRoll, this.damageMods);
+    const modifiedDamageRoll = applyMods(damageRoll, this._entity.damageMods);
 
     const damageWithinBounds = _.setBounds(min, Infinity);
     const damageDealt = damageWithinBounds(modifiedDamageRoll);
@@ -161,33 +163,36 @@ function CombatHelper(entity) {
     return damageDealt;
   };
 
-  const getWeaponSpeed = (weapon, base, factor) => (weapon ?
-    weapon.getAttribute('speed') : base) * factor;
+  const getWeaponSpeed = (weapon, base, factor) =>
+    factor * (weapon ?
+      weapon.getAttribute('speed') || 1 :
+      base);
 
   /**
    * Get attack speed of a player
    * @return float milliseconds between attacks
    */
   this.getAttackSpeed = Type.isNpc(this._entity) ?
-    () => this._entity.getAttribute('speed') * 1000 || 1000 :
+    () => (this._entity.getAttribute('speed') * 1000 || 5000) :
     secondAttack => {
       const weapon = secondAttack ? this.getOffhand() : this.getWeapon();
+      const speedFactor = 250; // ms
 
       const unarmedSpeed    = this._entity.getAttribute('quickness');
-      const weaponSpeed     = getWeaponSpeed(weapon, unarmedSpeed, 500);
-      const attributesSpeed = unarmedSpeed * 500
-        + this._entity.getAttribute('cleverness') * 250;
+      const weaponSpeed     = getWeaponSpeed(weapon, unarmedSpeed, speedFactor);
+      const attributesSpeed = unarmedSpeed * speedFactor
+        + this._entity.getAttribute('cleverness') * (speedFactor / 2);
 
-      const minimum = secondAttack ? 750 : 500;
-      const maximum = Math.max((25 - unarmedSpeed), 10) * 1000;
+      const minimum = speedFactor * (secondAttack ? 20 : 12);
+      const maximum = speedFactor * Math.max((50 - unarmedSpeed), 32);
       const speedWithinBounds = _.setBounds(minimum, maximum);
 
-      const median = maximum / 2;
-      const baseSpeed = Math.min(median - weaponSpeed - attributesSpeed, median);
+      const mean = maximum / 2;
+      const baseSpeed = Math.max(mean - weaponSpeed, 0);
 
       util.log("Their base speed is ", baseSpeed);
 
-      const speed = applyMods(baseSpeed, this.speedMods);
+      const speed = applyMods(baseSpeed, this._entity.speedMods) + Random.inRange(-1000, 1000);
 
       util.log("Their modified speed is ", speed);
 
@@ -226,19 +231,19 @@ function CombatHelper(entity) {
     }
 
   this.getDodgeChance = () => {
-    const bonus = Math.round(Random.inRange(1, this._entity.getAttribute('level'))) * .8;
-    const dodgeSkill = Type.isPlayer(this._entity) ?
-      this._entity.getSkills('dodging')  + bonus :
-      this._entity.getAttribute('speed') + bonus;
-    const parrySkill = Type.isPlayer(this._entity) ?
-      this._entity.getSkills('parrying') :
-      Math.round(this._entity.getAttribute('speed') / 2);
-    const dodgeBonus = Type.isPlayer(this._entity) ?
-      this._entity.getAttribute('quickness')
-      + Math.round(this._entity.getAttribute('cleverness') / 2) :
-      this._entity.getAttribute('level') || 1;
+    const level = this._entity.getAttribute('level');
+    const isPlayer = Type.isPlayer(this._entity);
+    const bonus = Random.inRange(1, Math.max(level, 6)) * .8;
 
-    const dodgeChance = applyMods(dodgeSkill + parrySkill + dodgeBonus, this.dodgeMods);
+    const dodgeSkill = isPlayer ?
+      this._entity.getSkills('dodging')  + bonus :
+      this._entity.getAttribute('dodge') || 1;
+    const parrySkill = isPlayer ?
+      this._entity.getSkills('parrying') :
+      level || 1;
+
+
+    const dodgeChance = applyMods(dodgeSkill + parrySkill + bonus, this._entity.dodgeMods);
     const dodgeWithinBounds = _.setBounds(5, 90);
 
     util.log('Base dodge chance is ', dodgeChance);
@@ -246,13 +251,15 @@ function CombatHelper(entity) {
   }
 
   this.getToHitChance = () => {
+    const level = this._entity.getAttribute('level');
+    const bonus = Random.inRange(1, Math.max(level, 6));
+
     //TODO: Weapon skills related to weapon type?
     //TODO: General combat skills?
-    const bonus = Random.inRange(1, this._entity.getAttribute('level'));
-    const toHitSkill = this._entity.getAttribute('level') + bonus; //For now, 1-20.
+    const toHitSkill = level + bonus; //For now, 1-20.
     const toHitBonus = this._entity.getAttribute('cleverness') + bonus
       + Math.round(this._entity.getAttribute('quickness') / 2  + bonus);
-    const toHitChance = applyMods(toHitSkill + toHitBonus, this.toHitMods);
+    const toHitChance = applyMods(toHitSkill + toHitBonus, this._entity.toHitMods);
     const toHitWithinBounds = _.setBounds(5, 90);
     util.log(this._entity.getShortDesc('en') + ': To hit chance is ', toHitChance);
     return toHitWithinBounds(toHitChance);

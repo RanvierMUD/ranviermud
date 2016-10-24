@@ -46,7 +46,8 @@ const Npcs = function NpcManager() {
         let npc_def;
 				// parse the npc files
 				try {
-          npc_def = require('js-yaml').load(fs.readFileSync(npc_file).toString('utf8'));
+          const npcDefinitionYaml = fs.readFileSync(npc_file).toString('utf8');
+          npc_def = require('js-yaml').load(npcDefinitionYaml);
 				} catch (e) {
 					log("\t\tError loading npc - " + npc_file + ' - ' + e.message);
 					continue;
@@ -111,15 +112,22 @@ const Npcs = function NpcManager() {
   self.get = uid => self.npcs[uid];
 
   /**
+   * proxy Array.find
+   * @param function callback
+   */
+  self.find = callback => _.values(self.npcs).find(callback)
+
+  /**
    * proxy Array.each
    * @param function callback
    */
-  self.each = callback => {
-    for (let npc in self.npcs) {
-      callback(self.npcs[npc]);
-    }
-  };
 
+  self.each = callback => _.values(self.npcs).forEach(callback);
+
+  /**
+   * proxy Array.each with condition
+   * @param function callback
+   */
   self.eachIf = (predicate, callback) => {
     for (let one in self.npcs) {
       const npc = self.npcs[one];
@@ -178,6 +186,8 @@ const Npc = function NpcConstructor(config) {
     self.types = config.types || [];
     self.defenses = {};
     self.inDialogue = false;
+    self.room_description  = config.room_description;
+    self.short_description = config.short_description;
 
     for (const stat in config.attributes || {}) {
       self.attributes[stat] = config.attributes[stat];
@@ -193,12 +203,14 @@ const Npc = function NpcConstructor(config) {
   /**#@+
    * Mutators
    */
-  self.getVnum = () => self.vnum;
-  self.getInv = () => self.inventory;
-  self.getRoom = () => self.room;
-  self.getLocation = self.getRoom;
-  self.getUuid = () => self.uuid;
-  self.getDefenses = () => self.defenses;
+  self.getVnum    = () => self.vnum;
+  self.getUuid    = () => self.uuid;
+
+  self.getInventory = () => self.inventory;
+  self.getRoom      = () => self.room;
+  self.getLocation  = self.getRoom;
+
+  self.getDefenses  = () => self.defenses;
   self.getBodyParts = () => Object.keys(self.defenses);
   self.getAttribute = attr =>
     typeof self.attributes[attr] !== 'undefined' ?
@@ -210,16 +222,13 @@ const Npc = function NpcConstructor(config) {
   self.addType = type => self.types.push(type);
 
   self.setUuid = uid => self.uuid = uid;
-
   self.setRoom = room => self.room = room;
 
   //TODO: Have spawn inventory but also add same inv functionality as player
-  self.setInventory = identifier => self.inventory = identifier;
-  self.setContainer = uid => self.container = uid;
+  self.setInventory = identifier  => self.inventory = identifier;
+  self.setContainer = uid         => self.container = uid;
   self.setAttribute = (attr, val) => self.attributes[attr] = val;
-  self.removeEffect = eff => { delete self.effects[eff]; };
-
-  self.combat = CombatUtil.getHelper(self);
+  self.removeEffect = eff         => { delete self.effects[eff]; };
 
   self.isInCombat       = ()        => self.inCombat.length > 0;
   self.setInCombat      = combatant => self.inCombat.push(combatant);
@@ -232,11 +241,13 @@ const Npc = function NpcConstructor(config) {
   }
 
   self.isPacifist = () => !self.listeners('combat').length;
-  /**#@-*/
 
   self.startDialogue = () => self.inDialogue = true;
   self.endDialogue   = () => self.inDialogue = false;
   self.isInDialogue  = () => self.inDialogue;
+  /**#@-*/
+
+  self.combat = CombatUtil.getHelper(self);
 
   /**
    * Get specific currently applied effect, or all current effects
@@ -276,24 +287,20 @@ const Npc = function NpcConstructor(config) {
    * @param string locale Locale of player
    * @return string Translated string
    */
-  const getTranslatedString = (thing, locale) =>
-    typeof self[thing] === 'string' ?
-      self[thing] :
-      (locale || 'en' in self[thing] ? self[thing][locale || 'en'] : 'UNTRANSLATED - Contact an admin');
 
   /**
    * Get the description, localized if possible
    * @param string locale
    * @return string
    */
-  self.getDescription = locale => getTranslatedString('description', locale);
+  self.getDescription = () => self.description
 
   /**
    * Get the attack, localized if possible
    * @param string locale
    * @return string
    */
-  self.getAttack = locale => getTranslatedString('attack', locale);
+  self.getAttack = () => self.attack;
 
   /**
    * Get the title, localized if possible
@@ -301,7 +308,9 @@ const Npc = function NpcConstructor(config) {
    * @return string
    */ //TODO: Consider passing in player object to see if player recognizes the item
    // //      IS that an observer pattern?
-  self.getShortDesc = locale => getTranslatedString('short_description', locale);
+  self.getShortDesc = () => self.short_description || self.description;
+
+  self.getRoomDesc = () => self.room_description || self.short_description || self.description;
 
   self.getName = () => self.name;
   /**
@@ -321,7 +330,9 @@ const Npc = function NpcConstructor(config) {
    * @return boolean
    */
   self.hasKeyword = (keyword, locale) =>
-    self.getKeywords(locale).some( word => keyword === word );
+    Array.isArray(self.getKeywords(locale)) ?
+      self.getKeywords(locale).some( word => keyword === word ) :
+      self.getKeywords(locale).includes(keyword);
 
   /**
    * Get the damage to sanity an npc can do

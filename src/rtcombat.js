@@ -275,9 +275,9 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
           defender.setAttribute('sanity', 1);
           if (attackerWeaponCanEmit()) {
             attackerWeapon.emit('deathblow', room, attacker, defender, players, hitLocation);
-          } else {
-            attacker.emit('deathblow', room, attacker, defender, players, hitLocation);
           }
+          attacker.emit('deathblow', room, attacker, defender, players, hitLocation);
+
           return combatEnd(Type.isPlayer(attacker));
         }
 
@@ -374,7 +374,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
         ' echo from nearby.'
       );
       players.eachIf(
-        p => p.getLocation() === room.getVnum(),
+        p => p.getLocation() === room.getLocation(),
         p => p.emit('sanityLoss', 'witnessing gruesome death first-hand', 50)
       );
     }

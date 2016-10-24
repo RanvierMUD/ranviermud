@@ -1,3 +1,47 @@
+NEEDFUL THINGS (0.3.4)
+========
+
+This release introduces some enhancements to items, NPCs, and combat, as well as many bugfixes.
+Items now have prerequisites based on your character's attributes. If you character does not meet the prerequisites for an item they have equipped, they face penalties that scale depending on how much they fall short of the prereqs. On the other hand, if they meet all of the prerequisites, they may receive a bonus of some kind.
+
+### Features:
+- Item prerequisites!
+
+### Enhancements:
+- Room descriptions for all items and NPCs.
+- Improved NPC dialogue by properly weighting topics.
+- Added weight to items.
+- Implement weight limit based on character stamina.
+- New weapon added!
+- Added prerequisites to existing weapons.
+- Improve combat balance -- slightly slower pace, less chance that you and an enemy will just constantly dodge each other.
+- Add dodge attribute to NPCs to determine their ability to dodge attacks.
+- Add additional effects to support prerequisite penalties.
+- Make combat modifiers persist even if the player logs off (so they cannot log off to remove item-based penalties)
+
+### Bugfixes:
+- Server would crash on player's death during combat.
+- Stun and charm feats did not work properly anymore.
+- Wielding a weapon in your offhand did not activate custom weapon scripts.
+- Wearing anything did not emit custom item scripts.
+- Removing items was bugged.
+- Dropping an equipped item dropped the item but kept it quipped.
+- Lockpicking would crash the server.
+
+### Technical stuff:
+- Added unit tests for items manager and item class.
+- Refactored item manager/item class.
+- Added array.find proxy for items, NPCs, players, rooms.
+- Added debugChar admin command to spot buggy behavior more easily.
+
+#### COVERAGE:
+
+Statements   : 31.17% ( 911/2923 )
+Branches     : 17.42% ( 208/1194 )
+Functions    : 19.05% ( 32/168 )
+Lines        : 31.65% ( 834/2635 )
+
+
 TALKING BACK (0.3.3)
 ========
 
