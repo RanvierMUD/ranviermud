@@ -47,7 +47,7 @@ var net = require('net'),
  * we'll pass them around via construction as needed
  */
 
-	//storage of main game entities
+// storage of main game entities
 var players,
 	rooms    = new Rooms(),
 	items    = new Items(),
@@ -76,6 +76,9 @@ commander
 	.option('-l, --locale [lang]', 'Default locale for the server', 'en')
 	.option('-v, --verbose', 'Verbose console logging.', true)
 	.parse(process.argv);
+
+// Set debug variable
+process.env['NODE_DEBUG'] = 'net';
 
 /**
  * Do the dirty work
