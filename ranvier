@@ -120,6 +120,8 @@ var init = function (restart_server)
 
 			socket.on('error', err => util.log(err));
 
+			socket.on('uncaughtException', err => util.log('UNCAUGHT: ', err));
+
 			// Register all of the events
 			for (var event in Events.events) {
 				socket.on(event, Events.events[event]);
