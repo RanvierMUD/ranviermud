@@ -18,8 +18,6 @@ exports.listeners = {
       toRoom({ firstPartyMessage, thirdPartyMessage });
 
       const missedPrerequisites = this.checkPrerequisites(player);
-      util.log("EMITTING WIELD ON CUSTOM WEAPON SCRIPT");
-      util.log(this);
 
       missedPrerequisites.forEach(prereq => {
         switch (prereq) {
@@ -39,7 +37,7 @@ exports.listeners = {
         player.warn('You could sow destruction with this.')
         const bonus = Math.ceil((player.getAttribute('stamina') - 6) / 2);
         player.combat.addDamageMod({
-          name: 'chain_whip' + this.getUuid(),
+          name: 'chain_whip ' + this.getUuid(),
           effect: damage => damage + bonus
         });
       }
@@ -60,7 +58,7 @@ exports.listeners = {
       const name = ItemUtil.getPenaltyDesc(this, location, 'encumbered');
 
       player.combat.deleteAllMods(name);
-      player.combat.deleteAllMods('chain_whip' + this.getUuid());
+      player.combat.deleteAllMods('chain_whip ' + this.getUuid());
     }
   },
 
