@@ -442,6 +442,8 @@ TelnetStream.prototype.attachStream = function (sock)
   var buftext = new Buffer(512);
   var buflen  = 0;
 
+  sock.on('error', err => console.error("Telnet Stream Err: ", err));
+
   sock.on('data', function (buf) {
     buf.copy(buftext, buflen);
     buflen += buf.length;
@@ -489,6 +491,11 @@ function Server(connectionListener)
   s.on('connected', connectionListener);
   s.on('error', error => {
     console.error('Error: ', error);
+    console.error('Stack Trace: ', error.stack);
+  });
+
+  s.on('uncaughtException', error => {
+    console.error('Uncaught Error: ', error);
     console.error('Stack Trace: ', error.stack);
   });
 
