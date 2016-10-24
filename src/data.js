@@ -116,6 +116,7 @@ var Data = {
 				var listeners = require(behaviors_dir + subdir + behavior + '.js').listeners;
 				for (var listener in listeners) {
 					// For now do not allow conflicting listeners in behaviors
+          if (listeners[listener]) { return; }
           var handler = listeners[listener](l10n);
 					target.removeAllListeners(listener);
 					target.on(listener, handler);

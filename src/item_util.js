@@ -2,7 +2,9 @@ const util    = require('util');
 const Effects = require('./effects').Effects;
 
 const penalize = (player, item, attr, callback) => {
+  util.log('factor for ' + attr + ' is:');
   const factor = player.getAttribute(attr) / item.getPrerequisite(attr);
+  util.log(factor);
   callback(factor);
 }
 
