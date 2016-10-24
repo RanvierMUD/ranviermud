@@ -56,8 +56,10 @@ exports.listeners = {
         player.getShortDesc('en') + ' stops brandishing the giant chain.'
       ];
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
+      const name = ItemUtil.getPenaltyDesc(this, location, 'encumbered');
 
-      ItemUtil.removeDefaultPenaltes(player, this, location);
+      player.removeEffect(name);
+      player.combat.deleteAllMods(name);
       player.combat.deleteAllMods('chain_whip' + this.getUuid());
     }
   },
