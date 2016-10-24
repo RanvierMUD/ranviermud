@@ -6,8 +6,8 @@
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 257 | Weapon skills related to weapon type?
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 258 | General combat skills?
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
-| /Users/seanodonohue/myForks/ranviermud/src/commands.js | 114 | invis
-| /Users/seanodonohue/myForks/ranviermud/src/commands.js | 165 | Do the same way as above once you extract the admin commands.
+| /Users/seanodonohue/myForks/ranviermud/src/commands.js | 137 | invis
+| /Users/seanodonohue/myForks/ranviermud/src/commands.js | 188 | Do the same way as above once you extract the admin commands.
 | /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 145 | Consider extracting these enums/consts from the main dialogue script file.
 | /Users/seanodonohue/myForks/ranviermud/src/doors.js | 44 | Refactor to use the bound functions in external code.
 | /Users/seanodonohue/myForks/ranviermud/src/effects.js | 4 | Extract into own directory. Too many effects.
@@ -19,8 +19,8 @@
 | /Users/seanodonohue/myForks/ranviermud/src/feats.js | 119 | Extract these to a skills/charm.js file
 | /Users/seanodonohue/myForks/ranviermud/src/feats.js | 429 | Use an event emitter instead.
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 52 | Dynamically pull in list of admins
-| /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 74 | Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
-| /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 80 | Add some kind of bonus.
+| /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 82 | Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
+| /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 88 | Add some kind of bonus.
 | /Users/seanodonohue/myForks/ranviermud/src/items.js | 34 | Extract to Data helper method.
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 15 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 17 | Extract npc from this file like player/player_manager
@@ -28,10 +28,10 @@
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 342 | Put in perception skill helper file
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 353 | Consider using Random.roll instead.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 618 | Use chalk node module to create color-coded logging messages.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 675 | Make a similar function but for NPCs::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 701 | Should go in other module::::::::::::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 712 | Put this as a function in the combatUtils module.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 622 | Use chalk node module to create color-coded logging messages.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 679 | Make a similar function but for NPCs::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 705 | Should go in other module::::::::::::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 716 | Put this as a function in the combatUtils module.
 | /Users/seanodonohue/myForks/ranviermud/src/rooms.js | 3 | Refactor
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 93 | What if they swap weapons mid-fight?
@@ -55,7 +55,7 @@
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 202 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 238 | Extract this to some kind of combat messaging helper?
 | /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 9 | Update to account for prereqs
-| /Users/seanodonohue/myForks/ranviermud/scripts/objects/2-cleaver.js | 9 | Update to account for prereqs
+| /Users/seanodonohue/myForks/ranviermud/scripts/objects/10-chain_whip.js | 68 | Refactor by extracting to functions...
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 15 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 22 | Different messages for different relative amounts of sanity loss.
