@@ -14,5 +14,5 @@
         defense: 1
         wearLocation: 'back'
         weight: 1
-        capacity: 8
+        max_capacity: 8
     load_max: 1
