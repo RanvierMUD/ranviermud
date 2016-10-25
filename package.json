@@ -18,6 +18,7 @@
     "jade": "",
     "jall": "",
     "js-yaml": "",
+    "longjohn": "^0.2.11",
     "node-uuid": "",
     "optimist": "",
     "sprintf": "",
