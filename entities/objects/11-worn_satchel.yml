@@ -1,0 +1,18 @@
+- &worn_satchel
+    vnum: 11
+    short_description:
+        en: "worn satchel"
+    room_description:
+        en: "a cracked leather satchel with a long strap"
+    keywords:
+        en: [ "satchel", "leather", "cracked" ]
+    description:
+        en: "A medium-sized satchel, closed by a buckle. Made of middle-grade leather that has seen quite a bit of use. Sturdy enough to carry a few things, but clearly meant for use by couriers or craftspeople."
+    room: 3
+    behaviors: "wearable"
+    attributes:
+        defense: 1
+        wearLocation: 'back'
+        weight: 1
+        capacity: 8
+    load_max: 1
