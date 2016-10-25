@@ -188,6 +188,8 @@ const Item = function ItemConstructor(config) {
 	self.setAttribute = (attr, val) => self.attributes[attr] = val;
 	/**#@-*/
 
+  self.isContainer = () => !!self.getAttribute('max_capacity');
+
 	/**
 	 * Get the description, localized if possible
 	 * @param string locale
