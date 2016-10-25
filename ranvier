@@ -40,7 +40,8 @@ var net = require('net'),
 	// third party
 	Localize  = require('jall'),
 	argv      = require('optimist').argv,
-	telnet    = require('./src/3rdparty/telnet.js');
+	telnet    = require('./src/3rdparty/telnet.js'),
+	longjohn  = require('longjohn');
 
 /**
  * These aren't really globals, they're only "global" to this file,
