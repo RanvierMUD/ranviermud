@@ -1,3 +1,5 @@
+'use strict';
+
 const Npcs    = require('../../src/npcs').Npcs;
 const Items   = require('../../src/items').Items;
 const Players = require('../../src/player_manager').Players;
