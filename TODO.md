@@ -50,7 +50,7 @@
 | /Users/seanodonohue/myForks/ranviermud/src/status.js | 112 | Use in player/npc class.
 | /Users/seanodonohue/myForks/ranviermud/scripts/behaviors/objects/wearable.js | 6 | Extract to file so that this functionality can be used for other items, and with special bonuses as well?
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
-| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/3-kazuul.js | 75 | Add condition where attacking the kazuul's legs will slow it greatly.
+| /Users/seanodonohue/myForks/ranviermud/scripts/npcs/3-defiler.js | 75 | Add condition where attacking the defiler's legs will slow it greatly.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 202 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 238 | Extract this to some kind of combat messaging helper?
