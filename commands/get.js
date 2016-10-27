@@ -25,7 +25,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const itemFound = CommandUtil.findItemInRoom(items, args, room, player);
     if (!itemFound) {
-      player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+      player.warn('The ' + args + ' could not be found here.');
       return;
     }
     const item = items.get(itemFound);
