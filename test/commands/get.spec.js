@@ -11,7 +11,10 @@ const Npc = require('../../src/npcs').Npc;
 const Type = require('../../src/type').Type;
 Type.config(Player, Npc, {}, {});
 
-const player = new Player();
+const socket = {
+  write: sinon.stub()
+}
+const player = new Player(socket);
 
 const getCmd = require('../../commands/get').command;
 const globals = getGlobals();
@@ -28,11 +31,11 @@ describe('successfully getting something from a room', () => {
 describe('failing to get stuff from a room', () => {
   it('should not let you get things during combat', () => {
     player.setInCombat({});
-    sinon.spy(player, 'sayL10n');
+    sinon.spy(player, 'warn');
     sinon.spy(items, 'get');
     get('thing', player);
-    const call = player.sayL10n.getCall(0);
-    expect(call.args[1]).to.be('GET_COMBAT');
+    const call = player.warn.getCall(0);
+    expect(call.args[0] === "You cannot do that while you're fighting.").to.be.true;
     expect(items.get.called).to.be.false;
   });
 });
