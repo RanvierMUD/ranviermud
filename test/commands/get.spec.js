@@ -1,17 +1,38 @@
 'use strict';
 
 const expect = require('chai').expect;
+const sinon  = require('sinon');
 
 const CommandInjector = require('./command-mock-utils').CommandInjector;
 const getGlobals      = require('./command-mock-utils').getGlobals;
 
 const Player = require('../../src/player').Player;
+const Npc = require('../../src/npcs').Npc;
+const Type = require('../../src/type').Type;
+Type.config(Player, Npc, {}, {});
+
 const player = new Player();
 
 const getCmd = require('../../commands/get').command;
 const globals = getGlobals();
-const get = CommantInjector(getCmd, globals);
+const get = CommandInjector(getCmd, globals);
+
+const [ rooms, items, players, npcs, Commands ] = globals;
+players.addPlayer(player);
+
 
 describe('successfully getting something from a room', () => {
 
+});
+
+describe('failing to get stuff from a room', () => {
+  it('should not let you get things during combat', () => {
+    player.setInCombat({});
+    sinon.spy(player, 'sayL10n');
+    sinon.spy(items, 'get');
+    get('thing', player);
+    const call = player.sayL10n.getCall(0);
+    expect(call.args[1]).to.be('GET_COMBAT');
+    expect(items.get.called).to.be.false;
+  });
 });
