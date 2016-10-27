@@ -33,7 +33,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function tryToPickUp(item) {
       if (inventoryFull(item)) {
-        player.say('You are not able to carry that.');
+        player.warn('You are not able to carry that.');
         return;
       }
       else {
