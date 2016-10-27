@@ -118,7 +118,7 @@ var Rooms = function() {
             room.filename = room_file;
             room.file_index = vnum;
             room = new Room(room);
-            self.rooms[room.getLocation()] = room;
+            self.addRoom(room);
           }
         }
       }
@@ -128,6 +128,8 @@ var Rooms = function() {
       }
     });
   };
+
+  self.addRoom = room => self.rooms[room.getLocation()] = room;
 
   /**
    * Get a room at a specific location
