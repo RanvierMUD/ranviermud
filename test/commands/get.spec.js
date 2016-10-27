@@ -32,7 +32,7 @@ describe('successfully getting something from a room', () => {
 
 });
 
-describe.only('failing to get stuff from a room', () => {
+describe('failing to get stuff from a room', () => {
 
   it('should not let you get things during combat', () => {
     player.setInCombat({});
