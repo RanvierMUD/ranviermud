@@ -18,13 +18,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     let item = CommandUtil.findItemInInventory(args, player, true);
 
     if (!item) {
-      return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+      return player.warn('You cannot drop an item you do not have.');
     }
 
     if (item.isEquipped()) {
       item = CommandUtil.findItemInInventory('2.' + args, player, true) || item;
       if (item.isEquipped()) {
-        return player.sayL10n(l10n, 'ITEM_WORN');
+        return player.warn('You are wearing ' + item.getShortDesc() + ' right now, and cannot drop it.');
       }
     }
 

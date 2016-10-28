@@ -16,6 +16,7 @@ Type.config(Player, Npc, {}, {});
 const socket = {
   write: sinon.stub()
 }
+
 const player = new Player(socket);
 
 const getCmd = require('../../commands/get').command;
@@ -112,7 +113,7 @@ describe('successfully getting something from a room', () => {
     const bulkItems = [
       createItem(['sandwich'], 22),
       createItem(['what'], 9999),
-      createItem(['purdy necklace'], 374) 
+      createItem(['purdy necklace'], 374)
     ];
 
     bulkItems.forEach(item => {
