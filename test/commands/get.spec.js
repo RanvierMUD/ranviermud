@@ -87,7 +87,7 @@ describe('failing to get stuff from a room', () => {
   });
 });
 
-describe.only('successfully getting something from a room', () => {
+describe('successfully getting something from a room', () => {
 
   it('should be able to get a single item', () => {
     const keywords = ['burger'];
@@ -101,6 +101,30 @@ describe.only('successfully getting something from a room', () => {
 
     const inventory = player.getInventory();
     expect(inventory.includes(burger)).to.be.true;
+  });
+
+  it('should be able to try to get all items', () => {
+    const createItem = (keywords, uuid) => {
+      const location = 2;
+      return new Item({ keywords, uuid, location });
+    };
+
+    const bulkItems = [
+      createItem(['sandwich'], 22),
+      createItem(['what'], 9999),
+      createItem(['purdy necklace'], 374) 
+    ];
+
+    bulkItems.forEach(item => {
+      items.addItem(item);
+      newRoom.addItem(item.getUuid());
+    });
+
+    get('all', player);
+
+    const inventory = player.getInventory();
+    expect(bulkItems.every( item => inventory.includes(item) )).to.be.true;
+
   });
 
 });
