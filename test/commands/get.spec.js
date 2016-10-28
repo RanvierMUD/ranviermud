@@ -64,11 +64,10 @@ describe('failing to get stuff from a room', () => {
     const heavyItem = new Item(heavyItemConfig);
     items.addItem(heavyItem); //TODO: Make this consistent. Room shouldn't need the uuid passed, should just get it.
     newRoom.addItem(heavyItem.getUuid());
+
     get('burrito', player);
 
     const call = player.warn.getCall(2);
-    console.log('infinite heavy:', call.args[0]);
-
     expect(call.args[0] === "You are not able to carry that.").to.be.true;
   });
 
@@ -84,12 +83,11 @@ describe('failing to get stuff from a room', () => {
     get('taco', player);
 
     const call = player.warn.getCall(3);
-    console.log('very heavy:', call.args[0]);
     expect(call.args[0] === "You are not able to carry that.").to.be.true;
   });
 });
 
-describe('successfully getting something from a room', () => {
+describe.only('successfully getting something from a room', () => {
 
   it('should be able to get a single item', () => {
     const keywords = ['burger'];
@@ -101,8 +99,8 @@ describe('successfully getting something from a room', () => {
 
     get('burger', player);
 
-    expect(player.getInventory().includes(uuid)).to.be.true;
-
+    const inventory = player.getInventory();
+    expect(inventory.includes(burger)).to.be.true;
   });
 
 });
