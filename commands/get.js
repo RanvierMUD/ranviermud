@@ -11,7 +11,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     // No picking stuff up in combat
     if (player.isInCombat()) {
-      player.sayL10n(l10n, 'GET_COMBAT');
+      player.warn("You cannot do that while you're fighting.");
       return;
     }
 
@@ -25,7 +25,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const itemFound = CommandUtil.findItemInRoom(items, args, room, player);
     if (!itemFound) {
-      player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+      player.warn('The ' + args + ' could not be found here.');
       return;
     }
     const item = items.get(itemFound);
@@ -33,7 +33,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function tryToPickUp(item) {
       if (inventoryFull(item)) {
-        player.say('You are not able to carry that.');
+        player.warn('You are not able to carry that.');
         return;
       }
       else {
@@ -57,8 +57,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function getAllItems(room) {
-      const items = room.getItems().map( id => items.get(id) );
-      items.forEach( item => tryToPickUp(item) );
+      const itemsInRoom = room.getItems().map( id => items.get(id) );
+      itemsInRoom.forEach( item => tryToPickUp(item) );
     }
 
     //TODO: Change to calculate based on character's strength and pack size vs. item weight/size.
@@ -74,7 +74,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function tooHeavy(inventory, item) {
       const itemWeight = item.getAttribute('weight');
       if (itemWeight === Infinity) { return true; }
-      const carriedWeight  = inventory.reduce((sum, item) => item.getAttribute('weight') + sum , 0);
+      const carriedWeight = inventory.reduce((sum, item) => item.getAttribute('weight') + sum , 0);
 
       // TODO: Put carrying capacity method on player obj.
       const maxCarryWeight = 10 + player.getAttribute('stamina') + player.getAttribute('level');
