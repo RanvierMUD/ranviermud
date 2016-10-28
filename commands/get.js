@@ -57,8 +57,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function getAllItems(room) {
-      const items = room.getItems().map( id => items.get(id) );
-      items.forEach( item => tryToPickUp(item) );
+      const itemsInRoom = room.getItems().map( id => items.get(id) );
+      itemsInRoom.forEach( item => tryToPickUp(item) );
     }
 
     //TODO: Change to calculate based on character's strength and pack size vs. item weight/size.
@@ -74,7 +74,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function tooHeavy(inventory, item) {
       const itemWeight = item.getAttribute('weight');
       if (itemWeight === Infinity) { return true; }
-      const carriedWeight  = inventory.reduce((sum, item) => item.getAttribute('weight') + sum , 0);
+      const carriedWeight = inventory.reduce((sum, item) => item.getAttribute('weight') + sum , 0);
 
       // TODO: Put carrying capacity method on player obj.
       const maxCarryWeight = 10 + player.getAttribute('stamina') + player.getAttribute('level');
