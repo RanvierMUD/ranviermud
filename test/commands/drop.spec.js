@@ -27,7 +27,7 @@ const [ rooms, items, players, npcs, Commands ] = globals;
 
 sinon.spy(player, 'warn');
 
-describe.only('failing to drop items', () => {
+describe('failing to drop items', () => {
 
   it('should not let you drop an item you do not have', () => {
 
@@ -56,8 +56,23 @@ describe.only('failing to drop items', () => {
 
 describe('successfully dropping items', () => {
 
-  it('should let you drop one at a time if you have it in inventory...', () => {
+  const location = 7;
+  const newRoom = new Room({ location });
+  rooms.addRoom(newRoom);
+  player.setLocation(location);
 
+  it('should let you drop one at a time if you have it in inventory...', () => {
+    const uuid = "potato";
+    const keywords = ["potato"];
+    const potato = new Item({ uuid, keywords, location });
+    items.addItem(potato);
+    player.addItem(potato);
+
+    drop('potato', player);
+
+    const inventory = player.getInventory();
+    expect(inventory.includes(potato)).to.be.false;
+    expect(newRoom.getItems().includes(uuid)).to.be.true;
   });
 
 });
