@@ -5,6 +5,7 @@ const sinon  = require('sinon');
 
 const CommandInjector = require('./command-mock-utils').CommandInjector;
 const getGlobals      = require('./command-mock-utils').getGlobals;
+const addItem         = require('./command-mock-utils').addItem;
 
 const Player = require('../../src/player').Player;
 const Npc = require('../../src/npcs').Npc;
@@ -64,15 +65,17 @@ describe('successfully dropping items', () => {
   it('should let you drop one at a time if you have it in inventory...', () => {
     const uuid = "potato";
     const keywords = ["potato"];
-    const potato = new Item({ uuid, keywords, location });
-    items.addItem(potato);
-    player.addItem(potato);
+    const potato = addItem({ uuid, keywords, items, player });
 
     drop('potato', player);
 
     const inventory = player.getInventory();
     expect(inventory.includes(potato)).to.be.false;
     expect(newRoom.getItems().includes(uuid)).to.be.true;
+  });
+
+  it('should let you drop a ton of items at once', () => {
+
   });
 
 });
