@@ -56,13 +56,13 @@
 | /Users/seanodonohue/myForks/ranviermud/scripts/npcs/5-feline.js | 238 | Extract this to some kind of combat messaging helper?
 | /Users/seanodonohue/myForks/ranviermud/scripts/objects/1-shiv.js | 9 | Update to account for prereqs
 | /Users/seanodonohue/myForks/ranviermud/scripts/objects/10-chain_whip.js | 68 | Refactor by extracting to functions...
-| /Users/seanodonohue/myForks/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 15 | Use this for all sanity loss incidents.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 22 | Different messages for different relative amounts of sanity loss.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 98 | Emit sanity loss event here if applicable.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 115 | Extract all stuff for determining stat gain into level utils.
 | /Users/seanodonohue/myForks/ranviermud/scripts/player/player.js | 177 | Permadeath, add it.
+| /Users/seanodonohue/myForks/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 64 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 79 | Put carrying capacity method on player obj.
 | /Users/seanodonohue/myForks/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)

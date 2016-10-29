@@ -40,7 +40,7 @@ const addItem = ({
 
     const item = new Item({ uuid, keywords, location, wearLocation, short_description });
     items.addItem(item);
-    if (room) { room.addItem(item); }
+    if (room) { room.addItem(item.getUuid()); }
     if (player) { player.addItem(item); }
     if (equipped) {
       wearLocation = wearLocation || item.getAttribute('wearLocation');
@@ -49,6 +49,11 @@ const addItem = ({
     return item;
 }
 
+const getCallCounter = fn => {
+  let counter = 0;
+  return () => fn.getCall(counter++);
+};
+
 module.exports = {
-  CommandInjector, getGlobals, addItem
+  CommandInjector, getGlobals, addItem, getCallCounter
 };
