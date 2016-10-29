@@ -28,28 +28,32 @@ const [ rooms, items, players, npcs, Commands ] = globals;
 
 sinon.spy(player, 'warn');
 
-describe('failing to drop items', () => {
+const getCallCounter = fn => {
+  let counter = 0;
+  return () => fn.getCall(counter++);
+};
+
+const getWarnCall = getCallCounter(player.warn);
+
+describe.only('failing to drop items', () => {
 
   it('should not let you drop an item you do not have', () => {
 
     drop('potato', player);
-    const call = player.warn.getCall(0);
+    const call = getWarnCall()
     expect(call.args[0] === 'You cannot drop an item you do not have.').to.be.true;
   });
 
   it('should not let you drop something you are wearing', () => {
     const wearLocation = 'body';
-    const keywords = ['armor'];
-    const uuid = 'armor';
+    const keywords     = ['armor'];
+    const uuid         = 'armor';
     const short_description = 'armor';
-    const armor = new Item({ uuid, wearLocation, keywords, short_description });
-    items.addItem(armor);
-    player.addItem(armor);
-    player.equip('body', armor);
+    const armor = addItem({ items, player, equipped: true, short_description, keywords, uuid });
 
     drop('armor', player);
 
-    const call = player.warn.getCall(1);
+    const call = getWarnCall();
     expect(call.args[0] === 'You are wearing armor right now, and cannot drop it.').to.be.true;
   });
 

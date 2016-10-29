@@ -41,7 +41,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       let playerName = player.getName();
 
       if (item.isEquipped()) {
-        return player.sayL10n(l10n, 'ITEM_WORN');
+        return player.warn('You are wearing ' + item.getShortDesc() + ' right now, and cannot drop it.');
       }
 
       players.eachIf(

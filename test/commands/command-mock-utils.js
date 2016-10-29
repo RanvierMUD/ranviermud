@@ -42,7 +42,8 @@ const addItem = ({
     items.addItem(item);
     if (room) { room.addItem(item); }
     if (player) { player.addItem(item); }
-    if (equipped && wearLocation) {
+    if (equipped) {
+      wearLocation = wearLocation || item.getAttribute('wearLocation');
       player.equip(wearLocation, item);
     }
     return item;
