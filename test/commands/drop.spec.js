@@ -6,6 +6,7 @@ const sinon  = require('sinon');
 const CommandInjector = require('./command-mock-utils').CommandInjector;
 const getGlobals      = require('./command-mock-utils').getGlobals;
 const addItem         = require('./command-mock-utils').addItem;
+const getCallCounter  = require('./command-mock-utils').getCallCounter;
 
 const Player = require('../../src/player').Player;
 const Npc = require('../../src/npcs').Npc;
@@ -27,11 +28,6 @@ const drop = CommandInjector(dropCmd, globals);
 const [ rooms, items, players, npcs, Commands ] = globals;
 
 sinon.spy(player, 'warn');
-
-const getCallCounter = fn => {
-  let counter = 0;
-  return () => fn.getCall(counter++);
-};
 
 const getWarnCall = getCallCounter(player.warn);
 
