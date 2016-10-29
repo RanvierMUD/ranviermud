@@ -5,6 +5,8 @@ const sinon  = require('sinon');
 
 const CommandInjector = require('./command-mock-utils').CommandInjector;
 const getGlobals      = require('./command-mock-utils').getGlobals;
+const addItem         = require('./command-mock-utils').addItem;
+const getCallCounter  = require('./command-mock-utils').getCallCounter;
 
 const Player = require('../../src/player').Player;
 const Npc = require('../../src/npcs').Npc;
@@ -16,6 +18,7 @@ Type.config(Player, Npc, {}, {});
 const socket = {
   write: sinon.stub()
 }
+
 const player = new Player(socket);
 
 const getCmd = require('../../commands/get').command;
@@ -27,10 +30,11 @@ players.addPlayer(player);
 
 sinon.spy(player, 'warn');
 sinon.spy(items, 'get');
+const getWarnCall = getCallCounter(player.warn);
 
 const location = 2;
-const newRoom = new Room({ location });
-rooms.addRoom(newRoom);
+const room = new Room({ location });
+rooms.addRoom(room);
 player.setLocation(location);
 
 describe('failing to get stuff from a room', () => {
@@ -40,7 +44,7 @@ describe('failing to get stuff from a room', () => {
 
     get('thing', player);
 
-    const call = player.warn.getCall(0);
+    const call = getWarnCall();
     expect(call.args[0] === "You cannot do that while you're fighting.").to.be.true;
     expect(items.get.called).to.be.false;
 
@@ -51,7 +55,7 @@ describe('failing to get stuff from a room', () => {
 
     get('potatos', player);
 
-    const call = player.warn.getCall(1);
+    const call = getWarnCall();
     expect(items.get.called).to.be.false;
     expect(call.args[0] === 'The potatos could not be found here.').to.be.true;
   });
@@ -61,13 +65,11 @@ describe('failing to get stuff from a room', () => {
     const keywords = ['burrito'];
     const uuid = 'wat';
     const heavyItemConfig = { name: 'burrito', keywords, attributes, location, uuid };
-    const heavyItem = new Item(heavyItemConfig);
-    items.addItem(heavyItem); //TODO: Make this consistent. Room shouldn't need the uuid passed, should just get it.
-    newRoom.addItem(heavyItem.getUuid());
+    const heavyItem = addItem(Object.assign({ items, room }, heavyItemConfig));
 
     get('burrito', player);
 
-    const call = player.warn.getCall(2);
+    const call = getWarnCall();
     expect(call.args[0] === "You are not able to carry that.").to.be.true;
   });
 
@@ -76,13 +78,11 @@ describe('failing to get stuff from a room', () => {
     const keywords = ['taco'];
     const uuid = 'hokay';
     const heavyItemConfig = { name: 'taco', keywords, attributes, location, uuid };
-    const heavyItem = new Item(heavyItemConfig);
-    items.addItem(heavyItem); //TODO: Make this consistent. Room shouldn't need the uuid passed, should just get it.
-    newRoom.addItem(heavyItem.getUuid());
+    const heavyItem = addItem(Object.assign({ items, room }, heavyItemConfig));
 
     get('taco', player);
 
-    const call = player.warn.getCall(3);
+    const call = getWarnCall();
     expect(call.args[0] === "You are not able to carry that.").to.be.true;
   });
 });
@@ -93,9 +93,7 @@ describe('successfully getting something from a room', () => {
     const keywords = ['burger'];
     const uuid = 'ham';
     const burgerConfig = { name: 'burger', keywords, uuid, location }
-    const burger = new Item(burgerConfig);
-    items.addItem(burger);
-    newRoom.addItem(burger.getUuid());
+    const burger = addItem(Object.assign({ items, room }, burgerConfig));
 
     get('burger', player);
 
@@ -106,19 +104,14 @@ describe('successfully getting something from a room', () => {
   it('should be able to try to get all items', () => {
     const createItem = (keywords, uuid) => {
       const location = 2;
-      return new Item({ keywords, uuid, location });
+      return addItem({ keywords, uuid, location, items, room });
     };
 
     const bulkItems = [
       createItem(['sandwich'], 22),
       createItem(['what'], 9999),
-      createItem(['purdy necklace'], 374) 
+      createItem(['purdy necklace'], 374)
     ];
-
-    bulkItems.forEach(item => {
-      items.addItem(item);
-      newRoom.addItem(item.getUuid());
-    });
 
     get('all', player);
 
