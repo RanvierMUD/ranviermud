@@ -58,8 +58,8 @@ describe.only('failing to drop items', () => {
 describe('successfully dropping items', () => {
 
   const location = 7;
-  const newRoom = new Room({ location });
-  rooms.addRoom(newRoom);
+  const room = new Room({ location });
+  rooms.addRoom(room);
   player.setLocation(location);
 
   it('should let you drop one at a time if you have it in inventory...', () => {
@@ -71,10 +71,37 @@ describe('successfully dropping items', () => {
 
     const inventory = player.getInventory();
     expect(inventory.includes(potato)).to.be.false;
-    expect(newRoom.getItems().includes(uuid)).to.be.true;
+    expect(room.getItems().includes(uuid)).to.be.true;
   });
 
   it('should let you drop a ton of items at once', () => {
+    const ham = addItem({
+      uuid: 'ham',
+      keywords: ['ham', 'sandwich'],
+      items,
+      player
+    });
+    const sunglasses = addItem({
+      uuid: 'sg',
+      keywords: ['sun'],
+      items,
+      player
+    });
+    const vest = addItem({
+      uuid: 'vest',
+      keywords: ['vest'],
+      items,
+      player
+    });
+
+    drop('all', player);
+
+    const roomItems = room.getItems();
+    const inventory = player.getInventory();
+    [ ham, sunglasses, vest ].forEach( item => {
+      expect(inventory.includes(item)).to.be.false;
+      expect(roomItems.includes(item.getUuid())).to.be.true;
+    });
 
   });
 
