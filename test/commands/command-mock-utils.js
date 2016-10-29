@@ -30,6 +30,7 @@ const addItem = ({
   location = 1,
   wearLocation,
   short_description,
+  attributes,
   room,
   player,
   items,
@@ -38,7 +39,7 @@ const addItem = ({
     if (!items) { throw new Error('You need to pass in the items manager...'); }
     if (room && player) { throw new Error('You can not place the item in a room and in an inventory at the same time.'); }
 
-    const item = new Item({ uuid, keywords, location, wearLocation, short_description });
+    const item = new Item({ attributes, uuid, keywords, location, wearLocation, short_description });
     items.addItem(item);
     if (room) { room.addItem(item.getUuid()); }
     if (player) { player.addItem(item); }
