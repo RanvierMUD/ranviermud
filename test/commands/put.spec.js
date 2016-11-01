@@ -5,7 +5,7 @@ const expect = require('chai').expect;
 const CommandInjector = require('./command-mock-utils').CommandInjector;
 const getGlobals      = require('./command-mock-utils').getGlobals;
 
-const Room = require('../../src/rooms').Room;
+const Room   = require('../../src/rooms').Room;
 const Player = require('../../src/player').Player;
 
 const putCmd = require('../../commands/put').command;
@@ -16,7 +16,8 @@ const put = CommandInjector(putCmd, globals);
 
 const [ rooms, items, players, npcs, Commands ] = globals;
 const location = 22;
-const player = new Player({});
+const socket = { write: function() {} };
+const player = new Player(socket);
 player.setLocation(location);
 
 const room = new Room({ location });
