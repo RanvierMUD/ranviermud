@@ -13,4 +13,9 @@
         weight: 200
         max_size_capacity: 32
         max_weight_capacity: 100
+    inventory:
+      - 3
+      - 4
+      - 5
+      - 7
     load_max: 1

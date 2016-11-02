@@ -8,7 +8,6 @@
         en: [ "leather boots", "boots", "shoes" ]
     description:
         en: "A pair of sturdy leather boots."
-    room: 5
     behaviors: "wearable"
     attributes:
         defense: 3
