@@ -8,7 +8,6 @@
         en: [ "harem pants", "pants", "harem" ]
     description:
         en: "A pair of royal crimson harem pants with an elastic waist. The material appears smooth, with a subtle sheen."
-    room: 7
     behaviors: "wearable"
     attributes:
         defense: 1

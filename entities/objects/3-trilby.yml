@@ -8,7 +8,6 @@
         en: [ "trilby", "hat" ]
     description:
         en: "A roughly worn brimmed hat. The top of it is dented in several spots and its ribbon is in tatters."
-    room: 5
     behaviors: "wearable"
     attributes:
         defense: 1
