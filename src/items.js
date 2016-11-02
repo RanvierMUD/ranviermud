@@ -26,14 +26,15 @@ const Items = function ItemsManager() {
     const debug = message => { if (verbose) util.debug(message); };
 
 		log("\tExamining object directory - " + objects_dir);
-		const objects = fs.readdir(objects_dir, (err, files) =>
-		{
-			// Load any object files
+		const objects = fs.readdir(objects_dir, (err, files) => {
+
+      // Load any object files
 			for (let j in files) {
 				const object_file = objects_dir + files[j];
+
         //TODO: Extract to Data helper method.
-				if (!fs.statSync(object_file).isFile()) continue;
-				if (!object_file.match(/yml$/)) continue;
+				if (!fs.statSync(object_file).isFile()) { continue; }
+				if (!object_file.match(/yml$/)) { continue; }
 
 				// parse the object files
         let objectDefinitions = [];
@@ -50,7 +51,7 @@ const Items = function ItemsManager() {
 				objectDefinitions.forEach(object => {
 					const validate = ['keywords', 'short_description', 'vnum'];
 
-					for (var v in validate) {
+					for (let v in validate) {
 						if (!(validate[v] in object)) {
               throw new ReferenceError('Error loading object in file ' + object + ' - no ' + validate[v] + ' specified')
 						}
@@ -65,6 +66,7 @@ const Items = function ItemsManager() {
 
 					const newObject = new Item(object);
 					newObject.setUuid(uuid.v4());
+          self.spawnContainerInventory(newObject);
 					log("\t\tLoaded item [uuid:" + newObject.getUuid() + ', vnum:' + newObject.vnum + ']');
 					self.addItem(newObject);
 				});
@@ -74,6 +76,16 @@ const Items = function ItemsManager() {
 		});
 
 	};
+
+  //TODO: Account for persisted items eventually (uuids rather than vnums)
+  self.spawnContainerInventory = item => {
+    const containerInventory = item
+      .getInventory()
+      .map(vnum => {
+        const itemDefinition = Data.loadItemByVnum(vnum);
+
+      });
+  }
 
 	/**
 	 * Add an item and generate a uuid if necessary
@@ -96,7 +108,7 @@ const Items = function ItemsManager() {
 	self.getByVnum = vnum => self.filter(obj => obj.getVnum() === vnum);
 
 	/**
-	 * retreive an instance of an object by uuid
+	 * retrieve an instance of an object by uuid
 	 * @param string uid
 	 * @return Item
 	 */
@@ -155,7 +167,6 @@ const Item = function ItemConstructor(config) {
 		self.script            = config.script      || null;
 		self.attributes        = config.attributes    || {};
     self.prerequisites     = config.prerequisites || {};
-
 
     if (self !== null) {
 		  Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
