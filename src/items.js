@@ -66,9 +66,7 @@ const Items = function ItemsManager() {
 
 					const newObject = new Item(object);
 					newObject.setUuid(uuid.v4());
-          if (newObject.inventory) {
-            self.spawnContainerInventory(newObject);
-          }
+
 					log("\t\tLoaded item [uuid:" + newObject.getUuid() + ', vnum:' + newObject.vnum + ']');
 					self.addItem(newObject);
 				});
@@ -77,18 +75,26 @@ const Items = function ItemsManager() {
 			if (callback) { callback(); }
 		});
 
+    objects.forEach(item => {
+      if (item.inventory) {
+        log("Loading inventory [container: " + item.getUuid() + " vnum: " + item.getVnum() + "]");
+        self.spawnContainerInventory(item);
+      }
+    });
+
 	};
 
   //TODO: Account for persisted items eventually (uuids rather than vnums)
-  self.spawnContainerInventory = (item, config) => {
-    const containerVnum = item.getVnum();
+  self.spawnContainerInventory = (container, config) => {
+    const containerVnum = container.getVnum();
+    const retrieveInventoryItemByVnum = vnum => self.getByVnum(vnum)
+      .filter(item => containerVnum === item.getContainer()));
 
-    const containerInventory = item
-      .getInventory()
-      .map(vnum => self
-          .getByVnum(vnum)
-          .filter(item => containerVnum === item.getContainer())
-      );
+    const containerInventory = container.getInventory()
+      .map(retrieveInventoryItemByVnum)
+      .forEach(item => item.setContainer(container.getUuid()));
+
+    container.setInventory(containerInventory.map(item => item.getUuid()));
   }
 
 	/**
