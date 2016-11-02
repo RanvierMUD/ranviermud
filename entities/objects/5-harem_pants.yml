@@ -16,3 +16,4 @@
     prerequisites:
         quickness: 2
     load_max: 1
+    container: 12

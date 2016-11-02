@@ -26,7 +26,7 @@ const Items = function ItemsManager() {
     const debug = message => { if (verbose) util.debug(message); };
 
 		log("\tExamining object directory - " + objects_dir);
-		const objects = fs.readdir(objects_dir, (err, files) => {
+    fs.readdir(objects_dir, (err, files) => {
 
       // Load any object files
 			for (let j in files) {
@@ -70,31 +70,44 @@ const Items = function ItemsManager() {
 					log("\t\tLoaded item [uuid:" + newObject.getUuid() + ', vnum:' + newObject.vnum + ']');
 					self.addItem(newObject);
 				});
+
 			}
+
+      log("Loading inventories into containers...");
+      self.each(item => {
+        if (item.inventory) {
+          log("Loading inventory [container: " + item.getUuid() + " vnum: " + item.getVnum() + "]");
+          self.spawnContainerInventory(item);
+        }
+      });
 
 			if (callback) { callback(); }
 		});
-
-    objects.forEach(item => {
-      if (item.inventory) {
-        log("Loading inventory [container: " + item.getUuid() + " vnum: " + item.getVnum() + "]");
-        self.spawnContainerInventory(item);
-      }
-    });
 
 	};
 
   //TODO: Account for persisted items eventually (uuids rather than vnums)
   self.spawnContainerInventory = (container, config) => {
     const containerVnum = container.getVnum();
-    const retrieveInventoryItemByVnum = vnum => self.getByVnum(vnum)
-      .filter(item => containerVnum === item.getContainer()));
 
-    const containerInventory = container.getInventory()
-      .map(retrieveInventoryItemByVnum)
-      .forEach(item => item.setContainer(container.getUuid()));
+    const hydrateContentsByVnum = vnum => {
+      const items = self
+        .getByVnum(vnum)
+        .filter(item => containerVnum === item.getContainer());
+      items.forEach(item => item.setContainer(container.getUuid()));
+      util.log("THESE ITEMS ARE IN IT: ", items);
+      return items;
+    }
 
-    container.setInventory(containerInventory.map(item => item.getUuid()));
+    const containerItems = container
+      .getInventory()
+      .map(hydrateContentsByVnum);
+
+    const containerInventory = _
+      .flatten(containerItems)
+      .map(item => item.getUuid());
+
+    container.setInventory(containerInventory);
   }
 
 	/**
@@ -165,9 +178,8 @@ const Item = function ItemConstructor(config) {
 	self.init = config => {
 		self.short_description = config.short_description || '';
     self.room_description  = config.room_description  || '';
-    self.keywords          = config.keywords    || [];
+    self.keywords          = config.keywords    || []; // Required
 		self.description       = config.description || '';
-		self.inventory         = config.inventory   || null;
 		self.room              = config.room        || null;
 		self.npc_held          = config.npc_held    || false;
 		self.equipped          = config.equipped    || false;
@@ -177,6 +189,8 @@ const Item = function ItemConstructor(config) {
 		self.script            = config.script      || null;
 		self.attributes        = config.attributes    || {};
     self.prerequisites     = config.prerequisites || {};
+
+    self.inventory = config.inventory || (self.isContainer() ? [] : null);
 
     if (self !== null) {
 		  Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
@@ -209,7 +223,7 @@ const Item = function ItemConstructor(config) {
 	self.setAttribute = (attr, val) => self.attributes[attr] = val;
 	/**#@-*/
 
-  self.isContainer = () => !!self.getAttribute('max_capacity');
+  self.isContainer = () => self.getAttribute('max_size_capacity') && self.getAttribute('max_weight_capacity');
 
 	/**
 	 * Get the description, localized if possible

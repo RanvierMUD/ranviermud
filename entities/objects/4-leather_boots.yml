@@ -14,3 +14,4 @@
         wearLocation: 'feet'
         weight: 2
     load_max: 1
+    container: 12
