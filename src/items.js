@@ -201,7 +201,7 @@ const Item = function ItemConstructor(config) {
 
 	self.setUuid      = uid   => self.uuid      = uid;
 	self.setRoom      = room  => self.room      = room;
-	self.setInventory = id    => self.inventory = id; //TODO: Maybe inventory should be array of ids?
+	self.setInventory = ids   => self.inventory = ids;
 	self.setNpcHeld   = held  => self.npc_held  = held;
 	self.setContainer = uid   => self.container = uid;
 	self.setEquipped  = equip => self.equipped  = !!equip;

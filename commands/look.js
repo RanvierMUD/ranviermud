@@ -16,6 +16,8 @@ const _     = require('../src/helpers');
 
 l10n.throwOnMissingTranslation(false);
 
+//TODO: Test and refactor.
+
 exports.command = (rooms, items, players, npcs, Commands) => {
 
   return (args, player, hasExplored) => {
@@ -24,6 +26,24 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     if (args) {
       args = args.toLowerCase();
+
+      const lookingInContainer = args.indexOf(' in ') > -1;
+
+      if (lookingInContainer) {
+        const containerTarget = args.split(' in ')[1];
+        const found = CommandUtil.findItemInRoom(items, containerTarget, room, player, true);
+        if (found && found.isContainer()) {
+          player.say(found.getRoomDesc(locale));
+          player.say(wrap(found.getDescription(locale), 80));
+          player.say("<bold>CONTENTS: </bold>");
+          found.getInventory()
+            .forEach(uid => {
+              const item = items.get(uid);
+              player.say('<cyan> - ' + item.getRoomDesc(locale) + '</cyan>');
+            });
+          return;
+        }
+      }
 
       // Look at items in the room first
       let thing = CommandUtil.findItemInRoom(items, args, room, player,
