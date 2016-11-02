@@ -29,6 +29,8 @@ const values = obj => {
 
 const toArray = thing => [].concat(thing);
 
+const flatten = nestedArrays => [].concat.apply([], nestedArrays);
+
 /**
  * Does the object have an array of keys?
  */
@@ -95,5 +97,5 @@ module.exports = {
   hasKeys,   leftPad,
   values,    reduceValues,
   setBounds, is,
-  toArray,
+  toArray,   flatten
 };
