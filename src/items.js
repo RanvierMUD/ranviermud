@@ -95,7 +95,6 @@ const Items = function ItemsManager() {
         .getByVnum(vnum)
         .filter(item => containerVnum === item.getContainer());
       items.forEach(item => item.setContainer(container.getUuid()));
-      util.log("THESE ITEMS ARE IN IT: ", items);
       return items;
     }
 
