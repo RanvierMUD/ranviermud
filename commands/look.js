@@ -16,6 +16,8 @@ const _     = require('../src/helpers');
 
 l10n.throwOnMissingTranslation(false);
 
+//TODO: Test and refactor.
+
 exports.command = (rooms, items, players, npcs, Commands) => {
 
   return (args, player, hasExplored) => {
@@ -28,6 +30,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       // Look at items in the room first
       let thing = CommandUtil.findItemInRoom(items, args, room, player,
         true);
+
+      if (thing) util.log('found an item');
 
       if (!thing) {
         // Then the inventory
@@ -91,8 +95,25 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       player.say(wrap(thing.getDescription(locale), 80));
       if (Type.isPlayer(thing)) { showPlayerEquipment(thing, player); }
-
+      if (Type.isItem(thing) && thing.isContainer()) {
+        util.log("THE THING IS AN ITEM!");
+        showContainerContents(thing, player);
+      }
       return;
+    }
+
+    function showContainerContents(container, player) {
+      player.say("<bold>CONTENTS: </bold>");
+      const contents = container.getInventory();
+      util.log('contents:', contents);
+      if (!contents.length) {
+        return player.say('<cyan>empty</cyan>');
+      }
+
+      contents.forEach(uid => {
+          const item = items.get(uid);
+          player.say('<cyan> - ' + item.getRoomDesc(locale) + '</cyan>');
+        });
     }
 
     if (!room) {

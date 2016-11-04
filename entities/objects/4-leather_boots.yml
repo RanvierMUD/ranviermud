@@ -8,10 +8,10 @@
         en: [ "leather boots", "boots", "shoes" ]
     description:
         en: "A pair of sturdy leather boots."
-    room: 5
     behaviors: "wearable"
     attributes:
         defense: 3
         wearLocation: 'feet'
         weight: 2
     load_max: 1
+    container: 12

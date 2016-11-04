@@ -26,14 +26,15 @@ const Items = function ItemsManager() {
     const debug = message => { if (verbose) util.debug(message); };
 
 		log("\tExamining object directory - " + objects_dir);
-		const objects = fs.readdir(objects_dir, (err, files) =>
-		{
-			// Load any object files
+    fs.readdir(objects_dir, (err, files) => {
+
+      // Load any object files
 			for (let j in files) {
 				const object_file = objects_dir + files[j];
+
         //TODO: Extract to Data helper method.
-				if (!fs.statSync(object_file).isFile()) continue;
-				if (!object_file.match(/yml$/)) continue;
+				if (!fs.statSync(object_file).isFile()) { continue; }
+				if (!object_file.match(/yml$/)) { continue; }
 
 				// parse the object files
         let objectDefinitions = [];
@@ -50,7 +51,7 @@ const Items = function ItemsManager() {
 				objectDefinitions.forEach(object => {
 					const validate = ['keywords', 'short_description', 'vnum'];
 
-					for (var v in validate) {
+					for (let v in validate) {
 						if (!(validate[v] in object)) {
               throw new ReferenceError('Error loading object in file ' + object + ' - no ' + validate[v] + ' specified')
 						}
@@ -65,15 +66,48 @@ const Items = function ItemsManager() {
 
 					const newObject = new Item(object);
 					newObject.setUuid(uuid.v4());
+
 					log("\t\tLoaded item [uuid:" + newObject.getUuid() + ', vnum:' + newObject.vnum + ']');
 					self.addItem(newObject);
 				});
+
 			}
+
+      log("Loading inventories into containers...");
+      self.each(item => {
+        if (item.inventory) {
+          log("Loading inventory [container: " + item.getUuid() + " vnum: " + item.getVnum() + "]");
+          self.spawnContainerInventory(item);
+        }
+      });
 
 			if (callback) { callback(); }
 		});
 
 	};
+
+  //TODO: Account for persisted items eventually (uuids rather than vnums)
+  self.spawnContainerInventory = (container, config) => {
+    const containerVnum = container.getVnum();
+
+    const hydrateContentsByVnum = vnum => {
+      const items = self
+        .getByVnum(vnum)
+        .filter(item => containerVnum === item.getContainer());
+      items.forEach(item => item.setContainer(container.getUuid()));
+      return items;
+    }
+
+    const containerItems = container
+      .getInventory()
+      .map(hydrateContentsByVnum);
+
+    const containerInventory = _
+      .flatten(containerItems)
+      .map(item => item.getUuid());
+
+    container.setInventory(containerInventory);
+  }
 
 	/**
 	 * Add an item and generate a uuid if necessary
@@ -96,7 +130,7 @@ const Items = function ItemsManager() {
 	self.getByVnum = vnum => self.filter(obj => obj.getVnum() === vnum);
 
 	/**
-	 * retreive an instance of an object by uuid
+	 * retrieve an instance of an object by uuid
 	 * @param string uid
 	 * @return Item
 	 */
@@ -143,9 +177,8 @@ const Item = function ItemConstructor(config) {
 	self.init = config => {
 		self.short_description = config.short_description || '';
     self.room_description  = config.room_description  || '';
-    self.keywords          = config.keywords    || [];
+    self.keywords          = config.keywords    || []; // Required
 		self.description       = config.description || '';
-		self.inventory         = config.inventory   || null;
 		self.room              = config.room        || null;
 		self.npc_held          = config.npc_held    || false;
 		self.equipped          = config.equipped    || false;
@@ -156,6 +189,7 @@ const Item = function ItemConstructor(config) {
 		self.attributes        = config.attributes    || {};
     self.prerequisites     = config.prerequisites || {};
 
+    self.inventory = config.inventory || (self.isContainer() ? [] : null);
 
     if (self !== null) {
 		  Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
@@ -180,7 +214,7 @@ const Item = function ItemConstructor(config) {
 
 	self.setUuid      = uid   => self.uuid      = uid;
 	self.setRoom      = room  => self.room      = room;
-	self.setInventory = id    => self.inventory = id; //TODO: Maybe inventory should be array of ids?
+	self.setInventory = ids   => self.inventory = ids;
 	self.setNpcHeld   = held  => self.npc_held  = held;
 	self.setContainer = uid   => self.container = uid;
 	self.setEquipped  = equip => self.equipped  = !!equip;
@@ -188,7 +222,7 @@ const Item = function ItemConstructor(config) {
 	self.setAttribute = (attr, val) => self.attributes[attr] = val;
 	/**#@-*/
 
-  self.isContainer = () => !!self.getAttribute('max_capacity');
+  self.isContainer = () => self.getAttribute('max_size_capacity') && self.getAttribute('max_weight_capacity');
 
 	/**
 	 * Get the description, localized if possible
