@@ -21,7 +21,8 @@
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 52 | Dynamically pull in list of admins
 | /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 82 | Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
 | /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 88 | Add some kind of bonus.
-| /Users/seanodonohue/myForks/ranviermud/src/items.js | 34 | Extract to Data helper method.
+| /Users/seanodonohue/myForks/ranviermud/src/items.js | 35 | Extract to Data helper method.
+| /Users/seanodonohue/myForks/ranviermud/src/items.js | 89 | Account for persisted items eventually (uuids rather than vnums)
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 15 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 17 | Extract npc from this file like player/player_manager
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 227 | Have spawn inventory but also add same inv functionality as player
@@ -66,9 +67,12 @@
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 64 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 79 | Put carrying capacity method on player obj.
 | /Users/seanodonohue/myForks/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 69 | Improve based on player stats/skills?
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 19 | Test and refactor.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 73 | Improve based on player stats/skills?
+| /Users/seanodonohue/myForks/ranviermud/commands/put.js | 5 | Change get to auto-put or auto-hold...
 | /Users/seanodonohue/myForks/ranviermud/commands/skills.js | 14 | Pull out attrs into enum of some kind for reuse?
 | /Users/seanodonohue/myForks/ranviermud/commands/skills.js | 15 | Refactor for readability by decomposing nested conditionals.
+| /Users/seanodonohue/myForks/ranviermud/commands/take.js | 14 | Have drop command search containers for items to drop?
 | /Users/seanodonohue/myForks/ranviermud/commands/train.js | 20 | Extract into own function in Skills module.
 | /Users/seanodonohue/myForks/ranviermud/commands/whisper.js | 2 | Refactor to be a channel.
 
@@ -78,5 +82,5 @@
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 89 | Can be done better with changes to npc class.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 298 | In statusUtils: This could be a problem if the combat is between two NPCs or two players.
 | /Users/seanodonohue/myForks/ranviermud/commands/appraise.js | 35 | There has to be a better way...
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 70 | This does not really seem to be working.
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 71 | Consider making it a 'scout' command/skill.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 74 | This does not really seem to be working.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 75 | Consider making it a 'scout' command/skill.
