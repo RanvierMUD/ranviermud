@@ -28,9 +28,19 @@ const look = CommandInjector(lookCmd, globals);
 const [ rooms, items, players, npcs, Commands ] = globals;
 players.addPlayer(player);
 
-// Make a room to put the player in.
+sinon.spy(player, 'say');
 
-// Put an npc an an item and another player in it?
+const location = 4;
+const room = new Room({ location });
+rooms.addRoom(room);
+player.setLocation(location);
+const shield = addItem({
+  items, room, player, location,
+  short_description: 'a shield',
+  keywords: ['shield'],
+  uuid: 'shield'
+})
+
 describe('Looking at a room', () => {
   it('should describe the room', () => {
 
