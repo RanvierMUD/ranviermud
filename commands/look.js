@@ -96,7 +96,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       player.say(wrap(thing.getDescription(locale), 80));
       if (Type.isPlayer(thing)) { showPlayerEquipment(thing, player); }
       if (Type.isItem(thing) && thing.isContainer()) {
-        util.log("THE THING IS AN ITEM!");
         showContainerContents(thing, player);
       }
       return;

@@ -31,19 +31,32 @@ players.addPlayer(player);
 sinon.spy(player, 'say');
 
 const location = 4;
-const room = new Room({ location });
+const description = 'room desc';
+const short_description = 'room shortdesc';
+const area = 'The Dungeon';
+const title = 'Treasure Chamber';
+const room = new Room({ location, short_description, description });
 rooms.addRoom(room);
 player.setLocation(location);
+player.setPreference('roomdescs', 'default');
 const shield = addItem({
-  items, room, player, location,
+  items, room, location,
   short_description: 'a shield',
   keywords: ['shield'],
   uuid: 'shield'
-})
+});
+const goblin = addNpc({
+  room, location, npcs
+  short_description: 'a goblin',
+  keywords: ['goblin'],
+  uuid: 'gobbo'
+});
 
 describe('Looking at a room', () => {
-  it('should describe the room', () => {
-
+  it('should describe the room with a long description, the first time around', () => {
+    look('', player);
+    // check for all player.say calls...
+    const expectedTitle = area + ': ' + title;
   });
 });
 

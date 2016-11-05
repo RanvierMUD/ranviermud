@@ -50,6 +50,26 @@ const addItem = ({
     return item;
 }
 
+const addNpc = ({
+  uuid = 'npc',
+  keywords = ['npc'],
+  location = 1,
+  short_description,
+  npcs,
+  attributes,
+  room,
+  inventory
+  }) => {
+    if (!npcs) { throw new Error('You need to pass in the npcs manager...'); }
+    if (!room) { throw new Error('You need to add the npc to a room.'); }
+
+    const npc = new Npc({ attributes, uuid, keywords, location, short_description, inventory });
+    npcs.add(npc); //TODO: Make consistent amongst manager classes (e.g., npcs.add vs items.addItem)
+    if (room) { room.addNpc(npc.getUuid()); }
+
+    return npc;
+}
+
 const getCallCounter = fn => {
   let counter = 0;
   return () => fn.getCall(counter++);
