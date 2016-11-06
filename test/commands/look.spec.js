@@ -40,7 +40,7 @@ const description = 'room desc';
 const short_description = 'room shortdesc';
 const area = 'The Dungeon';
 const title = 'Treasure Chamber';
-const room = new Room({ location, short_description, description });
+const room = new Room({ area, title, location, short_description, description });
 
 rooms.addRoom(room);
 player.setLocation(location);
