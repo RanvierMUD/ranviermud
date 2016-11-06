@@ -1,10 +1,11 @@
 'use strict';
 
 const Npcs    = require('../../src/npcs').Npcs;
+const Npc     = require('../../src/npcs').Npc;
 const Items   = require('../../src/items').Items;
+const Item    = require('../../src/items').Item;
 const Players = require('../../src/player_manager').PlayerManager;
 const Rooms   = require('../../src/rooms').Rooms;
-const Item    = require('../../src/items').Item;
 
 /*
   Takes a command function and an array of mocks in order:
@@ -76,5 +77,7 @@ const getCallCounter = fn => {
 };
 
 module.exports = {
-  CommandInjector, getGlobals, addItem, getCallCounter
+  CommandInjector,
+  getGlobals, getCallCounter,
+  addItem, addNpc
 };

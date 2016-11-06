@@ -142,7 +142,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     // display players in the same room
     players.eachIf(
-      CommandUtil.inSameRoom.bind(null, player),
+      p => CommandUtil.inSameRoom(player, p),
       p => player.sayL10n(l10n, 'IN_ROOM', p.getName()));
 
     // show all the items in the rom
