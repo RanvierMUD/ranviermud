@@ -31,6 +31,7 @@ const addItem = ({
   location = 1,
   wearLocation,
   short_description,
+  room_description,
   attributes,
   room,
   player,
@@ -40,7 +41,7 @@ const addItem = ({
     if (!items) { throw new Error('You need to pass in the items manager...'); }
     if (room && player) { throw new Error('You can not place the item in a room and in an inventory at the same time.'); }
 
-    const item = new Item({ attributes, uuid, keywords, location, wearLocation, short_description });
+    const item = new Item({ attributes, uuid, keywords, location, wearLocation, short_description, room_description });
     items.addItem(item);
     if (room) { room.addItem(item.getUuid()); }
     if (player) { player.addItem(item); }
@@ -56,6 +57,7 @@ const addNpc = ({
   keywords = ['npc'],
   location = 1,
   short_description,
+  room_description,
   npcs,
   attributes,
   room,
@@ -64,7 +66,7 @@ const addNpc = ({
     if (!npcs) { throw new Error('You need to pass in the npcs manager...'); }
     if (!room) { throw new Error('You need to add the npc to a room.'); }
 
-    const npc = new Npc({ attributes, uuid, keywords, location, short_description, inventory });
+    const npc = new Npc({ attributes, uuid, keywords, location, short_description, room_description, inventory });
     npcs.add(npc); //TODO: Make consistent amongst manager classes (e.g., npcs.add vs items.addItem)
     if (room) { room.addNpc(npc.getUuid()); }
 

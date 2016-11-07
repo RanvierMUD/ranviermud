@@ -126,7 +126,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const descPreference = player.getPreference('roomdescs');
 
     if (Time.isDay()) {
-
       const showShortByDefault = hasExplored && descPreference !== 'verbose';
       if (showShortByDefault || descPreference === 'short') {
         player.say(wrap(room.getShortDesc(locale), 80));
