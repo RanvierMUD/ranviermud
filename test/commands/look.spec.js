@@ -328,11 +328,26 @@ describe('Look command', () => {
       const npcDescCall = getPlayerSayCall();
       expect(npcDescCall.args[0] === goblin.getDescription()).to.be.true;
     });
-    
+
   });
 
   describe('Looking at an item in a room', () => {
+    look('shield', player);
 
+    it('should show shield description', () => {
+      const itemDescCall = getPlayerSayCall();
+      expect(itemDescCall.args[0] === shield.getDescription()).to.be.true;
+
+    });
+  });
+
+  describe('Looking at a container', () => {
+    describe('Looking at an empty container', () => {
+
+    });
+    describe('Looking at a container with a thing in it', () => {
+
+    });
   });
 
   describe('Looking at another player', () => {
