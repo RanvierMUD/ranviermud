@@ -28,8 +28,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       args = args.toLowerCase();
 
       // Look at items in the room first
-      let thing = CommandUtil.findItemInRoom(items, args, room, player,
-        true);
+      let thing = CommandUtil.findItemInRoom(items, args, room, player,true);
 
       if (thing) util.log('found an item');
 

@@ -68,7 +68,7 @@
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 79 | Put carrying capacity method on player obj.
 | /Users/seanodonohue/myForks/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 19 | Test and refactor.
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 73 | Improve based on player stats/skills?
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 72 | Improve based on player stats/skills?
 | /Users/seanodonohue/myForks/ranviermud/commands/put.js | 5 | Change get to auto-put or auto-hold...
 | /Users/seanodonohue/myForks/ranviermud/commands/skills.js | 14 | Pull out attrs into enum of some kind for reuse?
 | /Users/seanodonohue/myForks/ranviermud/commands/skills.js | 15 | Refactor for readability by decomposing nested conditionals.
@@ -82,5 +82,5 @@
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 89 | Can be done better with changes to npc class.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 298 | In statusUtils: This could be a problem if the combat is between two NPCs or two players.
 | /Users/seanodonohue/myForks/ranviermud/commands/appraise.js | 35 | There has to be a better way...
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 74 | This does not really seem to be working.
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 75 | Consider making it a 'scout' command/skill.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 73 | This does not really seem to be working.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 74 | Consider making it a 'scout' command/skill.
