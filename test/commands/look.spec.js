@@ -337,7 +337,6 @@ describe('Look command', () => {
     it('should show shield description', () => {
       const itemDescCall = getPlayerSayCall();
       expect(itemDescCall.args[0] === shield.getDescription()).to.be.true;
-
     });
   });
 
@@ -355,6 +354,17 @@ describe('Look command', () => {
   });
 
   describe('Looking at oneself', () => {
+    look('me', player);
+
+    it('should describe oneself', () => {
+      const playerDescCall = getPlayerSayCall();
+      expect(playerDescCall.args[0] === player.getDescription()).to.be.true;
+    });
+
+    it('should tell you if you are naked', () => {
+      const playerEquipCall = getPlayerSayCall();
+      expect(playerEquipCall.args[0] === 'You are naked!').to.be.true;
+    });
 
   });
 
