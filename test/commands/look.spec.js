@@ -31,16 +31,18 @@ const [ rooms, items, players, npcs, Commands ] = globals;
 players.addPlayer(player);
 
 sinon.spy(player, 'say');
+sinon.spy(player, 'write');
 sinon.stub(Time, 'isDay');
 
 const getPlayerSayCall = getCallCounter(player.say);
 
 const location = 4;
 const description = 'room desc';
-const short_description = 'room shortdesc';
+const short_desc = 'room shortdesc';
+const dark_desc = 'room darkdesc';
 const area = 'The Dungeon';
 const title = 'Treasure Chamber';
-const room = new Room({ area, title, location, short_description, description });
+const room = new Room({ area, title, location, short_desc, dark_desc, description });
 
 rooms.addRoom(room);
 player.setLocation(location);
@@ -49,46 +51,135 @@ player.setPreference('roomdescs', 'default');
 const shield = addItem({
   items, room, location,
   short_description: 'a shield',
+  room_description: 'a sturdy shield',
   keywords: ['shield'],
   uuid: 'shield'
 });
 
 const goblin = addNpc({
   room, location, npcs,
+  attributes: { level: 1 },
   short_description: 'a goblin',
+  room_description: 'a menacing goblin',
   keywords: ['goblin'],
   uuid: 'gobbo'
 });
 
-describe('Looking at a room', () => {
-  it('should describe the room with a long description, the first time around', () => {
-    Time.isDay.returns(true);
+describe('Look command', () => {
 
-    look('', player);
+  describe('Looking at a room', () => {
 
-    // check for all player.say calls...
-    const titleCall = getPlayerSayCall();
-    const expectedTitle = area + ': ' + title;
-    expect(titleCall.args[0] === expectedTitle).to.be.true;
+    describe('looking at the room during the day', () => {
+      Time.isDay.returns(true);
+
+      look('', player);
+
+      // check for all player.say calls...
+      it('should give the area and room title', () => {
+        const titleCall = getPlayerSayCall();
+        const expectedTitle = area + ': ' + title;
+        expect(titleCall.args[0] === expectedTitle).to.be.true;
+      });
+
+      it('should show long description since player has not explored the room yet and their preference is default', () => {
+        const descCall = getPlayerSayCall();
+        expect(descCall.args[0] === description).to.be.true;
+      });
+
+      it('should do a newline after the room desc', () => {
+        const newLineCall = getPlayerSayCall();
+        expect(newLineCall.args[0] === '').to.be.true;
+      });
+
+      it('should show the item on the ground', () => {
+        const itemCall = getPlayerSayCall();
+        const expectedItemRoomDesc = '<magenta>a sturdy shield</magenta>';
+        expect(itemCall.args[0] === expectedItemRoomDesc).to.be.true;
+      });
+
+      it('should show any NPCs, color coded by threat level (easy)', () => {
+        const npcCall = getPlayerSayCall();
+        const expectedNpcRoomDesc = '<green>a menacing goblin</green>';
+        expect(npcCall.args[0] === expectedNpcRoomDesc).to.be.true;
+      });
+
+      it('should show a label for any of the room\'s exits', () => {
+        const exitsCall = player.write.getCall(1);
+        const expectedItemsLabel = '<yellow><bold>Obvious exits: </yellow></bold>';
+        expect(exitsCall.args[0] === expectedItemsLabel).to.be.true;
+      });
+
+      it('should close the exits list with a bracket', () => {
+        const exitCloseCall = getPlayerSayCall();
+        expect(exitCloseCall.args[0] === ']').to.be.true;
+      });
+
+    });
+
+    describe('looking at a room while it is dark', () => {
+      Time.isDay.returns(false);
+
+      look('', player);
+
+      // check for all player.say calls...
+      it('should give the area and room title', () => {
+        const titleCall = getPlayerSayCall();
+        const expectedTitle = area + ': ' + title;
+        expect(titleCall.args[0] === expectedTitle).to.be.true;
+      });
+
+      it('should show dark description', () => {
+        const descCall = getPlayerSayCall();
+        console.log(">>> ", descCall.args[0], " <<<");
+        expect(descCall.args[0] === dark_desc).to.be.true;
+      });
+
+      it('should do a newline after the room desc', () => {
+        const newLineCall = getPlayerSayCall();
+        expect(newLineCall.args[0] === '').to.be.true;
+      });
+
+      it('should show the item on the ground', () => {
+        const itemCall = getPlayerSayCall();
+        const expectedItemRoomDesc = '<magenta>a sturdy shield</magenta>';
+        expect(itemCall.args[0] === expectedItemRoomDesc).to.be.true;
+      });
+
+      it('should show any NPCs, color coded by threat level (easy)', () => {
+        const npcCall = getPlayerSayCall();
+        const expectedNpcRoomDesc = '<green>a menacing goblin</green>';
+        expect(npcCall.args[0] === expectedNpcRoomDesc).to.be.true;
+      });
+
+      it('should show a label for any of the room\'s exits', () => {
+        const exitsCall = player.write.getCall(1);
+        const expectedItemsLabel = '<yellow><bold>Obvious exits: </yellow></bold>';
+        expect(exitsCall.args[0] === expectedItemsLabel).to.be.true;
+      });
+
+      Time.isDay.restore();
+
+    });
   });
-});
 
-describe('Looking at an npc in a room', () => {
+  describe('Looking at an npc in a room', () => {
 
-});
+  });
 
-describe('Looking at an item in a room', () => {
+  describe('Looking at an item in a room', () => {
 
-});
+  });
 
-describe('Looking at another player', () => {
+  describe('Looking at another player', () => {
 
-});
+  });
 
-describe('Looking at oneself', () => {
+  describe('Looking at oneself', () => {
 
-});
+  });
 
-describe('Looking at adjacent rooms', () => {
+  describe('Looking at adjacent rooms', () => {
+
+  });
 
 });
