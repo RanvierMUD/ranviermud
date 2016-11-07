@@ -268,6 +268,9 @@ describe('Look command', () => {
       Time.isDay.returns(true);
       player.setPreference('roomdescs', 'verbose');
       goblin.setAttribute('level', 2);
+      const oldHasMet = player.hasMet;
+      player.hasMet = () => true;
+      goblin.name = 'Boblin';
 
       const hasExplored = true;
       look('', player, hasExplored);
@@ -295,9 +298,9 @@ describe('Look command', () => {
         expect(itemCall.args[0] === expectedItemRoomDesc).to.be.true;
       });
 
-      it('should show any NPCs, color coded by threat level (medium)', () => {
+      it('should show any NPCs by name if they have been met, color coded by threat level (medium)', () => {
         const npcCall = getPlayerSayCall();
-        const expectedNpcRoomDesc = '<yellow>a menacing goblin</yellow>';
+        const expectedNpcRoomDesc = '<yellow>Boblin</yellow>';
         expect(npcCall.args[0] === expectedNpcRoomDesc).to.be.true;
       });
 
@@ -312,6 +315,7 @@ describe('Look command', () => {
         expect(exitCloseCall.args[0] === ']').to.be.true;
       });
 
+      player.hasMet = oldHasMet;
     });
 
     Time.isDay.restore();
