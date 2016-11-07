@@ -189,7 +189,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }
 
       const naked = Object.keys(equipped).length === 0;
-      if (naked) { playerLooking.sayL10n(l10n, "NAKED"); }
+      if (naked) {
+        const pronoun = playerTarget === playerLooking ? 'You' : 'They';
+        playerLooking.say(pronoun + " are naked!");
+      }
     }
 
   }
