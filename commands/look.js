@@ -103,7 +103,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function showContainerContents(container, player) {
       player.say("<bold>CONTENTS: </bold>");
       const contents = container.getInventory();
-      util.log('contents:', contents);
+
       if (!contents.length) {
         return player.say('<cyan>empty</cyan>');
       }

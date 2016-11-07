@@ -340,10 +340,50 @@ describe('Look command', () => {
     });
   });
 
-  describe('Looking at a container', () => {
+  describe('Looking at an item in your own inventory', () => {
+    player.addItem(shield);
+    look('shield', player);
+
+    it('should show shield description', () => {
+      const itemDescCall = getPlayerSayCall();
+      expect(itemDescCall.args[0] === shield.getDescription()).to.be.true;
+    });
+  });
+
+  const bucket = addItem({
+    items, room, location,
+    attributes: {
+      max_weight_capacity: 10,
+      max_size_capacity: 10,
+    },
+    uuid: 'bucket',
+    keywords: ['bucket'],
+    short_description: 'bucket',
+    description: 'bucket of stuff'
+  });
+
+  describe('Looking at a container in the room', () => {
+
     describe('Looking at an empty container', () => {
+      look('bucket', player);
+
+      it('should describe the container', () => {
+        const containerDescCall = getPlayerSayCall();
+        expect(containerDescCall.args[0] === "bucket of stuff");
+      });
+
+      it('should label the list of contents', () => {
+        const contentsLabelCall = getPlayerSayCall();
+        expect(contentsLabelCall.args[0] === "<bold>CONTENTS: </bold>");
+      });
+
+      it('should say it is empty', () => {
+        const emptyCall = getPlayerSayCall();
+        expect(emptyCall.args[0] === '<cyan>empty</cyan>');
+      });
 
     });
+
     describe('Looking at a container with a thing in it', () => {
 
     });
