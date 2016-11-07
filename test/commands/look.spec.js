@@ -322,7 +322,13 @@ describe('Look command', () => {
   });
 
   describe('Looking at an npc in a room', () => {
+    look('goblin', player);
 
+    it('should show goblin description', () => {
+      const npcDescCall = getPlayerSayCall();
+      expect(npcDescCall.args[0] === goblin.getDescription()).to.be.true;
+    });
+    
   });
 
   describe('Looking at an item in a room', () => {
