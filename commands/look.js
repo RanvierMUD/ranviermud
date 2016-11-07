@@ -56,7 +56,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       // Then other players
       if (!thing) {
         players.eachIf(
-          CommandUtil.inSameRoom.bind(null, player),
+          p => CommandUtil.inSameRoom(player, p),
           lookAtOther);
       }
 

@@ -211,6 +211,106 @@ describe('Look command', () => {
 
     });
 
+    describe('Looking at a room you have not explored with shortdesc preference', () => {
+
+      Time.isDay.returns(true);
+      const hasExplored = false;
+      player.setPreference('roomdescs', 'short');
+
+      look('', player, hasExplored);
+
+      // check for all player.say calls...
+      it('should give the area and room title', () => {
+        const titleCall = getPlayerSayCall();
+        const expectedTitle = area + ': ' + title;
+        expect(titleCall.args[0] === expectedTitle).to.be.true;
+      });
+
+      it('should show short description due to preferences', () => {
+        const descCall = getPlayerSayCall();
+        expect(descCall.args[0] === short_desc).to.be.true;
+      });
+
+      it('should do a newline after the room desc', () => {
+        const newLineCall = getPlayerSayCall();
+        expect(newLineCall.args[0] === '').to.be.true;
+      });
+
+      it('should show the item on the ground', () => {
+        const itemCall = getPlayerSayCall();
+        const expectedItemRoomDesc = '<magenta>a sturdy shield</magenta>';
+        expect(itemCall.args[0] === expectedItemRoomDesc).to.be.true;
+      });
+
+      it('should show any NPCs, color coded by threat level (easy)', () => {
+        const npcCall = getPlayerSayCall();
+        const expectedNpcRoomDesc = '<green>a menacing goblin</green>';
+        expect(npcCall.args[0] === expectedNpcRoomDesc).to.be.true;
+      });
+
+      it('should show a label for any of the room\'s exits', () => {
+        const exitsCall = player.write.getCall(1);
+        const expectedItemsLabel = '<yellow><bold>Obvious exits: </yellow></bold>';
+        expect(exitsCall.args[0] === expectedItemsLabel).to.be.true;
+      });
+
+      it('should close the exits list with a bracket', () => {
+        const exitCloseCall = getPlayerSayCall();
+        expect(exitCloseCall.args[0] === ']').to.be.true;
+      });
+
+    });
+
+    describe('Looking at a room you have explored with verbose desc preference', () => {
+
+      Time.isDay.returns(true);
+      const hasExplored = true;
+      player.setPreference('roomdescs', 'verbose');
+
+      look('', player, hasExplored);
+
+      // check for all player.say calls...
+      it('should give the area and room title', () => {
+        const titleCall = getPlayerSayCall();
+        const expectedTitle = area + ': ' + title;
+        expect(titleCall.args[0] === expectedTitle).to.be.true;
+      });
+
+      it('should show verbose description due to preferences', () => {
+        const descCall = getPlayerSayCall();
+        expect(descCall.args[0] === description).to.be.true;
+      });
+
+      it('should do a newline after the room desc', () => {
+        const newLineCall = getPlayerSayCall();
+        expect(newLineCall.args[0] === '').to.be.true;
+      });
+
+      it('should show the item on the ground', () => {
+        const itemCall = getPlayerSayCall();
+        const expectedItemRoomDesc = '<magenta>a sturdy shield</magenta>';
+        expect(itemCall.args[0] === expectedItemRoomDesc).to.be.true;
+      });
+
+      it('should show any NPCs, color coded by threat level (easy)', () => {
+        const npcCall = getPlayerSayCall();
+        const expectedNpcRoomDesc = '<green>a menacing goblin</green>';
+        expect(npcCall.args[0] === expectedNpcRoomDesc).to.be.true;
+      });
+
+      it('should show a label for any of the room\'s exits', () => {
+        const exitsCall = player.write.getCall(1);
+        const expectedItemsLabel = '<yellow><bold>Obvious exits: </yellow></bold>';
+        expect(exitsCall.args[0] === expectedItemsLabel).to.be.true;
+      });
+
+      it('should close the exits list with a bracket', () => {
+        const exitCloseCall = getPlayerSayCall();
+        expect(exitCloseCall.args[0] === ']').to.be.true;
+      });
+
+    });
+
     Time.isDay.restore();
   });
 
