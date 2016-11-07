@@ -165,6 +165,7 @@ describe('Look command', () => {
 
     describe('looking at a room with after having explored it', () => {
       Time.isDay.returns(true);
+      goblin.setAttribute('level', -4);
 
       const hasExplored = true;
       look('', player, hasExplored);
@@ -192,9 +193,9 @@ describe('Look command', () => {
         expect(itemCall.args[0] === expectedItemRoomDesc).to.be.true;
       });
 
-      it('should show any NPCs, color coded by threat level (easy)', () => {
+      it('should show any NPCs, color coded by threat level (very easy)', () => {
         const npcCall = getPlayerSayCall();
-        const expectedNpcRoomDesc = '<green>a menacing goblin</green>';
+        const expectedNpcRoomDesc = '<cyan>a menacing goblin</cyan>';
         expect(npcCall.args[0] === expectedNpcRoomDesc).to.be.true;
       });
 
@@ -214,9 +215,10 @@ describe('Look command', () => {
     describe('Looking at a room you have not explored with shortdesc preference', () => {
 
       Time.isDay.returns(true);
-      const hasExplored = false;
       player.setPreference('roomdescs', 'short');
+      goblin.setAttribute('level', 30);
 
+      const hasExplored = false;
       look('', player, hasExplored);
 
       // check for all player.say calls...
@@ -242,9 +244,9 @@ describe('Look command', () => {
         expect(itemCall.args[0] === expectedItemRoomDesc).to.be.true;
       });
 
-      it('should show any NPCs, color coded by threat level (easy)', () => {
+      it('should show any NPCs, color coded by threat level (hard)', () => {
         const npcCall = getPlayerSayCall();
-        const expectedNpcRoomDesc = '<green>a menacing goblin</green>';
+        const expectedNpcRoomDesc = '<red>a menacing goblin</red>';
         expect(npcCall.args[0] === expectedNpcRoomDesc).to.be.true;
       });
 
@@ -264,9 +266,10 @@ describe('Look command', () => {
     describe('Looking at a room you have explored with verbose desc preference', () => {
 
       Time.isDay.returns(true);
-      const hasExplored = true;
       player.setPreference('roomdescs', 'verbose');
+      goblin.setAttribute('level', 2);
 
+      const hasExplored = true;
       look('', player, hasExplored);
 
       // check for all player.say calls...
@@ -292,9 +295,9 @@ describe('Look command', () => {
         expect(itemCall.args[0] === expectedItemRoomDesc).to.be.true;
       });
 
-      it('should show any NPCs, color coded by threat level (easy)', () => {
+      it('should show any NPCs, color coded by threat level (medium)', () => {
         const npcCall = getPlayerSayCall();
-        const expectedNpcRoomDesc = '<green>a menacing goblin</green>';
+        const expectedNpcRoomDesc = '<yellow>a menacing goblin</yellow>';
         expect(npcCall.args[0] === expectedNpcRoomDesc).to.be.true;
       });
 
