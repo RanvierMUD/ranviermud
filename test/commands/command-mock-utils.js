@@ -73,9 +73,9 @@ const addNpc = ({
     return npc;
 }
 
-const getCallCounter = fn => {
+const getCallCounter = spy => {
   let counter = 0;
-  return () => fn.getCall(counter++);
+  return () => spy.getCall(counter++);
 };
 
 module.exports = {
