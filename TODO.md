@@ -5,6 +5,7 @@
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 9 | Chart this stuff out.
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 257 | Weapon skills related to weapon type?
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 258 | General combat skills?
+| /Users/seanodonohue/myForks/ranviermud/src/command_util.js | 35 | Make APIs consistent and not awful.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 137 | invis
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 188 | Do the same way as above once you extract the admin commands.
@@ -27,12 +28,13 @@
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 17 | Extract npc from this file like player/player_manager
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 227 | Have spawn inventory but also add same inv functionality as player
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 342 | Put in perception skill helper file
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 353 | Consider using Random.roll instead.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 622 | Use chalk node module to create color-coded logging messages.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 679 | Make a similar function but for NPCs::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 705 | Should go in other module::::::::::::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 716 | Put this as a function in the combatUtils module.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 265 | IS there a better way to store this info?
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 343 | Put in perception skill helper file
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 354 | Consider using Random.roll instead.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 623 | Use chalk node module to create color-coded logging messages.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 680 | Make a similar function but for NPCs::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 706 | Should go in other module::::::::::::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 717 | Put this as a function in the combatUtils module.
 | /Users/seanodonohue/myForks/ranviermud/src/rooms.js | 3 | Refactor
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 93 | What if they swap weapons mid-fight?
@@ -68,7 +70,7 @@
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 79 | Put carrying capacity method on player obj.
 | /Users/seanodonohue/myForks/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)
 | /Users/seanodonohue/myForks/ranviermud/commands/look.js | 19 | Test and refactor.
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 72 | Improve based on player stats/skills?
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 76 | Improve based on player stats/skills?
 | /Users/seanodonohue/myForks/ranviermud/commands/put.js | 5 | Change get to auto-put or auto-hold...
 | /Users/seanodonohue/myForks/ranviermud/commands/skills.js | 14 | Pull out attrs into enum of some kind for reuse?
 | /Users/seanodonohue/myForks/ranviermud/commands/skills.js | 15 | Refactor for readability by decomposing nested conditionals.
@@ -82,5 +84,5 @@
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 89 | Can be done better with changes to npc class.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 298 | In statusUtils: This could be a problem if the combat is between two NPCs or two players.
 | /Users/seanodonohue/myForks/ranviermud/commands/appraise.js | 35 | There has to be a better way...
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 73 | This does not really seem to be working.
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 74 | Consider making it a 'scout' command/skill.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 77 | This does not really seem to be working.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 78 | Consider making it a 'scout' command/skill.

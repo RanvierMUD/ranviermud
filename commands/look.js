@@ -54,15 +54,19 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       // Then other players
       if (!thing) {
-        players.eachIf(
-          p => CommandUtil.inSameRoom(player, p),
-          lookAtOther);
+        players.eachExcept( player,
+          p => {
+            if (p.getLocation() === player.getLocation()) {
+              lookAtOther(p);
+            }
+          });
       }
 
       function lookAtOther(p) {
-        if (args === p.getName().toLowerCase()) {
+        const otherName = p.getName().toLowerCase();
+        if (args === otherName) {
           thing = p;
-          player.sayL10n(l10n, 'IN_ROOM', thing.getName());
+          player.say(thing.getName() + ' is here.');
           p.sayL10n(l10n, 'BEING_LOOKED_AT', player.getName());
         }
       }
