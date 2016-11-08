@@ -1,6 +1,7 @@
 'use strict';
 const util = require('util');
 const _ = require('./helpers');
+const Type = require('./type').Type;
 
 const CommandUtil = {
   findItemInEquipment, findItemInRoom,
@@ -28,11 +29,12 @@ function hasScript(entity, event){
  */
 function inSameRoom(entity, target) {
   if (target) {
-    if (entity.getName) { // Handle players
+    if (Type.isPlayer(target)) { // Handle players
+      //TODO: Make APIs consistent and not awful.
       const notSameName = target.getName() !== entity.getName();
       const sameLocation = target.getLocation() === entity.getLocation();
       return notSameName && sameLocation;
-    } else if (entity.getShortDesc) { // Handle NPCs and items
+    } else if (Type.isNpc(target) || Type.isItem(target)) { // Handle NPCs and items
       return entity.getRoom() === target.getLocation();
     }
   }
