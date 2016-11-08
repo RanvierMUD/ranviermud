@@ -65,7 +65,7 @@ const goblin = addNpc({
   uuid: 'gobbo'
 });
 
-describe.only('Look command', () => {
+describe('Look command', () => {
 
   describe('Looking at a room', () => {
 
@@ -415,37 +415,6 @@ describe.only('Look command', () => {
       });
 
     });
-  });
-
-  describe('Looking at another player', () => {
-    player.setName('Test');
-    const otherPlayer = new Player(socket);
-    otherPlayer.setLocation(location);
-    otherPlayer.setName('Osis');
-    otherPlayer.setAttribute('description', 'A drunken knight.');
-
-    const flask = addItem({
-      items, player: otherPlayer,
-      keywords: ['flask'],
-      uuid: 'flask',
-      short_description: 'a flask',
-      room_description: 'a metal flask'
-    });
-
-    look('Osis', player);
-
-    it('should tell us that Osis is in the room', () => {
-      const osisNameCall = getPlayerSayCall();
-      console.log(">>>>>> ", osisNameCall.args[0]);
-      expect(osisNameCall.args[0] === "Osis is here.").to.be.true;
-    });
-
-    it('should describe what Sir Osis looks like', () => {
-      const osisDescCall = getPlayerSayCall();
-      console.log("<<<<<<< ", osisDescCall.args[0]);
-      expect(osisDescCall.args[0] === otherPlayer.getDescription()).to.be.true;
-    });
-
   });
 
   describe('Looking at oneself', () => {
