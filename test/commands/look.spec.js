@@ -163,7 +163,7 @@ describe('Look command', () => {
 
     });
 
-    describe('looking at a room with after having explored it', () => {
+    describe('looking at a room after having explored it with default preferences', () => {
       Time.isDay.returns(true);
       goblin.setAttribute('level', -4);
 
@@ -359,6 +359,7 @@ describe('Look command', () => {
     uuid: 'bucket',
     keywords: ['bucket'],
     short_description: 'bucket',
+    room_description: 'a tin bucket',
     description: 'bucket of stuff'
   });
 
@@ -385,6 +386,33 @@ describe('Look command', () => {
     });
 
     describe('Looking at a container with a thing in it', () => {
+
+      const potato = addItem({
+        items,
+        keywords: ['potato'],
+        uuid: 'potato',
+        short_description: 'a potato',
+        room_description: 'a slightly moldy potato'
+      });
+
+      bucket.addItem(potato);
+
+      look('bucket', player);
+
+      it('should describe the container', () => {
+        const containerDescCall = getPlayerSayCall();
+        expect(containerDescCall.args[0] === "bucket of stuff");
+      });
+
+      it('should label the list of contents', () => {
+        const contentsLabelCall = getPlayerSayCall();
+        expect(contentsLabelCall.args[0] === "<bold>CONTENTS: </bold>");
+      });
+
+      it('should say it has a potato', () => {
+        const potatoCall = getPlayerSayCall();
+        expect(potatoCall.args[0] === '<cyan>- a potato</cyan>');
+      });
 
     });
   });

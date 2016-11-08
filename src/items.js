@@ -287,8 +287,8 @@ const Item = function ItemConstructor(config) {
   }
 
   self.addItem = item => {
-    item.setContainer(self.getUuid);
-    return self.inventory.push(item.getUuid);
+    item.setContainer(self.getUuid());
+    return self.inventory.push(item.getUuid());
   }
 
   self.removeItem = uid => {
