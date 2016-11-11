@@ -173,14 +173,15 @@ const Commands = {
     // Load external commands
     fs.readdir(commands_dir,
       (err, files) => {
-        for (const j in files) {
-          const command_file = commands_dir + files[j];
-          if (!fs.statSync(command_file).isFile()) { continue; }
-          if (!command_file.match(/js$/)) { continue; }
+        for (const name in files) {
+          const filename = files[name];
+          const commandFile = commands_dir + filename;
+          if (!fs.statSync(commandFile).isFile()) { continue; }
+          if (!commandFile.match(/js$/)) { continue; }
 
-          const command_name = files[j].split('.')[0];
+          const commandName = filename.split('.')[0];
 
-          Commands.player_commands[command_name] = require(command_file)
+          Commands.player_commands[commandName] = require(commandFile)
             .command(rooms, items, players, npcs, Commands);
         }
       });

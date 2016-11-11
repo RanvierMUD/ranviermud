@@ -15,55 +15,52 @@
 //TODO: Refactor
 
 	// built-ins
-var net = require('net'),
-	util = require('util'),
-	express = require('express'),
-	commander = require('commander'),
-	wrap = require('wrap-ansi'),
-	pkg = require('./package.json'),
+const net = require('net');
+const util = require('util');
+const	express = require('express');
+const commander = require('commander');
+const wrap = require('wrap-ansi');
+const pkg = require('./package.json');
 
 	// local
-	Commands = require('./src/commands').Commands,
-	Rooms    = require('./src/rooms').Rooms,
-	Npcs     = require('./src/npcs').Npcs,
-	Items    = require('./src/items').Items,
-	Data     = require('./src/data').Data,
-	Events   = require('./src/events').Events,
-	Accounts = require('./src/accounts').Accounts,
-	Plugins  = require('./src/plugins'),
+const Commands = require('./src/commands').Commands;
+const Rooms    = require('./src/rooms').Rooms;
+const Npcs     = require('./src/npcs').Npcs;
+const Items    = require('./src/items').Items;
+const Data     = require('./src/data').Data;
+const Events   = require('./src/events').Events;
+const Accounts = require('./src/accounts').Accounts;
+const Plugins  = require('./src/plugins');
 
-	PlayerManager = require('./src/player_manager').PlayerManager,
-	CommandUtil   = require('./src/command_util').CommandUtil,
-	Time          = require('./src/time').Time,
-	Type          = require('./src/type').Type,
+const PlayerManager = require('./src/player_manager').PlayerManager;
+const CommandUtil   = require('./src/command_util').CommandUtil;
+const Time          = require('./src/time').Time;
+const Type          = require('./src/type').Type;
 
 	// third party
-	Localize  = require('jall'),
-	argv      = require('optimist').argv,
-	telnet    = require('./src/3rdparty/telnet.js'),
-	longjohn  = require('longjohn');
+const Localize  = require('jall');
+const argv      = require('optimist').argv;
+const telnet    = require('./src/3rdparty/telnet.js');
+const longjohn  = require('longjohn');
 
 /**
- * These aren't really globals, they're only "global" to this file,
+ * These aren't really globals; they're only "global" to this file,
  * we'll pass them around via construction as needed
  */
 
 // storage of main game entities
-var players,
-	rooms    = new Rooms(),
-	items    = new Items(),
-	npcs     = new Npcs(),
-	accounts = new Accounts(),
-	server,
-	Player  = require('./src/player').Player,
-	Npc     = require('./src/npcs').Npc,
-	Item    = require('./src/items').Item,
-	Account = require('./src/accounts').Account,
+let players, server, l10n;
+const	rooms    = new Rooms();
+const	items    = new Items();
+const	npcs     = new Npcs();
+const	accounts = new Accounts();
+const	Player  = require('./src/player').Player;
+const	Npc     = require('./src/npcs').Npc;
+const	Item    = require('./src/items').Item;
+const	Account = require('./src/accounts').Account;
 
-	// Stuff for the server executable
-	l10n,
-	respawnint,
-	saveint;
+// server options
+let respawnInterval, saveInterval;
 
 Type.config(Player, Npc, Item, Account);
 
@@ -72,7 +69,7 @@ Type.config(Player, Npc, Item, Account);
 commander
 	.version(pkg.version)
 	.option('-s, --save [time]', 'Number of minutes between auto-save ticks [5]', 5)
-	.option('-r, --respawn [time]', 'Number of minutes between respawn tickets [120]', 120)
+	.option('-r, --respawn [time]', 'Number of minutes between respawn ticks [120]', 120)
 	.option('-p, --port [portNumber]', 'Port to host telnet server [23]', 23)
 	.option('-l, --locale [lang]', 'Default locale for the server', 'en')
 	.option('-v, --verbose', 'Verbose console logging.', true)
@@ -84,31 +81,17 @@ process.env['NODE_DEBUG'] = 'net';
 /**
  * Do the dirty work
  */
-var init = function (restart_server)
-{
-
+function init(restartServer) {
 	util.log("START - Loading entities");
 	players = new PlayerManager([]);
-	restart_server = typeof restart_server === 'undefined' ? true : restart_server;
+	restartServer = typeof restartServer === 'undefined' ? true : restartServer;
 
-	Commands.configure({
-		rooms: rooms,
-		players: players,
-		items: items,
-		npcs: npcs,
-		locale: commander.locale
-	});
+	const locale = commander.locale;
+	Commands.configure({ rooms, players, items, npcs, locale });
 
-	Events.configure({
-		players: players,
-		items: items,
-		locale:  commander.locale,
-		npcs: npcs,
-		rooms: rooms,
-		accounts: accounts,
-	});
+	Events.configure({ players,items, locale, npcs, rooms, accounts, });
 
-	if (restart_server) {
+	if (restartServer) {
 		util.log("START - Starting server");
 
 		/**
@@ -121,10 +104,8 @@ var init = function (restart_server)
 
 			socket.on('error', err => util.log(err));
 
-			socket.on('uncaughtException', err => util.log('UNCAUGHT: ', err));
-
 			// Register all of the events
-			for (var event in Events.events) {
+			for (let event in Events.events) {
 				socket.on(event, Events.events[event]);
 			}
 
@@ -136,7 +117,7 @@ var init = function (restart_server)
 		});
 
 		// start the server
-		server.listen(commander.port).on('error', function(err) {
+		server.listen(commander.port).on('error', err => {
 			if (err.code === 'EADDRINUSE') {
 				util.log("Cannot start server on port " + commander.port + ", address is already in use.");
 				util.log("Do you have a MUD server already running?");
@@ -152,26 +133,19 @@ var init = function (restart_server)
 
 		// save every 10 minutes
 		util.log("Setting autosave to " + commander.save + " minutes.");
-		clearInterval(saveint);
-		saveint = setInterval(save, commander.save * 60000);
+		clearInterval(saveInterval);
+		saveInterval = setInterval(save, commander.save * 60000);
 
 		// respawn every 20 minutes, probably a better way to do this
 		util.log("Setting respawn to " + commander.respawn + " minutes.");
-		clearInterval(respawnint);
-		respawnint = setInterval(load, commander.respawn * 60000);
+		clearInterval(respawnInterval);
+		respawnInterval = setInterval(load, commander.respawn * 60000);
 
-		Plugins.init(true, {
-			players: players,
-			items:   items,
-			locale:  commander.locale,
-			npcs:    npcs,
-			rooms:   rooms,
-			server:  server
-		});
+		Plugins.init(true, { players, items, locale, npcs, rooms, server });
 
 	}
 
-	load(function (success) {
+	load(success => {
 		if (success) {
 			util.log(util.format("Server started on port: %d %s", commander.port, '...' ));
 			server.emit('startup');
@@ -189,12 +163,9 @@ init();
 /**
  * Save all connected players
  */
-function save()
-{
+function save() {
 	util.log("Saving...");
-	players.each(function (p) {
-		p.save();
-	});
+	players.each(player => player.save());
 	util.log("Done");
 }
 
@@ -205,8 +176,7 @@ function save()
 
 //TODO: Refactor and test?
 //TODO: Are the events/command modules being configed after load? Or only once on server startup?
-function load(callback)
-{
+function load(callback) {
 	util.log("Loading rooms...");
 	rooms.load(commander.verbose, function loadItems() {
 		util.log("Done.");
@@ -217,7 +187,7 @@ function load(callback)
 			util.log("Adding items to rooms...");
 			items.each(function addToRoom(item) {
 				if (item.getRoom()) {
-					var room = rooms.getAt(item.getRoom());
+					const room = rooms.getAt(item.getRoom());
 					if (!room.hasItem(item.getUuid())) {
 						room.addItem(item.getUuid());
 					}
@@ -260,8 +230,8 @@ l10n.throwOnMissingTranslation(false);
 /**
  * Commands that the server executable itself accepts
  */
-var server_commands = {
-	save: save,
+const server_commands = {
+	save,
 	/**
 	 * Hotboot, AKA do everything involved with a restart but keep players connected
 	 */
@@ -328,17 +298,11 @@ var server_commands = {
 		}, time);
 	}
 };
-//
-//process.on('SIGINT', function ()
-//{
-//  util.log("Shutting down - not so gracefully...");
-//  process.exit(0);
-//});
-//
+
 process.stdin.resume();
 
 // handle global-ish time-based events
-var wasDaytime = Time.isDay();
+let wasDaytime = Time.isDay();
 
 setInterval(tick , 5000);
 function tick() {
