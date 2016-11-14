@@ -78,18 +78,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       //FIXME: Consider making it a 'scout' command/skill.
       if (!thing) {
         const exits = room.getExits();
-        const canSee = exits.reduce((canSee, exit) => {
-          if (!canSee) { return canSee; }
-          if (args === exit.direction) {
-            if (Doors.isOpen(exit)) {
-              player.say("There's a door in the way.");
-              return false;
-            }
-            thing = rooms.getAt(exit.location);
-            player.say(thing.getTitle(locale));
-            return canSee;
-          }
-        }, true);
+        const canSee = exits.find( exit => (args === exit.direction) && Doors.isOpen(exit) );
+        thing = canSee ? rooms.getAt(exit.location) : null;
       }
 
       if (!thing) {
