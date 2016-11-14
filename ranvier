@@ -24,6 +24,7 @@ const pkg = require('./package.json');
 
 	// local
 const Commands = require('./src/commands').Commands;
+const PlayerManager = require('./src/player_manager').PlayerManager;
 const Rooms    = require('./src/rooms').Rooms;
 const Npcs     = require('./src/npcs').Npcs;
 const Items    = require('./src/items').Items;
@@ -32,7 +33,7 @@ const Events   = require('./src/events').Events;
 const Accounts = require('./src/accounts').Accounts;
 const Plugins  = require('./src/plugins');
 
-const PlayerManager = require('./src/player_manager').PlayerManager;
+	// utilities
 const CommandUtil   = require('./src/command_util').CommandUtil;
 const Time          = require('./src/time').Time;
 const Type          = require('./src/type').Type;
