@@ -174,51 +174,61 @@ function save() {
  * Configure the event and command modules after load. Doubles as a "respawn"
  */
 
-//TODO: Refactor and test?
-//TODO: Are the events/command modules being configed after load? Or only once on server startup?
 function load(callback) {
 	util.log("Loading rooms...");
-	rooms.load(commander.verbose, function loadItems() {
-		util.log("Done.");
+	rooms.load(commander.verbose, loadItems);
+
+	function loadItems() {
+		util.log("Done loading rooms.");
 		util.log("Loading items...");
-		items.load(commander.verbose, function addItems() {
-			util.log("Done.");
+		items.load(commander.verbose, addItems);
+	}
 
-			util.log("Adding items to rooms...");
-			items.each(function addToRoom(item) {
-				if (item.getRoom()) {
-					const room = rooms.getAt(item.getRoom());
-					if (!room.hasItem(item.getUuid())) {
-						room.addItem(item.getUuid());
-					}
-				}
-			});
-			util.log("Done.");
+	function addItems() {
+		util.log("Done loading items.");
 
-			util.log("Loading npcs...");
-			npcs.load(commander.verbose, function addNpcs() {
-				util.log("Done.");
+		util.log("Adding items to rooms...");
+		items.each(addItemToRoom);
+		util.log("Done adding items to rooms.");
 
-				util.log("Adding npcs to rooms...");
-				npcs.each(function (npc) {
-					const npcRoom = npc.getRoom();
-					if (npcRoom) {
-						var room = rooms.getAt(npcRoom);
-						if (!room.hasNpc(npc.getUuid())) {
-							room.addNpc(npc.getUuid());
-							npc.emit('spawn', room, rooms, players);
-						}
-					} else {
-						throw Error('Npc initialized without a room.');
-					}
-				});
-				util.log("Done.");
-				if (callback) {
-					callback(true);
-				}
-			});
-		});
-	});
+		util.log("Loading npcs...");
+		npcs.load(commander.verbose, addNpcs);
+	}
+
+	//TODO: Consider having this be a method on the room object?
+	function addItemToRoom(item) {
+		if (item.getRoom()) {
+			const room = rooms.getAt(item.getRoom());
+			if (!room.hasItem(item.getUuid())) {
+				room.addItem(item.getUuid());
+			}
+		}
+	}
+
+	function addNpcs() {
+		util.log("Done loading NPCs...");
+
+		util.log("Adding npcs to rooms...");
+		npcs.each(addNpcToRoom);
+		util.log("Done.");
+		if (callback) {
+			callback(true);
+		}
+	}
+
+	function addNpcToRoom(npc) {
+		const npcRoom = npc.getRoom();
+		if (npcRoom) {
+			const room = rooms.getAt(npcRoom);
+			if (!room.hasNpc(npc.getUuid())) {
+				room.addNpc(npc.getUuid());
+				npc.emit('spawn', room, rooms, players);
+			}
+		} else {
+			throw Error('Npc initialized without a room.');
+		}
+	}
+
 }
 
 
