@@ -73,15 +73,19 @@ const Commands = {
       (player, args) => {
         const attrs = player.getAttributes();
         player.say("<red>ADMIN: Debug Character</red>");
+
         player.warn('ATTRIBUTES: ');
         for (let attr in attrs) {
           player.say(attr + ': ' + attrs[attr]);
         }
+
         player.warn('EFFECTS: ');
         const effects = player.getEffects();
         for (let eff in effects) {
           player.say(eff + ': ' + effects[eff]);
         }
+
+        player.warn('MODIFIERS: ');
         ['speedMods', 'dodgeMods', 'damageMods', 'toHitMods'].forEach(mod => {
           if (!Object.keys(mod).length) { return; };
           player.warn(mod);
