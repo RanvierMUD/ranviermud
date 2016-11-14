@@ -163,10 +163,11 @@ init();
 /**
  * Save all connected players
  */
-function save() {
-	util.log("Saving...");
+function save(callback) {
+	util.log("Saving players...");
 	players.each(player => player.save());
 	util.log("Done");
+	if (callback) { callback(); }
 }
 
 /**
@@ -195,7 +196,6 @@ function load(callback) {
 		npcs.load(commander.verbose, addNpcs);
 	}
 
-	//TODO: Consider having this be a method on the room object?
 	function addItemToRoom(item) {
 		if (item.getRoom()) {
 			const room = rooms.getAt(item.getRoom());
@@ -233,9 +233,15 @@ function load(callback) {
 
 
 // Not game stuff, this is for the server executable
+const yaml = require('js-yaml');
+const fs   = require('fs');
+const serverL10nFile = fs.readFileSync(__dirname + '/l10n/server.yml').toString('utf8')
 process.stdin.setEncoding('utf8');
-l10n = new Localize(require('js-yaml').load(require('fs').readFileSync(__dirname + '/l10n/server.yml').toString('utf8')), undefined, 'zz');
+l10n = new Localize(yaml.load(serverL10nFile), undefined, 'zz');
 l10n.throwOnMissingTranslation(false);
+
+const hotboot = args => serverOperation('HOTBOOT_WARN', hotbootServer, args);
+const restart = args => serverOperation('RESTART_WARN', restartServer, args);
 
 /**
  * Commands that the server executable itself accepts
@@ -245,69 +251,56 @@ const server_commands = {
 	/**
 	 * Hotboot, AKA do everything involved with a restart but keep players connected
 	 */
-	hotboot: function (args)
-	{
-		args = args ? args.split(' ') : [];
-		var warn = args[0] && args[0] === 'warn';
-		var time = args[0] ? parseInt(args[warn ? 1 : 0], 10) : 0;
-
-		if (time && time < 20) {
-			console.log("Gotta give the players a bit longer than that, might as well do it instantly...");
-			return;
-		}
-		time = time ? time * 1000 : 0;
-
-		if (warn) {
-			warn = function (interval) {
-				players.broadcastL10n(l10n, 'HOTBOOT_WARN', interval);
-				players.each(p => p.prompt());
-			};
-			warn(time / 1000 + " seconds");
-			setTimeout(function () { warn(Math.floor((time / 4) / 1000) + " seconds"); }, time - Math.floor(time / 4));
-		}
-
-		util.log("HOTBOOTING SERVER" + (time ? " IN " + (time / 1000) + " SECONDS " : ''));
-		setTimeout(function () {
-			util.log("HOTBOOTING...");
-			save();
-			init(false);
-		}, time);
-	},
+	hotboot,
 	/**
 	 * Hard restart: saves and disconnects all connected players
 	 */
-	restart: function (args)
-	{
-		args = args ? args.split(' ') : [];
-		var warn = args[0] && args[0] === 'warn';
-		var time = args[0] ? parseInt(args[warn ? 1 : 0], 10) : 0;
-
-		if (time && time < 20) {
-			console.log("Gotta give the players a bit longer than that, might as well do it instantly...");
-			return;
-		}
-		time = time ? time * 1000 : 0;
-
-		if (warn) {
-			warn = function (interval) {
-				players.broadcastL10n(l10n, 'RESTART_WARN', interval);
-				players.each(p => p.prompt());
-			};
-			warn(time / 1000 + " seconds");
-			setTimeout(function () { warn(Math.floor((time / 4) / 1000) + " seconds"); }, time - Math.floor(time / 4));
-		}
-
-		util.log("RESTARTING SERVER" + (time ? " IN " + (time / 1000) + " SECONDS " : ''));
-		setTimeout(function () {
-			util.log("RESTARTING...");
-			save();
-			server.emit('shutdown');
-			server.close();
-			players.each( p => { p.getSocket().end(); });
-			init(true);
-		}, time);
-	}
+	restart
 };
+
+function serverOperation(warningStr, operation, args) {
+	args = args ? args.split(' ') : [];
+	const shouldWarn = args[0] && args[0] === 'warn';
+
+	let time = args[0] ? parseInt(args[shouldWarn ? 1 : 0], 10) : 0;
+
+	if (time && time < 20) {
+		console.log("Gotta give the players a bit longer than that, might as well do it instantly...");
+		console.log("Doing nothing.");
+		return;
+	}
+
+	time = time ? time * 1000 : 0;
+
+	if (shouldWarn) {
+		const warnPlayers = interval => {
+			players.broadcastL10n(l10n, warningStr, interval);
+			players.each(p => p.prompt());
+		};
+
+		warnPlayers(time / 1000 + " seconds");
+
+		const warningInterval = Math.floor(time / 4);
+		setInterval( () => warnPlayers(warningInterval / 1000 + " seconds"), warningInterval );
+	}
+
+	util.log(warningStr + " SERVER" + (time ? " IN " + (time / 1000) + " SECONDS " : ''));
+	setTimeout(operation, time);
+}
+
+function hotbootServer() {
+	util.log("HOTBOOTING...");
+	save(() => init(false));
+}
+
+function restartServer() {
+	util.log("RESTARTING...");
+	save();
+	server.emit('shutdown');
+	server.close();
+	players.each( p => { p.getSocket().end(); });
+	init(true);
+}
 
 process.stdin.resume();
 
