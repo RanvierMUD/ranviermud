@@ -433,6 +433,21 @@ describe('Look command', () => {
   });
 
   describe('Looking at adjacent rooms', () => {
+    const fakeExit = {
+      location:  1,
+      direction: 'tavern'
+    };
+
+    const adjacent = new Room({ area, title, location: 1, short_desc, dark_desc,
+      description: 'a frickin tavern' });
+
+    rooms.addRoom(adjacent);
+
+    look('tavern', player);
+
+    it('should do a thing', () => {
+
+    });
 
   });
 
