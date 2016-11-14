@@ -79,8 +79,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       if (!thing) {
         const exits       = room.getExits();
         const isExit      = exit => (args === exit.direction);
-        const foundExit   = exits.find(canSee);
-        const canSee      = foundExit ? Doors.isClosed(foundExit) : false;
+        const foundExit   = exits.find(isExit);
+        const canSee      = foundExit ? Doors.isOpen(foundExit) : false;
 
         if (canSee) {
           thing = rooms.getAt(foundExit.getLocation());
