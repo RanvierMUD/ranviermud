@@ -312,7 +312,7 @@ function tick() {
 	let timeChange = wasDaytime !== Time.isDay();
 
 	if (timeChange) {
-		players.each( p => p.emit('timeChange', wasDaytime, rooms));
+		players.each( p => p.emit('timeChange', wasDaytime, rooms) );
 		wasDaytime = !wasDaytime;
 		util.log("The times, they are a-changin'...");
 	}
@@ -328,17 +328,16 @@ function tick() {
 	if (weatherHappened) { util.log("WEATHER REPORT: " + weatherHappened); }
 }
 
-process.stdin.on('data', function (data)
-{
+process.stdin.on('data', data => {
 	data = data.trim();
-	var command = data.split(' ')[0];
+	const command = data.split(' ')[0];
 
 	if (!(command in server_commands)) {
 		console.log("That's not a real command...");
 		return;
 	}
 
-	let args = data.split(' ').slice(1).join(' ');
+	const args = data.split(' ').slice(1).join(' ');
 
 	server_commands[command](args);
 });
