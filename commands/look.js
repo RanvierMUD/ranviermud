@@ -77,9 +77,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       //FIXME: This does not really seem to be working.
       //FIXME: Consider making it a 'scout' command/skill.
       if (!thing) {
-        const exits = room.getExits();
-        const canSee = exits.find( exit => (args === exit.direction) && Doors.isOpen(exit) );
-        thing = canSee ? rooms.getAt(exit.location) : null;
+        const exits       = room.getExits();
+        const isExit      = exit => (args === exit.direction);
+        const foundExit   = exits.find(canSee);
+        const canSee      = foundExit ? Doors.isClosed(foundExit) : false;
+
+        if (canSee) {
+          thing = rooms.getAt(foundExit.getLocation());
+        } else if (foundExit) {
+          return player.warn('There is a door in the way...');
+        }
+
       }
 
       if (!thing) {
