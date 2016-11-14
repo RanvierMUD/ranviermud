@@ -98,6 +98,10 @@ function openOrClose(verb, args, player, players, rooms) {
     return player.say('That door is already ' + pastTense +'.');
   }
 
+  if (isOpen && isLocked(exit)) {
+    return player.say('That door is locked.');
+  }
+
   const dest = rooms.getAt(exit.location);
 
   const srcTitle  = room.getTitle('en');
