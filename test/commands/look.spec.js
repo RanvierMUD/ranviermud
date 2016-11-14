@@ -432,7 +432,8 @@ describe('Look command', () => {
 
   });
 
-  describe('Looking at adjacent rooms', () => {
+  //TODO: Fix?
+  xdescribe('Looking at adjacent rooms', () => {
     const fakeExit = {
       location:  1,
       direction: 'tavern'
@@ -442,11 +443,22 @@ describe('Look command', () => {
       description: 'a frickin tavern' });
 
     rooms.addRoom(adjacent);
-
+    room.exits.push(fakeExit);
     look('tavern', player);
 
-    it('should do a thing', () => {
+    it('should describe room if you look at it.', () => {
+      const playerLookAdjacentCall = getPlayerSayCall();
+      console.log(playerLookAdjacentCall.args[0]);
+      expect(playerLookAdjacentCall.args[0] === adjacent.getDescription());
+    });
 
+    room.exits[0].door = { open: false };
+
+    it('should tell you if there is a door in the way.', () => {
+      sinon.spy(player, 'warn');
+      const playerLookDoorCall = player.warn.getCall(0);
+      console.log(playerLookDoorCall.args[0]);
+      expect(playerLookDoorCall.args[0] === '<yellow>There is a door in the way...</yellow>');
     });
 
   });
