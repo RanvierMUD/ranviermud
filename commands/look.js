@@ -83,7 +83,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         const canSee      = foundExit ? Doors.isOpen(foundExit) : false;
 
         if (canSee) {
-          thing = rooms.getAt(foundExit.getLocation());
+          thing = rooms.getAt(foundExit.location);
         } else if (foundExit) {
           return player.warn('There is a door in the way...');
         }
