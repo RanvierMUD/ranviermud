@@ -100,8 +100,8 @@ const Commands = {
           const inv = player.getInventory();
 
           player.warn('ITEMS:\n');
-          for (let itemUid in inv) {
-            console.log(itemUid);
+          for (let i in inv) {
+            const itemUid = inv[i];
             const item = items.get(itemUid);
             player.say(item.getShortDesc());
 
