@@ -101,7 +101,7 @@ const Commands = {
 
           player.warn('ITEMS:\n');
           for (let itemUid in inv) {
-            
+            console.log(itemUid);
             const item = items.get(itemUid);
             player.say(item.getShortDesc());
 
