@@ -286,6 +286,20 @@ const Item = function ItemConstructor(config) {
     return missedPrereqs;
   }
 
+  self.addItem = item => {
+    item.setContainer(self.getUuid());
+    return self.inventory.push(item.getUuid());
+  }
+
+  self.removeItem = uid => {
+    if (self.inventory.indexOf(uid) > -1) {
+      self.inventory = self.inventory.filter(item => item.getUuid() !== uid);
+      return uid;
+    }
+    return null;
+  }
+
+  self.findInInventory = predicate => self.inventory.find(predicate);
 
 	/**
 	 * Used when persisting a copy of an item to a JSON

@@ -241,7 +241,7 @@ var Room = function Room(config) {
 
   self.getDarkDesc = function(locale) {
     return typeof self.dark_desc === 'string' ?
-      self.short_desc :
+      self.dark_desc :
       (locale in self.dark_desc ?
         self.dark_desc[locale] :
         self.getShortDesc(locale));

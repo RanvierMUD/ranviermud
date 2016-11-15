@@ -262,6 +262,7 @@ const Player = function PlayerConstructor(socket) {
   * @return boolean True if they have already been there. Otherwise false.
   */
 
+  //TODO: IS there a better way to store this info?
   self.hasExplored = vnum => {
     if (_.hasNot(self.explored, vnum)) {
       self.explored.push(vnum);

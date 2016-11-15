@@ -5,9 +5,10 @@
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 9 | Chart this stuff out.
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 257 | Weapon skills related to weapon type?
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 258 | General combat skills?
+| /Users/seanodonohue/myForks/ranviermud/src/command_util.js | 33 | Make APIs consistent and not awful.
 | /Users/seanodonohue/myForks/ranviermud/src/commands.js | 36 | Extract into individual files.
-| /Users/seanodonohue/myForks/ranviermud/src/commands.js | 137 | invis
-| /Users/seanodonohue/myForks/ranviermud/src/commands.js | 188 | Do the same way as above once you extract the admin commands.
+| /Users/seanodonohue/myForks/ranviermud/src/commands.js | 141 | invis
+| /Users/seanodonohue/myForks/ranviermud/src/commands.js | 193 | Do the same way as above once you extract the admin commands.
 | /Users/seanodonohue/myForks/ranviermud/src/dialogue.js | 145 | Consider extracting these enums/consts from the main dialogue script file.
 | /Users/seanodonohue/myForks/ranviermud/src/doors.js | 44 | Refactor to use the bound functions in external code.
 | /Users/seanodonohue/myForks/ranviermud/src/effects.js | 4 | Extract into own directory. Too many effects.
@@ -21,17 +22,19 @@
 | /Users/seanodonohue/myForks/ranviermud/src/help_files.js | 52 | Dynamically pull in list of admins
 | /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 82 | Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
 | /Users/seanodonohue/myForks/ranviermud/src/item_util.js | 88 | Add some kind of bonus.
-| /Users/seanodonohue/myForks/ranviermud/src/items.js | 34 | Extract to Data helper method.
+| /Users/seanodonohue/myForks/ranviermud/src/items.js | 35 | Extract to Data helper method.
+| /Users/seanodonohue/myForks/ranviermud/src/items.js | 89 | Account for persisted items eventually (uuids rather than vnums)
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 15 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 17 | Extract npc from this file like player/player_manager
 | /Users/seanodonohue/myForks/ranviermud/src/npcs.js | 227 | Have spawn inventory but also add same inv functionality as player
 | /Users/seanodonohue/myForks/ranviermud/src/player.js | 59 | Generated descs.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 342 | Put in perception skill helper file
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 353 | Consider using Random.roll instead.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 622 | Use chalk node module to create color-coded logging messages.
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 679 | Make a similar function but for NPCs::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 705 | Should go in other module::::::::::::::::::::::::
-| /Users/seanodonohue/myForks/ranviermud/src/player.js | 716 | Put this as a function in the combatUtils module.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 265 | IS there a better way to store this info?
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 343 | Put in perception skill helper file
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 354 | Consider using Random.roll instead.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 623 | Use chalk node module to create color-coded logging messages.
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 680 | Make a similar function but for NPCs::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 706 | Should go in other module::::::::::::::::::::::::
+| /Users/seanodonohue/myForks/ranviermud/src/player.js | 717 | Put this as a function in the combatUtils module.
 | /Users/seanodonohue/myForks/ranviermud/src/rooms.js | 3 | Refactor
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 93 | What if they swap weapons mid-fight?
@@ -66,9 +69,12 @@
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 64 | Change to calculate based on character's strength and pack size vs. item weight/size.
 | /Users/seanodonohue/myForks/ranviermud/commands/get.js | 79 | Put carrying capacity method on player obj.
 | /Users/seanodonohue/myForks/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 69 | Improve based on player stats/skills?
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 19 | Test and refactor.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 76 | Improve based on player stats/skills?
+| /Users/seanodonohue/myForks/ranviermud/commands/put.js | 5 | Change get to auto-put or auto-hold...
 | /Users/seanodonohue/myForks/ranviermud/commands/skills.js | 14 | Pull out attrs into enum of some kind for reuse?
 | /Users/seanodonohue/myForks/ranviermud/commands/skills.js | 15 | Refactor for readability by decomposing nested conditionals.
+| /Users/seanodonohue/myForks/ranviermud/commands/take.js | 14 | Have drop command search containers for items to drop?
 | /Users/seanodonohue/myForks/ranviermud/commands/train.js | 20 | Extract into own function in Skills module.
 | /Users/seanodonohue/myForks/ranviermud/commands/whisper.js | 2 | Refactor to be a channel.
 
@@ -78,5 +84,5 @@
 | /Users/seanodonohue/myForks/ranviermud/src/combat_util.js | 89 | Can be done better with changes to npc class.
 | /Users/seanodonohue/myForks/ranviermud/src/rtcombat.js | 298 | In statusUtils: This could be a problem if the combat is between two NPCs or two players.
 | /Users/seanodonohue/myForks/ranviermud/commands/appraise.js | 35 | There has to be a better way...
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 70 | This does not really seem to be working.
-| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 71 | Consider making it a 'scout' command/skill.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 77 | This does not really seem to be working.
+| /Users/seanodonohue/myForks/ranviermud/commands/look.js | 78 | Consider making it a 'scout' command/skill.
