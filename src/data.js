@@ -118,9 +118,8 @@ const Data = {
 				const l10n = l10nHelper(l10nFile);
 				const listeners = require(behaviors_dir + subdir + behavior + '.js').listeners;
 
+        // Warning: Multiple listeners can be added for the same event. All will be triggered.
         for (let listener in listeners) {
-
-          // For now do not allow conflicting listeners in behaviors
           let handler = listeners[listener](l10n);
 					target.on(listener, handler);
 				}

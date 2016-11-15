@@ -113,7 +113,7 @@ const Commands = {
               player.say(prereq + ': ' + prereqs[prereq]);
             }
             player.say(item.isEquipped() ? 'Equipped' : 'In inventory');
-
+            player.say('Events: ', item.eventNames());
             player.warn('========\n');
           }
 
