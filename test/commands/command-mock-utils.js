@@ -1,10 +1,11 @@
 'use strict';
 
 const Npcs    = require('../../src/npcs').Npcs;
+const Npc     = require('../../src/npcs').Npc;
 const Items   = require('../../src/items').Items;
+const Item    = require('../../src/items').Item;
 const Players = require('../../src/player_manager').PlayerManager;
 const Rooms   = require('../../src/rooms').Rooms;
-const Item    = require('../../src/items').Item;
 
 /*
   Takes a command function and an array of mocks in order:
@@ -30,6 +31,7 @@ const addItem = ({
   location = 1,
   wearLocation,
   short_description,
+  room_description,
   attributes,
   room,
   player,
@@ -39,7 +41,7 @@ const addItem = ({
     if (!items) { throw new Error('You need to pass in the items manager...'); }
     if (room && player) { throw new Error('You can not place the item in a room and in an inventory at the same time.'); }
 
-    const item = new Item({ attributes, uuid, keywords, location, wearLocation, short_description });
+    const item = new Item({ attributes, uuid, keywords, location, wearLocation, short_description, room_description });
     items.addItem(item);
     if (room) { room.addItem(item.getUuid()); }
     if (player) { player.addItem(item); }
@@ -50,11 +52,34 @@ const addItem = ({
     return item;
 }
 
-const getCallCounter = fn => {
+const addNpc = ({
+  uuid = 'npc',
+  keywords = ['npc'],
+  location = 1,
+  short_description,
+  room_description,
+  npcs,
+  attributes,
+  room,
+  inventory
+  }) => {
+    if (!npcs) { throw new Error('You need to pass in the npcs manager...'); }
+    if (!room) { throw new Error('You need to add the npc to a room.'); }
+
+    const npc = new Npc({ attributes, uuid, keywords, location, short_description, room_description, inventory });
+    npcs.add(npc); //TODO: Make consistent amongst manager classes (e.g., npcs.add vs items.addItem)
+    if (room) { room.addNpc(npc.getUuid()); }
+
+    return npc;
+}
+
+const getCallCounter = spy => {
   let counter = 0;
-  return () => fn.getCall(counter++);
+  return () => spy.getCall(counter++);
 };
 
 module.exports = {
-  CommandInjector, getGlobals, addItem, getCallCounter
+  CommandInjector,
+  getGlobals, getCallCounter,
+  addItem, addNpc
 };
