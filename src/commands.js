@@ -95,6 +95,31 @@ const Commands = {
         });
       },
 
+      debugInv: (rooms, items, players, npcs, Commands) =>
+        (player, args) => {
+          const inv = player.getInventory();
+
+          player.warn('ITEMS:\n');
+          for (let itemUid in inv) {
+            
+            const item = items.get(itemUid);
+            player.say(item.getShortDesc());
+
+            const attrs = item.getAttributes();
+            for (let attr in attrs) {
+              player.say(attr + ': ' + attrs[attr]);
+            }
+
+            const prereqs = item.getPrerequisites();
+            for (let prereq in prereqs) {
+              player.say(prereq + ': ' + prereqs[prereq]);
+            }
+
+            player.warn('========\n');
+          }
+
+        },
+
 
     setAttribute: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
