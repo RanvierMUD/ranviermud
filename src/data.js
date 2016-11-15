@@ -113,7 +113,7 @@ const Data = {
 			let behaviors = config.behaviors.split(',');
 
       // reverse to give left-to-right weight in the array
-			behaviors.reverse().forEach(function (behavior) {
+			behaviors.reverse().forEach( behavior => {
 				const l10nFile = behaviors_l10n_dir + subdir + behavior + '.yml';
 				const l10n = l10nHelper(l10nFile);
 				const listeners = require(behaviors_dir + subdir + behavior + '.js').listeners;
@@ -122,7 +122,6 @@ const Data = {
 
           // For now do not allow conflicting listeners in behaviors
           let handler = listeners[listener](l10n);
-					target.removeAllListeners(listener);
 					target.on(listener, handler);
 				}
 			});
