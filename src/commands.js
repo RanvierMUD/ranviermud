@@ -98,11 +98,9 @@ const Commands = {
       debugInv: (rooms, items, players, npcs, Commands) =>
         (player, args) => {
           const inv = player.getInventory();
-
-          player.warn('ITEMS:\n');
+          player.warn("ITEMS:\n");
           for (let i in inv) {
-            const itemUid = inv[i];
-            const item = items.get(itemUid);
+            const item = inv[i];
             player.say(item.getShortDesc());
 
             const attrs = item.getAttributes();
@@ -114,6 +112,7 @@ const Commands = {
             for (let prereq in prereqs) {
               player.say(prereq + ': ' + prereqs[prereq]);
             }
+            player.say(item.isEquipped() ? 'Equipped' : 'In inventory');
 
             player.warn('========\n');
           }

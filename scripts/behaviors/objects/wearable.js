@@ -3,8 +3,6 @@ const ItemUtil  = require('../../../src/item_util').ItemUtil;
 
 
 exports.listeners = {
-  // TODO: Extract to file so that this functionality can be used for other items, and with special bonuses as well?
-  // OR just add a bonus emitter -- might be too spaghetti though.
 
   wear: function (l10n) {
     return function (location, room, player, players) {
@@ -13,7 +11,7 @@ exports.listeners = {
       if (missedPrerequisites.length) {
         ItemUtil.useDefaultPenalties(this, player, location, missedPrerequisites, 'wear');
       }
-
+      console.log("EMITTING WEAR");
       const toRoom = Broadcast.toRoom(room, player, null, players);
       const desc = this.getShortDesc('en');
       const name = player.getName();
