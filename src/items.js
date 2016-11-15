@@ -98,9 +98,10 @@ const Items = function ItemsManager() {
       return items;
     }
 
-    const containerItems = container
-      .getInventory()
-      .map(hydrateContentsByVnum);
+    const inv = container.getInventory();
+    const containerItems = inv && inv.length ?
+      inv.map(hydrateContentsByVnum) :
+      [];
 
     const containerInventory = _
       .flatten(containerItems)
