@@ -180,6 +180,7 @@ const Item = function ItemConstructor(config) {
     self.room_description  = config.room_description  || '';
     self.keywords          = config.keywords    || []; // Required
 		self.description       = config.description || '';
+    //TODO: Every other class uses .location for the room vnum, right? use .location and .getLocation
 		self.room              = config.room        || null;
 		self.npc_held          = config.npc_held    || false;
 		self.equipped          = config.equipped    || false;

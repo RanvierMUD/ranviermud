@@ -1,5 +1,5 @@
 - &chain-whip
-    vnum: 2
+    vnum: 10
     short_description:
         en: "chain whip"
     room_description:
