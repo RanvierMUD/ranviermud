@@ -252,7 +252,7 @@ const Commands = {
             Commands.admin_commands[command] = commandFunc;
           }
         } catch (e) {
-          console.log('admin_command config -> ', e);
+          console.log('Admin_command config error -> ', e);
         }
       }
   },

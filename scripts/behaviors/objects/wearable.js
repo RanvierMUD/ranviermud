@@ -11,7 +11,7 @@ exports.listeners = {
       if (missedPrerequisites.length) {
         ItemUtil.useDefaultPenalties(this, player, location, missedPrerequisites, 'wear');
       }
-      console.log("EMITTING WEAR");
+
       const toRoom = Broadcast.toRoom(room, player, null, players);
       const desc = this.getShortDesc('en');
       const name = player.getName();
