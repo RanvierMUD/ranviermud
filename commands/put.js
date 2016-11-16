@@ -25,49 +25,63 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     const [itemTarget, containerTarget] = getTargets(args);
 
     if (!containerTarget || containerTarget === 'away') {
-      const item =
-        CommandUtil.findItemInRoom(items, itemTarget, room, player, true) ||
-        CommandUtil.findItemInInventory(itemTarget, player, true);
+      const { item } = findStuff(itemTarget);
+
       if (!item) { return player.warn('Could not find ' + itemTarget + '.'); }
-      putInLargestWornContainer(item);
+
+      const container = findOptimalContainer(item);
+      putInContainer(item, container);
+
     } else {
-      const item =
-        CommandUtil.findItemInRoom(items, itemTarget, room, player, true) ||
-        CommandUtil.findItemInInventory(itemTarget, player, true);
-      if (!item) { return player.warn('Could not find ' + itemTarget + '.'); }
+      const { item, container } = findStuff(itemTarget, containerTarget);
 
-      const container =
-        CommandUtil.findItemInInventory(itemTarget, player, true) ||
-        CommandUtil.findItemInRoom(items, containerTarget, room, player, true);
+      if (!item)      { return player.warn('Could not find ' + itemTarget + '.'); }
       if (!container) { return player.warn('Could not find ' + containerTarget + '.'); }
+      putInContainer(item, container);
+    }
 
-      putInSpecifiedContainer(item, container);
+    // -- helpers --
+
+    //TODO: When inventory is finalized, do a thing where it checks held items first...
+    function findStuff(itemTarget, containerTarget) {
+      const item = CommandUtil.findItemInRoom(items, itemTarget, room, player, true)
+                || CommandUtil.findItemInInventory(itemTarget, player, true);
+      const container = containerTarget ?
+           CommandUtil.findItemInInventory(itemTarget, player, true)
+        || CommandUtil.findItemInRoom(items, containerTarget, room, player, true) :
+        null;
+      return { item, container };
     }
 
     function putInSpecifiedContainer(item, container) {
-
+      item.setContainer(container);
+      container.addItem(item);
+      item.setRoom(null);
+      if (room) { room.removeItem(item.getUuid()); }
     }
 
-    function putInLargestWornContainer(item) {
+    function findOptimalContainer(item) {
       // Find optimal container using hella algorithm.
+      // Filter all containers in inventory.
+      // Then filter for ones that can fit the item.
     }
 
   };
 
-  function getTargets(args) {
-    args = args.split(' ');
+function getTargets(args) {
+  args = args.split(' ');
 
-    switch(args.length) {
-      case 1:
-        return [ args[0], null ];
-      case 3:
-        return removePreposition(args);
-      default:
-        return args;
-    }
+  switch(args.length) {
+    case 1:
+      return [ args[0], null ];
+    case 3:
+      return removePreposition(args);
+    default:
+      return args;
   }
+}
 
-  function removePreposition(args) {
-    const prepositions = ['from', 'in', 'into'];
-    return args.filter(word => !prepositions.includes(word));
-  }
+function removePreposition(args) {
+  const prepositions = ['from', 'in', 'into'];
+  return args.filter(word => !prepositions.includes(word));
+}
