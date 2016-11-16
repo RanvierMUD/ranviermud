@@ -27,7 +27,6 @@ const toRoom = (room, firstParty, secondParty, players) => config => {
   const secondPartyMsger = Type.isPlayer(secondParty) ?
     secondParty.say : noop;
 
-
   const isThirdPartyInRoom = player => {
     const isFirstParty  = player === firstParty;
     const isSecondParty = player === secondParty;

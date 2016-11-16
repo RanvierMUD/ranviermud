@@ -95,6 +95,59 @@ const Commands = {
         });
       },
 
+      debugInv: (rooms, items, players, npcs, Commands) =>
+        (player, args) => {
+          const inv = player.getInventory();
+          player.warn("ITEMS:\n");
+          for (let i in inv) {
+            const item = inv[i];
+            player.say(item.getShortDesc());
+
+            const attrs = item.getAttributes();
+            for (let attr in attrs) {
+              player.say(attr + ': ' + attrs[attr]);
+            }
+
+            const prereqs = item.getPrerequisites();
+            for (let prereq in prereqs) {
+              player.say(prereq + ': ' + prereqs[prereq]);
+            }
+            player.say(item.isEquipped() ? 'Equipped' : 'In inventory');
+            player.say('Events: ', item.eventNames());
+            player.warn('========\n');
+          }
+
+        },
+
+    debugItems: (rooms, items, players, npcs, Commands) =>
+      (player, args) => {
+        const allItems = items.objects;
+        player.warn("GLOBAL ITEMS:\n");
+        for (let uid in allItems) {
+          const item = allItems[uid];
+
+          player.say(item.getShortDesc());
+          player.say('\n')
+          player.say('vnum: ' + item.getVnum());
+          player.say('uuid: ' + item.getUuid());
+          player.say('location: ' + item.getRoom());
+          player.say('\n')
+          player.say(item.isEquipped() ? 'Equipped' : 'Not equipped');
+
+          const container = item.getContainer();
+          player.say(container ? 'Container: ' + container : 'No container.');
+
+          const inventory = item.getInventory();
+          player.say(inventory ? 'Inventory: ' : 'No inventory.');
+          if (inventory) {
+            for (let uid in inventory) {
+              player.say(uid);
+            }
+          }
+          player.warn('========\n');
+        }
+
+      },
 
     setAttribute: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
@@ -199,7 +252,7 @@ const Commands = {
             Commands.admin_commands[command] = commandFunc;
           }
         } catch (e) {
-          console.log('admin_command config -> ', e);
+          console.log('Admin_command config error -> ', e);
         }
       }
   },

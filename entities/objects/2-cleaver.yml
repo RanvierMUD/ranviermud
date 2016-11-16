@@ -1,13 +1,9 @@
 - &cleaver
     vnum: 2
-    short_description:
-        en: "meat cleaver"
-    room_description:
-        en: "a butcher's hefty cleaver"
-    keywords:
-        en: [ "cleaver", "meat", "cleav", "butch", "butcher" ]
-    description:
-        en: "A long, sharp, thick blade. Replete with a handle inlaid with horn and oak. Adept when used to sever meat from the bone."
+    short_description: "meat cleaver"
+    room_description: "a butcher's hefty cleaver"
+    keywords: [ "cleaver", "meat", "cleav", "butch", "butcher" ]
+    description: "A long, sharp, thick blade. Replete with a handle inlaid with horn and oak. Adept when used to sever meat from the bone."
     room: 2
     script: '2-cleaver.js'
     behaviors: "wieldable"
