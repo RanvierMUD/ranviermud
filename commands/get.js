@@ -44,7 +44,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function pickUp(item) {
       player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc('en'));
       item.setRoom(null);
-      item.setInventory(playerName);
+      item.setHolder(playerName);
       player.addItem(item);
       room.removeItem(item.getUuid());
 
