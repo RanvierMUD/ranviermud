@@ -15,6 +15,7 @@
 const util        = require('util');
 const _           = require('../src/helpers');
 const CommandUtil = require('../src/command_util').CommandUtil;
+const Broadcast   = require('../src/broadcast').Broadcast;
 
 exports.command = (rooms, items, players, npcs, Commands) =>
   (args, player) => {
@@ -25,6 +26,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     const room = rooms.getAt(player.getLocation());
+    const toRoom = Broadcast.toRoom(room, player, null, players);
 
     const [ itemTarget, containerTarget ] = _.getTargets(args);
 
@@ -33,6 +35,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     if (!item)      { return player.warn('Could not find ' + itemTarget + '.'); }
     if (!container) { return player.warn('Could not find ' + containerTarget + '.'); }
+
     putInContainer(item, container);
 
     // -- helpers --
@@ -53,7 +56,13 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       const holder = container.getHolder() || null;
       item.setHolder(holder);
       if (room) { room.removeItem(item.getUuid()); }
-      player.say('you put the thing in the stuff');
+
+      const containerDesc = container.getShortDesc();
+      const itemName = item.getShortDesc();
+      toRoom({
+        firstPartyMessage: 'You place the ' + itemName + ' into the ' + containerDesc + '.',
+        thirdPartyMessage: player.getName() + ' places the ' + itemName + ' into the ' + containerDesc + '.'
+      });
     }
 
   };
