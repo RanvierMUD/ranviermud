@@ -1,25 +1,26 @@
 'use strict';
 
+// syntax: put [item] in [container] or put [item] [container]
+//TODO: Change get to auto-put or auto-hold...
+
+// When finding item to put in container:
+// - Look at held items first.
+// - Then look in the room at large.
+
+// When finding container:
+// - Look at worn containers first (inventory)
+// - Then nested containers
+// - Finally, look in room
+
 const util        = require('util');
 const CommandUtil = require('../src/command_util').CommandUtil;
 
 exports.command = (rooms, items, players, npcs, Commands) =>
   (args, player) => {
     args = args.trim();
-    // syntax: put [item] in [container] or put [item] [container]
-    //TODO: Change get to auto-put or auto-hold...
-
-    // When finding item to put in container:
-    // - Look at held items first.
-    // - Then look in the room at large.
-
-    // When finding container:
-    // - Look at worn containers first (inventory)
-    // - Then nested containers
-    // - Finally, look in room
 
     if (!args) {
-      player.warn('Put which item into which container?');
+      return player.warn('Put which item into which container?');
     }
 
     const room = rooms.getAt(player.getLocation());
@@ -46,11 +47,11 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     function putInContainer(item, container) {
-      console.log('ARGS FOR PUT: ', arguments);
       container.addItem(item);
       item.setRoom(null);
       item.setHolder(player.getName());
       if (room) { room.removeItem(item.getUuid()); }
+      player.say('you put the thing in the stuff');
     }
 
     //TODO: SAVE THIS FOR TAKE/GET?
