@@ -72,8 +72,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     player.addItem(item);
     const itemName = item.getShortDesc();
     toRoom({
-      firstPartyMessage: 'You reach into the ' + containerDesc + ' and find a' + itemName + '.',
-      thirdPartyMessage: player.getName() + ' reaches into the ' + containerDesc + ' and finds a' + itemName + '.'
+      firstPartyMessage: 'You reach into the ' + containerDesc + ' and find a ' + itemName + '.',
+      thirdPartyMessage: player.getName() + ' reaches into the ' + containerDesc + ' and finds a ' + itemName + '.'
     });
   }
 
