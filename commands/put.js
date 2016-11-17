@@ -13,6 +13,7 @@
 // - Finally, look in room
 
 const util        = require('util');
+const _           = require('../src/helpers');
 const CommandUtil = require('../src/command_util').CommandUtil;
 
 exports.command = (rooms, items, players, npcs, Commands) =>
@@ -25,7 +26,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     const room = rooms.getAt(player.getLocation());
 
-    const [ itemTarget, containerTarget ] = getTargets(args);
+    const [ itemTarget, containerTarget ] = _.getTargets(args);
 
     const item      = findItem(itemTarget);
     const container = findContainer(containerTarget);
@@ -49,40 +50,10 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     function putInContainer(item, container) {
       container.addItem(item);
       item.setRoom(null);
-      item.setHolder(player.getName());
+      const holder = container.getHolder() || null;
+      item.setHolder(holder);
       if (room) { room.removeItem(item.getUuid()); }
       player.say('you put the thing in the stuff');
     }
 
-    //TODO: SAVE THIS FOR TAKE/GET?
-    function findOptimalContainer(item) {
-      const inventory  = player.getInventory();
-      const itemSize   = item.getAttribute('size')   || 1;
-      const itemWeight = item.getAttribute('weight') || 1;
-
-      const availableContainers = inventory
-        .filter(item => item.isContainer());
-
-      return availableContainers[0] || null;
-      // TODO: Then filter for ones that can fit the item.
-    }
-
   };
-
-function getTargets(args) {
-  args = args.split(' ');
-
-  switch(args.length) {
-    case 1:
-      return [ args[0], null ];
-    case 3:
-      return removePreposition(args);
-    default:
-      return args;
-  }
-}
-
-function removePreposition(args) {
-  const prepositions = ['from', 'in', 'into'];
-  return args.filter(word => !prepositions.includes(word));
-}
