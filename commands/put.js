@@ -25,7 +25,9 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     const room = rooms.getAt(player.getLocation());
 
     const [ itemTarget, containerTarget ] = getTargets(args);
-    const { item,       container       } = findStuff(itemTarget, containerTarget);
+
+    const item      = findItem(itemTarget);
+    const container = findContainer(containerTarget);
 
     if (!item)      { return player.warn('Could not find ' + itemTarget + '.'); }
     if (!container) { return player.warn('Could not find ' + containerTarget + '.'); }
@@ -33,24 +35,18 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     // -- helpers --
 
-    //TODO: When inventory is finalized, do a thing where it checks held items first...
-    function findStuff(itemTarget, containerTarget) {
-      const item      = findItemTarget(itemTarget);
-      const container = findContainerTarget(containerTarget);
-      return { item, container };
-    }
-
-    function findItemTarget(itemTarget) {
+    function findItem(itemTarget) {
       return CommandUtil.findItemInRoom(items, itemTarget, room, player, true) || CommandUtil.findItemInInventory(itemTarget, player, true);
     }
 
-    function findContainerTarget(containerTarget) {
+    function findContainer(containerTarget) {
       return containerTarget ?
-        CommandUtil.findItemInInventory(itemTarget, player, true) || CommandUtil.findItemInRoom(items, containerTarget, room, player, true) :
+        CommandUtil.findItemInInventory(containerTarget, player, true) || CommandUtil.findItemInRoom(items, containerTarget, room, player, true) :
         null;
     }
 
     function putInContainer(item, container) {
+      console.log('ARGS FOR PUT: ', arguments);
       container.addItem(item);
       item.setRoom(null);
       item.setHolder(player.getName());

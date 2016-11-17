@@ -226,7 +226,7 @@ const Item = function ItemConstructor(config) {
 	self.setAttribute = (attr, val) => self.attributes[attr] = val;
 	/**#@-*/
 
-  self.isContainer = () => self.getAttribute('max_size_capacity') && self.getAttribute('max_weight_capacity');
+  self.isContainer = () => (self.getAttribute('maxSizeCapacity') && self.getAttribute('maxWeightCapacity'));
 
 	/**
 	 * Get the description, localized if possible
@@ -292,6 +292,8 @@ const Item = function ItemConstructor(config) {
 
   self.addItem = item => {
     item.setContainer(self.getUuid());
+    console.log('inventory is ', self.inventory);
+    console.log('i am ', self);
 
     return self.inventory.push(item.getUuid());
   }
