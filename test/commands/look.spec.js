@@ -353,8 +353,8 @@ describe('Look command', () => {
   const bucket = addItem({
     items, room, location,
     attributes: {
-      max_weight_capacity: 10,
-      max_size_capacity: 10,
+      maxWeightCapacity: 10,
+      maxSizeCapacity: 10,
     },
     uuid: 'bucket',
     keywords: ['bucket'],

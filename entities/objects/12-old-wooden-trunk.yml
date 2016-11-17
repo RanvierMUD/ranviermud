@@ -11,8 +11,8 @@
     room: 5
     attributes:
         weight: 200
-        max_size_capacity: 32
-        max_weight_capacity: 100
+        maxSizeCapacity: 32
+        maxWeightCapacity: 100
     inventory:
       - 3
       - 4
