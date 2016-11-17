@@ -22,6 +22,7 @@
 const util        = require('util');
 const _           = require('../src/helpers');
 const CommandUtil = require('../src/command_util').CommandUtil;
+const Broadcast   = require('../src/broadcast').Broadcast;
 
 exports.command = (rooms, items, players, npcs, Commands) =>
   (args, player) => {
@@ -32,6 +33,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     const room = rooms.getAt(player.getLocation());
+    const toRoom = Broadcast.toRoom(room, player, null, players);
 
     const [ itemTarget, containerTarget ] = _.getTargets(args);
 
@@ -42,9 +44,11 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     const item = findItemInContainer(itemTarget, container);
+    const containerDesc = container.getShortDesc();
 
     if (!item) {
-      return player.warn('Could not find ' + itemTarget + ' in ' + container.getShortDesc() + '.');
+      toRoom({ thirdPartyMessage: player.getName() + ' roots around in ' + containerDesc + ' and comes up empty-handed.' });
+      return player.warn('Could not find ' + itemTarget + ' in ' + containerDesc + '.');
     }
 
     takeFromContainer(item, container)
@@ -66,6 +70,11 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     item.setContainer(null);
     item.setHolder(player.getName());
     player.addItem(item);
+    const itemName = item.getShortDesc();
+    toRoom({
+      firstPartyMessage: 'You reach into the ' + containerDesc + ' and find a' + itemName + '.',
+      thirdPartyMessage: player.getName() + ' reaches into the ' + containerDesc + ' and finds a' + itemName + '.'
+    });
   }
 
   /* Use this in take and get eventually, maybe put in item utils? */
