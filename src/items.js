@@ -205,6 +205,7 @@ const Item = function ItemConstructor(config) {
 	self.getVnum      = ()   => self.vnum;
 	self.getInventory = ()   => self.inventory;
 	self.isNpcHeld    = ()   => self.npc_held;
+  self.getHolder    = ()   => self.holder; // Name/uid of player/npc holding it.
 	self.isEquipped   = ()   => self.equipped;
 	self.getRoom      = ()   => self.room;
 	self.getContainer = ()   => self.container;
