@@ -22,48 +22,52 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       player.warn('Put which item into which container?');
     }
 
-    const [itemTarget, containerTarget] = getTargets(args);
+    const room = rooms.getAt(player.getLocation());
 
-    if (!containerTarget || containerTarget === 'away') {
-      const { item } = findStuff(itemTarget);
+    const [ itemTarget, containerTarget ] = getTargets(args);
+    const { item,       container       } = findStuff(itemTarget, containerTarget);
 
-      if (!item) { return player.warn('Could not find ' + itemTarget + '.'); }
-
-      const container = findOptimalContainer(item);
-      putInContainer(item, container);
-
-    } else {
-      const { item, container } = findStuff(itemTarget, containerTarget);
-
-      if (!item)      { return player.warn('Could not find ' + itemTarget + '.'); }
-      if (!container) { return player.warn('Could not find ' + containerTarget + '.'); }
-      putInContainer(item, container);
-    }
+    if (!item)      { return player.warn('Could not find ' + itemTarget + '.'); }
+    if (!container) { return player.warn('Could not find ' + containerTarget + '.'); }
+    putInContainer(item, container);
 
     // -- helpers --
 
     //TODO: When inventory is finalized, do a thing where it checks held items first...
     function findStuff(itemTarget, containerTarget) {
-      const item = CommandUtil.findItemInRoom(items, itemTarget, room, player, true)
-                || CommandUtil.findItemInInventory(itemTarget, player, true);
-      const container = containerTarget ?
-           CommandUtil.findItemInInventory(itemTarget, player, true)
-        || CommandUtil.findItemInRoom(items, containerTarget, room, player, true) :
-        null;
+      const item      = findItemTarget(itemTarget);
+      const container = findContainerTarget(containerTarget);
       return { item, container };
     }
 
-    function putInSpecifiedContainer(item, container) {
-      item.setContainer(container);
+    function findItemTarget(itemTarget) {
+      return CommandUtil.findItemInRoom(items, itemTarget, room, player, true) || CommandUtil.findItemInInventory(itemTarget, player, true);
+    }
+
+    function findContainerTarget(containerTarget) {
+      return containerTarget ?
+        CommandUtil.findItemInInventory(itemTarget, player, true) || CommandUtil.findItemInRoom(items, containerTarget, room, player, true) :
+        null;
+    }
+
+    function putInContainer(item, container) {
       container.addItem(item);
       item.setRoom(null);
+      item.setHolder(player.getName());
       if (room) { room.removeItem(item.getUuid()); }
     }
 
+    //TODO: SAVE THIS FOR TAKE/GET?
     function findOptimalContainer(item) {
-      // Find optimal container using hella algorithm.
-      // Filter all containers in inventory.
-      // Then filter for ones that can fit the item.
+      const inventory  = player.getInventory();
+      const itemSize   = item.getAttribute('size')   || 1;
+      const itemWeight = item.getAttribute('weight') || 1;
+
+      const availableContainers = inventory
+        .filter(item => item.isContainer());
+
+      return availableContainers[0] || null;
+      // TODO: Then filter for ones that can fit the item.
     }
 
   };
