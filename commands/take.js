@@ -33,7 +33,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     const room = rooms.getAt(player.getLocation());
 
-    const [ itemTarget, containerTarget ] = _.getTarget(args);
+    const [ itemTarget, containerTarget ] = _.getTargets(args);
 
     const container = findContainer(containerTarget);
 
@@ -52,7 +52,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     // do a thing
 
     function findContainer(containerTarget) {
-      return CommandUtil.findItemInInventory(containerTarget, player, true) || CommandUtil.findItemInRoom(items, containerTarget, room, player, true) :
+      return CommandUtil.findItemInInventory(containerTarget, player, true) || CommandUtil.findItemInRoom(items, containerTarget, room, player, true);
     }
 
     function findItemInContainer(itemTarget, container) {
@@ -81,3 +81,4 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     return availableContainers[0] || null;
     // TODO: Then filter for ones that can fit the item.
   }
+}
