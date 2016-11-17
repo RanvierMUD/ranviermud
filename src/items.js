@@ -292,9 +292,6 @@ const Item = function ItemConstructor(config) {
 
   self.addItem = item => {
     item.setContainer(self.getUuid());
-    console.log('inventory is ', self.inventory);
-    console.log('i am ', self);
-
     return self.inventory.push(item.getUuid());
   }
 
