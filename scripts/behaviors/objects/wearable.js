@@ -16,8 +16,8 @@ exports.listeners = {
       const desc = this.getShortDesc('en');
       const name = player.getName();
       toRoom({
-        firstPartyMessage: 'You wear the ' + desc + '.',
-        thirdPartyMessage: name + ' wears the ' + desc + '.'
+        firstPartyMessage: `You wear the ${desc}.`,
+        thirdPartyMessage: `${name} wears the ${desc}.`
       });
     };
   },
@@ -28,8 +28,8 @@ exports.listeners = {
       const desc = this.getShortDesc('en');
       const name = player.getName();
       toRoom({
-        firstPartyMessage: 'You remove the ' + desc + '.',
-        thirdPartyMessage: name + ' removes the ' + desc + '.'
+        firstPartyMessage: `You remove the ${desc}.`,
+        thirdPartyMessage: `${name} removes the ${desc}.`
       });
 
       ItemUtil.removeDefaultPenaltes(player, this, location);
