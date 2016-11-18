@@ -1,5 +1,5 @@
 node_modules
-plugins/
+plugins/**/*.*
 data/players/*.json
 data/accounts/*.json
 *.swp
