@@ -178,18 +178,19 @@ const Item = function ItemConstructor(config) {
 	self.init = config => {
 		self.short_description = config.short_description || '';
     self.room_description  = config.room_description  || '';
-    self.keywords          = config.keywords    || []; // Required
-		self.description       = config.description || '';
+    self.keywords          = config.keywords      || []; // Required
+		self.description       = config.description   || '';
     //TODO: Every other class uses .location for the room vnum, right? use .location and .getLocation
-		self.room              = config.room        || null;
-		self.npc_held          = config.npc_held    || false;
-		self.equipped          = config.equipped    || false;
-		self.container         = config.container   || null;
-		self.uuid              = config.uuid        || null;
-		self.vnum              = config.vnum;       // Required
-		self.script            = config.script      || null;
+		self.room              = config.room          || null;
+		self.npc_held          = config.npc_held      || false;
+		self.equipped          = config.equipped      || false;
+		self.container         = config.container     || null;
+		self.uuid              = config.uuid          || null;
+		self.vnum              = config.vnum;         // Required
+		self.script            = config.script        || null;
 		self.attributes        = config.attributes    || {};
     self.prerequisites     = config.prerequisites || {};
+    self.holder            = config.holder        || '';
 
     self.inventory = config.inventory || (self.isContainer() ? [] : null);
 
@@ -204,6 +205,7 @@ const Item = function ItemConstructor(config) {
 	self.getVnum      = ()   => self.vnum;
 	self.getInventory = ()   => self.inventory;
 	self.isNpcHeld    = ()   => self.npc_held;
+  self.getHolder    = ()   => self.holder; // Name/uid of player/npc holding it.
 	self.isEquipped   = ()   => self.equipped;
 	self.getRoom      = ()   => self.room;
 	self.getContainer = ()   => self.container;
@@ -218,13 +220,14 @@ const Item = function ItemConstructor(config) {
 	self.setRoom      = room  => self.room      = room;
 	self.setInventory = ids   => self.inventory = ids;
 	self.setNpcHeld   = held  => self.npc_held  = held;
+  self.setHolder    = id    => self.holder    = id;
 	self.setContainer = uid   => self.container = uid;
 	self.setEquipped  = equip => self.equipped  = !!equip;
 
 	self.setAttribute = (attr, val) => self.attributes[attr] = val;
 	/**#@-*/
 
-  self.isContainer = () => self.getAttribute('max_size_capacity') && self.getAttribute('max_weight_capacity');
+  self.isContainer = () => (self.getAttribute('maxSizeCapacity') && self.getAttribute('maxWeightCapacity'));
 
 	/**
 	 * Get the description, localized if possible
@@ -295,7 +298,7 @@ const Item = function ItemConstructor(config) {
 
   self.removeItem = uid => {
     if (self.inventory.indexOf(uid) > -1) {
-      self.inventory = self.inventory.filter(item => item.getUuid() !== uid);
+      self.inventory = self.inventory.filter(itemId => itemId !== uid);
       return uid;
     }
     return null;

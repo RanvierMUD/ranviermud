@@ -142,6 +142,7 @@ const Commands = {
           if (inventory) {
             for (let uid in inventory) {
               player.say(uid);
+              player.say(inventory[uid]);
             }
           }
           player.warn('========\n');

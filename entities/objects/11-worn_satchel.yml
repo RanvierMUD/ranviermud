@@ -5,7 +5,7 @@
     room_description:
         en: "a cracked leather satchel with a long strap"
     keywords:
-        en: [ "satchel", "leather", "cracked" ]
+        en: [ "satchel", "leather", "cracked", "satch" ]
     description:
         en: "A medium-sized satchel, closed by a buckle. Made of middle-grade leather that has seen quite a bit of use. Sturdy enough to carry a few things, but clearly meant for use by couriers or craftspeople."
     room: 3
@@ -14,6 +14,6 @@
         defense: 1
         wearLocation: 'back'
         weight: 1
-        max_size_capacity: 8
-        max_weight_capacity: 10
+        maxSizeCapacity: 8
+        maxWeightCapacity: 10
     load_max: 1

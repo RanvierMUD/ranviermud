@@ -1,6 +1,5 @@
 'use strict';
-const CommandUtil = require('../src/command_util')
-  .CommandUtil;
+const CommandUtil = require('../src/command_util').CommandUtil;
 const Random = require('../src/random').Random;
 const move = require('../src/commands').Commands.move;
 const l10nFile = __dirname + '/../l10n/commands/flee.yml';
