@@ -58,7 +58,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       
       if (worn) {
         util.log(`Cannot wear due to already wearing an item: ${worn} on ${wearLocation}`);
-        player.warn(`You cannot wear ${item.getShortDesc()}, you are already wearing ${items.get(worn).getShortDesc('en')} on your ${wearLocation}.`);
+        player.warn(`You cannot wear the ${item.getShortDesc()}, you are already wearing the ${items.get(worn).getShortDesc('en')} on your ${wearLocation}.`);
         return false;
       }
       return true;
