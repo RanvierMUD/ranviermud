@@ -55,6 +55,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       item.setRoom(null);
       const holder = container.getHolder() || null;
       item.setHolder(holder);
+      player.removeItem(item);
       if (room) { room.removeItem(item.getUuid()); }
 
       const containerDesc = container.getShortDesc();
