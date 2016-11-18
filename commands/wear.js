@@ -53,10 +53,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function hasOpenSpot(item) {
-      const worn = player.getEquipped(item.getAttribute('wearLocation'));
+      const wearLocation = item.getAttribute('wearLocation');
+      const worn = player.getEquipped(wearLocation);
+      
       if (worn) {
-        util.log("Cannot wear due to already wearing an item.");
-        player.sayL10n(l10n, 'CANT_WEAR', items.get(worn).getShortDesc('en'));
+        util.log(`Cannot wear due to already wearing an item: ${worn} on ${wearLocation}`);
+        player.warn(`You cannot wear ${item.getShortDesc()}, you are already wearing ${items.get(worn).getShortDesc('en')} on your ${wearLocation}.`);
         return false;
       }
       return true;
