@@ -75,6 +75,24 @@ const splitArgs = args => args.toLowerCase ?
   args.toLowerCase().split(' ') :
   null;
 
+function getTargets(args) {
+  args = args.split(' ');
+
+  switch(args.length) {
+    case 1:
+      return [ args[0], null ];
+    case 3:
+      return removePreposition(args);
+    default:
+      return args;
+  }
+}
+
+function removePreposition(args) {
+  const prepositions = ['from', 'in', 'into'];
+  return args.filter(word => !prepositions.includes(word));
+}
+
 /**
  * Allows you to set min and max range for a number.
  * Mostly for preventing semi-random results from getting wacky.
@@ -92,10 +110,11 @@ const setBounds = (min, max) => stat =>
   Math.max(Math.min(max, stat), min);
 
 module.exports = {
-  has,       hasNot,
-  firstWord, splitArgs,
-  hasKeys,   leftPad,
-  values,    reduceValues,
-  setBounds, is,
-  toArray,   flatten
+  has,        hasNot,
+  firstWord,  splitArgs,
+  hasKeys,    leftPad,
+  values,     reduceValues,
+  setBounds,  is,
+  toArray,    flatten,
+  getTargets,
 };
