@@ -71,6 +71,14 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     function hold(location, item) {
       player.equip(location, item);
       item.emit('hold', location, room, player, players);
+
+      const itemName = item.getShortDesc();
+
+      player.say(`You pick up the ${$itemName} and hold it.`);
+      players.eachIf(
+        p => CommandUtil.inSameRoom(p, player),
+        p => p.say(`${playerName} picks up the ${itemName} and holds it ${containerName}.`)
+      );
     }
 
     function canHold() {
