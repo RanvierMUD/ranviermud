@@ -36,7 +36,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     function tryToPickUp(item) {
       const [ tooLarge, tooHeavy ] = checkInventory(item);
       const canPickUp       = [ tooLarge, tooHeavy ].every( predicate => !predicate );
-      const holdingLocation = player.getHoldingSlot();
+      const holdingLocation = playercanHold();
 
       if (canPickUp) {
         return pickUp(item);
