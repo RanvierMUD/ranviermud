@@ -81,12 +81,14 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     //TODO: Extract all of these vvv to ItemUtils.js to use in take/put commands as well.
 
+    //TODO: Eventually, this should check for a container or containers that can fit it, and return that, so that the item
+    // Can be added to this container.
     function tooLarge(inventory) {
-      const itemWeight = item.getWeight();
-      if (itemWeight === Infinity) { return true; }
+      const itemSize = item.getSize();
+      if (itemSize === Infinity) { return true; }
 
-      const carriedWeight  = player.getCarriedWeight();
-      const maxCarryWeight = player.getMaxCarryWeight();
+      const carriedSize  = player.getCarriedSize();
+      const maxCarrySize = player.getMaxCarrySize();
 
       return (carriedWeight + itemWeight) > maxCarryWeight;
     }
