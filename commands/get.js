@@ -51,6 +51,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       
       const container = player.getContainerWithCapacity(item.getAttribute('size'));
       container.addItem(item);
+      item.setContainer(container);
       room.removeItem(item.getUuid());
 
       const itemName      = item.getShortDesc();
