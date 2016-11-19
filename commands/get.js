@@ -45,19 +45,22 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     function pickUp(item) {
-      player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc('en'));
       item.setRoom(null);
       item.setHolder(playerName);
       
-      const containerWithCapacity = player.getContainerWithCapacity(item.getAttribute('size'));
+      const container = player.getContainerWithCapacity(item.getAttribute('size'));
       container.addItem(item);
       room.removeItem(item.getUuid());
 
-      util.log(playerName + ' picked up ' + item.getShortDesc('en'));
+      const itemName      = item.getShortDesc();
+      const containerName = container.getShortDesc();
+
+      util.log(`${playerName} picked up ${itemName}`);
+      player.say(`You pick up the ${itemName} and place it in your ${containerName}.`);
 
       players.eachIf(
         p => CommandUtil.inSameRoom(p, player),
-        p => p.sayL10n(l10n, 'OTHER_PICKUP', playerName, item.getShortDesc(p.getLocale()))
+        p => p.say(`${playerName} picks up the ${itemName} and places it in their ${containerName}.`)
       );
     }
 
@@ -81,16 +84,13 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     //TODO: Extract all of these vvv to ItemUtils.js to use in take/put commands as well.
-
-    //TODO: Eventually, this should check for a container or containers that can fit it, and return that, so that the item
-    // Can be added to this container.
     function tooLarge(inventory) {
       const itemSize = item.getAttribute('size');
       if (itemSize === Infinity) { return true; }
 
       const containerWithCapacity = player.getContainerWithCapacity(itemSize);
 
-      return containerWithCapacity; // Okay now put it in a thing and stuff?
+      return containerWithCapacity;
     }
 
     function tooHeavy(inventory, item) {
