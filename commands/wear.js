@@ -54,7 +54,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function hasOpenSpot(item) {
       const wearLocation = item.getAttribute('wearLocation');
-      const worn = player.getEquipped(wearLocation);
+      const worn         = player.getEquipped(wearLocation);
       
       if (worn) {
         util.log(`Cannot wear due to already wearing an item: ${worn} on ${wearLocation}`);
@@ -66,7 +66,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function putOn(item) {
       const location = item.getAttribute('wearLocation');
-      const room = rooms.getAt(player.getLocation());
+      const room     = rooms.getAt(player.getLocation());
+      
       item.emit('wear', location, room, player, players);
       player.equip(location, item);
       return true;
