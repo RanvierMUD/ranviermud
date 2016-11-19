@@ -34,7 +34,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     // -- Handy McHelpertons...
 
     function tryToPickUp(item) {
-      const predicates = checkInventorySpots(item);
+      const predicates = checkInventory(item);
       const canPickUp  = predicates.every( predicate => predicate === true );
       
       if (canPickUp) {
@@ -79,7 +79,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       itemsInRoom.forEach( item => tryToPickUp(item) );
     }
 
-    function inventoryFull(item) {
+    function checkInventory(item) {
       const inventory = player.getInventory();
       return [ tooLarge(inventory, item) , tooHeavy(inventory, item) ];
     }
