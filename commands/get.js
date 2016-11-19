@@ -37,12 +37,13 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       const [ tooLarge, tooHeavy ] = checkInventory(item);
       const canPickUp       = [ tooLarge, tooHeavy ].every( predicate => !predicate );
       const holdingLocation = canHold();
+      
       if (canPickUp) {
         return pickUp(item);
       } else if (holdingLocation && !tooHeavy) {
         return player.equip(holdingLocation, item);
       } else {
-        const message = getFailureMessage(predicates, item);
+        const message = getFailureMessage(tooLarge, tooHeavy, item);
         return player.warn(message);
       }
     }
@@ -86,9 +87,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return ['wield', 'offhand'].filter(slot => equipped[slot])[0];
     }
 
-    function getFailureMessage(predicates, item) {
-      const itemName               = item.getShortDesc();
-      const [ tooLarge, tooHeavy ] = predicates;
+    function getFailureMessage(tooLarge, tooHeavy, item) {
+      const itemName = item.getShortDesc();
       
       if (tooLarge) { return `The ${itemName} will not fit in your inventory, it is too large.`; }
       if (tooHeavy) { return `The ${itemName} is too heavy for you to carry at the moment.`; }
