@@ -72,7 +72,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function tooHeavy(inventory, item) {
-      const itemWeight = item.getAttribute('weight');
+      const itemWeight = item.getWeight();
       if (itemWeight === Infinity) { return true; }
 
       const carriedWeight  = player.getCarriedWeight();
