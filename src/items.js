@@ -314,11 +314,11 @@ const Item = function ItemConstructor(config) {
 	 */
 
 	self.getWeight = () => self.isContainer() ? 
-				self.getContainerWeight()  :
+				self.getContainerWeight() + self.getAttribute('weight') :
 				self.getAttribute('weight');
 
 	
-	self.getContainerWeight = () =>  self.inventory.reduce((sum, item) => item.getWeight() + sum, 0);
+	self.getContainerWeight = () => self.inventory.reduce((sum, item) => item.getWeight() + sum, 0);
 		
 
 	/**
