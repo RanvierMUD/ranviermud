@@ -481,7 +481,13 @@ const Player = function PlayerConstructor(socket) {
     return Math.max(minimum, minimumBonus + staminaBonus + levelBonus + willBonus);
   }
 
-  self.getCarriedWeight = () => self.inventory.reduce((sum, item) => item.getAttribute('weight') + sum , 0);
+
+  self.getCarriedWeight = () => self.inventory
+    .reduce((sum, item) => item.isContainer() ? 
+      item.getContainerWeight()   + sum :
+      item.getAttribute('weight') + sum, 
+    0);
+
 
 
   ///// ----- Communicate with the player. ----- ///////
