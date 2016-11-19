@@ -68,6 +68,11 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       );
     }
 
+    function hold(location, item) {
+      player.equip(location, item);
+      item.emit('hold', location, room, player, players);
+    }
+
     function canHold() {
       const equipped = player.getEquipped();
       return ['wield', 'offhand'].filter(slot => equipped[slot])[0];
