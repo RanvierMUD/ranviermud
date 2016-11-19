@@ -25,7 +25,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const items = player.getInventory().filter(item => !item.isEquipped());
       if (!items.length) { return player.say("You have nothing to wear."); }
       items.forEach(wearItem);
-      items.forEach(item => util.log(item.getShortDesc('en')));
     }
 
     function wearItem(item) {

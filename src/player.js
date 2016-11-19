@@ -457,7 +457,7 @@ const Player = function PlayerConstructor(socket) {
    */
   self.unequip = (item, players) => {
     const container       = self.getContainerWithCapacity(item.getAttribute('size'));
-    const holdingLocation = self.getHoldingSlot(item);
+    const holdingLocation = self.canHold(item);
     const itemName        = item.getShortDesc();
 
     if (container) {
@@ -482,6 +482,7 @@ const Player = function PlayerConstructor(socket) {
     const containerName = container.getName();
     container.addItem(item);
     item.setContainer(container);
+
     player.say(`You remove the ${itemName} and place it in your ${containerName}.`);
     players.eachIf(
       p => CommandUtil.inSameRoom(p, player),
@@ -498,10 +499,10 @@ const Player = function PlayerConstructor(socket) {
     );
   }
 
-   self.getHoldingSlot = () => {
-      const equipped    = self.getEquipped();
-      const holdingSpot = ['wield', 'offhand'].filter(slot => !equipped[slot])[0];
-      return holdingSpot;
+   self.canHold = () => {
+      const equipped     = self.getEquipped();
+      const holdingSpots = ['wield', 'offhand', 'held'].filter(slot => !equipped[slot])
+      return holdingSpots.length < 2;
     }
 
   /**
