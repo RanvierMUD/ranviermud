@@ -41,7 +41,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       if (canPickUp) {
         return pickUp(item);
       } else if (holdingLocation && !tooHeavy) {
-        return hold(holdingLocation, item);
+        return hold(item);
       } else {
         const message = getFailureMessage(tooLarge, tooHeavy, item);
         return player.warn(message);
@@ -69,17 +69,20 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       );
     }
 
-    function hold(location, item) {
-      player.equip(location, item);
+    function hold(item) {
+      player.equip('held', item);
 
       const itemName = item.getShortDesc();
       player.say(`You pick up the ${itemName} and hold it.`);
       players.eachIf(
         p => CommandUtil.inSameRoom(p, player),
-        p => p.say(`${playerName} picks up the ${itemName} and holds it ${containerName}.`)
+        p => p.say(`${playerName} picks up the ${itemName} and holds it.`)
       );
 
       player.addItem(item);
+      room.removeItem(item.getUuid());
+      item.setRoom(null);
+      item.setHolder(player.getName());
 
       item.emit('hold', location, room, player, players);
     }
