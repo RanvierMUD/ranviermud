@@ -476,7 +476,7 @@ const Player = function PlayerConstructor(socket) {
     const minimum = 10; // in case mods are added later?
     const staminaBonus = self.getAttribute('stamina') * 15;
     const levelBonus   = Math.ceil(self.getAttribute('level') / 4);
-    const willBonus    = Math.ceil(self.getAttribute('will') / 2);
+    const willBonus    = Math.ceil(self.getAttribute('willpower') / 2);
 
     return Math.max(minimum, minimum + staminaBonus + levelBonus + willBonus);
   }
