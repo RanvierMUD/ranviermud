@@ -35,7 +35,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     function tryToPickUp(item) {
       const predicates = inventoryFull(item);
-      const canPickUp  = predicates.every( predicate => predicate === true );
+      const canPickUp  = predicates.every( predicate => !!predicate );
       
       if (canPickUp) {
         return pickUp(item);
