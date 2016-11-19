@@ -35,7 +35,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     function tryToPickUp(item) {
       const predicates = checkInventory(item);
-      const canPickUp  = predicates.every( predicate => predicate === true );
+      const canPickUp  = predicates.every( predicate => !!predicate );
       
       if (canPickUp) {
         return pickUp(item);
@@ -68,7 +68,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     function getFailureMessage(predicates, item) {
       const itemName               = item.getShortDesc();
       const [ tooLarge, tooHeavy ] = predicates;
-
+      console.log(`TooLarge: ${tooLarge}`);
+      console.log(`TooHeavy: ${tooHeavy}`);
       if (tooLarge) { return `The ${itemName} will not fit in your inventory, it is too large.`; }
       if (tooHeavy) { return `The ${itemName} is too heavy for you to carry at the moment.`; }
       return `You cannot pick up ${itemName} right now.`;
@@ -87,7 +88,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     //TODO: Extract all of these vvv to ItemUtils.js to use in take/put commands as well.
     function tooLarge(inventory) {
       const itemSize = item.getAttribute('size');
-      if (itemSize === Infinity) { return false; }
+      if (itemSize === Infinity) { return true; }
 
       const containerWithCapacity = player.getContainerWithCapacity(itemSize);
       return !containerWithCapacity;
