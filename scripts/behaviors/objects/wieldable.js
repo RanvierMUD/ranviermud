@@ -30,6 +30,12 @@ exports.listeners = {
     }
   },
 
+  hold: function (l10n) {
+    return function (location, room, player, players) {
+      this.emit('wield', location, room, player, players);
+    }
+  }
+
   remove: function (l10n) {
     return function (location, room, player, players) {
       const toRoom = Broadcast.toRoom(room, player, null, players);
