@@ -104,8 +104,7 @@ const Items = function ItemsManager() {
       [];
 
     const containerInventory = _
-      .flatten(containerItems)
-      .map(item => item.getUuid());
+      .flatten(containerItems);
 
     container.setInventory(containerInventory);
   }
@@ -294,13 +293,13 @@ const Item = function ItemConstructor(config) {
 
   self.addItem = item => {
     item.setContainer(self.getUuid());
-    return self.inventory.push(item.getUuid());
+    return self.inventory.push(item);
   }
 
-  self.removeItem = uid => {
-    if (self.inventory.indexOf(uid) > -1) {
-      self.inventory = self.inventory.filter(itemId => itemId !== uid);
-      return uid;
+  self.removeItem = item => {
+    if (self.inventory.indexOf(item) > -1) {
+      self.inventory = self.inventory.filter(i => item !== i);
+      return item;
     }
     return null;
   }

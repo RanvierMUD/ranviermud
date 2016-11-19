@@ -25,7 +25,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     const itemFound = CommandUtil.findItemInRoom(items, args, room, player);
     if (!itemFound) {
-      return player.warn(`You find no ${args} here`);
+      return player.warn(`You find no ${args} here.`);
     }
     
     const item = items.get(itemFound);
