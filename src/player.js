@@ -483,7 +483,7 @@ const Player = function PlayerConstructor(socket) {
 
   /**
    * Recursively gets weight of all items in inventory, including those inside of containers.
-   * @reutrn Number weight units carried in inventory
+   * @return Number weight units carried in inventory
    */
   self.getCarriedWeight = () => self.inventory.reduce((sum, item) => item.getWeight() + sum, 0);
 
