@@ -34,8 +34,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     // -- Handy McHelpertons...
 
     function tryToPickUp(item) {
-      const predicates = inventoryFull(item);
-      const canPickUp  = predicates.every( predicate => !!predicate );
+      const predicates = checkInventorySpots(item);
+      const canPickUp  = predicates.every( predicate => predicate === true );
       
       if (canPickUp) {
         return pickUp(item);
@@ -87,11 +87,10 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     //TODO: Extract all of these vvv to ItemUtils.js to use in take/put commands as well.
     function tooLarge(inventory) {
       const itemSize = item.getAttribute('size');
-      if (itemSize === Infinity) { return true; }
+      if (itemSize === Infinity) { return false; }
 
       const containerWithCapacity = player.getContainerWithCapacity(itemSize);
-
-      return containerWithCapacity;
+      return !containerWithCapacity;
     }
 
     function tooHeavy(inventory, item) {
