@@ -103,9 +103,7 @@ const Items = function ItemsManager() {
       inv.map(hydrateContentsByVnum) :
       [];
 
-    const containerInventory = _
-      .flatten(containerItems);
-
+    const containerInventory = _.flatten(containerItems);
     container.setInventory(containerInventory);
   }
 
@@ -299,6 +297,7 @@ const Item = function ItemConstructor(config) {
   self.removeItem = item => {
     if (self.inventory.indexOf(item) > -1) {
       self.inventory = self.inventory.filter(i => item !== i);
+			item.setContainer(null);
       return item;
     }
     return null;
@@ -320,7 +319,11 @@ const Item = function ItemConstructor(config) {
 	self.getContainerWeight = () => self.getInventory().reduce((sum, item) => item.getWeight() + sum, 0);
 
 	self.getRemainingSizeCapacity = () => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents();
-	self.getSizeOfContents = () => self.getInventory().reduce((sum, item) => item.getAttribute('size') + sum, 0);
+	self.getSizeOfContents = () => self.getInventory().reduce((sum, item) => {
+		console.log(item);
+		console.log(self.inventory);
+		return item.getAttribute('size') + sum}
+		, 0);
 
 	/**
 	 * Used when persisting a copy of an item to a JSON
