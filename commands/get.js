@@ -61,14 +61,21 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       itemsInRoom.forEach( item => tryToPickUp(item) );
     }
 
-    //TODO: Change to calculate based on character's strength and pack size vs. item weight/size.
     function inventoryFull(item) {
       const inventory = player.getInventory();
-      return tooManyItems(inventory) || tooHeavy(inventory, item);
+      return tooLarge(inventory, item) || tooHeavy(inventory, item);
     }
 
-    function tooManyItems(inventory) {
-      return inventory.length >= 20;
+    //TODO: Extract all of these vvv to ItemUtils.js to use in take/put commands as well.
+
+    function tooLarge(inventory) {
+      const itemWeight = item.getWeight();
+      if (itemWeight === Infinity) { return true; }
+
+      const carriedWeight  = player.getCarriedWeight();
+      const maxCarryWeight = player.getMaxCarryWeight();
+
+      return (carriedWeight + itemWeight) > maxCarryWeight;
     }
 
     function tooHeavy(inventory, item) {
