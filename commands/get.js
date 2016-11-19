@@ -35,8 +35,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     function tryToPickUp(item) {
       const predicates = checkInventory(item);
-      const canPickUp  = predicates.every( predicate => !!predicate );
-      
+      const canPickUp  = predicates.every( predicate => !predicate );
+
       if (canPickUp) {
         return pickUp(item);
       } else {
@@ -68,8 +68,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     function getFailureMessage(predicates, item) {
       const itemName               = item.getShortDesc();
       const [ tooLarge, tooHeavy ] = predicates;
-      console.log(`TooLarge: ${tooLarge}`);
-      console.log(`TooHeavy: ${tooHeavy}`);
+      
       if (tooLarge) { return `The ${itemName} will not fit in your inventory, it is too large.`; }
       if (tooHeavy) { return `The ${itemName} is too heavy for you to carry at the moment.`; }
       return `You cannot pick up ${itemName} right now.`;
