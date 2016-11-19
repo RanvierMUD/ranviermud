@@ -28,16 +28,16 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       player.warn('The ' + args + ' could not be found here.');
       return;
     }
+    
     const item = items.get(itemFound);
     tryToPickUp(item);
 
     function tryToPickUp(item) {
       if (inventoryFull(item)) {
-        player.warn('You are not able to carry that.');
-        return;
+        return player.warn('You are not able to carry that.');
       }
       else {
-        pickUp(item);
+        return pickUp(item);
       }
     }
 
@@ -74,10 +74,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function tooHeavy(inventory, item) {
       const itemWeight = item.getAttribute('weight');
       if (itemWeight === Infinity) { return true; }
-      const carriedWeight = inventory.reduce((sum, item) => item.getAttribute('weight') + sum , 0);
 
-      // TODO: Put carrying capacity method on player obj.
-      const maxCarryWeight = 10 + player.getAttribute('stamina') + player.getAttribute('level');
+      const carriedWeight  = player.getCarriedWeight();
+      const maxCarryWeight = player.getMaxCarryWeight();
+
       return (carriedWeight + itemWeight) > maxCarryWeight;
     }
 
