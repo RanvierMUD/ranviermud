@@ -321,7 +321,7 @@ const Item = function ItemConstructor(config) {
 
 	self.getRemainingSizeCapacity = () => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents();
 	self.getSizeOfContents = () => self.getInventory()
-		.reduce((sum, item) => item.getAttribute('size') + sum, 0);
+		.reduce((sum, item) => item.getAttribute ? item.getAttribute('size') + sum : console.log("DAFUQ  " + item), 0);
 
 	/**
 	 * Used when persisting a copy of an item to a JSON

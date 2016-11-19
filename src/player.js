@@ -455,8 +455,21 @@ const Player = function PlayerConstructor(socket) {
    * @param Item   item
    * @return String slot it was equipped in (see remove commmand)
    */
-  self.unequip = item => {
+  self.unequip = (item, players) => {
+    const container       = self.getContainerWithCapacity(item.getAttribute('size'));
+    const holdingLocation = self.getHoldingSlot(item);
+    const itemName        = item.getShortDesc();
+
+    if (container) {
+      putItemInContainer(item, container, player, players);
+    } else if (holdingLocation) {
+      holdOntoItem(item, holdingLocation, player, players);
+    } else {
+      return player.warn(`You will have to drop the item.`);
+    }
+
     item.setEquipped(false);
+
     for (const slot in self.equipment) {
       if (self.equipment[slot] === item.getUuid()) {
         delete self.equipment[slot];
@@ -464,6 +477,32 @@ const Player = function PlayerConstructor(socket) {
       }
     }
   };
+
+  function putItemInContainer(item, container, player, players) {
+    const containerName = container.getName();
+    container.addItem(item);
+    item.setContainer(container);
+    player.say(`You remove the ${itemName} and place it in your ${containerName}.`);
+    players.eachIf(
+      p => CommandUtil.inSameRoom(p, player),
+      p => p.say(`${player.getName()} removes their ${itemName} and places it in their ${containerName}.`)
+    );
+  }
+
+  function holdOntoItem(item, holdingLocation, player, players) {
+    self.equip(holdingLocation, item);
+    player.say(`You remove the ${itemName} and hold onto it.`);
+    players.eachIf(
+      p => CommandUtil.inSameRoom(p, player),
+      p => p.say(`${player.getName()} removes their ${itemName} and holds it.`)
+    );
+  }
+
+   self.getHoldingSlot = () => {
+      const equipped    = self.getEquipped();
+      const holdingSpot = ['wield', 'offhand'].filter(slot => !equipped[slot])[0];
+      return holdingSpot;
+    }
 
   /**
    * Imaginary weight units player can carry (ounces-ish)
@@ -482,9 +521,11 @@ const Player = function PlayerConstructor(socket) {
    * Recursively gets weight of all items in inventory, including those inside of containers.
    * @return Number weight units carried in inventory
    */
-  self.getCarriedWeight = () => self.inventory.reduce((sum, item) => item.getWeight() + sum, 0);
+  self.getCarriedWeight = () => self.inventory
+    .reduce((sum, item) => item.getWeight() + sum, 0);
 
-  self.getContainerWithCapacity = size => self.inventory.filter(item => item.isContainer() && item.getRemainingSizeCapacity() >= size)[0];
+  self.getContainerWithCapacity = size => self.inventory
+    .filter(item => item.isContainer() && item.getRemainingSizeCapacity() >= size)[0];
 
 
 
