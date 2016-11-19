@@ -86,7 +86,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     //TODO: Extract all of these vvv to ItemUtils.js to use in take/put commands as well.
-    function tooLarge(inventory) {
+    function tooLarge(inventory, item) {
       const itemSize = item.getAttribute('size');
       if (itemSize === Infinity) { return true; }
 
