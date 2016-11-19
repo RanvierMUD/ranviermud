@@ -11,4 +11,5 @@
     #script: "9-vats.js"
     attributes:
         weight: .inf
+        size: .inf
     load_max: 1
