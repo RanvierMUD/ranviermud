@@ -4,8 +4,8 @@ const l10n = require('../src/l10n')(l10nFile);
 const CommandUtil = require('../src/command_util').CommandUtil;
 const util = require('util');
 
-exports.command = (rooms, items, players, npcs, Commands) => {
-  return (args, player) => {
+exports.command = (rooms, items, players, npcs, Commands) => 
+  (args, player) => {
 
     player.emit('action', 0);
 
@@ -25,19 +25,23 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const itemFound = CommandUtil.findItemInRoom(items, args, room, player);
     if (!itemFound) {
-      player.warn('The ' + args + ' could not be found here.');
-      return;
+      return player.warn(`You find no ${args} here`);
     }
     
     const item = items.get(itemFound);
-    tryToPickUp(item);
+    return tryToPickUp(item);
+
+    // -- Handy McHelpertons...
 
     function tryToPickUp(item) {
-      if (inventoryFull(item)) {
-        return player.warn('You are not able to carry that.');
-      }
-      else {
+      const canPickUp = inventoryFull(item)
+        .every( predicate => predicate === true );
+      
+      if (canPickUp) {
         return pickUp(item);
+      } else {
+        const message = getFailureMessage(canPickUp);
+        return player.warn(message);
       }
     }
 
@@ -56,6 +60,15 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       );
     }
 
+    function getFailureMessage(predicates, item) {
+      const itemName               = item.getShortDesc();
+      const [ tooLarge, tooHeavy ] = predicates;
+
+      if (tooLarge) { return `${itemName} will not fit in your inventory, it is too large.`; }
+      if (tooHeavy) { return `${itemName} is too heavy for you to carry at the moment.`; }
+      return `You cannot pick up ${itemName} right now.`;
+    }
+
     function getAllItems(room) {
       const itemsInRoom = room.getItems().map( id => items.get(id) );
       itemsInRoom.forEach( item => tryToPickUp(item) );
@@ -63,7 +76,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function inventoryFull(item) {
       const inventory = player.getInventory();
-      return tooLarge(inventory, item) || tooHeavy(inventory, item);
+      return [ tooLarge(inventory, item) , tooHeavy(inventory, item) ];
     }
 
     //TODO: Extract all of these vvv to ItemUtils.js to use in take/put commands as well.
@@ -89,4 +102,3 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
   };
-};
