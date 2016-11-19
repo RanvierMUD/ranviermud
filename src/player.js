@@ -487,6 +487,8 @@ const Player = function PlayerConstructor(socket) {
    */
   self.getCarriedWeight = () => self.inventory.reduce((sum, item) => item.getWeight() + sum, 0);
 
+  self.getContainerWithCapacity = size => self.inventory.filter(item => item.getRemainingSizeCapacity() >= size)[0];
+
 
 
   ///// ----- Communicate with the player. ----- ///////
