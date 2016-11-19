@@ -34,12 +34,13 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     // -- Handy McHelpertons...
 
     function tryToPickUp(item) {
-      const canPickUp = inventoryFull(item).every( predicate => predicate === true );
+      const predicates = inventoryFull(item);
+      const canPickUp  = predicates.every( predicate => predicate === true );
       
       if (canPickUp) {
         return pickUp(item);
       } else {
-        const message = getFailureMessage(canPickUp);
+        const message = getFailureMessage(predicates, item);
         return player.warn(message);
       }
     }
@@ -68,8 +69,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       const itemName               = item.getShortDesc();
       const [ tooLarge, tooHeavy ] = predicates;
 
-      if (tooLarge) { return `${itemName} will not fit in your inventory, it is too large.`; }
-      if (tooHeavy) { return `${itemName} is too heavy for you to carry at the moment.`; }
+      if (tooLarge) { return `The ${itemName} will not fit in your inventory, it is too large.`; }
+      if (tooHeavy) { return `The ${itemName} is too heavy for you to carry at the moment.`; }
       return `You cannot pick up ${itemName} right now.`;
     }
 
