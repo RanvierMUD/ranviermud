@@ -34,8 +34,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     // -- Handy McHelpertons...
 
     function tryToPickUp(item) {
-      const canPickUp = inventoryFull(item)
-        .every( predicate => predicate === true );
+      const canPickUp = inventoryFull(item).every( predicate => predicate === true );
       
       if (canPickUp) {
         return pickUp(item);
@@ -49,7 +48,9 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc('en'));
       item.setRoom(null);
       item.setHolder(playerName);
-      player.addItem(item);
+      
+      const containerWithCapacity = player.getContainerWithCapacity(item.getAttribute('size'));
+      container.addItem(item);
       room.removeItem(item.getUuid());
 
       util.log(playerName + ' picked up ' + item.getShortDesc('en'));
@@ -84,13 +85,12 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     //TODO: Eventually, this should check for a container or containers that can fit it, and return that, so that the item
     // Can be added to this container.
     function tooLarge(inventory) {
-      const itemSize = item.getSize();
+      const itemSize = item.getAttribute('size');
       if (itemSize === Infinity) { return true; }
 
-      const carriedSize  = player.getCarriedSize();
-      const maxCarrySize = player.getMaxCarrySize();
+      const containerWithCapacity = player.getContainerWithCapacity(itemSize);
 
-      return (carriedWeight + itemWeight) > maxCarryWeight;
+      return containerWithCapacity; // Okay now put it in a thing and stuff?
     }
 
     function tooHeavy(inventory, item) {
