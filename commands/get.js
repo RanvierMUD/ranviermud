@@ -34,11 +34,13 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     // -- Handy McHelpertons...
 
     function tryToPickUp(item) {
-      const predicates = checkInventory(item);
-      const canPickUp  = predicates.every( predicate => !predicate );
-
+      const [ tooLarge, tooHeavy ] = checkInventory(item);
+      const canPickUp       = [ tooLarge, tooHeavy ].every( predicate => !predicate );
+      const holdingLocation = canHold();
       if (canPickUp) {
         return pickUp(item);
+      } else if (holdingLocation && !tooHeavy) {
+        return player.equip(holdingLocation, item);
       } else {
         const message = getFailureMessage(predicates, item);
         return player.warn(message);
@@ -64,6 +66,11 @@ exports.command = (rooms, items, players, npcs, Commands) =>
         p => CommandUtil.inSameRoom(p, player),
         p => p.say(`${playerName} picks up the ${itemName} and places it in their ${containerName}.`)
       );
+    }
+
+    function canHold() {
+      const equipped = player.getEquipped();
+      return ['wield', 'offhand'].filter(slot => equipped[slot])[0];
     }
 
     function getFailureMessage(predicates, item) {

@@ -316,14 +316,12 @@ const Item = function ItemConstructor(config) {
 				self.getAttribute('weight');
 
 	
-	self.getContainerWeight = () => self.getInventory().reduce((sum, item) => item.getWeight() + sum, 0);
+	self.getContainerWeight = () => self.getInventory()
+		.reduce((sum, item) => item.getWeight() + sum, 0);
 
 	self.getRemainingSizeCapacity = () => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents();
-	self.getSizeOfContents = () => self.getInventory().reduce((sum, item) => {
-		console.log(item);
-		console.log(self.inventory);
-		return item.getAttribute('size') + sum}
-		, 0);
+	self.getSizeOfContents = () => self.getInventory()
+		.reduce((sum, item) => item.getAttribute('size') + sum, 0);
 
 	/**
 	 * Used when persisting a copy of an item to a JSON

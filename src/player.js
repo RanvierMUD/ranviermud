@@ -152,10 +152,9 @@ const Player = function PlayerConstructor(socket) {
 
   self.setGender   = gender => self.gender = gender.toUpperCase();
 
-  self.addItem     = item   => self.inventory.push(item);
-  self.removeItem  = item   =>
-    self.inventory = self.inventory.filter(i => item !== i);
-  self.setInventory     = inv         => self.inventory = inv;
+  self.addItem      = item   => self.inventory.push(item);
+  self.removeItem   = item   => self.inventory = self.inventory.filter(i => item !== i);
+  self.setInventory = inv    => self.inventory = inv;
 
   self.setAttribute     = (attr, val) => self.attributes[attr]  = val;
   self.setPreference    = (pref, val) => self.preferences[pref] = val;
@@ -164,11 +163,9 @@ const Player = function PlayerConstructor(socket) {
   self.fleeFromCombat   = ()          => self.inCombat = [];
   self.setInCombat      = combatant   => self.inCombat.push(combatant);
   self.getInCombat      = ()          => self.inCombat;
-  self.removeFromCombat = combatant   => {
-    const combatantIndex = self.inCombat.indexOf(combatant);
-    if (combatantIndex === -1) { return; }
-    self.inCombat.splice(combatantIndex, 1);
-  }
+  self.removeFromCombat = combatant   => 
+    self.inCombat = self.inCombat.filter(comb => combatant !== comb);
+  
 
   ///// ----- Skills and Training. ----- ///////
 
