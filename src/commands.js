@@ -118,11 +118,11 @@ const Commands = {
             player.say(`Is container: ${isContainer}`);
             player.say(`Total weight: ${actualWeight}`);
             if (isContainer) {
-              const itemContents   = item.getInventory().map(item => items.get(item));
+              const itemContents   = item.getInventory();
               const spaceLeft      = item.getRemainingSizeCapacity();
               const contentsWeight = item.getContainerWeight();
              
-              player.say(`Contents: ${itemContents.join()}`);
+              player.say(`Contents: ${itemContents}`);
               player.say(`Space left: ${spaceLeft}`);
               player.say(`Contents weight: ${contentsWeight}`);
               player.say(`
