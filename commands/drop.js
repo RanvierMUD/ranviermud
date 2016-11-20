@@ -37,7 +37,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     drop(item);
 
     function dropAll() {
-      const items     = player.getInventory();
+      const items = player.getInventory();
       if (!items.length && !isDead) { return player.say('You have nothing to drop.'); }
       items.forEach(item => drop(item));
     }

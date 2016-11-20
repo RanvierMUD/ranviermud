@@ -501,8 +501,8 @@ const Player = function PlayerConstructor(socket) {
 
    self.canHold = () => {
       const equipped     = self.getEquipped();
-      const holdingSpots = ['wield', 'offhand', 'held'].filter(slot => !equipped[slot])
-      return holdingSpots.length < 2;
+      const holdingSpots = ['wield', 'offhand', 'held', 'offhand held'].filter(slot => !equipped[slot]);
+      return holdingSpots.length > 2;
     }
 
   /**

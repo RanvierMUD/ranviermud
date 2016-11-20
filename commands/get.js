@@ -35,12 +35,12 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     function tryToPickUp(item) {
       const [ tooLarge, tooHeavy ] = checkInventory(item);
-      const canPickUp       = [ tooLarge, tooHeavy ].every( predicate => !predicate );
-      const holdingLocation = playercanHold();
+      const canPickUp = [ tooLarge, tooHeavy ].every( predicate => !predicate );
+      const canHold   = player.canHold();
 
       if (canPickUp) {
         return pickUp(item);
-      } else if (holdingLocation && !tooHeavy) {
+      } else if (canHold && !tooHeavy) {
         return hold(item);
       } else {
         const message = getFailureMessage(tooLarge, tooHeavy, item);
@@ -70,7 +70,9 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     function hold(item) {
-      player.equip('held', item);
+      const equipment = player.getEquipped();
+      if (!equipment['held']) { player.equip('held', item); }
+      else { player.equip('offhand held', item); }
 
       const itemName = item.getShortDesc();
       player.say(`You pick up the ${itemName} and hold it.`);
