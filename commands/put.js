@@ -38,7 +38,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     putInContainer(item, container);
 
-    // -- helpers --
+    // -- helpers -- //TODO: Put in CommandUtil?
 
     function findItem(itemTarget) {
       return CommandUtil.findItemInRoom(items, itemTarget, room, player, true) || CommandUtil.findItemInInventory(itemTarget, player, true);
@@ -52,10 +52,17 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     function putInContainer(item, container) {
       container.addItem(item);
-      item.setRoom(null);
+      
+      if (item.isEquipped()) {
+        item.setEquipped(false);
+        player.unequip(item, players)
+      }
+      
       const holder = container.getHolder() || null;
       item.setHolder(holder);
       player.removeItem(item);
+     
+      item.setRoom(null);
       if (room) { room.removeItem(item.getUuid()); }
 
       const containerDesc = container.getShortDesc();
