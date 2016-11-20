@@ -71,8 +71,9 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     function hold(item) {
       const equipment = player.getEquipped();
-      if (!equipment['held']) { player.equip('held', item); }
-      else { player.equip('offhand held', item); }
+      const location = player.findHoldingLocation(); 
+      
+      player.equip(location, item);
 
       const itemName = item.getShortDesc();
       player.say(`You pick up the ${itemName} and hold it.`);
@@ -85,6 +86,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       room.removeItem(item.getUuid());
       item.setRoom(null);
       item.setHolder(player.getName());
+      item.setEquipped(true);
 
       item.emit('hold', location, room, player, players);
     }

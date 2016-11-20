@@ -446,7 +446,15 @@ const Player = function PlayerConstructor(socket) {
    * @param Item   item
    */
   self.equip = (wearLocation, item) => {
-    self.equipment[wearLocation] = item.getUuid();
+    const uid = item.getUuid();
+    
+    for (const slot in self.equipment) {
+      if (self.equipment[slot] === uid) {
+        delete self.equipment[slot];
+      }
+    }
+
+    self.equipment[wearLocation] = uid;
     item.setEquipped(true);
   };
 
@@ -457,15 +465,15 @@ const Player = function PlayerConstructor(socket) {
    */
   self.unequip = (item, players) => {
     const container       = self.getContainerWithCapacity(item.getAttribute('size'));
-    const holdingLocation = self.canHold(item);
+    const holdingLocation = self.canHold(item) ? findHoldingLocation() : null;
     const itemName        = item.getShortDesc();
 
     if (container) {
-      putItemInContainer(item, container, player, players);
+      putItemInContainer(item, container, self, players);
     } else if (holdingLocation) {
-      holdOntoItem(item, holdingLocation, player, players);
+      holdOntoItem(item, holdingLocation, self, players);
     } else {
-      return player.warn(`You will have to drop the item.`);
+      return self.warn(`You will have to drop the item.`);
     }
 
     item.setEquipped(false);
@@ -478,6 +486,12 @@ const Player = function PlayerConstructor(socket) {
     }
   };
 
+  self.findHoldingLocation = () => {
+    const equipment = self.getEquipped();
+    return equipment['held'] ? 'offhand held' : 'held';
+  }
+
+  //TODO: Extract these into item utils?
   function putItemInContainer(item, container, player, players) {
     const containerName = container.getName();
     container.addItem(item);
@@ -491,7 +505,8 @@ const Player = function PlayerConstructor(socket) {
   }
 
   function holdOntoItem(item, holdingLocation, player, players) {
-    self.equip(holdingLocation, item);
+    const itemName = item.getShortDesc();
+    player.equip(holdingLocation, item);
     player.say(`You remove the ${itemName} and hold onto it.`);
     players.eachIf(
       p => CommandUtil.inSameRoom(p, player),
@@ -510,7 +525,7 @@ const Player = function PlayerConstructor(socket) {
    * @return weight units player can carry in inventory, total.
    */
   self.getMaxCarryWeight = () => {
-    const minimum = 10; // in case mods are added later?
+    const minimum      = 10; // in case mods are added later?
     const staminaBonus = self.getAttribute('stamina') * 15;
     const levelBonus   = Math.ceil(self.getAttribute('level') / 4);
     const willBonus    = Math.ceil(self.getAttribute('willpower') / 2);
