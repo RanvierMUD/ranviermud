@@ -26,7 +26,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     wearItem(thing);
 
     function isHeld(item) {
-      const equipment = player.getEquipment();
+      const equipment = player.getEquipped();
       return ['held', 'offhand held'].some(slot => item.getUuid() === equipment[slot]);
     }
 
