@@ -122,6 +122,7 @@ const Items = function ItemsManager() {
 		self.load_count[item.vnum] = self.load_count[item.vnum] ? self.load_count[item.vnum] + 1 : 1;
 	};
 
+
 	/**
 	 * Gets all instance of an object by vnum
    * //TODO: Consider using this when checking to see if objs should be loaded.
@@ -305,6 +306,22 @@ const Item = function ItemConstructor(config) {
   }
 
   self.findInInventory = predicate => self.inventory.find(predicate);
+
+	/**
+	 * Get weight of all items inside of a container...
+	 * And the container.
+	 * @return Number weight 
+	 */
+
+	self.getWeight = () => self.isContainer() ? 
+				self.getContainerWeight() + self.getAttribute('weight') :
+				self.getAttribute('weight');
+
+	
+	self.getContainerWeight = () => self.getInventory().reduce((sum, item) => item.getWeight() + sum, 0);
+
+	self.getRemainingSizeCapacity = () => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents();
+	self.getSizeOfContents = () => self.getInventory().reduce((sum, item) => item.getAttribute('size') + sum, 0);
 
 	/**
 	 * Used when persisting a copy of an item to a JSON

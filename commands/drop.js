@@ -24,7 +24,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     if (item.isEquipped()) {
       item = CommandUtil.findItemInInventory('2.' + args, player, true) || item;
       if (item.isEquipped()) {
-        return player.warn('You are wearing ' + item.getShortDesc() + ' right now, and cannot drop it.');
+        return player.warn(`You are wearing ${item.getShortDesc()} right now, and cannot drop it.`);
       }
     }
 
@@ -41,7 +41,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       let playerName = player.getName();
 
       if (item.isEquipped()) {
-        return player.warn('You are wearing ' + item.getShortDesc() + ' right now, and cannot drop it.');
+        return player.warn(`You are wearing ${item.getShortDesc()} right now, and cannot drop it.`);
       }
 
       players.eachIf(
@@ -58,11 +58,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           npc.emit('playerDropItem', room, rooms, player, players, npc, npcs, item);
         });
       }
-      util.log(playerName + " drops " + itemName + " at " + room.getLocation() + ".");
+      util.log(`${playerName} drops ${itemName} at ${room.getLocation()}.`);
 
       player.removeItem(item);
       room.addItem(item.getUuid());
-      item.setInventory(null);
+      item.setHolder(null);
       item.setRoom(room.getLocation());
     }
   };

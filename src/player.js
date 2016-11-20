@@ -468,6 +468,29 @@ const Player = function PlayerConstructor(socket) {
     }
   };
 
+  /**
+   * Imaginary weight units player can carry (ounces-ish)
+   * @return weight units player can carry in inventory, total.
+   */
+  self.getMaxCarryWeight = () => {
+    const minimum = 10; // in case mods are added later?
+    const staminaBonus = self.getAttribute('stamina') * 15;
+    const levelBonus   = Math.ceil(self.getAttribute('level') / 4);
+    const willBonus    = Math.ceil(self.getAttribute('willpower') / 2);
+
+    return Math.max(minimum, minimum + staminaBonus + levelBonus + willBonus);
+  }
+
+  /**
+   * Recursively gets weight of all items in inventory, including those inside of containers.
+   * @reutrn Number weight units carried in inventory
+   */
+  self.getCarriedWeight = () => self.inventory.reduce((sum, item) => item.getWeight() + sum, 0);
+
+  self.getContainerWithCapacity = size => self.inventory.filter(item => item.isContainer() && item.getRemainingSizeCapacity() >= size)[0];
+
+
+
   ///// ----- Communicate with the player. ----- ///////
 
 
@@ -476,8 +499,8 @@ const Player = function PlayerConstructor(socket) {
    * @param string data Stuff to write
    */
   self.write = (data, color) => {
-    color = color || true;
-    if (!color) ansi.disable();
+    color = typeof color === 'boolean' ? color : true;
+    if (!color) { ansi.disable(); }
     socket.write(ansi.parse(data));
     ansi.enable();
   };

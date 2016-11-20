@@ -14,7 +14,8 @@
     attributes:
         speed: 5
         damage: 1-70
-        weight: 11
+        weight: 80
+        size: 10
     prerequisites:
         stamina: 8
     load_max: 1

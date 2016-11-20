@@ -33,7 +33,7 @@ exports.listeners = {
       const rand = Random.inRange(1, 15);
       if (rand === 3) {
         const itemDesc = item.getShortDesc('en');
-        const msg = '<bold>The rat sniffs at the ' + itemDesc +'</bold>';
+        const msg = `<bold>The rat sniffs at the ${itemDesc}.</bold>`;
         const toRoom = Broadcast.toRoom(room, this, player, players);
         toRoom({
           secondPartyMessage: msg,
