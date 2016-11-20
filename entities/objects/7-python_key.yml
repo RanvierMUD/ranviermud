@@ -9,5 +9,6 @@
         en: "A tarnished copper key in the shape of a python."
     load_max: 1
     attributes:
-      weight: 1
+      weight: .5
+      size: 1
     container: 12

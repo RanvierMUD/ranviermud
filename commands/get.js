@@ -4,8 +4,8 @@ const l10n = require('../src/l10n')(l10nFile);
 const CommandUtil = require('../src/command_util').CommandUtil;
 const util = require('util');
 
-exports.command = (rooms, items, players, npcs, Commands) => {
-  return (args, player) => {
+exports.command = (rooms, items, players, npcs, Commands) => 
+  (args, player) => {
 
     player.emit('action', 0);
 
@@ -25,35 +25,54 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const itemFound = CommandUtil.findItemInRoom(items, args, room, player);
     if (!itemFound) {
-      player.warn('The ' + args + ' could not be found here.');
-      return;
+      return player.warn(`You find no ${args} here`);
     }
+    
     const item = items.get(itemFound);
-    tryToPickUp(item);
+    return tryToPickUp(item);
+
+    // -- Handy McHelpertons...
 
     function tryToPickUp(item) {
-      if (inventoryFull(item)) {
-        player.warn('You are not able to carry that.');
-        return;
-      }
-      else {
-        pickUp(item);
+      const predicates = checkInventory(item);
+      const canPickUp  = predicates.every( predicate => !predicate );
+
+      if (canPickUp) {
+        return pickUp(item);
+      } else {
+        const message = getFailureMessage(predicates, item);
+        return player.warn(message);
       }
     }
 
     function pickUp(item) {
-      player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc('en'));
       item.setRoom(null);
       item.setHolder(playerName);
-      player.addItem(item);
+      
+      const container = player.getContainerWithCapacity(item.getAttribute('size'));
+      container.addItem(item);
+      item.setContainer(container);
       room.removeItem(item.getUuid());
 
-      util.log(playerName + ' picked up ' + item.getShortDesc('en'));
+      const itemName      = item.getShortDesc();
+      const containerName = container.getShortDesc();
+
+      util.log(`${playerName} picked up ${itemName}`);
+      player.say(`You pick up the ${itemName} and place it in your ${containerName}.`);
 
       players.eachIf(
         p => CommandUtil.inSameRoom(p, player),
-        p => p.sayL10n(l10n, 'OTHER_PICKUP', playerName, item.getShortDesc(p.getLocale()))
+        p => p.say(`${playerName} picks up the ${itemName} and places it in their ${containerName}.`)
       );
+    }
+
+    function getFailureMessage(predicates, item) {
+      const itemName               = item.getShortDesc();
+      const [ tooLarge, tooHeavy ] = predicates;
+      
+      if (tooLarge) { return `The ${itemName} will not fit in your inventory, it is too large.`; }
+      if (tooHeavy) { return `The ${itemName} is too heavy for you to carry at the moment.`; }
+      return `You cannot pick up ${itemName} right now.`;
     }
 
     function getAllItems(room) {
@@ -61,25 +80,28 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       itemsInRoom.forEach( item => tryToPickUp(item) );
     }
 
-    //TODO: Change to calculate based on character's strength and pack size vs. item weight/size.
-    function inventoryFull(item) {
+    function checkInventory(item) {
       const inventory = player.getInventory();
-      return tooManyItems(inventory) || tooHeavy(inventory, item);
+      return [ tooLarge(inventory, item) , tooHeavy(inventory, item) ];
     }
 
-    function tooManyItems(inventory) {
-      return inventory.length >= 20;
+    //TODO: Extract all of these vvv to ItemUtils.js to use in take/put commands as well.
+    function tooLarge(inventory) {
+      const itemSize = item.getAttribute('size');
+      if (itemSize === Infinity) { return true; }
+
+      const containerWithCapacity = player.getContainerWithCapacity(itemSize);
+      return !containerWithCapacity;
     }
 
     function tooHeavy(inventory, item) {
-      const itemWeight = item.getAttribute('weight');
+      const itemWeight = item.getWeight();
       if (itemWeight === Infinity) { return true; }
-      const carriedWeight = inventory.reduce((sum, item) => item.getAttribute('weight') + sum , 0);
 
-      // TODO: Put carrying capacity method on player obj.
-      const maxCarryWeight = 10 + player.getAttribute('stamina') + player.getAttribute('level');
+      const carriedWeight  = player.getCarriedWeight();
+      const maxCarryWeight = player.getMaxCarryWeight();
+
       return (carriedWeight + itemWeight) > maxCarryWeight;
     }
 
   };
-};

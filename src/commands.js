@@ -1,23 +1,23 @@
 'use strict';
-const util = require('util'),
-  ansi = require('sty').parse,
-  fs = require('fs'),
+const util    = require('util'),
+  ansi        = require('sty').parse,
+  fs          = require('fs'),
   CommandUtil = require('./command_util').CommandUtil,
-  l10nHelper = require('./l10n');
+  l10nHelper  = require('./l10n');
 
 const Doors = require('./doors').Doors;
-const _ = require('./helpers');
+const _     = require('./helpers');
 
 // "Globals" to be specified later during config.
-let rooms = null;
+let rooms   = null;
 let players = null;
-let items = null;
-let npcs = null;
+let items   = null;
+let npcs    = null;
 
 /**
  * Localization
  */
-let l10n = null;
+let l10n       = null;
 const l10nFile = __dirname + '/../l10n/commands.yml';
 
 // shortcut for l10n.translate
@@ -112,6 +112,23 @@ const Commands = {
             for (let prereq in prereqs) {
               player.say(prereq + ': ' + prereqs[prereq]);
             }
+
+            const isContainer = item.isContainer();
+            const actualWeight = item.getWeight();
+            player.say(`Is container: ${isContainer}`);
+            player.say(`Total weight: ${actualWeight}`);
+            if (isContainer) {
+              const itemContents   = item.getInventory();
+              const spaceLeft      = item.getRemainingSizeCapacity();
+              const contentsWeight = item.getContainerWeight();
+             
+              player.say(`Contents: ${itemContents.join()}`);
+              player.say(`Space left: ${spaceLeft}`);
+              player.say(`Contents weight: ${contentsWeight}`);
+              player.say(`
+              ===========`);
+            }
+
             player.say(item.isEquipped() ? 'Equipped' : 'In inventory');
             player.say('Events: ', item.eventNames());
             player.warn('========\n');

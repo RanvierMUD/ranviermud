@@ -13,5 +13,6 @@
         defense: 3
         wearLocation: 'feet'
         weight: 2
+        size: 4
     load_max: 1
     container: 12

@@ -1,6 +1,6 @@
 'use strict';
 
-const fs   = require('fs'),
+const fs = require('fs'),
     path = require('path'),
     util = require('util'),
     l10nHelper = require('./l10n');

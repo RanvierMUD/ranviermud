@@ -12,6 +12,7 @@
     attributes:
         defense: 1
         wearLocation: 'head'
-        weight: 1
+        weight: 2
+        size: 3
     load_max: 1
     container: 12
