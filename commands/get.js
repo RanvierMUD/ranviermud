@@ -76,6 +76,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       player.equip(location, item);
 
       const itemName = item.getShortDesc();
+      
       player.say(`You pick up the ${itemName} and hold it.`);
       players.eachIf(
         p => CommandUtil.inSameRoom(p, player),
@@ -89,6 +90,10 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       item.setEquipped(true);
 
       item.emit('hold', location, room, player, players);
+
+      if (item.getAttribute('damage')) {
+        return Commands.player_commands.wield(itemName, player);
+      }
     }
 
  
