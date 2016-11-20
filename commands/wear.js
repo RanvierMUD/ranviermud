@@ -16,13 +16,22 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     thing = CommandUtil.findItemInInventory(thing, player, true);
     if (!thing) {
-      return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+      return player.say(`You do not seem to have ${thing} in your possessions...`);
+    }
+
+    if (thing.isEquipped() && !isHeld(thing)) {
+      return player.say(`You seem to already be wearing the ${thing.getShortDesc()}.`);
     }
 
     wearItem(thing);
 
+    function isHeld(item) {
+      const equipment = player.getEquipment();
+      return ['held', 'offhand held'].some(slot => item.getUuid() === equipment[slot]);
+    }
+
     function wearAll() {
-      const items = player.getInventory().filter(item => !item.isEquipped());
+      const items = player.getInventory().filter(item => !item.isEquipped() || isHeld(item));
       if (!items.length) { return player.say("You have nothing to wear."); }
       items.forEach(wearItem);
     }
