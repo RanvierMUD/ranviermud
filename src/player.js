@@ -737,37 +737,42 @@ const Player = function PlayerConstructor(socket) {
    * @return string
    */
   self.stringify = () => {
-    let inv = [];
+    const inventory = [];
 
     self.getInventory()
       .forEach(item => {
-        inv.push(item.flatten());
+        inventory.push(item.flatten());
       });
 
-    return JSON.stringify({
-      name: self.name,
-      accountName: self.accountName,
-      location: self.location,
-      locale: self.locale,
-      prompt_string: self.prompt_string,
-      combat_prompt: self.combat_prompt,
-      password: self.password,
-      inventory: inv,
-      equipment: self.equipment,
-      attributes: self.attributes,
-      skills: self.skills,
-      feats: self.feats,
-      gender: self.gender,
-      preferences: self.preferences,
-      explored: self.explored,
-      killed:   self.killed,
-      met:      self.met,
-      training: self.training,
-      bodyParts: self.bodyParts,
-    });
+    try {
+      const { name, accountName, location, locale, 
+        prompt_string, combat_prompt, password,
+        equipment, attributes, skills, feats,
+        gender, preferences, explored, killed,
+        met, training, bodyParts, effects 
+      } = self;
+
+      return JSON.stringify({ 
+        name,           accountName, 
+        location,       locale, 
+        prompt_string,  combat_prompt, 
+        password,       equipment,
+        attributes,     skills, 
+        feats,          gender, 
+        preferences,    explored, 
+        killed,         met, 
+        training,       bodyParts, 
+        effects,        inventory
+      });
+    } catch (err) {
+      util.log(
+        `SAVE ERROR:
+        Inv is ${inventory}
+        Error is: ${err}`);
+    }
+    
   };
 
-  //TODO: Make a similar function but for NPCs::::::::::::::
 
   /**
    * Helpers to activate skills or feats

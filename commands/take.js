@@ -32,7 +32,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return player.warn('Take which item from which container?');
     }
 
-    const room = rooms.getAt(player.getLocation());
+    const room   = rooms.getAt(player.getLocation());
     const toRoom = Broadcast.toRoom(room, player, null, players);
 
     const [ itemTarget, containerTarget ] = _.getTargets(args);
@@ -61,7 +61,6 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     function findItemInContainer(itemTarget, container) {
       return container.getInventory()
-        .map(uid => items.get(uid))
         .filter(item => item.hasKeyword(itemTarget))[0];
   };
 
