@@ -245,8 +245,18 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
         player = new Player(socket);
         player.load(Data.loadPlayer(name));
-        const reloadedInventory = player.getInventory().map(item => new Item(item));
-        player.setInventory(reloadedInventory);
+
+        const hydrateInventory = entity => entity
+          .getInventory()
+          .map(item => new Item(item))
+          .map(hydrateNestedItems);
+
+        const hydrateNestedItems = item => item.isContainer() ? 
+          item.setInventory(hydrateInventory(item)) || item : 
+          item;
+
+        const reloadedInventory = hydrateInventory(player);
+        player.setInventory(reloadedInventory)
         players.addPlayer(player);
 
         player.getSocket()

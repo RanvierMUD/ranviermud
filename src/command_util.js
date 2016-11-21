@@ -71,12 +71,10 @@ function findItemInEquipment(items, lookString, being, hydrate) {
  * @return string UUID of the item
  */
 function findItemInRoom(items, lookString, room, player, hydrate) {
-  let thing = CommandUtil.parseDot(lookString, room.getItems(), function(
-    item) {
-    let found = items.get(item);
-    return found && found.hasKeyword(this.keyword, 'en');
+  const itemsList = room.getItems().map(i => items.get(i));
+  let thing = CommandUtil.parseDot(lookString, itemsList, function(item) {
+    return item && item.hasKeyword(this.keyword, 'en');
   });
-
   return ifExists(thing, hydrate);
 }
 
