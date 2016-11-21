@@ -14,6 +14,7 @@ const npcs_scripts_dir = __dirname + '/../scripts/player/';
 const l10n_dir         = __dirname + '/../l10n/scripts/player/';
 const statusUtil       = require('./status');
 const CombatUtil       = require('./combat_util').CombatUtil;
+const CommandUtil      = require('./command_util').CommandUtil;
 
 const Player = function PlayerConstructor(socket) {
   const self = this;
@@ -464,8 +465,8 @@ const Player = function PlayerConstructor(socket) {
    * @return String slot it was equipped in (see remove commmand)
    */
   self.unequip = (item, players) => {
-    const container       = self.getContainerWithCapacity(item.getAttribute('size'));
-    const holdingLocation = self.canHold(item) ? findHoldingLocation() : null;
+    const container       = self.getContainersWithCapacity(item.getAttribute('size')).filter(cont => cont !== item);
+    const holdingLocation = self.canHold(item) ? self.findHoldingLocation() : null;
     const itemName        = item.getShortDesc();
 
     if (container) {
@@ -473,7 +474,7 @@ const Player = function PlayerConstructor(socket) {
     } else if (holdingLocation) {
       holdOntoItem(item, holdingLocation, self, players);
     } else {
-      return self.warn(`You will have to drop the item.`);
+      return self.warn(`Your hands are full. You will have to put away or drop something you are holding.`);
     }
 
     item.setEquipped(false);
@@ -493,7 +494,8 @@ const Player = function PlayerConstructor(socket) {
 
   //TODO: Extract these into item utils?
   function putItemInContainer(item, container, player, players) {
-    const containerName = container.getName();
+    const containerName = container.getShortDesc();
+    const itemName      = item.getShortDesc();
     container.addItem(item);
     item.setContainer(container);
 
@@ -540,8 +542,10 @@ const Player = function PlayerConstructor(socket) {
   self.getCarriedWeight = () => self.inventory
     .reduce((sum, item) => item.getWeight() + sum, 0);
 
-  self.getContainerWithCapacity = size => self.inventory
-    .filter(item => item.isContainer() && item.getRemainingSizeCapacity() >= size)[0];
+  self.getContainersWithCapacity = size => self.inventory
+    .filter(item => item.isContainer() && item.getRemainingSizeCapacity() >= size);
+
+  self.getContainerWithCapacity = size => self.getContainersWithCapacity(size)[0];
 
 
 
