@@ -464,17 +464,14 @@ const Player = function PlayerConstructor(socket) {
    * @param Item   item
    * @return String slot it was equipped in (see remove commmand)
    */
-  self.unequip = (item, players) => {
+  self.unequip = (item, players, isDropping) => {
     const container       = self.getContainersWithCapacity(item.getAttribute('size')).filter(cont => cont !== item)[0];
     const holdingLocation = self.canHold(item) ? self.findHoldingLocation() : null;
     const itemName        = item.getShortDesc();
 
-    if (container) {
-      putItemInContainer(item, container, self, players);
-    } else if (holdingLocation) {
-      holdOntoItem(item, holdingLocation, self, players);
-    } else {
-      return self.warn(`Your hands are full. You will have to put away or drop something you are holding.`);
+    if (!isDropping) {
+      const success = handleNormalUnequip(item, container, self, players, holdingLocation);
+      if (!success) { return; }
     }
 
     item.setEquipped(false);
@@ -486,6 +483,16 @@ const Player = function PlayerConstructor(socket) {
       }
     }
   };
+
+  function handleNormalUnequip() {
+    if (container) {
+      return putItemInContainer(item, container, self, players);
+    } else if (holdingLocation) {
+      return holdOntoItem(item, holdingLocation, self, players);
+    } else {
+      return self.warn(`Your hands are full. You will have to put away or drop something you are holding.`);
+    }
+  }
 
   self.findHoldingLocation = () => {
     const equipment = self.getEquipped();
@@ -504,6 +511,7 @@ const Player = function PlayerConstructor(socket) {
       p => CommandUtil.inSameRoom(p, player),
       p => p.say(`${player.getName()} removes their ${itemName} and places it in their ${containerName}.`)
     );
+    return true;
   }
 
   function holdOntoItem(item, holdingLocation, player, players) {
@@ -514,13 +522,14 @@ const Player = function PlayerConstructor(socket) {
       p => CommandUtil.inSameRoom(p, player),
       p => p.say(`${player.getName()} removes their ${itemName} and holds it.`)
     );
+    return true;
   }
 
    self.canHold = () => {
       const equipped     = self.getEquipped();
       const holdingSpots = ['wield', 'offhand', 'held', 'offhand held'].filter(slot => !equipped[slot]);
       return holdingSpots.length > 2;
-    }
+    };
 
   /**
    * Imaginary weight units player can carry (ounces-ish)
