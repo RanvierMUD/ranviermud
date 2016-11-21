@@ -22,15 +22,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     if (item.isEquipped()) {
-      const holding = isHeld(item);
-      if (holding) {
-        item.setEquipped(false);
-        delete player.equipment[holding];   
-      } else {
-        item = CommandUtil.findItemInInventory('2.' + args, player, true) || item;
-        if (item.isEquipped()) {
-          return player.warn(`You are wearing ${item.getShortDesc()} right now, and cannot drop it.`);
-        }
+      item = CommandUtil.findItemInInventory('2.' + args, player, true) || item;
+      if (item.isEquipped()) {
+        return player.warn(`You are wearing ${item.getShortDesc()} right now, and cannot drop it.`);
       }
     }
 
@@ -60,6 +54,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }
       util.log(`${playerName} drops ${itemName} at ${room.getLocation()}.`);
 
+      if (item.isEquipped()) { player.unequip(item, players); }
       player.removeItem(item);
       room.addItem(item.getUuid());
       item.setHolder(null);
