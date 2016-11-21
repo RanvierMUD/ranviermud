@@ -164,8 +164,8 @@ function useKey(verb, args, player, players, rooms) {
   if (exit.door.locked === isLocking) {
     return player.say('That door is already ' + verb + 'ed.');
   }
-
-  const key = CommandUtil.findItemInInventory(exit.door.key, player, true);
+  
+  const key = CommandUtil.findItemInInventory(exit.door.locked, player, true);
 
   if (!key) {
     return player.say('You are missing the key.');
