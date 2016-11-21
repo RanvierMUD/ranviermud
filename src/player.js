@@ -737,12 +737,9 @@ const Player = function PlayerConstructor(socket) {
    * @return string
    */
   self.stringify = () => {
-    const inventory = [];
-
-    self.getInventory()
-      .forEach(item => {
-        inventory.push(item.flatten());
-      });
+    const inventory = self
+      .getInventory()
+      .map(item => item.flatten());
 
     try {
       const { name, accountName, location, locale, 
