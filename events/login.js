@@ -245,6 +245,8 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
         player = new Player(socket);
         player.load(Data.loadPlayer(name));
+        const reloadedInventory = player.getInventory().map(item => new Item(item));
+        player.setInventory(reloadedInventory);
         players.addPlayer(player);
 
         player.getSocket()

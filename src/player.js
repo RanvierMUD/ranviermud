@@ -15,6 +15,7 @@ const l10n_dir         = __dirname + '/../l10n/scripts/player/';
 const statusUtil       = require('./status');
 const CombatUtil       = require('./combat_util').CombatUtil;
 const CommandUtil      = require('./command_util').CommandUtil;
+const ItemUtil         = require('./item_util').ItemUtil;
 
 const Player = function PlayerConstructor(socket) {
   const self = this;
@@ -551,10 +552,22 @@ const Player = function PlayerConstructor(socket) {
   self.getCarriedWeight = () => self.inventory
     .reduce((sum, item) => item.getWeight() + sum, 0);
 
+  /**
+   *  @param Number size
+   *  @return a list of all containers with capacity greater than size.
+   */
   self.getContainersWithCapacity = size => self.inventory
     .filter(item => item.isContainer() && item.getRemainingSizeCapacity() >= size);
 
   self.getContainerWithCapacity = size => self.getContainersWithCapacity(size)[0];
+
+  /**
+   * Gets a flattened list of all items in the inventory for use by CommandUtil and such.
+   * @return a list of all items in inventory, nested one level deep?
+   */
+   self.getFlattenedInventory = () => self
+    .getInventory()
+    .reduce(ItemUtil.inventoryFlattener, []); 
 
 
 
@@ -705,6 +718,7 @@ const Player = function PlayerConstructor(socket) {
       }
     }
 
+
     // If the player is new, or skills have been added, initialize them to level 1.
     for (let skill in Skills) {
       skill = Skills[skill];
@@ -761,6 +775,7 @@ const Player = function PlayerConstructor(socket) {
         training,       bodyParts, 
         effects,        inventory
       });
+
     } catch (err) {
       util.log(
         `SAVE ERROR:
@@ -794,8 +809,6 @@ const Player = function PlayerConstructor(socket) {
     const args = [].slice.call(arguments).slice(1)
     Feats[feat].activate.apply(null, args);
   };
-
-  //TODO: Should go in other module::::::::::::::::::::::::
 
   /**
    * Helper to calculate physical damage

@@ -43,7 +43,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return player.warn('Take ' + itemTarget + ' from which container?');
     }
 
-    const item = findItemInContainer(itemTarget, container);
+    const item          = findItemInContainer(itemTarget, container);
     const containerDesc = container.getShortDesc();
 
     if (!item) {
@@ -60,12 +60,13 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     function findItemInContainer(itemTarget, container) {
-      return container.getInventory()
+      return container
+        .getInventory()
         .filter(item => item.hasKeyword(itemTarget))[0];
   };
 
   function takeFromContainer(item, container) {
-    container.removeItem(item.getUuid());
+    container.removeItem();
     item.setContainer(null);
     item.setHolder(player.getName());
     player.addItem(item);

@@ -10,6 +10,7 @@ const CommandUtil = {
   parseDot           ,
 };
 
+const ifExists = (thing, hydrate) => thing ? (hydrate ? thing : thing.getUuid()) : false;
 
 /**
  * Takes an object and name of event to emit and tells you if it has a listener.
@@ -56,7 +57,7 @@ function findItemInEquipment(items, lookString, being, hydrate) {
       return item && item.hasKeyword(this.keyword, being.getLocale());
     });
 
-  return thing ? (hydrate ? thing : thing.getUuid()) : false;
+  return ifExists(thing, hydrate);
 }
 
 
@@ -70,14 +71,13 @@ function findItemInEquipment(items, lookString, being, hydrate) {
  * @return string UUID of the item
  */
 function findItemInRoom(items, lookString, room, player, hydrate) {
-  hydrate = hydrate || false;
   let thing = CommandUtil.parseDot(lookString, room.getItems(), function(
     item) {
     let found = items.get(item);
     return found && found.hasKeyword(this.keyword, 'en');
   });
 
-  return thing ? (hydrate ? items.get(thing) : thing) : false;
+  return ifExists(thing, hydrate);
 }
 
 
@@ -91,7 +91,6 @@ function findItemInRoom(items, lookString, room, player, hydrate) {
  * @return string UUID of the item
  */
 function findNpcInRoom(npcs, lookString, room, player, hydrate) {
-  hydrate = hydrate || false;
   let thing = CommandUtil.parseDot(lookString, room.getNpcs(),
     function (id) {
       let npc = npcs.get(id);
@@ -99,7 +98,7 @@ function findNpcInRoom(npcs, lookString, room, player, hydrate) {
     }
   );
 
-  return thing ? (hydrate ? npcs.get(thing) : thing) : false;
+  return ifExists(thing, hydrate);
 }
 
 
@@ -111,14 +110,13 @@ function findNpcInRoom(npcs, lookString, room, player, hydrate) {
  * @return string UUID of the item
  */
 function findItemInInventory(lookString, being, hydrate) {
-  hydrate = hydrate || false;
-  let thing = CommandUtil.parseDot(lookString, being.getInventory(),
+  let thing = CommandUtil.parseDot(lookString, being.getFlattenedInventory(),
     function (item) {
       return item && item.hasKeyword(this.keyword, being.getLocale());
     });
-
-  return thing ? (hydrate ? thing : thing.getUuid()) : false;
+  return ifExists(thing, hydrate);
 }
+
 
 
 /**
