@@ -90,7 +90,18 @@ const checkForCrit = (attacker, defender, damageDealt) => {
   }
 }
 
+const inventoryFlattener = (inv, item) => {
+  try {
+    return inv.concat(item).concat(item.getFlattenedInventory());
+  } catch (e) {
+    util.log('AW DANG:', e);
+    util.log('ITEM: ', item);
+    return inv.concat(item);
+  }
+}
+
 exports.ItemUtil = {
+  inventoryFlattener,
   penalize, getPenaltyDesc,
   useDefaultPenalties, checkForCrit,
   removeDefaultPenaltes

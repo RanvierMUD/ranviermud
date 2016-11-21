@@ -10,7 +10,8 @@ const fs    = require('fs'),
 const objects_dir =         __dirname + '/../entities/objects/';
 const l10n_dir    =         __dirname + '/../l10n/scripts/objects/';
 const objects_scripts_dir = __dirname + '/../scripts/objects/';
-const _ = require('./helpers');
+const ItemUtil = require('./item_util').ItemUtil;
+const _ 			 = require('./helpers');
 
 const Items = function ItemsManager() {
 	const self = this;
@@ -303,6 +304,11 @@ const Item = function ItemConstructor(config) {
     return null;
   }
 
+	self.getFlattenedInventory = () => self.isContainer() ? 
+		self.getInventory()
+				.reduce(ItemUtil.inventoryFlattener, []) : 
+		[];
+
   self.findInInventory = predicate => self.inventory.find(predicate);
 
 	/**
@@ -320,8 +326,10 @@ const Item = function ItemConstructor(config) {
 		.reduce((sum, item) => item.getWeight() + sum, 0);
 
 	self.getRemainingSizeCapacity = () => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents();
-	self.getSizeOfContents = () => self.getInventory()
-		.reduce((sum, item) => item.getAttribute ? item.getAttribute('size') + sum : console.log("DAFUQ  " + item), 0);
+	
+	self.getSizeOfContents = () => self
+		.getInventory()
+		.reduce((sum, item) => item.getAttribute('size') + sum, 0);
 
 	/**
 	 * Used when persisting a copy of an item to a JSON
