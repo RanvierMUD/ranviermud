@@ -753,14 +753,13 @@ const Player = function PlayerConstructor(socket) {
       .getInventory()
       .map(item => item.flatten());
 
+    const { name, accountName, location, locale, 
+      prompt_string, combat_prompt, password,
+      equipment, attributes, skills, feats,
+      gender, preferences, explored, killed,
+      met, training, bodyParts, effects 
+    } = self;
     try {
-      const { name, accountName, location, locale, 
-        prompt_string, combat_prompt, password,
-        equipment, attributes, skills, feats,
-        gender, preferences, explored, killed,
-        met, training, bodyParts, effects 
-      } = self;
-
       return JSON.stringify({ 
         name,           accountName, 
         location,       locale, 
@@ -779,6 +778,18 @@ const Player = function PlayerConstructor(socket) {
         `SAVE ERROR:
         Inv is ${inventory}
         Error is: ${err}`);
+      return JSON.stringify({ 
+        name,           accountName, 
+        location,       locale, 
+        prompt_string,  combat_prompt, 
+        password,       equipment: {},
+        attributes,     skills, 
+        feats,          gender, 
+        preferences,    explored, 
+        killed,         met, 
+        training,       bodyParts, 
+        effects,        inventory: []
+      });
     }
     
   };
