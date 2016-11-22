@@ -157,7 +157,13 @@ function getFailureMessage(tooLarge, tooHeavy, item) {
   return `You cannot pick up ${itemName} right now.`;
 }
 
+function isHeld(player, item) {
+  const equipment = player.getEquipped();
+  return ['held', 'wield', 'offhand', 'offhand held'].filter(slot => equipment[slot] === item.getUuid())[0];
+}
+
 exports.ItemUtil = {
+  isHeld,
   checkInventory, 
   hold, pickUp,
   getFailureMessage, 
