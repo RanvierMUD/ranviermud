@@ -16,7 +16,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     thing = CommandUtil.findItemInInventory(thing, player, true);
     if (!thing) {
-      return player.say(`You do not seem to have ${thing} in your possessions...`);
+      return player.say(`You do not seem to have ${args} in your possessions...`);
     }
 
     if (thing.isEquipped() && !isHeld(thing)) {

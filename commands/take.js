@@ -72,7 +72,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
       if (canHold && !tooHeavy) {
         return hold(item, container);
-      } else if (canPickup) {
+      } else if (canPickUp) {
         return pickUp(item);
       } else { 
         const message = ItemUtil.getFailureMessage(tooLarge, tooHeavy, item);
