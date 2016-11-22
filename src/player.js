@@ -450,13 +450,8 @@ const Player = function PlayerConstructor(socket) {
   self.equip = (wearLocation, item) => {
     const uid = item.getUuid();
     
-    for (const slot in self.equipment) {
-      if (self.equipment[slot] === uid) {
-        delete self.equipment[slot];
-      }
-    }
-
     self.equipment[wearLocation] = uid;
+    console.log(`EQUIPPING ${item.getShortDesc()} at ${wearLocation}`);
     item.setEquipped(true);
   };
 
@@ -471,21 +466,27 @@ const Player = function PlayerConstructor(socket) {
     const itemName        = item.getShortDesc();
 
     if (!isDropping) {
-      const success = handleNormalUnequip(item, container, self, players, holdingLocation);
+      const success = handleNormalUnequip(item, container, players, holdingLocation);
       if (!success) { return; }
+    } else {
+      item.setEquipped(false);
     }
 
-    item.setEquipped(false);
+    return deleteFromEquipment(item, holdingLocation);
+    
+  };
 
+  function deleteFromEquipment(item, holdingLocation) {
     for (const slot in self.equipment) {
+      if (slot === holdingLocation) { continue; }
       if (self.equipment[slot] === item.getUuid()) {
         delete self.equipment[slot];
         return slot;
       }
     }
-  };
+  }
 
-  function handleNormalUnequip() {
+  function handleNormalUnequip(item, container, players, holdingLocation) {
     if (container) {
       return putItemInContainer(item, container, self, players);
     } else if (holdingLocation) {
@@ -510,7 +511,7 @@ const Player = function PlayerConstructor(socket) {
     player.say(`You remove the ${itemName} and place it in your ${containerName}.`);
     players.eachIf(
       p => CommandUtil.inSameRoom(p, player),
-      p => p.say(`${player.getName()} removes their ${itemName} and places it in their ${containerName}.`)
+      p => p.say(`${player.getName()} places their ${itemName} in their ${containerName}.`)
     );
     return true;
   }
@@ -518,19 +519,14 @@ const Player = function PlayerConstructor(socket) {
   function holdOntoItem(item, holdingLocation, player, players) {
     const itemName = item.getShortDesc();
     player.equip(holdingLocation, item);
-    player.say(`You remove the ${itemName} and hold onto it.`);
-    players.eachIf(
-      p => CommandUtil.inSameRoom(p, player),
-      p => p.say(`${player.getName()} removes their ${itemName} and holds it.`)
-    );
     return true;
   }
 
    self.canHold = () => {
-      const equipped     = self.getEquipped();
-      const holdingSpots = ['wield', 'offhand', 'held', 'offhand held'].filter(slot => !equipped[slot]);
-      return holdingSpots.length > 2;
-    };
+    const equipped     = self.getEquipped();
+    const holdingSpots = ['wield', 'offhand', 'held', 'offhand held'].filter(slot => !equipped[slot]);
+    return holdingSpots.length > 2;
+  };
 
   /**
    * Imaginary weight units player can carry (ounces-ish)

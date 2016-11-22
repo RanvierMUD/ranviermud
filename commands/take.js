@@ -65,9 +65,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     };
 
     function takeFromContainer(item, container) {
-      
-      item.setContainer(null);
-      
+            
       const [ tooLarge, tooHeavy ] = ItemUtil.checkInventory(player, item);
       const canPickUp = [ tooLarge, tooHeavy ].every( predicate => !predicate );
       const canHold   = player.canHold();
@@ -87,24 +85,27 @@ exports.command = (rooms, items, players, npcs, Commands) =>
         location => {
           const itemName = item.getShortDesc();
 
+          container.removeItem(item);
           item.emit('hold', location, room, player, players);
+
           toRoom({
             firstPartyMessage: `You reach into the ${containerDesc} and take the ${itemName}.`,
             thirdPartyMessage: `${player.getName()} reaches into the ${containerDesc} and takes the ${itemName}.`
           });
         });
-        container.removeItem(item);
     }
 
     function pickUp(item) {
       return ItemUtil.pickUp({player, item}, 
-        containerDest => {
-          const destContainerName = containerDest.getShortDesc();
+        destContainer => {
+          const destContainerName = destContainer.getShortDesc();
+          
           toRoom({
             firstPartyMessage: `You reach into the ${containerDesc} and take the ${itemName}, placing it in your ${destContainerName}.`,
             thirdPartyMessage: `${player.getName()} takes the ${itemName} from the ${containerDesc} and places it in their ${destContainerName}.`
           });
-          containerDest.removeItem(item);
+          
+          destContainer.removeItem(item);
         });
     }
 
