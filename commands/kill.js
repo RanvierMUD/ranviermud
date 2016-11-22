@@ -13,7 +13,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         if (!npc) {
             return player.warn(`Kill ${args}? If you can find them, maybe.`);
         }
-        if (!npc.isPacifist) { console.log('fucked up ', npc); }
+
         if (npc.isPacifist()) {
             return player.warn(`${npc.getShortDesc()} radiates a calming aura.`);
         }
@@ -25,11 +25,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         const fightingPlayer = _.has(npc.getInCombat(), player);
 
         if (fightingPlayer) {
-          player.say('You are already fighting them!');
-          return;
+          return player.say(`You are already fighting that ${npc.getShortDesc()}!`);
         } else if (npc.isInCombat()) {
-          player.say('They are busy fighting someone else, no fair!');
-          return;
+          return player.say('That ${npc.getShortDesc()} is busy fighting someone else, no fair!');
         }
 
         npc.emit('combat', player, room, players, npcs, rooms, cleanup);
