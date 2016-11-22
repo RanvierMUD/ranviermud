@@ -101,11 +101,10 @@ const inventoryFlattener = (inv, item) => {
 }
 
 function checkInventory(player, item) {
-  const inventory = player.getInventory();
-  return [ tooLarge(inventory, player, item) , tooHeavy(inventory, player, item) ];
+  return [ tooLarge(player, item) , tooHeavy(player, item) ];
 }
 
-function tooLarge(inventory, player, item) {
+function tooLarge(player, item) {
   const itemSize = item.getAttribute('size');
   if (itemSize === Infinity) { return true; }
 
@@ -113,7 +112,7 @@ function tooLarge(inventory, player, item) {
   return !containerWithCapacity;
 }
 
-function tooHeavy(inventory, player, item) {
+function tooHeavy(player, item) {
   const itemWeight = item.getWeight();
   if (itemWeight === Infinity) { return true; }
 
