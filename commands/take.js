@@ -67,15 +67,45 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
   function takeFromContainer(item, container) {
     container.removeItem();
-    item.setContainer(null);
-    item.setHolder(player.getName());
-    player.addItem(item);
     
-    const itemName = item.getShortDesc();
-    toRoom({
-      firstPartyMessage: `You reach into the ${containerDesc} and take the ${itemName}.`,
-      thirdPartyMessage: `${player.getName()} reaches into the ${containerDesc} and takes the ${itemName}.`
-    });
+    item.setContainer(null);
+    
+    const [ tooLarge, tooHeavy ] = ItemUtil.checkInventory(item);
+    const canPickUp = [ tooLarge, tooHeavy ].every( predicate => !predicate );
+    const canHold   = player.canHold();
+
+    if (canHold && !tooHeavy) {
+      return hold(item);
+    } else if (canPickup) {
+      return pickUp(item);
+    } else { 
+      const message = ItemUtil.getFailureMessage(tooLarge, tooHeavy, item);
+      return player.warn(message);
+    }
+  }
+
+  function hold(item) {
+    return ItemUtil.hold({ player, item }, 
+      location => {
+        const itemName = item.getShortDesc();
+
+        item.emit('hold', location, room, player, players);
+        toRoom({
+          firstPartyMessage: `You reach into the ${containerDesc} and take the ${itemName}.`,
+          thirdPartyMessage: `${player.getName()} reaches into the ${containerDesc} and takes the ${itemName}.`
+        });
+      });
+  }
+
+  function pickUp(item) {
+    return ItemUtil.pickUp({player, item}, 
+      containerDest => {
+        const destContainerName = containerDest.getShortDesc();
+        toRoom({
+          firstPartyMessage: `You reach into the ${containerDesc} and take the ${itemName}, placing it in your ${destContainerName}.`,
+          thirdPartyMessage: `${player.getName()} takes the ${itemName} from the ${containerDesc} and places it in their ${destContainerName}.`
+        });
+      });
   }
 
   /* Use this in take and get eventually, maybe put in item utils? */
