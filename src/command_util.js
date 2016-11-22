@@ -125,6 +125,9 @@ function findItemInInventory(lookString, being, hydrate) {
  * @return object
  */
 function parseDot(arg, objects, filterFunc) {
+  if (arg === 'python key') {
+      console.log(objects);
+  }
   if (!arg) {
     util.log("ERROR: No arg passed into parseDot: ", arguments);
     return;

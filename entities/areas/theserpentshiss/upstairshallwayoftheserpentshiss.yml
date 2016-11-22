@@ -23,7 +23,7 @@
       direction: 'python'
       door:
         open: false
-        locked: y
+        locked: true
         key: 'python key'
         difficulty: 15
         mob_locked: y
