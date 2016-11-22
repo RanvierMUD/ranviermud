@@ -139,7 +139,7 @@ function useKey(verb, args, player, players, rooms) {
   args = args.toLowerCase().split(' ');
 
   if (!args) {
-    return player.say("Which door do you want to " + verb + "?");
+    return player.say(`Which door do you want to ${verb}`);
   }
 
   const room  = rooms.getAt(player.getLocation());

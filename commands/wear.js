@@ -16,16 +16,24 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     thing = CommandUtil.findItemInInventory(thing, player, true);
     if (!thing) {
-      return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+      return player.say(`You do not seem to have ${args} in your possessions...`);
+    }
+
+    if (thing.isEquipped() && !isHeld(thing)) {
+      return player.say(`You seem to already be wearing the ${thing.getShortDesc()}.`);
     }
 
     wearItem(thing);
 
+    function isHeld(item) {
+      const equipment = player.getEquipped();
+      return ['held', 'offhand held'].some(slot => item.getUuid() === equipment[slot]);
+    }
+
     function wearAll() {
-      const items = player.getInventory().filter(item => !item.isEquipped());
+      const items = player.getInventory().filter(item => !item.isEquipped() || isHeld(item));
       if (!items.length) { return player.say("You have nothing to wear."); }
       items.forEach(wearItem);
-      items.forEach(item => util.log(item.getShortDesc('en')));
     }
 
     function wearItem(item) {
@@ -57,7 +65,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const worn         = player.getEquipped(wearLocation);
       
       if (worn) {
-        util.log(`Cannot wear due to already wearing an item: ${worn} on ${wearLocation}`);
+        util.log(`${player.getName()}: Cannot wear ${item.getShortDesc()} due to already wearing an item: ${worn} on ${wearLocation}`);
         player.warn(`You cannot wear the ${item.getShortDesc()}, you are already wearing the ${items.get(worn).getShortDesc('en')} on your ${wearLocation}.`);
         return false;
       }

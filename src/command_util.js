@@ -10,6 +10,7 @@ const CommandUtil = {
   parseDot           ,
 };
 
+const ifExists = (thing, hydrate) => thing ? (hydrate ? thing : thing.getUuid()) : false;
 
 /**
  * Takes an object and name of event to emit and tells you if it has a listener.
@@ -31,7 +32,7 @@ function inSameRoom(entity, target) {
   if (target) {
     if (Type.isPlayer(target)) { // Handle players
       //TODO: Make APIs consistent and not awful.
-      const notSameName = target.getName() !== entity.getName();
+      const notSameName  = target.getName() !== entity.getName();
       const sameLocation = target.getLocation() === entity.getLocation();
       return notSameName && sameLocation;
     } else if (Type.isNpc(target) || Type.isItem(target)) { // Handle NPCs and items
@@ -56,7 +57,7 @@ function findItemInEquipment(items, lookString, being, hydrate) {
       return item && item.hasKeyword(this.keyword, being.getLocale());
     });
 
-  return thing ? (hydrate ? thing : thing.getUuid()) : false;
+  return ifExists(thing, hydrate);
 }
 
 
@@ -70,14 +71,11 @@ function findItemInEquipment(items, lookString, being, hydrate) {
  * @return string UUID of the item
  */
 function findItemInRoom(items, lookString, room, player, hydrate) {
-  hydrate = hydrate || false;
-  let thing = CommandUtil.parseDot(lookString, room.getItems(), function(
-    item) {
-    let found = items.get(item);
-    return found && found.hasKeyword(this.keyword, 'en');
+  const itemsList = room.getItems().map(items.get);
+  let thing = CommandUtil.parseDot(lookString, itemsList, function(item) {
+    return item && item.hasKeyword(this.keyword, 'en');
   });
-
-  return thing ? (hydrate ? items.get(thing) : thing) : false;
+  return ifExists(thing, hydrate);
 }
 
 
@@ -91,15 +89,14 @@ function findItemInRoom(items, lookString, room, player, hydrate) {
  * @return string UUID of the item
  */
 function findNpcInRoom(npcs, lookString, room, player, hydrate) {
-  hydrate = hydrate || false;
-  let thing = CommandUtil.parseDot(lookString, room.getNpcs(),
-    function (id) {
-      let npc = npcs.get(id);
+  const npcsInRoom = room.getNpcs().map(npcs.get);
+  let thing = CommandUtil.parseDot(lookString, npcsInRoom,
+    function (npc) {
       return npc && npc.hasKeyword(this.keyword, 'en');
     }
   );
 
-  return thing ? (hydrate ? npcs.get(thing) : thing) : false;
+  return ifExists(thing, hydrate);
 }
 
 
@@ -111,14 +108,13 @@ function findNpcInRoom(npcs, lookString, room, player, hydrate) {
  * @return string UUID of the item
  */
 function findItemInInventory(lookString, being, hydrate) {
-  hydrate = hydrate || false;
-  let thing = CommandUtil.parseDot(lookString, being.getInventory(),
+  let thing = CommandUtil.parseDot(lookString, being.getFlattenedInventory(),
     function (item) {
       return item && item.hasKeyword(this.keyword, being.getLocale());
     });
-
-  return thing ? (hydrate ? thing : thing.getUuid()) : false;
+  return ifExists(thing, hydrate);
 }
+
 
 
 /**
@@ -129,6 +125,9 @@ function findItemInInventory(lookString, being, hydrate) {
  * @return object
  */
 function parseDot(arg, objects, filterFunc) {
+  if (arg === 'python key') {
+      console.log(objects);
+  }
   if (!arg) {
     util.log("ERROR: No arg passed into parseDot: ", arguments);
     return;

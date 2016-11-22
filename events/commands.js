@@ -63,7 +63,11 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
           if (command[0] === '@') {
             const adminCommand = command.slice(1);
             if (adminCommand in Commands.admin_commands) {
-              Commands.admin_commands[adminCommand](player, args);
+              try { Commands.admin_commands[adminCommand](player, args); }
+              catch(e) { 
+                util.log(adminCommand + ' Admin Command ERROR:');
+                console.log(e)
+              }
               return;
             }
           }
