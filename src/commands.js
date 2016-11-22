@@ -157,9 +157,8 @@ const Commands = {
           const inventory = item.getInventory();
           player.say(inventory ? 'Inventory: ' : 'No inventory.');
           if (inventory) {
-            for (let uid in inventory) {
-              player.say(uid);
-              player.say(inventory[uid]);
+            for (let i in inventory) {
+              player.say(`${i}: ${inventory[i].getShortDesc()} ${i.getUuid()}`);
             }
           }
           player.warn('========\n');
