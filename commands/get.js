@@ -34,7 +34,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     // -- Handy McHelpertons...
 
     function tryToPickUp(item) {
-      const [ tooLarge, tooHeavy ] = ItemUtil.checkInventory(item);
+      const [ tooLarge, tooHeavy ] = ItemUtil.checkInventory(player, item);
       const canPickUp = [ tooLarge, tooHeavy ].every( predicate => !predicate );
       const canHold   = player.canHold();
 
