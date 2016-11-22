@@ -33,6 +33,10 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return player.warn('Take which item from which container?');
     }
 
+    if (player.isInCombat()) {
+      return player.warn('You cannot do that while fighting!');
+    }
+
     const room   = rooms.getAt(player.getLocation());
     const toRoom = Broadcast.toRoom(room, player, null, players);
 
@@ -99,7 +103,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return ItemUtil.pickUp({player, item}, 
         destContainer => {
           const destContainerName = destContainer.getShortDesc();
-          
+          const itemName          = item.getShortDesc();
           toRoom({
             firstPartyMessage: `You reach into the ${containerDesc} and take the ${itemName}, placing it in your ${destContainerName}.`,
             thirdPartyMessage: `${player.getName()} takes the ${itemName} from the ${containerDesc} and places it in their ${destContainerName}.`

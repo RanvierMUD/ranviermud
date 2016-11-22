@@ -25,6 +25,10 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return player.warn('Put which item into which container?');
     }
 
+    if (player.isInCombat()) {
+      return player.warn('You cannot do that while fighting!');
+    }
+
     const room = rooms.getAt(player.getLocation());
     const toRoom = Broadcast.toRoom(room, player, null, players);
 
