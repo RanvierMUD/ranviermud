@@ -10,7 +10,8 @@ const fs    = require('fs'),
 const objects_dir =         __dirname + '/../entities/objects/';
 const l10n_dir    =         __dirname + '/../l10n/scripts/objects/';
 const objects_scripts_dir = __dirname + '/../scripts/objects/';
-const _ = require('./helpers');
+const ItemUtil = require('./item_util').ItemUtil;
+const _ 			 = require('./helpers');
 
 const Items = function ItemsManager() {
 	const self = this;
@@ -103,10 +104,7 @@ const Items = function ItemsManager() {
       inv.map(hydrateContentsByVnum) :
       [];
 
-    const containerInventory = _
-      .flatten(containerItems)
-      .map(item => item.getUuid());
-
+    const containerInventory = _.flatten(containerItems);
     container.setInventory(containerInventory);
   }
 
@@ -294,16 +292,22 @@ const Item = function ItemConstructor(config) {
 
   self.addItem = item => {
     item.setContainer(self.getUuid());
-    return self.inventory.push(item.getUuid());
+    return self.inventory.push(item);
   }
 
-  self.removeItem = uid => {
-    if (self.inventory.indexOf(uid) > -1) {
-      self.inventory = self.inventory.filter(itemId => itemId !== uid);
-      return uid;
+  self.removeItem = item => {
+    if (self.inventory.indexOf(item) > -1) {
+      self.inventory = self.inventory.filter(i => item !== i);
+			item.setContainer(null);
+      return item;
     }
     return null;
   }
+
+	self.getFlattenedInventory = () => self.isContainer() ? 
+		self.getInventory()
+				.reduce(ItemUtil.inventoryFlattener, []) : 
+		[];
 
   self.findInInventory = predicate => self.inventory.find(predicate);
 
@@ -318,10 +322,14 @@ const Item = function ItemConstructor(config) {
 				self.getAttribute('weight');
 
 	
-	self.getContainerWeight = () => self.getInventory().reduce((sum, item) => item.getWeight() + sum, 0);
+	self.getContainerWeight = () => self.getInventory()
+		.reduce((sum, item) => item.getWeight() + sum, 0);
 
 	self.getRemainingSizeCapacity = () => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents();
-	self.getSizeOfContents = () => self.getInventory().reduce((sum, item) => item.getAttribute('size') + sum, 0);
+	
+	self.getSizeOfContents = () => self
+		.getInventory()
+		.reduce((sum, item) => item.getAttribute('size') + sum, 0);
 
 	/**
 	 * Used when persisting a copy of an item to a JSON

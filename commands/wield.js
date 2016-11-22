@@ -16,9 +16,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 		const offhand = items.get(player.getEquipped('offhand'));
 		const canDual = player.getSkills('dual');
 
+		const canHold = player.canHold();
+
 		if (wielded && (offhand || !canDual)) {
-			return alreadyWielding();
+		  return alreadyWielding();
 		} else if (wielded && canDual && !offhand) {
+		  if (!canHold) { return player.warn('Your hands are full already. You need to put something away first.'); }
 		  location = 'offhand';
 		}
 

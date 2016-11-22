@@ -14,6 +14,8 @@ const npcs_scripts_dir = __dirname + '/../scripts/player/';
 const l10n_dir         = __dirname + '/../l10n/scripts/player/';
 const statusUtil       = require('./status');
 const CombatUtil       = require('./combat_util').CombatUtil;
+const CommandUtil      = require('./command_util').CommandUtil;
+const ItemUtil         = require('./item_util').ItemUtil;
 
 const Player = function PlayerConstructor(socket) {
   const self = this;
@@ -152,10 +154,9 @@ const Player = function PlayerConstructor(socket) {
 
   self.setGender   = gender => self.gender = gender.toUpperCase();
 
-  self.addItem     = item   => self.inventory.push(item);
-  self.removeItem  = item   =>
-    self.inventory = self.inventory.filter(i => item !== i);
-  self.setInventory     = inv         => self.inventory = inv;
+  self.addItem      = item   => self.inventory.push(item);
+  self.removeItem   = item   => self.inventory = self.inventory.filter(i => item !== i);
+  self.setInventory = inv    => self.inventory = inv;
 
   self.setAttribute     = (attr, val) => self.attributes[attr]  = val;
   self.setPreference    = (pref, val) => self.preferences[pref] = val;
@@ -164,11 +165,9 @@ const Player = function PlayerConstructor(socket) {
   self.fleeFromCombat   = ()          => self.inCombat = [];
   self.setInCombat      = combatant   => self.inCombat.push(combatant);
   self.getInCombat      = ()          => self.inCombat;
-  self.removeFromCombat = combatant   => {
-    const combatantIndex = self.inCombat.indexOf(combatant);
-    if (combatantIndex === -1) { return; }
-    self.inCombat.splice(combatantIndex, 1);
-  }
+  self.removeFromCombat = combatant   => 
+    self.inCombat = self.inCombat.filter(comb => combatant !== comb);
+  
 
   ///// ----- Skills and Training. ----- ///////
 
@@ -449,7 +448,12 @@ const Player = function PlayerConstructor(socket) {
    * @param Item   item
    */
   self.equip = (wearLocation, item) => {
-    self.equipment[wearLocation] = item.getUuid();
+    const uid = item.getUuid();
+    
+    deleteFromEquipment(item, wearLocation);
+
+    self.equipment[wearLocation] = uid;
+    console.log(`EQUIPPING ${item.getShortDesc()} at ${wearLocation}`);
     item.setEquipped(true);
   };
 
@@ -458,14 +462,72 @@ const Player = function PlayerConstructor(socket) {
    * @param Item   item
    * @return String slot it was equipped in (see remove commmand)
    */
-  self.unequip = item => {
-    item.setEquipped(false);
+  self.unequip = (item, players, isDropping) => {
+    const container       = self.getContainersWithCapacity(item.getAttribute('size')).filter(cont => cont !== item)[0];
+    const holdingLocation = self.canHold(item) ? self.findHoldingLocation() : null;
+    const itemName        = item.getShortDesc();
+
+    if (!isDropping) {
+      const success = handleNormalUnequip(item, container, players, holdingLocation);
+      if (!success) { return; }
+    } else {
+      item.setEquipped(false);
+    }
+
+    return deleteFromEquipment(item, holdingLocation);
+    
+  };
+
+  function deleteFromEquipment(item, location) {
     for (const slot in self.equipment) {
+      if (slot === location) { continue; }
       if (self.equipment[slot] === item.getUuid()) {
         delete self.equipment[slot];
         return slot;
       }
     }
+  }
+
+  function handleNormalUnequip(item, container, players, holdingLocation) {
+    if (container) {
+      return putItemInContainer(item, container, self, players);
+    } else if (holdingLocation) {
+      return holdOntoItem(item, holdingLocation, self, players);
+    } else {
+      return self.warn(`Your hands are full. You will have to put away or drop something you are holding.`);
+    }
+  }
+
+  self.findHoldingLocation = () => {
+    const equipment = self.getEquipped();
+    return equipment['held'] ? 'offhand held' : 'held';
+  }
+
+  //TODO: Extract these into item utils?
+  function putItemInContainer(item, container, player, players) {
+    const containerName = container.getShortDesc();
+    const itemName      = item.getShortDesc();
+    container.addItem(item);
+    item.setContainer(container);
+
+    player.say(`You remove the ${itemName} and place it in your ${containerName}.`);
+    players.eachIf(
+      p => CommandUtil.inSameRoom(p, player),
+      p => p.say(`${player.getName()} places their ${itemName} in their ${containerName}.`)
+    );
+    return true;
+  }
+
+  function holdOntoItem(item, holdingLocation, player, players) {
+    const itemName = item.getShortDesc();
+    player.equip(holdingLocation, item);
+    return true;
+  }
+
+   self.canHold = () => {
+    const equipped     = self.getEquipped();
+    const holdingSpots = ['wield', 'offhand', 'held', 'offhand held'].filter(slot => !equipped[slot]);
+    return holdingSpots.length > 2;
   };
 
   /**
@@ -473,7 +535,7 @@ const Player = function PlayerConstructor(socket) {
    * @return weight units player can carry in inventory, total.
    */
   self.getMaxCarryWeight = () => {
-    const minimum = 10; // in case mods are added later?
+    const minimum      = 10; // in case mods are added later?
     const staminaBonus = self.getAttribute('stamina') * 15;
     const levelBonus   = Math.ceil(self.getAttribute('level') / 4);
     const willBonus    = Math.ceil(self.getAttribute('willpower') / 2);
@@ -483,11 +545,27 @@ const Player = function PlayerConstructor(socket) {
 
   /**
    * Recursively gets weight of all items in inventory, including those inside of containers.
-   * @reutrn Number weight units carried in inventory
+   * @return Number weight units carried in inventory
    */
-  self.getCarriedWeight = () => self.inventory.reduce((sum, item) => item.getWeight() + sum, 0);
+  self.getCarriedWeight = () => self.inventory
+    .reduce((sum, item) => item.getWeight() + sum, 0);
 
-  self.getContainerWithCapacity = size => self.inventory.filter(item => item.isContainer() && item.getRemainingSizeCapacity() >= size)[0];
+  /**
+   *  @param Number size
+   *  @return a list of all containers with capacity greater than size.
+   */
+  self.getContainersWithCapacity = size => self.inventory
+    .filter(item => item.isContainer() && item.getRemainingSizeCapacity() >= size);
+
+  self.getContainerWithCapacity = size => self.getContainersWithCapacity(size)[0];
+
+  /**
+   * Gets a flattened list of all items in the inventory for use by CommandUtil and such.
+   * @return a list of all items in inventory, nested one level deep?
+   */
+   self.getFlattenedInventory = () => self
+    .getInventory()
+    .reduce(ItemUtil.inventoryFlattener, []); 
 
 
 
@@ -638,6 +716,7 @@ const Player = function PlayerConstructor(socket) {
       }
     }
 
+
     // If the player is new, or skills have been added, initialize them to level 1.
     for (let skill in Skills) {
       skill = Skills[skill];
@@ -670,37 +749,51 @@ const Player = function PlayerConstructor(socket) {
    * @return string
    */
   self.stringify = () => {
-    let inv = [];
+    const inventory = self
+      .getInventory()
+      .map(item => item.flatten());
 
-    self.getInventory()
-      .forEach(item => {
-        inv.push(item.flatten());
+    const { name, accountName, location, locale, 
+      prompt_string, combat_prompt, password,
+      equipment, attributes, skills, feats,
+      gender, preferences, explored, killed,
+      met, training, bodyParts, effects 
+    } = self;
+    try {
+      return JSON.stringify({ 
+        name,           accountName, 
+        location,       locale, 
+        prompt_string,  combat_prompt, 
+        password,       equipment,
+        attributes,     skills, 
+        feats,          gender, 
+        preferences,    explored, 
+        killed,         met, 
+        training,       bodyParts, 
+        effects,        inventory
       });
 
-    return JSON.stringify({
-      name: self.name,
-      accountName: self.accountName,
-      location: self.location,
-      locale: self.locale,
-      prompt_string: self.prompt_string,
-      combat_prompt: self.combat_prompt,
-      password: self.password,
-      inventory: inv,
-      equipment: self.equipment,
-      attributes: self.attributes,
-      skills: self.skills,
-      feats: self.feats,
-      gender: self.gender,
-      preferences: self.preferences,
-      explored: self.explored,
-      killed:   self.killed,
-      met:      self.met,
-      training: self.training,
-      bodyParts: self.bodyParts,
-    });
+    } catch (err) {
+      util.log(
+        `SAVE ERROR:
+        Inv is ${inventory}
+        Error is: ${err}`);
+      return JSON.stringify({ 
+        name,           accountName, 
+        location,       locale, 
+        prompt_string,  combat_prompt, 
+        password,       equipment: {},
+        attributes,     skills, 
+        feats,          gender, 
+        preferences,    explored, 
+        killed,         met, 
+        training,       bodyParts, 
+        effects,        inventory: []
+      });
+    }
+    
   };
 
-  //TODO: Make a similar function but for NPCs::::::::::::::
 
   /**
    * Helpers to activate skills or feats
@@ -725,8 +818,6 @@ const Player = function PlayerConstructor(socket) {
     const args = [].slice.call(arguments).slice(1)
     Feats[feat].activate.apply(null, args);
   };
-
-  //TODO: Should go in other module::::::::::::::::::::::::
 
   /**
    * Helper to calculate physical damage

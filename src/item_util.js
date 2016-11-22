@@ -90,7 +90,85 @@ const checkForCrit = (attacker, defender, damageDealt) => {
   }
 }
 
+const inventoryFlattener = (inv, item) => {
+  try {
+    return inv.concat(item).concat(item.getFlattenedInventory());
+  } catch (e) {
+    util.log('AW DANG:', e);
+    util.log('ITEM: ', item);
+    return inv.concat(item);
+  }
+}
+
+function checkInventory(player, item) {
+  return [ tooLarge(player, item) , tooHeavy(player, item) ];
+}
+
+function tooLarge(player, item) {
+  const itemSize = item.getAttribute('size');
+  if (itemSize === Infinity) { return true; }
+
+  const containerWithCapacity = player.getContainerWithCapacity(itemSize);
+  return !containerWithCapacity;
+}
+
+function tooHeavy(player, item) {
+  const itemWeight = item.getWeight();
+  if (itemWeight === Infinity) { return true; }
+
+  const carriedWeight  = player.getCarriedWeight();
+  const maxCarryWeight = player.getMaxCarryWeight();
+
+  return (carriedWeight + itemWeight) > maxCarryWeight;
+}
+
+function hold({ player, room, item }, callback) {
+  const equipment = player.getEquipped();
+  const location  = player.findHoldingLocation(); 
+  
+  player.equip(location, item);
+
+  player.addItem(item);
+  if (room) { room.removeItem(item.getUuid()) };
+  item.setRoom(null);
+  item.setHolder(player.getName());
+  item.setEquipped(true);
+
+  callback(location);
+}
+
+function pickUp({ player, room, item }, callback) {
+  item.setRoom(null);
+  item.setHolder(player.getName());
+  
+  const container = player.getContainerWithCapacity(item.getAttribute('size'));
+  container.addItem(item);
+  item.setContainer(container);
+  if (room) { room.removeItem(item.getUuid()); }
+
+  callback(container);
+}
+
+function getFailureMessage(tooLarge, tooHeavy, item) {
+  const itemName = item.getShortDesc();
+  
+  if (tooLarge) { return `The ${itemName} will not fit in your inventory, it is too large.`; }
+  if (tooHeavy) { return `The ${itemName} is too heavy for you to carry at the moment.`; }
+  return `You cannot pick up ${itemName} right now.`;
+}
+
+function isHeld(player, item) {
+  const equipment = player.getEquipped();
+  return ['held', 'wield', 'offhand', 'offhand held'].filter(slot => equipment[slot] === item.getUuid())[0];
+}
+
 exports.ItemUtil = {
+  isHeld,
+  checkInventory, 
+  hold, pickUp,
+  getFailureMessage, 
+  tooLarge, tooHeavy,
+  inventoryFlattener,
   penalize, getPenaltyDesc,
   useDefaultPenalties, checkForCrit,
   removeDefaultPenaltes

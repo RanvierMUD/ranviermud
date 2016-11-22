@@ -110,10 +110,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         return player.say('<cyan>empty</cyan>');
       }
 
-      contents.forEach(uid => {
-          const item = items.get(uid);
-          player.say('<cyan> - ' + item.getRoomDesc(locale) + '</cyan>');
-        });
+      contents.forEach(item => player.say(`<cyan> - ${item.getRoomDesc()}</cyan>`));
     }
 
     if (!room) {

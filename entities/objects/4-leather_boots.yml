@@ -5,7 +5,7 @@
     room_description:
         en: "a pair of well-worn high-top leather boots"
     keywords:
-        en: [ "leather boots", "boots", "shoes" ]
+        en: [ "leather boots", "boots", "shoes", "boot" ]
     description:
         en: "A pair of sturdy leather boots."
     behaviors: "wearable"

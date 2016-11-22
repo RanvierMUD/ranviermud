@@ -23,16 +23,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     if (item.isEquipped()) {
       item = CommandUtil.findItemInInventory('2.' + args, player, true) || item;
-      if (item.isEquipped()) {
-        return player.warn(`You are wearing ${item.getShortDesc()} right now, and cannot drop it.`);
-      }
     }
 
     drop(item);
 
     function dropAll() {
-      const items = player.getInventory()
-        .filter(item => !item.isEquipped());
+      const items = player.getInventory();
       if (!items.length && !isDead) { return player.say('You have nothing to drop.'); }
       items.forEach(item => drop(item));
     }
@@ -40,15 +36,15 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function drop(item) {
       let playerName = player.getName();
 
-      if (item.isEquipped()) {
-        return player.warn(`You are wearing ${item.getShortDesc()} right now, and cannot drop it.`);
+      if (item.isEquipped()) { 
+        const isDropping = true;
+        player.unequip(item, players, isDropping); 
       }
 
       players.eachIf(
         p => CommandUtil.inSameRoom(p, player),
         p => p.sayL10n(l10n, 'OTHER_DROPS', playerName, item.getShortDesc(p.getLocale()))
       );
-
 
       let itemName = item.getShortDesc('en');
       if (!isDead) {
@@ -65,5 +61,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       item.setHolder(null);
       item.setRoom(room.getLocation());
     }
+
   };
 };

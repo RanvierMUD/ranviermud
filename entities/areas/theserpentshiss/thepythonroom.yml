@@ -13,5 +13,6 @@
       location: 4
       direction: 'out'
       door:
-        locked: 'python key'
+        locked: true
+        key: 'python key'
         open: false

@@ -4,18 +4,18 @@ const l10nFile = __dirname + '/../l10n/commands/kill.yml';
 const _ = require('../src/helpers');
 const l10n = require('../src/l10n')(l10nFile);
 const util = require('util');
+
 exports.command = (rooms, items, players, npcs, Commands) => {
     return (args, player) => {
         const room = rooms.getAt(player.getLocation());
         const npc = CommandUtil.findNpcInRoom(npcs, args, room, player, true);
 
         if (!npc) {
-            player.sayL10n(l10n, 'TARGET_NOT_FOUND');
-            return;
+            return player.warn(`Kill ${args}? If you can find them, maybe.`);
         }
+
         if (npc.isPacifist()) {
-            player.sayL10n(l10n, 'KILL_PACIFIST');
-            return;
+            return player.warn(`${npc.getShortDesc()} radiates a calming aura.`);
         }
 
         if (!player.hasEnergy(5)) { return player.noEnergy(); }
@@ -25,11 +25,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         const fightingPlayer = _.has(npc.getInCombat(), player);
 
         if (fightingPlayer) {
-          player.say('You are already fighting them!');
-          return;
+          return player.say(`You are already fighting that ${npc.getShortDesc()}!`);
         } else if (npc.isInCombat()) {
-          player.say('They are busy fighting someone else, no fair!');
-          return;
+          return player.say('That ${npc.getShortDesc()} is busy fighting someone else, no fair!');
         }
 
         npc.emit('combat', player, room, players, npcs, rooms, cleanup);
