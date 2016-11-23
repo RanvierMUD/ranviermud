@@ -8,8 +8,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     const inventory   = player.getInventory();
     const equipped    = player.getEquipped();
-    const equipment   = new Map();
 
+    if (!Object.keys(equipped).length) {
+      return player.warn(`You're stark naked, with nothing to your name...`);
+    }
+
+    const equipment   = new Map();
     const longestSlot = Object.keys(equipped)
       .reduce((longest, key) => longest > key.length ? longest : key.length, 0);
    
@@ -20,28 +24,28 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const name     = item.getShortDesc();
       const weight   = item.getWeight();
       const contents = item.isContainer() ? item.getInventory() : false;
-      equipment.set(slot, { name, weight, contents });
+      const capacity = item.isContainer() ? 
+        getContainerCapacity(item) :
+        null;
+      equipment.set(slot, { name, weight, contents, capacity });
 
       longest = name.length > longest ? 
         name.length : 
         longest;
     }
 
-    if (!equipment.size) {
-      return player.warn(`You're stark naked, with nothing to your name...`);
-    }
-
     player.say(
       `<bold>Your inventory:</bold>
+      <cyan>Encumbrance: ${player.getCarriedWeight()}/${player.getMaxCarryWeight()} gravets</cyan>
       `);
     
     const displayListItem = (name, nestingLevel) => player.say(`<cyan>${_.leftPad(nestingLevel)} - ${name}</cyan>`);
 
     for (let [slot, details] of equipment) {
-      const { name, weight, contents } = details;
+      const { name, weight, contents, capacity } = details;
       const weightPadding = _.leftPad(longest - name.length);
       const namePadding   = _.leftPad(longestSlot - slot.length);
-      player.say(`<magenta><${slot}></magenta>${namePadding} <bold>${name}</bold> ${weightPadding} | <cyan>weight: ${weight} gravets</cyan>`);
+      player.say(`<magenta><${slot}></magenta>${namePadding} <bold>${name}</bold> ${weightPadding} | <cyan>weight: ${weight} gravets</cyan> ${printCap(capacity)}`);
       if (contents) {
         displayContainerContents(contents, 0, true);
       }
@@ -56,6 +60,19 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function displayNestedContainer(item, nestingLevel) {
       displayListItem(item.getShortDesc(), nestingLevel);
       displayContainerContents(item.getInventory(), nestingLevel + 1);
+    }
+
+    function getContainerCapacity(item) {
+      return { 
+        max:     item.getAttribute('maxSizeCapacity'), 
+        current: item.getSizeOfContents() 
+      };
+    }
+
+    function printCap(capacity) {
+      if (!capacity) { return ''; }
+      const { current, max } = capacity;
+      return ` <green>${current}/${max} aums</green>`;
     }
 
   };

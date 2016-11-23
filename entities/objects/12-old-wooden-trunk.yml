@@ -10,9 +10,9 @@
         en: "A large oaken trunk, the lid covered with intricate bands of copper. It looks like someone or something has busted the lock open, as there are chunks of splintered wood where it would have been."
     room: 5
     attributes:
-        weight: 200
+        weight: 300
         maxSizeCapacity: 44
-        maxWeightCapacity: 160
+        maxWeightCapacity: 180
         size: 48
     inventory:
       - 3

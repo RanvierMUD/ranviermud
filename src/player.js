@@ -537,10 +537,10 @@ const Player = function PlayerConstructor(socket) {
    * @return weight units player can carry in inventory, total.
    */
   self.getMaxCarryWeight = () => {
-    const minimum      = 10; // in case mods are added later?
+    const minimum      = 20; // in case mods are added later?
     const staminaBonus = self.getAttribute('stamina') * 15;
-    const levelBonus   = Math.ceil(self.getAttribute('level') / 4);
-    const willBonus    = Math.ceil(self.getAttribute('willpower') / 2);
+    const levelBonus   = Math.floor(self.getAttribute('level') * 1.25);
+    const willBonus    = Math.ceil(self.getAttribute('willpower') * 1.5);
 
     return Math.max(minimum, minimum + staminaBonus + levelBonus + willBonus);
   }

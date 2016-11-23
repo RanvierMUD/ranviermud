@@ -37,6 +37,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function wearItem(item) {
+      const itemContainer = item.getContainer();
+      if (itemContainer) {
+        itemContainer.removeItem(item);
+        item.setContainer(null);
+      }
       if (isWeapon(item)) {
         const keyword = item.getKeywords('en')[0];
         return Commands.player_commands.wield(keyword, player);
