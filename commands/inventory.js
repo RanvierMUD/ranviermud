@@ -64,7 +64,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function printCap(capacity) {
       if (!capacity) { return ''; }
       const { current, max } = capacity;
-      return ` <green>${current}/${max} cubic aums</green>`;
+      return ` <green>${current}/${max} aums</green>`;
     }
 
   };
