@@ -22,8 +22,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const contents = item.isContainer() ? item.getInventory() : false;
       equipment.set(slot, { name, weight, contents });
 
-      longest = item.getShortDesc().length > longest ? 
-        item.getShortDesc().length : 
+      longest = name.length > longest ? 
+        name.length : 
         longest;
     }
 
