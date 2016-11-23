@@ -35,22 +35,21 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const displayListItem = item => player.say(`<cyan>${_.leftPad(nestingLevel)} - ${item.getShortDesc()}</cyan>`)
 
     for (let [slot, details] of equipment) {
-      const details = { name, weight, contents };
+      const { name, weight, contents } = details;
       const padding = _.leftPad(longest - name.length);
-      player.say(`<magenta><${slot}></magenta> <bold>${name}</bold> ${padding}<cyan>weight: ${weight} gravets</cyan>`);
+      player.say(`<magenta><${slot}></magenta> <bold>${name}</bold> ${padding} | <cyan>weight: ${weight} gravets</cyan>`);
       if (contents) {
-        displayContainer(contents, 0);
+        displayContainerContents(contents, 0);
       }
     }
 
-    function displayContainerContents(item, nestingLevel) {
-      const contents = container.getInventory();
-        if (!contents.length) { return; }
-        
-        player.say("<bold>CONTENTS: </bold>");
-        contents.forEach(item => item.isContainer() ? 
-          displayContainerContents(item, nestingLevel + 1) : 
-          displayListItem(item, nestingLevel));
+    function displayContainerContents(contents, nestingLevel) {
+      if (!contents.length) { return; }
+      
+      player.say("<bold>CONTENTS: </bold>");
+      contents.forEach(item => item.isContainer() ? 
+        displayContainerContents(item, nestingLevel + 1) : 
+        displayListItem(item, nestingLevel));
     }
 
   };
