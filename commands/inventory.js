@@ -35,7 +35,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       `<bold>Your inventory:</bold>
       `);
     
-    const displayListItem = (name, nestingLevel) => player.say(`<cyan>${_.leftPad(nestingLevel)} - ${name}</cyan> ${_.leftPad(Math.max(0, longest - (nestingLevel + name.length)))} |`);
+    const displayListItem = (name, nestingLevel) => player.say(`<cyan>${_.leftPad(nestingLevel)} - ${name}</cyan>`);
 
     for (let [slot, details] of equipment) {
       const { name, weight, contents } = details;
@@ -50,11 +50,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function displayContainerContents(contents, nestingLevel) {
       contents.forEach(item => item.isContainer() ? 
         displayNestedContainer(item, nestingLevel): 
-        displayListItem(item.getShortDesc(), nestingLevel + longest));
+        displayListItem(item.getShortDesc(), nestingLevel));
     }
 
     function displayNestedContainer(item, nestingLevel) {
-      displayListItem(item.getShortDesc(), nestingLevel + longest);
+      displayListItem(item.getShortDesc(), nestingLevel);
       displayContainerContents(item.getInventory(), nestingLevel + 1);
     }
 
