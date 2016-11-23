@@ -8,8 +8,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
     const inventory   = player.getInventory();
     const equipped    = player.getEquipped();
-    const equipment   = new Map();
 
+    if (!Object.keys(equipped).length) {
+      return player.warn(`You're stark naked, with nothing to your name...`);
+    }
+
+    const equipment   = new Map();
     const longestSlot = Object.keys(equipped)
       .reduce((longest, key) => longest > key.length ? longest : key.length, 0);
    
@@ -21,17 +25,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const weight   = item.getWeight();
       const contents = item.isContainer() ? item.getInventory() : false;
       const capacity = item.isContainer() ? 
-        { max: item.getAttribute('maxSizeCapacity'), current: item.getSizeOfContents() } :
+        getContainerCapacity(item) :
         null;
       equipment.set(slot, { name, weight, contents, capacity });
 
       longest = name.length > longest ? 
         name.length : 
         longest;
-    }
-
-    if (!equipment.size) {
-      return player.warn(`You're stark naked, with nothing to your name...`);
     }
 
     player.say(
@@ -60,6 +60,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function displayNestedContainer(item, nestingLevel) {
       displayListItem(item.getShortDesc(), nestingLevel);
       displayContainerContents(item.getInventory(), nestingLevel + 1);
+    }
+
+    function getContainerCapacity(item) {
+      return { 
+        max:     item.getAttribute('maxSizeCapacity'), 
+        current: item.getSizeOfContents() 
+      };
     }
 
     function printCap(capacity) {
