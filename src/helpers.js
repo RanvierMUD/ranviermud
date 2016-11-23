@@ -41,7 +41,7 @@ const hasKeys = obj => !!Object.keys(obj).length;
  * Pads leftly.
  */
 const leftPad = (amt, pad) => {
-  pad = pad || '';
+  pad = pad || ' ';
   let padding = '';
   while (amt) {
     padding += pad;
