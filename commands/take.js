@@ -96,6 +96,10 @@ exports.command = (rooms, items, players, npcs, Commands) =>
             firstPartyMessage: `You reach into the ${containerDesc} and take the ${itemName}.`,
             thirdPartyMessage: `${player.getName()} reaches into the ${containerDesc} and takes the ${itemName}.`
           });
+
+          if (item.getAttribute('damage')) {
+            return Commands.player_commands.wield(itemName, player);
+          }
         });
     }
 
