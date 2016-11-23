@@ -29,7 +29,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return player.warn('You cannot do that while fighting!');
     }
 
-    const room = rooms.getAt(player.getLocation());
+    const room   = rooms.getAt(player.getLocation());
     const toRoom = Broadcast.toRoom(room, player, null, players);
 
     const [ itemTarget, containerTarget ] = _.getTargets(args);
@@ -37,8 +37,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     const item      = findItem(itemTarget);
     const container = findContainer(containerTarget);
 
-    if (!item)      { return player.warn('Could not find ' + itemTarget + '.'); }
-    if (!container) { return player.warn('Could not find ' + containerTarget + '.'); }
+    if (!item)      { return player.warn(`Could not find ${itemTarget}.`); }
+    if (!container) { return player.warn(`Could not find ${containerTarget}.`); }
 
     putInContainer(item, container);
 
