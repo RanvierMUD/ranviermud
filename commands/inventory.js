@@ -36,7 +36,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     player.say(
       `<bold>Your inventory:</bold>
-      <green>Encumbrance: ${player.getCarriedWeight()}/${player.getMaxCarryWeight()} aums</green>
+      <cyan>Encumbrance: ${player.getCarriedWeight()}/${player.getMaxCarryWeight()} gravets</cyan>
       `);
     
     const displayListItem = (name, nestingLevel) => player.say(`<cyan>${_.leftPad(nestingLevel)} - ${name}</cyan>`);
