@@ -1,40 +1,62 @@
 'use strict';
 const l10nFile = __dirname + '/../l10n/commands/inventory.yml';
 const l10n = require('../src/l10n')(l10nFile);
+const _    = require('../src/helpers');
 const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
-    player.sayL10n(l10n, 'INV');
+    const inventory   = player.getInventory();
+    const equipped    = player.getEquipped();
+    const equipment   = new Map();
 
-    util.log(player.getName() + '\'s inventory: ');
+    const longestSlot = Object.keys(equipped)
+      .reduce((longest, key) => longest > key.length ? longest : key.length, 0);
+   
+    let longest = 0;
 
-    // See how many of an item a player has so we can do stuff like (2) apple
-    const itemCounts = {};
-    const inventory = player.getInventory();
-    inventory.forEach(item => {
-        const vnum = item.getVnum();
-        if (!item.isEquipped()) {
-          itemCounts[vnum] ? itemCounts[vnum] += 1 : itemCounts[vnum] = 1;
-        }
-      });
+    for (let slot in equipped) {
+      const item     = items.get(equipped[slot]);
+      const name     = item.getShortDesc();
+      const weight   = item.getWeight();
+      const contents = item.isContainer() ? item.getInventory() : false;
+      equipment.set(slot, { name, weight, contents });
 
-    const displayed = {};
-    inventory.forEach(item => {
-        const vnum = item.getVnum();
-        if (!(vnum in displayed) && !item.isEquipped()) {
-          displayed[vnum] = true;
-          let amount = itemCounts[vnum];
-          let prefix = amount > 1 ? '(' + amount + ') ' : '';
-          util.log(prefix + item.getShortDesc('en'));
-          player.say(prefix + item.getShortDesc('en'));
-        }
-      });
+      longest = name.length > longest ? 
+        name.length : 
+        longest;
+    }
 
+    if (!equipment.size) {
+      return player.warn(`You're stark naked, with nothing to your name...`);
+    }
 
-      if (!Object.keys(displayed).length){
-      	player.sayL10n(l10n, 'EMPTY');
+    player.say(
+      `<bold>Your inventory:</bold>
+      `);
+    
+    const displayListItem = (name, nestingLevel) => player.say(`<cyan>${_.leftPad(nestingLevel)} - ${name}</cyan>`);
+
+    for (let [slot, details] of equipment) {
+      const { name, weight, contents } = details;
+      const weightPadding = _.leftPad(longest - name.length);
+      const namePadding   = _.leftPad(longestSlot - slot.length);
+      player.say(`<magenta><${slot}></magenta>${namePadding} <bold>${name}</bold> ${weightPadding} | <cyan>weight: ${weight} gravets</cyan>`);
+      if (contents) {
+        displayContainerContents(contents, 0, true);
       }
+    }
+
+    function displayContainerContents(contents, nestingLevel) {
+      contents.forEach(item => item.isContainer() ? 
+        displayNestedContainer(item, nestingLevel) : 
+        displayListItem(item.getShortDesc(), nestingLevel));
+    }
+
+    function displayNestedContainer(item, nestingLevel) {
+      displayListItem(item.getShortDesc(), nestingLevel);
+      displayContainerContents(item.getInventory(), nestingLevel + 1);
+    }
 
   };
 };

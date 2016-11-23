@@ -104,12 +104,14 @@ exports.command = (rooms, items, players, npcs, Commands) =>
         destContainer => {
           const destContainerName = destContainer.getShortDesc();
           const itemName          = item.getShortDesc();
+
+          container.removeItem(item);
           toRoom({
             firstPartyMessage: `You reach into the ${containerDesc} and take the ${itemName}, placing it in your ${destContainerName}.`,
             thirdPartyMessage: `${player.getName()} takes the ${itemName} from the ${containerDesc} and places it in their ${destContainerName}.`
           });
           
-          destContainer.removeItem(item);
+          destContainer.addItem(item);
         });
     }
 
