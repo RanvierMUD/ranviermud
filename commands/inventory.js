@@ -1,40 +1,46 @@
 'use strict';
 const l10nFile = __dirname + '/../l10n/commands/inventory.yml';
 const l10n = require('../src/l10n')(l10nFile);
+const _    = require('../src/helpers');
 const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
-    player.sayL10n(l10n, 'INV');
+    const inventory   = player.getInventory();
+    const equipped    = player.getEquipped();
+    const equipment   = new Map();
 
-    util.log(player.getName() + '\'s inventory: ');
+    for (let slot in equipped) {
+      equipment.set(slot, items.get(equipped[slot]));
+    }
 
-    // See how many of an item a player has so we can do stuff like (2) apple
-    const itemCounts = {};
-    const inventory = player.getInventory();
-    inventory.forEach(item => {
-        const vnum = item.getVnum();
-        if (!item.isEquipped()) {
-          itemCounts[vnum] ? itemCounts[vnum] += 1 : itemCounts[vnum] = 1;
-        }
-      });
+    if (!equipped.length) {
+      return player.warn(`You're stark naked, with nothing to your name...`);
+    }
 
-    const displayed = {};
-    inventory.forEach(item => {
-        const vnum = item.getVnum();
-        if (!(vnum in displayed) && !item.isEquipped()) {
-          displayed[vnum] = true;
-          let amount = itemCounts[vnum];
-          let prefix = amount > 1 ? '(' + amount + ') ' : '';
-          util.log(prefix + item.getShortDesc('en'));
-          player.say(prefix + item.getShortDesc('en'));
-        }
-      });
+    player.say(
+      `<bold>Your inventory:</bold>
+      `);
+    
+    const displayListItem = item => player.say(`<cyan>${_.leftPad(nestingLevel)} - ${item.getShortDesc()}</cyan>`)
 
-
-      if (!Object.keys(displayed).length){
-      	player.sayL10n(l10n, 'EMPTY');
+    for (let [slot, item] of equipment) {
+      player.say(`<magenta><${slot}></magenta> <bold>${item.getShortDesc()}</bold> <cyan>weight: ${item.getWeight()} gravets</cyan>`);
+      if (item.isContainer()) {
+        displayContainer(item, 0);
       }
+    }
+
+
+    function displayContainerContents(item, nestingLevel) {
+      const contents = container.getInventory();
+        if (!contents.length) { return; }
+        
+        player.say("<bold>CONTENTS: </bold>");
+        contents.forEach(item => item.isContainer() ? 
+          displayContainerContents(item, nestingLevel + 1) : 
+          displayListItem(item, nestingLevel));
+    }
 
   };
 };
