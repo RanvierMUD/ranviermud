@@ -10,10 +10,20 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const equipped    = player.getEquipped();
     const equipment   = new Map();
 
+    let longest = 0;
+
     for (let slot in equipped) {
-      equipment.set(slot, items.get(equipped[slot]));
+      const item     = items.get(equipped[slot]);
+      const name     = item.getShortDesc();
+      const weight   = item.getWeight();
+      const contents = item.isContainer() ? item.getInventory() : false;
+      equipment.set(slot, { name, weight, contents });
+
+      longest = item.getShortDesc().length > longest ? 
+        item.getShortDesc().length : 
+        longest;
     }
-    
+
     if (!equipment.size) {
       return player.warn(`You're stark naked, with nothing to your name...`);
     }
@@ -24,13 +34,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     
     const displayListItem = item => player.say(`<cyan>${_.leftPad(nestingLevel)} - ${item.getShortDesc()}</cyan>`)
 
-    for (let [slot, item] of equipment) {
-      player.say(`<magenta><${slot}></magenta> <bold>${item.getShortDesc()}</bold> <cyan>weight: ${item.getWeight()} gravets</cyan>`);
-      if (item.isContainer()) {
-        displayContainer(item, 0);
+    for (let [slot, details] of equipment) {
+      const details = { name, weight, contents };
+      const padding = _.leftPad(longest - name.length);
+      player.say(`<magenta><${slot}></magenta> <bold>${name}</bold> ${padding}<cyan>weight: ${weight} gravets</cyan>`);
+      if (contents) {
+        displayContainer(contents, 0);
       }
     }
-
 
     function displayContainerContents(item, nestingLevel) {
       const contents = container.getInventory();
