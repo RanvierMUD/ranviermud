@@ -467,6 +467,8 @@ const Player = function PlayerConstructor(socket) {
     const holdingLocation = self.canHold(item) ? self.findHoldingLocation() : null;
     const itemName        = item.getShortDesc();
 
+    util.log(`UNEQUIPPING ${itemName}`);
+
     if (!isDropping) {
       const success = handleNormalUnequip(item, container, players, holdingLocation);
       if (!success) { return; }

@@ -10,6 +10,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const equipped    = player.getEquipped();
     const equipment   = new Map();
 
+    const longestSlot = Object.keys(equipped)
+      .reduce((longest, key) => longest > key.length ? longest : key.length, 0);
+   
     let longest = 0;
 
     for (let slot in equipped) {
@@ -32,24 +35,27 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       `<bold>Your inventory:</bold>
       `);
     
-    const displayListItem = item => player.say(`<cyan>${_.leftPad(nestingLevel)} - ${item.getShortDesc()}</cyan>`)
+    const displayListItem = (name, nestingLevel) => player.say(`<cyan>${_.leftPad(nestingLevel)} - ${name}</cyan> ${_.leftPad(Math.max(0, longest - (nestingLevel + name.length)))} |`);
 
     for (let [slot, details] of equipment) {
       const { name, weight, contents } = details;
-      const padding = _.leftPad(longest - name.length);
-      player.say(`<magenta><${slot}></magenta> <bold>${name}</bold> ${padding} | <cyan>weight: ${weight} gravets</cyan>`);
+      const weightPadding = _.leftPad(longest - name.length);
+      const namePadding   = _.leftPad(longestSlot - slot.length);
+      player.say(`<magenta><${slot}></magenta>${namePadding} <bold>${name}</bold> ${weightPadding} | <cyan>weight: ${weight} gravets</cyan>`);
       if (contents) {
-        displayContainerContents(contents, 0);
+        displayContainerContents(contents, 0, true);
       }
     }
 
     function displayContainerContents(contents, nestingLevel) {
-      if (!contents.length) { return; }
-      
-      player.say("<bold>CONTENTS: </bold>");
       contents.forEach(item => item.isContainer() ? 
-        displayContainerContents(item, nestingLevel + 1) : 
-        displayListItem(item, nestingLevel));
+        displayNestedContainer(item, nestingLevel): 
+        displayListItem(item.getShortDesc(), nestingLevel + longest));
+    }
+
+    function displayNestedContainer(item, nestingLevel) {
+      displayListItem(item.getShortDesc(), nestingLevel + longest);
+      displayContainerContents(item.getInventory(), nestingLevel + 1);
     }
 
   };
