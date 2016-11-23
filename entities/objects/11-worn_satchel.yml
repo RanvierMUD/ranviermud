@@ -13,7 +13,7 @@
     attributes:
         defense: 1
         wearLocation: 'back'
-        weight: 20
+        weight: 12
         size: 11
         maxSizeCapacity: 10
         maxWeightCapacity: 40
