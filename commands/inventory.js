@@ -13,8 +13,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     for (let slot in equipped) {
       equipment.set(slot, items.get(equipped[slot]));
     }
-
-    if (!equipped.length) {
+    
+    if (!equipment.size) {
       return player.warn(`You're stark naked, with nothing to your name...`);
     }
 
