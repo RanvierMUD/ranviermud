@@ -90,15 +90,15 @@ const checkForCrit = (attacker, defender, damageDealt) => {
   }
 }
 
-function checkInventory(player, item) {
-  return [ tooLarge(player, item) , tooHeavy(player, item) ];
+function checkInventory(player, item, items) {
+  return [ tooLarge(player, item, items) , tooHeavy(player, item) ];
 }
 
-function tooLarge(player, item) {
+function tooLarge(player, item, items) {
   const itemSize = item.getAttribute('size');
   if (itemSize === Infinity) { return true; }
 
-  const containerWithCapacity = player.getContainerWithCapacity(itemSize);
+  const containerWithCapacity = player.getContainerWithCapacity(items, itemSize);
   return !containerWithCapacity;
 }
 
