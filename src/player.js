@@ -533,7 +533,7 @@ const Player = function PlayerConstructor(socket) {
   };
 
   /**
-   * Imaginary weight units player can carry (ounces-ish)
+   * Imaginary weight units player can carry (~10 grams)
    * @return weight units player can carry in inventory, total.
    */
   self.getMaxCarryWeight = () => {
@@ -542,7 +542,7 @@ const Player = function PlayerConstructor(socket) {
     const levelBonus   = Math.floor(self.getAttribute('level') * 1.25);
     const willBonus    = Math.ceil(self.getAttribute('willpower') * 1.5);
 
-    return Math.max(minimum, minimum + staminaBonus + levelBonus + willBonus);
+    return Math.ceil(Math.max(minimum, minimum + staminaBonus + levelBonus + willBonus));
   }
 
   /**
@@ -560,14 +560,6 @@ const Player = function PlayerConstructor(socket) {
     .filter(item => item.isContainer() && item.getRemainingSizeCapacity() >= size);
 
   self.getContainerWithCapacity = size => self.getContainersWithCapacity(size)[0];
-
-  /**
-   * Gets a flattened list of all items in the inventory for use by CommandUtil and such.
-   * @return a list of all items in inventory, nested one level deep?
-   */
-   self.getFlattenedInventory = () => self
-    .getInventory()
-    .reduce(ItemUtil.inventoryFlattener, []); 
 
 
 

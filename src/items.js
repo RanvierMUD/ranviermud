@@ -292,7 +292,7 @@ const Item = function ItemConstructor(config) {
 
   self.addItem = item => {
     item.setContainer(self.getUuid());
-    return self.inventory.push(item);
+    return self.inventory.push(item.getUuid());
   }
 
   self.removeItem = item => {
@@ -303,11 +303,6 @@ const Item = function ItemConstructor(config) {
     }
     return null;
   }
-
-	self.getFlattenedInventory = () => self.isContainer() ? 
-		self.getInventory()
-				.reduce(ItemUtil.inventoryFlattener, []) : 
-		[];
 
   self.findInInventory = predicate => self.inventory.find(predicate);
 
