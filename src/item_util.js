@@ -189,7 +189,6 @@ exports.ItemUtil = {
   hold, pickUp,
   getFailureMessage, holdOntoItem,
   tooLarge, tooHeavy,
-  inventoryFlattener,
   penalize, getPenaltyDesc,
   useDefaultPenalties, checkForCrit,
   removeDefaultPenaltes
