@@ -453,7 +453,7 @@ const Player = function PlayerConstructor(socket) {
     ItemUtil.deleteFromEquipment(self, item, wearLocation);
 
     self.equipment[wearLocation] = uid;
-    console.log(`EQUIPPING ${item.getShortDesc()} at ${wearLocation}`);
+    util.log(`EQUIPPING ${item.getShortDesc()} at ${wearLocation}`);
     item.setEquipped(true);
   };
 
@@ -528,13 +528,9 @@ const Player = function PlayerConstructor(socket) {
    *  @param Number size
    *  @return a list of all containers with capacity greater than size.
    */
-  self.getContainersWithCapacity = (items, size) => {
-    util.log('in player get cont method:');
-    util.log(items);
-    util.log(size);
-    return self.inventory
+  self.getContainersWithCapacity = (items, size) => self.inventory
       .filter(item => item.isContainer() && item.getRemainingSizeCapacity(items) >= size);
-  }
+
   self.getContainerWithCapacity = (items, size) => self.getContainersWithCapacity(items, size)[0];
 
 

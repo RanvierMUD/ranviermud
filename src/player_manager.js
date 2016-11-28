@@ -135,7 +135,6 @@ var PlayerManager = function ()
 	 */
 	self.broadcastL10n = function (l10n, key)
 	{
-		console.log(key);
 		var locale = l10n.locale;
 		var args = [].slice.call(arguments).slice(1);
 		self.each(function (p)
