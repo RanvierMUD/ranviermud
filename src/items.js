@@ -325,6 +325,8 @@ const Item = function ItemConstructor(config) {
 	self.getSizeOfContents = items => self
 		.getInventory()
 		.reduce((sum, uid) => {
+			util.log(items);
+			util.log(uid);
 			const item = items.get(uid);
 			return item.getAttribute('size') + sum;
 		}, 0);

@@ -462,8 +462,9 @@ const Player = function PlayerConstructor(socket) {
    * @param Item   item
    * @return String slot it was equipped in (see remove commmand)
    */
-  self.unequip = (item, players, isDropping) => {
-    const container       = self.getContainersWithCapacity(item.getAttribute('size')).filter(cont => cont !== item)[0];
+  self.unequip = (item, items, players, isDropping) => {
+    const size            = item.getAttribute('size');
+    const container       = self.getContainersWithCapacity(items, size).filter(cont => cont !== item)[0];
     const holdingLocation = self.canHold(item) ? self.findHoldingLocation() : null;
     const itemName        = item.getShortDesc();
 
@@ -527,9 +528,13 @@ const Player = function PlayerConstructor(socket) {
    *  @param Number size
    *  @return a list of all containers with capacity greater than size.
    */
-  self.getContainersWithCapacity = (items, size) => self.inventory
-    .filter(item => item.isContainer() && item.getRemainingSizeCapacity(items) >= size);
-
+  self.getContainersWithCapacity = (items, size) => {
+    util.log('in player get cont method:');
+    util.log(items);
+    util.log(size);
+    return self.inventory
+      .filter(item => item.isContainer() && item.getRemainingSizeCapacity(items) >= size);
+  }
   self.getContainerWithCapacity = (items, size) => self.getContainersWithCapacity(items, size)[0];
 
 
