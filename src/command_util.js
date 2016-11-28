@@ -108,7 +108,7 @@ function findNpcInRoom(npcs, lookString, room, player, hydrate) {
  * @return string UUID of the item
  */
 function findItemInInventory(lookString, being, hydrate) {
-  let thing = CommandUtil.parseDot(lookString, being.getFlattenedInventory(),
+  let thing = CommandUtil.parseDot(lookString, being.getInventory(),
     function (item) {
       return item && item.hasKeyword(this.keyword, being.getLocale());
     });
