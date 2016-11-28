@@ -129,7 +129,7 @@ function hold({ player, room, item }, callback) {
   player.equip(location, item);
 
   player.addItem(item);
-  if (room) { room.removeItem(item.getUuid()) };
+  if (room) { room.removeItem(item) };
   item.setRoom(null);
   item.setHolder(player.getName());
   item.setEquipped(true);
@@ -142,9 +142,10 @@ function pickUp({ player, room, item }, callback) {
   item.setHolder(player.getName());
   
   const container = player.getContainerWithCapacity(item.getAttribute('size'));
+  player.addItem(item);
   container.addItem(item);
   item.setContainer(container);
-  if (room) { room.removeItem(item.getUuid()); }
+  if (room) { room.removeItem(item); }
 
   callback(container);
 }

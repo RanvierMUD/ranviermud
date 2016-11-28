@@ -43,7 +43,7 @@ const addItem = ({
 
     const item = new Item({ attributes, uuid, keywords, location, wearLocation, short_description, room_description });
     items.addItem(item);
-    if (room) { room.addItem(item.getUuid()); }
+    if (room)   { room.addItem(item); }
     if (player) { player.addItem(item); }
     if (equipped) {
       wearLocation = wearLocation || item.getAttribute('wearLocation');
