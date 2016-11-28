@@ -312,21 +312,19 @@ const Item = function ItemConstructor(config) {
 	 * @return Number weight 
 	 */
 
-	self.getWeight = () => self.isContainer() ? 
-				self.getContainerWeight() + self.getAttribute('weight') :
+	self.getWeight = items => self.isContainer() ? 
+				self.getContainerWeight(items) + self.getAttribute('weight') :
 				self.getAttribute('weight');
 
 	
-	self.getContainerWeight = () => self.getInventory()
-		.reduce((sum, item) => item.getWeight() + sum, 0);
+	self.getContainerWeight = items => self.getInventory()
+		.reduce((sum, item) => items.get(item).getWeight() + sum, 0);
 
 	self.getRemainingSizeCapacity = items => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents(items);
 	
 	self.getSizeOfContents = items => self
 		.getInventory()
 		.reduce((sum, uid) => {
-			util.log(items);
-			util.log(uid);
 			const item = items.get(uid);
 			return item.getAttribute('size') + sum;
 		}, 0);

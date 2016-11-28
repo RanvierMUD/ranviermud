@@ -22,7 +22,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     for (let slot in equipped) {
       const item     = items.get(equipped[slot]);
       const name     = item.getShortDesc();
-      const weight   = item.getWeight();
+      const weight   = item.getWeight(items);
       const contents = item.isContainer() ? item.getInventory() : false;
       const capacity = item.isContainer() ? 
         getContainerCapacity(item) :
@@ -36,7 +36,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     player.say(
       `<bold>Your inventory:</bold>
-      <cyan>Encumbrance: ${player.getCarriedWeight()}/${player.getMaxCarryWeight()} gravets</cyan>
+      <cyan>Encumbrance: ${player.getCarriedWeight(items)}/${player.getMaxCarryWeight()} gravets</cyan>
       `);
     
     const displayListItem = (name, nestingLevel) => player.say(`<cyan>${_.leftPad(nestingLevel)} - ${name}</cyan>`);
