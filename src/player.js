@@ -450,7 +450,7 @@ const Player = function PlayerConstructor(socket) {
   self.equip = (wearLocation, item) => {
     const uid = item.getUuid();
     
-    deleteFromEquipment(item, wearLocation);
+    ItemUtil.deleteFromEquipment(item, wearLocation);
 
     self.equipment[wearLocation] = uid;
     console.log(`EQUIPPING ${item.getShortDesc()} at ${wearLocation}`);
