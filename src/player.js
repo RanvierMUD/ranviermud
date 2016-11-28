@@ -476,25 +476,15 @@ const Player = function PlayerConstructor(socket) {
       item.setEquipped(false);
     }
 
-    return deleteFromEquipment(item, holdingLocation);
+    return ItemUtil.deleteFromEquipment(self, item, holdingLocation);
     
   };
 
-  function deleteFromEquipment(item, location) {
-    for (const slot in self.equipment) {
-      if (slot === location) { continue; }
-      if (self.equipment[slot] === item.getUuid()) {
-        delete self.equipment[slot];
-        return slot;
-      }
-    }
-  }
-
   function handleNormalUnequip(item, container, players, holdingLocation) {
     if (container) {
-      return putItemInContainer(item, container, self, players);
+      return ItemUtil.putItemInContainer(item, container, self, players);
     } else if (holdingLocation) {
-      return holdOntoItem(item, holdingLocation, self, players);
+      return ItemUtil.holdOntoItem(item, holdingLocation, self, players);
     } else {
       return self.warn(`Your hands are full. You will have to put away or drop something you are holding.`);
     }
@@ -505,26 +495,7 @@ const Player = function PlayerConstructor(socket) {
     return equipment['held'] ? 'offhand held' : 'held';
   }
 
-  //TODO: Extract these into item utils?
-  function putItemInContainer(item, container, player, players) {
-    const containerName = container.getShortDesc();
-    const itemName      = item.getShortDesc();
-    container.addItem(item);
-    item.setContainer(container);
 
-    player.say(`You remove the ${itemName} and place it in your ${containerName}.`);
-    players.eachIf(
-      p => CommandUtil.inSameRoom(p, player),
-      p => p.say(`${player.getName()} places their ${itemName} in their ${containerName}.`)
-    );
-    return true;
-  }
-
-  function holdOntoItem(item, holdingLocation, player, players) {
-    const itemName = item.getShortDesc();
-    player.equip(holdingLocation, item);
-    return true;
-  }
 
    self.canHold = () => {
     const equipped     = self.getEquipped();

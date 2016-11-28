@@ -90,16 +90,6 @@ const checkForCrit = (attacker, defender, damageDealt) => {
   }
 }
 
-const inventoryFlattener = (inv, item) => {
-  try {
-    return inv.concat(item).concat(item.getFlattenedInventory());
-  } catch (e) {
-    util.log('AW DANG:', e);
-    util.log('ITEM: ', item);
-    return inv.concat(item);
-  }
-}
-
 function checkInventory(player, item) {
   return [ tooLarge(player, item) , tooHeavy(player, item) ];
 }
@@ -111,6 +101,16 @@ function tooLarge(player, item) {
   const containerWithCapacity = player.getContainerWithCapacity(itemSize);
   return !containerWithCapacity;
 }
+
+function deleteFromEquipment(entity, item, location) {
+    for (const slot in entity.equipment) {
+      if (slot === location) { continue; }
+      if (entity.equipment[slot] === item.getUuid()) {
+        delete entity.equipment[slot];
+        return slot;
+      }
+    }
+  }
 
 function tooHeavy(player, item) {
   const itemWeight = item.getWeight();
@@ -162,11 +162,31 @@ function isHeld(player, item) {
   return ['held', 'wield', 'offhand', 'offhand held'].filter(slot => equipment[slot] === item.getUuid())[0];
 }
 
+function putItemInContainer(item, container, player, players) {
+    const containerName = container.getShortDesc();
+    const itemName      = item.getShortDesc();
+    container.addItem(item);
+    item.setContainer(container);
+
+    player.say(`You remove the ${itemName} and place it in your ${containerName}.`);
+    players.eachIf(
+      p => CommandUtil.inSameRoom(p, player),
+      p => p.say(`${player.getName()} places their ${itemName} in their ${containerName}.`)
+    );
+    return true;
+  }
+
+  function holdOntoItem(item, holdingLocation, player, players) {
+    const itemName = item.getShortDesc();
+    player.equip(holdingLocation, item);
+    return true;
+  }
+
 exports.ItemUtil = {
-  isHeld,
-  checkInventory, 
+  isHeld, deleteFromEquipment,
+  checkInventory, putItemInContainer,
   hold, pickUp,
-  getFailureMessage, 
+  getFailureMessage, holdOntoItem,
   tooLarge, tooHeavy,
   inventoryFlattener,
   penalize, getPenaltyDesc,
