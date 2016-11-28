@@ -91,7 +91,7 @@ const checkForCrit = (attacker, defender, damageDealt) => {
 }
 
 function checkInventory(player, item, items) {
-  return [ tooLarge(player, item, items) , tooHeavy(player, item) ];
+  return [ tooLarge(player, item, items) , tooHeavy(player, item, items) ];
 }
 
 function tooLarge(player, item, items) {
@@ -103,11 +103,11 @@ function tooLarge(player, item, items) {
 }
 
 
-function tooHeavy(player, item) {
-  const itemWeight = item.getWeight();
+function tooHeavy(player, item, items) {
+  const itemWeight = item.getWeight(items);
   if (itemWeight === Infinity) { return true; }
 
-  const carriedWeight  = player.getCarriedWeight();
+  const carriedWeight  = player.getCarriedWeight(items);
   const maxCarryWeight = player.getMaxCarryWeight();
 
   return (carriedWeight + itemWeight) > maxCarryWeight;
