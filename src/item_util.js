@@ -102,17 +102,6 @@ function tooLarge(player, item, items) {
   return !containerWithCapacity;
 }
 
-function deleteFromEquipment(entity, item, location) {
-    for (const slot in entity.equipment) {
-      util.log('checking ', slot);
-      if (slot === location) { continue; }
-      if (entity.equipment[slot] === item.getUuid()) {
-        util.log('baleeting');
-        delete entity.equipment[slot];
-        return slot;
-      }
-    }
-  }
 
 function tooHeavy(player, item) {
   const itemWeight = item.getWeight();
@@ -150,6 +139,18 @@ function pickUp({ player, room, item }, callback) {
 
   callback(container);
 }
+
+function deleteFromEquipment(entity, item, location) {
+    for (const slot in entity.equipment) {
+      util.log('checking ', slot);
+      if (slot === location) { continue; }
+      if (entity.equipment[slot] === item.getUuid()) {
+        util.log('baleeting');
+        delete entity.equipment[slot];
+        return slot;
+      }
+    }
+  }
 
 function getFailureMessage(tooLarge, tooHeavy, item) {
   const itemName = item.getShortDesc();
