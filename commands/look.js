@@ -106,11 +106,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       player.say("<bold>CONTENTS: </bold>");
       const contents = container.getInventory();
 
-      if (!contents.length) {
+      if (!contents || !contents.length) {
         return player.say('<cyan>empty</cyan>');
       }
 
-      contents.forEach(item => player.say(`<cyan> - ${item.getRoomDesc()}</cyan>`));
+      contents
+        .map(items.get)
+        .forEach(item => player.say(`<cyan> - ${item.getRoomDesc()}</cyan>`));
     }
 
     if (!room) {
