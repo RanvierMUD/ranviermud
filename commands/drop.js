@@ -8,6 +8,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player, isDead) => {
     const room = rooms.getAt(player.getLocation());
 
+    //TODO: Does this handle dropping a container with items in it?
+    // Should remove all contents from player inventory and set the room for each of them.
+    
     args = args.toLowerCase();
 
     if (args === 'all') {
