@@ -65,6 +65,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     function findItemInContainer(itemTarget, container) {
       return container
         .getInventory()
+        .map(items.get)
         .filter(item => item.hasKeyword(itemTarget))[0];
     };
 

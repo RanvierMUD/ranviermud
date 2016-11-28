@@ -52,9 +52,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function displayContainerContents(contents, nestingLevel) {
-      contents.forEach(item => item.isContainer() ? 
-        displayNestedContainer(item, nestingLevel) : 
-        displayListItem(item.getShortDesc(), nestingLevel));
+      contents
+        .map(items.get)
+        .forEach(item => item.isContainer() ? 
+          displayNestedContainer(item, nestingLevel) : 
+          displayListItem(item.getShortDesc(), nestingLevel));
     }
 
     function displayNestedContainer(item, nestingLevel) {
@@ -65,7 +67,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function getContainerCapacity(item) {
       return { 
         max:     item.getAttribute('maxSizeCapacity'), 
-        current: item.getSizeOfContents() 
+        current: item.getSizeOfContents(items) 
       };
     }
 

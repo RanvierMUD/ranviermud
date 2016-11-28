@@ -96,7 +96,7 @@ const Items = function ItemsManager() {
         .getByVnum(vnum)
         .filter(item => containerVnum === item.getContainer());
       items.forEach(item => item.setContainer(container.getUuid()));
-      return items;
+      return items.map(item => item.getUuid());
     }
 
     const inv = container.getInventory();
