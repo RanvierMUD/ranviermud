@@ -70,7 +70,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     function takeFromContainer(item, container) {
             
-      const [ tooLarge, tooHeavy ] = ItemUtil.checkInventory(player, item);
+      const [ tooLarge, tooHeavy ] = ItemUtil.checkInventory(player, item, items);
       const canPickUp = [ tooLarge, tooHeavy ].every( predicate => !predicate );
       const canHold   = player.canHold();
 

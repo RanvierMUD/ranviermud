@@ -527,10 +527,10 @@ const Player = function PlayerConstructor(socket) {
    *  @param Number size
    *  @return a list of all containers with capacity greater than size.
    */
-  self.getContainersWithCapacity = size => self.inventory
-    .filter(item => item.isContainer() && item.getRemainingSizeCapacity() >= size);
+  self.getContainersWithCapacity = (items, size) => self.inventory
+    .filter(item => item.isContainer() && item.getRemainingSizeCapacity(items) >= size);
 
-  self.getContainerWithCapacity = size => self.getContainersWithCapacity(size)[0];
+  self.getContainerWithCapacity = (items, size) => self.getContainersWithCapacity(items, size)[0];
 
 
 
