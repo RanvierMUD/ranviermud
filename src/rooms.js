@@ -274,17 +274,18 @@ var Room = function Room(config) {
    * Add an item to the quicklookup array for items
    * @param string uid
    */
-  self.addItem = function(uid) {
-    self.items.push(uid)
+  self.addItem = function(item) {
+    self.items.push(item.getUuid());
   };
 
   /**
    * Remove an item from the room
    * @param string uid
    */
-  self.removeItem = function(uid) {
-    self.items = self.items.filter(function(i) {
-      return i !== uid;
+  self.removeItem = function(item) {
+    const itemId = item.getUuid();
+    self.items = self.items.filter(function(uid) {
+      return itemId !== uid;
     });
   };
 
@@ -318,8 +319,9 @@ var Room = function Room(config) {
    * @param string uid
    * @return boolean
    */
-  self.hasItem = function(uid) {
-    return self.items.some(i => i === uid);
+  self.hasItem = function(item) {
+    const uid = item.getUuid();
+    return self.items.some(id => id === uid);
   };
 
   /**
