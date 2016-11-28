@@ -200,8 +200,8 @@ function load(callback) {
 	function addItemToRoom(item) {
 		if (item.getRoom()) {
 			const room = rooms.getAt(item.getRoom());
-			if (!room.hasItem(item.getUuid())) {
-				room.addItem(item;
+			if (!room.hasItem(item)) {
+				room.addItem(item);
 			}
 		}
 	}
