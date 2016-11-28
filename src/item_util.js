@@ -104,8 +104,10 @@ function tooLarge(player, item) {
 
 function deleteFromEquipment(entity, item, location) {
     for (const slot in entity.equipment) {
+      util.log('checking ', slot);
       if (slot === location) { continue; }
       if (entity.equipment[slot] === item.getUuid()) {
+        util.log('baleeting');
         delete entity.equipment[slot];
         return slot;
       }
@@ -125,10 +127,6 @@ function tooHeavy(player, item) {
 function hold({ player, room, item }, callback) {
   const equipment = player.getEquipped();
   const location  = player.findHoldingLocation(); 
-  
-  if (item.getAttribute('damage')) {
-    return Commands.player_commands.wield(item.getKeywords()[0], player);
-  }
   
   player.addItem(item);
   if (room) { room.removeItem(item) };
