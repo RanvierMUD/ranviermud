@@ -126,12 +126,15 @@ function hold({ player, room, item }, callback) {
   const equipment = player.getEquipped();
   const location  = player.findHoldingLocation(); 
   
-  player.equip(location, item);
-
+  if (item.getAttribute('damage')) {
+    return Commands.player_commands.wield(item.getKeywords()[0], player);
+  }
+  
   player.addItem(item);
   if (room) { room.removeItem(item) };
   item.setRoom(null);
   item.setHolder(player.getName());
+  player.equip(location, item);
   item.setEquipped(true);
 
   callback(location);
