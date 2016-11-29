@@ -89,7 +89,6 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return ItemUtil.hold({ player, item }, 
         location => {
           const itemName = item.getShortDesc();
-
           container.removeItem(item);
           item.emit('hold', location, room, player, players);
 

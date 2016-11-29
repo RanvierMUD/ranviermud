@@ -1,3 +1,5 @@
+//TODO: LOL REFACTOR
+
 var PlayerManager = function ()
 {
 	var self = this;

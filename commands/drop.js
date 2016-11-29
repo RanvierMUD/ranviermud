@@ -60,7 +60,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       util.log(`${playerName} drops ${itemName} at ${room.getLocation()}.`);
 
       player.removeItem(item);
-      item.setContainer(null);
+      const container = items.get(item.getContainer());
+      if (container) { container.removeItem(item); }
       room.addItem(item);
       item.setHolder(null);
       item.setRoom(room.getLocation());

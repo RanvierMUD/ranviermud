@@ -134,7 +134,6 @@ function pickUp({ player, room, item }, callback) {
   const container = player.getContainerWithCapacity(item.getAttribute('size'));
   player.addItem(item);
   container.addItem(item);
-  item.setContainer(container);
   if (room) { room.removeItem(item); }
 
   callback(container);
@@ -169,7 +168,6 @@ function putItemInContainer(item, container, player, players) {
     const containerName = container.getShortDesc();
     const itemName      = item.getShortDesc();
     container.addItem(item);
-    item.setContainer(container);
 
     player.say(`You remove the ${itemName} and place it in your ${containerName}.`);
     players.eachIf(
