@@ -114,7 +114,6 @@ const Items = function ItemsManager() {
 	 */
 	self.addItem = item => {
 		if (!item.getUuid()) {
-			util.log('no uuid found on ', item.getShortDesc());
 			item.setUuid(item.uuid || uuid.v4());
 		}
 		self.objects[item.getUuid()] = item;
