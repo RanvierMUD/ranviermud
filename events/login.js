@@ -276,7 +276,8 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
         player.checkTraining();
 
         // All that shit done, let them play!
-        player.getSocket().emit("commands", player);
+        player.getSocket()
+              .emit("commands", player);
 
         break;
     }

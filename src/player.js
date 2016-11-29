@@ -509,12 +509,53 @@ const Player = function PlayerConstructor(socket) {
    * @return weight units player can carry in inventory, total.
    */
   self.getMaxCarryWeight = () => {
-    const minimum      = 20; // in case mods are added later?
+    const minimum      = 40; // in case mods are added later?
     const staminaBonus = self.getAttribute('stamina') * 15;
     const levelBonus   = Math.floor(self.getAttribute('level') * 1.25);
     const willBonus    = Math.ceil(self.getAttribute('willpower') * 1.5);
 
     return Math.ceil(Math.max(minimum, minimum + staminaBonus + levelBonus + willBonus));
+  }
+
+  /** //TODO: Put this somewhere nice.
+   * Instead of using effects, this is used to decide effects of encumbrance.
+   * A higher multiplier is a bad thing. 
+   * Action costs will be multiplied by the multiplier. 
+   * Things like dodge chance will be divided. 
+   * @param items manager
+   * @return object { multiplier, description }
+   */
+  self.getEncumbranceMultiplier = items => {
+    const encumbrance    = self.getCarriedWeight(items);
+    const maxEncumbrance = self.getMaxCarryWeight();
+
+    const percentage = (encumbrance / maxEncumbrance) * 100;
+
+    const encumbranceTiers = {
+      10: [ 0.75, 'insubstantial' ],
+      20: [ 1,    'light'         ],
+      35: [ 1.25, 'moderate'      ],
+      50: [ 1.5,  'heavy'         ],
+      65: [ 1.75, 'cumbersome'    ],
+      75: [ 2,    'burdensome'    ],
+      80: [ 2.5,  'overburdening' ],
+      90: [ 3,    'back-breaking' ],
+    };
+
+    const buildEncumbranceDetails = details => {
+      const  [ multiplier, description ] = details;
+      return { multiplier, description };
+    }
+
+    for (const tier of encumbranceTiers) {
+      const details = encumbranceTiers[tier];
+      if (tier >= percentage) {
+        return buildEncumbranceDetails(details);
+      }
+    }
+    const multiplier  = 4;
+    const description = 'crushing';
+    return { multiplier, description };
   }
 
   /**
