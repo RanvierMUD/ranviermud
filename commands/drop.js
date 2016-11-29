@@ -8,6 +8,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player, isDead) => {
     const room = rooms.getAt(player.getLocation());
 
+    //TODO: Does this handle dropping a container with items in it?
+    // Should remove all contents from player inventory and set the room for each of them.
+    
     args = args.toLowerCase();
 
     if (args === 'all') {
@@ -38,7 +41,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       if (item.isEquipped()) { 
         const isDropping = true;
-        player.unequip(item, players, isDropping); 
+        player.unequip(item, items, players, isDropping); 
       }
 
       players.eachIf(
@@ -57,7 +60,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       util.log(`${playerName} drops ${itemName} at ${room.getLocation()}.`);
 
       player.removeItem(item);
-      room.addItem(item.getUuid());
+      const container = items.get(item.getContainer());
+      if (container) { container.removeItem(item); }
+      room.addItem(item);
       item.setHolder(null);
       item.setRoom(room.getLocation());
     }

@@ -34,7 +34,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     // -- Handy McHelpertons...
 
     function tryToPickUp(item) {
-      const [ tooLarge, tooHeavy ] = ItemUtil.checkInventory(player, item);
+      const [ tooLarge, tooHeavy ] = ItemUtil.checkInventory(player, item, items);
       const canPickUp = [ tooLarge, tooHeavy ].every( predicate => !predicate );
       const canHold   = player.canHold();
 
@@ -65,10 +65,13 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     function hold(item) {
+
       return ItemUtil.hold({ player, room, item }, 
         location => {
           const itemName = item.getShortDesc();
-      
+          if (item.getAttribute('damage')) {
+            return Commands.player_commands.wield(item.getKeywords()[0], player);
+          }
           item.emit('hold', location, room, player, players);
 
           player.say(`You pick up the ${itemName} and hold it.`);
@@ -76,10 +79,6 @@ exports.command = (rooms, items, players, npcs, Commands) =>
             p => CommandUtil.inSameRoom(p, player),
             p => p.say(`${playerName} picks up the ${itemName} and holds it.`)
           );
-
-          if (item.getAttribute('damage')) {
-            return Commands.player_commands.wield(itemName, player);
-          }
         });
     }
 
