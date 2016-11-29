@@ -65,12 +65,13 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     function findItemInContainer(itemTarget, container) {
       return container
         .getInventory()
+        .map(items.get)
         .filter(item => item.hasKeyword(itemTarget))[0];
     };
 
     function takeFromContainer(item, container) {
             
-      const [ tooLarge, tooHeavy ] = ItemUtil.checkInventory(player, item);
+      const [ tooLarge, tooHeavy ] = ItemUtil.checkInventory(player, item, items);
       const canPickUp = [ tooLarge, tooHeavy ].every( predicate => !predicate );
       const canHold   = player.canHold();
 
@@ -88,7 +89,6 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return ItemUtil.hold({ player, item }, 
         location => {
           const itemName = item.getShortDesc();
-
           container.removeItem(item);
           item.emit('hold', location, room, player, players);
 

@@ -450,10 +450,10 @@ const Player = function PlayerConstructor(socket) {
   self.equip = (wearLocation, item) => {
     const uid = item.getUuid();
     
-    deleteFromEquipment(item, wearLocation);
+    ItemUtil.deleteFromEquipment(self, item, wearLocation);
 
     self.equipment[wearLocation] = uid;
-    console.log(`EQUIPPING ${item.getShortDesc()} at ${wearLocation}`);
+    util.log(`EQUIPPING ${item.getShortDesc()} at ${wearLocation}`);
     item.setEquipped(true);
   };
 
@@ -462,8 +462,9 @@ const Player = function PlayerConstructor(socket) {
    * @param Item   item
    * @return String slot it was equipped in (see remove commmand)
    */
-  self.unequip = (item, players, isDropping) => {
-    const container       = self.getContainersWithCapacity(item.getAttribute('size')).filter(cont => cont !== item)[0];
+  self.unequip = (item, items, players, isDropping) => {
+    const size            = item.getAttribute('size');
+    const container       = self.getContainersWithCapacity(items, size).filter(cont => cont !== item)[0];
     const holdingLocation = self.canHold(item) ? self.findHoldingLocation() : null;
     const itemName        = item.getShortDesc();
 
@@ -476,25 +477,15 @@ const Player = function PlayerConstructor(socket) {
       item.setEquipped(false);
     }
 
-    return deleteFromEquipment(item, holdingLocation);
+    return ItemUtil.deleteFromEquipment(self, item, holdingLocation);
     
   };
 
-  function deleteFromEquipment(item, location) {
-    for (const slot in self.equipment) {
-      if (slot === location) { continue; }
-      if (self.equipment[slot] === item.getUuid()) {
-        delete self.equipment[slot];
-        return slot;
-      }
-    }
-  }
-
   function handleNormalUnequip(item, container, players, holdingLocation) {
     if (container) {
-      return putItemInContainer(item, container, self, players);
+      return ItemUtil.putItemInContainer(item, container, self, players);
     } else if (holdingLocation) {
-      return holdOntoItem(item, holdingLocation, self, players);
+      return ItemUtil.holdOntoItem(item, holdingLocation, self, players);
     } else {
       return self.warn(`Your hands are full. You will have to put away or drop something you are holding.`);
     }
@@ -505,26 +496,7 @@ const Player = function PlayerConstructor(socket) {
     return equipment['held'] ? 'offhand held' : 'held';
   }
 
-  //TODO: Extract these into item utils?
-  function putItemInContainer(item, container, player, players) {
-    const containerName = container.getShortDesc();
-    const itemName      = item.getShortDesc();
-    container.addItem(item);
-    item.setContainer(container);
 
-    player.say(`You remove the ${itemName} and place it in your ${containerName}.`);
-    players.eachIf(
-      p => CommandUtil.inSameRoom(p, player),
-      p => p.say(`${player.getName()} places their ${itemName} in their ${containerName}.`)
-    );
-    return true;
-  }
-
-  function holdOntoItem(item, holdingLocation, player, players) {
-    const itemName = item.getShortDesc();
-    player.equip(holdingLocation, item);
-    return true;
-  }
 
    self.canHold = () => {
     const equipped     = self.getEquipped();
@@ -533,7 +505,7 @@ const Player = function PlayerConstructor(socket) {
   };
 
   /**
-   * Imaginary weight units player can carry (ounces-ish)
+   * Imaginary weight units player can carry (~10 grams)
    * @return weight units player can carry in inventory, total.
    */
   self.getMaxCarryWeight = () => {
@@ -542,32 +514,24 @@ const Player = function PlayerConstructor(socket) {
     const levelBonus   = Math.floor(self.getAttribute('level') * 1.25);
     const willBonus    = Math.ceil(self.getAttribute('willpower') * 1.5);
 
-    return Math.max(minimum, minimum + staminaBonus + levelBonus + willBonus);
+    return Math.ceil(Math.max(minimum, minimum + staminaBonus + levelBonus + willBonus));
   }
 
   /**
    * Recursively gets weight of all items in inventory, including those inside of containers.
    * @return Number weight units carried in inventory
    */
-  self.getCarriedWeight = () => self.inventory
-    .reduce((sum, item) => item.getWeight() + sum, 0);
+  self.getCarriedWeight = items => self.inventory
+    .reduce((sum, item) => item.getWeight(items) + sum, 0);
 
   /**
    *  @param Number size
    *  @return a list of all containers with capacity greater than size.
    */
-  self.getContainersWithCapacity = size => self.inventory
-    .filter(item => item.isContainer() && item.getRemainingSizeCapacity() >= size);
+  self.getContainersWithCapacity = (items, size) => self.inventory
+      .filter(item => item.isContainer() && item.getRemainingSizeCapacity(items) >= size);
 
-  self.getContainerWithCapacity = size => self.getContainersWithCapacity(size)[0];
-
-  /**
-   * Gets a flattened list of all items in the inventory for use by CommandUtil and such.
-   * @return a list of all items in inventory, nested one level deep?
-   */
-   self.getFlattenedInventory = () => self
-    .getInventory()
-    .reduce(ItemUtil.inventoryFlattener, []); 
+  self.getContainerWithCapacity = (items, size) => self.getContainersWithCapacity(items, size)[0];
 
 
 

@@ -90,33 +90,24 @@ const checkForCrit = (attacker, defender, damageDealt) => {
   }
 }
 
-const inventoryFlattener = (inv, item) => {
-  try {
-    return inv.concat(item).concat(item.getFlattenedInventory());
-  } catch (e) {
-    util.log('AW DANG:', e);
-    util.log('ITEM: ', item);
-    return inv.concat(item);
-  }
+function checkInventory(player, item, items) {
+  return [ tooLarge(player, item, items) , tooHeavy(player, item, items) ];
 }
 
-function checkInventory(player, item) {
-  return [ tooLarge(player, item) , tooHeavy(player, item) ];
-}
-
-function tooLarge(player, item) {
+function tooLarge(player, item, items) {
   const itemSize = item.getAttribute('size');
   if (itemSize === Infinity) { return true; }
 
-  const containerWithCapacity = player.getContainerWithCapacity(itemSize);
+  const containerWithCapacity = player.getContainerWithCapacity(items, itemSize);
   return !containerWithCapacity;
 }
 
-function tooHeavy(player, item) {
-  const itemWeight = item.getWeight();
+
+function tooHeavy(player, item, items) {
+  const itemWeight = item.getWeight(items);
   if (itemWeight === Infinity) { return true; }
 
-  const carriedWeight  = player.getCarriedWeight();
+  const carriedWeight  = player.getCarriedWeight(items);
   const maxCarryWeight = player.getMaxCarryWeight();
 
   return (carriedWeight + itemWeight) > maxCarryWeight;
@@ -126,12 +117,11 @@ function hold({ player, room, item }, callback) {
   const equipment = player.getEquipped();
   const location  = player.findHoldingLocation(); 
   
-  player.equip(location, item);
-
   player.addItem(item);
-  if (room) { room.removeItem(item.getUuid()) };
+  if (room) { room.removeItem(item) };
   item.setRoom(null);
   item.setHolder(player.getName());
+  player.equip(location, item);
   item.setEquipped(true);
 
   callback(location);
@@ -142,12 +132,24 @@ function pickUp({ player, room, item }, callback) {
   item.setHolder(player.getName());
   
   const container = player.getContainerWithCapacity(item.getAttribute('size'));
+  player.addItem(item);
   container.addItem(item);
-  item.setContainer(container);
-  if (room) { room.removeItem(item.getUuid()); }
+  if (room) { room.removeItem(item); }
 
   callback(container);
 }
+
+function deleteFromEquipment(entity, item, location) {
+    for (const slot in entity.equipment) {
+      util.log('checking ', slot);
+      if (slot === location) { continue; }
+      if (entity.equipment[slot] === item.getUuid()) {
+        util.log('baleeting');
+        delete entity.equipment[slot];
+        return slot;
+      }
+    }
+  }
 
 function getFailureMessage(tooLarge, tooHeavy, item) {
   const itemName = item.getShortDesc();
@@ -162,13 +164,31 @@ function isHeld(player, item) {
   return ['held', 'wield', 'offhand', 'offhand held'].filter(slot => equipment[slot] === item.getUuid())[0];
 }
 
+function putItemInContainer(item, container, player, players) {
+    const containerName = container.getShortDesc();
+    const itemName      = item.getShortDesc();
+    container.addItem(item);
+
+    player.say(`You remove the ${itemName} and place it in your ${containerName}.`);
+    players.eachIf(
+      p => CommandUtil.inSameRoom(p, player),
+      p => p.say(`${player.getName()} places their ${itemName} in their ${containerName}.`)
+    );
+    return true;
+  }
+
+  function holdOntoItem(item, holdingLocation, player, players) {
+    const itemName = item.getShortDesc();
+    player.equip(holdingLocation, item);
+    return true;
+  }
+
 exports.ItemUtil = {
-  isHeld,
-  checkInventory, 
+  isHeld, deleteFromEquipment,
+  checkInventory, putItemInContainer,
   hold, pickUp,
-  getFailureMessage, 
+  getFailureMessage, holdOntoItem,
   tooLarge, tooHeavy,
-  inventoryFlattener,
   penalize, getPenaltyDesc,
   useDefaultPenalties, checkForCrit,
   removeDefaultPenaltes

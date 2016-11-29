@@ -60,7 +60,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       if (item.isEquipped()) {
         item.setEquipped(false);
         const isDropping = true; //TODO: Come up with better param name...
-        player.unequip(item, players, isDropping);
+        player.unequip(item, items, players, isDropping);
       }
       
       const holder = container.getHolder() || null;
@@ -68,7 +68,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       player.removeItem(item);
      
       item.setRoom(null);
-      if (room) { room.removeItem(item.getUuid()); }
+      if (room) { room.removeItem(item); }
 
       const containerDesc = container.getShortDesc();
       const itemName = item.getShortDesc();

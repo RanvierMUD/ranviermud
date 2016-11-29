@@ -96,7 +96,7 @@ const Items = function ItemsManager() {
         .getByVnum(vnum)
         .filter(item => containerVnum === item.getContainer());
       items.forEach(item => item.setContainer(container.getUuid()));
-      return items;
+      return items.map(item => item.getUuid());
     }
 
     const inv = container.getInventory();
@@ -292,22 +292,18 @@ const Item = function ItemConstructor(config) {
 
   self.addItem = item => {
     item.setContainer(self.getUuid());
-    return self.inventory.push(item);
+    return self.inventory.push(item.getUuid());
   }
 
   self.removeItem = item => {
-    if (self.inventory.indexOf(item) > -1) {
-      self.inventory = self.inventory.filter(i => item !== i);
+		const uid = item.getUuid();
+    if (self.inventory.indexOf(uid) > -1) {
+      self.inventory = self.inventory.filter(id => uid !== id);
 			item.setContainer(null);
       return item;
     }
     return null;
   }
-
-	self.getFlattenedInventory = () => self.isContainer() ? 
-		self.getInventory()
-				.reduce(ItemUtil.inventoryFlattener, []) : 
-		[];
 
   self.findInInventory = predicate => self.inventory.find(predicate);
 
@@ -317,19 +313,22 @@ const Item = function ItemConstructor(config) {
 	 * @return Number weight 
 	 */
 
-	self.getWeight = () => self.isContainer() ? 
-				self.getContainerWeight() + self.getAttribute('weight') :
+	self.getWeight = items => self.isContainer() ? 
+				self.getContainerWeight(items) + self.getAttribute('weight') :
 				self.getAttribute('weight');
 
 	
-	self.getContainerWeight = () => self.getInventory()
-		.reduce((sum, item) => item.getWeight() + sum, 0);
+	self.getContainerWeight = items => self.getInventory()
+		.reduce((sum, item) => items.get(item).getWeight() + sum, 0);
 
-	self.getRemainingSizeCapacity = () => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents();
+	self.getRemainingSizeCapacity = items => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents(items);
 	
-	self.getSizeOfContents = () => self
+	self.getSizeOfContents = items => self
 		.getInventory()
-		.reduce((sum, item) => item.getAttribute('size') + sum, 0);
+		.reduce((sum, uid) => {
+			const item = items.get(uid);
+			return item.getAttribute('size') + sum;
+		}, 0);
 
 	/**
 	 * Used when persisting a copy of an item to a JSON

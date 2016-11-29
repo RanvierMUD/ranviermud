@@ -114,13 +114,13 @@ const Commands = {
             }
 
             const isContainer = item.isContainer();
-            const actualWeight = item.getWeight();
+            const actualWeight = item.getWeight(items);
             player.say(`Is container: ${isContainer}`);
             player.say(`Total weight: ${actualWeight}`);
             if (isContainer) {
               const itemContents   = item.getInventory();
-              const spaceLeft      = item.getRemainingSizeCapacity();
-              const contentsWeight = item.getContainerWeight();
+              const spaceLeft      = item.getRemainingSizeCapacity(items);
+              const contentsWeight = item.getContainerWeight(items);
              
               player.say(`Contents: ${itemContents}`);
               player.say(`Space left: ${spaceLeft}`);
