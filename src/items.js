@@ -220,7 +220,7 @@ const Item = function ItemConstructor(config) {
 	self.setInventory = ids   => self.inventory = ids;
 	self.setNpcHeld   = held  => self.npc_held  = held;
   self.setHolder    = id    => self.holder    = id;
-	self.setContainer = con   => self.container = uid;
+	self.setContainer = uid   => self.container = uid;
 	self.setEquipped  = equip => self.equipped  = !!equip;
 
 	self.setAttribute = (attr, val) => self.attributes[attr] = val;
