@@ -168,7 +168,7 @@ function putItemInContainer(item, container, player, players) {
     const containerName = container.getShortDesc();
     const itemName      = item.getShortDesc();
     container.addItem(item);
-
+  
     player.say(`You remove the ${itemName} and place it in your ${containerName}.`);
     players.eachIf(
       p => CommandUtil.inSameRoom(p, player),

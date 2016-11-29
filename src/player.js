@@ -725,38 +725,19 @@ const Player = function PlayerConstructor(socket) {
       gender, preferences, explored, killed,
       met, training, bodyParts, effects 
     } = self;
-    try {
-      return JSON.stringify({ 
-        name,           accountName, 
-        location,       locale, 
-        prompt_string,  combat_prompt, 
-        password,       equipment,
-        attributes,     skills, 
-        feats,          gender, 
-        preferences,    explored, 
-        killed,         met, 
-        training,       bodyParts, 
-        effects,        inventory
-      });
-
-    } catch (err) {
-      util.log(
-        `SAVE ERROR:
-        Inv is ${inventory}
-        Error is: ${err}`);
-      return JSON.stringify({ 
-        name,           accountName, 
-        location,       locale, 
-        prompt_string,  combat_prompt, 
-        password,       equipment: {},
-        attributes,     skills, 
-        feats,          gender, 
-        preferences,    explored, 
-        killed,         met, 
-        training,       bodyParts, 
-        effects,        inventory: []
-      });
-    }
+    
+    return JSON.stringify({ 
+      name,           accountName, 
+      location,       locale, 
+      prompt_string,  combat_prompt, 
+      password,       equipment,
+      attributes,     skills, 
+      feats,          gender, 
+      preferences,    explored, 
+      killed,         met, 
+      training,       bodyParts, 
+      effects,        inventory
+    });
     
   };
 
