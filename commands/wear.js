@@ -40,7 +40,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const itemContainer = item.getContainer();
       if (itemContainer) {
         itemContainer.removeItem(item);
-        item.setContainer(null);
       }
       if (isWeapon(item)) {
         const keyword = item.getKeywords('en')[0];
