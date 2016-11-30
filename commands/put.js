@@ -29,8 +29,6 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return player.warn('You cannot do that while fighting!');
     }
 
-    player.emit('action', 1, items);
-
     const room   = rooms.getAt(player.getLocation());
     const toRoom = Broadcast.toRoom(room, player, null, players);
 
@@ -78,6 +76,9 @@ exports.command = (rooms, items, players, npcs, Commands) =>
         firstPartyMessage: 'You place the ' + itemName + ' into the ' + containerDesc + '.',
         thirdPartyMessage: player.getName() + ' places the ' + itemName + ' into the ' + containerDesc + '.'
       });
+      
+      player.emit('action', 1, items);
+
     }
 
   };

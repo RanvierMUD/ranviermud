@@ -37,7 +37,6 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return player.warn('You cannot do that while fighting!');
     }
 
-    player.emit('action', 1, items);
 
     const room   = rooms.getAt(player.getLocation());
     const toRoom = Broadcast.toRoom(room, player, null, players);
@@ -99,6 +98,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
             thirdPartyMessage: `${player.getName()} reaches into the ${containerDesc} and takes the ${itemName}.`
           });
 
+          player.emit('action', 1, items);
+
           if (item.getAttribute('damage')) {
             return Commands.player_commands.wield(itemName, player);
           }
@@ -116,6 +117,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
             firstPartyMessage: `You reach into the ${containerDesc} and take the ${itemName}, placing it in your ${destContainerName}.`,
             thirdPartyMessage: `${player.getName()} takes the ${itemName} from the ${containerDesc} and places it in their ${destContainerName}.`
           });
+
+          player.emit('action', 1, items);
           
           destContainer.addItem(item);
         });
