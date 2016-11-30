@@ -37,6 +37,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return player.warn('You cannot do that while fighting!');
     }
 
+    player.emit('action', 1, items);
+
     const room   = rooms.getAt(player.getLocation());
     const toRoom = Broadcast.toRoom(room, player, null, players);
 
