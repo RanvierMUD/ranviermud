@@ -525,7 +525,7 @@ const Player = function PlayerConstructor(socket) {
    * @param items manager
    * @return object { multiplier, description }
    */
-  self.getEncumbranceMultiplier = items => {
+  self.getEncumbrance = items => {
     const encumbrance    = self.getCarriedWeight(items);
     const maxEncumbrance = self.getMaxCarryWeight();
 
@@ -547,9 +547,9 @@ const Player = function PlayerConstructor(socket) {
       return { multiplier, description };
     }
 
-    for (const tier of encumbranceTiers) {
+    for (const tier in encumbranceTiers) {
       const details = encumbranceTiers[tier];
-      if (tier >= percentage) {
+      if (parseInt(tier, 10) >= percentage) {
         return buildEncumbranceDetails(details);
       }
     }
