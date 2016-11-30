@@ -113,9 +113,9 @@ const Player = function PlayerConstructor(socket) {
         rooms.getAt(self.getLocation()) : null;
 
 
-  self.hasEnergy = cost =>
+  self.hasEnergy = (cost, items) =>
     (self.getAttribute('energy') >= cost) ?
-      self.emit('action', cost) || true :
+      self.emit('action', cost, items) || true :
       false;
 
   self.noEnergy = () => self.warn('You need to rest first.');

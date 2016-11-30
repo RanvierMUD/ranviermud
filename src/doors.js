@@ -67,7 +67,7 @@ function openOrClose(verb, args, player, players, rooms) {
 
   const isOpen = verb === 'open';
 
-  player.emit('action', 0);
+  player.emit('action', 1, items);
 
   if (player.isInCombat()) {
     return player.say('You are too busy for that right now.');
@@ -130,7 +130,7 @@ function useKey(verb, args, player, players, rooms) {
   util.log('USING KEY....')
   const isLocking = verb === 'lock';
 
-  player.emit('action');
+  player.emit('action', 0, items);
 
   if (player.isInCombat()) {
     return player.say('You are too busy for that right now.');
