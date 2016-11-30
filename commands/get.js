@@ -8,7 +8,7 @@ const util = require('util');
 exports.command = (rooms, items, players, npcs, Commands) => 
   (args, player) => {
 
-    player.emit('action', 0, items);
+    player.emit('action', 1, items);
 
     // No picking stuff up in combat
     if (player.isInCombat()) {

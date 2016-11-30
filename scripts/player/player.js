@@ -48,16 +48,21 @@ exports.listeners = {
   },
 
   action: function(l10n) {
+
     return function(cost, items) {
 
       // If there is a cost to the emitted action,
       // reduce it based on their athletics skill.
       // Then, subtract it from their energy.
       if (cost) {
-        const encumbranceMultiplier = this.getEncumbranceMultiplier(items);
-        cost = Math.ceil((cost / this.getSkills('athletics')) ;
+        const encumbrance = this.getEncumbrance(items);
+        const [ multiplier, details ] = encumbrance;
+        cost = Math.ceil((cost * multiplier) / this.getSkills('athletics'));
+
+        CombatUtil.setEncumbrancePenalties(this, encumbrance);
+        
         const currentEnergy = this.getAttribute('energy');
-        const newEnergy = Math.max(0, currentEnergy - cost);
+        const newEnergy     = Math.max(0, currentEnergy - cost);
         this.setAttribute('energy', newEnergy);
       }
 

@@ -6,6 +6,8 @@ const Type   = require('./type').Type;
 const Random = require('./random').Random;
 const _ = require('./helpers');
 
+const getSpecialEncumbranceEffects = require('./effects').getSpecialEncumbranceEffects;
+
 //TODO: Chart this stuff out.
 
 /* Various helper functions for combat */
@@ -30,8 +32,7 @@ function decideHitLocation(locations, target, precise) {
 * starting with the base stat.
 */
 const applyMod  = (stat, modifier) => modifier(stat)
-const applyMods = (base, modsObj)  => _
-  .reduceValues(modsObj, applyMod, base);
+const applyMods = (base, modsObj)  => _.reduceValues(modsObj, applyMod, base);
 
 /** CombatHelper ** //////////////////////////////
 * The purpose of this class is to standardize
@@ -242,8 +243,8 @@ function CombatHelper(entity) {
       this._entity.getSkills('parrying') :
       level || 1;
 
-
-    const dodgeChance = applyMods(dodgeSkill + parrySkill + bonus, this._entity.dodgeMods);
+    const dodgeAndParry     = dodgeSkill + parrySkill + bonus;
+    const dodgeChance       = applyMods(dodgeFactor, this._entity.dodgeMods);
     const dodgeWithinBounds = _.setBounds(5, 90);
 
     util.log('Base dodge chance is ', dodgeChance);
@@ -277,11 +278,38 @@ function CombatHelper(entity) {
   return this;
 }
 
+function setEncumbrancePenalties(entity, encumbrance) {
+  entity.combat.deleteAllMods('encumbrance');
+  const [ multiplier, details ] = encumbrance;
+  
+  entity.combat.addSpeedMod({
+    name:  'encumbrance', 
+    effect: speed => speed * multiplier
+  });
+
+  entity.combat.addDodgeMod({
+    name:  'encumbrance',
+    effect: dodge => dodge / multiplier
+  });
+
+  const specialEffects = getSpecialEncumbranceEffects(entity)[details];
+
+  for (const attrToMod in specialEffects) {
+    const modifier = specialEffects[attrToMod];
+    entity.combat.addMod(attrToMod)(modifier);
+  }
+  
+  return specialEffects;
+}
+
 function getHelper(entity) {
   return new CombatHelper(entity);
 }
 
+
+
 exports.CombatHelper = CombatHelper;
 exports.CombatUtil   = {
-  getHelper, decideHitLocation
+  getHelper, decideHitLocation, 
+  setEncumbrancePenalties
 };
