@@ -8,8 +8,6 @@ const util = require('util');
 exports.command = (rooms, items, players, npcs, Commands) => 
   (args, player) => {
 
-    player.emit('action', 1, items);
-
     // No picking stuff up in combat
     if (player.isInCombat()) {
       player.warn("You cannot do that while you're fighting.");
@@ -56,6 +54,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
           util.log(`${playerName} picked up ${itemName}`);
           player.say(`You pick up the ${itemName} and place it in your ${containerName}.`);
+          player.emit('action', 1, items);
 
           players.eachIf(
             p => CommandUtil.inSameRoom(p, player),
@@ -75,6 +74,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
           item.emit('hold', location, room, player, players);
 
           player.say(`You pick up the ${itemName} and hold it.`);
+          player.emit('action', 1, items);
+          
           players.eachIf(
             p => CommandUtil.inSameRoom(p, player),
             p => p.say(`${playerName} picks up the ${itemName} and holds it.`)
