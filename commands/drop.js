@@ -41,7 +41,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       if (item.isEquipped()) { 
         const isDropping = true;
-        player.unequip(item, items, players, isDropping); 
+        const location = player.unequip(item, items, players, isDropping); 
+        item.emit('remove', location, room, player, players);
       }
 
       players.eachIf(
