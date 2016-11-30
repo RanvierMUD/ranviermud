@@ -3,6 +3,7 @@
 const LevelUtil = require('../../src/levels').LevelUtil,
   Skills = require('../../src/skills').Skills,
   CommandUtil = require('../../src/command_util').CommandUtil,
+  CombatUtil = require('../../src/combat_util').CombatUtil,
   util = require('util'),
   Commands = require('../../src/commands').Commands,
   Effects = require('../../src/effects').Effects,
@@ -48,7 +49,7 @@ exports.listeners = {
   },
 
   action: function(l10n) {
-
+    let previousEncumbranceState = '';
     return function(cost, items) {
 
       // If there is a cost to the emitted action,
@@ -56,7 +57,14 @@ exports.listeners = {
       // Then, subtract it from their energy.
       if (cost) {
         const encumbrance = this.getEncumbrance(items);
-        const [ multiplier, details ] = encumbrance;
+        const { multiplier, description } = encumbrance;
+
+        if (description !== previousEncumbranceState) {
+          if (previousEncumbranceState !== '') {
+            this.warn(`Your current encumbrance is ${description}.`);
+          }
+          previousEncumbranceState = description;
+        }
         cost = Math.ceil((cost * multiplier) / this.getSkills('athletics'));
 
         CombatUtil.setEncumbrancePenalties(this, encumbrance);

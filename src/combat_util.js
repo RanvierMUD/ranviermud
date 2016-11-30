@@ -280,7 +280,7 @@ function CombatHelper(entity) {
 
 function setEncumbrancePenalties(entity, encumbrance) {
   entity.combat.deleteAllMods('encumbrance');
-  const [ multiplier, details ] = encumbrance;
+  const { multiplier, description } = encumbrance;
   
   entity.combat.addSpeedMod({
     name:  'encumbrance', 
@@ -292,7 +292,7 @@ function setEncumbrancePenalties(entity, encumbrance) {
     effect: dodge => dodge / multiplier
   });
 
-  const specialEffects = getSpecialEncumbranceEffects(entity)[details];
+  const specialEffects = getSpecialEncumbranceEffects(entity)[description];
 
   for (const attrToMod in specialEffects) {
     const modifier = specialEffects[attrToMod];
