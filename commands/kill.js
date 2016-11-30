@@ -18,7 +18,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
             return player.warn(`${npc.getShortDesc()} radiates a calming aura.`);
         }
 
-        if (!player.hasEnergy(5)) { return player.noEnergy(); }
+        if (!player.hasEnergy(5, items)) { return player.noEnergy(); }
 
         util.log(player.getName() + ' is on the offensive...');
 
