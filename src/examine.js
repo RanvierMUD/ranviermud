@@ -52,8 +52,6 @@ module.exports.examine = (args, player, players, config) => {
 
   const foundIt = _.has(config.poi, target);
 
-  util.log('found what they were looking for? ', foundIt);
-
   return foundIt && config.check() ?
     config.found() :
     config.nothingFound();
