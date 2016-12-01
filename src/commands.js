@@ -130,8 +130,11 @@ const Commands = {
             }
 
             player.say(item.isEquipped() ? 'Equipped' : 'In inventory');
-            player.say('Events: ', item.eventNames());
+            const events = item.eventNames() || Object.keys(item._events || {});
+            player.say('Events: ', events.join());
             player.warn('========\n');
+            console.log('events for ', item.getShortDesc());
+            console.log(events);
           }
 
         },
