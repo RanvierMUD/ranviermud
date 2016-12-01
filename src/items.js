@@ -190,6 +190,7 @@ const Item = function ItemConstructor(config) {
 		self.attributes        = config.attributes    || {};
     self.prerequisites     = config.prerequisites || {};
     self.holder            = config.holder        || '';
+		self.behaviors         = config.behaviors     || null;
 
     self.inventory = config.inventory || (self.isContainer() ? [] : null);
 
