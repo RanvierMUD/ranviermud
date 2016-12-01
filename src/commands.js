@@ -365,7 +365,7 @@ function move(exit, player) {
   }
 
   const moveCost = exit.cost ? exit.cost : 1;
-  if (!player.hasEnergy(moveCost)) { return player.noEnergy(); }
+  if (!player.hasEnergy(moveCost, items)) { return player.noEnergy(); }
 
   if (closedDoor) {
     Commands.player_commands.open(exit.direction, player);
@@ -389,7 +389,6 @@ function move(exit, player) {
         p.prompt();
       }
     });
-
 
 
   player.setLocation(exit.location);

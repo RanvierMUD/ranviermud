@@ -40,6 +40,8 @@ const buff = (attribute, config) => {
 	};
 };
 
+
+
 const buffWithMax = (attribute, config) => {
 	util.log('Buffing ' + attribute + ': ', getTargetName(config));
 	util.log(config.magnitude);
@@ -110,26 +112,22 @@ const Effects = {
 	// A function returning an effects object.
 	// Used when a player equips an item they don't have enough stamina for.
 	// Lowers energy and max energy.
-	encumbered: config => ({
-		activate: () => {
-			const player = config.player;
-			const factor = config.factor;
-			const energy = player.getAttribute('energy');
-			const maxEnergy = player.getAttribute('max_energy');
-			util.log("FACTOR IS ", factor);
-			player.setAttribute('max_energy', maxEnergy * factor);
-			player.setAttribute('energy', Math.min(energy, maxEnergy * factor));
-		},
-		deactivate: () => {
-			const player = config.player;
-			const factor = config.factor;
-			const energy = player.getAttribute('energy');
-			const maxEnergy = player.getAttribute('max_energy');
-			util.log("FACTOR IS ", factor);
-			player.setAttribute('max_energy', maxEnergy / factor);
-			player.setAttribute('energy', Math.min(energy / factor, maxEnergy / factor));
+	encumbered: ({ player, factor }) => {
+		return {
+			activate: () => {
+				const energy    = player.getAttribute('energy');
+				const maxEnergy = player.getAttribute('max_energy');
+				const penalizedEnergy = maxEnergy * factor
+				player.setAttribute('max_energy', penalizedEnergy);
+				player.setAttribute('energy', Math.min(energy, penalizedEnergy));
+			},
+			
+			deactivate: () => {
+				const maxEnergy = player.getAttribute('max_energy');
+				player.setAttribute('max_energy', maxEnergy / factor);
+			}
 		}
-	}),
+	},
 
 	// A function returning an effects object.
 	// Used when a player equips an item they don't have enough willpower for.
@@ -349,4 +347,83 @@ function getRegenVerb(isHealth, isFeat) {
 	return 'meditating';
 }
 
+const getSpecialEncumbranceEffects = entity => ({
+    
+	'insubstantial': {
+		'dodgeMods': {
+			name: 'encumbrance',
+			effect: dodge => dodge + Math.ceil(entity.getAttribute('quickness') / 2)
+		},
+		'defenseMods': {
+			name:  'encumbrance',
+			effect: defense => defense - 2
+		},
+		'damageMods': {
+			name:  'encumbrance',
+			effect: damage => damage - 2 
+		},
+		'toHitMods': {
+			name: 'encumbrance',
+			effect: toHit => toHit + Math.ceil(entity.getAttribute('level') / 4)
+		}
+	},
+
+	'light': {
+		'defenseMods': {
+			name:  'encumbrance',
+			effect: defense => defense - 1
+		},
+		'damageMods': {
+			name:  'encumbrance',
+			effect: damage => damage - 1 
+		},
+		'toHitMods': {
+			name: 'encumbrance',
+			effect: toHit => toHit + Math.ceil(entity.getAttribute('level') / 5)
+		}
+	},
+
+	'burdensome': {
+		'dodgeMods': {
+			name:  'encumbrance',
+			effect: dodge => Math.ceil(dodge / 2) 
+		}
+	},
+
+	'overburdening': {
+		'toHitMods': {
+			name: 'encumbrance',
+			effect: toHit => Math.ceil(toHit / 2)
+		},
+		'dodgeMods': {
+			name: 'encumbrance',
+			effect: dodge => Math.floor(dodge / 4)
+		}
+	},
+
+	'crushing': {
+		'toHitMods': {
+			name: 'encumbrance',
+			effect: toHit => Math.floor(toHit / 3)
+		},
+		'dodgeMods': {
+			name: 'encumbrance',
+			effect: dodge => 0
+		}
+	},
+
+	'back-breaking': {
+		'toHitMods': {
+			name: 'encumbrance',
+			effect: toHit => Math.floor(toHit / 2)
+		},
+		'dodgeMods': {
+			name: 'encumbrance',
+			effect: dodge => Math.floor(dodge / 5)
+		}
+	},
+
+});
+
 exports.Effects = Effects;
+exports.getSpecialEncumbranceEffects = getSpecialEncumbranceEffects;

@@ -246,17 +246,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
         player = new Player(socket);
         player.load(Data.loadPlayer(name));
 
-        const hydrateInventory = entity => entity
-          .getInventory()
-          .map(item => new Item(item))
-          .map(hydrateNestedItems);
-
-        const hydrateNestedItems = item => item.isContainer() ? 
-          item.setInventory(hydrateInventory(item)) || item : 
-          item;
-
-        const reloadedInventory = hydrateInventory(player);
-        player.setInventory(reloadedInventory)
         players.addPlayer(player);
 
         player.getSocket()
@@ -273,7 +262,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
             players.removePlayer(player);
           });
 
-        //TODO: Have load in player file?
         // Load the player's inventory (There's probably a better place to do this)
         let inv = [];
         player.getInventory()
@@ -288,7 +276,8 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
         player.checkTraining();
 
         // All that shit done, let them play!
-        player.getSocket().emit("commands", player);
+        player.getSocket()
+              .emit("commands", player);
 
         break;
     }
