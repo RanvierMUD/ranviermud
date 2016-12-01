@@ -116,9 +116,9 @@ const Effects = {
 		return {
 			activate: () => {
 				const energy    = player.getAttribute('energy');
-				const maxEnergy = player.getAttribute('maxEnergy');
+				const maxEnergy = player.getAttribute('max_energy');
 				const penalizedEnergy = maxEnergy * factor
-				player.setAttribute('max_energy', maxEnergy);
+				player.setAttribute('max_energy', penalizedEnergy);
 				player.setAttribute('energy', Math.min(energy, penalizedEnergy));
 			},
 			
