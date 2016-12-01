@@ -478,7 +478,7 @@ const Player = function PlayerConstructor(socket) {
     }
 
     ItemUtil.deleteFromEquipment(self, item, holdingLocation);
-    return success;
+    return true;
   };
 
   function handleNormalUnequip(item, container, players, holdingLocation) {
