@@ -409,7 +409,7 @@ const Player = function PlayerConstructor(socket) {
     }
 
     if (self.effects[eff].event) {
-      self.removeListener(self.effects[eff].event, self.effects[eff].deactivate);
+      self.removeListener(self.effects[eff].event);
     } else {
       clearTimeout(self.effects[eff].timer);
     }

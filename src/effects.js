@@ -112,26 +112,24 @@ const Effects = {
 	// A function returning an effects object.
 	// Used when a player equips an item they don't have enough stamina for.
 	// Lowers energy and max energy.
-	encumbered: config => ({
-		activate: () => {
-			const player = config.player;
-			const factor = config.factor;
-			const energy = player.getAttribute('energy');
-			const maxEnergy = player.getAttribute('max_energy');
-			util.log("FACTOR IS ", factor);
-			player.setAttribute('max_energy', maxEnergy * factor);
-			player.setAttribute('energy', Math.min(energy, maxEnergy * factor));
-		},
-		deactivate: () => {
-			const player = config.player;
-			const factor = config.factor;
-			const energy = player.getAttribute('energy');
-			const maxEnergy = player.getAttribute('max_energy');
-			util.log("FACTOR IS ", factor);
-			player.setAttribute('max_energy', maxEnergy / factor);
-			player.setAttribute('energy', Math.min(energy / factor, maxEnergy / factor));
+	encumbered: ({ player, factor }) => {
+		const startingMaxEnergy = player.getAttribute('max_energy');
+		return {
+			activate: () => {
+
+				const energy    = player.getAttribute('energy');
+				const maxEnergy = startingMaxEnergy;
+
+				player.setAttribute('max_energy', maxEnergy * factor);
+				player.setAttribute('energy', Math.max(energy, maxEnergy * factor));
+			},
+			deactivate: () => {
+				const maxEnergy = player.getAttribute('max_energy');
+				util.log("FACTOR IS ", factor);
+				player.setAttribute('max_energy', Math.max(startingMaxEnergy, maxEnergy / factor));
+			}
 		}
-	}),
+	},
 
 	// A function returning an effects object.
 	// Used when a player equips an item they don't have enough willpower for.
