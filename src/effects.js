@@ -113,20 +113,24 @@ const Effects = {
 	// Used when a player equips an item they don't have enough stamina for.
 	// Lowers energy and max energy.
 	encumbered: ({ player, factor }) => {
-		const startingMaxEnergy = player.getAttribute('max_energy');
+		let startingMaxEnergy = player.getAttribute('max_energy');
+		let penalizedEnergy; // Kept track of to account for level-ups or buffs while encumbered... hopefully.
 		return {
 			activate: () => {
-
 				const energy    = player.getAttribute('energy');
 				const maxEnergy = startingMaxEnergy;
+				penalizedEnergy = maxEnergy * factor;
 
-				player.setAttribute('max_energy', maxEnergy * factor);
+				player.setAttribute('max_energy', penalizedEnergy);
 				player.setAttribute('energy', Math.max(energy, maxEnergy * factor));
 			},
+			
 			deactivate: () => {
 				const maxEnergy = player.getAttribute('max_energy');
+				const difference = startingMaxEnergy - maxEnergy;
+				
 				util.log("FACTOR IS ", factor);
-				player.setAttribute('max_energy', Math.max(startingMaxEnergy, maxEnergy / factor));
+				player.setAttribute('max_energy', startingMaxEnergy + difference);
 			}
 		}
 	},
