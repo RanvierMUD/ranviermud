@@ -350,7 +350,8 @@ const Item = function ItemConstructor(config) {
 			equipped:          self.equipped,
 			attributes:        self.attributes,
       prerequisites:     self.prerequisites,
-			holder:            self.holder
+			holder:            self.holder,
+			behaviors:         self.behaviors
 		});
 
 	self.init(config);

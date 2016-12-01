@@ -82,19 +82,17 @@ const Data = {
 	loadListeners: (config, l10n_dir, scripts_dir, target) => {
 
     // Check to see if the target has scripts, if so load them
-		if ('script' in config) {
-			if (config.script){
-				const listeners = require(scripts_dir + config.script).listeners;
+		if (config.script) {
+			const listeners = require(scripts_dir + config.script).listeners;
 
-        // the localization file for the script will be l10n/scripts/<script name>.yml
-				// example: l10n/scripts/1.js.yml
-				const l10nFile = l10n_dir + config.script + '.yml';
-				const l10n = l10nHelper(l10nFile);
-				util.log('Loaded script file ' + l10nFile);
+			// the localization file for the script will be l10n/scripts/<script name>.yml
+			// example: l10n/scripts/1.js.yml
+			const l10nFile = l10n_dir + config.script + '.yml';
+			const l10n = l10nHelper(l10nFile);
+			util.log('Loaded script file ' + l10nFile);
 
-        for (let listener in listeners) {
-					target.on(listener, listeners[listener](l10n));
-				}
+			for (let listener in listeners) {
+				target.on(listener, listeners[listener](l10n));
 			}
 		}
 
@@ -109,7 +107,7 @@ const Data = {
 	 * @return object The applied target
 	 */
 	loadBehaviors: (config, subdir, target) => {
-		if ('behaviors' in config) {
+		if (config.behaviors) {
 			let behaviors = config.behaviors.split(',');
 
       // reverse to give left-to-right weight in the array
