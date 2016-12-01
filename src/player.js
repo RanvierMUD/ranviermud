@@ -797,12 +797,12 @@ const Player = function PlayerConstructor(socket) {
     Skills[skill].activate(...args);
   };
 
-  self.useFeat = (feat, ...args) => {
-    if (!Feats[feat.toLowerCase()]) {
-      util.log("feat not found: ", feat);
-      return;
-    }
-    Feats[feat].activate(...args);
+  self.useFeat = (featName, ...args) => {
+    featName = featName.toLowerCase();
+    const feat = Feats[featName];
+    return feat ? 
+      feat.activate(...args) : 
+      util.log(`ERROR: Feat not found: ${featName}`);
   };
 
   /**
@@ -811,7 +811,7 @@ const Player = function PlayerConstructor(socket) {
    * @param string location
    */
   self.damage = (dmg, location) => {
-    if (!dmg) return;
+    if (!dmg) { return 0; }
     location = location || 'body';
 
     //TODO: Put this as a function in the combatUtils module.
