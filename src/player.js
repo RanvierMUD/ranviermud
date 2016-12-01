@@ -647,6 +647,7 @@ const Player = function PlayerConstructor(socket) {
    * Display the configured prompt to the player
    * @param object extra Other data to show
    */
+  //TODO: refactor to use template strings.
   self.prompt = extra => {
     let pstring = self.getPrompt();
     extra = extra || {};
@@ -729,7 +730,6 @@ const Player = function PlayerConstructor(socket) {
       skill = Skills[skill];
       if (!self.skills[skill.id]) {
 
-        //TODO: Use chalk node module to create color-coded logging messages.
         util.log("Initializing skill ", skill.id);
         self.skills[skill.id] = 1;
       }
