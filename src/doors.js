@@ -63,7 +63,7 @@ exports.Doors = {
  * helps keep things dry.
  */
 
-function openOrClose(verb, args, player, players, rooms) {
+function openOrClose(verb, args, player, players, rooms, items) {
 
   const isOpen = verb === 'open';
 
