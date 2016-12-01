@@ -4,6 +4,7 @@ const util = require('util');
 //TODO: Extract into own directory. Too many effects.
 //TODO: Make an atom snippet for this?
 //TODO: Effects_utils?
+//TODO: These do not persist. Fix?
 
 /**
  * Reusable helper functions and defaults for effects.

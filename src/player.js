@@ -789,22 +789,20 @@ const Player = function PlayerConstructor(socket) {
    * @param [string] arguments
    * Command event passes in player, args, rooms, npcs.
    */
-  self.useSkill = function (skill /*, args... */ ) {
+  self.useSkill = (skill, ...args) => {
     if (!Skills[skill]) {
       util.log("skill not found: ", skill);
       return;
     }
-    const args = [].slice.call(arguments).slice(1)
-    Skills[skill].activate.apply(null, args);
+    Skills[skill].activate(...args);
   };
 
-  self.useFeat = function (feat /*, args... */ ) {
+  self.useFeat = (feat, ...args) => {
     if (!Feats[feat.toLowerCase()]) {
       util.log("feat not found: ", feat);
       return;
     }
-    const args = [].slice.call(arguments).slice(1)
-    Feats[feat].activate.apply(null, args);
+    Feats[feat].activate(...args);
   };
 
   /**
