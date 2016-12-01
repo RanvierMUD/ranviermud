@@ -134,12 +134,7 @@ const Items = function ItemsManager() {
 	 * @param string uid
 	 * @return Item
 	 */
-	self.get = uid => {
-		util.log('looking for ', uid);
-		util.log('in ', Object.keys(self.objects));
-
-		return self.objects[uid];
-	}
+	self.get = uid => self.objects[uid];
 
 	/**
 	 * proxy Array.each

@@ -1,5 +1,6 @@
-const util    = require('util');
-const Effects = require('./effects').Effects;
+const util = require('util');
+const CommandUtil = require('./command_util').CommandUtil;
+const Effects     = require('./effects').Effects;
 
 const penalize = (player, item, attr, callback) => {
   util.log('factor for ' + attr + ' is:');
@@ -74,6 +75,7 @@ const removeDefaultPenaltes = (player, item, location) => {
   player.combat.deleteAllMods(slowed);
 };
 
+
 const checkForCrit = (attacker, defender, damageDealt) => {
   const defenderHealth = defender.getAttribute('health');
   const defenderMaxHealth = defender.getAttribute('max_health');
@@ -139,17 +141,20 @@ function pickUp({ player, room, item }, callback) {
   callback(container);
 }
 
+/* Used for deleting an item from equipment, including moving from one slot to another.
+ * @param entity player or anything with equipment
+ * @param item object
+ * @param location new location to equip item at.
+ * @return string new location where item is equipped.
+ */
 function deleteFromEquipment(entity, item, location) {
-    for (const slot in entity.equipment) {
-      util.log('checking ', slot);
-      if (slot === location) { continue; }
-      if (entity.equipment[slot] === item.getUuid()) {
-        util.log('baleeting');
-        delete entity.equipment[slot];
-        return slot;
-      }
+  for (const slot in entity.equipment) {
+    if (slot === location) { continue; }
+    if (entity.equipment[slot] === item.getUuid()) {
+      delete entity.equipment[slot];
     }
   }
+}
 
 function getFailureMessage(tooLarge, tooHeavy, item) {
   const itemName = item.getShortDesc();
@@ -168,6 +173,14 @@ function putItemInContainer(item, container, player, players) {
     const containerName = container.getShortDesc();
     const itemName      = item.getShortDesc();
     container.addItem(item);
+    
+    if (item.isEquipped()) {
+      util.log('was equipped, gon remove');
+      item.setEquipped(false);
+      deleteFromEquipment(player, item);
+    }
+
+    util.log('CONTAINERING');
   
     player.say(`You remove the ${itemName} and place it in your ${containerName}.`);
     players.eachIf(
@@ -178,6 +191,7 @@ function putItemInContainer(item, container, player, players) {
   }
 
   function holdOntoItem(item, holdingLocation, player, players) {
+    util.log('HOLDIN');
     const itemName = item.getShortDesc();
     player.equip(holdingLocation, item);
     return true;
