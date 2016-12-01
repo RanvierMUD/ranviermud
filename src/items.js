@@ -134,12 +134,7 @@ const Items = function ItemsManager() {
 	 * @param string uid
 	 * @return Item
 	 */
-	self.get = uid => {
-		util.log('looking for ', uid);
-		util.log('in ', Object.keys(self.objects));
-
-		return self.objects[uid];
-	}
+	self.get = uid => self.objects[uid];
 
 	/**
 	 * proxy Array.each
@@ -195,6 +190,7 @@ const Item = function ItemConstructor(config) {
 		self.attributes        = config.attributes    || {};
     self.prerequisites     = config.prerequisites || {};
     self.holder            = config.holder        || '';
+		self.behaviors         = config.behaviors     || null;
 
     self.inventory = config.inventory || (self.isContainer() ? [] : null);
 
@@ -355,7 +351,8 @@ const Item = function ItemConstructor(config) {
 			equipped:          self.equipped,
 			attributes:        self.attributes,
       prerequisites:     self.prerequisites,
-			holder:            self.holder
+			holder:            self.holder,
+			behaviors:         self.behaviors
 		});
 
 	self.init(config);
