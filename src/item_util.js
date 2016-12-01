@@ -152,6 +152,7 @@ function deleteFromEquipment(entity, item, location) {
     if (slot === location) { continue; }
     if (entity.equipment[slot] === item.getUuid()) {
       delete entity.equipment[slot];
+      return slot;
     }
   }
 }
