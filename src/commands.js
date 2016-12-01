@@ -130,7 +130,7 @@ const Commands = {
             }
 
             player.say(item.isEquipped() ? 'Equipped' : 'In inventory');
-            plaeyr.say(`========`);
+            player.say(`========`);
             player.say(`Behaviors: ${item.behaviors}, script: ${item.script}`);
             const events = item.eventNames();
             player.say(`Events: ${events.join(', ')}`);
