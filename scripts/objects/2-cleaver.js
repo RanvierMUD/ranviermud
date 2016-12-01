@@ -36,10 +36,10 @@ exports.listeners = {
     return function (location, room, player, players) {
       const toRoom = Broadcast.toRoom(room, player, null, players);
       const firstPartyMessage = [
-        '<yellow>You place the bulky cleaver in your pack.</yellow>'
+        '<yellow>The time for butchery is over...</yellow>'
       ];
       const thirdPartyMessage = [
-        player.getShortDesc('en') + ' places the bulky cleaver in their pack.'
+        player.getShortDesc('en') + ' removes their butcher\'s cleaver.'
       ];
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
 

@@ -5,10 +5,10 @@ const CommandUtil = require('../src/command_util').CommandUtil;
 const util = require('util');
 const _ = require('../src/helpers');
 
-exports.command = (rooms, items, players, npcs, Commands) => {
-  return (args, player) => {
 
-    player.emit('action', 0);
+//TODO: Refactor/redo due to the new container functionality....
+exports.command = (rooms, items, players, npcs, Commands) => 
+  (args, player) => {
 
     // syntax 'give [item] [player]'
     if (player.isInCombat()) {
@@ -25,6 +25,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     let toIndex = args.indexOf('to');
     if (toIndex > -1) { args.splice(to, 1); }
 
+    //FIXME: Make it impossible to give an item if the other player cannot receive it.
     const item = CommandUtil.findItemInInventory(args[0], player, true);
     const room = rooms.getAt(player.getLocation());
     let targetPlayer = args[1];
@@ -58,6 +59,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       return;
     }
 
+    //FIXME: Get rid of try catch block and make this work with containers
     function giveItemToPlayer(playerGiving, playerReceiving, itemGiven) {
       try {
         util.log(playerReceiving.getName() + ' gets ', itemGiven.getShortDesc('en') + ' from ' + playerGiving.getName());
@@ -65,6 +67,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           playerGiving.getLocale()), playerReceiving.getName());
         playerReceiving.sayL10n(l10n, 'ITEM_RECEIVED', itemGiven.getShortDesc(
           playerReceiving.getLocale()), playerGiving.getName());
+
+        player.emit('action', 1, items);
+        playerReceiving.emit('action', 1, items);
+
       } catch (e) {
         util.log("Error when giving an item ", e);
         util.log("playerReceiving: ", playerReceiving.getName());
@@ -72,12 +78,14 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         util.log("Item: ", item);
 
         playerGiving.sayL10n(l10n, 'GENERIC_ITEM_GIVEN', playerReceiving.getName());
-        playerReceiving.sayL10n(l10n, 'GENERIC_ITEM_RECEIVED', playerGiving
-          .getName());
+        playerReceiving.sayL10n(l10n, 'GENERIC_ITEM_RECEIVED', playerGiving.getName());
       }
+
       playerGiving.removeItem(itemGiven);
-      itemGiven.setInventory(playerReceiving.getName());
+      itemGiven.setHolder(playerReceiving.getName());
       playerReceiving.addItem(itemGiven);
+      player.emit('action', 1, items);
+      playerReceiving.emit('action', 1, items);
+
     }
-  };
 };

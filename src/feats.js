@@ -248,7 +248,7 @@ const Feats = {
 
       function siphonTarget(target) {
 
-        if (!player.hasEnergy(5)) {
+        if (!player.hasEnergy(5, items)) {
           return player.say('<magenta>You will need to rest first.</magenta>');
         }
 

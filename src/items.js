@@ -114,7 +114,7 @@ const Items = function ItemsManager() {
 	 */
 	self.addItem = item => {
 		if (!item.getUuid()) {
-			item.setUuid(uuid.v4());
+			item.setUuid(item.uuid || uuid.v4());
 		}
 		self.objects[item.getUuid()] = item;
 		self.load_count[item.vnum] = self.load_count[item.vnum] ? self.load_count[item.vnum] + 1 : 1;
@@ -134,7 +134,12 @@ const Items = function ItemsManager() {
 	 * @param string uid
 	 * @return Item
 	 */
-	self.get = uid => self.objects[uid];
+	self.get = uid => {
+		util.log('looking for ', uid);
+		util.log('in ', Object.keys(self.objects));
+
+		return self.objects[uid];
+	}
 
 	/**
 	 * proxy Array.each
@@ -317,9 +322,11 @@ const Item = function ItemConstructor(config) {
 				self.getContainerWeight(items) + self.getAttribute('weight') :
 				self.getAttribute('weight');
 
-	
+	const hydrateItem = (items, item) => typeof item === 'string' ? items.get(item) : item;
+
 	self.getContainerWeight = items => self.getInventory()
-		.reduce((sum, item) => items.get(item).getWeight() + sum, 0);
+		.reduce((sum, item) => hydrateItem(items, item).getWeight() + sum, 0);
+
 
 	self.getRemainingSizeCapacity = items => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents(items);
 	
@@ -347,7 +354,8 @@ const Item = function ItemConstructor(config) {
 			script:            self.script,
 			equipped:          self.equipped,
 			attributes:        self.attributes,
-      prerequisites:     self.prerequisites
+      prerequisites:     self.prerequisites,
+			holder:            self.holder
 		});
 
 	self.init(config);

@@ -76,6 +76,9 @@ exports.command = (rooms, items, players, npcs, Commands) =>
         firstPartyMessage: 'You place the ' + itemName + ' into the ' + containerDesc + '.',
         thirdPartyMessage: player.getName() + ' places the ' + itemName + ' into the ' + containerDesc + '.'
       });
+      
+      player.emit('action', 1, items);
+
     }
 
   };
