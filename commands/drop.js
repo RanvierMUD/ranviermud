@@ -55,7 +55,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         player.sayL10n(l10n, 'ITEM_DROP', itemName, false);
         room.getNpcs().forEach( id => {
           let npc = npcs.get(id);
-          npc.emit('playerDropItem', room, rooms, player, players, npc, npcs, item);
+          npc.emit('playerDropItem', room, rooms, player, players, npc, npcs, item, items);
         });
       }
       util.log(`${playerName} drops ${itemName} at ${room.getLocation()}.`);
