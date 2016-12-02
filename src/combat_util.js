@@ -243,8 +243,8 @@ function CombatHelper(entity) {
       this._entity.getSkills('parrying') :
       level || 1;
 
-    const dodgeAndParry     = dodgeSkill + parrySkill + bonus;
-    const dodgeChance       = applyMods(dodgeFactor, this._entity.dodgeMods);
+    const totalDodgeBonus   = dodgeSkill + parrySkill + bonus;
+    const dodgeChance       = applyMods(totalDodgeBonus, this._entity.dodgeMods);
     const dodgeWithinBounds = _.setBounds(5, 90);
 
     util.log('Base dodge chance is ', dodgeChance);

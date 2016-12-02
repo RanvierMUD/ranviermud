@@ -410,7 +410,7 @@ function move(exit, player) {
       .forEach(id => {
         const npc = npcs.get(id);
         if (!npc) { return; }
-        npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
+        npc.emit('playerEnter', room, rooms, player, players, npc, npcs, items);
       });
 
   room.emit('playerEnter', player, players, rooms);
