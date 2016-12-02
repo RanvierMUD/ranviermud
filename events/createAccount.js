@@ -36,7 +36,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
       case 'check':
         let newAccount = null;
         socket.write('No such account exists.\r\n');
-        say('<bold>Do you want your account\'s username to be ' + name + '?</bold> <cyan>[y/n]</cyan> ');
+        say(`<bold>Do you want your account's username to be ${name}?</bold> <cyan>[y/n]</cyan> `);
 
         socket.once('data', data => {
 

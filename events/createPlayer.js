@@ -122,8 +122,12 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
       case 'gender':
         const genders = ['m', 'f', 'a'];
 
-        socket.write('<bold>What is your character\'s gender?</bold>\n'
-        + '<cyan>[F]emale\n[M]ale\n[A]ndrogynous</cyan>\n');
+        socket.write(`<bold>What is your character's gender?</bold>
+        <cyan>
+        [F]emale
+        [M]ale
+        [A]ndrogynous
+        </cyan>`);
 
         socket.getSocket()
           .once('data', gender => {
