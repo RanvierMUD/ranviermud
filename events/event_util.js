@@ -50,7 +50,7 @@ function capitalize(str) {
        + str.toLowerCase().substr(1);
 }
 
-const gen_say = socket => string => socket.write(sty.parse(string));
+const gen_say = socket => string => socket.write(sty.parse(string + '\n'));
 
 const EventUtil = {
   gen_next,
