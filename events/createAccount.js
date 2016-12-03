@@ -35,7 +35,8 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
 
       case 'check':
         let newAccount = null;
-        socket.write('No such account exists.\r\n');
+        say('No such account exists.\n');
+        util.log('NAME ENTERED IS ', name);
         say(`<bold>Do you want your account's username to be ${name}?</bold> <cyan>[y/n]</cyan> `);
 
         socket.once('data', data => {
@@ -50,17 +51,17 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
             return repeat();
           }
 
-          const firstLetter = data[0].toLowerCase();
+          const firstLetter = data.toLowerCase()[0];
           if (data && firstLetter === 'y') {
-            socket.write('Creating account...\r\n');
+            say('Creating account...');
             newAccount = new Account();
             newAccount.setUsername(name);
             newAccount.setSocket(socket);
             return next(socket, 'password', name, newAccount);
 
-          } else if (data && data === 'n') {
-            socket.write('Goodbye!\r\n');
-            return socket.end();
+          } else if (data && firstLetter === 'n') {
+            say(`Let's try again!`);
+            return socket.emit('login', socket, 'login');
 
           } else {
             return repeat();
@@ -75,15 +76,15 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
             pass = pass.toString().trim();
 
             if (!pass) {
-              socket.write('You must use a password.\r\n');
+              say('You must use a password.');
               return repeat();
             }
             if (pass.length <= 5) {
-              socket.write('Your password must be 6 characters or longer.\r\n');
+              say('Your password must be 6 characters or longer.');
               return repeat();
             }
             if (pass.length > 30) {
-              socket.write('Your password must be less than or equal to 30 characters.\r\n');
+              say('Your password must be less than or equal to 30 characters.');
               return repeat();
             }
 

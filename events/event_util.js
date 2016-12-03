@@ -46,11 +46,12 @@ function isNegot(buffer) {
 
 // Does what it says on the box
 function capitalize(str) {
+  util.log('str as input is ', str);
   return str[0].toUpperCase()
        + str.toLowerCase().substr(1);
 }
 
-const gen_say = socket => string => socket.write(sty.parse(string));
+const gen_say = socket => string => socket.write(sty.parse(string + '\n'));
 
 const EventUtil = {
   gen_next,
