@@ -51,7 +51,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
             return repeat();
           }
 
-          const firstLetter = data[0].toLowerCase();
+          const firstLetter = data.toLowerCase()[0];
           if (data && firstLetter === 'y') {
             say('Creating account...');
             newAccount = new Account();
@@ -59,9 +59,9 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
             newAccount.setSocket(socket);
             return next(socket, 'password', name, newAccount);
 
-          } else if (data && data === 'n') {
-            say('Goodbye!');
-            return socket.end();
+          } else if (data && firstLetter === 'n') {
+            say(`Let's try again!`);
+            return socket.emit('login', socket, 'login');
 
           } else {
             return repeat();
