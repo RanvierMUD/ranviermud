@@ -17,6 +17,7 @@ const Account     = require(src + 'accounts').Account;
 const Type        = require(src + 'type').Type;
 const Commands    = require(src + 'commands').Commands;
 const Item        = require(src + 'items').Item;
+const _           = require(src + 'helpers');
 
 const passwordAttempts = {};
 
@@ -75,7 +76,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
             return repeat();
           }
 
-          name = EventUtil.capitalize(name);
+          name = _.capitalize(name);
 
           let accountExists = Data.loadAccount(name);
 
