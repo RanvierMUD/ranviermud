@@ -82,7 +82,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
       break;
 
       case 'check':
-        say(`<bold> ${name} doesn't exist, would you like to create it?</bold> <cyan>[y/n]</cyan> `);
+        say(`<bold>${name} doesn't exist, would you like to create it?</bold> <cyan>[y/n]</cyan> `);
         socket.once('data', confirmation => {
           confirmation = confirmation.toString()
             .trim()
