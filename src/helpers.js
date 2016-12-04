@@ -36,6 +36,11 @@ const flatten = nestedArrays => [].concat.apply([], nestedArrays);
  */
 const hasKeys = obj => !!Object.keys(obj).length;
 
+function capitalize(str) {
+  return str[0].toUpperCase()
+       + str.toLowerCase().substr(1);
+}
+
 
 /**
  * Pads leftly.
@@ -116,5 +121,6 @@ module.exports = {
   values,     reduceValues,
   setBounds,  is,
   toArray,    flatten,
-  getTargets, removePreposition
+  getTargets, removePreposition,
+  capitalize,
 };

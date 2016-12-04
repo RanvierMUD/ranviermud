@@ -47,7 +47,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
             return repeat();
           }
 
-          name = EventUtil.capitalize(name
+          name = _.capitalize(name
             .toString()
             .trim());
 
