@@ -46,7 +46,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     function checkForTarget(target) {
         if (target.getName().toLowerCase() === targetPlayer) {
-          giveItemToPlayer(player, target, item);
+          giveItemToPlayer(player, target, players, item, items, rooms);
           targetFound = true;
         }
       }
@@ -54,37 +54,40 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     if (!targetFound) {
       return player.say(`It seems that ${_.capitalize(targetPlayer)} is not in this room.`);
     }
-
-    //FIXME: Get rid of try catch block and make this work with containers
-    function giveItemToPlayer(playerGiving, playerReceiving, itemGiven) {
-      
-      const room   = rooms.getAt(playerGiving.getLocation());
-      const toRoom = 
-      try {
-        util.log(playerReceiving.getName() + ' gets ', itemGiven.getShortDesc('en') + ' from ' + playerGiving.getName());
-        playerGiving.sayL10n(l10n, 'ITEM_GIVEN', itemGiven.getShortDesc(
-          playerGiving.getLocale()), playerReceiving.getName());
-        playerReceiving.sayL10n(l10n, 'ITEM_RECEIVED', itemGiven.getShortDesc(
-          playerReceiving.getLocale()), playerGiving.getName());
-
-        player.emit('action', 1, items);
-        playerReceiving.emit('action', 1, items);
-
-      } catch (e) {
-        util.log("Error when giving an item ", e);
-        util.log("playerReceiving: ", playerReceiving.getName());
-        util.log("playerGiving: ", playerGiving.getName());
-        util.log("Item: ", item);
-
-        playerGiving.sayL10n(l10n, 'GENERIC_ITEM_GIVEN', playerReceiving.getName());
-        playerReceiving.sayL10n(l10n, 'GENERIC_ITEM_RECEIVED', playerGiving.getName());
-      }
-
-      playerGiving.removeItem(itemGiven);
-      itemGiven.setHolder(playerReceiving.getName());
-      playerReceiving.addItem(itemGiven);
-      player.emit('action', 1, items);
-      playerReceiving.emit('action', 1, items);
-
-    }
+    
 };
+
+function giveItemToPlayer(player, target, players, item, items, rooms) {
+
+  const room   = rooms.getAt(player.getLocation());
+  const toRoom = Broadcast.toRoom(room, player, target, players);
+  
+  const itemName   = item.getShortDesc();
+  const targetName = target.getName();
+  const playerName = player.getName();
+
+  const giveMessages = {
+    firstPartyMessage: `You give the ${itemName} to ${targetName}.`,
+    secondPartyMessage: `${playerName} gives you the ${itemName}.`,
+    thirdPartyMessage: `${playerName} gives the ${itemName} to ${targetName}.`
+  };
+
+  util.log(`Attempting: ${giveMessages.thirdPartyMessage}`);
+
+  const container = items.get(item.getContainer())
+  if (container) { container.removeItem(item); }
+
+  const targetContainer = target //TODO: Finish
+
+  player.removeItem(item);
+  item.setHolder(target.getName());
+
+  target.addItem(item);
+
+  player.emit('action', 1, items);
+  target.emit('action', 1, items);
+
+  toRoom(giveMessages);
+
+
+}
