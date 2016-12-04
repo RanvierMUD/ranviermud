@@ -6,24 +6,22 @@ const util = require('util');
 const _ = require('../src/helpers');
 
 
-//TODO: Refactor/redo due to the new container functionality....
 exports.command = (rooms, items, players, npcs, Commands) => 
   (args, player) => {
 
     // syntax 'give [item] [player]'
     if (player.isInCombat()) {
-      return player.sayL10n(l10n, 'GIVE_COMBAT');
+      return player.say(`Now is not the time to be handing out presents...`);
     }
 
-    args = _.splitArgs(args);
+    args = _.removePreposition(_.splitArgs(args));
 
     if (!args.length) {
-      player.sayL10n(l10n, 'NO_ITEM_OR_TARGET');
+      player.sayL10n(`You need to specify what you're trying to give and to whom.`);
       return;
     }
 
-    let toIndex = args.indexOf('to');
-    if (toIndex > -1) { args.splice(to, 1); }
+    
 
     //FIXME: Make it impossible to give an item if the other player cannot receive it.
     const item = CommandUtil.findItemInInventory(args[0], player, true);

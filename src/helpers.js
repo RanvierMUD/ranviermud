@@ -89,7 +89,7 @@ function getTargets(args) {
 }
 
 function removePreposition(args) {
-  const prepositions = ['from', 'in', 'into'];
+  const prepositions = ['from', 'in', 'into', 'to'];
   return args.filter(word => !prepositions.includes(word));
 }
 
@@ -116,5 +116,5 @@ module.exports = {
   values,     reduceValues,
   setBounds,  is,
   toArray,    flatten,
-  getTargets,
+  getTargets, removePreposition
 };
