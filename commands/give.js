@@ -1,6 +1,5 @@
 'use strict';
-const l10nFile = __dirname + '/../l10n/commands/give.yml';
-const l10n        = require('../src/l10n')(l10nFile);
+
 const CommandUtil = require('../src/command_util').CommandUtil;
 const Broadcast   = require('../src/broadcast').Broadcast;
 const _           = require('../src/helpers');
@@ -72,12 +71,20 @@ function giveItemToPlayer(player, target, players, item, items, rooms) {
     thirdPartyMessage: `${playerName} gives the ${itemName} to ${targetName}.`
   };
 
+  const failedGiveMessages = {
+    firstPartyMessage: `You try to give the ${itemName} to ${targetName} but they have nowhere to put it.`,
+    secondPartyMessage: `${playerName} tries to give you the ${itemName}, but your hands are full and you've nowhere to put it.`,
+    thirdPartyMessage: `${playerName} tries to give ${targetName} the ${itemName}, but ${targetName} reluctantly turns them down.`
+  };
+
   util.log(`Attempting: ${giveMessages.thirdPartyMessage}`);
+
+  // Should be able to give if they have an open hand (target.canHold) or container.
+  const size = item.getAttribute('size');
+  const targetContainer = target.getContainerWithCapacity(items, size);
 
   const container = items.get(item.getContainer())
   if (container) { container.removeItem(item); }
-
-  const targetContainer = target //TODO: Finish
 
   player.removeItem(item);
   item.setHolder(target.getName());
