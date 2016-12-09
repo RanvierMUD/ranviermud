@@ -141,6 +141,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
         break;
 
       case 'chooseChar':
+
       /*
       Player selection menu:
         * Can select existing player
@@ -214,7 +215,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
         options.forEach((opt, i) => {
           const num = i + 1;
-          say('<cyan>[' + num + ']</cyan> <bold>' + opt.display + '</bold>\r\n');
+          say('<cyan>[' + num + ']</cyan> <bold>' + opt.display + '</bold>\r');
         });
 
         socket.once('data', choice => {

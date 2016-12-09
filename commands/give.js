@@ -9,7 +9,7 @@ const util        = require('util');
 exports.command = (rooms, items, players, npcs, Commands) => 
   (args, player) => {
 
-    // syntax 'give [item] [player]'
+    // syntax 'give [item] [player]' //TODO: Make more flexible
     if (player.isInCombat()) {
       return player.say(`Now is not the time to be handing out presents...`);
     }

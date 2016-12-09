@@ -45,7 +45,8 @@ function isNegot(buffer) {
 }
 
 
-const gen_say = socket => string => socket.write(sty.parse(string + '\n'));
+const gen_say   = socket => string => socket.write(sty.parse(string + '\n'));
+const gen_write = socket => string => socket.write(sty.parse(string));
 
 const EventUtil = {
   gen_next,
