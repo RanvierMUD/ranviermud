@@ -26,15 +26,19 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return player.say(`You can not find ${args[0]} in your inventory.`);
     }
 
-    if (item.isEquipped()) {
-      return player.say(`You cannot give ${item.getShortDesc()} away, you are using it.`);
-    }
-    
     let targetPlayer = args[1];
     let targetFound  = false;
 
     if (!targetPlayer) {
       return player.say(`You need to specify to whom you want to give ${item.getShortDesc()}.`);
+    }
+
+    const isEquipped = item.isEquipped()
+    const isHolding  = player.isHolding(item);
+
+    const needsToHandOff = isEquipped && isHolding; 
+    if (isEquipped && !isHolding) {
+      return player.say(`You cannot give ${item.getShortDesc()} away, you are using it.`);
     }
 
     targetPlayer = targetPlayer.toLowerCase();
@@ -45,7 +49,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     function checkForTarget(target) {
         if (target.getName().toLowerCase() === targetPlayer) {
-          giveItemToPlayer(player, target, players, item, items, rooms);
+          giveItemToPlayer(player, target, players, item, items, rooms, needsToHandOff);
           targetFound = true;
         }
       }
@@ -56,7 +60,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     
 };
 
-function giveItemToPlayer(player, target, players, item, items, rooms) {
+function giveItemToPlayer(player, target, players, item, items, rooms, needsToHandOff) {
 
   const room   = rooms.getAt(player.getLocation());
   const toRoom = Broadcast.toRoom(room, player, target, players);
@@ -81,10 +85,23 @@ function giveItemToPlayer(player, target, players, item, items, rooms) {
 
   // Should be able to give if they have an open hand (target.canHold) or container.
   const size = item.getAttribute('size');
+  const targetCanHold   = target.canHold();
   const targetContainer = target.getContainerWithCapacity(items, size);
 
+  if (!targetCanHold && !targetContainer) {
+    return toRoom(failedGiveMessages);
+  }
+
   const container = items.get(item.getContainer())
-  if (container) { container.removeItem(item); }
+  if (container)      { container.removeItem(item); }
+  if (needsToHandOff) { player.unequip(item, items, players, true); }
+  
+  if (targetCanHold) {
+    target.equip(target.findHoldingLocation(), item);
+  } else if (targetContainer) {
+    targetContainer.addItem(item);
+    target.say(`You place ${itemName} into your ${targetContainer.getShortDesc()}.`);
+  } 
 
   player.removeItem(item);
   item.setHolder(target.getName());
@@ -95,6 +112,5 @@ function giveItemToPlayer(player, target, players, item, items, rooms) {
   target.emit('action', 1, items);
 
   toRoom(giveMessages);
-
 
 }
