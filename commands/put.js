@@ -50,8 +50,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     function findContainer(containerTarget) {
       return containerTarget ?
-        CommandUtil.findItemInInventory(containerTarget, player, true) || CommandUtil.findItemInRoom(items, containerTarget, room, player, true) :
-        null;
+        player.getContainerWithCapacity(items, item.getAttribute('size')) :
+        CommandUtil.findItemInRoom(items, containerTarget, room, player, true) || null;
     }
 
     function putInContainer(item, container) {
