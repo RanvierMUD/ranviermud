@@ -17,6 +17,7 @@ const Account     = require(src + 'accounts').Account;
 const Type        = require(src + 'type').Type;
 const Commands    = require(src + 'commands').Commands;
 const Item        = require(src + 'items').Item;
+const _           = require(src + 'helpers');
 
 const passwordAttempts = {};
 
@@ -75,7 +76,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
             return repeat();
           }
 
-          name = EventUtil.capitalize(name);
+          name = _.capitalize(name);
 
           let accountExists = Data.loadAccount(name);
 
@@ -140,6 +141,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
         break;
 
       case 'chooseChar':
+
       /*
       Player selection menu:
         * Can select existing player
@@ -213,7 +215,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
         options.forEach((opt, i) => {
           const num = i + 1;
-          say('<cyan>[' + num + ']</cyan> <bold>' + opt.display + '</bold>\r\n');
+          say('<cyan>[' + num + ']</cyan> <bold>' + opt.display + '</bold>\r');
         });
 
         socket.once('data', choice => {

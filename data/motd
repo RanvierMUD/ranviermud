@@ -1,5 +1,12 @@
 RANVIER v0.3.4 alpha server
 ===========================
+Currently testing:
+- New inventory system
+  - Give, put, take, get, drop, equip, remove, wield commands.
+- Login flow
+
+Known Issues:
+- Effects are stupid and don't persist.
 
 * please send me bug reports via mudcoders slack  *
 E N J O Y
