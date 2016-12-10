@@ -85,6 +85,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     function getAllItems(room) {
       const itemsInRoom = room.getItems().map( id => items.get(id) );
+      if (!itemsInRoom.length) { return player.say(`Nothing in here to get.`); }
       itemsInRoom.forEach( item => tryToPickUp(item) );
     }
 
