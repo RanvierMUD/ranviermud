@@ -21,8 +21,8 @@
 | /Users/seanohue/myProjects/ranviermud/src/feats.js | 119 | Extract these to a skills/charm.js file
 | /Users/seanohue/myProjects/ranviermud/src/feats.js | 429 | Use an event emitter instead.
 | /Users/seanohue/myProjects/ranviermud/src/help_files.js | 52 | Dynamically pull in list of admins
-| /Users/seanohue/myProjects/ranviermud/src/item_util.js | 84 | Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
-| /Users/seanohue/myProjects/ranviermud/src/item_util.js | 90 | Add some kind of bonus.
+| /Users/seanohue/myProjects/ranviermud/src/item_util.js | 83 | Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
+| /Users/seanohue/myProjects/ranviermud/src/item_util.js | 89 | Add some kind of bonus.
 | /Users/seanohue/myProjects/ranviermud/src/items.js | 36 | Extract to Data helper method.
 | /Users/seanohue/myProjects/ranviermud/src/items.js | 90 | Account for persisted items eventually (uuids rather than vnums)
 | /Users/seanohue/myProjects/ranviermud/src/items.js | 182 | Every other class uses .location for the room vnum, right? use .location and .getLocation

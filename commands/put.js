@@ -49,9 +49,12 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     function findContainer(containerTarget) {
-      return containerTarget ?
-        player.getContainerWithCapacity(items, item.getAttribute('size')) :
-        CommandUtil.findItemInRoom(items, containerTarget, room, player, true) || null;
+      if (!containerTarget || containerTarget === 'away') {
+        return player.getContainerWithCapacity(items, item.getAttribute('size'));
+      }
+      const possibleContainersInInventory = player.getContainersWithCapacity(items, item.getAttribute('size'))
+        .filter(item => item.hasKeyword(containerTarget));
+      return possibleContainersInInventory[0] || CommandUtil.findItemInRoom(items, containerTarget, room, player, true);
     }
 
     function putInContainer(item, container) {
