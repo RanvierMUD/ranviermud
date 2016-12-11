@@ -135,6 +135,12 @@ function checkInventory(player, item, items) {
   return [ tooLarge(player, item, items) , tooHeavy(player, item, items) ];
 }
 
+/* Used to determine if the player has any containers with enough volume to fit the item.
+ * @param Player object
+ * @param Item object
+ * @param Items manager object
+ * @return Boolean True if the item will fit, else false
+*/
 function tooLarge(player, item, items) {
   const itemSize = item.getAttribute('size');
   if (itemSize === Infinity) { return true; }
@@ -143,7 +149,12 @@ function tooLarge(player, item, items) {
   return !containerWithCapacity;
 }
 
-
+/* Used to determine if the player has any containers strong enough to carry its weight.
+ * @param Player object
+ * @param Item object
+ * @param Items manager object
+ * @return Boolean True if the item will fit, else false
+*/
 function tooHeavy(player, item, items) {
   const itemWeight = item.getWeight(items);
   if (itemWeight === Infinity) { return true; }
@@ -153,6 +164,12 @@ function tooHeavy(player, item, items) {
 
   return (carriedWeight + itemWeight) > maxCarryWeight;
 }
+
+/* Helper function for a player who is going to be holding an item that they get.
+ * @param config {player, room, item} -- room is optional.
+ * @param callback fn to be called with the held location for cleanup purposes.
+ * @return void
+*/
 
 function hold({ player, room, item }, callback) {
   const equipment = player.getEquipped();
@@ -168,6 +185,11 @@ function hold({ player, room, item }, callback) {
   callback(location);
 }
 
+/* Helper function for a player who is going to be picking up an item and placing it in container.
+ * @param config {player, room, item} -- room is optional.
+ * @param callback fn to be called with the container obj for cleanup purposes.
+ * @return void
+*/
 function pickUp({ player, room, item }, callback) {
   item.setRoom(null);
   item.setHolder(player.getName());
