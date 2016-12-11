@@ -42,21 +42,18 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     putInContainer(item, container);
 
-    // -- helpers -- //TODO: Put in CommandUtil?
+    // -- helpers -- //TODO: Put in CommandUtil/ItemUtil?
 
     function findItem(itemTarget) {
       return CommandUtil.findItemInRoom(items, itemTarget, room, player, true) || CommandUtil.findItemInInventory(itemTarget, player, true);
     }
 
     function findContainer(containerTarget) {
-      console.log('keywords:', containerTarget)
       if (!containerTarget || containerTarget === 'away') {
-        console.log("put stuff awayyyy");
         return player.getContainerWithCapacity(items, item.getAttribute('size'));
       }
       const possibleContainersInInventory = player.getContainersWithCapacity(items, item.getAttribute('size'))
         .filter(item => item.hasKeyword(containerTarget));
-      console.log('possible inventory stuff: ', possibleContainersInInventory);
       return possibleContainersInInventory[0] || CommandUtil.findItemInRoom(items, containerTarget, room, player, true);
     }
 

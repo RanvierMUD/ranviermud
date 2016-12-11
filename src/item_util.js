@@ -2,21 +2,43 @@ const util = require('util');
 const CommandUtil = require('./command_util').CommandUtil;
 const Effects     = require('./effects').Effects;
 
+
+/* Helper for penalizing players based on missing prerequisites.
+ * @param Player object
+ * @param Item object
+ * @param Attribute string (such as 'willpower')
+ * @param Callback fn to be used
+ * @return void (factor is passed into callback)
+*/
 const penalize = (player, item, attr, callback) => {
-  util.log('factor for ' + attr + ' is:');
   const factor = player.getAttribute(attr) / item.getPrerequisite(attr);
-  util.log(factor);
   callback(factor);
 }
 
+/* Helper for getting the description of a default prerequisites penalty.
+ * Really, just used as an ID for the effects.
+ * @param Item object
+ * @param Location wearLocation string
+ * @param status string (such as "encumbered")
+ * @return effect Id string
+*/
 const getPenaltyDesc = (item, location, status) => status + '_by_' + item.getShortDesc() + '_' + location;
 
+/* Function to set up default penalties if the user of an item does not meet all prereqs.
+ * @param Item object
+ * @param Player object
+ * @param Location wearLocation string
+ * @param missedPrerequisites []strings of attributes the player does not meet prerequisites for
+ * @param verb String (such as "wear" or "wield")
+ * @return void
+*/
 const useDefaultPenalties = (item, player, location, missedPrerequisites, verb) => {
   const gerund = verb ? verb + 'ing' : 'using';
   verb = verb || 'use';
 
   missedPrerequisites.forEach(prereq => {
     switch (prereq) {
+
 
       case 'stamina':
         return penalize(player, item, 'stamina', factor => {
@@ -58,6 +80,12 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites, verb) 
 
 };
 
+/* Used when removing an item to wipe away all default penalties.
+ * @param player object
+ * @param item object
+ * @param location wearLocation string
+ * @return void
+*/
 const removeDefaultPenaltes = (player, item, location) => {
   const itemDesc = item.getShortDesc();
 
@@ -74,7 +102,13 @@ const removeDefaultPenaltes = (player, item, location) => {
   player.combat.deleteAllMods(slowed);
 };
 
-
+/* Used to decide if a hit with a weapon is a critical hit or not.
+  //TODO: Use EventEmitters to emit a critical hit event for the item, so each item can have special crit effects.
+ * @param Attacker object (NPC or Player)
+ * @param Defender object (NPC or Player)
+ * @param damageDealt int
+ * @return void
+*/
 const checkForCrit = (attacker, defender, damageDealt) => {
   const defenderHealth = defender.getAttribute('health');
   const defenderMaxHealth = defender.getAttribute('max_health');
@@ -91,6 +125,12 @@ const checkForCrit = (attacker, defender, damageDealt) => {
   }
 }
 
+/* Used in "get" to see if the player's inventory can fit the item or not.
+ * @param Player object
+ * @param Item object
+ * @param Items manager object
+ * @return Boolean True if the item will fit, else false
+*/
 function checkInventory(player, item, items) {
   return [ tooLarge(player, item, items) , tooHeavy(player, item, items) ];
 }
