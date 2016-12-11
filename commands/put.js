@@ -38,7 +38,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     const container = findContainer(containerTarget);
 
     if (!item)      { return player.warn(`Could not find ${itemTarget}.`); }
-    if (!container) { return player.warn(`Could not find ${containerTarget}.`); }
+    if (!container) { return player.warn(`Could not find ${containerTarget} that would fit ${item.getShortDesc()} in it.`); }
 
     putInContainer(item, container);
 
@@ -49,11 +49,14 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     function findContainer(containerTarget) {
+      console.log('keywords:', containerTarget)
       if (!containerTarget || containerTarget === 'away') {
+        console.log("put stuff awayyyy");
         return player.getContainerWithCapacity(items, item.getAttribute('size'));
       }
       const possibleContainersInInventory = player.getContainersWithCapacity(items, item.getAttribute('size'))
         .filter(item => item.hasKeyword(containerTarget));
+      console.log('possible inventory stuff: ', possibleContainersInInventory);
       return possibleContainersInInventory[0] || CommandUtil.findItemInRoom(items, containerTarget, room, player, true);
     }
 
