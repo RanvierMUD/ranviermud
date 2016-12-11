@@ -10,8 +10,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     // No picking stuff up in combat
     if (player.isInCombat()) {
-      player.warn("You cannot do that while you're fighting.");
-      return;
+      return player.warn("You cannot do that while you're fighting.");
     }
 
     const room       = rooms.getAt(player.getLocation());
