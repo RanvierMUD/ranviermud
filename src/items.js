@@ -323,7 +323,6 @@ const Item = function ItemConstructor(config) {
 	self.getContainerWeight = items => self.getInventory()
 		.reduce((sum, item) => hydrateItem(items, item).getWeight() + sum, 0);
 
-
 	self.getRemainingSizeCapacity = items => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents(items);
 	
 	self.getSizeOfContents = items => self
