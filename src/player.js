@@ -452,10 +452,8 @@ const Player = function PlayerConstructor(socket) {
     
     ItemUtil.deleteFromEquipment(self, item, wearLocation);
 
-    if (!self.getInventory().some(i => i == item))
-
     self.equipment[wearLocation] = uid;
-    util.log(`EQUIPPING ${item.getShortDesc()} at ${wearLocation}`);
+    util.log(`${self.getName()} is EQUIPPING ${item.getShortDesc()} at ${wearLocation}.`);
     item.setEquipped(true);
   };
 
@@ -795,10 +793,7 @@ const Player = function PlayerConstructor(socket) {
    * Command event passes in player, args, rooms, npcs.
    */
   self.useSkill = (skill, ...args) => {
-    if (!Skills[skill]) {
-      util.log("skill not found: ", skill);
-      return;
-    }
+    if (!Skills[skill]) { return util.log("ERROR: Skill not found: ", skill); }
     Skills[skill].activate(...args);
   };
 
