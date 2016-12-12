@@ -144,12 +144,14 @@ const Commands = {
     debugItems: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const allItems = items.objects;
+        player.warn(`UUIDs: ${Object.keys(allItems)}`);
+        player.warn(`========`);
         player.warn("GLOBAL ITEMS:\n");
         for (let uid in allItems) {
           const item = allItems[uid];
 
           player.say(item.getShortDesc());
-          player.say('\n')
+          player.say('\n');
           player.say('vnum: ' + item.getVnum());
           player.say('uuid: ' + item.getUuid());
           player.say('location: ' + item.getRoom());

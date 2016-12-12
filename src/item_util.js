@@ -302,7 +302,6 @@ function putItemInContainer(item, container, player, players) {
   * @return true if it succeeded
   */
   function holdOntoItem(item, holdingLocation, player, players) {
-    util.log('HOLDIN');
     const itemName = item.getShortDesc();
     player.equip(holdingLocation, item);
     return true;
