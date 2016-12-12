@@ -206,11 +206,15 @@ function hold({ player, room, item }, callback) {
  * @param callback fn to be called with the container obj for cleanup purposes.
  * @return void
 */
-function pickUp({ player, room, item }, callback) {
+function pickUp({ player, room, item, items }, callback) {
+  
+  const container = player
+    .getContainersWithCapacity(items, item.getAttribute('size'))
+    .filter(it => it !== item)
+    .filter(it => it.getAttribute('maxWeightCapacity') - it.getContainerWeight(items) >= item.getAttribute('weight'))[0];
+
   item.setRoom(null);
   item.setHolder(player.getName());
-  
-  const container = player.getContainerWithCapacity(item.getAttribute('size'));
   player.addItem(item);
   container.addItem(item);
   if (room) { room.removeItem(item); }

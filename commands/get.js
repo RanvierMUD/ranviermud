@@ -46,7 +46,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     function pickUp(item) {
-      return ItemUtil.pickUp({ player, room, item }, 
+      return ItemUtil.pickUp({ player, room, item, items }, 
         container => {
           const itemName      = item.getShortDesc();
           const containerName = container.getShortDesc();
