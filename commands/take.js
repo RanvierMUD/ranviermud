@@ -102,7 +102,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
     }
 
     function pickUp(item) {
-      return ItemUtil.pickUp({player, item}, 
+      return ItemUtil.pickUp({player, item, items}, 
         destContainer => {
           const destContainerName = destContainer.getShortDesc();
           const itemName          = item.getShortDesc();
@@ -115,7 +115,6 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
           player.emit('action', 1, items);
           
-          destContainer.addItem(item);
         });
     }
 
