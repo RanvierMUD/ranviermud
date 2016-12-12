@@ -2,21 +2,46 @@ const util = require('util');
 const CommandUtil = require('./command_util').CommandUtil;
 const Effects     = require('./effects').Effects;
 
+/* HANDLING PREREQUISITES FOR EQUIPMENT */
+
+/* Helper for penalizing players based on missing prerequisites.
+ * @param Player object
+ * @param Item object
+ * @param Attribute string (such as 'willpower')
+ * @param Callback fn to be used
+ * @return void (factor is passed into callback)
+*/
 const penalize = (player, item, attr, callback) => {
-  util.log('factor for ' + attr + ' is:');
   const factor = player.getAttribute(attr) / item.getPrerequisite(attr);
-  util.log(factor);
   callback(factor);
 }
 
+
+/* Helper for getting the description of a default prerequisites penalty.
+ * Really, just used as an ID for the effects.
+ * @param Item object
+ * @param Location wearLocation string
+ * @param status string (such as "encumbered")
+ * @return effect Id string
+*/
 const getPenaltyDesc = (item, location, status) => status + '_by_' + item.getShortDesc() + '_' + location;
 
+
+/* Function to set up default penalties if the user of an item does not meet all prereqs.
+ * @param Item object
+ * @param Player object
+ * @param Location wearLocation string
+ * @param missedPrerequisites []strings of attributes the player does not meet prerequisites for
+ * @param verb String (such as "wear" or "wield")
+ * @return void
+*/
 const useDefaultPenalties = (item, player, location, missedPrerequisites, verb) => {
   const gerund = verb ? verb + 'ing' : 'using';
   verb = verb || 'use';
 
   missedPrerequisites.forEach(prereq => {
     switch (prereq) {
+
 
       case 'stamina':
         return penalize(player, item, 'stamina', factor => {
@@ -58,6 +83,13 @@ const useDefaultPenalties = (item, player, location, missedPrerequisites, verb) 
 
 };
 
+
+/* Used when removing an item to wipe away all default penalties.
+ * @param player object
+ * @param item object
+ * @param location wearLocation string
+ * @return void
+*/
 const removeDefaultPenaltes = (player, item, location) => {
   const itemDesc = item.getShortDesc();
 
@@ -75,6 +107,16 @@ const removeDefaultPenaltes = (player, item, location) => {
 };
 
 
+/* HANDLING SPECIAL ITEM-BASED EVENTS  */
+
+
+/* Used to decide if a hit with a weapon is a critical hit or not.
+  //TODO: Use EventEmitters to emit a critical hit event for the item, so each item can have special crit effects.
+ * @param Attacker object (NPC or Player)
+ * @param Defender object (NPC or Player)
+ * @param damageDealt int
+ * @return void
+*/
 const checkForCrit = (attacker, defender, damageDealt) => {
   const defenderHealth = defender.getAttribute('health');
   const defenderMaxHealth = defender.getAttribute('max_health');
@@ -91,10 +133,27 @@ const checkForCrit = (attacker, defender, damageDealt) => {
   }
 }
 
+
+/* HANDLING INVENTORY MANAGEMENT */
+
+
+/* Used in "get" to see if the player's inventory can fit the item or not.
+ * @param Player object
+ * @param Item object
+ * @param Items manager object
+ * @return Boolean True if the item will fit, else false
+*/
 function checkInventory(player, item, items) {
   return [ tooLarge(player, item, items) , tooHeavy(player, item, items) ];
 }
 
+
+/* Used to determine if the player has any containers with enough volume to fit the item.
+ * @param Player object
+ * @param Item object
+ * @param Items manager object
+ * @return Boolean True if the item will fit, else false
+*/
 function tooLarge(player, item, items) {
   const itemSize = item.getAttribute('size');
   if (itemSize === Infinity) { return true; }
@@ -104,6 +163,12 @@ function tooLarge(player, item, items) {
 }
 
 
+/* Used to determine if the player has any containers strong enough to carry its weight.
+ * @param Player object
+ * @param Item object
+ * @param Items manager object
+ * @return Boolean True if the item will fit, else false
+*/
 function tooHeavy(player, item, items) {
   const itemWeight = item.getWeight(items);
   if (itemWeight === Infinity) { return true; }
@@ -114,6 +179,12 @@ function tooHeavy(player, item, items) {
   return (carriedWeight + itemWeight) > maxCarryWeight;
 }
 
+
+/* Helper function for a player who is going to be holding an item that they get.
+ * @param config {player, room, item} -- room is optional.
+ * @param callback fn to be called with the held location for cleanup purposes.
+ * @return void
+*/
 function hold({ player, room, item }, callback) {
   const equipment = player.getEquipped();
   const location  = player.findHoldingLocation(); 
@@ -128,6 +199,12 @@ function hold({ player, room, item }, callback) {
   callback(location);
 }
 
+
+/* Helper function for a player who is going to be picking up an item and placing it in container.
+ * @param config {player, room, item} -- room is optional.
+ * @param callback fn to be called with the container obj for cleanup purposes.
+ * @return void
+*/
 function pickUp({ player, room, item }, callback) {
   item.setRoom(null);
   item.setHolder(player.getName());
@@ -139,6 +216,7 @@ function pickUp({ player, room, item }, callback) {
 
   callback(container);
 }
+
 
 /* Used for deleting an item from equipment, including moving from one slot to another.
  * @param entity player or anything with equipment
@@ -156,6 +234,13 @@ function deleteFromEquipment(entity, item, location) {
   }
 }
 
+
+/* Returns a string explaining why they can not pick up the item.
+ * @param tooLarge Boolean
+ * @param tooHeavy Boolean
+ * @param item object
+ * @return failureMessage String 
+*/
 function getFailureMessage(tooLarge, tooHeavy, item) {
   const itemName = item.getShortDesc();
   
@@ -164,24 +249,39 @@ function getFailureMessage(tooLarge, tooHeavy, item) {
   return `You cannot pick up ${itemName} right now.`;
 }
 
+
+/* Is the player holding the item?
+ * @param player object
+ * @param item object
+ * @return isHel Boolean
+*/
 function isHeld(player, item) {
   const equipment = player.getEquipped();
   return ['held', 'wield', 'offhand', 'offhand held'].filter(slot => equipment[slot] === item.getUuid())[0];
 }
 
+
+// FIXME: Deprecate the items below, or at least have them call above functions and then
+// return a boolean.
+
+
+/* It puts the item in the container 
+ * //TODO: Consider deprecating this since it does mostly the same stuff as the above function 'pickUp'.
+ * @param item, container, player, players
+ * @return true if it succeeded
+*/
 function putItemInContainer(item, container, player, players) {
     const containerName = container.getShortDesc();
     const itemName      = item.getShortDesc();
     container.addItem(item);
     
+    // Remove if equipped.
     if (item.isEquipped()) {
-      util.log('was equipped, gon remove');
       item.setEquipped(false);
       deleteFromEquipment(player, item);
     }
 
-    util.log('CONTAINERING');
-  
+    // Broadcast it.
     player.say(`You remove the ${itemName} and place it in your ${containerName}.`);
     players.eachIf(
       p => CommandUtil.inSameRoom(p, player),
@@ -190,6 +290,12 @@ function putItemInContainer(item, container, player, players) {
     return true;
   }
 
+
+  /* It puts the item in the hands
+  * //TODO: Consider deprecating this since it does mostly the same stuff as the above function 'hold'.
+  * @param item, container, player, players
+  * @return true if it succeeded
+  */
   function holdOntoItem(item, holdingLocation, player, players) {
     util.log('HOLDIN');
     const itemName = item.getShortDesc();
