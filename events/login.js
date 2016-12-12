@@ -265,12 +265,11 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
           });
 
         // Load the player's inventory (There's probably a better place to do this)
-        let inv = [];
-        player.getInventory()
-          .forEach(item => {
-            item = new Item(item);
+        const inv = player.getInventory()
+          .map(itemConfig => {
+            const item = new Item(itemConfig);
             items.addItem(item);
-            inv.push(item);
+            return item;
           });
         player.setInventory(inv);
 

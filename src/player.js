@@ -452,6 +452,8 @@ const Player = function PlayerConstructor(socket) {
     
     ItemUtil.deleteFromEquipment(self, item, wearLocation);
 
+    if (!self.getInventory().some(i => i == item))
+
     self.equipment[wearLocation] = uid;
     util.log(`EQUIPPING ${item.getShortDesc()} at ${wearLocation}`);
     item.setEquipped(true);
@@ -576,7 +578,6 @@ const Player = function PlayerConstructor(socket) {
       .filter(item => item.isContainer() && item.getRemainingSizeCapacity(items) >= size);
 
   self.getContainerWithCapacity = (items, size) => self.getContainersWithCapacity(items, size)[0];
-
 
 
 

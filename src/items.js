@@ -116,6 +116,7 @@ const Items = function ItemsManager() {
 		if (!item.getUuid()) {
 			item.setUuid(item.uuid || uuid.v4());
 		}
+		util.log(`Adding new item ${item.getShortDesc()} as uuid ${item.getUuid()}`);
 		self.objects[item.getUuid()] = item;
 		self.load_count[item.vnum] = self.load_count[item.vnum] ? self.load_count[item.vnum] + 1 : 1;
 	};
@@ -318,7 +319,10 @@ const Item = function ItemConstructor(config) {
 				self.getContainerWeight(items) + self.getAttribute('weight') :
 				self.getAttribute('weight');
 
-	const hydrateItem = (items, item) => typeof item === 'string' ? items.get(item) : item;
+	const hydrateItem = (items, item) => {
+		util.log(`HYDRATING: ${item}`);
+		return typeof item === 'string' ? items.get(item) : item;
+	}
 
 	self.getContainerWeight = items => self.getInventory()
 		.reduce((sum, item) => hydrateItem(items, item).getWeight() + sum, 0);

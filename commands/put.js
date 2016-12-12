@@ -68,7 +68,8 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       
       const holder = container.getHolder() || null;
       item.setHolder(holder);
-      player.removeItem(item);
+      
+      if (!holder || holder !== player.getName()) { player.removeItem(item); }
      
       item.setRoom(null);
       if (room) { room.removeItem(item); }
