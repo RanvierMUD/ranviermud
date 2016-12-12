@@ -51,7 +51,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
           const itemName      = item.getShortDesc();
           const containerName = container.getShortDesc();
 
-          util.log(`${playerName} picked up ${itemName}`);
+          util.log(`${playerName} picked up ${itemName} in ${player.getLocation()}`);
           player.say(`You pick up the ${itemName} and place it in your ${containerName}.`);
           player.emit('action', 1, items);
 
