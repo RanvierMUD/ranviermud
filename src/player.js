@@ -575,11 +575,8 @@ const Player = function PlayerConstructor(socket) {
   self.getContainersWithCapacity = (items, size) => self.inventory
       .filter(item => item.isContainer() && item.getRemainingSizeCapacity(items) >= size);
 
-  self.getContainerWithCapacity = (items, size) => {
-    const cont = self.getContainersWithCapacity(items, size)[0];
-    util.log(`CONTAINER FOUND: ${cont}`);
-    return cont;
-  }
+  self.getContainerWithCapacity = (items, size) => self.getContainersWithCapacity(items, size)[0];
+
 
 
 
