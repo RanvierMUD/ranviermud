@@ -29,14 +29,9 @@ exports.command = (rooms, items, players, npcs, Commands) =>
   (args, player) => {
     args = args.trim();
 
-    if (!args) {
-      return player.warn('Take which item from which container?');
-    }
+    if (!args) { return player.warn('Take which item from which container?'); }
 
-    if (player.isInCombat()) {
-      return player.warn('You cannot do that while fighting!');
-    }
-
+    if (player.isInCombat()) { return player.warn('You cannot do that while fighting!'); }
 
     const room   = rooms.getAt(player.getLocation());
     const toRoom = Broadcast.toRoom(room, player, null, players);
@@ -59,10 +54,12 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     takeFromContainer(item, container)
 
+    //TODO: ItemsUtil?
     function findContainer(containerTarget) {
       return CommandUtil.findItemInInventory(containerTarget, player, true) || CommandUtil.findItemInRoom(items, containerTarget, room, player, true);
     }
 
+    //TODO: ItemsUtil file?
     function findItemInContainer(itemTarget, container) {
       return container
         .getInventory()
@@ -76,14 +73,12 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       const canPickUp = [ tooLarge, tooHeavy ].every( predicate => !predicate );
       const canHold   = player.canHold();
 
-      if (canHold && !tooHeavy) {
-        return hold(item, container);
-      } else if (canPickUp) {
-        return pickUp(item);
-      } else { 
-        const message = ItemUtil.getFailureMessage(tooLarge, tooHeavy, item);
-        return player.warn(message);
-      }
+      if (canHold && !tooHeavy) { return hold(item, container); }  
+      if (canPickUp)            { return pickUp(item); }
+
+      const message = ItemUtil.getFailureMessage(tooLarge, tooHeavy, item);
+      return player.warn(message);
+
     }
 
     function hold(item, container) {

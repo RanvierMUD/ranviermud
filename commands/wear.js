@@ -37,7 +37,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function wearItem(item) {
-      const itemContainer = item.getContainer();
+      const itemContainer = items.get(item.getContainer());
       if (itemContainer) {
         itemContainer.removeItem(item);
       }

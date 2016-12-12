@@ -159,6 +159,7 @@ function tooLarge(player, item, items) {
   if (itemSize === Infinity) { return true; }
 
   const containerWithCapacity = player.getContainerWithCapacity(items, itemSize);
+  util.log("Container found? : ", containerWithCapacity);
   return !containerWithCapacity;
 }
 
