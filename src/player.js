@@ -463,12 +463,11 @@ const Player = function PlayerConstructor(socket) {
    * @return String slot it was equipped in (see remove commmand)
    */
   self.unequip = (item, items, players, isDropping) => {
-    const holdingLocation = self.canHold(item) ? self.findHoldingLocation() : null;
+    const holdingLocation = self.canHold(item) && !isDropping ? self.findHoldingLocation() : null;
     const itemName        = item.getShortDesc();
     const size            = item.getAttribute('size');
     const container       = self.getContainersWithCapacity(items, size)
                                 .filter(cont => cont !== item)[0];
-
 
     if (!isDropping) {
       const success = handleNormalUnequip(item, container, players, holdingLocation);

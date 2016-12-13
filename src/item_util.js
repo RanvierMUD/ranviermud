@@ -101,9 +101,9 @@ const removeDefaultPenaltes = (player, item, location) => {
   player.removeEffect(encumbered);
   player.removeEffect(confused);
 
-  player.combat.deleteAllMods(distracted);
-  player.combat.deleteAllMods(encumbered);
-  player.combat.deleteAllMods(slowed);
+  player.combat.removeAllMods(distracted);
+  player.combat.removeAllMods(encumbered);
+  player.combat.removeAllMods(slowed);
 };
 
 

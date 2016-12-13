@@ -154,7 +154,20 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, items, ca
     // Handle attacker fatigue
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost, items);
     if (slowAttacker) {
-      attacker.addEffect('fatigued', Effects.fatigued, { attacker });
+      attacker.combat.addSpeedMod({ 
+        name: 'fatigue',
+        modifier: speed => speed + 1000
+      });
+      attacker.combat.addDodgeMod({
+        name: 'fatigue',
+        modifier: dodge => Math.max(dodge - 3, 1)
+      });
+      attacker.combat.addToHitMod({
+        name: 'fatigue',
+        modifier: toHit => Math.max(toHit - 3, 1)
+      });
+    } else {
+      attacker.combat.removeAllMods('fatigue');
     }
 
     //FIXME:

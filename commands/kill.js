@@ -30,7 +30,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           return player.say('That ${npc.getShortDesc()} is busy fighting someone else, no fair!');
         }
 
-        npc.emit('combat', player, room, players, npcs, rooms, cleanup);
+        npc.emit('combat', player, room, players, npcs, rooms, items, cleanup);
 
         function cleanup(success) {
             // cleanup here...

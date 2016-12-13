@@ -106,7 +106,7 @@ const Effects = {
 		deactivate: () => {
 			const target = config.target;
 
-			target.deleteAllMods('knocked down')
+			target.removeAllMods('knocked down')
 		}
 	}),
 
@@ -179,7 +179,7 @@ const Effects = {
 				});
 			}
 		},
-		deactivate: config => config.attacker.combat.deleteAllMods('fatigued'),
+		deactivate: config => config.attacker.combat.removeAllMods('fatigued'),
 	},
 
 	// If player is stressed during combat...
@@ -202,7 +202,7 @@ const Effects = {
 				});
 			}
 		},
-		deactivate: config => config.attacker.combat.deleteAllMods('stressed'),
+		deactivate: config => config.attacker.combat.removeAllMods('stressed'),
 	},
 
 	// If player is insane during combat...
@@ -229,7 +229,7 @@ const Effects = {
 				});
 			}
 		},
-		deactivate: config => config.attacker.combat.deleteAllMods('insane'),
+		deactivate: config => config.attacker.combat.removeAllMods('insane'),
 	},
 
   /**

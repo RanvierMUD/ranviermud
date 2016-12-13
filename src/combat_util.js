@@ -74,7 +74,7 @@ function CombatHelper(entity) {
   this.removeDefenseMod = this.deleteMod('defenseMods');
   this.removeDodgeMod   = this.deleteMod('dodgeMods');
 
-  this.deleteAllMods = name => {
+  this.removeAllMods = name => {
     if (!name) { return false; } //TODO: Eventually, remove all mods?
     this.removeSpeedMod(name);
     this.removeDamageMod(name);
@@ -279,7 +279,7 @@ function CombatHelper(entity) {
 }
 
 function setEncumbrancePenalties(entity, encumbrance) {
-  entity.combat.deleteAllMods('encumbrance');
+  entity.combat.removeAllMods('encumbrance');
   const { multiplier, description } = encumbrance;
   
   entity.combat.addSpeedMod({
