@@ -313,13 +313,13 @@ const Commands = {
     }
 
     if (exits.length > 1) {
-      player.sayL10n(l10n, "AMBIG_EXIT");
+      player.warn(`Be more specific. Which way would you like to go?`);
       return true;
     }
 
     if (player.isInCombat()) {
-      player.sayL10n(l10n, 'MOVE_COMBAT');
-      return;
+      player.say(`You are in the middle of a fight! Try fleeing.`);
+      return true;
     }
 
     move(exits.pop(), player);
@@ -360,7 +360,6 @@ function move(exit, player) {
   const lockedDoor = Doors.isLocked(exit);
 
   if (closedDoor && lockedDoor) {
-    util.log("DOOR LOCKED, ATTEMPTING UNLOCK...");
     Doors.useKeyToUnlock(exit.direction, player, players, rooms);
     if (Doors.isLocked(exit)) { return; }
   }

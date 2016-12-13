@@ -22,9 +22,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function remove(item) {
-      if (!item && !isDead) {
-        return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-      }
+      if (!item && !isDead) { return player.warn(`You don't seem to have that...`); }
 
       util.log(player.getName() + ' removing ' + item.getShortDesc('en'));
 
