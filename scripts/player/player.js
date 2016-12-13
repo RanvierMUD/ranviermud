@@ -51,7 +51,6 @@ exports.listeners = {
   action: function(l10n) {
     let previousEncumbranceState = '';
     return function(cost, items) {
-
       // If there is a cost to the emitted action,
       // reduce it based on their athletics skill.
       // Then, subtract it from their energy.
