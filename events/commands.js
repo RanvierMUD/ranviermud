@@ -30,6 +30,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
 
         /* Parse order is:
          * look shortcut
+         * inventory shortcut
          * admin commands
          * common direction shortcuts
          * commands
@@ -111,8 +112,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
 
           if (command.toLowerCase() in directions) {
             const exit = directions[command.toLowerCase()];
-            Commands.room_exits(exit, player);
-            return true;
+            return Commands.room_exits(exit, player);
           }
         }
 
