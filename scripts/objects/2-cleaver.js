@@ -44,7 +44,7 @@ exports.listeners = {
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
 
       ItemUtil.removeDefaultPenaltes(player, this, location);
-      player.combat.deleteAllMods('cleaver' + this.getUuid());
+      player.combat.removeAllMods('cleaver' + this.getUuid());
     }
   },
 

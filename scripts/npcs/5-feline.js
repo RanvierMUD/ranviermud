@@ -227,7 +227,7 @@ exports.listeners = {
             });
           },
           deactivate: () => {
-            this.combat.deleteAllMods('ferocious feline');
+            this.combat.removeAllMods('ferocious feline');
           }
         })
       }
