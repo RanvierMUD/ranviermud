@@ -300,7 +300,7 @@ const Item = function ItemConstructor(config) {
   self.removeItem = item => {
 		const uid = item.getUuid();
     if (self.inventory.indexOf(uid) > -1) {
-      self.inventory = self.inventory.filter(id => uid !== id);
+      self.setInventory(self.getInventory().filter(id => uid !== id));
 			item.setContainer(null);
       return item;
     }

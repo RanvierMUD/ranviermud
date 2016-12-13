@@ -360,7 +360,7 @@ function move(exit, player) {
   const lockedDoor = Doors.isLocked(exit);
 
   if (closedDoor && lockedDoor) {
-    Doors.useKeyToUnlock(exit.direction, player, players, rooms);
+    Doors.useKeyToUnlock(exit.direction, player, players, rooms, items);
     if (Doors.isLocked(exit)) { return; }
   }
 
