@@ -34,10 +34,10 @@ exports.command = (rooms, items, players, npcs, Commands) =>
 
     const [ itemTarget, containerTarget ] = _.getTargets(args);
 
-    const item      = findItem(itemTarget);
+    const item = findItem(itemTarget);
+    if (!item) { return player.warn(`Could not find ${itemTarget}.`); }
+    
     const container = findContainer(containerTarget);
-
-    if (!item)      { return player.warn(`Could not find ${itemTarget}.`); }
     if (!container) { return player.warn(`Could not find ${containerTarget} that would fit ${item.getShortDesc()} in it.`); }
 
     putInContainer(item, container);
@@ -57,12 +57,14 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       return possibleContainersInInventory[0] || CommandUtil.findItemInRoom(items, containerTarget, room, player, true);
     }
 
+    // Main operation of putting an item into a container.
+
     function putInContainer(item, container) {
       container.addItem(item);
       
       if (item.isEquipped()) {
         item.setEquipped(false);
-        const isDropping = true; //TODO: Come up with better param name...
+        const isDropping = true;
         player.unequip(item, items, players, isDropping);
       }
       
