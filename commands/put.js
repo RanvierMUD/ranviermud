@@ -53,7 +53,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
         return player.getContainerWithCapacity(items, item.getAttribute('size'));
       }
       const possibleContainersInInventory = player.getContainersWithCapacity(items, item.getAttribute('size'))
-        .filter(item => item.hasKeyword(containerTarget));
+        .filter(cont => cont.hasKeyword(containerTarget) && cont.getUuid() != item.getContainer());
       return possibleContainersInInventory[0] || CommandUtil.findItemInRoom(items, containerTarget, room, player, true);
     }
 
