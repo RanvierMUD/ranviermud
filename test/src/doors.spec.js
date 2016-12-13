@@ -202,7 +202,7 @@ describe('Doors & Locks', () => {
         fakeRooms.getAt = () => fakeRoom;
         fakePlayer.getInventory = () => [ fakeKey ];
 
-        Doors.useKeyToUnlock('out', fakePlayer, fakePlayers, fakeRooms);
+        Doors.useKeyToUnlock('out', fakePlayer, fakePlayers, fakeRooms, items);
         expect(Doors.isLocked(lockedExit)).to.be.false;
 
       });
@@ -217,7 +217,7 @@ describe('Doors & Locks', () => {
         fakeRooms.getAt = () => fakeRoom;
         fakePlayer.getInventory = () => [ fakeKey ];
 
-        Doors.useKeyToLock('out', fakePlayer, fakePlayers, fakeRooms);
+        ToLock('out', fakePlayer, fakePlayers, fakeRooms, items);
         expect(Doors.isLocked(unlockedExit)).to.be.true;
       });
 

@@ -157,17 +157,19 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, items, ca
       attacker.addEffect('fatigued', Effects.fatigued, { attacker });
     }
 
-    // Handle attacker sanity effects...
-    const stressedLimit = 40;
-    const stressedAttacker = Type.isPlayer(attacker) && attacker.getAttribute('sanity') <= stressedLimit;
-    if (stressedAttacker) {
-      attacker.addEffect('stressed', Effects.stressed, { attacker });
+    //FIXME:
+    // // Handle attacker sanity effects...
+    // const stressedLimit = 40;
+    // const stressedAttacker = Type.isPlayer(attacker) && attacker.getAttribute('sanity') <= stressedLimit;
+    // if (stressedAttacker) {
+    //   attacker.addEffect('stressed', Effects.stressed, { attacker });
 
-      const insanityLimit = 20;
-      if (attacker.getAttribute('sanity') > insanityLimit) {
-        attacker.addEffect('insane', Effects.insane, { attacker });
-      }
-    }
+    //   const insanityLimit = 20;
+    //   if (attacker.getAttribute('sanity') > insanityLimit) {
+    //     attacker.addEffect('insane', Effects.insane, { attacker });
+    //   }
+    // }
+
 
     // Assign constants for this round...
     const attackerSpeed = attacker.combat.getAttackSpeed(this.isSecondAttack);

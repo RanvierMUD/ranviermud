@@ -6,7 +6,7 @@ const util = require('util');
 exports.listeners = {
   playerEnter: (l10n) => {
     let callback = success => { /* Do stuff here*/ };
-    return function (room, rooms, player, players, npc, npcs) {
+    return function (room, rooms, player, players, npc, npcs, items) {
       if (player && !player.isInCombat() && !npc.isInCombat()) {
         util.log(npc.getShortDesc('en') + ' is on the offensive.');
         initCombat(l10n, this, player, room, npcs, players, rooms, items, callback);

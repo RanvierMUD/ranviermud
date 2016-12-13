@@ -126,7 +126,7 @@ function openOrClose(verb, args, player, players, rooms, items) {
 
 }
 
-function useKey(verb, args, player, players, rooms) {
+function useKey(verb, args, player, players, rooms, items) {
   util.log('USING KEY....')
   const isLocking = verb === 'lock';
 
