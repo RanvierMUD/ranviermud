@@ -500,9 +500,14 @@ const Player = function PlayerConstructor(socket) {
     return ['wield', 'offhand', 'held', 'offhand held'].some(slot => equipped[slot] === item.getUuid());
   }
 
-  self.canHold = () => {
+  self.canHold = item => {
     const equipped     = self.getEquipped();
-    const holdingSpots = ['wield', 'offhand', 'held', 'offhand held'].filter(slot => !equipped[slot]);
+    const holdingSpots = ['wield', 'offhand', 'held', 'offhand held'];
+
+    // The spot is open if there is nothing in it or if the item they are trying to wield is already being held...
+    const openSpots = holdingSpots.filter(slot => !equipped[slot] || (item ? 
+        equipped[slot] === item.getUuid() : 
+        true));
     return holdingSpots.length > 2;
   };
 

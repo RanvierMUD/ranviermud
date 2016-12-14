@@ -33,7 +33,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 			const offhandDesc = getOffhandDesc(offhand, wielded);
 			const adjective   = getAdjective(offhand, wielded);
 
-			return player.say('You are already wielding ' + adjective + wieldedDesc + offhandDesc + '.');
+			return player.say(`You are already wielding ${adjective + wieldedDesc + offhandDesc}.`);
 		}
 
 
@@ -43,6 +43,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
 			if (!weapon || !weapon.getAttribute('damage')) {
 				return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+			}
+
+			const container = weapon.getContainer();
+			if (container) { 
+				items.get(container).removeItem(weapon); 
+				weapon.setContainer(null);	
 			}
 
 			util.log(player.getName() + ' ' + location + 's ' + weapon.getShortDesc('en'));
