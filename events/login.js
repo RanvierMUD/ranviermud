@@ -121,7 +121,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
           }
 
           if (pass.length < 6) {
-            say('Your password must be at least 6 characters.');
+            say('Your password is not long enough.');
             return next(socket, 'password', true, name);
           }
 

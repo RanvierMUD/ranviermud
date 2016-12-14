@@ -378,6 +378,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, items, ca
     } else {
       util.log("** Player death: ", player.getName());
       player.sayL10n(l10n, 'LOSE', target.getShortDesc(locale));
+      player.fleeFromCombat();
       player.emit('die');
 
       broadcastExceptPlayer(player.getName() +
