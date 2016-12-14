@@ -54,6 +54,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
       }
       const possibleContainersInInventory = player.getContainersWithCapacity(items, item.getAttribute('size'))
         .filter(cont => cont.hasKeyword(containerTarget) && cont.getUuid() != item.getContainer());
+      
       return possibleContainersInInventory[0] || CommandUtil.findItemInRoom(items, containerTarget, room, player, true);
     }
 

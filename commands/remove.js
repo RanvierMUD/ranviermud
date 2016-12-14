@@ -27,8 +27,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       util.log(player.getName() + ' removing ' + item.getShortDesc('en'));
 
       const location = player.unequip(item, items, players);
-      if (!location) { return player.say(`You are unable to unequip ${item.getShortDesc()}.`); }
       if (isDead)    { return; }
+      if (!location) { return player.say(`You are unable to unequip ${item.getShortDesc()}.`); }
       
       const room = rooms.getAt(player.getLocation());
       item.emit('remove', location, room, player, players);
