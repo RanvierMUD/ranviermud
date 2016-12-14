@@ -20,7 +20,7 @@ const Broadcast   = require('./broadcast').Broadcast;
 let dualWieldCancel = null;
 
 function _initCombat(l10n, target, player, room, npcs, players, rooms, items, callback) {
-  const locale = Type.isPlayer(player) ? 'en' : 'en';
+  const locale = 'en';
   player.setInCombat(target);
   target.setInCombat(player);
 
