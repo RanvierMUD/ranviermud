@@ -39,10 +39,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function drop(item) {
       let playerName = player.getName();
 
-      if (item.isEquipped()) { 
+      if (item.isEquipped() || isDead) { 
         const isDropping = true;
         const location = player.unequip(item, items, players, isDropping); 
-        item.emit('remove', location, room, player, players);
+        if (!isDead) { item.emit('remove', location, room, player, players); }
       }
 
       players.eachIf(
