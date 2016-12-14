@@ -385,10 +385,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, items, ca
         ' collapses to the ground, life fleeing their body before your eyes.');
 
       broadcastExceptPlayer('<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
-      broadcastToArea('The gurgles of a dying ' +
-        statusUtils.getGenderNoun(player) +
-        ' echo from nearby.'
-      );
+      broadcastToArea('The gurgles of a dying ' + statusUtils.getGenderNoun(player) + ' echo from nearby.');
+      
       players.eachIf(
         p => p.getLocation() === room.getLocation(),
         p => p.emit('sanityLoss', 'witnessing gruesome death first-hand', 50)
