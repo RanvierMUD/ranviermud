@@ -80,11 +80,11 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
               return repeat();
             }
             if (pass.length <= 5) {
-              say('Your password must be 6 characters or longer.');
+              say('Your password is not long enough.');
               return repeat();
             }
             if (pass.length > 30) {
-              say('Your password must be less than or equal to 30 characters.');
+              say('Your password is too long.');
               return repeat();
             }
 
