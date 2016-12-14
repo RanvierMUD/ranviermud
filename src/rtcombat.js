@@ -17,7 +17,7 @@ const Type        = require('./type').Type;
 const Effects     = require('./effects').Effects;
 const Broadcast   = require('./broadcast').Broadcast;
 
-let dualWieldCancel = null;
+let dualWieldCancel = null; //FIXME: Could this be a problem with multiple players in combat all at once?
 
 function _initCombat(l10n, target, player, room, npcs, players, rooms, items, callback) {
   const locale = 'en';
