@@ -120,11 +120,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
             return next(socket, 'password', true, name);
           }
 
-          if (pass.length < 6) {
-            say('Your password is not long enough.');
-            return next(socket, 'password', true, name);
-          }
-
           pass = crypto
             .createHash('md5')
             .update(pass.toString('').trim())
