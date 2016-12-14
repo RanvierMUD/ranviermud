@@ -166,6 +166,20 @@ exports.listeners = {
           }
         },
 
+        'vittles': {
+          priority: Dialogue.Priority.MEDIUM,
+          prerequisite: hasMet,
+          keywords: {
+            every: ['vittles'],
+            some: ['food', 'sustenance', 'meal', 'vittles'],
+            find: ['hungry', 'hunger', 'food', 'vittles']
+          },
+          dialogue: {
+            type: Dialogue.Types.SIMPLE,
+            say: `"Indeed," Baxter smirks. "Do you not see the rodents scurrying about this inn? Self-serve."`
+          }
+        },
+
         'small talk': {
           priority: Dialogue.Priority.HIGH,
           prerequisite: hasMet,
@@ -193,6 +207,7 @@ exports.listeners = {
     }
   },
 
+
   playerYell: l10n => {
     return function _respond(player, players, rooms, npcs, args) {
       const npcRoom = this.getLocation();
@@ -207,6 +222,8 @@ exports.listeners = {
         p => p !== player && p.getLocation() === npcRoom);
     }
   },
+
+
   hit: l10n => {
     return function(room, player, players, hitLocation, damage) {
       const toRoom = Broadcast.toRoom(room, this, player, players);
