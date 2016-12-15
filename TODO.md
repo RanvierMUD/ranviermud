@@ -34,21 +34,21 @@
 | /Users/seanohue/myProjects/ranviermud/src/player.js | 264 | IS there a better way to store this info?
 | /Users/seanohue/myProjects/ranviermud/src/player.js | 342 | Put in perception skill helper file
 | /Users/seanohue/myProjects/ranviermud/src/player.js | 353 | Consider using Random.roll instead.
-| /Users/seanohue/myProjects/ranviermud/src/player.js | 653 | refactor to use template strings.
-| /Users/seanohue/myProjects/ranviermud/src/player.js | 817 | Put this as a function in the combatUtils module.
+| /Users/seanohue/myProjects/ranviermud/src/player.js | 657 | refactor to use template strings.
+| /Users/seanohue/myProjects/ranviermud/src/player.js | 821 | Put this as a function in the combatUtils module.
 | /Users/seanohue/myProjects/ranviermud/src/player_manager.js | 1 | LOL REFACTOR
 | /Users/seanohue/myProjects/ranviermud/src/rooms.js | 3 | Refactor
 | /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
 | /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 93 | What if they swap weapons mid-fight?
 | /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 134 | Remove this when allowing for multicombat.
 | /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 135 | Use an array of targets for multicombat.
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 237 | What if there are no players involved in combat?
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 334 | Add to utils helper.js file
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 346 | Handle PvP or NvN combat ending differently.
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 386 | Extract this to combat utils.
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 387 | Make NPCs have fleeing behavior, too.
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 388 | Emit flee?
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 400 | Use Broadcast module or extract to the Broadcast file.
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 251 | What if there are no players involved in combat?
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 348 | Add to utils helper.js file
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 360 | Handle PvP or NvN combat ending differently.
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 398 | Extract this to combat utils.
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 399 | Make NPCs have fleeing behavior, too.
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 400 | Emit flee?
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 412 | Use Broadcast module or extract to the Broadcast file.
 | /Users/seanohue/myProjects/ranviermud/src/skills.js | 28 | Pull into own files.
 | /Users/seanohue/myProjects/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanohue/myProjects/ranviermud/src/status.js | 3 | Refactor.
@@ -56,16 +56,16 @@
 | /Users/seanohue/myProjects/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanohue/myProjects/ranviermud/scripts/npcs/3-defiler.js | 75 | Add condition where attacking the defiler's legs will slow it greatly.
 | /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
-| /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 202 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
-| /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 238 | Extract this to some kind of combat messaging helper?
+| /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 217 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
+| /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 255 | Extract this to some kind of combat messaging helper?
 | /Users/seanohue/myProjects/ranviermud/scripts/objects/1-shiv.js | 9 | Update to account for prereqs
 | /Users/seanohue/myProjects/ranviermud/scripts/objects/10-chain_whip.js | 68 | Refactor by extracting to functions...
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 16 | Use this for all sanity loss incidents.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 23 | Different messages for different relative amounts of sanity loss.
-| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 112 | Emit sanity loss event here if applicable.
-| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 129 | Extract all stuff for determining stat gain into level utils.
-| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 191 | Permadeath, add it.
+| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 111 | Emit sanity loss event here if applicable.
+| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 128 | Extract all stuff for determining stat gain into level utils.
+| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 190 | Permadeath, add it.
 | /Users/seanohue/myProjects/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanohue/myProjects/ranviermud/commands/drop.js | 11 | Does this handle dropping a container with items in it?
 | /Users/seanohue/myProjects/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)
@@ -87,8 +87,8 @@
 |:------|:------:|:------
 | /Users/seanohue/myProjects/ranviermud/src/combat_util.js | 90 | Can be done better with changes to npc class.
 | /Users/seanohue/myProjects/ranviermud/src/item_util.js | 268 | Deprecate the items below, or at least have them call above functions and then
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 160 | 
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 299 | In statusUtils: This could be a problem if the combat is between two NPCs or two players.
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 173 | 
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 313 | In statusUtils: This could be a problem if the combat is between two NPCs or two players.
 | /Users/seanohue/myProjects/ranviermud/commands/appraise.js | 35 | There has to be a better way...
 | /Users/seanohue/myProjects/ranviermud/commands/look.js | 77 | This does not really seem to be working.
 | /Users/seanohue/myProjects/ranviermud/commands/look.js | 78 | Consider making it a 'scout' command/skill.
