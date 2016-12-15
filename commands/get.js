@@ -2,84 +2,90 @@
 const l10nFile = __dirname + '/../l10n/commands/get.yml';
 const l10n = require('../src/l10n')(l10nFile);
 const CommandUtil = require('../src/command_util').CommandUtil;
+const ItemUtil    = require('../src/item_util').ItemUtil;
 const util = require('util');
 
-exports.command = (rooms, items, players, npcs, Commands) => {
-  return (args, player) => {
-
-    player.emit('action', 0);
+exports.command = (rooms, items, players, npcs, Commands) => 
+  (args, player) => {
 
     // No picking stuff up in combat
     if (player.isInCombat()) {
-      player.sayL10n(l10n, 'GET_COMBAT');
-      return;
+      return player.warn("You cannot do that while you're fighting.");
     }
 
-    const room = rooms.getAt(player.getLocation());
+    const room       = rooms.getAt(player.getLocation());
     const playerName = player.getName();
 
     if (args.toLowerCase() === "all") {
-      getAllItems(room);
-      return;
+      return getAllItems(room);
     }
 
     const itemFound = CommandUtil.findItemInRoom(items, args, room, player);
     if (!itemFound) {
-      player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-      return;
+      return player.warn(`You find no ${args} here.`);
     }
+    
     const item = items.get(itemFound);
-    tryToPickUp(item);
+    return tryToPickUp(item);
+
+    // -- Handy McHelpertons...
 
     function tryToPickUp(item) {
-      if (inventoryFull(item)) {
-        player.say('You are not able to carry that.');
-        return;
-      }
-      else {
-        pickUp(item);
+      const [ tooLarge, tooHeavy ] = ItemUtil.checkInventory(player, item, items);
+      const canPickUp = [ tooLarge, tooHeavy ].every( predicate => !predicate );
+      const canHold   = player.canHold();
+
+      if (canHold && !tooHeavy) { 
+        return hold(item);
+      } else if (canPickUp) {
+        return pickUp(item);
+      } else {
+        const message = ItemUtil.getFailureMessage(tooLarge, tooHeavy, item);
+        return player.warn(message);
       }
     }
 
     function pickUp(item) {
-      player.sayL10n(l10n, 'ITEM_PICKUP', item.getShortDesc('en'));
-      item.setRoom(null);
-      item.setInventory(playerName);
-      player.addItem(item);
-      room.removeItem(item.getUuid());
+      return ItemUtil.pickUp({ player, room, item, items }, 
+        container => {
+          const itemName      = item.getShortDesc();
+          const containerName = container.getShortDesc();
 
-      util.log(playerName + ' picked up ' + item.getShortDesc('en'));
+          util.log(`${playerName} picked up ${itemName} in ${player.getLocation()}`);
+          player.say(`You pick up the ${itemName} and place it in your ${containerName}.`);
+          player.emit('action', 1, items);
 
-      players.eachIf(
-        p => CommandUtil.inSameRoom(p, player),
-        p => p.sayL10n(l10n, 'OTHER_PICKUP', playerName, item.getShortDesc(p.getLocale()))
-      );
+          players.eachIf(
+            p => CommandUtil.inSameRoom(p, player),
+            p => p.say(`${playerName} picks up the ${itemName} and places it in their ${containerName}.`)
+          );
+        });
+    }
+
+    function hold(item) {
+
+      return ItemUtil.hold({ player, room, item }, 
+        location => {
+          const itemName = item.getShortDesc();
+          if (item.getAttribute('damage')) {
+            return Commands.player_commands.wield(item.getKeywords()[0], player);
+          }
+          item.emit('hold', location, room, player, players);
+
+          player.say(`You pick up the ${itemName} and hold it.`);
+          player.emit('action', 1, items);
+          
+          players.eachIf(
+            p => CommandUtil.inSameRoom(p, player),
+            p => p.say(`${playerName} picks up the ${itemName} and holds it.`)
+          );
+        });
     }
 
     function getAllItems(room) {
-      const items = room.getItems().map( id => items.get(id) );
-      items.forEach( item => tryToPickUp(item) );
-    }
-
-    //TODO: Change to calculate based on character's strength and pack size vs. item weight/size.
-    function inventoryFull(item) {
-      const inventory = player.getInventory();
-      return tooManyItems(inventory) || tooHeavy(inventory, item);
-    }
-
-    function tooManyItems(inventory) {
-      return inventory.length >= 20;
-    }
-
-    function tooHeavy(inventory, item) {
-      const itemWeight = item.getAttribute('weight');
-      if (itemWeight === Infinity) { return true; }
-      const carriedWeight  = inventory.reduce((sum, item) => item.getAttribute('weight') + sum , 0);
-
-      // TODO: Put carrying capacity method on player obj.
-      const maxCarryWeight = 10 + player.getAttribute('stamina') + player.getAttribute('level');
-      return (carriedWeight + itemWeight) > maxCarryWeight;
+      const itemsInRoom = room.getItems().map( id => items.get(id) );
+      if (!itemsInRoom.length) { return player.say(`Nothing in here to get.`); }
+      itemsInRoom.forEach( item => tryToPickUp(item) );
     }
 
   };
-};

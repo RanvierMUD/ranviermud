@@ -16,10 +16,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     util.log('%' + percentage + ' tnl.');
 
     const toLevelStatus = {
-      0: 'You have far to go before advancing again.',
-      25: 'You have a journey ahead before advancing.',
-      50: 'You feel that you have more to learn before advancing.',
-      75: 'You have learned much since you last advanced.',
+      0: 'You have recently advanced.',
+      10: 'You have a lengthy journey ahead before advancing.',
+      35: 'You feel that you have more to learn before advancing.',
+      66: 'You have learned much since you last advanced.',
       90: 'You are on the cusp of a breakthrough...'
     };
 

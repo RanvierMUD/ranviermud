@@ -57,8 +57,8 @@ exports.listeners = {
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
       const name = ItemUtil.getPenaltyDesc(this, location, 'encumbered');
 
-      player.combat.deleteAllMods(name);
-      player.combat.deleteAllMods('chain_whip ' + this.getUuid());
+      player.combat.removeAllMods(name);
+      player.combat.removeAllMods('chain_whip ' + this.getUuid());
     }
   },
 

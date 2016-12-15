@@ -84,6 +84,8 @@ describe('Item class', () => {
         "equipped": false,
         "container": null,
         "inventory": [],
+        "behaviors": null,
+        "holder": "",
         "keywords": [
           "potato",
           "spud"

@@ -10,8 +10,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const featToManifest = _.firstWord(args);
 
       if (featToManifest in player.getFeats()) {
-        player.say('You already have manifested ' + featToManifest + '.');
-        return;
+        return player.say('You already have manifested ' + featToManifest + '.');
       }
 
       if (featToManifest in Feats) {
@@ -21,7 +20,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           player.say('You manifest ' + feat.name.toLowerCase() + '.');
           util.log(player.getName() + ' manifests ' + feat.name);
 
-          return purchaseFeat(player, feat);
+          return purchaseFeat(player, feat, items);
         } else {
           return player.say('You are not yet powerful enough to manifest ' + featToManifest + '.');
         }
@@ -33,8 +32,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   }
 }
 
-function purchaseFeat(player, feat) {
-  if (!player.hasEnergy(5)) { return player.noEnergy(); }
+function purchaseFeat(player, feat, items) {
+  if (!player.hasEnergy(5, items)) { return player.noEnergy(); }
   const originalMutagens = player.getAttribute('mutagens');
   if (!originalMutagens || originalMutagens < feat.cost) {
     return player.say('You are not able to manifest that feat yet.');

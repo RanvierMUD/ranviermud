@@ -63,11 +63,11 @@ exports.Doors = {
  * helps keep things dry.
  */
 
-function openOrClose(verb, args, player, players, rooms) {
+function openOrClose(verb, args, player, players, rooms, items) {
 
   const isOpen = verb === 'open';
 
-  player.emit('action', 0);
+  player.emit('action', 1, items);
 
   if (player.isInCombat()) {
     return player.say('You are too busy for that right now.');
@@ -98,6 +98,10 @@ function openOrClose(verb, args, player, players, rooms) {
     return player.say('That door is already ' + pastTense +'.');
   }
 
+  if (isOpen && isLocked(exit)) {
+    return player.say('That door is locked.');
+  }
+
   const dest = rooms.getAt(exit.location);
 
   const srcTitle  = room.getTitle('en');
@@ -122,11 +126,11 @@ function openOrClose(verb, args, player, players, rooms) {
 
 }
 
-function useKey(verb, args, player, players, rooms) {
+function useKey(verb, args, player, players, rooms, items) {
   util.log('USING KEY....')
   const isLocking = verb === 'lock';
 
-  player.emit('action');
+  player.emit('action', 0, items);
 
   if (player.isInCombat()) {
     return player.say('You are too busy for that right now.');
@@ -135,7 +139,7 @@ function useKey(verb, args, player, players, rooms) {
   args = args.toLowerCase().split(' ');
 
   if (!args) {
-    return player.say("Which door do you want to " + verb + "?");
+    return player.say(`Which door do you want to ${verb}`);
   }
 
   const room  = rooms.getAt(player.getLocation());

@@ -44,20 +44,14 @@ function isNegot(buffer) {
   return buffer[buffer.length - 1] === 0x0a || buffer[buffer.length - 1] === 0x0d;
 }
 
-// Does what it says on the box
-function capitalize(str) {
-  return str[0].toUpperCase()
-       + str.toLowerCase().substr(1);
-}
 
-const gen_say = socket => string => socket.write(sty.parse(string));
+const gen_say   = socket => string => socket.write(sty.parse(string + '\n'));
+const gen_write = socket => string => socket.write(sty.parse(string));
 
 const EventUtil = {
   gen_next,
   gen_repeat,
   gen_say,
-
-  capitalize,
   isNegot,
   swallowGarbage,
 };

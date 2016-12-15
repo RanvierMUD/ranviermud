@@ -1,0 +1,22 @@
+- &old_wooden_trunk
+    vnum: 12
+    short_description:
+        en: "old wooden trunk"
+    room_description:
+        en: "an old oak trunk banded with copper"
+    keywords:
+        en: [ "old", "oak", "trunk", "chest" ]
+    description:
+        en: "A large oaken trunk, the lid covered with intricate bands of copper. It looks like someone or something has busted the lock open, as there are chunks of splintered wood where it would have been."
+    room: 5
+    attributes:
+        weight: 300
+        maxSizeCapacity: 44
+        maxWeightCapacity: 180
+        size: 48
+    inventory:
+      - 3
+      - 4
+      - 5
+      - 7
+    load_max: 1

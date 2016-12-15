@@ -24,8 +24,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }
     }
     const isNaked = !_.hasKeys(equipped);
+    
     if (isNaked) {
-      player.say("You are naked.");
+      player.warn("You are naked.");
     }
 
   };

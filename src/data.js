@@ -1,19 +1,20 @@
-var fs   = require('fs'),
+'use strict';
+
+const fs = require('fs'),
     path = require('path'),
     util = require('util'),
     l10nHelper = require('./l10n');
 
-var data_path          = __dirname + '/../data/';
-var behaviors_dir      = __dirname + '/../scripts/behaviors/';
-var behaviors_l10n_dir = __dirname + '/../l10n/scripts/behaviors/';
+const data_path          = __dirname + '/../data/';
+const behaviors_dir      = __dirname + '/../scripts/behaviors/';
+const behaviors_l10n_dir = __dirname + '/../l10n/scripts/behaviors/';
 
-var Data = {
+const Data = {
 	/**
 	 * load the MOTD for the intro screen
 	 * @return string
 	 */
-	loadMotd : function ()
-	{
+	loadMotd: () => {
 		var motd = fs.readFileSync(data_path + 'motd').toString('utf8');
 		return motd;
 	},
@@ -24,27 +25,22 @@ var Data = {
 	 * @param string name Player's name
 	 * @return object
 	 */
-	loadPlayer : function (name)
-	{
-		var playerpath = data_path + 'players/' + name + '.json';
+	loadPlayer: name => {
+		const playerpath = data_path + 'players/' + name + '.json';
 		if (!fs.existsSync(playerpath)) {
 			return false;
 		}
-
-		// This currently doesn't work seemingly due to a nodejs bug so... we'll do it the hard way
-		//return require(playerpath);
 
 		return JSON.parse(fs.readFileSync(playerpath).toString('utf8'));
 	},
 
   /**
-   * Load a player's pfile.
-   * This does not instantiate a player, it simply returns data
-   * @param string name Player's name
+   * Load a player's account.
+   * This does not instantiate an account, it simply returns data
+   * @param string name account's name
    * @return object
    */
-  loadAccount : function (name)
-  {
+  loadAccount: name => {
     var accountPath = data_path + 'accounts/' + name + '.json';
     if (!fs.existsSync(accountPath)) {
       return false;
@@ -59,17 +55,22 @@ var Data = {
 	 * @param function callback
 	 * @return boolean
 	 */
-	savePlayer: function (player, callback)
-	{
+	savePlayer: (player, callback) => {
 		fs.writeFileSync(data_path + 'players/' + player.getName() + '.json', player.stringify(), 'utf8');
 		if (callback) { callback(); }
 	},
 
-  saveAccount: function (account, callback)
-  {
+  /**
+	 * Save a player account
+	 * @param Player player
+	 * @param function callback
+	 * @return boolean
+	 */
+  saveAccount: (account, callback) => {
     fs.writeFileSync(data_path + 'accounts/' + account.getUsername() + '.json', account.stringify(), 'utf8');
     if (callback) { callback(); }
   },
+
 
 	/**
 	 * Load and set listeners onto an object
@@ -78,20 +79,20 @@ var Data = {
 	 * @param object target
 	 * @return object The applied target
 	 */
-	loadListeners: function (config, l10n_dir, scripts_dir, target)
-	{
-		// Check to see if the target has scripts, if so load them
-		if ('script' in config) {
-			if (config.script){
-				var listeners = require(scripts_dir + config.script).listeners;
-				// the localization file for the script will be l10n/scripts/<script name>.yml
-				// example: l10n/scripts/1.js.yml
-				var l10nFile = l10n_dir + config.script + '.yml';
-				var l10n = l10nHelper(l10nFile);
-				util.log('Loaded script file ' + l10nFile);
-				for (var listener in listeners) {
-					target.on(listener, listeners[listener](l10n));
-				}
+	loadListeners: (config, l10n_dir, scripts_dir, target) => {
+
+    // Check to see if the target has scripts, if so load them
+		if (config.script) {
+			const listeners = require(scripts_dir + config.script).listeners;
+
+			// the localization file for the script will be l10n/scripts/<script name>.yml
+			// example: l10n/scripts/1.js.yml
+			const l10nFile = l10n_dir + config.script + '.yml';
+			const l10n = l10nHelper(l10nFile);
+			util.log('Loaded script file ' + l10nFile);
+
+			for (let listener in listeners) {
+				target.on(listener, listeners[listener](l10n));
 			}
 		}
 
@@ -105,24 +106,23 @@ var Data = {
 	 * @param object target
 	 * @return object The applied target
 	 */
-	loadBehaviors: function (config, subdir, target)
-	{
-		if ('behaviors' in config) {
-			var behaviors = config.behaviors.split(',');
-			// reverse to give left-to-right weight in the array
-			behaviors.reverse().forEach(function (behavior) {
-				var l10nFile = behaviors_l10n_dir + subdir + behavior + '.yml';
-				var l10n = l10nHelper(l10nFile);
-				var listeners = require(behaviors_dir + subdir + behavior + '.js').listeners;
-				for (var listener in listeners) {
-					// For now do not allow conflicting listeners in behaviors
-          var handler = listeners[listener](l10n);
-					target.removeAllListeners(listener);
+	loadBehaviors: (config, subdir, target) => {
+		if (config.behaviors) {
+			let behaviors = config.behaviors.split(',');
+
+      // reverse to give left-to-right weight in the array
+			behaviors.reverse().forEach( behavior => {
+				const l10nFile = behaviors_l10n_dir + subdir + behavior + '.yml';
+				const l10n = l10nHelper(l10nFile);
+				const listeners = require(behaviors_dir + subdir + behavior + '.js').listeners;
+
+        // Warning: Multiple listeners can be added for the same event. All will be triggered.
+        for (let listener in listeners) {
+          let handler = listeners[listener](l10n);
 					target.on(listener, handler);
 				}
 			});
 		}
-
 
 		return target;
 	},

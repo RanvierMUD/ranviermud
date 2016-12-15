@@ -10,7 +10,8 @@ const fs    = require('fs'),
 const objects_dir =         __dirname + '/../entities/objects/';
 const l10n_dir    =         __dirname + '/../l10n/scripts/objects/';
 const objects_scripts_dir = __dirname + '/../scripts/objects/';
-const _ = require('./helpers');
+const ItemUtil = require('./item_util').ItemUtil;
+const _ 			 = require('./helpers');
 
 const Items = function ItemsManager() {
 	const self = this;
@@ -26,14 +27,15 @@ const Items = function ItemsManager() {
     const debug = message => { if (verbose) util.debug(message); };
 
 		log("\tExamining object directory - " + objects_dir);
-		const objects = fs.readdir(objects_dir, (err, files) =>
-		{
-			// Load any object files
+    fs.readdir(objects_dir, (err, files) => {
+
+      // Load any object files
 			for (let j in files) {
 				const object_file = objects_dir + files[j];
+
         //TODO: Extract to Data helper method.
-				if (!fs.statSync(object_file).isFile()) continue;
-				if (!object_file.match(/yml$/)) continue;
+				if (!fs.statSync(object_file).isFile()) { continue; }
+				if (!object_file.match(/yml$/)) { continue; }
 
 				// parse the object files
         let objectDefinitions = [];
@@ -50,7 +52,7 @@ const Items = function ItemsManager() {
 				objectDefinitions.forEach(object => {
 					const validate = ['keywords', 'short_description', 'vnum'];
 
-					for (var v in validate) {
+					for (let v in validate) {
 						if (!(validate[v] in object)) {
               throw new ReferenceError('Error loading object in file ' + object + ' - no ' + validate[v] + ' specified')
 						}
@@ -65,15 +67,46 @@ const Items = function ItemsManager() {
 
 					const newObject = new Item(object);
 					newObject.setUuid(uuid.v4());
+
 					log("\t\tLoaded item [uuid:" + newObject.getUuid() + ', vnum:' + newObject.vnum + ']');
 					self.addItem(newObject);
 				});
+
 			}
+
+      log("Loading inventories into containers...");
+      self.each(item => {
+        if (item.inventory) {
+          log("Loading inventory [container: " + item.getUuid() + " vnum: " + item.getVnum() + "]");
+          self.spawnContainerInventory(item);
+        }
+      });
 
 			if (callback) { callback(); }
 		});
 
 	};
+
+  //TODO: Account for persisted items eventually (uuids rather than vnums)
+  self.spawnContainerInventory = (container, config) => {
+    const containerVnum = container.getVnum();
+
+    const hydrateContentsByVnum = vnum => {
+      const items = self
+        .getByVnum(vnum)
+        .filter(item => containerVnum === item.getContainer());
+      items.forEach(item => item.setContainer(container.getUuid()));
+      return items.map(item => item.getUuid());
+    }
+
+    const inv = container.getInventory();
+    const containerItems = inv && inv.length ?
+      inv.map(hydrateContentsByVnum) :
+      [];
+
+    const containerInventory = _.flatten(containerItems);
+    container.setInventory(containerInventory);
+  }
 
 	/**
 	 * Add an item and generate a uuid if necessary
@@ -81,11 +114,13 @@ const Items = function ItemsManager() {
 	 */
 	self.addItem = item => {
 		if (!item.getUuid()) {
-			item.setUuid(uuid.v4());
+			item.setUuid(item.uuid || uuid.v4());
 		}
+		util.log(`Adding new item ${item.getShortDesc()} as uuid ${item.getUuid()}`);
 		self.objects[item.getUuid()] = item;
 		self.load_count[item.vnum] = self.load_count[item.vnum] ? self.load_count[item.vnum] + 1 : 1;
 	};
+
 
 	/**
 	 * Gets all instance of an object by vnum
@@ -96,7 +131,7 @@ const Items = function ItemsManager() {
 	self.getByVnum = vnum => self.filter(obj => obj.getVnum() === vnum);
 
 	/**
-	 * retreive an instance of an object by uuid
+	 * retrieve an instance of an object by uuid
 	 * @param string uid
 	 * @return Item
 	 */
@@ -143,19 +178,22 @@ const Item = function ItemConstructor(config) {
 	self.init = config => {
 		self.short_description = config.short_description || '';
     self.room_description  = config.room_description  || '';
-    self.keywords          = config.keywords    || [];
-		self.description       = config.description || '';
-		self.inventory         = config.inventory   || null;
-		self.room              = config.room        || null;
-		self.npc_held          = config.npc_held    || false;
-		self.equipped          = config.equipped    || false;
-		self.container         = config.container   || null;
-		self.uuid              = config.uuid        || null;
-		self.vnum              = config.vnum;       // Required
-		self.script            = config.script      || null;
+    self.keywords          = config.keywords      || []; // Required
+		self.description       = config.description   || '';
+    //TODO: Every other class uses .location for the room vnum, right? use .location and .getLocation
+		self.room              = config.room          || null;
+		self.npc_held          = config.npc_held      || false;
+		self.equipped          = config.equipped      || false;
+		self.container         = config.container     || null;
+		self.uuid              = config.uuid          || null;
+		self.vnum              = config.vnum;         // Required
+		self.script            = config.script        || null;
 		self.attributes        = config.attributes    || {};
     self.prerequisites     = config.prerequisites || {};
+    self.holder            = config.holder        || '';
+		self.behaviors         = config.behaviors     || null;
 
+    self.inventory = config.inventory || (self.isContainer() ? [] : null);
 
     if (self !== null) {
 		  Data.loadListeners(config, l10n_dir, objects_scripts_dir, Data.loadBehaviors(config, 'objects/', self));
@@ -168,6 +206,7 @@ const Item = function ItemConstructor(config) {
 	self.getVnum      = ()   => self.vnum;
 	self.getInventory = ()   => self.inventory;
 	self.isNpcHeld    = ()   => self.npc_held;
+  self.getHolder    = ()   => self.holder; // Name/uid of player/npc holding it.
 	self.isEquipped   = ()   => self.equipped;
 	self.getRoom      = ()   => self.room;
 	self.getContainer = ()   => self.container;
@@ -180,13 +219,16 @@ const Item = function ItemConstructor(config) {
 
 	self.setUuid      = uid   => self.uuid      = uid;
 	self.setRoom      = room  => self.room      = room;
-	self.setInventory = id    => self.inventory = id; //TODO: Maybe inventory should be array of ids?
+	self.setInventory = ids   => self.inventory = ids;
 	self.setNpcHeld   = held  => self.npc_held  = held;
+  self.setHolder    = id    => self.holder    = id;
 	self.setContainer = uid   => self.container = uid;
 	self.setEquipped  = equip => self.equipped  = !!equip;
 
 	self.setAttribute = (attr, val) => self.attributes[attr] = val;
 	/**#@-*/
+
+  self.isContainer = () => (self.getAttribute('maxSizeCapacity') && self.getAttribute('maxWeightCapacity'));
 
 	/**
 	 * Get the description, localized if possible
@@ -250,6 +292,44 @@ const Item = function ItemConstructor(config) {
     return missedPrereqs;
   }
 
+  self.addItem = item => {
+    item.setContainer(self.getUuid());
+    return self.inventory.push(item.getUuid());
+  }
+
+  self.removeItem = item => {
+		const uid = item.getUuid();
+    if (self.inventory.indexOf(uid) > -1) {
+      self.setInventory(self.getInventory().filter(id => uid !== id));
+			item.setContainer(null);
+      return item;
+    }
+    return null;
+  }
+
+  self.findInInventory = predicate => self.inventory.find(predicate);
+
+	/**
+	 * Get weight of all items inside of a container...
+	 * And the container.
+	 * @return Number weight 
+	 */
+
+	self.getWeight = items => self.isContainer() ? 
+				self.getContainerWeight(items) + self.getAttribute('weight') :
+				self.getAttribute('weight');
+
+	self.getContainerWeight = items => self.getInventory()
+		.reduce((sum, item) => items.get(item).getWeight() + sum, 0);
+
+	self.getRemainingSizeCapacity = items => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents(items);
+	
+	self.getSizeOfContents = items => self
+		.getInventory()
+		.reduce((sum, uid) => {
+			const item = items.get(uid);
+			return item.getAttribute('size') + sum;
+		}, 0);
 
 	/**
 	 * Used when persisting a copy of an item to a JSON
@@ -268,7 +348,9 @@ const Item = function ItemConstructor(config) {
 			script:            self.script,
 			equipped:          self.equipped,
 			attributes:        self.attributes,
-      prerequisites:     self.prerequisites
+      prerequisites:     self.prerequisites,
+			holder:            self.holder,
+			behaviors:         self.behaviors
 		});
 
 	self.init(config);

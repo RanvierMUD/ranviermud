@@ -1,6 +1,5 @@
 'use strict';
-const CommandUtil = require('../src/command_util')
-  .CommandUtil;
+const CommandUtil = require('../src/command_util').CommandUtil;
 const Random = require('../src/random').Random;
 const move = require('../src/commands').Commands.move;
 const l10nFile = __dirname + '/../l10n/commands/flee.yml';
@@ -10,7 +9,7 @@ const l10n = require('../src/l10n')(l10nFile);
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
 
-    if (!player.hasEnergy(2)) { return player.noEnergy(); }
+    if (!player.hasEnergy(2, items)) { return player.noEnergy(); }
 
     if (!player.isInCombat()) {
       player.sayL10n(l10n, "NO_FIGHT");

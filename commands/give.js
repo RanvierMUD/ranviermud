@@ -1,83 +1,116 @@
 'use strict';
-const l10nFile = __dirname + '/../l10n/commands/give.yml';
-const l10n = require('../src/l10n')(l10nFile);
+
 const CommandUtil = require('../src/command_util').CommandUtil;
-const util = require('util');
-const _ = require('../src/helpers');
+const Broadcast   = require('../src/broadcast').Broadcast;
+const _           = require('../src/helpers');
+const util        = require('util');
 
-exports.command = (rooms, items, players, npcs, Commands) => {
-  return (args, player) => {
 
-    player.emit('action', 0);
+exports.command = (rooms, items, players, npcs, Commands) => 
+  (args, player) => {
 
-    // syntax 'give [item] [player]'
+    // syntax 'give [item] [player]' //TODO: Make more flexible
     if (player.isInCombat()) {
-      return player.sayL10n(l10n, 'GIVE_COMBAT');
+      return player.say(`Now is not the time to be handing out presents...`);
     }
 
-    args = _.splitArgs(args);
+    args = _.removePreposition(_.splitArgs(args));
 
     if (!args.length) {
-      player.sayL10n(l10n, 'NO_ITEM_OR_TARGET');
-      return;
+      return player.say(`You need to specify what you're trying to give and to whom.`);
     }
 
-    let toIndex = args.indexOf('to');
-    if (toIndex > -1) { args.splice(to, 1); }
-
     const item = CommandUtil.findItemInInventory(args[0], player, true);
-    const room = rooms.getAt(player.getLocation());
+
+    if (!item) {
+      return player.say(`You can not find ${args[0]} in your inventory.`);
+    }
+
     let targetPlayer = args[1];
     let targetFound  = false;
 
-    if (!item) {
-      player.sayL10n(l10n, 'ITEM_NOT_FOUND', args[0]);
-      return;
+    if (!targetPlayer) {
+      return player.say(`You need to specify to whom you want to give ${item.getShortDesc()}.`);
     }
 
-    if (!targetPlayer) {
-      player.sayL10n(l10n, 'NO_ITEM_OR_TARGET');
-      return;
+    const isEquipped = item.isEquipped()
+    const isHolding  = player.isHolding(item);
+
+    const needsToHandOff = isEquipped && isHolding; 
+    if (isEquipped && !isHolding) {
+      return player.say(`You cannot give ${item.getShortDesc()} away, you are using it.`);
     }
 
     targetPlayer = targetPlayer.toLowerCase();
 
     players.eachIf(
-      CommandUtil.inSameRoom.bind(null, player),
-      checkForTarget);
+      target => CommandUtil.inSameRoom(player, target),
+      target => checkForTarget(target));
 
     function checkForTarget(target) {
         if (target.getName().toLowerCase() === targetPlayer) {
-          giveItemToPlayer(player, target, item);
+          giveItemToPlayer(player, target, players, item, items, rooms, needsToHandOff);
           targetFound = true;
         }
       }
 
     if (!targetFound) {
-      player.sayL10n(l10n, "PLAYER_NOT_FOUND", targetPlayer);
-      return;
+      return player.say(`It seems that ${_.capitalize(targetPlayer)} is not in this room.`);
     }
-
-    function giveItemToPlayer(playerGiving, playerReceiving, itemGiven) {
-      try {
-        util.log(playerReceiving.getName() + ' gets ', itemGiven.getShortDesc('en') + ' from ' + playerGiving.getName());
-        playerGiving.sayL10n(l10n, 'ITEM_GIVEN', itemGiven.getShortDesc(
-          playerGiving.getLocale()), playerReceiving.getName());
-        playerReceiving.sayL10n(l10n, 'ITEM_RECEIVED', itemGiven.getShortDesc(
-          playerReceiving.getLocale()), playerGiving.getName());
-      } catch (e) {
-        util.log("Error when giving an item ", e);
-        util.log("playerReceiving: ", playerReceiving.getName());
-        util.log("playerGiving: ", playerGiving.getName());
-        util.log("Item: ", item);
-
-        playerGiving.sayL10n(l10n, 'GENERIC_ITEM_GIVEN', playerReceiving.getName());
-        playerReceiving.sayL10n(l10n, 'GENERIC_ITEM_RECEIVED', playerGiving
-          .getName());
-      }
-      playerGiving.removeItem(itemGiven);
-      itemGiven.setInventory(playerReceiving.getName());
-      playerReceiving.addItem(itemGiven);
-    }
-  };
+    
 };
+
+function giveItemToPlayer(player, target, players, item, items, rooms, needsToHandOff) {
+
+  const room   = rooms.getAt(player.getLocation());
+  const toRoom = Broadcast.toRoom(room, player, target, players);
+  
+  const itemName   = item.getShortDesc();
+  const targetName = target.getName();
+  const playerName = player.getName();
+
+  const giveMessages = {
+    firstPartyMessage: `You give the ${itemName} to ${targetName}.`,
+    secondPartyMessage: `${playerName} gives you the ${itemName}.`,
+    thirdPartyMessage: `${playerName} gives the ${itemName} to ${targetName}.`
+  };
+
+  const failedGiveMessages = {
+    firstPartyMessage: `You try to give the ${itemName} to ${targetName} but they have nowhere to put it.`,
+    secondPartyMessage: `${playerName} tries to give you the ${itemName}, but your hands are full and you've nowhere to put it.`,
+    thirdPartyMessage: `${playerName} tries to give ${targetName} the ${itemName}, but ${targetName} reluctantly turns them down.`
+  };
+
+  util.log(`Attempting: ${giveMessages.thirdPartyMessage}`);
+
+  // Should be able to give if they have an open hand (target.canHold) or container.
+  const size = item.getAttribute('size');
+  const targetCanHold   = target.canHold();
+  const targetContainer = target.getContainerWithCapacity(items, size);
+
+  if (!targetCanHold && !targetContainer) {
+    return toRoom(failedGiveMessages);
+  }
+
+  const container = items.get(item.getContainer())
+  if (container)      { container.removeItem(item); }
+  if (needsToHandOff) { player.unequip(item, items, players, true); }
+  
+  if (targetCanHold) {
+    target.equip(target.findHoldingLocation(), item);
+  } else if (targetContainer) {
+    targetContainer.addItem(item);
+    target.say(`You place ${itemName} into your ${targetContainer.getShortDesc()}.`);
+  } 
+
+  player.removeItem(item);
+  item.setHolder(target.getName());
+
+  target.addItem(item);
+
+  player.emit('action', 1, items);
+  target.emit('action', 1, items);
+
+  toRoom(giveMessages);
+
+}

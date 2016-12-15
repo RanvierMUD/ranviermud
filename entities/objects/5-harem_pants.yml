@@ -8,12 +8,15 @@
         en: [ "harem pants", "pants", "harem" ]
     description:
         en: "A pair of royal crimson harem pants with an elastic waist. The material appears smooth, with a subtle sheen."
-    room: 7
     behaviors: "wearable"
     attributes:
         defense: 1
         wearLocation: 'legs'
         weight: 2
+        size: 3
+        maxWeightCapacity: 8
+        maxSizeCapacity: 8
     prerequisites:
         quickness: 2
     load_max: 1
+    container: 12

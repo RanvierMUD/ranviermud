@@ -1,23 +1,23 @@
 'use strict';
-const util = require('util'),
-  ansi = require('sty').parse,
-  fs = require('fs'),
+const util    = require('util'),
+  ansi        = require('sty').parse,
+  fs          = require('fs'),
   CommandUtil = require('./command_util').CommandUtil,
-  l10nHelper = require('./l10n');
+  l10nHelper  = require('./l10n');
 
 const Doors = require('./doors').Doors;
-const _ = require('./helpers');
+const _     = require('./helpers');
 
 // "Globals" to be specified later during config.
-let rooms = null;
+let rooms   = null;
 let players = null;
-let items = null;
-let npcs = null;
+let items   = null;
+let npcs    = null;
 
 /**
  * Localization
  */
-let l10n = null;
+let l10n       = null;
 const l10nFile = __dirname + '/../l10n/commands.yml';
 
 // shortcut for l10n.translate
@@ -73,15 +73,19 @@ const Commands = {
       (player, args) => {
         const attrs = player.getAttributes();
         player.say("<red>ADMIN: Debug Character</red>");
+
         player.warn('ATTRIBUTES: ');
         for (let attr in attrs) {
           player.say(attr + ': ' + attrs[attr]);
         }
+
         player.warn('EFFECTS: ');
         const effects = player.getEffects();
         for (let eff in effects) {
           player.say(eff + ': ' + effects[eff]);
         }
+
+        player.warn('MODIFIERS: ');
         ['speedMods', 'dodgeMods', 'damageMods', 'toHitMods'].forEach(mod => {
           if (!Object.keys(mod).length) { return; };
           player.warn(mod);
@@ -91,6 +95,83 @@ const Commands = {
         });
       },
 
+      debugInv: (rooms, items, players, npcs, Commands) =>
+        (player, args) => {
+          const inv = player.getInventory();
+          player.warn("ITEMS:\n");
+          for (let i in inv) {
+            const item = inv[i];
+            player.say(item.getShortDesc());
+
+            const attrs = item.getAttributes();
+            for (let attr in attrs) {
+              player.say(attr + ': ' + attrs[attr]);
+            }
+
+            const prereqs = item.getPrerequisites();
+            for (let prereq in prereqs) {
+              player.say(prereq + ': ' + prereqs[prereq]);
+            }
+
+            const isContainer = item.isContainer();
+            const actualWeight = item.getWeight(items);
+            player.say(`Is container: ${isContainer}`);
+            player.say(`Total weight: ${actualWeight}`);
+            if (isContainer) {
+              const itemContents   = item.getInventory();
+              const spaceLeft      = item.getRemainingSizeCapacity(items);
+              const contentsWeight = item.getContainerWeight(items);
+             
+              player.say(`Contents: ${itemContents}`);
+              player.say(`Space left: ${spaceLeft}`);
+              player.say(`Contents weight: ${contentsWeight}`);
+              player.say(`
+              ===========`);
+            }
+
+            player.say(item.isEquipped() ? 'Equipped' : 'In inventory');
+            player.say(`========`);
+            player.say(`Behaviors: ${item.behaviors}, script: ${item.script}`);
+            const events = item.eventNames();
+            player.say(`Events: ${events.join(', ')}`);
+            player.warn('========\n');
+            console.log('events for ', item.getShortDesc());
+            console.log(events);
+          }
+
+        },
+
+    debugItems: (rooms, items, players, npcs, Commands) =>
+      (player, args) => {
+        const allItems = items.objects;
+        player.warn(`UUIDs: ${Object.keys(allItems)}`);
+        player.warn(`========`);
+        player.warn("GLOBAL ITEMS:\n");
+        for (let uid in allItems) {
+          const item = allItems[uid];
+
+          player.say(item.getShortDesc());
+          player.say('\n');
+          player.say('vnum: ' + item.getVnum());
+          player.say('uuid: ' + item.getUuid());
+          player.say('location: ' + item.getRoom());
+          player.say('\n')
+          player.say(item.isEquipped() ? 'Equipped' : 'Not equipped');
+
+          const container = item.getContainer();
+          player.say(container ? 'Container: ' + container : 'No container.');
+
+          const inventory = item.getInventory();
+          player.say(inventory ? 'Inventory: ' : 'No inventory.');
+          if (inventory) {
+            for (let i in inventory) {
+              player.say(`${i}: ${inventory[i].getShortDesc()} ${i.getUuid()}`);
+            }
+          }
+          player.warn('========\n');
+        }
+
+      },
 
     setAttribute: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
@@ -173,14 +254,15 @@ const Commands = {
     // Load external commands
     fs.readdir(commands_dir,
       (err, files) => {
-        for (const j in files) {
-          const command_file = commands_dir + files[j];
-          if (!fs.statSync(command_file).isFile()) { continue; }
-          if (!command_file.match(/js$/)) { continue; }
+        for (const name in files) {
+          const filename = files[name];
+          const commandFile = commands_dir + filename;
+          if (!fs.statSync(commandFile).isFile()) { continue; }
+          if (!commandFile.match(/js$/)) { continue; }
 
-          const command_name = files[j].split('.')[0];
+          const commandName = filename.split('.')[0];
 
-          Commands.player_commands[command_name] = require(command_file)
+          Commands.player_commands[commandName] = require(commandFile)
             .command(rooms, items, players, npcs, Commands);
         }
       });
@@ -194,7 +276,7 @@ const Commands = {
             Commands.admin_commands[command] = commandFunc;
           }
         } catch (e) {
-          console.log('admin_command config -> ', e);
+          console.log('Admin_command config error -> ', e);
         }
       }
   },
@@ -231,13 +313,13 @@ const Commands = {
     }
 
     if (exits.length > 1) {
-      player.sayL10n(l10n, "AMBIG_EXIT");
+      player.warn(`Be more specific. Which way would you like to go?`);
       return true;
     }
 
     if (player.isInCombat()) {
-      player.sayL10n(l10n, 'MOVE_COMBAT');
-      return;
+      player.say(`You are in the middle of a fight! Try fleeing.`);
+      return true;
     }
 
     move(exits.pop(), player);
@@ -278,8 +360,7 @@ function move(exit, player) {
   const lockedDoor = Doors.isLocked(exit);
 
   if (closedDoor && lockedDoor) {
-    util.log("DOOR LOCKED, ATTEMPTING UNLOCK...");
-    Doors.useKeyToUnlock(exit.direction, player, players, rooms);
+    Doors.useKeyToUnlock(exit.direction, player, players, rooms, items);
     if (Doors.isLocked(exit)) { return; }
   }
 
@@ -290,7 +371,7 @@ function move(exit, player) {
   }
 
   const moveCost = exit.cost ? exit.cost : 1;
-  if (!player.hasEnergy(moveCost)) { return player.noEnergy(); }
+  if (!player.hasEnergy(moveCost, items)) { return player.noEnergy(); }
 
   if (closedDoor) {
     Commands.player_commands.open(exit.direction, player);
@@ -316,7 +397,6 @@ function move(exit, player) {
     });
 
 
-
   player.setLocation(exit.location);
 
   // Add room to list of explored rooms
@@ -331,7 +411,7 @@ function move(exit, player) {
       .forEach(id => {
         const npc = npcs.get(id);
         if (!npc) { return; }
-        npc.emit('playerEnter', room, rooms, player, players, npc, npcs);
+        npc.emit('playerEnter', room, rooms, player, players, npc, npcs, items);
       });
 
   room.emit('playerEnter', player, players, rooms);

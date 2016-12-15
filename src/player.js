@@ -14,6 +14,8 @@ const npcs_scripts_dir = __dirname + '/../scripts/player/';
 const l10n_dir         = __dirname + '/../l10n/scripts/player/';
 const statusUtil       = require('./status');
 const CombatUtil       = require('./combat_util').CombatUtil;
+const CommandUtil      = require('./command_util').CommandUtil;
+const ItemUtil         = require('./item_util').ItemUtil;
 
 const Player = function PlayerConstructor(socket) {
   const self = this;
@@ -111,9 +113,9 @@ const Player = function PlayerConstructor(socket) {
         rooms.getAt(self.getLocation()) : null;
 
 
-  self.hasEnergy = cost =>
+  self.hasEnergy = (cost, items) =>
     (self.getAttribute('energy') >= cost) ?
-      self.emit('action', cost) || true :
+      self.emit('action', cost, items) || true :
       false;
 
   self.noEnergy = () => self.warn('You need to rest first.');
@@ -152,10 +154,9 @@ const Player = function PlayerConstructor(socket) {
 
   self.setGender   = gender => self.gender = gender.toUpperCase();
 
-  self.addItem     = item   => self.inventory.push(item);
-  self.removeItem  = item   =>
-    self.inventory = self.inventory.filter(i => item !== i);
-  self.setInventory     = inv         => self.inventory = inv;
+  self.addItem      = item   => self.inventory.push(item);
+  self.removeItem   = item   => self.inventory = self.inventory.filter(i => item !== i);
+  self.setInventory = inv    => self.inventory = inv;
 
   self.setAttribute     = (attr, val) => self.attributes[attr]  = val;
   self.setPreference    = (pref, val) => self.preferences[pref] = val;
@@ -164,11 +165,9 @@ const Player = function PlayerConstructor(socket) {
   self.fleeFromCombat   = ()          => self.inCombat = [];
   self.setInCombat      = combatant   => self.inCombat.push(combatant);
   self.getInCombat      = ()          => self.inCombat;
-  self.removeFromCombat = combatant   => {
-    const combatantIndex = self.inCombat.indexOf(combatant);
-    if (combatantIndex === -1) { return; }
-    self.inCombat.splice(combatantIndex, 1);
-  }
+  self.removeFromCombat = combatant   => 
+    self.inCombat = self.inCombat.filter(comb => combatant !== comb);
+  
 
   ///// ----- Skills and Training. ----- ///////
 
@@ -262,6 +261,7 @@ const Player = function PlayerConstructor(socket) {
   * @return boolean True if they have already been there. Otherwise false.
   */
 
+  //TODO: IS there a better way to store this info?
   self.hasExplored = vnum => {
     if (_.hasNot(self.explored, vnum)) {
       self.explored.push(vnum);
@@ -409,7 +409,7 @@ const Player = function PlayerConstructor(socket) {
     }
 
     if (self.effects[eff].event) {
-      self.removeListener(self.effects[eff].event, self.effects[eff].deactivate);
+      self.removeListener(self.effects[eff].event);
     } else {
       clearTimeout(self.effects[eff].timer);
     }
@@ -448,7 +448,12 @@ const Player = function PlayerConstructor(socket) {
    * @param Item   item
    */
   self.equip = (wearLocation, item) => {
-    self.equipment[wearLocation] = item.getUuid();
+    const uid = item.getUuid();
+    
+    ItemUtil.deleteFromEquipment(self, item, wearLocation);
+
+    self.equipment[wearLocation] = uid;
+    util.log(`${self.getName()} is EQUIPPING ${item.getShortDesc()} at ${wearLocation}.`);
     item.setEquipped(true);
   };
 
@@ -457,15 +462,126 @@ const Player = function PlayerConstructor(socket) {
    * @param Item   item
    * @return String slot it was equipped in (see remove commmand)
    */
-  self.unequip = item => {
-    item.setEquipped(false);
-    for (const slot in self.equipment) {
-      if (self.equipment[slot] === item.getUuid()) {
-        delete self.equipment[slot];
-        return slot;
+  self.unequip = (item, items, players, isDropping) => {
+    const holdingLocation = self.canHold(item) && !isDropping ? self.findHoldingLocation() : null;
+    const itemName        = item.getShortDesc();
+    const size            = item.getAttribute('size');
+    const container       = self.getContainersWithCapacity(items, size)
+                                .filter(cont => cont !== item)[0];
+
+    if (!isDropping) {
+      const success = handleNormalUnequip(item, container, players, holdingLocation);
+      if (!success) { return false; }
+    } else {
+      item.setEquipped(false);
+    }
+
+    ItemUtil.deleteFromEquipment(self, item, holdingLocation);
+    return true;
+  };
+
+  function handleNormalUnequip(item, container, players, holdingLocation) {
+    if (container) {
+      return ItemUtil.putItemInContainer(item, container, self, players);
+    } else if (holdingLocation) {
+      return ItemUtil.holdOntoItem(item, holdingLocation, self, players);
+    } else {
+      return self.warn(`Your hands are full. You will have to put away or drop something you are holding.`);
+    }
+  }
+
+  self.findHoldingLocation = () => {
+    const equipment = self.getEquipped();
+    return equipment['held'] ? 'offhand held' : 'held';
+  }
+
+  self.isHolding = item => {
+    const equipped = self.getEquipped();
+    return ['wield', 'offhand', 'held', 'offhand held'].some(slot => equipped[slot] === item.getUuid());
+  }
+
+  self.canHold = item => {
+    const equipped     = self.getEquipped();
+    const holdingSpots = ['wield', 'offhand', 'held', 'offhand held'];
+
+    // The spot is open if there is nothing in it or if the item they are trying to wield is already being held...
+    const openSpots = holdingSpots.filter(slot => !equipped[slot] || (item ? 
+        equipped[slot] === item.getUuid() : 
+        true));
+    return holdingSpots.length > 2;
+  };
+
+  /**
+   * Imaginary weight units player can carry (~10 grams)
+   * @return weight units player can carry in inventory, total.
+   */
+  self.getMaxCarryWeight = () => {
+    const minimum      = 40; // in case mods are added later?
+    const staminaBonus = self.getAttribute('stamina') * 15;
+    const levelBonus   = Math.floor(self.getAttribute('level') * 1.25);
+    const willBonus    = Math.ceil(self.getAttribute('willpower') * 1.5);
+
+    return Math.ceil(Math.max(minimum, minimum + staminaBonus + levelBonus + willBonus));
+  }
+
+  /** //TODO: Put this somewhere nice.
+   * Instead of using effects, this is used to decide effects of encumbrance.
+   * A higher multiplier is a bad thing. 
+   * Action costs will be multiplied by the multiplier. 
+   * Things like dodge chance will be divided. 
+   * @param items manager
+   * @return object { multiplier, description }
+   */
+  self.getEncumbrance = items => {
+    const encumbrance    = self.getCarriedWeight(items);
+    const maxEncumbrance = self.getMaxCarryWeight();
+
+    const percentage = (encumbrance / maxEncumbrance) * 100;
+
+    const encumbranceTiers = {
+      10: [ 0.75, 'insubstantial' ],
+      20: [ 1,    'light'         ],
+      35: [ 1.25, 'moderate'      ],
+      50: [ 1.5,  'heavy'         ],
+      65: [ 1.75, 'cumbersome'    ],
+      75: [ 2,    'burdensome'    ],
+      80: [ 2.5,  'overburdening' ],
+      90: [ 3,    'back-breaking' ],
+    };
+
+    const buildEncumbranceDetails = details => {
+      const  [ multiplier, description ] = details;
+      return { multiplier, description };
+    }
+
+    for (const tier in encumbranceTiers) {
+      const details = encumbranceTiers[tier];
+      if (parseInt(tier, 10) >= percentage) {
+        return buildEncumbranceDetails(details);
       }
     }
-  };
+    const multiplier  = 4;
+    const description = 'crushing';
+    return { multiplier, description };
+  }
+
+  /**
+   * Recursively gets weight of all items in inventory, including those inside of containers.
+   * @return Number weight units carried in inventory
+   */
+  self.getCarriedWeight = items => self.inventory
+    .reduce((sum, item) => item.getWeight(items) + sum, 0);
+
+  /**
+   *  @param Number size
+   *  @return a list of all containers with capacity greater than size.
+   */
+  self.getContainersWithCapacity = (items, size) => self.inventory
+      .filter(item => item.isContainer() && item.getRemainingSizeCapacity(items) >= size);
+
+  self.getContainerWithCapacity = (items, size) => self.getContainersWithCapacity(items, size)[0];
+
+
 
   ///// ----- Communicate with the player. ----- ///////
 
@@ -475,8 +591,8 @@ const Player = function PlayerConstructor(socket) {
    * @param string data Stuff to write
    */
   self.write = (data, color) => {
-    color = color || true;
-    if (!color) ansi.disable();
+    color = typeof color === 'boolean' ? color : true;
+    if (!color) { ansi.disable(); }
     socket.write(ansi.parse(data));
     ansi.enable();
   };
@@ -538,6 +654,7 @@ const Player = function PlayerConstructor(socket) {
    * Display the configured prompt to the player
    * @param object extra Other data to show
    */
+  //TODO: refactor to use template strings.
   self.prompt = extra => {
     let pstring = self.getPrompt();
     extra = extra || {};
@@ -614,12 +731,12 @@ const Player = function PlayerConstructor(socket) {
       }
     }
 
+
     // If the player is new, or skills have been added, initialize them to level 1.
     for (let skill in Skills) {
       skill = Skills[skill];
       if (!self.skills[skill.id]) {
 
-        //TODO: Use chalk node module to create color-coded logging messages.
         util.log("Initializing skill ", skill.id);
         self.skills[skill.id] = 1;
       }
@@ -646,37 +763,32 @@ const Player = function PlayerConstructor(socket) {
    * @return string
    */
   self.stringify = () => {
-    let inv = [];
+    const inventory = self
+      .getInventory()
+      .map(item => item.flatten());
 
-    self.getInventory()
-      .forEach(item => {
-        inv.push(item.flatten());
-      });
-
-    return JSON.stringify({
-      name: self.name,
-      accountName: self.accountName,
-      location: self.location,
-      locale: self.locale,
-      prompt_string: self.prompt_string,
-      combat_prompt: self.combat_prompt,
-      password: self.password,
-      inventory: inv,
-      equipment: self.equipment,
-      attributes: self.attributes,
-      skills: self.skills,
-      feats: self.feats,
-      gender: self.gender,
-      preferences: self.preferences,
-      explored: self.explored,
-      killed:   self.killed,
-      met:      self.met,
-      training: self.training,
-      bodyParts: self.bodyParts,
+    const { name, accountName, location, locale, 
+      prompt_string, combat_prompt, password,
+      equipment, attributes, skills, feats,
+      gender, preferences, explored, killed,
+      met, training, bodyParts, effects 
+    } = self;
+    
+    return JSON.stringify({ 
+      name,           accountName, 
+      location,       locale, 
+      prompt_string,  combat_prompt, 
+      password,       equipment,
+      attributes,     skills, 
+      feats,          gender, 
+      preferences,    explored, 
+      killed,         met, 
+      training,       bodyParts, 
+      effects,        inventory
     });
+    
   };
 
-  //TODO: Make a similar function but for NPCs::::::::::::::
 
   /**
    * Helpers to activate skills or feats
@@ -684,25 +796,18 @@ const Player = function PlayerConstructor(socket) {
    * @param [string] arguments
    * Command event passes in player, args, rooms, npcs.
    */
-  self.useSkill = function (skill /*, args... */ ) {
-    if (!Skills[skill]) {
-      util.log("skill not found: ", skill);
-      return;
-    }
-    const args = [].slice.call(arguments).slice(1)
-    Skills[skill].activate.apply(null, args);
+  self.useSkill = (skill, ...args) => {
+    if (!Skills[skill]) { return util.log("ERROR: Skill not found: ", skill); }
+    Skills[skill].activate(...args);
   };
 
-  self.useFeat = function (feat /*, args... */ ) {
-    if (!Feats[feat.toLowerCase()]) {
-      util.log("feat not found: ", feat);
-      return;
-    }
-    const args = [].slice.call(arguments).slice(1)
-    Feats[feat].activate.apply(null, args);
+  self.useFeat = (featName, ...args) => {
+    featName = featName.toLowerCase();
+    const feat = Feats[featName];
+    return feat ? 
+      feat.activate(...args) : 
+      util.log(`ERROR: Feat not found: ${featName}`);
   };
-
-  //TODO: Should go in other module::::::::::::::::::::::::
 
   /**
    * Helper to calculate physical damage
@@ -710,7 +815,7 @@ const Player = function PlayerConstructor(socket) {
    * @param string location
    */
   self.damage = (dmg, location) => {
-    if (!dmg) return;
+    if (!dmg) { return 0; }
     location = location || 'body';
 
     //TODO: Put this as a function in the combatUtils module.
