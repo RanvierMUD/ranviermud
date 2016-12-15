@@ -1,3 +1,48 @@
+ITEMCEPTION (0.4.0)
+=======
+
+This release introduces a major overhaul to the items system, which will break older pfiles and probably older items.
+There are now usable containers. Players can put items in containers, or take them out.
+Containers can be nested, and have capacity limits based on both volume and weight.
+Player inventory is now container-based. Meaning, you can hold/wield up to two items and besides that all of your items go into wearable containers.
+Hooray for pockets!
+There are also a lot of minor changes, fixes, and improvements, and likely some bugs from the aforementioned overhaul.
+
+### Features:
+- Containers for items.
+- New inventory system.
+- World can be setup to have items spawn inside containers and not just on the ground.
+
+### Enhancements:
+- Admin commands: @debugInv and @debugItems. Still pretty sketchy but can come in handy.
+- Improved defiler scripts and messages.
+- Improved Baxter's dialogue tree slightly.
+- Improved login flow and made formatting of login messages more helpful and consistent between clients.
+
+### Bugfixes:
+- Fixed LOADS of inventory-related issues which I will omit since they were probably added when the features listed above were added.
+- Fixed issue where items were not emitting their drop events if they were dropped while the player died.
+- Increased server logging/debugging abilities, including adding longer stack traces.
+- Fixed a breaking bug related to dying. Dying is still buggy but will be overhauled soonish anyway.
+- Fixed issues with 'get all', 'remove all', 'drop all', and 'give'.
+- Removed buggy effects. Effects to be refactored soon.
+- Item behaviors were not persisting if they were in the player's inventory. Now they are.
+- Fixed bug where the messages for a roach leaving the room and entering the room were the same...
+
+### Technical stuff:
+- Code coverage tool (istanbul) is now configured to ignore the 3rd party telnet server code, but it does include things such as scripts now.
+- Also, a lot of tests are broken and won't be fixed anytime soon.
+- Upgraded code to use features supported by Node 7.1.0, including destructuring, for/of, template strings.
+- Refactored the ranvier server file.
+- Methods dealing with adding/removing items and npcs are simplified.
+
+#### COVERAGE:
+Statements   : 31.49% ( 1341/4259 )
+Branches     : 20.1% ( 338/1682 )
+Functions    : 34.13% ( 71/208 )
+Lines        : 31.38% ( 1213/3865 )
+
+
 NEEDFUL THINGS (0.3.4)
 ========
 

@@ -1,0 +1,91 @@
+'use strict';
+
+// syntax: put [item] in [container] or put [item] [container]
+//TODO: Change get to auto-put or auto-hold...
+
+// When finding item to put in container:
+// - Look at held items first.
+// - Then look in the room at large.
+
+// When finding container:
+// - Look at worn containers first (inventory)
+// - Then nested containers
+// - Finally, look in room
+
+const util        = require('util');
+const _           = require('../src/helpers');
+const CommandUtil = require('../src/command_util').CommandUtil;
+const Broadcast   = require('../src/broadcast').Broadcast;
+
+exports.command = (rooms, items, players, npcs, Commands) =>
+  (args, player) => {
+    args = args.trim();
+
+    if (!args) {
+      return player.warn('Put which item into which container?');
+    }
+
+    if (player.isInCombat()) {
+      return player.warn('You cannot do that while fighting!');
+    }
+
+    const room   = rooms.getAt(player.getLocation());
+    const toRoom = Broadcast.toRoom(room, player, null, players);
+
+    const [ itemTarget, containerTarget ] = _.getTargets(args);
+
+    const item = findItem(itemTarget);
+    if (!item) { return player.warn(`Could not find ${itemTarget}.`); }
+    
+    const container = findContainer(containerTarget);
+    if (!container) { return player.warn(`Could not find ${containerTarget} that would fit ${item.getShortDesc()} in it.`); }
+
+    putInContainer(item, container);
+
+    // -- helpers -- //TODO: Put in CommandUtil/ItemUtil?
+
+    function findItem(itemTarget) {
+      return CommandUtil.findItemInRoom(items, itemTarget, room, player, true) || CommandUtil.findItemInInventory(itemTarget, player, true);
+    }
+
+    function findContainer(containerTarget) {
+      if (!containerTarget || containerTarget === 'away') {
+        return player.getContainerWithCapacity(items, item.getAttribute('size'));
+      }
+      const possibleContainersInInventory = player.getContainersWithCapacity(items, item.getAttribute('size'))
+        .filter(cont => cont.hasKeyword(containerTarget) && cont.getUuid() != item.getContainer());
+      
+      return possibleContainersInInventory[0] || CommandUtil.findItemInRoom(items, containerTarget, room, player, true);
+    }
+
+    // Main operation of putting an item into a container.
+
+    function putInContainer(item, container) {
+      container.addItem(item);
+      
+      if (item.isEquipped()) {
+        item.setEquipped(false);
+        const isDropping = true;
+        player.unequip(item, items, players, isDropping);
+      }
+      
+      const holder = container.getHolder() || null;
+      item.setHolder(holder);
+      
+      if (!holder || holder !== player.getName()) { player.removeItem(item); }
+     
+      item.setRoom(null);
+      if (room) { room.removeItem(item); }
+
+      const containerDesc = container.getShortDesc();
+      const itemName = item.getShortDesc();
+      toRoom({
+        firstPartyMessage: 'You place the ' + itemName + ' into the ' + containerDesc + '.',
+        thirdPartyMessage: player.getName() + ' places the ' + itemName + ' into the ' + containerDesc + '.'
+      });
+      
+      player.emit('action', 1, items);
+
+    }
+
+  };

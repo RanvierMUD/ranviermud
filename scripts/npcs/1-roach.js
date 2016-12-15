@@ -35,7 +35,7 @@ exports.listeners = {
       const rand = Random.inRange(1, 5);
       if (rand === 3) {
         const itemDesc = item.getShortDesc('en');
-        const msg = '<bold>The roach scurries over to the ' + itemDesc +'</bold>';
+        const msg = '<bold>The roach scurries over to the ' + itemDesc +'.</bold>';
         const toRoom = Broadcast.toRoom(room, this, player, players);
         toRoom({
           secondPartyMessage: msg,
@@ -131,9 +131,9 @@ exports.listeners = {
     return function(room, rooms, players, npcs, src) {
       const toRoom = Broadcast.toRoom(room, this, null, players);
       const thirdPartyMessage = Random.fromArray([
-        'A cockroach leaves for ' + src + ', leaving a trail of ooze.',
-        'A roach heads to ' + src + ', antennae jittering.',
-        'An oozing coackroach scuttles over to ' + src + '.'
+        'A cockroach crawls in from ' + src + ', dripping ooze.',
+        'A roach scuttles in from ' + src + ', antennae jittering.',
+        'An oozing coackroach skitters over to ' + src + '.'
       ]);
       toRoom({thirdPartyMessage});
     }

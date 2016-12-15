@@ -13,7 +13,10 @@
     attributes:
         defense: 3
         wearLocation: 'torso'
-        weight: 3
+        weight: 16
+        size: 10
+        maxWeightCapacity: 16
+        maxSizeCapacity: 8
     prerequisites:
         stamina: 2
     load_max: 1

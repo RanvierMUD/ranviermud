@@ -226,7 +226,6 @@ const Npc = function NpcConstructor(config) {
 
   //TODO: Have spawn inventory but also add same inv functionality as player
   self.setInventory = identifier  => self.inventory = identifier;
-  self.setContainer = uid         => self.container = uid;
   self.setAttribute = (attr, val) => self.attributes[attr] = val;
   self.removeEffect = eff         => { delete self.effects[eff]; };
 

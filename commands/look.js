@@ -16,6 +16,8 @@ const _     = require('../src/helpers');
 
 l10n.throwOnMissingTranslation(false);
 
+//TODO: Test and refactor.
+
 exports.command = (rooms, items, players, npcs, Commands) => {
 
   return (args, player, hasExplored) => {
@@ -26,8 +28,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       args = args.toLowerCase();
 
       // Look at items in the room first
-      let thing = CommandUtil.findItemInRoom(items, args, room, player,
-        true);
+      let thing = CommandUtil.findItemInRoom(items, args, room, player,true);
+
+      if (thing) util.log('found an item');
 
       if (!thing) {
         // Then the inventory
@@ -51,15 +54,19 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       // Then other players
       if (!thing) {
-        players.eachIf(
-          CommandUtil.inSameRoom.bind(null, player),
-          lookAtOther);
+        players.eachExcept( player,
+          p => {
+            if (p.getLocation() === player.getLocation()) {
+              lookAtOther(p);
+            }
+          });
       }
 
       function lookAtOther(p) {
-        if (args === p.getName().toLowerCase()) {
+        const otherName = p.getName().toLowerCase();
+        if (args === otherName) {
           thing = p;
-          player.sayL10n(l10n, 'IN_ROOM', thing.getName());
+          player.say(thing.getName() + ' is here.');
           p.sayL10n(l10n, 'BEING_LOOKED_AT', player.getName());
         }
       }
@@ -70,19 +77,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       //FIXME: This does not really seem to be working.
       //FIXME: Consider making it a 'scout' command/skill.
       if (!thing) {
-        const exits = room.getExits();
-        const canSee = exits.reduce((canSee, exit) => {
-          if (!canSee) { return canSee; }
-          if (args === exit.direction) {
-            if (Doors.isOpen(exit)) {
-              player.say("There's a door in the way.");
-              return false;
-            }
-            thing = rooms.getAt(exit.location);
-            player.say(thing.getTitle(locale));
-            return canSee;
-          }
-        }, true);
+        const exits       = room.getExits();
+        const isExit      = exit => (args === exit.direction);
+        const foundExit   = exits.find(isExit);
+        const canSee      = foundExit ? Doors.isOpen(foundExit) : false;
+
+        if (canSee) {
+          thing = rooms.getAt(foundExit.location);
+        } else if (foundExit) {
+          return player.warn('There is a door in the way...');
+        }
+
       }
 
       if (!thing) {
@@ -91,8 +96,23 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
       player.say(wrap(thing.getDescription(locale), 80));
       if (Type.isPlayer(thing)) { showPlayerEquipment(thing, player); }
-
+      if (Type.isItem(thing) && thing.isContainer()) {
+        showContainerContents(thing, player);
+      }
       return;
+    }
+
+    function showContainerContents(container, player) {
+      player.say("<bold>CONTENTS: </bold>");
+      const contents = container.getInventory();
+
+      if (!contents || !contents.length) {
+        return player.say('<cyan>empty</cyan>');
+      }
+
+      contents
+        .map(items.get)
+        .forEach(item => player.say(`<cyan> - ${item.getRoomDesc()}</cyan>`));
     }
 
     if (!room) {
@@ -106,7 +126,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const descPreference = player.getPreference('roomdescs');
 
     if (Time.isDay()) {
-
       const showShortByDefault = hasExplored && descPreference !== 'verbose';
       if (showShortByDefault || descPreference === 'short') {
         player.say(wrap(room.getShortDesc(locale), 80));
@@ -122,7 +141,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     // display players in the same room
     players.eachIf(
-      CommandUtil.inSameRoom.bind(null, player),
+      p => CommandUtil.inSameRoom(player, p),
       p => player.sayL10n(l10n, 'IN_ROOM', p.getName()));
 
     // show all the items in the rom
@@ -171,7 +190,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }
 
       const naked = Object.keys(equipped).length === 0;
-      if (naked) { playerLooking.sayL10n(l10n, "NAKED"); }
+      if (naked) {
+        const pronoun = playerTarget === playerLooking ? 'You' : 'They';
+        playerLooking.say(pronoun + " are naked!");
+      }
     }
 
   }

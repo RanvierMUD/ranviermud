@@ -29,17 +29,24 @@ const values = obj => {
 
 const toArray = thing => [].concat(thing);
 
+const flatten = nestedArrays => [].concat.apply([], nestedArrays);
+
 /**
  * Does the object have an array of keys?
  */
 const hasKeys = obj => !!Object.keys(obj).length;
+
+function capitalize(str) {
+  return str[0].toUpperCase()
+       + str.toLowerCase().substr(1);
+}
 
 
 /**
  * Pads leftly.
  */
 const leftPad = (amt, pad) => {
-  pad = pad || '';
+  pad = pad || ' ';
   let padding = '';
   while (amt) {
     padding += pad;
@@ -73,6 +80,24 @@ const splitArgs = args => args.toLowerCase ?
   args.toLowerCase().split(' ') :
   null;
 
+function getTargets(args) {
+  args = args.split(' ');
+
+  switch(args.length) {
+    case 1:
+      return [ args[0], null ];
+    case 3:
+      return removePreposition(args);
+    default:
+      return args;
+  }
+}
+
+function removePreposition(args) {
+  const prepositions = ['from', 'in', 'into', 'to'];
+  return args.filter(word => !prepositions.includes(word));
+}
+
 /**
  * Allows you to set min and max range for a number.
  * Mostly for preventing semi-random results from getting wacky.
@@ -90,10 +115,12 @@ const setBounds = (min, max) => stat =>
   Math.max(Math.min(max, stat), min);
 
 module.exports = {
-  has,       hasNot,
-  firstWord, splitArgs,
-  hasKeys,   leftPad,
-  values,    reduceValues,
-  setBounds, is,
-  toArray,
+  has,        hasNot,
+  firstWord,  splitArgs,
+  hasKeys,    leftPad,
+  values,     reduceValues,
+  setBounds,  is,
+  toArray,    flatten,
+  getTargets, removePreposition,
+  capitalize,
 };

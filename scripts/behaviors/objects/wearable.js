@@ -3,8 +3,6 @@ const ItemUtil  = require('../../../src/item_util').ItemUtil;
 
 
 exports.listeners = {
-  // TODO: Extract to file so that this functionality can be used for other items, and with special bonuses as well?
-  // OR just add a bonus emitter -- might be too spaghetti though.
 
   wear: function (l10n) {
     return function (location, room, player, players) {
@@ -18,8 +16,8 @@ exports.listeners = {
       const desc = this.getShortDesc('en');
       const name = player.getName();
       toRoom({
-        firstPartyMessage: 'You wear the ' + desc + '.',
-        thirdPartyMessage: name + ' wears the ' + desc + '.'
+        firstPartyMessage: `You wear the ${desc}.`,
+        thirdPartyMessage: `${name} wears the ${desc}.`
       });
     };
   },
@@ -30,8 +28,8 @@ exports.listeners = {
       const desc = this.getShortDesc('en');
       const name = player.getName();
       toRoom({
-        firstPartyMessage: 'You remove the ' + desc + '.',
-        thirdPartyMessage: name + ' removes the ' + desc + '.'
+        firstPartyMessage: `You remove the ${desc}.`,
+        thirdPartyMessage: `${name} removes the ${desc}.`
       });
 
       ItemUtil.removeDefaultPenaltes(player, this, location);

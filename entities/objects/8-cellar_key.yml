@@ -11,3 +11,4 @@
     load_max: 1
     attributes:
       weight: 1
+      size: 1

@@ -16,19 +16,31 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     thing = CommandUtil.findItemInInventory(thing, player, true);
     if (!thing) {
-      return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+      return player.say(`You do not seem to have ${args} in your possessions...`);
+    }
+
+    if (thing.isEquipped() && !isHeld(thing)) {
+      return player.say(`You seem to already be wearing the ${thing.getShortDesc()}.`);
     }
 
     wearItem(thing);
 
+    function isHeld(item) {
+      const equipment = player.getEquipped();
+      return ['held', 'offhand held'].some(slot => item.getUuid() === equipment[slot]);
+    }
+
     function wearAll() {
-      const items = player.getInventory().filter(item => !item.isEquipped());
+      const items = player.getInventory().filter(item => !item.isEquipped() || isHeld(item));
       if (!items.length) { return player.say("You have nothing to wear."); }
       items.forEach(wearItem);
-      items.forEach(item => util.log(item.getShortDesc('en')));
     }
 
     function wearItem(item) {
+      const itemContainer = items.get(item.getContainer());
+      if (itemContainer) {
+        itemContainer.removeItem(item);
+      }
       if (isWeapon(item)) {
         const keyword = item.getKeywords('en')[0];
         return Commands.player_commands.wield(keyword, player);
@@ -53,10 +65,12 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function hasOpenSpot(item) {
-      const worn = player.getEquipped(item.getAttribute('wearLocation'));
+      const wearLocation = item.getAttribute('wearLocation');
+      const worn         = player.getEquipped(wearLocation);
+      
       if (worn) {
-        util.log("Cannot wear due to already wearing an item.");
-        player.sayL10n(l10n, 'CANT_WEAR', items.get(worn).getShortDesc('en'));
+        util.log(`${player.getName()}: Cannot wear ${item.getShortDesc()} due to already wearing an item: ${worn} on ${wearLocation}`);
+        player.warn(`You cannot wear the ${item.getShortDesc()}, you are already wearing the ${items.get(worn).getShortDesc('en')} on your ${wearLocation}.`);
         return false;
       }
       return true;
@@ -64,7 +78,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     function putOn(item) {
       const location = item.getAttribute('wearLocation');
-      const room = rooms.getAt(player.getLocation());
+      const room     = rooms.getAt(player.getLocation());
+      
       item.emit('wear', location, room, player, players);
       player.equip(location, item);
       return true;

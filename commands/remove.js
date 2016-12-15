@@ -11,33 +11,25 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const target = _.firstWord(args);
 
-    if (target === 'all') { return removeAll(); }
+    if (target === 'all') { return Commands.player_commands.drop('all', player); }
 
     const thing = CommandUtil.findItemInEquipment(items, target, player, true);
-
-    return remove(thing);
-
-    /// Helper functions ///
-
-    function removeAll() {
-      const equipment = _.values(player.getEquipped());
-      if (!equipment.length) { return player.say('You have nothing to remove.'); }
-
-      equipment
-       .map(id => items.get(id))
-       .forEach(remove);
+    
+    if (thing.isEquipped()) {
+      return remove(thing);
+    } else {
+      return player.warn(`${thing.getShortDesc()} is not equipped.`);
     }
 
     function remove(item) {
-      if (!item && !isDead) {
-        return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-      }
+      if (!item && !isDead) { return player.warn(`You don't seem to have that...`); }
 
       util.log(player.getName() + ' removing ' + item.getShortDesc('en'));
 
-      const location = player.unequip(item);
-
-      if (isDead) { return; }
+      const location = player.unequip(item, items, players);
+      if (isDead)    { return; }
+      if (!location) { return player.say(`You are unable to unequip ${item.getShortDesc()}.`); }
+      
       const room = rooms.getAt(player.getLocation());
       item.emit('remove', location, room, player, players);
     }

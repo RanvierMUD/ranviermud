@@ -5,13 +5,14 @@
     room_description:
         en: "a pair of well-worn high-top leather boots"
     keywords:
-        en: [ "leather boots", "boots", "shoes" ]
+        en: [ "leather boots", "boots", "shoes", "boot" ]
     description:
         en: "A pair of sturdy leather boots."
-    room: 5
     behaviors: "wearable"
     attributes:
         defense: 3
         wearLocation: 'feet'
-        weight: 2
+        weight: 8
+        size: 8
     load_max: 1
+    container: 12

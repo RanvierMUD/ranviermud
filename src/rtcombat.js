@@ -17,10 +17,10 @@ const Type        = require('./type').Type;
 const Effects     = require('./effects').Effects;
 const Broadcast   = require('./broadcast').Broadcast;
 
-let dualWieldCancel = null;
+let dualWieldCancel = null; //FIXME: Could this be a problem with multiple players in combat all at once?
 
-function _initCombat(l10n, target, player, room, npcs, players, rooms, callback) {
-  const locale = Type.isPlayer(player) ? 'en' : 'en';
+function _initCombat(l10n, target, player, room, npcs, players, rooms, items, callback) {
+  const locale = 'en';
   player.setInCombat(target);
   target.setInCombat(player);
 
@@ -152,22 +152,37 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     util.log('Attack energy cost for ' + attacker.getShortDesc('en') + ' is ' + energyCost);
 
     // Handle attacker fatigue
-    const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost);
+    const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost, items);
     if (slowAttacker) {
-      attacker.addEffect('fatigued', Effects.fatigued, { attacker });
+      attacker.combat.addSpeedMod({ 
+        name: 'fatigue',
+        modifier: speed => speed + 1000
+      });
+      attacker.combat.addDodgeMod({
+        name: 'fatigue',
+        modifier: dodge => Math.max(dodge - 3, 1)
+      });
+      attacker.combat.addToHitMod({
+        name: 'fatigue',
+        modifier: toHit => Math.max(toHit - 3, 1)
+      });
+    } else {
+      attacker.combat.removeAllMods('fatigue');
     }
 
-    // Handle attacker sanity effects...
-    const stressedLimit = 40;
-    const stressedAttacker = Type.isPlayer(attacker) && attacker.getAttribute('sanity') <= stressedLimit;
-    if (stressedAttacker) {
-      attacker.addEffect('stressed', Effects.stressed, { attacker });
+    //FIXME:
+    // // Handle attacker sanity effects...
+    // const stressedLimit = 40;
+    // const stressedAttacker = Type.isPlayer(attacker) && attacker.getAttribute('sanity') <= stressedLimit;
+    // if (stressedAttacker) {
+    //   attacker.addEffect('stressed', Effects.stressed, { attacker });
 
-      const insanityLimit = 20;
-      if (attacker.getAttribute('sanity') > insanityLimit) {
-        attacker.addEffect('insane', Effects.insane, { attacker });
-      }
-    }
+    //   const insanityLimit = 20;
+    //   if (attacker.getAttribute('sanity') > insanityLimit) {
+    //     attacker.addEffect('insane', Effects.insane, { attacker });
+    //   }
+    // }
+
 
     // Assign constants for this round...
     const attackerSpeed = attacker.combat.getAttackSpeed(this.isSecondAttack);
@@ -363,23 +378,21 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, callback)
     } else {
       util.log("** Player death: ", player.getName());
       player.sayL10n(l10n, 'LOSE', target.getShortDesc(locale));
+      player.fleeFromCombat();
       player.emit('die');
 
-      broadcastExceptPlayer(player.getName() +
-        ' collapses to the ground, life fleeing their body before your eyes.');
+      broadcastExceptPlayer(player.getName() + ' collapses to the ground, life fleeing their body before your eyes.');
 
       broadcastExceptPlayer('<blue>A horrible feeling gnaws at the pit of your stomach.</blue>');
-      broadcastToArea('The gurgles of a dying ' +
-        statusUtils.getGenderNoun(player) +
-        ' echo from nearby.'
-      );
+      broadcastToArea('The gurgles of a dying ' + statusUtils.getGenderNoun(player) + ' echo from nearby.');
+
       players.eachIf(
         p => p.getLocation() === room.getLocation(),
         p => p.emit('sanityLoss', 'witnessing gruesome death first-hand', 50)
       );
     }
     player.prompt();
-    callback(success);
+    if (callback) { callback(success); }
   }
 
   //TODO: Extract this to combat utils.

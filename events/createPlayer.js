@@ -47,7 +47,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
             return repeat();
           }
 
-          name = EventUtil.capitalize(name
+          name = _.capitalize(name
             .toString()
             .trim());
 
@@ -65,14 +65,14 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
           }
 
           if (invalid) {
-            say(invalid + '\r\n');
+            say(invalid);
             return repeat();
           } else {
 
             const exists = players.getByName(name) || Data.loadPlayer(name);
 
             if (exists) {
-              say('That name is already taken.\r\n');
+              say(`That name is already taken.`);
               return repeat();
             } else {
               return next(socket, 'check', account, name);
@@ -82,18 +82,18 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
       break;
 
       case 'check':
-        say("<bold>" + name + " doesn't exist, would you like to create it?</bold> <cyan>[y/n]</cyan> ");
-        socket.once('data', check => {
-          check = check.toString()
+        say(`<bold>${name} doesn't exist, would you like to create it?</bold> <cyan>[y/n]</cyan> `);
+        socket.once('data', confirmation => {
+          confirmation = confirmation.toString()
             .trim()
             .toLowerCase();
 
-          if (!/[yn]/.test(check)) {
+          if (!/[yn]/.test(confirmation)) {
             return repeat();
           }
 
-          if (check === 'n') {
-            say("Let's try again...\r\n");
+          if (confirmation === 'n') {
+            say(`Let's try again...`);
             return socket.emit('createPlayer', socket, 'name');
           }
 
@@ -102,7 +102,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         break;
 
       case 'create':
-        socket.write('Creating character... \n');
+        say('Creating character...');
         socket = new Player(socket);
 
         socket.setName(name);
@@ -122,8 +122,12 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
       case 'gender':
         const genders = ['m', 'f', 'a'];
 
-        socket.write('<bold>What is your character\'s gender?</bold>\n'
-        + '<cyan>[F]emale\n[M]ale\n[A]ndrogynous</cyan>\n');
+        say(`<bold>What is your character's gender?</bold>
+        <cyan>
+        [F]emale
+        [M]ale
+        [A]ndrogynous
+        </cyan>`);
 
         socket.getSocket()
           .once('data', gender => {
@@ -133,7 +137,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
               .toLowerCase();
 
             if (!gender || _.hasNot(genders, gender)) {
-              socket.say('Please specify a gender, or <cyan>[A]ndrogynous</cyan> if you\'d prefer.');
+              say('Please specify a gender, or <cyan>[A]ndrogynous</cyan> if you\'d prefer.');
               return repeat();
             }
 

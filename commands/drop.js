@@ -8,6 +8,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player, isDead) => {
     const room = rooms.getAt(player.getLocation());
 
+    //TODO: Does this handle dropping a container with items in it?
+    // Should remove all contents from player inventory and set the room for each of them.
+    
     args = args.toLowerCase();
 
     if (args === 'all') {
@@ -18,21 +21,17 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     let item = CommandUtil.findItemInInventory(args, player, true);
 
     if (!item) {
-      return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
+      return player.warn('You cannot drop an item you do not have.');
     }
 
     if (item.isEquipped()) {
       item = CommandUtil.findItemInInventory('2.' + args, player, true) || item;
-      if (item.isEquipped()) {
-        return player.sayL10n(l10n, 'ITEM_WORN');
-      }
     }
 
     drop(item);
 
     function dropAll() {
-      const items = player.getInventory()
-        .filter(item => !item.isEquipped());
+      const items = player.getInventory();
       if (!items.length && !isDead) { return player.say('You have nothing to drop.'); }
       items.forEach(item => drop(item));
     }
@@ -40,8 +39,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function drop(item) {
       let playerName = player.getName();
 
-      if (item.isEquipped()) {
-        return player.sayL10n(l10n, 'ITEM_WORN');
+      if (item.isEquipped() || isDead) { 
+        const isDropping = true;
+        const location = player.unequip(item, items, players, isDropping); 
+        if (!isDead) { item.emit('remove', location, room, player, players); }
       }
 
       players.eachIf(
@@ -49,21 +50,23 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         p => p.sayL10n(l10n, 'OTHER_DROPS', playerName, item.getShortDesc(p.getLocale()))
       );
 
-
       let itemName = item.getShortDesc('en');
       if (!isDead) {
         player.sayL10n(l10n, 'ITEM_DROP', itemName, false);
         room.getNpcs().forEach( id => {
           let npc = npcs.get(id);
-          npc.emit('playerDropItem', room, rooms, player, players, npc, npcs, item);
+          npc.emit('playerDropItem', room, rooms, player, players, npc, npcs, item, items);
         });
       }
-      util.log(playerName + " drops " + itemName + " at " + room.getLocation() + ".");
+      util.log(`${playerName} drops ${itemName} at ${room.getLocation()}.`);
 
       player.removeItem(item);
-      room.addItem(item.getUuid());
-      item.setInventory(null);
+      const container = items.get(item.getContainer());
+      if (container) { container.removeItem(item); }
+      room.addItem(item);
+      item.setHolder(null);
       item.setRoom(room.getLocation());
     }
+
   };
 };
