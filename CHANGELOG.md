@@ -1,3 +1,37 @@
+ITEMCEPTION (0.4.0)
+=======
+
+This release introduces a major overhaul to the items system, which will break older pfiles and probably older items.
+There are now usable containers. Players can put items in containers, or take them out.
+Containers can be nested, and have capacity limits based on both volume and weight.
+Player inventory is now container-based. Meaning, you can hold/wield up to two items and besides that all of your items go into wearable containers.
+Hooray for pockets!
+There are also a lot of minor changes, fixes, and improvements, and likely some bugs from the aforementioned overhaul.
+
+### Features:
+- Containers for items.
+- New inventory system.
+- World can be setup to have items spawn inside containers and not just on the ground.
+
+### Enhancements:
+- Admin commands: @debugInv and @debugItems. Still pretty sketchy but can come in handy.
+- Improved defiler scripts and messages.
+- Improved Baxter's dialogue tree slightly.
+
+### Bugfixes:
+- Fixed LOADS of inventory-related issues which I will omit since they were probably added when the features listed above were added.
+- Fixed issue where items were not emitting their drop events if they were dropped while the player died.
+- Increased server logging/debugging abilities, including adding longer stack traces.
+- Fixed a breaking bug related to dying. Dying is still buggy but will be overhauled soonish anyway.
+- Fixed issues with 'get all', 'remove all', 'drop all', and 'give'.
+
+### Technical stuff:
+- Code coverage tool (istanbul) is now configured to ignore the 3rd party telnet server code, but it does include things such as scripts now.
+- Also, a lot of tests are broken and won't be fixed anytime soon.
+- Upgraded code to use features supported by Node 7.1.0, including destructuring, for/of, template strings.
+- 
+
+
 NEEDFUL THINGS (0.3.4)
 ========
 
