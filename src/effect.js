@@ -27,7 +27,7 @@ class Effect {
   getTarget()  { return this[_target]; }
 
   /* Get options or defaults */
-  getDuration() { return this[_options].duration || Infinity; }
+  getDuration() { return parseInt(this[_options].duration, 10) || Infinity; }
 
 }
 
