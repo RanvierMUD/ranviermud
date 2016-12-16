@@ -75,6 +75,21 @@ describe('Effect class', () => {
         expect(effect.getDuration()).to.equal(Infinity)
       });
 
+      it('should otherwise just get the duration', () => {
+        const effect = new Effect(defaultOpts);
+        expect(effect.getDuration()).to.equal(100000);
+      });
+
+      it('should be able to parse strings that are numeric', () => {
+        const effect = new Effect(Object.assign({}, defaultOpts, { options: { duration: '100ms' } }));
+        expect(effect.getDuration()).to.equal(100);
+      });
+
+      it('non-numeric, non parseable duration options should be set to default', () => {
+        const effect = new Effect(Object.assign({}, defaultOpts, { options: { duration: 'potatos' } }));
+        expect(effect.getDuration()).to.equal(Infinity);  
+      });
+
     });
 
   });
