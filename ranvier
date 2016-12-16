@@ -44,6 +44,8 @@ const argv      = require('optimist').argv;
 const telnet    = require('./src/3rdparty/telnet.js');
 const longjohn  = require('longjohn');
 
+require('pretty-error').start();
+
 /**
  * These aren't really globals; they're only "global" to this file,
  * we'll pass them around via construction as needed
