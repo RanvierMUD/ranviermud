@@ -43,8 +43,9 @@ const Localize  = require('jall');
 const argv      = require('optimist').argv;
 const telnet    = require('./src/3rdparty/telnet.js');
 const longjohn  = require('longjohn');
+const pe        = require('pretty-error').start();
 
-require('pretty-error').start();
+pe.skipNodeFiles();
 
 /**
  * These aren't really globals; they're only "global" to this file,
