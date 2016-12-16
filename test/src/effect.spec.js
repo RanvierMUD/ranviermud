@@ -9,14 +9,16 @@ const Effect = require('../../src/effect').Effect;
 
 describe('Effect class', () => {
 
+  const target = new Player({});
+  const defaultOpts = {
+    target, 
+    id: 'id', 
+    type: 'some_effect',
+    options: { duration: 100000 }
+  };
+
   describe('Construction & Validation', () => {
-    const target = new Player({});
-    const defaultOpts = {
-      target, 
-      id: 'id', 
-      type: 'some_effect',
-      options: { duration: 100000 }
-    };
+
 
     it('Should create an instance of an Effect, given proper params', () => {
       const effect = new Effect(defaultOpts);
@@ -54,6 +56,20 @@ describe('Effect class', () => {
       expect(createBadEffect).to.throw(ReferenceError);
     });
 
+  });
+
+  describe('Getters for required stuff', () => {
+    it('should have everything', () => {
+      const effect = new Effect(defaultOpts);
+      expect(effect.getId()).to.equal('id');
+      expect(effect.getOptions()).to.eql({ duration: 100000 });
+      expect(effect.getType()).to.equal('some_effect');
+      expect(effect.getTarget()).to.eql(target);
+    })
+  });
+
+  describe('Getters for options', () => {
+    
   });
 
 });
