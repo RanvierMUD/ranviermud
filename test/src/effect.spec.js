@@ -19,7 +19,6 @@ describe('Effect class', () => {
 
   describe('Construction & Validation', () => {
 
-
     it('Should create an instance of an Effect, given proper params', () => {
       const effect = new Effect(defaultOpts);
       
@@ -48,7 +47,6 @@ describe('Effect class', () => {
       expect(createBadEffect).to.throw(ReferenceError);
     });
 
-
     it('should not create an Effect without an options object to pass to Effects methods', () => {
       const createBadEffect = () => {
         return new Effect(Object.assign({}, defaultOpts, { options: null }));
@@ -70,6 +68,15 @@ describe('Effect class', () => {
 
   describe('Getters for options', () => {
     
+    describe('Duration option', () => {
+
+      it('should be set to Infinity by default', () => {
+        const effect = new Effect(Object.assign({}, defaultOpts, { options: { burrito: true } }));
+        expect(effect.getDuration()).to.equal(Infinity)
+      });
+
+    });
+
   });
 
 });
