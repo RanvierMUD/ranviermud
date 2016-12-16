@@ -20,6 +20,15 @@ class Effect {
     this[_target]  = target;
   }
 
+  /* Get private fields... */
+  getId()      { return this[_id]; }
+  getOptions() { return this[_options]; }
+  getType()    { return this[_type]; }
+  getTarget()  { return this[_getTarget]; }
+
+  /* Get options or defaults */
+  getDuration() { return this[_options].duration || Infinity; }
+
 }
 
 /* Validation helper for effect construction */
