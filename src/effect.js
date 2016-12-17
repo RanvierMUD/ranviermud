@@ -46,7 +46,8 @@ class Effect {
   setElapsed() { this[_elapsed] = this.getElapsed(); }
 
   getElapsed() { 
-    if (!this[_started]) { return null; }
+    if (typeof this[_started] !== 'number') { return null; }
+
     return Date.now() - this[_started];
   }
 
