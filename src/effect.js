@@ -24,7 +24,7 @@ class Effect {
     //TODO: If the effect has a set duration, 
     // then we need to keep track of how long it lasts
     // so that players can not just log off to escape negative status effects.
-    // Do this by tracking
+    // Do this by tracking how much time has elapsed if the player quits or goes linkdead.
     if (options.duration) {
       this[_elapsed] = options.elapsed || 0;
       this[_started] = Date.now();
@@ -38,21 +38,22 @@ class Effect {
   getType()    { return this[_type]; }
   getTarget()  { return this[_target]; }
 
-  /* Get options or defaults */
-  getDuration()     { return parseInt(this[_options].duration, 10) || Infinity; }
-  getMultiplier()   { return parseInt(this[_options].factor, 10 )  || 1; }
-  getBonus()        { return parseInt(this[_options].bonus, 10)    || 0; }
+  getDuration() { 
+    return parseInt(this[_options].duration, 10) || Infinity; 
+  }
 
   /* Mutators */
-  setElapsed() { 
-    this[_elapsed] = Date.now() - this[_started];
-    return this[_elapsed];
+  setElapsed() { this[_elapsed] = this.getElapsed(); }
+
+  getElapsed() { 
+    if (!this[_started]) { return null; }
+    return Date.now() - this[_started];
   }
 
   /* Predicates */
+  isEnded()     { return this.getElapsed() ? this.getElapsed() > this.getDuration() : false; }
+  isTemporary() { return this.getDuration() !== Infinity; }
 
-  isEnded() { return this.setElapsed() > this.getDuration(); }
-   
 }
 
 /* Validation helper for effect construction */

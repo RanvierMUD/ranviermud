@@ -94,4 +94,49 @@ describe('Effect class', () => {
 
   });
 
+  describe('Keeping track of time', () => {
+
+    describe('in permanent effects', () => {
+      const effect = new Effect(Object.assign({}, defaultOpts, { options: { multiplier: 2 } }));
+
+      it('should return null if the effect is permanent', () => {
+        expect(effect.getElapsed()).to.be.null;
+      });
+
+      it('should tell us if the effect has a time limit or not...', () => {
+        expect(effect.isTemporary()).to.be.false;
+      });
+    });
+    
+    describe('in temporary effects', () => {
+
+      let clock = null;
+        
+      beforeEach(() => {
+        clock = sinon.useFakeTimers();
+      });
+
+      afterEach(() => {
+        clock.restore();
+      });
+      
+      const effect = new Effect(defaultOpts);
+      
+      it('should otherwise return the amount of time that has lapsed since the effect was instantiated', () => {
+        clock.tick(200);
+        expect(effect.getElapsed()).to.equal(200);
+      });
+
+      it('should tell us that the effect will wear off eventually', () => {
+        expect(effect.isTemporary()).to.be.true;
+      });
+
+      it('should tell us the effect should be removed', () => {
+        expect(effect.isFinished()).to.be.false;
+      });
+    
+    });
+
+  });
+
 });

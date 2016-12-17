@@ -11,6 +11,7 @@
 | /Users/seanohue/myProjects/ranviermud/src/commands.js | 270 | Do the same way as above once you extract the admin commands.
 | /Users/seanohue/myProjects/ranviermud/src/dialogue.js | 145 | Consider extracting these enums/consts from the main dialogue script file.
 | /Users/seanohue/myProjects/ranviermud/src/doors.js | 44 | Refactor to use the bound functions in external code.
+| /Users/seanohue/myProjects/ranviermud/src/effect.js | 24 | If the effect has a set duration,
 | /Users/seanohue/myProjects/ranviermud/src/effects.js | 4 | Extract into own directory. Too many effects.
 | /Users/seanohue/myProjects/ranviermud/src/effects.js | 5 | Make an atom snippet for this?
 | /Users/seanohue/myProjects/ranviermud/src/effects.js | 6 | Effects_utils?
@@ -60,13 +61,13 @@
 | /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 255 | Extract this to some kind of combat messaging helper?
 | /Users/seanohue/myProjects/ranviermud/scripts/objects/1-shiv.js | 9 | Update to account for prereqs
 | /Users/seanohue/myProjects/ranviermud/scripts/objects/10-chain_whip.js | 68 | Refactor by extracting to functions...
+| /Users/seanohue/myProjects/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 16 | Use this for all sanity loss incidents.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 23 | Different messages for different relative amounts of sanity loss.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 111 | Emit sanity loss event here if applicable.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 128 | Extract all stuff for determining stat gain into level utils.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 190 | Permadeath, add it.
-| /Users/seanohue/myProjects/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanohue/myProjects/ranviermud/commands/drop.js | 11 | Does this handle dropping a container with items in it?
 | /Users/seanohue/myProjects/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)
 | /Users/seanohue/myProjects/ranviermud/commands/look.js | 19 | Test and refactor.
