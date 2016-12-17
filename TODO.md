@@ -54,13 +54,13 @@
 | /Users/seanohue/myProjects/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanohue/myProjects/ranviermud/src/status.js | 3 | Refactor.
 | /Users/seanohue/myProjects/ranviermud/src/status.js | 112 | Use in player/npc class.
-| /Users/seanohue/myProjects/ranviermud/scripts/objects/1-shiv.js | 9 | Update to account for prereqs
-| /Users/seanohue/myProjects/ranviermud/scripts/objects/10-chain_whip.js | 68 | Refactor by extracting to functions...
 | /Users/seanohue/myProjects/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanohue/myProjects/ranviermud/scripts/npcs/3-defiler.js | 75 | Add condition where attacking the defiler's legs will slow it greatly.
 | /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
 | /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 217 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
 | /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 255 | Extract this to some kind of combat messaging helper?
+| /Users/seanohue/myProjects/ranviermud/scripts/objects/1-shiv.js | 9 | Update to account for prereqs
+| /Users/seanohue/myProjects/ranviermud/scripts/objects/10-chain_whip.js | 68 | Refactor by extracting to functions...
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 16 | Use this for all sanity loss incidents.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 23 | Different messages for different relative amounts of sanity loss.
