@@ -106,24 +106,29 @@ describe('Effect class', () => {
       it('should tell us if the effect has a time limit or not...', () => {
         expect(effect.isTemporary()).to.be.false;
       });
+
+      it('should tell us the effect should not be removed', () => {
+        expect(effect.isEnded()).to.be.false;
+      });
+
     });
     
     describe('in temporary effects', () => {
 
-      let clock = null;
+      let clock, effect;
         
       beforeEach(() => {
-        clock = sinon.useFakeTimers();
+        clock  = sinon.useFakeTimers();
+        effect = new Effect(defaultOpts);
       });
 
       afterEach(() => {
         clock.restore();
       });
-      
-      const effect = new Effect(defaultOpts);
-      
-      it('should otherwise return the amount of time that has lapsed since the effect was instantiated', () => {
+            
+      it('should get the amount of time that has lapsed since the effect was instantiated', () => {
         clock.tick(200);
+        console.log('dur', effect.getDuration());
         expect(effect.getElapsed()).to.equal(200);
       });
 
@@ -132,7 +137,9 @@ describe('Effect class', () => {
       });
 
       it('should tell us the effect should be removed', () => {
-        expect(effect.isFinished()).to.be.false;
+        expect(effect.isEnded()).to.be.false;
+        clock.tick(1000000);
+        expect(effect.isEnded()).to.be.true;
       });
     
     });
