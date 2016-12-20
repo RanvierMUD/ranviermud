@@ -55,17 +55,17 @@
 | /Users/seanohue/myProjects/ranviermud/src/status.js | 112 | Use in player/npc class.
 | /Users/seanohue/myProjects/ranviermud/scripts/objects/1-shiv.js | 9 | Update to account for prereqs
 | /Users/seanohue/myProjects/ranviermud/scripts/objects/10-chain_whip.js | 68 | Refactor by extracting to functions...
+| /Users/seanohue/myProjects/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
+| /Users/seanohue/myProjects/ranviermud/scripts/npcs/3-defiler.js | 75 | Add condition where attacking the defiler's legs will slow it greatly.
+| /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
+| /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 217 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
+| /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 255 | Extract this to some kind of combat messaging helper?
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 2 | Refactor into individual files.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 16 | Use this for all sanity loss incidents.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 23 | Different messages for different relative amounts of sanity loss.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 111 | Emit sanity loss event here if applicable.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 128 | Extract all stuff for determining stat gain into level utils.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 190 | Permadeath, add it.
-| /Users/seanohue/myProjects/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
-| /Users/seanohue/myProjects/ranviermud/scripts/npcs/3-defiler.js | 75 | Add condition where attacking the defiler's legs will slow it greatly.
-| /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
-| /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 217 | Lower reputation with cat. Use emitter to handle this. Use a behavior file.
-| /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 255 | Extract this to some kind of combat messaging helper?
 | /Users/seanohue/myProjects/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanohue/myProjects/ranviermud/commands/drop.js | 11 | Does this handle dropping a container with items in it?
 | /Users/seanohue/myProjects/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)
