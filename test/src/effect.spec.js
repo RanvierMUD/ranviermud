@@ -108,7 +108,7 @@ describe('Effect class', () => {
       });
 
       it('should tell us the effect should not be removed', () => {
-        expect(effect.isEnded()).to.be.false;
+        expect(effect.isCurrent()).to.be.true;
       });
 
     });
@@ -128,7 +128,6 @@ describe('Effect class', () => {
             
       it('should get the amount of time that has lapsed since the effect was instantiated', () => {
         clock.tick(200);
-        console.log('dur', effect.getDuration());
         expect(effect.getElapsed()).to.equal(200);
       });
 
@@ -137,9 +136,9 @@ describe('Effect class', () => {
       });
 
       it('should tell us the effect should be removed', () => {
-        expect(effect.isEnded()).to.be.false;
+        expect(effect.isCurrent()).to.be.true;
         clock.tick(1000000);
-        expect(effect.isEnded()).to.be.true;
+        expect(effect.isCurrent()).to.be.false;
       });
     
     });

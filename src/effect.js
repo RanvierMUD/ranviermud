@@ -42,18 +42,27 @@ class Effect {
     return parseInt(this[_options].duration, 10) || Infinity; 
   }
 
-  /* Mutators */
-  setElapsed() { this[_elapsed] = this.getElapsed(); }
 
   getElapsed() { 
     if (isNaN(this[_started])) { return null; }
-
     return Date.now() - this[_started];
   }
 
+  /* Mutators */
+  setElapsed() { this[_elapsed] = this.getElapsed(); }
+
   /* Predicates */
-  isEnded()     { return this.getElapsed() ? this.getElapsed() > this.getDuration() : false; }
-  isTemporary() { return this.getDuration() !== Infinity; }
+  isCurrent()      { return this.isTemporary() ? this.getElapsed() < this.getDuration() : true; }
+  isTemporary()    { return this.getDuration() < Infinity; }
+  isValid()        { return this.isCurrent() && this.checkPredicate(); }
+  
+  checkPredicate() { 
+    const predicate = this.getOptions().predicate;
+    return predicate ? 
+      predicate(this.getOptions(), this.getTarget()) : 
+      true;
+  }
+
 
 }
 
