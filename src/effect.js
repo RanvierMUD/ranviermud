@@ -21,10 +21,6 @@ class Effect {
     this[_target]  = target;
     this[_options] = options;
 
-    //TODO: If the effect has a set duration, 
-    // then we need to keep track of how long it lasts
-    // so that players can not just log off to escape negative status effects.
-    // Do this by tracking how much time has elapsed if the player quits or goes linkdead.
     if (options.duration) {
       this[_elapsed] = options.elapsed || 0;
       this[_started] = Date.now();
