@@ -33,10 +33,10 @@ class Effect {
   }
 
   /* Get private fields... */
-  getId()      { return this[_id]; }
+  getId()      { return this[_id];      }
   getOptions() { return this[_options]; }
-  getType()    { return this[_type]; }
-  getTarget()  { return this[_target]; }
+  getType()    { return this[_type];    }
+  getTarget()  { return this[_target];  }
 
   getDuration() { 
     return parseInt(this[_options].duration, 10) || Infinity; 
