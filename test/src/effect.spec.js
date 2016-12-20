@@ -148,7 +148,9 @@ describe('Effect class', () => {
     describe('checking validity', () => {
       it('should use optional predicate if it exists', () => {
         const effect = new Effect(Object.assign({ 
-          predicate: options => !!options,
+          options: {
+            predicate: () => true 
+          },
           duration: null
         }, defaultOpts));
         effect.init();
