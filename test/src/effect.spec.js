@@ -142,6 +142,16 @@ describe('Effect class', () => {
       });
     
     });
+    
+    describe('checking validity', () => {
+      it('should use optional predicate if it exists', () => {
+        const effect = new Effect(Object.assign({ 
+          predicate: () => true,
+          duration: null
+        }, defaultOpts));
+        expect(effect.isValid()).to.be.true;
+      });
+    });
 
   });
 
