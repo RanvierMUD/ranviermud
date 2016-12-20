@@ -62,7 +62,7 @@ class Effect {
       target.on(event, cb);
     }
 
-    const attrMods = effect.modifiers;
+    const modifiers = effect.modifiers;
     for (let attr in modifiers) {
       const modifier = modifiers[attr];
       if (!modifier) { throw new ReferenceError("An attribute modifier was registered but it had no callback."); }
