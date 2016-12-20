@@ -98,6 +98,7 @@ describe('Effect class', () => {
 
     describe('in permanent effects', () => {
       const effect = new Effect(Object.assign({}, defaultOpts, { options: { multiplier: 2 } }));
+      effect.init();
 
       it('should return null if the effect is permanent', () => {
         expect(effect.getElapsed()).to.be.null;
@@ -120,6 +121,7 @@ describe('Effect class', () => {
       beforeEach(() => {
         clock  = sinon.useFakeTimers();
         effect = new Effect(defaultOpts);
+        effect.init();
       });
 
       afterEach(() => {
@@ -146,9 +148,11 @@ describe('Effect class', () => {
     describe('checking validity', () => {
       it('should use optional predicate if it exists', () => {
         const effect = new Effect(Object.assign({ 
-          predicate: () => true,
+          predicate: options => !!options,
           duration: null
         }, defaultOpts));
+        effect.init();
+
         expect(effect.isValid()).to.be.true;
       });
     });
