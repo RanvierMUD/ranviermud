@@ -35,8 +35,8 @@ const Npcs = function NpcManager() {
 		const debug = (message) => { if (verbose) util.debug(message); };
 
 		log("\tExamining npc directory - " + npcs_dir);
-		const npcs = fs.readdir(npcs_dir, (err, files) =>
-    {
+		fs.readdir(npcs_dir, (err, files) => {
+      
 			// Load any npc files
 			for (const j in files) {
 				const npc_file = npcs_dir + files[j];
