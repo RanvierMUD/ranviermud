@@ -29,9 +29,18 @@ class Effects {
 				_effects.set(file, effect);
 				util.log(`Effect #${_effects.size}: ${file} configured.`);
 			}
-
 		});
 
+	}
+
+	/* Gets the effect from the map and passes in options/target to get the final effect object.
+	 * @param effectType String (matches filename of effect)
+	 * @param options Object of optional params to be used in effect.
+	 * @param target NPC | Player
+	 * @return effect Object
+	*/
+	get(effectType, options, target) {
+		return _effects.get(effectType)(options, target);
 	}
 
 }
