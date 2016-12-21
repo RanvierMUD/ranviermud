@@ -23,7 +23,7 @@ class Effects {
 				if (!file.match(/js$/)) 				 { continue; }
 				
 				const effectFile = effectsDir + file;
-				const effect 		 = require(effectFile).effect(players, items, npcs, rooms, Commands)
+				const effect 		 = require(effectFile).effect(players, items, npcs, rooms, Commands);
 
 				// The filename must match the "type" of effect.
 				_effects.set(file, effect);
@@ -39,8 +39,29 @@ class Effects {
 	 * @param target NPC | Player
 	 * @return effect Object
 	*/
-	get(effectType, options, target) {
+	static get(effectType, options, target) {
 		return _effects.get(effectType)(options, target);
+	}
+
+	/* Evaluates each effect, deciding if the effect is still valid, and updating anything that needs be.
+	 * For example, could evaluate on each tick, on each action, or both.
+	 * @param target NPC | Player
+	 * @return void
+	*/
+	static evaluateEffects(target) {
+		for (const [ id, effect ] of target.getEffects()) {
+			if (effect.isValid()) {
+				effect.evaluate(effect.getOptions(), target);
+			} else {
+				target.removeEffect(id);
+			}
+		}
+	}
+
+	* [Symbol.iterator]() {
+		for (const [type, effect] of _effects) {
+			yield effect;
+		}
 	}
 
 }
