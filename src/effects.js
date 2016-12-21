@@ -4,11 +4,7 @@ const util = require('util');
 
 // To store effects after configuration.
 const _effects = new Map();
-
-
-// To store globals to inject into effects.
-let players, items, npcs, rooms;
-
+const effectsDir = __dirname + '../effects/';
 
 /* Helper class for loading, getting, and handling effects. */
 
@@ -16,7 +12,7 @@ class Effects {
 	constructor() {}
 	
 	config(players, items, npcs, rooms) {
-			
+		
 	}
 
 }
