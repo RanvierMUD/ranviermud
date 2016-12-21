@@ -11,8 +11,27 @@ const effectsDir = __dirname + '../effects/';
 class Effects {
 	constructor() {}
 	
-	config(players, items, npcs, rooms) {
-		
+	config(players, items, npcs, rooms, Commands) {
+		util.log("Configuring effects...");
+
+		fs.readdir(effectsDir, (err, files) => {
+			if (err) { throw new Error(err); }
+
+			for (const file of files) {
+				util.log(`Configuring ${file}...`);
+				if (!fs.statSync(file).isFile()) { continue; }
+				if (!file.match(/js$/)) 				 { continue; }
+				
+				const effectFile = effectsDir + file;
+				const effect 		 = require(effectFile).effect(players, items, npcs, rooms, Commands)
+
+				// The filename must match the "type" of effect.
+				_effects.set(file, effect);
+				util.log(`Effect #${_effects.size}: ${file} configured.`);
+			}
+
+		});
+
 	}
 
 }
