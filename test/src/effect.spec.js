@@ -153,6 +153,7 @@ describe('Effect class', () => {
           },
           duration: null
         }, defaultOpts));
+        
         effect.init();
 
         expect(effect.isValid()).to.be.true;
