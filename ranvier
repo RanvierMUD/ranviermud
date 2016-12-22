@@ -62,12 +62,12 @@ const	Player  = require('./src/player').Player;
 const	Npc     = require('./src/npcs').Npc;
 const	Item    = require('./src/items').Item;
 const	Account = require('./src/accounts').Account;
+const Effects = require('./src/effects').Effects;
 
 // server options
 let respawnInterval, saveInterval;
 
 Type.config(Player, Npc, Item, Account);
-
 
 // cmdline options
 commander
@@ -92,7 +92,7 @@ function init(restartServer) {
 
 	const locale = commander.locale;
 	Commands.configure({ rooms, players, items, npcs, locale });
-
+	Effects.config({ players, items, npcs, rooms, Commands });
 	Events.configure({ players,items, locale, npcs, rooms, accounts, });
 
 	if (restartServer) {

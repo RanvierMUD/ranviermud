@@ -3,4 +3,10 @@
 const util = require('util');
 
 exports.effect = (players, items, npcs, rooms, Commands) => 
-  (options, target) => util.log("LOL");
+  (options, target) => {
+    util.log("LOL");
+    return {
+      evaluate: () => true,
+      type: 'stun',
+    };
+  }
