@@ -1,6 +1,7 @@
 'use strict';
 const util = require('util');
 const fs 	 = require('fs');
+const _    = require('./helpers');
 
 // To store effects after configuration.
 const _effects = new Map();
@@ -37,12 +38,12 @@ class Effects {
 	}
 
 	/* Gets the effect from the map and passes in options/target to get the final effect object.
+	 * @param target NPC | Player
 	 * @param effectType String (matches filename of effect)
 	 * @param options Object of optional params to be used in effect.
-	 * @param target NPC | Player
 	 * @return effect Object
 	*/
-	static get(effectType, options, target) {
+	static get(target, effectType, options) {
 		return _effects.get(effectType)(options, target);
 	}
 
@@ -61,7 +62,23 @@ class Effects {
 		}
 	}
 
-	static evaluateAttrMods(target, attr) {}
+	static evaluateAttrMods(target, attr) {
+		let attrValue = target.attributes[attr] || 0;
+
+		for (const [ id, effect ] of target.getEffects()) {
+			if (!effect.modifiers) { continue; }
+			
+			if (effect.isValid()) {
+				const mod = effect.modifiers[attr];
+				if (!mod) { continue; }
+				attrValue = mod(attrValue);
+			} else {
+				target.removeEffect(id);
+			}
+		}
+
+		return attrValue;
+	}
 
 	* [Symbol.iterator]() {
 		for (const [type, effect] of _effects) {

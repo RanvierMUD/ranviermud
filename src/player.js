@@ -8,6 +8,7 @@ const Data = require('./data').Data,
   wrap     = require('wrap-ansi'),
   Random   = require('./random').Random,
   Feats    = require('./feats').Feats,
+  Effects  = require('./effects').Effects,
   _        = require('./helpers');
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
@@ -21,7 +22,7 @@ const Player = function PlayerConstructor(socket) {
   const self = this;
 
   self.name        = '';
-  self.description = '';
+  self.description = 'A person';
   self.location    = null;
   self.locale      = null;
   self.accountName = '';
@@ -57,9 +58,6 @@ const Player = function PlayerConstructor(socket) {
     experience: 0,
     mutagens:   0,
     attrPoints: 0,
-
-    //TODO: Generated descs.
-    description: 'A person.'
   };
 
   self.preferences = {
@@ -102,7 +100,7 @@ const Player = function PlayerConstructor(socket) {
   self.getName         = () => self.name;
   self.getShortDesc    = () => self.name;
   self.getAccountName  = () => self.accountName;
-  self.getDescription  = () => self.attributes.description;
+  self.getDescription  = () => self.description;
   self.getLocation     = () => self.location;
   self.getBodyParts    = () => self.bodyParts;
   self.getSocket       = () => socket;
@@ -121,7 +119,7 @@ const Player = function PlayerConstructor(socket) {
   self.noEnergy = () => self.warn('You need to rest first.');
 
   self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
-    self.attributes[attr] : false;
+    Effects.evaluateAttrMods(self, attr) : false;
 
   self.getPreference = pref => typeof self.preferences[pref] !== 'undefined' ?
     self.preferences[pref] : false;
@@ -143,7 +141,7 @@ const Player = function PlayerConstructor(socket) {
   self.setLocale       = locale => self.locale = locale;
   self.setName         = newname => self.name = newname;
   self.setAccountName  = accname => self.accountName = accname;
-  self.setDescription  = newdesc => self.attributes.description = newdesc;
+  self.setDescription  = newdesc => self.description = newdesc;
 
   self.setLocation = loc  => self.location = loc;
   self.setPassword = pass =>
@@ -709,6 +707,8 @@ const Player = function PlayerConstructor(socket) {
    self.location = data.location;
    self.locale = data.locale;
 
+   self.description = data.description;
+
    self.bodyParts = data.bodyParts || {};
    self.inventory = data.inventory || [];
    self.equipment = data.equipment || {};
@@ -771,7 +771,7 @@ const Player = function PlayerConstructor(socket) {
       prompt_string, combat_prompt, password,
       equipment, attributes, skills, feats,
       gender, preferences, explored, killed,
-      met, training, bodyParts, effects 
+      met, training, bodyParts, effects, description 
     } = self;
     
     return JSON.stringify({ 
@@ -784,7 +784,8 @@ const Player = function PlayerConstructor(socket) {
       preferences,    explored, 
       killed,         met, 
       training,       bodyParts, 
-      effects,        inventory
+      effects,        inventory,
+      description
     });
     
   };
