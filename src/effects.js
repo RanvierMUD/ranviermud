@@ -1,17 +1,17 @@
 'use strict';
 const util = require('util');
-
+const fs 	 = require('fs');
 
 // To store effects after configuration.
 const _effects = new Map();
-const effectsDir = __dirname + '../effects/';
+const effectsDir = __dirname + '/../effects/';
 
 /* Helper class for loading, getting, and handling effects. */
 
 class Effects {
-	constructor() {}
+	constructor() { throw new TypeError("You should not instantiate the Effects helper class."); }
 	
-	config(players, items, npcs, rooms, Commands) {
+	static config({ players, items, npcs, rooms, Commands }) {
 		util.log("Configuring effects...");
 
 		fs.readdir(effectsDir, (err, files) => {
@@ -19,18 +19,21 @@ class Effects {
 
 			for (const file of files) {
 				util.log(`Configuring ${file}...`);
-				if (!fs.statSync(file).isFile()) { continue; }
-				if (!file.match(/js$/)) 				 { continue; }
-				
+
 				const effectFile = effectsDir + file;
-				const effect 		 = require(effectFile).effect(players, items, npcs, rooms, Commands);
+				if (!fs.statSync(effectFile).isFile()) { continue; }
+				if (!effectFile.match(/js$/)) 				 { continue; }
+				
+				const effect = require(effectFile).effect(players, items, npcs, rooms, Commands);	
+				const name = file.split('.')[0];
 
 				// The filename must match the "type" of effect.
-				_effects.set(file, effect);
+				validate(effect, name);
+				_effects.set(name, effect);
 				util.log(`Effect #${_effects.size}: ${file} configured.`);
 			}
 		});
-
+		
 	}
 
 	/* Gets the effect from the map and passes in options/target to get the final effect object.
@@ -48,15 +51,17 @@ class Effects {
 	 * @param target NPC | Player
 	 * @return void
 	*/
-	static evaluateEffects(target) {
+	static evaluateEffects(target, event) {
 		for (const [ id, effect ] of target.getEffects()) {
 			if (effect.isValid()) {
-				effect.evaluate(effect.getOptions(), target);
+				effect.evaluate(event, effect.getOptions(), target);
 			} else {
 				target.removeEffect(id);
 			}
 		}
 	}
+
+	static evaluateAttrMods(target, attr) {}
 
 	* [Symbol.iterator]() {
 		for (const [type, effect] of _effects) {
@@ -143,6 +148,22 @@ const getSpecialEncumbranceEffects = entity => ({
 	},
 
 });
+
+
+// On startup, validates all effect files
+const validate = (effect, filename) => {
+	const fakeTarget  = {};
+	const fakeOptions = {};
+	const test = effect(fakeOptions, fakeTarget);
+	
+	if (!test.evaluate || typeof test.evaluate !== 'function') {
+		throw new ReferenceError("Each effect must have an evaluate function.");
+	}
+	if (!test.type || filename !== test.type) {
+		throw new ReferenceError("Each effect must have a type that matches its filename.");
+	}
+
+}
 
 exports.Effects = Effects;
 exports.getSpecialEncumbranceEffects = getSpecialEncumbranceEffects;
