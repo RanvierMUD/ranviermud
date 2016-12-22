@@ -91,6 +91,11 @@ class Effect {
     return Date.now() - this[_started];
   }
 
+  // Safely returns an empty object if there are no defined modifiers.
+  getModifiers() {
+    return this[_effect].modifiers || {};
+  }
+
   /* Mutators */
   setElapsed() { this[_elapsed] = this.getElapsed(); }
 

@@ -65,13 +65,13 @@ class Effects {
 	static evaluateAttrMods(target, attr) {
 		let attrValue = target.attributes[attr] || 0;
 
+		//TODO: Add method to each effect to get modifiers.
 		for (const [ id, effect ] of target.getEffects()) {
-			if (!effect.modifiers) { continue; }
+			const modifier = effect.getModifiers()[attr] //TODO: Impl.
+			if (!modifier) { continue; }
 			
 			if (effect.isValid()) {
-				const mod = effect.modifiers[attr];
-				if (!mod) { continue; }
-				attrValue = mod(attrValue);
+				attrValue = modifier(attrValue);
 			} else {
 				target.removeEffect(id);
 			}
