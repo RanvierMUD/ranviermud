@@ -77,7 +77,9 @@ class Effects {
 			}
 		}
 
-		return attrValue;
+		// Don't allow negative attributes. 
+		// If attr somehow becomes NaN, return 0.
+		return Math.max(attrValue, 0) || 0;
 	}
 
 	* [Symbol.iterator]() {
