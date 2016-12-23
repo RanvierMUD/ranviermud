@@ -23,10 +23,10 @@ class Effect {
     this[_type]    = type;
     this[_target]  = target;
     this[_options] = options;
-    this[_effect]  = {activate: () => null} //Effects.get(type, options, target);
+    this[_effect]  = Effects.get(target, type, options);
 
     this[_effect].activate(options, target);
-
+    if (this[_options].activate) { this[_options].activate(target); }
   }
 
   /* 
@@ -37,8 +37,8 @@ class Effect {
    * 3) //TODO: Sets up attribute modifiers
    */
   init() {
-    const target  = this.getTarget();
-    const options = this.getOptions();
+    const target  = this[_target];
+    const options = this[_options];
     
     if (options.duration) {
       this[_started] = options.started || Date.now();
@@ -52,14 +52,12 @@ class Effect {
       effect.deactivate(options, target);
     });
 
-    
-    const events         = effect.events         || {};
-    const eventCallbacks = effect.eventCallbacks || {};
+    const events = effect.events         || {};
     
     for (let event in events) {
-      const cb = eventCallbacks[event];
-      if (!cb) { throw new ReferenceError("An event was registered for an effect, but it had no callback."); }
-      target.on(event, cb);
+      const handler = events[event];
+      if (!handler) { throw new ReferenceError("An event was registered for an effect, but it had no handler."); }
+      target.on(event, handler);
     }
 
     const modifiers = effect.modifiers;
@@ -105,13 +103,24 @@ class Effect {
   isValid()        { return this.isCurrent() && this.checkPredicate(); }
   
   checkPredicate() { 
-    const predicate = this.getOptions().predicate;
-    console.log("predicate:::: ", predicate);
+    const options   = this[_options];
+    const predicate = options.predicate;
     return predicate ? 
-      predicate(this.getOptions(), this.getTarget()) : 
+      predicate(options, this[_target]) : 
       true;
   }
 
+  /* Proxies for effect/optional methods */
+  deactivate() {
+    this[_effect].deactivate();
+    if (this[_options].deactivate) { 
+      this[_options].deactivate(); 
+    }
+    const events = effect.events || {};
+    for (let event in events) {
+      target.removeListener(event)
+    }
+  }
 }
 
 /* Validation helper for effect construction */

@@ -9,6 +9,7 @@ const Data = require('./data').Data,
   Random   = require('./random').Random,
   Feats    = require('./feats').Feats,
   Effects  = require('./effects').Effects,
+  Effect   = require('./effect').Effect,
   _        = require('./helpers');
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
@@ -72,7 +73,7 @@ const Player = function PlayerConstructor(socket) {
   self.met      = { length: 0 };
 
   // Anything affecting the player
-  self.effects = {};
+  self.effects = new Map();
 
   // Skills the players has
   self.skills = {};
@@ -361,33 +362,26 @@ const Player = function PlayerConstructor(socket) {
 
   /**
    * Get currently applied effects
-   * @param string eff
-   * @return Array|Object
+   * @param string effect id
+   * @return Map effects
    */
-  self.getEffects = eff => {
-    if (eff) {
-      return typeof self.effects[eff] !== 'undefined' ? self.effects[eff] :
-        false;
-    }
-    return self.effects;
-  };
+  self.getEffects = id => id ? self.effects.get(id) : self.effects;
 
   /**
    * Add, activate and set a timer for an effect
    * @param string name
    * @param object effect
    */
-  self.addEffect = (name, effect, config) => {
-    if (effect.activate) {
-      effect.activate(config);
-    }
-
-    let deact = function() {
-      if (effect.deactivate && self.getSocket()) {
-        effect.deactivate(config);
-      }
-      self.removeEffect(name);
-    };
+  self.addEffect = (id, options) => {
+    const effect = new Effect({ 
+      id, 
+      options, 
+      type: options.type, 
+      target: self 
+    });
+      
+    self.removeEffect(id);
+    effects.set(id, effect);
 
     if (effect.duration) {
       effect.timer = setTimeout(deact, effect.duration);
@@ -396,6 +390,15 @@ const Player = function PlayerConstructor(socket) {
     }
     self.effects[name] = effect;
   };
+
+  self.removeEffect = id => {
+    if (effects.has(id)) {
+      const oldEffect = effects.get(id);
+      oldEffect.deactivate();
+      effects.delete(id);
+    }
+  }
+  /*
 
   self.removeEffect = eff => {
     if (!eff || !self.effects[eff]) {
@@ -413,6 +416,8 @@ const Player = function PlayerConstructor(socket) {
     }
     if (self.effects[eff]) { delete self.effects[eff]; }
   };
+
+  */
 
   ///// ----- Handle Inventory && Equipment. ----- ///////
 
