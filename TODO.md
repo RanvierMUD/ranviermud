@@ -8,13 +8,10 @@
 | /Users/seanohue/myProjects/ranviermud/src/command_util.js | 34 | Make APIs consistent and not awful.
 | /Users/seanohue/myProjects/ranviermud/src/commands.js | 36 | Extract into individual files.
 | /Users/seanohue/myProjects/ranviermud/src/commands.js | 218 | invis
-| /Users/seanohue/myProjects/ranviermud/src/commands.js | 270 | Do the same way as above once you extract the admin commands.
+| /Users/seanohue/myProjects/ranviermud/src/commands.js | 266 | Do the same way as above once you extract the admin commands.
 | /Users/seanohue/myProjects/ranviermud/src/dialogue.js | 145 | Consider extracting these enums/consts from the main dialogue script file.
 | /Users/seanohue/myProjects/ranviermud/src/doors.js | 44 | Refactor to use the bound functions in external code.
-| /Users/seanohue/myProjects/ranviermud/src/effects.js | 4 | Extract into own directory. Too many effects.
-| /Users/seanohue/myProjects/ranviermud/src/effects.js | 5 | Make an atom snippet for this?
-| /Users/seanohue/myProjects/ranviermud/src/effects.js | 6 | Effects_utils?
-| /Users/seanohue/myProjects/ranviermud/src/effects.js | 7 | These do not persist. Fix?
+| /Users/seanohue/myProjects/ranviermud/src/effects.js | 68 | Add method to each effect to get modifiers.
 | /Users/seanohue/myProjects/ranviermud/src/events.js | 24 | Deprecate this if possible.
 | /Users/seanohue/myProjects/ranviermud/src/events.js | 82 | Extract stuff like this into Data module as util funcs.
 | /Users/seanohue/myProjects/ranviermud/src/examine.js | 18 | Change command so that it can work on any item, npc, or room by emitting.
@@ -30,12 +27,11 @@
 | /Users/seanohue/myProjects/ranviermud/src/npcs.js | 15 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
 | /Users/seanohue/myProjects/ranviermud/src/npcs.js | 17 | Extract npc from this file like player/player_manager
 | /Users/seanohue/myProjects/ranviermud/src/npcs.js | 227 | Have spawn inventory but also add same inv functionality as player
-| /Users/seanohue/myProjects/ranviermud/src/player.js | 61 | Generated descs.
-| /Users/seanohue/myProjects/ranviermud/src/player.js | 264 | IS there a better way to store this info?
-| /Users/seanohue/myProjects/ranviermud/src/player.js | 342 | Put in perception skill helper file
-| /Users/seanohue/myProjects/ranviermud/src/player.js | 353 | Consider using Random.roll instead.
-| /Users/seanohue/myProjects/ranviermud/src/player.js | 657 | refactor to use template strings.
-| /Users/seanohue/myProjects/ranviermud/src/player.js | 821 | Put this as a function in the combatUtils module.
+| /Users/seanohue/myProjects/ranviermud/src/player.js | 262 | IS there a better way to store this info?
+| /Users/seanohue/myProjects/ranviermud/src/player.js | 340 | Put in perception skill helper file
+| /Users/seanohue/myProjects/ranviermud/src/player.js | 351 | Consider using Random.roll instead.
+| /Users/seanohue/myProjects/ranviermud/src/player.js | 655 | refactor to use template strings.
+| /Users/seanohue/myProjects/ranviermud/src/player.js | 822 | Put this as a function in the combatUtils module.
 | /Users/seanohue/myProjects/ranviermud/src/player_manager.js | 1 | LOL REFACTOR
 | /Users/seanohue/myProjects/ranviermud/src/rooms.js | 3 | Refactor
 | /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
@@ -53,6 +49,8 @@
 | /Users/seanohue/myProjects/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanohue/myProjects/ranviermud/src/status.js | 3 | Refactor.
 | /Users/seanohue/myProjects/ranviermud/src/status.js | 112 | Use in player/npc class.
+| /Users/seanohue/myProjects/ranviermud/scripts/objects/1-shiv.js | 9 | Update to account for prereqs
+| /Users/seanohue/myProjects/ranviermud/scripts/objects/10-chain_whip.js | 68 | Refactor by extracting to functions...
 | /Users/seanohue/myProjects/ranviermud/scripts/npcs/1-roach.js | 9 | Consider modifying this to use dep injection that is more like the commands.
 | /Users/seanohue/myProjects/ranviermud/scripts/npcs/3-defiler.js | 75 | Add condition where attacking the defiler's legs will slow it greatly.
 | /Users/seanohue/myProjects/ranviermud/scripts/npcs/5-feline.js | 60 | Extract to dialogue or level utils?
@@ -64,8 +62,6 @@
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 111 | Emit sanity loss event here if applicable.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 128 | Extract all stuff for determining stat gain into level utils.
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 190 | Permadeath, add it.
-| /Users/seanohue/myProjects/ranviermud/scripts/objects/1-shiv.js | 9 | Update to account for prereqs
-| /Users/seanohue/myProjects/ranviermud/scripts/objects/10-chain_whip.js | 68 | Refactor by extracting to functions...
 | /Users/seanohue/myProjects/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanohue/myProjects/ranviermud/commands/drop.js | 11 | Does this handle dropping a container with items in it?
 | /Users/seanohue/myProjects/ranviermud/commands/help.js | 41 | Extract this (its also used in commands)

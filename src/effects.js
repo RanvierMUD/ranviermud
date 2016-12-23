@@ -67,7 +67,7 @@ class Effects {
 
 		//TODO: Add method to each effect to get modifiers.
 		for (const [ id, effect ] of target.getEffects()) {
-			const modifier = effect.getModifiers()[attr] //TODO: Impl.
+			const modifier = effect.getModifiers()[attr];
 			if (!modifier) { continue; }
 			
 			if (effect.isValid()) {
