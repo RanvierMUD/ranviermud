@@ -5,7 +5,26 @@ const sinon  = require('sinon');
 const Player = require('../../src/player').Player;
 const Npc    = require('../../src/npcs').Npc;
 
-const Effect = require('../../src/effect').Effect;
+const Effect  = require('../../src/effect').Effect;
+const Effects = require('../../src/effects').Effects;
+
+
+
+Effects.config({ 
+  players: {}, 
+  items: {}, 
+  room: {}, 
+  npcs: {}, 
+  Commands: {} 
+});
+
+const fakeEffect = {
+  activate: sinon.spy(),
+  deactivate: sinon.spy(),
+
+};
+
+Effects.get = sinon.stub().returns(fakeEffect);
 
 describe('Effect class', () => {
 
