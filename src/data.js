@@ -105,6 +105,7 @@ const Data = {
 	 * @return 
 	*/
 	loadEffects: (target, str) => {
+		if (!str) { return new Map(); }
 		let stringifiedEffects;
 		try {
 			stringifiedEffects = new Map(JSON.parse(str));
@@ -118,6 +119,7 @@ const Data = {
 			const { id, type, options } = effectConfig;
 			const effect = new Effect({ id, type, options, target });
 			loadedEffects.set(id, effect);
+			effect.init();
 		}
 
 		return loadedEffects;
