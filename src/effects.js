@@ -79,6 +79,14 @@ class Effects {
 		return Math.max(attrValue, 0) || 0;
 	}
 
+	static stringify(target) {
+		let flattened = [];
+		for ([id, effect] of target.getEffects()) {
+			flattened.push([id, effect.flatten()]);
+		}
+		return JSON.stringify(flattened);
+	}
+
 	* [Symbol.iterator]() {
 		for (const [type, effect] of _effects) {
 			yield effect;
@@ -171,9 +179,10 @@ const validate = (effect, filename) => {
 	const fakeTarget  = {};
 	const fakeOptions = {};
 	const test = effect(fakeOptions, fakeTarget);
-	
-	if (!test.evaluate || typeof test.evaluate !== 'function') {
-		throw new ReferenceError("Each effect must have an evaluate function.");
+	const isFunction = thing => thing && typeof thing === 'function';
+	if (!isFunction(test.activate) || !isFunction(test.deactivate)) {
+		console.log(effect, filename);
+		throw new ReferenceError("Each effect must have activate and deactivate functions.");
 	}
 	if (!test.type || filename !== test.type) {
 		throw new ReferenceError("Each effect must have a type that matches its filename.");

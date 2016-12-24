@@ -25,8 +25,8 @@ class Effect {
     this[_options] = options;
     this[_effect]  = Effects.get(target, type, options);
 
-    this[_effect].activate(options, target);
-    if (this[_options].activate) { this[_options].activate(target); }
+    this[_effect].activate();
+    if (this[_options].activate) { this[_options].activate(); }
   }
 
   /* 
@@ -49,10 +49,10 @@ class Effect {
 
     target.on('quit', () => {
       this.setElapsed();
-      effect.deactivate(options, target);
+      // effect.deactivate();
     });
 
-    const events = effect.events         || {};
+    const events = effect.events || {};
     
     for (let event in events) {
       const handler = events[event];
@@ -76,9 +76,9 @@ class Effect {
   getTarget()  { return this[_target];  }
 
   /* Get fields from generic effect, for player-friendly consumption. */
-  getName()        { return this[_event].name; }
-  getDescription() { return this[_event].desc; }
-  getAura()        { return this[_event].aura; }
+  getName()        { return this[_effect].name; }
+  getDescription() { return this[_effect].desc; }
+  getAura()        { return this[_effect].aura; }
 
   getDuration() { 
     return parseInt(this[_options].duration, 10) || Infinity; 
@@ -121,6 +121,16 @@ class Effect {
       target.removeListener(event)
     }
   }
+
+  flatten() {
+    const savedOptions = Object.assign({}, this[_options], { started: this[_started], elapsed: this[_elapsed] }); 
+    return {
+      id:      this[_id],
+      options: savedOptions,
+      type:    this[_type],
+    };
+  }
+
 }
 
 /* Validation helper for effect construction */
@@ -129,7 +139,7 @@ const validate = (id, options, type, target) => {
     throw new ReferenceError("Effects must have an ID to prevent stacking."); 
   }
   if (!options || !Object.keys(options).length) { 
-    throw new ReferenceError("Effects must take an options object to pass to applicable functions when evaluating effects."); 
+    throw new ReferenceError("Effects must take an options object."); 
   }
   if (!type) { 
     throw new ReferenceError("Effects must have a generic effect type."); 

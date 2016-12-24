@@ -31,7 +31,7 @@ sinon.spy(player, 'warn');
 
 const getWarnCall = getCallCounter(player.warn);
 
-describe('failing to drop items', () => {
+describe.only('failing to drop items', () => {
 
   it('should not let you drop an item you do not have', () => {
 
