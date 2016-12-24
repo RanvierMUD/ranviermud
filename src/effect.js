@@ -106,7 +106,7 @@ class Effect {
     const options   = this[_options];
     const predicate = options.predicate;
     return predicate ? 
-      predicate(options, this[_target]) : 
+      predicate() : 
       true;
   }
 
