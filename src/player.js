@@ -741,7 +741,7 @@ const Player = function PlayerConstructor(socket) {
     }
     
     // Hydrate and activate any effects
-    Data.loadEffects(target, data.effects);
+    Data.loadEffects(self, data.effects);
 
   };
 
@@ -768,7 +768,7 @@ const Player = function PlayerConstructor(socket) {
       .getInventory()
       .map(item => item.flatten());
 
-    const effects = Effects.stringify(target);
+    const effects = Effects.stringify(self);
 
     const { 
       name, accountName, location, locale, 
