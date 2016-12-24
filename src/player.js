@@ -775,7 +775,7 @@ const Player = function PlayerConstructor(socket) {
       prompt_string, combat_prompt, password,
       equipment, attributes, skills, feats,
       gender, preferences, explored, killed,
-      met, training, bodyParts, effects, description 
+      met, training, bodyParts, description 
     } = self;
     
     return JSON.stringify({ 
