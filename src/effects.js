@@ -54,9 +54,7 @@ class Effects {
 	*/
 	static evaluateEffects(target, event) {
 		for (const [ id, effect ] of target.getEffects()) {
-			if (effect.isValid()) {
-				effect.evaluate(event, effect.getOptions(), target);
-			} else {
+			if (!effect.isValid()) {
 				target.removeEffect(id);
 			}
 		}
@@ -65,7 +63,6 @@ class Effects {
 	static evaluateAttrMods(target, attr) {
 		let attrValue = target.attributes[attr] || 0;
 
-		//TODO: Add method to each effect to get modifiers.
 		for (const [ id, effect ] of target.getEffects()) {
 			const modifier = effect.getModifiers()[attr];
 			if (!modifier) { continue; }
