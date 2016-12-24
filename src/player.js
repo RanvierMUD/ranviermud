@@ -382,13 +382,7 @@ const Player = function PlayerConstructor(socket) {
       
     self.removeEffect(id);
     effects.set(id, effect);
-
-    if (effect.duration) {
-      effect.timer = setTimeout(deact, effect.duration);
-    } else if (effect.event) {
-      self.on(effect.event, deact);
-    }
-    self.effects[name] = effect;
+    effect.init();
   };
 
   self.removeEffect = id => {
@@ -736,7 +730,6 @@ const Player = function PlayerConstructor(socket) {
       }
     }
 
-
     // If the player is new, or skills have been added, initialize them to level 1.
     for (let skill in Skills) {
       skill = Skills[skill];
@@ -746,6 +739,9 @@ const Player = function PlayerConstructor(socket) {
         self.skills[skill.id] = 1;
       }
     }
+    
+    // Hydrate and activate any effects
+    Data.loadEffects(target, data.effects);
 
   };
 
@@ -772,7 +768,10 @@ const Player = function PlayerConstructor(socket) {
       .getInventory()
       .map(item => item.flatten());
 
-    const { name, accountName, location, locale, 
+    const effects = Effects.stringify(target);
+
+    const { 
+      name, accountName, location, locale, 
       prompt_string, combat_prompt, password,
       equipment, attributes, skills, feats,
       gender, preferences, explored, killed,
