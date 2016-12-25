@@ -162,14 +162,14 @@ const Feats = {
       const potentialTargets = combatants.length === 1 ?
         combatants :
         combatants
-          .filter(enemy =>
-            enemy.hasKeyword(args) ||
-            enemy.getShortDesc().includes(args) ||
-            enemy.getName().toString().includes(args));
+          .filter(enemy => args ? 
+            (enemy.hasKeyword(args) 
+            || enemy.getShortDesc().includes(args) 
+            || enemy.getName().toString().includes(args)) :
+            []);
 
-      if (!args || !potentialTargets.length) {
-        player.say('Stun whom?');
-        return;
+      if (!potentialTargets.length) {
+        return player.say('Stun whom?');
       }
 
       const target = potentialTargets[0];
@@ -177,11 +177,11 @@ const Feats = {
       const stunning = player.getEffects('stunning') || target.getEffects('stunned');
 
       if (stunning) {
-        player.say('You must wait before doing that again.');
-        return;
+        return player.say('You must wait before doing that again.');
       }
 
-      const cooldown = 15 * 1000;
+      const level = player.getAttribute('level');
+      const cooldown = Math.max((30 * 1000) - (level * 1000) 
       target.addEffect('stunned', {
         duration: 5 * 1000,
 
