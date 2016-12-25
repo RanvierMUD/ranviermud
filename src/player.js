@@ -368,7 +368,7 @@ const Player = function PlayerConstructor(socket) {
   self.getEffects = id => id ? self.effects.get(id) : self.effects;
 
   /**
-   * Add, activate and set a timer for an effect
+   * Add & activate an effect
    * @param string name
    * @param object effect
    */
@@ -381,37 +381,18 @@ const Player = function PlayerConstructor(socket) {
     });
       
     self.removeEffect(id);
-    effects.set(id, effect);
+    self.effects.set(id, effect);
     effect.init();
   };
 
   self.removeEffect = id => {
-    if (effects.has(id)) {
-      const oldEffect = effects.get(id);
+    if (self.effects.has(id)) {
+      const oldEffect = self.effects.get(id);
       oldEffect.deactivate();
-      effects.delete(id);
+      return self.effects.delete(id);
     }
   }
-  /*
-
-  self.removeEffect = eff => {
-    if (!eff || !self.effects[eff]) {
-      return util.log("ERROR: Effect " + eff + " not found on " + self.getName());
-    }
-
-    if (self.effects[eff].deactivate) {
-      self.effects[eff].deactivate();
-    }
-
-    if (self.effects[eff].event) {
-      self.removeListener(self.effects[eff].event);
-    } else {
-      clearTimeout(self.effects[eff].timer);
-    }
-    if (self.effects[eff]) { delete self.effects[eff]; }
-  };
-
-  */
+  
 
   ///// ----- Handle Inventory && Equipment. ----- ///////
 
