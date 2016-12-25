@@ -105,7 +105,8 @@ class Effect {
 
   /* Proxies for effect/optional methods */
   deactivate() {
-    this[_effect].deactivate();
+    const effect = this[_effect];
+    effect.deactivate();
     if (this[_options].deactivate) { 
       this[_options].deactivate(); 
     }
