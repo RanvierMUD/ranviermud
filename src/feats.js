@@ -161,12 +161,11 @@ const Feats = {
       const combatants = player.getInCombat();
       const potentialTargets = combatants.length === 1 ?
         combatants :
-        combatants
-          .filter(enemy => args ? 
-            (enemy.hasKeyword(args) 
-            || enemy.getShortDesc().includes(args) 
-            || enemy.getName().toString().includes(args)) :
-            []);
+        combatants.filter(enemy => args ? 
+          (enemy.hasKeyword(args) 
+          || enemy.getShortDesc().includes(args) 
+          || enemy.getName().toString().includes(args)) :
+          []);
 
       if (!potentialTargets.length) {
         return player.say('Stun whom?');
@@ -174,42 +173,38 @@ const Feats = {
 
       const target = potentialTargets[0];
 
-      const stunning = player.getEffects('stunning') || target.getEffects('stunned');
+      const stunning = player.getEffects('stun cooldown');
+      const alreadyStunned = target.getEffects('stunned');
 
       if (stunning) {
         return player.say('You must wait before doing that again.');
       }
 
-      const level = player.getAttribute('level');
-      const cooldown = Math.max((30 * 1000) - (level * 1000) 
-      target.addEffect('stunned', {
-        duration: 5 * 1000,
-
+      const level    = player.getAttribute('level');
+      const will     = player.getAttribute('willpower');
+      const cooldown = Math.max((30 * 1000) - (level * 1000), 6000); 
+      const duration = Math.min((level / 4) * 3000, 30 * 1000);
+      const factor   = Math.round((level + will / 4) + (player.getAttribute('cleverness') / 8));
+      
+      target.addEffect('stun', {
+        duration,
+        factor,
+        id: 'stunned',
+        
         activate: () => {
-          player.say('<magenta>You concentrate on stifling your opponent.</magenta>');
-          const strongestMentalAttr = Math.max(player.getAttribute('willpower'), player.getAttribute('cleverness'));
-          const magnitude = player.getAttribute('level') + strongestMentalAttr;
-          target.combat.addDodgeMod({
-            name: 'stunned',
-            effect: dodge => Math.max(dodge - magnitude, 0)
-          });
-          target.combat.addToHitMod({
-            name: 'stunned',
-            effect: toHit => Math.max(toHit - magnitude, 0)
-          })
-          player.addEffect('stunning', Effects.slow({
-            target,
-            magnitude,
-          }));
-          const sanityCost = 11 + Math.round(magnitude / 2);
+          player.say(`<magenta>You concentrate on stifling ${target.getShortDesc()}.</magenta>`);
+          
+          const sanityCost = 11 + Math.round(factor / 2);
           deductSanity(player, sanityCost);
+          
+          player.addEffect('stun_cooldown', {
+            id: 'stun cooldown',
+            duration: cooldown,
+            cost: Math.max(1, target.getAttribute('level') - will)
+          });
         },
 
-        deactivate: () => {
-          player.say('<yellow>Your opponent is no longer stunned.</yellow>');
-          combatant.combat.removeDodgeMod('stunned');
-          setTimeout(player.removeEffect.bind(null, 'stunning'), cooldown);
-        },
+        deactivate: () => player.warn(`Your opponent, ${target.getShortDesc()} is free of your power.`),
       });
     }
   },
