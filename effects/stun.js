@@ -8,14 +8,14 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
     return {
       activate: () => {
         const {
-          factor          = 2,
-          duration        = 10 * 1000,
+          factor   = 2,
+          duration = 10 * 1000,
         } = options;
 
         const name = 'stunned';
 
         target.combat.addSpeedMod({ name,
-          effect: speed => speed * factor
+          effect: speed => Math.max(speed * factor, 10 * 1000)
         });
 
         target.combat.addDodgeMod({ name,
@@ -24,7 +24,7 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
 
         target.combat.addToHitMod({
           name,
-          effect: toHit => toHit / factor
+          effect: toHit => toHit / (factor * 2)
         });
 
       },
