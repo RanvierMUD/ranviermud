@@ -60,13 +60,6 @@ class Effect {
       target.on(event, handler);
     }
 
-    const modifiers = effect.modifiers;
-    for (let attr in modifiers) {
-      const modifier = modifiers[attr];
-      if (!modifier) { throw new ReferenceError("An attribute modifier was registered but it had no callback."); }
-      target.setModifier(attr, modifier);
-    }
-
   }
 
   /* Get private fields... */

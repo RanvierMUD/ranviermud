@@ -186,10 +186,10 @@ const Feats = {
       const duration = Math.min((level / 4) * 3000, 30 * 1000);
       const factor   = Math.round((level + will / 4) + (player.getAttribute('cleverness') / 8));
       
-      target.addEffect('stun', {
+      target.addEffect('stunned', {
         duration,
         factor,
-        id: 'stunned',
+        type: 'stun',
         
         activate: () => {
           player.say(`<magenta>You concentrate on stifling ${target.getShortDesc()}.</magenta>`);
@@ -197,8 +197,8 @@ const Feats = {
           const sanityCost = 11 + Math.round(factor / 2);
           deductSanity(player, sanityCost);
           
-          player.addEffect('stun_cooldown', {
-            id: 'stun cooldown',
+          player.addEffect('stun cooldown', {
+            type: 'willpower_cooldown',
             duration: cooldown,
             cost: Math.max(1, target.getAttribute('level') - will)
           });
