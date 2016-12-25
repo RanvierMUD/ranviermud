@@ -229,7 +229,13 @@ const Commands = {
    * }
    * @param object config
    */
-  configure: function({ rooms, players, items, npcs }) {
+  configure: function(config) {
+
+    rooms   = config.rooms;
+    players = config.players;
+    npcs    = config.npcs;
+    items   = config.items;
+
 
     util.log("Loading command l10n... ");
     l10n = l10nHelper(l10nFile);

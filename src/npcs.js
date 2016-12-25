@@ -4,7 +4,8 @@ const fs = require('fs'),
   uuid   = require('node-uuid'),
   events = require('events'),
   Data   = require('./data.js').Data,
-  _      = require('./helpers');
+  _      = require('./helpers'),
+  Effect = require('./effect').Effect;
 
 const npcs_dir = __dirname + '/../entities/npcs/';
 const npcs_scripts_dir = __dirname + '/../scripts/npcs/';
@@ -163,13 +164,15 @@ const Npc = function NpcConstructor(config) {
   self.inCombat = [];
   self.uuid = null;
 
+
+  //TODO: Make attributes more or less match that of the player.
   self.attributes = {
     max_health: 0,
     health: 0,
     level: 1
   };
 
-  self.effects = {};
+  self.effects = new Map();
 
   /**
    * tha real constructor
@@ -227,7 +230,6 @@ const Npc = function NpcConstructor(config) {
   //TODO: Have spawn inventory but also add same inv functionality as player
   self.setInventory = identifier  => self.inventory = identifier;
   self.setAttribute = (attr, val) => self.attributes[attr] = val;
-  self.removeEffect = eff         => { delete self.effects[eff]; };
 
   self.isInCombat       = ()        => self.inCombat.length > 0;
   self.setInCombat      = combatant => self.inCombat.push(combatant);
@@ -253,31 +255,32 @@ const Npc = function NpcConstructor(config) {
    * @param string aff
    * @return Array|Object
    */
-  self.getEffects = eff => {
-    if (eff) {
-      return self.effects[eff] ?
-        self.effects[eff] : false;
-    }
-    return self.effects;
-  };
+  self.getEffects = eff => eff ? self.effects.get(eff) : self.effects;
 
   /**
-   * Add, activate and set a timer for an affect
+   * Add & activate an effect
    * @param string name
-   * @param object affect
+   * @param object effect
    */
-  self.addEffect = (name, effect, config) => {
-    if (effect.activate) {
-      effect.activate(config);
-    }
+  self.addEffect = (id, options) => {
+    const effect = new Effect({ 
+      id, 
+      options, 
+      type: options.type, 
+      target: self 
+    });
+      
+    self.removeEffect(id);
+    self.effects.set(id, effect);
+    effect.init();
+  };
 
-    setTimeout(() => {
-      if (effect.deactivate) {
-        effect.deactivate(config);
-      }
-      self.removeEffect(name);
-    }, effect.duration * 1000);
-    self.effects[name] = 1;
+  self.removeEffect = id => {
+    if (self.effects.has(id)) {
+      const oldEffect = self.effects.get(id);
+      oldEffect.deactivate();
+      return self.effects.delete(id);
+    }
   };
 
   /**
