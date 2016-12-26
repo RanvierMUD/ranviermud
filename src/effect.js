@@ -9,7 +9,9 @@ const _type    = Symbol('type');
 const _target  = Symbol('target'); 
 const _elapsed = Symbol('elapsed');
 const _started = Symbol('started');
+const _paused  = Symbol('paused');
 const _effect  = Symbol('effect');
+
 
 /* Effect class -- instantiates new effect, can be used to check for validity of effect, can be used 
  * @param {id: string, options: object, type: string, target: NPC | Player } 
@@ -24,6 +26,8 @@ class Effect {
     this[_target]  = target;
     this[_options] = options;
     this[_effect]  = Effects.get(target, type, options);
+    this[_paused]  = options.paused ? Date.now() - options.paused : 0;
+
 
     this[_effect].activate();
     if (this[_options].activate) { this[_options].activate(); }
@@ -79,7 +83,7 @@ class Effect {
 
   getElapsed() { 
     if (isNaN(this[_started])) { return null; }
-    return Date.now() - this[_started];
+    return Date.now() - (this[_started] + this[_paused]);
   }
 
   // Safely returns an empty object if there are no defined modifiers.
@@ -88,7 +92,7 @@ class Effect {
   }
 
   /* Mutators */
-  setElapsed() { this[_elapsed] = this.getElapsed(); }
+  setElapsed(elapsed) { this[_elapsed] = elapsed || this.getElapsed(); }
 
   /* Predicates */
   isCurrent()      { return this.isTemporary() ? this.getElapsed() < this.getDuration() : true; }
@@ -117,7 +121,12 @@ class Effect {
   }
 
   flatten() {
-    const savedOptions = Object.assign({}, this[_options], { started: this[_started], elapsed: this[_elapsed] }); 
+    const savedOptions = Object.assign({}, this[_options], 
+      { 
+        started: this[_started], 
+        elapsed: this[_elapsed],
+        paused:  this[_started] ? Date.now() : null
+      }); 
     return {
       id:      this[_id],
       options: savedOptions,
