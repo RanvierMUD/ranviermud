@@ -4,7 +4,7 @@ const fs = require('fs'),
     path = require('path'),
     util = require('util'),
     l10nHelper = require('./l10n'),
-		Effect = require('./effect');
+		Effect = require('./effect').Effect;
 
 const data_path          = __dirname + '/../data/';
 const behaviors_dir      = __dirname + '/../scripts/behaviors/';
