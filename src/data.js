@@ -105,8 +105,12 @@ const Data = {
 	 * @return 
 	*/
 	loadEffects: (target, str) => {
+		util.log(`Loading in ${target.getShortDesc()}'s effects from: ${str}`);
+		
 		if (!str) { return new Map(); }
+		
 		let stringifiedEffects;
+		
 		try {
 			stringifiedEffects = new Map(JSON.parse(str));
 		} catch (e) {
