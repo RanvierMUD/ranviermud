@@ -722,7 +722,7 @@ const Player = function PlayerConstructor(socket) {
     }
     
     // Hydrate and activate any effects
-    Data.loadEffects(self, data.effects);
+    self.effects = Data.loadEffects(self, data.effects);
 
   };
 

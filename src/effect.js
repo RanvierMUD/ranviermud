@@ -121,12 +121,12 @@ class Effect {
   }
 
   flatten() {
-    const savedOptions = Object.assign({}, this[_options], 
-      { 
-        started: this[_started], 
-        elapsed: this[_elapsed],
-        paused:  this[_started] ? Date.now() : null
-      }); 
+    const savedOptions = Object.assign({}, 
+    this[_options], { 
+      started: this[_started], 
+      elapsed: this[_elapsed],
+      paused:  this[_started] ? Date.now() : null
+    }); 
     return {
       id:      this[_id],
       options: savedOptions,

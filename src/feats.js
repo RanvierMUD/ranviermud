@@ -182,7 +182,7 @@ const Feats = {
 
       const level    = player.getAttribute('level');
       const will     = player.getAttribute('willpower');
-      const cooldown = Math.max((30 * 1000) - (level * 1000), 6000); 
+      const cooldown = Math.max((60 * 1000) - (level * 1000), 6000); 
       const duration = Math.min((level / 4) * 3000, 30 * 1000);
       const factor   = Math.round((level + will / 4) + (player.getAttribute('cleverness') / 8));
       
