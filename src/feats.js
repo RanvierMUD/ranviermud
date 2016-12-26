@@ -33,7 +33,7 @@ const Feats = {
     id: "leatherskin",
     description: "Your skin has become tougher, and you are better able to take physical damage.",
     activate: player => {
-      util.log(player.getName() + ' activates Leatherskin.');
+
       if (player.getEffects('leatherskin')) {
         player.removeEffect('leatherskin');
       }
