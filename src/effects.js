@@ -81,7 +81,7 @@ class Effects {
 
 	static stringify(target) {
 		let flattened = [];
-		for ([id, effect] of target.getEffects()) {
+		for (const [id, effect] of target.getEffects()) {
 			flattened.push([id, effect.flatten()]);
 		}
 		return JSON.stringify(flattened);

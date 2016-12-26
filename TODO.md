@@ -8,14 +8,14 @@
 | /Users/seanohue/myProjects/ranviermud/src/command_util.js | 34 | Make APIs consistent and not awful.
 | /Users/seanohue/myProjects/ranviermud/src/commands.js | 36 | Extract into individual files.
 | /Users/seanohue/myProjects/ranviermud/src/commands.js | 218 | invis
-| /Users/seanohue/myProjects/ranviermud/src/commands.js | 266 | Do the same way as above once you extract the admin commands.
+| /Users/seanohue/myProjects/ranviermud/src/commands.js | 271 | Do the same way as above once you extract the admin commands.
 | /Users/seanohue/myProjects/ranviermud/src/dialogue.js | 145 | Consider extracting these enums/consts from the main dialogue script file.
 | /Users/seanohue/myProjects/ranviermud/src/doors.js | 44 | Refactor to use the bound functions in external code.
 | /Users/seanohue/myProjects/ranviermud/src/events.js | 24 | Deprecate this if possible.
 | /Users/seanohue/myProjects/ranviermud/src/events.js | 82 | Extract stuff like this into Data module as util funcs.
 | /Users/seanohue/myProjects/ranviermud/src/examine.js | 18 | Change command so that it can work on any item, npc, or room by emitting.
 | /Users/seanohue/myProjects/ranviermud/src/feats.js | 119 | Extract these to a skills/charm.js file
-| /Users/seanohue/myProjects/ranviermud/src/feats.js | 429 | Use an event emitter instead.
+| /Users/seanohue/myProjects/ranviermud/src/feats.js | 424 | Use an event emitter instead.
 | /Users/seanohue/myProjects/ranviermud/src/help_files.js | 52 | Dynamically pull in list of admins
 | /Users/seanohue/myProjects/ranviermud/src/item_util.js | 114 | Use EventEmitters to emit a critical hit event for the item, so each item can have special crit effects.
 | /Users/seanohue/myProjects/ranviermud/src/item_util.js | 125 | Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
@@ -23,14 +23,15 @@
 | /Users/seanohue/myProjects/ranviermud/src/items.js | 36 | Extract to Data helper method.
 | /Users/seanohue/myProjects/ranviermud/src/items.js | 90 | Account for persisted items eventually (uuids rather than vnums)
 | /Users/seanohue/myProjects/ranviermud/src/items.js | 183 | Every other class uses .location for the room vnum, right? use .location and .getLocation
-| /Users/seanohue/myProjects/ranviermud/src/npcs.js | 15 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
-| /Users/seanohue/myProjects/ranviermud/src/npcs.js | 17 | Extract npc from this file like player/player_manager
-| /Users/seanohue/myProjects/ranviermud/src/npcs.js | 227 | Have spawn inventory but also add same inv functionality as player
+| /Users/seanohue/myProjects/ranviermud/src/npcs.js | 16 | Make NPCs persistent. Have a load-minimum so that if the amt of NPCs falls below the min,
+| /Users/seanohue/myProjects/ranviermud/src/npcs.js | 18 | Extract npc from this file like player/player_manager
+| /Users/seanohue/myProjects/ranviermud/src/npcs.js | 168 | Make attributes more or less match that of the player.
+| /Users/seanohue/myProjects/ranviermud/src/npcs.js | 230 | Have spawn inventory but also add same inv functionality as player
 | /Users/seanohue/myProjects/ranviermud/src/player.js | 263 | IS there a better way to store this info?
 | /Users/seanohue/myProjects/ranviermud/src/player.js | 341 | Put in perception skill helper file
 | /Users/seanohue/myProjects/ranviermud/src/player.js | 352 | Consider using Random.roll instead.
-| /Users/seanohue/myProjects/ranviermud/src/player.js | 660 | refactor to use template strings.
-| /Users/seanohue/myProjects/ranviermud/src/player.js | 827 | Put this as a function in the combatUtils module.
+| /Users/seanohue/myProjects/ranviermud/src/player.js | 635 | refactor to use template strings.
+| /Users/seanohue/myProjects/ranviermud/src/player.js | 807 | Put this as a function in the combatUtils module.
 | /Users/seanohue/myProjects/ranviermud/src/player_manager.js | 1 | LOL REFACTOR
 | /Users/seanohue/myProjects/ranviermud/src/rooms.js | 3 | Refactor
 | /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 5 | Add strings for sanity damage
