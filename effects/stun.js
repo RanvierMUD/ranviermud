@@ -3,10 +3,8 @@
 const util = require('util');
 
 exports.effect = (players, items, npcs, rooms, Commands) => 
-  (options, target) => {
-    util.log("Stun attempt:");
-    return {
-      activate: () => {
+  (options, target) => ({
+      activate() {
         const {
           factor   = 2,
           duration = 10 * 1000,
@@ -28,15 +26,15 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
         });
 
       },
+      
+      deactivate() { target.combat.removeAllMods('stunned') },
 
       modifiers: {
         energy:     energy     => energy     / factor,
         max_energy: max_energy => max_energy / factor,
       },
 
-      deactivate: () => target.combat.removeAllMods('stunned'),
       type: 'stun',
       name: 'Stunned',
       aura: 'uselessness'
-    };
-  }
+  });
