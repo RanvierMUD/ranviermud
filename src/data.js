@@ -115,7 +115,7 @@ const Data = {
 		}
 
 		const loadedEffects = new Map();
-		for ([id, effectConfig] of stringifiedEffects) {
+		for (const [id, effectConfig] of stringifiedEffects) {
 			const { id, type, options } = effectConfig;
 			const effect = new Effect({ id, type, options, target });
 			loadedEffects.set(id, effect);
