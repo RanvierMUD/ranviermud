@@ -128,6 +128,9 @@ const Feats = {
       const charming    = player.getEffects('charm');
       const coolingDown = target.getEffects('charm cooldown');
 
+      if (charming)    { return player.warn('You are already quite charming, really.'); }
+      if (coolingDown) { return player.warn('You must wait for some time before doing that again.'); }
+
       deductSanity(player, 15 + player.getInCombat().length);
 
       const cooldown = 60 * 1000;
@@ -141,7 +144,7 @@ const Feats = {
         
         deactivate: () => player.warn('You are no longer radiating calm and peace.'),
         activate:   () => {
-          const cost =  Math.max(Math.ceil(player.getAttribute('cleverness') / 2), 2);
+          const cost = Math.max(Math.ceil(player.getAttribute('cleverness') / 2), 2);
           player.say('<magenta>You radiate a calming, peaceful aura.</magenta>');
           player.addEffect('charm cooldown', {
             type: 'willpower_cooldown',
