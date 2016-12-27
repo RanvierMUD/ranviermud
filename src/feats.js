@@ -58,9 +58,9 @@ const Feats = {
     type: 'passive',
     cost: 2,
     prereqs: {
-      'stamina':   4,
+      'stamina':   5,
       'willpower': 2,
-      'level':     5,
+      'level':     12,
       feats: ['leatherskin'],
     },
     name: 'Ironskin',
@@ -76,8 +76,8 @@ const Feats = {
         combatModName: 'ironskin',
         name:          'Ironskin',
         aura:          'steeliness',
-        defenseBonus:   bonus,
-        healthBonus:    bonus * 5, 
+        defenseBonus:   bonus * 4,
+        healthBonus:    bonus + 5, 
         activate:       () => player.combat.addSpeedMod({
           name: 'ironskin',
           effect: speed => speed * 1.5
@@ -92,10 +92,9 @@ const Feats = {
     type: 'passive', // may end up being active instead?
     cost: 1,
     prereqs: {
-      stamina:    1,
       willpower:  3,
       cleverness: 3,
-      level:      7,
+      level:      5,
     },
 
     name: 'Assense Auras',
@@ -111,7 +110,7 @@ const Feats = {
     },
   },
 
-  /// Active feats
+  /// Active feats ///
   charm: {
     type: 'active',
     cost: 2,
@@ -125,38 +124,32 @@ const Feats = {
     id: 'charm',
     description: 'You are able to calm violent creatures and stop them from attacking you.',
     activate: (player, args, rooms, npcs, players) => {
-      util.log(player.getName() + ' activates Charm.');
-      const combatants = player.getInCombat();
-      const charming = player.getEffects('charming');
 
-      // TODO: Extract these to a skills/charm.js file
-      const turnOnCharm = () => player.addEffect('charming', {
-        duration: 30 * 1000,
-        deactivate: () => {
-          player.warn('You are no longer radiating calm and peace.');
-          player.setAttribute('cleverness', player.getAttribute('cleverness') - 1);
-        },
-        activate: () => {
-          player.setAttribute('cleverness', player.getAttribute('cleverness') + 1);
+      const charming    = player.getEffects('charm');
+      const coolingDown = target.getEffects('charm cooldown');
+
+      deductSanity(player, 15 + player.getInCombat().length);
+
+      const cooldown = 60 * 1000;
+      const duration = player.getAttribute('cleverness') + player.getAttribute('willpower') * 1000;
+      const bonus    = Math.ceil(player.getAttribute('level') / 5);
+
+      player.addEffect('charm', {
+        type: 'charm',
+        
+        duration, bonus,
+        
+        deactivate: () => player.warn('You are no longer radiating calm and peace.'),
+        activate:   () => {
+          const cost =  Math.max(Math.ceil(player.getAttribute('cleverness') / 2), 2);
           player.say('<magenta>You radiate a calming, peaceful aura.</magenta>');
-        }
+          player.addEffect('charm cooldown', {
+            type: 'willpower_cooldown',
+            duration: cooldown + duration,
+            cost
+          });
+        },  
       });
-
-      const removeFromCombat = combatant => {
-        player.say('<bold>' + combatant.getShortDesc('en') + ' stops fighting you.</bold>');
-        combatant.fleeFromCombat();
-      }
-
-      if (combatants.length && !charming) {
-        player.fleeFromCombat();
-        combatants.map(removeFromCombat);
-        turnOnCharm();
-        deductSanity(player, 15 + combatants.length);
-      } else if (!charming) {
-        turnOnCharm();
-      } else {
-        player.warn('You are already quite charming, really.');
-      }
     }
   },
 
@@ -189,7 +182,7 @@ const Feats = {
       const stunning = player.getEffects('stun cooldown');
       const alreadyStunned = target.getEffects('stunned');
 
-      if (stunning) {
+      if (stunning || alreadyStunned) {
         return player.say('You must wait before doing that again.');
       }
 
