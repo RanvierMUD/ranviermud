@@ -34,14 +34,23 @@ const Feats = {
     description: "Your skin has become tougher, and you are better able to take physical damage.",
     activate: player => {
 
-      if (player.getEffects('leatherskin')) {
-        player.removeEffect('leatherskin');
-      }
-      player.addEffect('leatherskin', Effects.defenseBoost({
-        magnitude: 1.15,
-        player,
-        event: 'quit'
-      }));
+      const level = player.getAttribute('level');
+      const bonus = Math.min(Math.ceil(level / 4), 5);
+
+      player.addEffect('leatherskin', {
+        type:          'defense_boost',
+        combatModName: 'leatherskin',
+        name:          'Leatherskin',
+        aura:          'leather',
+        defenseBonus:   bonus,
+        healthBonus:    bonus * 5,  
+        activate:       () => player.combat.addSpeedMod({
+          name: 'leatherskin',
+          effect: speed => speed + 500
+        })  
+      });
+
+      player.say("<bold>Your skin hardens into a leathery hide.</bold>");
     },
   },
 
@@ -58,20 +67,24 @@ const Feats = {
     id: 'ironskin',
     description: 'Your skin hardens further, into a layer of heavy metallic chitin.',
     activate: player => {
-      if (player.getEffects('ironskin')) {
-        player.removeEffect('leatherskin');
-      }
-      player.addEffect('ironskin', Effects.defenseBoost({
-        player,
-        magnitude: 2.05,
-        event: 'quit'
-      }));
-      player.addEffect('ironskin_slow', Effects.haste({
-        target: player,
-        magnitude: .5,
-        effect: 'quit'
-      }));
-      player.say('<cyan><bold>Clank.</bold></cyan>');
+
+      const level = player.getAttribute('level');
+      const bonus = Math.min(Math.ceil(level / 2), 15);
+
+      player.addEffect('ironskin', {
+        type:          'defense_boost',
+        combatModName: 'ironskin',
+        name:          'Ironskin',
+        aura:          'steeliness',
+        defenseBonus:   bonus,
+        healthBonus:    bonus * 5, 
+        activate:       () => player.combat.addSpeedMod({
+          name: 'ironskin',
+          effect: speed => speed * 1.5
+        })
+      });
+
+      player.say("<bold><blue>Clank.</blue></bold>");
     }
   },
 

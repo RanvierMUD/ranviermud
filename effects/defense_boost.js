@@ -7,8 +7,7 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
      name          = "Shielded",
      aura          = "basic protection",
      defenseBonus  = 2, 
-     healthBonus   = 10,
-     duration      = 10 * 1000 
+     healthBonus   = 0,
    }, target) => ({
       
       activate() {
