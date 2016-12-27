@@ -3,13 +3,9 @@
 const util = require('util');
 
 exports.effect = (players, items, npcs, rooms, Commands) => 
-  (options, target) => ({
+  ({ factor   = 2, duration = 10 * 1000 }, target) => ({
+      
       activate() {
-        const {
-          factor   = 2,
-          duration = 10 * 1000,
-        } = options;
-
         const name = 'stunned';
 
         target.combat.addSpeedMod({ name,
@@ -20,14 +16,13 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
           effect: dodge => 0
         });
 
-        target.combat.addToHitMod({
-          name,
+        target.combat.addToHitMod({ name,
           effect: toHit => toHit / (factor * 2)
         });
 
       },
       
-      deactivate() { target.combat.removeAllMods('stunned') },
+      deactivate() { target.combat.removeAllMods('stunned'); },
 
       modifiers: {
         energy:     energy     => energy     / factor,
