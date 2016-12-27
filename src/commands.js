@@ -81,8 +81,12 @@ const Commands = {
 
         player.warn('EFFECTS: ');
         const effects = player.getEffects();
-        for (let eff in effects) {
-          player.say(eff + ': ' + effects[eff]);
+        for (let [id, effect] of effects) {
+          player.say(`${id}: `);
+          player.say(`duration: ${effect.getDuration()}`);
+          player.say(`elapsed:  ${effect.getElapsed()}`);
+          player.say(`aura:     ${effect.getAura()}`);
+
         }
 
         player.warn('MODIFIERS: ');
