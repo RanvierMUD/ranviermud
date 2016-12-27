@@ -22,7 +22,7 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
       deactivate() { target.combat.removeAllMods(combatModName); },
 
       modifiers: {
-        health:     health     => health     + healthBonus,
+        health:     health     => Math.min(health + healthBonus, target.getAttribute('max_health')),
         max_health: max_health => max_health + healthBonus,
       },
 
