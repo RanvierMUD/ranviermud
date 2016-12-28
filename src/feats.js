@@ -229,7 +229,7 @@ const Feats = {
     id: 'siphon',
     name: 'Siphon',
     description: 'Drain others of their will to live, and restore your own.',
-    activate: (player, args, rooms, npcs, players) => {
+    activate: (player, args, rooms, npcs, players, items) => {
       util.log(player.getName() + ' activates Siphon.');
       const combatant = player.getInCombat()[0];
       const target    = _.firstWord(args);
@@ -274,7 +274,7 @@ const Feats = {
 
         util.log(player.getName() + ' drains a ' + target.getShortDesc('en') + ' for ' + siphoned);
 
-        const duration = 120 * 1000 - (player.getAttribute('level') * 1000);
+        const duration = (61 - player.getAttribute('level')) * 1000;
         const cost     = Math.ceil(siphoned / player.getAttribute('level')); 
         player.addEffect('siphoning', { 
           type: 'willpower_cooldown',
