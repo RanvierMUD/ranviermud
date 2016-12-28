@@ -8,7 +8,7 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
       activate: () => {},
 
       modifiers: {
-        willpower: willpower => Math.max(1, willpower - 1) 
+        willpower: willpower => Math.max(1, willpower - cost) 
       },
 
       deactivate: () => {},
