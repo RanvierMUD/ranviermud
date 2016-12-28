@@ -222,9 +222,10 @@ const Feats = {
     type: 'active',
     cost: 2,
     prereqs: {
+      'stamina': 3,
       'willpower': 3,
       'cleverness': 4,
-      'level': 8,
+      'level': 14,
     },
     id: 'siphon',
     name: 'Siphon',
@@ -301,8 +302,7 @@ const Feats = {
       const cooldownNotOver = player.getEffects('secondwind');
 
       if (cooldownNotOver) {
-        player.say("Your heart would surely explode. You must wait.");
-        return;
+        return player.warn("Your heart would surely explode. You must wait.");
       }
 
       deductSanity(player, 15);
@@ -314,26 +314,29 @@ const Feats = {
         effect: speed => speed * modifier
       });
 
-      const cooldown = 120 * 1000;
+      const duration = player.getAttribute('level') * 2000;
 
       player.addEffect('secondwind', {
-        duration: cooldown,
-        activate: () => player.say('<magenta>You feel a fell energy coursing through your veins.</magenta>'),
-        deactivate: () => {
+        type: 'haste',
+        duration,
+        activate()   { 
+          player.say('<magenta>You feel a fell energy coursing through your veins.</magenta>') 
+        },
+        deactivate() {
           player.combat.removeSpeedMod('secondwind');
-          player.addEffect('secondwind_hangover', {
-            duration: cooldown / 4,
-
+          player.addEffect('secondwind hangover', {
+            duration: duration * 4,
+            type: 'slow',
             activate: () => {
               player.combat.addSpeedMod({
-                name: 'secondwind_hangover',
+                name: 'secondwind hangover',
                 effect: speed => speed * .80
               });
               player.say('<magenta>Your heartbeat is erratic...</magenta>');
             },
 
             deactivate: () => {
-              player.combat.removeSpeedMod('secondwind_hangover');
+              player.combat.removeSpeedMod('secondwind hangover');
               player.say('<magenta>You feel normal again.</magenta>');
             },
           })
