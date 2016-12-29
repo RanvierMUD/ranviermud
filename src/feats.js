@@ -319,7 +319,7 @@ const Feats = {
       player.addEffect('secondwind', {
         type: 'haste',
         duration,
-        activate()   { 
+        activate() { 
           player.say('<magenta>You feel a fell energy coursing through your veins.</magenta>') 
         },
         deactivate() {
@@ -327,7 +327,7 @@ const Feats = {
           player.addEffect('secondwind hangover', {
             duration: duration * 4,
             type: 'slow',
-            activate: () => {
+            activate() {
               player.combat.addSpeedMod({
                 name: 'secondwind hangover',
                 effect: speed => speed * .80
@@ -335,7 +335,7 @@ const Feats = {
               player.say('<magenta>Your heartbeat is erratic...</magenta>');
             },
 
-            deactivate: () => {
+            deactivate() {
               player.combat.removeSpeedMod('secondwind hangover');
               player.say('<magenta>You feel normal again.</magenta>');
             },
