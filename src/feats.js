@@ -222,15 +222,15 @@ const Feats = {
     type: 'active',
     cost: 2,
     prereqs: {
-      'stamina': 3,
-      'willpower': 3,
+      'stamina':    3,
+      'willpower':  3,
       'cleverness': 4,
-      'level': 14,
+      'level':      14,
     },
     id: 'siphon',
     name: 'Siphon',
     description: 'Drain others of their will to live, and restore your own.',
-    activate: (player, args, rooms, npcs, players, items) => {
+    activate(player, args, rooms, npcs, players, items) {
       util.log(player.getName() + ' activates Siphon.');
       const combatant = player.getInCombat()[0];
       const target    = _.firstWord(args);
