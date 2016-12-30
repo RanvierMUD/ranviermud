@@ -122,6 +122,9 @@ const Player = function PlayerConstructor(socket) {
   self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
     Effects.evaluateAttrMods(self, attr) : false;
 
+  self.getRawAttribute = attr => typeof self.attributes[attr] !== 'undefined' ? 
+    self.attributes[attr] : self.attributes;
+
   self.getPreference = pref => typeof self.preferences[pref] !== 'undefined' ?
     self.preferences[pref] : false;
 
