@@ -349,37 +349,41 @@ const Feats = {
     type: 'active',
     cost: 1,
     prereqs: {
-      'stamina':    3,
-      'quickness':  3,
-      'willpower':  4,
-      'cleverness': 3,
+      'stamina':    4,
+      'quickness':  2,
+      'willpower':  3,
+      'cleverness': 2,
       'level':      8,
     },
     id: 'regeneration',
     name: 'Regeneration',
     description: 'Restore your own broken tissues.',
     activate: (player, args, rooms, npcs, players) => {
-      const cooldownNotOver = player.getEffects('regenerated') || player.getEffects('regen');
+      const cooldownNotOver = player.getEffects('regeneration cooldown') || player.getEffects('regenerating');
 
       if (cooldownNotOver) {
-        player.say("You must wait before doing that again.");
-        return;
+        return player.say("You must wait before doing that again.");
       }
 
       const duration = 30  * 1000;
       const cooldown = 120 * 1000;
       const interval = 5   * 1000;
-      const bonus    = 10;
+      const bonus    = Math.ceil(player.getAttribute('level') / 2);
 
       const config = {
-        player,
         bonus,
         interval,
-        isFeat: true,
-        stat: 'health',
-        callback: () => { // on deactivate
+
+        type:      'regen', //TODO:
+        attribute: 'health',
+        isFeat:     true,
+
+        deactivate() {
           util.log(player.getName() + ' regen is deactivated.');
-          player.addEffect('regenerated', { duration: cooldown });
+          player.addEffect('regeneration cooldown', {
+            type: 'weakness', //TODO:
+            duration: cooldown 
+          });
           player.say('<green>You feel a dull ache as your body stops stitching itself back together.</green>')
         },
       };
@@ -388,7 +392,7 @@ const Feats = {
 
       deductSanity(player, 25);
 
-      player.addEffect('regen', Effects.regen(config));
+      player.addEffect('regeneration', Effects.regen(config));
     },
   },
 
