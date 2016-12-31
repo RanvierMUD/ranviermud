@@ -29,22 +29,6 @@ exports.listeners = {
     }
   },
 
-  regen(l10n) {
-      return function({ 
-        bonus, duration, 
-        id       = "resting", 
-        interval = 1 
-      }) {
-        bonus = bonus || this.getSkills('recovery');
-        this.addEffect(id, {
-          type: 'regen',
-          bonus,
-          duration,
-          interval
-        });
-    }
-  },
-
   meditate: function(l10n) {
     return function(bonus) {
       bonus = bonus || this.getSkills('concentration');
