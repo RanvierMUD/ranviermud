@@ -56,7 +56,9 @@ class Effect {
       // effect.deactivate();
     });
 
-    const events = effect.events || {};
+    const events = Object.assign({},
+      effect.events  || {},
+      options.events || {});
     
     for (let event in events) {
       const handler = events[event];
