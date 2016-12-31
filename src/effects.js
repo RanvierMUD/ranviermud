@@ -181,10 +181,11 @@ const validate = (effect, filename) => {
 	const test = effect(fakeOptions, fakeTarget);
 	const isFunction = thing => thing && typeof thing === 'function';
 	if (!isFunction(test.activate) || !isFunction(test.deactivate)) {
-		console.log(effect, filename);
+		util.log(filename);
 		throw new ReferenceError("Each effect must have activate and deactivate functions.");
 	}
 	if (!test.type || filename !== test.type) {
+		util.log(filename);
 		throw new ReferenceError("Each effect must have a type that matches its filename.");
 	}
 

@@ -15,6 +15,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     util.log(self + ' is resting.');
     player.write('<blue>You rest and regain health.</blue>\n');
-    player.emit('regen');
+    // player.emit('regen'); //TODO: Add an effect instead.
   };
 };

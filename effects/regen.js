@@ -30,8 +30,8 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
         },
       },
 
-      type: 'weakness',
-      name: 'Recovering from physical exertion',
+      type: 'regen',
+      name: `Regenerating ${attribute}`,
       aura: 'exhaustion'
     };
   }
