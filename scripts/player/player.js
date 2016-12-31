@@ -40,6 +40,7 @@ exports.listeners = {
           type: 'regen',
           bonus,
           duration,
+          interval
         });
     }
   },
