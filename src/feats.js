@@ -367,8 +367,8 @@ const Feats = {
 
       const duration = 30  * 1000;
       const cooldown = 120 * 1000;
-      const interval = 5   * 1000;
-      const bonus    = Math.ceil(player.getAttribute('level') / 2);
+      const interval = 2;
+      const bonus    = 10 + Math.ceil(player.getAttribute('level') / 2.5);
 
       const config = {
         bonus,

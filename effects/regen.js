@@ -4,20 +4,20 @@ const util = require('util');
 
 exports.effect = (players, items, npcs, rooms, Commands) => 
   ({ 
-    attribute = 'health', 
-    event     = 'tick', 
-    isFeat    = false,  
-    interval  = 20,
-    bonus     = 1,
-  } , target) => {
+    attribute  = 'health', 
+    regenEvent = 'tick', 
+    isFeat     = false,  
+    interval   = 1,
+    bonus      = 1,
+  }, target) => {
     let currentInterval = 0;
+    
     return {
-
       activate() {},
       deactivate() {},
 
       events: {
-        [event]: () => {
+        [regenEvent]: () => {
           currentInterval++;
           if (currentInterval % interval === 0) {
             const startingAttribute = target.getRawAttribute(attribute);
@@ -27,7 +27,7 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
             const regenAttribute = Math.min(maximum, startingAttribute + bonus);
             player.setAttribute(attribute, regenAttribute);
           }
-        }
+        },
       },
 
       type: 'weakness',

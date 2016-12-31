@@ -1,5 +1,7 @@
 'use strict';
+
 //TODO: Refactor into individual files.
+
 const LevelUtil = require('../../src/levels').LevelUtil,
   Skills = require('../../src/skills').Skills,
   CommandUtil = require('../../src/command_util').CommandUtil,
@@ -8,13 +10,15 @@ const LevelUtil = require('../../src/levels').LevelUtil,
   Commands = require('../../src/commands').Commands,
   Effects = require('../../src/effects').Effects,
   Broadcast = require('../../src/broadcast').Broadcast;
+
+
 exports.listeners = {
 
   //// Function wrappers needed to access "this" (Player obj)
 
 
   //TODO: Use this for all sanity loss incidents.
-  sanityLoss: function(l10n) {
+  sanityLoss(l10n) {
     return function(cost, reason) {
       reason = reason || 'experiencing terror';
       const currentSanity = this.getAttribute('sanity');
@@ -25,14 +29,15 @@ exports.listeners = {
     }
   },
 
-  regen: function(l10n) {
-      return function(bonus) {
-        bonus = bonus || this.getSkills('recovery');
-        const config = {
-          player: this,
-          bonus
-        };
-        this.addEffect('resting', Effects.regen(config));
+  regen(l10n) {
+      return function(bonus, id, duration) {
+        bonus    = bonus || this.getSkills('recovery');
+                
+        this.addEffect('resting', {
+          type: 'regen',
+          bonus,
+          duration
+        });
     }
   },
 
