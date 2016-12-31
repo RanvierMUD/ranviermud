@@ -1,8 +1,7 @@
-var CommandUtil = require('../../src/command_util')
-  .CommandUtil;
-var l10nFile = __dirname + '/../../l10n/scripts/rooms/8.js.yml';
-var l10n = require('../../src/l10n')(l10nFile);
-var examiner = require('../../src/examine').examine;
+const CommandUtil = require('../../src/command_util').CommandUtil;
+const l10nFile = __dirname + '/../../l10n/scripts/rooms/8.js.yml';
+const l10n = require('../../src/l10n')(l10nFile);
+const examiner = require('../../src/examine').examine;
 
 //TODO: Redo/refactor all examine listeners.
 
@@ -10,7 +9,7 @@ exports.listeners = {
 
   examine: l10n => {
     return (args, player, players) => {
-      var config = {
+      const config = {
         poi: [
             'crates',
             'boxes',
