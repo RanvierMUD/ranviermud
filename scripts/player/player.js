@@ -30,13 +30,16 @@ exports.listeners = {
   },
 
   regen(l10n) {
-      return function(bonus, id, duration) {
-        bonus    = bonus || this.getSkills('recovery');
-                
-        this.addEffect('resting', {
+      return function({ 
+        bonus, duration, 
+        id       = "resting", 
+        interval = 1 
+      }) {
+        bonus = bonus || this.getSkills('recovery');
+        this.addEffect(id, {
           type: 'regen',
           bonus,
-          duration
+          duration,
         });
     }
   },
