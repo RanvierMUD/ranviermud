@@ -26,13 +26,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     player.addEffect('resting health', {
       type: 'regen',
-      bonus: player.getSkill('recovery') || 1,
+      bonus: player.getSkills('recovery') || 1,
       events
     });
 
     player.addEffect('resting energy', {
       type: 'regen',
-      bonus: player.getSkill('athletics') || 1,
+      bonus: player.getSkills('athletics') || 1,
       attribute: 'energy',
       events
     });

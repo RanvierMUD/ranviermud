@@ -25,13 +25,13 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
             if (startingAttribute === maximum) { return; }
 
             const regenAttribute = Math.min(maximum, startingAttribute + bonus);
-            player.setAttribute(attribute, regenAttribute);
+            target.setAttribute(attribute, regenAttribute);
           }
         },
       },
 
       type: 'regen',
       name: `Regenerating ${attribute}`,
-      aura: 'exhaustion'
+      aura: 'regeneration'
     };
   }
