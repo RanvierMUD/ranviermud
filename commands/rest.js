@@ -16,7 +16,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     util.log(self + ' is resting.');
 
     const events = {
-      action() {
+      action: () => {
         player.removeEffect("resting health");
         player.removeEffect("resting energy");
       }
