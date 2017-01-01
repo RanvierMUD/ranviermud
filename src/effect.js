@@ -118,7 +118,7 @@ class Effect {
     }
     const events = effect.events || {};
     for (let event in events) {
-      target.removeListener(event)
+      this[_target].removeListener(event)
     }
   }
 
