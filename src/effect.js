@@ -111,14 +111,17 @@ class Effect {
 
   /* Proxies for effect/optional methods */
   deactivate() {
-    const effect = this[_effect];
-    effect.deactivate();
+    this[_effect].deactivate();
+
     if (this[_options].deactivate) { 
       this[_options].deactivate(); 
     }
-    const events = effect.events || {};
-    for (let event in events) {
-      this[_target].removeListener(event)
+
+    for (let event in this[_effect].events || {}) {
+      this[_target].removeListener(event, this[_effect].events[event]);
+    }
+    for (let event in this[_options].events || {}) {
+      this[_target].removeListener(event, this[_options].events[event]);
     }
   }
 
