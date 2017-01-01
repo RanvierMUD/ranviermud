@@ -8,7 +8,7 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
     regenEvent = 'tick', 
     isFeat     = false,  
     interval   = 1,
-    bonus      = 1,
+    bonus      = 1
   }, target) => {
     let currentInterval = 0;
     

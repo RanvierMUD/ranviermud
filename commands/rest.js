@@ -14,7 +14,27 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     util.log(self + ' is resting.');
+
+    const events = {
+      action() {
+        player.removeEffect("resting health");
+        player.removeEffect("resting energy");
+      }
+    };
+
     player.write('<blue>You rest and regain health.</blue>\n');
-    // player.emit('regen'); //TODO: Add an effect instead.
+
+    player.addEffect('resting health', {
+      type: 'regen',
+      bonus: player.getSkill('recovery') || 1,
+      events
+    });
+
+    player.addEffect('resting energy', {
+      type: 'regen',
+      bonus: player.getSkill('athletics') || 1,
+      attribute: 'energy',
+      events
+    });
   };
 };
