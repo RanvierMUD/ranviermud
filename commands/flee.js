@@ -12,30 +12,31 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     if (!player.hasEnergy(2, items)) { return player.noEnergy(); }
 
     if (!player.isInCombat()) {
-      player.sayL10n(l10n, "NO_FIGHT");
-      return;
+      return player.warn('You have nothing to flee from... right?');
     }
 
     util.log(player.getName() + ' is trying to flee from:');
 
     const opponents = player.getInCombat();
 
-    opponents.forEach( opp => util.log(opp.getShortDesc('en')) );
-
-    const fleed     = Random.coinFlip();
-    const room      = rooms.getAt(player.getLocation());
-    const exit      = Random.fromArray(room.getExits());
+    const fleed = Random.coinFlip();
+    const room  = rooms.getAt(player.getLocation());
+    const exit  = Random.fromArray(room.getExits());
 
     if (fleed && move(exit, player)) {
       opponents.forEach(opp => opp.removeFromCombat(player));
       player.fleeFromCombat();
 
       player.sayL10n(l10n, 'FLEE_SUCCEED');
+      const duration = player.getAttribute('level') * 1000;
       util.log(player.getName() + " fled successfully.");
-      return;
+      player.addEffect('cowardice', {
+        type: 'debuff',
+        penalty: 1,
+        duration:
+      });
+    } else {
+      player.sayL10n(l10n, "FLEE_FAIL");
     }
-
-    player.sayL10n(l10n, "FLEE_FAIL");
-    return;
   };
 };
