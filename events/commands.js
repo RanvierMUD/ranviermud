@@ -135,12 +135,12 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
 
         // Handles skills, feats, exits
         function checkForSpecializedCommand(command, args) {
-          var exit = Commands.room_exits(command, player);
+          const exit = Commands.room_exits(command, player);
 
           //TODO: Refactor as to not rely on negative conditionals as much?
           if (exit === false) {
-            var isSkill = command in player.getSkills();
-            var isFeat = command in player.getFeats();
+            const isSkill = command in player.getSkills();
+            const isFeat  = command in player.getFeats();
 
             if (!isSkill && !isFeat) {
               if (!(command in Channels)) {
@@ -151,8 +151,8 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
                 return true
               }
             } else {
-              var use = isSkill ? player.useSkill : player.useFeat;
-              use(command, player, args, rooms, npcs, players);
+              const use = isSkill ? player.useSkill : player.useFeat;
+              use(command, player, args, rooms, npcs, players, items);
               return true;
             }
           }

@@ -1,6 +1,6 @@
 const defaultAttributes = {
   max_health: 100,
-  health:     90,
+  health:     80,
   max_sanity: 100,
   sanity:     90,
   energy:     90,
@@ -16,7 +16,6 @@ const defaultAttributes = {
   mutagens:   0,
   attrPoints: 0,
 
-  description: 'A person.'
 };
 
 const defaultPreferences = {

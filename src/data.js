@@ -3,7 +3,8 @@
 const fs = require('fs'),
     path = require('path'),
     util = require('util'),
-    l10nHelper = require('./l10n');
+    l10nHelper = require('./l10n'),
+		Effect = require('./effect').Effect;
 
 const data_path          = __dirname + '/../data/';
 const behaviors_dir      = __dirname + '/../scripts/behaviors/';
@@ -97,6 +98,35 @@ const Data = {
 		}
 
 		return target;
+	},
+
+	/* Loads in stringified effects to persist them.
+	 * @param 
+	 * @return 
+	*/
+	loadEffects: (target, str) => {
+		util.log(`Loading in ${target.getShortDesc()}'s effects from: ${str}`);
+		
+		if (!str) { return new Map(); }
+		
+		let stringifiedEffects;
+		
+		try {
+			stringifiedEffects = new Map(JSON.parse(str));
+		} catch (e) {
+			console.log("ERROR: ", e, str);
+			stringifiedEffects = new Map();
+		}
+
+		const loadedEffects = new Map();
+		for (const [id, effectConfig] of stringifiedEffects) {
+			const { id, type, options } = effectConfig;
+			const effect = new Effect({ id, type, options, target });
+			loadedEffects.set(id, effect);
+			effect.init();
+		}
+
+		return loadedEffects;
 	},
 
 	/**

@@ -43,6 +43,9 @@ const Localize  = require('jall');
 const argv      = require('optimist').argv;
 const telnet    = require('./src/3rdparty/telnet.js');
 const longjohn  = require('longjohn');
+const pe        = require('pretty-error').start();
+
+pe.skipNodeFiles();
 
 /**
  * These aren't really globals; they're only "global" to this file,
@@ -59,12 +62,12 @@ const	Player  = require('./src/player').Player;
 const	Npc     = require('./src/npcs').Npc;
 const	Item    = require('./src/items').Item;
 const	Account = require('./src/accounts').Account;
+const Effects = require('./src/effects').Effects;
 
 // server options
 let respawnInterval, saveInterval;
 
 Type.config(Player, Npc, Item, Account);
-
 
 // cmdline options
 commander
@@ -89,7 +92,7 @@ function init(restartServer) {
 
 	const locale = commander.locale;
 	Commands.configure({ rooms, players, items, npcs, locale });
-
+	Effects.config({ players, items, npcs, rooms, Commands });
 	Events.configure({ players,items, locale, npcs, rooms, accounts, });
 
 	if (restartServer) {

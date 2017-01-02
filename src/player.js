@@ -8,6 +8,8 @@ const Data = require('./data').Data,
   wrap     = require('wrap-ansi'),
   Random   = require('./random').Random,
   Feats    = require('./feats').Feats,
+  Effects  = require('./effects').Effects,
+  Effect   = require('./effect').Effect,
   _        = require('./helpers');
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
@@ -21,7 +23,7 @@ const Player = function PlayerConstructor(socket) {
   const self = this;
 
   self.name        = '';
-  self.description = '';
+  self.description = 'A person';
   self.location    = null;
   self.locale      = null;
   self.accountName = '';
@@ -57,9 +59,6 @@ const Player = function PlayerConstructor(socket) {
     experience: 0,
     mutagens:   0,
     attrPoints: 0,
-
-    //TODO: Generated descs.
-    description: 'A person.'
   };
 
   self.preferences = {
@@ -74,7 +73,7 @@ const Player = function PlayerConstructor(socket) {
   self.met      = { length: 0 };
 
   // Anything affecting the player
-  self.effects = {};
+  self.effects = new Map();
 
   // Skills the players has
   self.skills = {};
@@ -102,7 +101,7 @@ const Player = function PlayerConstructor(socket) {
   self.getName         = () => self.name;
   self.getShortDesc    = () => self.name;
   self.getAccountName  = () => self.accountName;
-  self.getDescription  = () => self.attributes.description;
+  self.getDescription  = () => self.description;
   self.getLocation     = () => self.location;
   self.getBodyParts    = () => self.bodyParts;
   self.getSocket       = () => socket;
@@ -121,7 +120,10 @@ const Player = function PlayerConstructor(socket) {
   self.noEnergy = () => self.warn('You need to rest first.');
 
   self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
-    self.attributes[attr] : false;
+    Effects.evaluateAttrMods(self, attr) : false;
+
+  self.getRawAttribute = attr => typeof self.attributes[attr] !== 'undefined' ? 
+    self.attributes[attr] : self.attributes;
 
   self.getPreference = pref => typeof self.preferences[pref] !== 'undefined' ?
     self.preferences[pref] : false;
@@ -143,7 +145,7 @@ const Player = function PlayerConstructor(socket) {
   self.setLocale       = locale => self.locale = locale;
   self.setName         = newname => self.name = newname;
   self.setAccountName  = accname => self.accountName = accname;
-  self.setDescription  = newdesc => self.attributes.description = newdesc;
+  self.setDescription  = newdesc => self.description = newdesc;
 
   self.setLocation = loc  => self.location = loc;
   self.setPassword = pass =>
@@ -363,58 +365,37 @@ const Player = function PlayerConstructor(socket) {
 
   /**
    * Get currently applied effects
-   * @param string eff
-   * @return Array|Object
+   * @param string effect id
+   * @return Map effects
    */
-  self.getEffects = eff => {
-    if (eff) {
-      return typeof self.effects[eff] !== 'undefined' ? self.effects[eff] :
-        false;
-    }
-    return self.effects;
-  };
+  self.getEffects = id => id ? self.effects.get(id) : self.effects;
 
   /**
-   * Add, activate and set a timer for an effect
+   * Add & activate an effect
    * @param string name
    * @param object effect
    */
-  self.addEffect = (name, effect, config) => {
-    if (effect.activate) {
-      effect.activate(config);
-    }
-
-    let deact = function() {
-      if (effect.deactivate && self.getSocket()) {
-        effect.deactivate(config);
-      }
-      self.removeEffect(name);
-    };
-
-    if (effect.duration) {
-      effect.timer = setTimeout(deact, effect.duration);
-    } else if (effect.event) {
-      self.on(effect.event, deact);
-    }
-    self.effects[name] = effect;
+  self.addEffect = (id, options) => {
+    const effect = new Effect({ 
+      id, 
+      options, 
+      type: options.type, 
+      target: self 
+    });
+      
+    self.removeEffect(id);
+    self.effects.set(id, effect);
+    effect.init();
   };
 
-  self.removeEffect = eff => {
-    if (!eff || !self.effects[eff]) {
-      return util.log("ERROR: Effect " + eff + " not found on " + self.getName());
+  self.removeEffect = id => {
+    if (self.effects.has(id)) {
+      const oldEffect = self.effects.get(id);
+      oldEffect.deactivate();
+      return self.effects.delete(id);
     }
-
-    if (self.effects[eff].deactivate) {
-      self.effects[eff].deactivate();
-    }
-
-    if (self.effects[eff].event) {
-      self.removeListener(self.effects[eff].event);
-    } else {
-      clearTimeout(self.effects[eff].timer);
-    }
-    if (self.effects[eff]) { delete self.effects[eff]; }
-  };
+  }
+  
 
   ///// ----- Handle Inventory && Equipment. ----- ///////
 
@@ -709,6 +690,8 @@ const Player = function PlayerConstructor(socket) {
    self.location = data.location;
    self.locale = data.locale;
 
+   self.description = data.description;
+
    self.bodyParts = data.bodyParts || {};
    self.inventory = data.inventory || [];
    self.equipment = data.equipment || {};
@@ -731,7 +714,6 @@ const Player = function PlayerConstructor(socket) {
       }
     }
 
-
     // If the player is new, or skills have been added, initialize them to level 1.
     for (let skill in Skills) {
       skill = Skills[skill];
@@ -741,6 +723,9 @@ const Player = function PlayerConstructor(socket) {
         self.skills[skill.id] = 1;
       }
     }
+    
+    // Hydrate and activate any effects
+    self.effects = Data.loadEffects(self, data.effects);
 
   };
 
@@ -767,11 +752,14 @@ const Player = function PlayerConstructor(socket) {
       .getInventory()
       .map(item => item.flatten());
 
-    const { name, accountName, location, locale, 
+    const effects = Effects.stringify(self);
+
+    const { 
+      name, accountName, location, locale, 
       prompt_string, combat_prompt, password,
       equipment, attributes, skills, feats,
       gender, preferences, explored, killed,
-      met, training, bodyParts, effects 
+      met, training, bodyParts, description 
     } = self;
     
     return JSON.stringify({ 
@@ -784,7 +772,8 @@ const Player = function PlayerConstructor(socket) {
       preferences,    explored, 
       killed,         met, 
       training,       bodyParts, 
-      effects,        inventory
+      effects,        inventory,
+      description
     });
     
   };

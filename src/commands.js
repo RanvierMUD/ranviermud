@@ -81,8 +81,12 @@ const Commands = {
 
         player.warn('EFFECTS: ');
         const effects = player.getEffects();
-        for (let eff in effects) {
-          player.say(eff + ': ' + effects[eff]);
+        for (let [id, effect] of effects) {
+          player.say(`${id}: `);
+          player.say(`duration: ${effect.getDuration()}`);
+          player.say(`elapsed:  ${effect.getElapsed()}`);
+          player.say(`aura:     ${effect.getAura()}`);
+
         }
 
         player.warn('MODIFIERS: ');
@@ -230,14 +234,15 @@ const Commands = {
    * @param object config
    */
   configure: function(config) {
+
     rooms   = config.rooms;
     players = config.players;
-    items   = config.items;
     npcs    = config.npcs;
+    items   = config.items;
 
     util.log("Loading command l10n... ");
     l10n = l10nHelper(l10nFile);
-    l10n.setLocale(config.locale);
+    l10n.setLocale("en");
     util.log("Done");
 
     /**

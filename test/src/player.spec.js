@@ -30,13 +30,6 @@ describe('New player', () => {
 
     describe('Attributes', () => {
 
-      it('Should have default attributes', () => {
-        const expected   = Mocks.defaultAttributes;
-        const actual     = testPlayer.getAttributes();
-
-        expect(actual).to.eql(expected);
-      });
-
       it('Should be able to set and get attributes', () => {
         const current = testPlayer.getAttribute('health');
         const damaged = current - 10;
