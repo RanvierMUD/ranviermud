@@ -20,7 +20,7 @@ See the [gamedev](https://github.com/seanohue/ranviermud/tree/gamedev) branch fo
 
 ## Requirements
 
-* NodeJS >= v5.6.0
+* NodeJS >= v7.1.0
 
 ## Up and running
 

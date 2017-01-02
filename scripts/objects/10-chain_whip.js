@@ -75,12 +75,26 @@ exports.listeners = {
           attacker.getName() + ' wallops ' + defender.getShortDesc() + ' in the side of the head with a giant chain.'
         ];
         player.warn(defender.getShortDesc() + ' is dazed!');
-        defender.addEffect('concussed', Effects.slow({
-          target: defender,
-          magnitude: .66,
-          duration: 15000,
-          deactivate: () => player.warn(defender.getShortDesc() + ' regains their focus.')
-        }));
+        defender.addEffect('concussed', {
+          type: 'slow',
+          duration: 15 * 1000,
+          
+          activate() {
+            defender.combat.addSpeedMod({
+              name: 'concussed',
+              effect: speed => speed + 1500
+            });
+            defender.combat.addToHitMod({
+              name: 'concussed',
+              effect: toHit => toHit * .9
+            });
+          },
+
+          deactivate() {
+            defender.combat.removeAllMods('concussed');  
+            player.warn(defender.getShortDesc() + ' regains their focus.');
+          }
+        });
       } else if (hitLocation.includes('leg') && !defender.getEffects('knocked down')) {
         firstPartyMessage = [
           'You use your chain whip to sweep ' + defender.getShortDesc() + '\'s feet out from under them!'

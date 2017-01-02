@@ -11,12 +11,32 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     if (player.isInCombat()) {
       return player.say("You can't do that while fighting.");
     }
-    if (player.getEffects('recuperating')) {
+    if (player.getEffects('resting energy')) {
       return player.say('You are already recuperating.');
     }
 
-    util.log(self + ' is meditating.');
-    player.write('<blue>You rest and regain your focus.</blue>\n');
-    player.emit('meditate');
+    const events = {
+      action: () => {
+        player.removeEffect("resting sanity");
+        player.removeEffect("resting energy");
+        player.warn("You end your meditation session.");
+      }
+    };
+
+    player.addEffect('resting sanity', {
+      type: 'regen',
+      bonus: player.getSkills('concentration') || 1,
+      attribute: 'sanity',
+      events
+    });
+
+    player.addEffect('resting energy', {
+      type: 'regen',
+      bonus: player.getSkills('athletics') || 1,
+      attribute: 'energy',
+    });
+
+    player.write('<blue>You meditate and alleviate stress.</blue>\n');
+
   };
 };

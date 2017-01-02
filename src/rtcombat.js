@@ -170,18 +170,29 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, items, ca
       attacker.combat.removeAllMods('fatigue');
     }
 
-    //FIXME:
-    // // Handle attacker sanity effects...
-    // const stressedLimit = 40;
-    // const stressedAttacker = Type.isPlayer(attacker) && attacker.getAttribute('sanity') <= stressedLimit;
-    // if (stressedAttacker) {
-    //   attacker.addEffect('stressed', Effects.stressed, { attacker });
+    // Handle attacker sanity effects...
+    const stressedLimit = 40;
+    const stressedAttacker = Type.isPlayer(attacker) && attacker.getAttribute('sanity') <= stressedLimit;
+    if (stressedAttacker) {
+      attacker.addEffect('stressed', {
+        name: 'Stressed',
+        type: 'stupefy',
+        aura: 'intense stress',
+        percentage: .9
+      });
 
-    //   const insanityLimit = 20;
-    //   if (attacker.getAttribute('sanity') > insanityLimit) {
-    //     attacker.addEffect('insane', Effects.insane, { attacker });
-    //   }
-    // }
+      const insanityLimit = 20;
+      if (attacker.getAttribute('sanity') > insanityLimit) {
+        //TODO: Make a custom insanity effect with events and such?
+        attacker.addEffect('insanity', {
+          name: 'Insane',
+          type: 'stupefy',
+          aura: 'insanity',
+          cost: 3,
+          percentage: .5
+        });
+      }
+    }
 
 
     // Assign constants for this round...
