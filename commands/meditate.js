@@ -25,7 +25,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     player.addEffect('resting sanity', {
       type: 'regen',
-      bonus: player.getSkills('recovery') || 1,
+      bonus: player.getSkills('concentration') || 1,
       attribute: 'sanity',
       events
     });
