@@ -24,19 +24,31 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const exit  = Random.fromArray(room.getExits());
 
     if (fleed && move(exit, player)) {
+      
       opponents.forEach(opp => opp.removeFromCombat(player));
       player.fleeFromCombat();
 
-      player.sayL10n(l10n, 'FLEE_SUCCEED');
-      const duration = player.getAttribute('level') * 1000;
+      player.say(`<red>You manage to escape in one piece!</red>`);
       util.log(player.getName() + " fled successfully.");
+
+      const duration = player.getAttribute('level') * 1000;
       player.addEffect('cowardice', {
         type: 'debuff',
         penalty: 1,
-        duration:
+        duration
       });
+
+
+      const cumulativeOpponentLevel = opponents.reduce((sum, opp) => sum += opp.getAttribute('level'), 0);
+      const level = player.getAttribute('level');
+
+      if (cumulativeOpponentLevel > level + 2) {
+        const expGain = (cumulativeOpponentLevel - level) * 10;
+        player.emit('experience', expGain, 'surviving to fight again another day');
+      }
+
     } else {
-      player.sayL10n(l10n, "FLEE_FAIL");
+      player.warn('You are cornered and unable to escape!');
     }
   };
 };
