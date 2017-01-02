@@ -281,6 +281,7 @@ const Feats = {
         const cost     = Math.ceil(siphoned / player.getAttribute('level')); 
         player.addEffect('siphoning', { 
           type: 'willpower_cooldown',
+          name: 'Using siphon',
           duration,
           cost
         });
@@ -308,7 +309,7 @@ const Feats = {
       }
 
       deductSanity(player, 15);
-      player.setAttribute('energy', player.getAttribute('max_energy'));
+      player.setAttribute('energy', player.getRawAttribute('max_energy'));
 
       const modifier = Math.ceil(player.getAttribute('level') / 10) + 1;
       player.combat.addSpeedMod({
@@ -320,6 +321,7 @@ const Feats = {
 
       player.addEffect('secondwind', {
         type: 'haste',
+        name: 'Secondwind',
         duration,
         activate() { 
           player.say('<magenta>You feel a fell energy coursing through your veins.</magenta>') 
@@ -328,6 +330,7 @@ const Feats = {
           player.combat.removeSpeedMod('secondwind');
           player.addEffect('secondwind hangover', {
             duration: duration * 4,
+            name: 'Recovering from secondwind',
             type: 'slow',
             activate() {
               player.combat.addSpeedMod({
