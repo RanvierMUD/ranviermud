@@ -359,7 +359,7 @@ const Feats = {
     name: 'Regeneration',
     description: 'Restore your own broken tissues.',
     activate: (player, args, rooms, npcs, players) => {
-      const cooldownNotOver = player.getEffects('regeneration cooldown') || player.getEffects('regenerating');
+      const cooldownNotOver = player.getEffects('regeneration cooldown') || player.getEffects('regeneration');
 
       if (cooldownNotOver) {
         return player.say("You must wait before doing that again.");
