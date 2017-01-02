@@ -29,18 +29,6 @@ exports.listeners = {
     }
   },
 
-  meditate: function(l10n) {
-    return function(bonus) {
-      bonus = bonus || this.getSkills('concentration');
-      const config = {
-        player: this,
-        stat: 'sanity',
-        bonus
-      };
-      this.addEffect('meditating', Effects.regen(config));
-    }
-  },
-
   action: function(l10n) {
     let previousEncumbranceState = '';
     return function(cost, items) {
