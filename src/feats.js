@@ -41,6 +41,7 @@ const Feats = {
         type:          'defense_boost',
         combatModName: 'leatherskin',
         name:          'Leatherskin',
+        desc:          'Your skin has hardened into tough, leathery hide.',
         aura:          'leather',
         defenseBonus:   bonus,
         healthBonus:    bonus * 5,  
@@ -76,6 +77,7 @@ const Feats = {
         combatModName: 'ironskin',
         name:          'Ironskin',
         aura:          'steeliness',
+        desc:          'Your skin has an iron-like chitin coating it.',
         defenseBonus:   bonus * 4,
         healthBonus:    bonus + 5, 
         activate:       () => player.combat.addSpeedMod({
