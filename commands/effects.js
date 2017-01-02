@@ -3,7 +3,11 @@ const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => 
   (args, player) => { 
-    for (let [id, effect] of player.getEffects()) {
+    const effects = player.getEffects();
+
+    if (!effects.size) { return player.warn('You are not under any effects.'); }
+
+    for (let [id, effect] of effects) {
       player.say(`<blue>${effect.getName()}</blue>`);
       
       const desc = effect.getDescription();
