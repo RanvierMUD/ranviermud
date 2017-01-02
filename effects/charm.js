@@ -17,5 +17,6 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
 
       type: 'charm',
       name: 'Charm',
+      desc: 'You radiate a charming aura that prevents normally aggressive enemies from attacking you.',
       aura: 'charming'
   });

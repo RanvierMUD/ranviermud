@@ -14,6 +14,7 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
       deactivate() {},
       type: 'haste',
       name: 'Hasted',
+      desc: 'You are moving faster than usual.',
       aura: 'sluggishness'
     };
   }
