@@ -189,7 +189,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, items, ca
           type: 'stupefy',
           aura: 'insanity',
           cost: 3,
-          percentage: .5
+          percentage: .5,
+          desc: 'You seem to have entirely lost your wits.'
         });
       }
     }
