@@ -9,7 +9,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     if (player.isInCombat()) {
       return player.say("You can't do that while fighting.");
     }
-    if (player.getEffects('recuperating')) {
+    if (player.getEffects('resting energy')) {
       return player.say('You are already recuperating.');
     }
 
@@ -19,10 +19,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       action: () => {
         player.removeEffect("resting health");
         player.removeEffect("resting energy");
+        player.warn("You get back on your feet again.");
       }
     };
-
-    player.write('<blue>You rest and regain health.</blue>\n');
 
     player.addEffect('resting health', {
       type: 'regen',
@@ -34,7 +33,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       type: 'regen',
       bonus: player.getSkills('athletics') || 1,
       attribute: 'energy',
-      events
     });
+
+    player.write('<blue>You rest and regain health.</blue>\n');
+
   };
 };

@@ -368,31 +368,31 @@ const Feats = {
       const duration = 30  * 1000;
       const cooldown = 120 * 1000;
       const interval = 2;
-      const bonus    = 10 + Math.ceil(player.getAttribute('level') / 2.5);
+      const bonus    = 10 + Math.ceil(player.getAttribute('level') + player.getAttribute('willpower') / 2.5);
 
-      const config = {
+      player.addEffect('regeneration', {
         bonus,
         interval,
+        duration,
 
-        type:      'regen', //TODO:
+        type:      'regen',
         attribute: 'health',
         isFeat:     true,
 
         deactivate() {
           util.log(player.getName() + ' regen is deactivated.');
           player.addEffect('regeneration cooldown', {
-            type: 'weakness', //TODO:
+            type: 'weakness',
             duration: cooldown 
           });
           player.say('<green>You feel a dull ache as your body stops stitching itself back together.</green>')
         },
-      };
+      });
 
       player.say("<blue>You feel your own flesh mending itself.</blue>");
 
       deductSanity(player, 25);
 
-      player.addEffect('regeneration', Effects.regen(config));
     },
   },
 
