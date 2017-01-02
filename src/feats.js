@@ -301,7 +301,8 @@ const Feats = {
     id:   'secondwind',
     name: 'Second Wind',
     description: 'Reinvigorate yourself in an instant.',
-    activate: (player, args, rooms, npcs, players) => {
+   
+   activate(player, args, rooms, npcs, players) {
       const cooldownNotOver = player.getEffects('secondwind');
 
       if (cooldownNotOver) {
@@ -326,12 +327,15 @@ const Feats = {
         activate() { 
           player.say('<magenta>You feel a fell energy coursing through your veins.</magenta>') 
         },
+        
         deactivate() {
           player.combat.removeSpeedMod('secondwind');
+          
           player.addEffect('secondwind hangover', {
             duration: duration * 4,
-            name: 'Recovering from secondwind',
+            name: 'Recovering from second wind',
             type: 'slow',
+            
             activate() {
               player.combat.addSpeedMod({
                 name: 'secondwind hangover',
@@ -344,9 +348,11 @@ const Feats = {
               player.combat.removeSpeedMod('secondwind hangover');
               player.say('<magenta>You feel normal again.</magenta>');
             },
-          })
+          });
         },
+
       });
+
     },
   },
 
@@ -363,7 +369,7 @@ const Feats = {
     id: 'regeneration',
     name: 'Regeneration',
     description: 'Restore your own broken tissues.',
-    activate: (player, args, rooms, npcs, players) => {
+    activate(player, args, rooms, npcs, players) {
       const cooldownNotOver = player.getEffects('regeneration cooldown') || player.getEffects('regeneration');
 
       if (cooldownNotOver) {
