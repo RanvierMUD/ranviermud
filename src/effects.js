@@ -9,10 +9,9 @@ const effectsDir = __dirname + '/../effects/';
 
 /* Helper class for loading, getting, and handling effects. */
 
-class Effects {
-	constructor() { throw new TypeError("You should not instantiate the Effects helper class."); }
+const Effects = {
 	
-	static config({ players, items, npcs, rooms, Commands }) {
+	config({ players, items, npcs, rooms, Commands }) {
 		util.log("Configuring effects...");
 
 		fs.readdir(effectsDir, (err, files) => {
@@ -35,7 +34,7 @@ class Effects {
 			}
 		});
 		
-	}
+	},
 
 	/* Gets the effect from the map and passes in options/target to get the final effect object.
 	 * @param target NPC | Player
@@ -43,24 +42,24 @@ class Effects {
 	 * @param options Object of optional params to be used in effect.
 	 * @return effect Object
 	*/
-	static get(target, effectType, options) {
+	get(target, effectType, options) {
 		return _effects.get(effectType)(options, target);
-	}
+	},
 
 	/* Evaluates each effect, deciding if the effect is still valid, and updating anything that needs be.
 	 * For example, could evaluate on each tick, on each action, or both.
 	 * @param target NPC | Player
 	 * @return void
 	*/
-	static evaluateEffects(target, event) {
+	evaluateEffects(target, event) {
 		for (const [ id, effect ] of target.getEffects()) {
 			if (!effect.isValid()) {
 				target.removeEffect(id);
 			}
 		}
-	}
+	},
 
-	static evaluateAttrMods(target, attr) {
+	evaluateAttrMods(target, attr) {
 		let attrValue = target.attributes[attr] || 0;
 
 		for (const [ id, effect ] of target.getEffects()) {
@@ -77,15 +76,15 @@ class Effects {
 		// Don't allow negative attributes. 
 		// If attr somehow becomes NaN, return 0.
 		return Math.max(attrValue, 0) || 0;
-	}
+	},
 
-	static stringify(target) {
+	stringify(target) {
 		let flattened = [];
 		for (const [id, effect] of target.getEffects()) {
 			flattened.push([id, effect.flatten()]);
 		}
 		return JSON.stringify(flattened);
-	}
+	},
 
 	* [Symbol.iterator]() {
 		for (const [type, effect] of _effects) {

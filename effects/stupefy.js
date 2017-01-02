@@ -28,7 +28,7 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
         cleverness: cleverness => Math.max(1, cleverness - cost) 
       },
 
-      type: 'stupefaction',
+      type: 'stupefy',
       name,
       aura
     };
