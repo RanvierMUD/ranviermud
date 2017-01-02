@@ -78,7 +78,7 @@ exports.listeners = {
 
   tick: function(l10n) {
     return function() { /*TODO: Emit sanity loss event here if applicable.*/
-      Effects.evaluateEffects(target, 'tick');
+      Effects.evaluateEffects(this, 'tick');
     }
   },
 
