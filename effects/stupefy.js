@@ -7,7 +7,8 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
      name = "Stupefied",
      aura = "stupefaction",
      percentage = 0.5,
-     cost       = 1 
+     cost       = 1,
+     desc       = 'You are distracted and unfocused due to stress.' 
   } , target) => {
     return {
       activate() {
@@ -30,6 +31,7 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
 
       type: 'stupefy',
       name,
-      aura
+      aura,
+      desc
     };
   }
