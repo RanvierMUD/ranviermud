@@ -14,6 +14,7 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
       deactivate() {},
       type: 'slow',
       name: 'Slowed',
+      desc: 'You are moving sluggishly.',
       aura: 'sluggishness'
     };
   }
