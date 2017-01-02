@@ -11,7 +11,6 @@ const LevelUtil = require('../../src/levels').LevelUtil,
   Effects = require('../../src/effects').Effects,
   Broadcast = require('../../src/broadcast').Broadcast;
 
-
 exports.listeners = {
 
   //// Function wrappers needed to access "this" (Player obj)
@@ -53,17 +52,6 @@ exports.listeners = {
         const newEnergy     = Math.max(0, currentEnergy - cost);
         this.setAttribute('energy', newEnergy);
       }
-
-      // Finally, end any recovery states and their effects.
-      const recovery = ['resting', 'meditating', 'recuperating'];
-      recovery.forEach(state => {
-        const effect = this.getEffects(state);
-        if (effect) {
-          util.log(this.getName() + ' ends ' + state);
-          effect.deactivate();
-          this.removeEffect(state);
-        }
-      });
     }
   },
 
@@ -90,19 +78,7 @@ exports.listeners = {
 
   tick: function(l10n) {
     return function() { /*TODO: Emit sanity loss event here if applicable.*/
-
-      /* Autoregen all the things */
-      const healthRegen = Math.ceil((this.getAttribute('level') + this.getSkills('recovery')) / 5) - 1;
-      const sanityRegen = Math.ceil((this.getAttribute('level') + this.getSkills('concentration')) / 5) - 1;
-      const energyRegen = Math.ceil((this.getAttribute('level') + this.getSkills('athletics')) / 2) - 1;
-
-      const maxHealth = this.getAttribute('max_health');
-      const maxSanity = this.getAttribute('max_sanity');
-      const maxEnergy = this.getAttribute('max_energy');
-
-      this.setAttribute('health', Math.min(this.getAttribute('health') + healthRegen, maxHealth));
-      this.setAttribute('sanity', Math.min(this.getAttribute('sanity') + sanityRegen, maxSanity));
-      this.setAttribute('energy', Math.min(this.getAttribute('energy') + energyRegen, maxEnergy));
+      Effects.evaluateEffects(target, 'tick');
     }
   },
 

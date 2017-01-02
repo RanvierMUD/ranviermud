@@ -388,11 +388,14 @@ const Feats = {
 
         type:      'regen',
         attribute: 'health',
+        name: 'Regeneration',
+        desc: 'Your body is mending itself at an unnatural pace.',
         isFeat:     true,
 
         deactivate() {
           util.log(player.getName() + ' regen is deactivated.');
           player.addEffect('regeneration cooldown', {
+            name: 'Recovery from regeneration',
             type: 'weakness',
             duration: cooldown 
           });
