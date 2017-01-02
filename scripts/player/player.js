@@ -55,7 +55,7 @@ exports.listeners = {
     }
   },
 
-  experience: function(l10n) {
+  experience(l10n) {
     return function(experience, reason) {
 
       const maxLevel = 60;
@@ -76,7 +76,7 @@ exports.listeners = {
     }
   },
 
-  tick: function(l10n) {
+  tick(l10n) {
     return function() { /*TODO: Emit sanity loss event here if applicable.*/
       Effects.evaluateEffects(this, 'tick');
     }
@@ -84,7 +84,7 @@ exports.listeners = {
 
   //TODO: Extract all stuff for determining stat gain into level utils.
 
-  level: function(l10n) {
+  level(l10n) {
     return function() {
       const name = this.getName();
       const newLevel = this.getAttribute('level') + 1;
