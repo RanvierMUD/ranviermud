@@ -232,8 +232,10 @@ exports.listeners = {
       if (!this.getEffects('flurry')) {
         player.say('<yellow>The cat pounces on you with a flurry of blows!');
         this.addEffect('flurry', {
+          type: 'haste',
           duration: 6 * 1000,
-          activate: () => {
+          
+          activate() {
             this.combat.addSpeedMod({
               name: 'ferocious feline',
               effect: speed => Math.round(speed * .75)
@@ -243,7 +245,8 @@ exports.listeners = {
               effect: damage => damage + 10
             });
           },
-          deactivate: () => {
+
+          deactivate() {
             this.combat.removeAllMods('ferocious feline');
           }
         })
@@ -292,8 +295,9 @@ exports.listeners = {
       if (whackedInHead && !this.getEffects('monocle broke')) {
         this.addEffect('monocle broke', {
           duration: 15 * 1000,
-
-          activate: () => {
+          type: 'defense_boost',
+          defenseBonus: -1,
+          activate() {
             player.say('<bold>You whack the cat in the head and his monocle cracks.</bold>');
             this.combat.addToHitMod({
               name: 'monocle broke' + damage,
@@ -301,7 +305,7 @@ exports.listeners = {
             });
           },
 
-          deactivate: () => {
+          deactivate() {
             this.combat.removeToHitMod('monocle broke' + damage);
             player.say('<white>The sassy feline swaps out their broken monocle for a fresh one.</white>')
           }
