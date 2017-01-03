@@ -1,38 +1,36 @@
-var fs     = require('fs'),
-    util   = require('util');
-var plugins_dir = __dirname + '/../plugins/';
+const fs     = require('fs'),
+      util   = require('util');
+const pluginsDir = __dirname + '/../plugins/';
 
-module.exports =
-{
-	init: function (verbose, config)
-	{
-		var log = function (message) { if (verbose) util.log(message); };
-		var debug = function (message) { if (verbose) util.debug(message); };
-		log("Examining plugin directory - " + plugins_dir);
-		var plugins = fs.readdirSync(plugins_dir);
+module.exports = {
+	init(verbose, config) {
+		const log   = message => { if (verbose) util.log(message); };
+		const debug = message => { if (verbose) util.debug(message); };
+		
+		log("Examining plugin directory - " + pluginsDir);
+		if (!fs.existsSync(pluginsDir)) {
+			fs.mkdirSync(pluginsDir);
+		}
+
+		const plugins = fs.readdirSync(pluginsDir);
 		// Load any plugin files
-		plugins.forEach(function (plugin)
-		{
-			var plugin_dir = plugins_dir + plugin;
-			if (!fs.statSync(plugin_dir).isDirectory()) return;
+		plugins.forEach(plugin => {
+			const pluginDir = pluginsDir + plugin;
+			if (!fs.statSync(pluginDir).isDirectory()) return;
 
 			// create and load the plugins
-			var files = fs.readdirSync(plugin_dir);
+			const files = fs.readdirSync(pluginDir);
 
 			// Check for an area manifest
-			var has_init = files.some(function (file) {
-				return file.match(/plugin.js/);
-			});
+			const hasInit = files.some(file => file.match(/plugin.js/));
 
-			if (!has_init) {
-				log("Failed to load plugin - " + plugin + ' - No plugin.js file');
-				return;
+			if (!hasInit) {
+				return debug("Failed to load plugin - " + plugin + ' - No plugin.js file');
 			}
 
 			log("Loading plugin [" + plugin + "]");
-			require(plugin_dir + '/plugin.js').init(config);
+			require(pluginDir + '/plugin.js').init(config);
 			log("Done");
 		});
-
 	}
 };
