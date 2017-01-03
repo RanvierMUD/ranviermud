@@ -75,9 +75,9 @@ class Effect {
   getTarget()  { return this[_target];  }
 
   /* Get fields from generic effect, for player-friendly consumption. */
-  getName()        { return this[_effect].name; }
-  getDescription() { return this[_effect].desc; }
-  getAura()        { return this[_effect].aura; }
+  getName()        { return this[_options].name || this[_effect].name; }
+  getDescription() { return this[_options].desc || this[_effect].desc; }
+  getAura()        { return this[_options].aura || this[_effect].aura; }
 
   getDuration() { 
     return parseInt(this[_options].duration, 10) || Infinity; 

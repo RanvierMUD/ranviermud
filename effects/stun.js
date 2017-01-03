@@ -31,5 +31,6 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
 
       type: 'stun',
       name: 'Stunned',
+      desc: 'You are dazed, finding it difficult to move or react.',
       aura: 'uselessness'
   });

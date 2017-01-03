@@ -41,6 +41,7 @@ const Feats = {
         type:          'defense_boost',
         combatModName: 'leatherskin',
         name:          'Leatherskin',
+        desc:          'Your skin has hardened into tough, leathery hide.',
         aura:          'leather',
         defenseBonus:   bonus,
         healthBonus:    bonus * 5,  
@@ -76,6 +77,7 @@ const Feats = {
         combatModName: 'ironskin',
         name:          'Ironskin',
         aura:          'steeliness',
+        desc:          'Your skin has an iron-like chitin coating it.',
         defenseBonus:   bonus * 4,
         healthBonus:    bonus + 5, 
         activate:       () => player.combat.addSpeedMod({
@@ -279,6 +281,7 @@ const Feats = {
         const cost     = Math.ceil(siphoned / player.getAttribute('level')); 
         player.addEffect('siphoning', { 
           type: 'willpower_cooldown',
+          name: 'Using siphon',
           duration,
           cost
         });
@@ -298,7 +301,8 @@ const Feats = {
     id:   'secondwind',
     name: 'Second Wind',
     description: 'Reinvigorate yourself in an instant.',
-    activate: (player, args, rooms, npcs, players) => {
+   
+   activate(player, args, rooms, npcs, players) {
       const cooldownNotOver = player.getEffects('secondwind');
 
       if (cooldownNotOver) {
@@ -306,7 +310,7 @@ const Feats = {
       }
 
       deductSanity(player, 15);
-      player.setAttribute('energy', player.getAttribute('max_energy'));
+      player.setAttribute('energy', player.getRawAttribute('max_energy'));
 
       const modifier = Math.ceil(player.getAttribute('level') / 10) + 1;
       player.combat.addSpeedMod({
@@ -318,15 +322,20 @@ const Feats = {
 
       player.addEffect('secondwind', {
         type: 'haste',
+        name: 'Secondwind',
         duration,
         activate() { 
           player.say('<magenta>You feel a fell energy coursing through your veins.</magenta>') 
         },
+        
         deactivate() {
           player.combat.removeSpeedMod('secondwind');
+          
           player.addEffect('secondwind hangover', {
             duration: duration * 4,
+            name: 'Recovering from second wind',
             type: 'slow',
+            
             activate() {
               player.combat.addSpeedMod({
                 name: 'secondwind hangover',
@@ -339,9 +348,11 @@ const Feats = {
               player.combat.removeSpeedMod('secondwind hangover');
               player.say('<magenta>You feel normal again.</magenta>');
             },
-          })
+          });
         },
+
       });
+
     },
   },
 
@@ -358,7 +369,7 @@ const Feats = {
     id: 'regeneration',
     name: 'Regeneration',
     description: 'Restore your own broken tissues.',
-    activate: (player, args, rooms, npcs, players) => {
+    activate(player, args, rooms, npcs, players) {
       const cooldownNotOver = player.getEffects('regeneration cooldown') || player.getEffects('regeneration');
 
       if (cooldownNotOver) {
@@ -377,11 +388,14 @@ const Feats = {
 
         type:      'regen',
         attribute: 'health',
+        name: 'Regeneration',
+        desc: 'Your body is mending itself at an unnatural pace.',
         isFeat:     true,
 
         deactivate() {
           util.log(player.getName() + ' regen is deactivated.');
           player.addEffect('regeneration cooldown', {
+            name: 'Recovery from regeneration',
             type: 'weakness',
             duration: cooldown 
           });
