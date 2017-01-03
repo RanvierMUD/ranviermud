@@ -34,6 +34,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const duration = player.getAttribute('level') * 1000;
       player.addEffect('cowardice', {
         type: 'debuff',
+        name: 'Cowardice',
+        description: 'Recovering from fleeing in fear',
+        aura: 'cowardly',
         penalty: 1,
         duration
       });
@@ -46,6 +49,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         const expGain = (cumulativeOpponentLevel - level) * 10;
         player.emit('experience', expGain, 'surviving to fight again another day');
       }
+
+      player.emit('sanityLoss', cumulativeOpponentLevel, 'fleeing under duress');
 
     } else {
       player.warn('You are cornered and unable to escape!');
