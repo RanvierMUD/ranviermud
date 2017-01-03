@@ -13,7 +13,8 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
 
       deactivate: () => {},
       type: 'willpower_cooldown',
-      name: 'Recovering from use of psionic willpower',
+      name: 'Drained willpower',
+      desc: 'Recovering from use of psionic willpower',
       aura: 'drained'
     };
   }

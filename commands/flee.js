@@ -12,30 +12,48 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     if (!player.hasEnergy(2, items)) { return player.noEnergy(); }
 
     if (!player.isInCombat()) {
-      player.sayL10n(l10n, "NO_FIGHT");
-      return;
+      return player.warn('You have nothing to flee from... right?');
     }
 
     util.log(player.getName() + ' is trying to flee from:');
 
     const opponents = player.getInCombat();
 
-    opponents.forEach( opp => util.log(opp.getShortDesc('en')) );
-
-    const fleed     = Random.coinFlip();
-    const room      = rooms.getAt(player.getLocation());
-    const exit      = Random.fromArray(room.getExits());
+    const fleed = Random.coinFlip();
+    const room  = rooms.getAt(player.getLocation());
+    const exit  = Random.fromArray(room.getExits());
 
     if (fleed && move(exit, player)) {
+      
       opponents.forEach(opp => opp.removeFromCombat(player));
       player.fleeFromCombat();
 
-      player.sayL10n(l10n, 'FLEE_SUCCEED');
+      player.say(`<red>You manage to escape in one piece!</red>`);
       util.log(player.getName() + " fled successfully.");
-      return;
-    }
 
-    player.sayL10n(l10n, "FLEE_FAIL");
-    return;
+      const duration = player.getAttribute('level') * 1000;
+      player.addEffect('cowardice', {
+        type: 'debuff',
+        name: 'Cowardice',
+        description: 'Recovering from fleeing in fear',
+        aura: 'cowardly',
+        penalty: 1,
+        duration
+      });
+
+
+      const cumulativeOpponentLevel = opponents.reduce((sum, opp) => sum += opp.getAttribute('level'), 0);
+      const level = player.getAttribute('level');
+
+      if (cumulativeOpponentLevel > level + 2) {
+        const expGain = (cumulativeOpponentLevel - level) * 10;
+        player.emit('experience', expGain, 'surviving to fight again another day');
+      }
+
+      player.emit('sanityLoss', cumulativeOpponentLevel, 'fleeing under duress');
+
+    } else {
+      player.warn('You are cornered and unable to escape!');
+    }
   };
 };

@@ -8,6 +8,7 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
      aura          = "basic protection",
      defenseBonus  = 2, 
      healthBonus   = 0,
+     desc          = "You are protected from physical damage."
    }, target) => ({
       
       activate() {
@@ -26,5 +27,5 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
       },
 
       type: 'defense_boost',
-      name, aura
+      name, aura, desc
   });
