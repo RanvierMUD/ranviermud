@@ -1,14 +1,13 @@
 RANVIER v0.3.4 alpha server
 ===========================
-RANVIERMUD alpha v0.4.0
+RANVIER Alpha v0.4.1
 
 Currently testing:
-- New inventory system
-  - Give, put, take, get, drop, equip, remove, wield commands.
-- Login flow
+- Inventory system may still have kinks.
+- Effects system is entirely reworked so that effects persist and are more robust.
 
-Known Issues:
-- Effects are stupid and don't persist.
 
-* please send me bug reports via mudcoders slack  *
+* Please send me bug reports via Mudcoders Slack  *
+* www.mudcoders.com *
+
 E N J O Y
