@@ -14,7 +14,7 @@
 | /Users/seanohue/myProjects/ranviermud/src/events.js | 24 | Deprecate this if possible.
 | /Users/seanohue/myProjects/ranviermud/src/events.js | 82 | Extract stuff like this into Data module as util funcs.
 | /Users/seanohue/myProjects/ranviermud/src/examine.js | 18 | Change command so that it can work on any item, npc, or room by emitting.
-| /Users/seanohue/myProjects/ranviermud/src/feats.js | 443 | Use an event emitter instead.
+| /Users/seanohue/myProjects/ranviermud/src/feats.js | 457 | Use an event emitter instead.
 | /Users/seanohue/myProjects/ranviermud/src/help_files.js | 52 | Dynamically pull in list of admins
 | /Users/seanohue/myProjects/ranviermud/src/item_util.js | 114 | Use EventEmitters to emit a critical hit event for the item, so each item can have special crit effects.
 | /Users/seanohue/myProjects/ranviermud/src/item_util.js | 125 | Improve... if the damage is over the weapon's normal max damage it should be considered a crit...
@@ -38,13 +38,13 @@
 | /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 134 | Remove this when allowing for multicombat.
 | /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 135 | Use an array of targets for multicombat.
 | /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 186 | Make a custom insanity effect with events and such?
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 262 | What if there are no players involved in combat?
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 359 | Add to utils helper.js file
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 371 | Handle PvP or NvN combat ending differently.
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 409 | Extract this to combat utils.
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 410 | Make NPCs have fleeing behavior, too.
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 411 | Emit flee?
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 423 | Use Broadcast module or extract to the Broadcast file.
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 263 | What if there are no players involved in combat?
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 360 | Add to utils helper.js file
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 372 | Handle PvP or NvN combat ending differently.
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 410 | Extract this to combat utils.
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 411 | Make NPCs have fleeing behavior, too.
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 412 | Emit flee?
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 424 | Use Broadcast module or extract to the Broadcast file.
 | /Users/seanohue/myProjects/ranviermud/src/skills.js | 28 | Pull into own files.
 | /Users/seanohue/myProjects/ranviermud/src/status.js | 2 | Dry this up more.
 | /Users/seanohue/myProjects/ranviermud/src/status.js | 3 | Refactor.
@@ -57,11 +57,11 @@
 | /Users/seanohue/myProjects/ranviermud/scripts/objects/1-shiv.js | 9 | Update to account for prereqs
 | /Users/seanohue/myProjects/ranviermud/scripts/objects/10-chain_whip.js | 68 | Refactor by extracting to functions...
 | /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 3 | Refactor into individual files.
-| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 20 | Use this for all sanity loss incidents.
-| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 27 | Different messages for different relative amounts of sanity loss.
-| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 92 | Emit sanity loss event here if applicable.
-| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 109 | Extract all stuff for determining stat gain into level utils.
-| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 171 | Permadeath, add it.
+| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 19 | Use this for all sanity loss incidents.
+| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 26 | Different messages for different relative amounts of sanity loss.
+| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 80 | Emit sanity loss event here if applicable.
+| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 85 | Extract all stuff for determining stat gain into level utils.
+| /Users/seanohue/myProjects/ranviermud/scripts/player/player.js | 147 | Permadeath, add it.
 | /Users/seanohue/myProjects/ranviermud/scripts/rooms/1.js | 11 | Now, this would be a good case for an ES6 map.
 | /Users/seanohue/myProjects/ranviermud/scripts/rooms/8.js | 6 | Redo/refactor all examine listeners.
 | /Users/seanohue/myProjects/ranviermud/commands/drop.js | 11 | Does this handle dropping a container with items in it?
@@ -84,7 +84,7 @@
 |:------|:------:|:------
 | /Users/seanohue/myProjects/ranviermud/src/combat_util.js | 90 | Can be done better with changes to npc class.
 | /Users/seanohue/myProjects/ranviermud/src/item_util.js | 268 | Deprecate the items below, or at least have them call above functions and then
-| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 324 | In statusUtils: This could be a problem if the combat is between two NPCs or two players.
+| /Users/seanohue/myProjects/ranviermud/src/rtcombat.js | 325 | In statusUtils: This could be a problem if the combat is between two NPCs or two players.
 | /Users/seanohue/myProjects/ranviermud/commands/appraise.js | 35 | There has to be a better way...
 | /Users/seanohue/myProjects/ranviermud/commands/look.js | 77 | This does not really seem to be working.
 | /Users/seanohue/myProjects/ranviermud/commands/look.js | 78 | Consider making it a 'scout' command/skill.

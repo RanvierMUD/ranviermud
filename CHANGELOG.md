@@ -1,3 +1,51 @@
+SPECIAL EFFECTS (0.4.1)
+=======
+
+This release focuses on the effects system. 
+Previously, there were a lot of technical issues with effects: 
+- There was no consistent format for them. 
+- They were not flexible nor functional, in that they directly mutated the player's stats (for instance). This caused bugs.
+- They could not be easily tied into the event emitter architecture.
+- They did not persist after a player logged off.
+
+Now all of that is fixed!
+
+### Features:  
+- There is now a small debuff effect when you flee from battle. It lasts for a short amount of time at lower levels and scales up.
+- `effects` command allows you to see what effects you have, with a brief friendly description.
+
+### Enhancements:
+- Improved effects to be persistent, functionally change attributes instead of mutating, and have a consistent API.
+- All existing effects have been recreated and improved upon.
+
+### Bugfixes
+- Now if you don't have a plugins folder on startup, the server will create one instead of crashing.
+- Due to buggy API, effects would send duplicate messages on activate/deactivate. Now it is fixed.
+- Bugs related to effects mutating player stats or not persisting have all been fixed.
+
+### Technical Stuff:
+- Effects on players persist.
+- Effects have their own folder instead of all being in one giant messy file.
+- Effects on items (enchantments?) should be easier to do now.
+- Making new effects is way easier.
+- Effects work on NPCs as well as players, though they don't persist between server reboots (yet).
+- All older effects have been recreated as mentioned above.
+- The new API should allow for easier effect management, for example allowing for potions to remove all negative effects.
+
+### Coming Soon:
+- Coordinate-based rooms
+- Improvements to pathfinding
+- Persisting containers/items/NPCs across server reboots
+- Changes to NPCs to make the API match players
+- Improved documentation/finishing graphs that I started a while back
+
+#### COVERAGE:
+Statements   : 33.54% ( 1455/4338 )
+Branches     : 22.41% ( 383/1709 )
+Functions    : 33.86% ( 85/251 )
+Lines        : 33.6% ( 1323/3938 )
+
+
 ITEMCEPTION (0.4.0)
 =======
 
