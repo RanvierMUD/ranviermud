@@ -10,7 +10,7 @@ const effectsDir = __dirname + '/../effects/';
 /* Helper class for loading, getting, and handling effects. */
 
 const Effects = {
-	
+
 	config({ players, items, npcs, rooms, Commands }) {
 		util.log("Configuring effects...");
 
@@ -23,8 +23,8 @@ const Effects = {
 				const effectFile = effectsDir + file;
 				if (!fs.statSync(effectFile).isFile()) { continue; }
 				if (!effectFile.match(/js$/)) 				 { continue; }
-				
-				const effect = require(effectFile).effect(players, items, npcs, rooms, Commands);	
+
+				const effect = require(effectFile).effect(players, items, npcs, rooms, Commands);
 				const name = file.split('.')[0];
 
 				// The filename must match the "type" of effect.
@@ -33,7 +33,7 @@ const Effects = {
 				util.log(`Effect #${_effects.size}: ${file} configured.`);
 			}
 		});
-		
+
 	},
 
 	/* Gets the effect from the map and passes in options/target to get the final effect object.
@@ -65,7 +65,7 @@ const Effects = {
 		for (const [ id, effect ] of target.getEffects()) {
 			const modifier = effect.getModifiers()[attr];
 			if (!modifier) { continue; }
-			
+
 			if (effect.isValid()) {
 				attrValue = modifier(attrValue);
 			} else {
@@ -73,7 +73,7 @@ const Effects = {
 			}
 		}
 
-		// Don't allow negative attributes. 
+		// Don't allow negative attributes.
 		// If attr somehow becomes NaN, return 0.
 		return Math.max(attrValue, 0) || 0;
 	},
@@ -95,7 +95,7 @@ const Effects = {
 }
 
 const getSpecialEncumbranceEffects = entity => ({
-    
+
 	'insubstantial': {
 		'dodgeMods': {
 			name: 'encumbrance',
@@ -107,7 +107,7 @@ const getSpecialEncumbranceEffects = entity => ({
 		},
 		'damageMods': {
 			name:  'encumbrance',
-			effect: damage => damage - 2 
+			effect: damage => damage - 2
 		},
 		'toHitMods': {
 			name: 'encumbrance',
@@ -122,7 +122,7 @@ const getSpecialEncumbranceEffects = entity => ({
 		},
 		'damageMods': {
 			name:  'encumbrance',
-			effect: damage => damage - 1 
+			effect: damage => damage - 1
 		},
 		'toHitMods': {
 			name: 'encumbrance',
@@ -133,7 +133,7 @@ const getSpecialEncumbranceEffects = entity => ({
 	'burdensome': {
 		'dodgeMods': {
 			name:  'encumbrance',
-			effect: dodge => Math.ceil(dodge / 2) 
+			effect: dodge => Math.ceil(dodge / 2)
 		}
 	},
 

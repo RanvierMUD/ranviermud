@@ -281,9 +281,9 @@ function CombatHelper(entity) {
 function setEncumbrancePenalties(entity, encumbrance) {
   entity.combat.removeAllMods('encumbrance');
   const { multiplier, description } = encumbrance;
-  
+
   entity.combat.addSpeedMod({
-    name:  'encumbrance', 
+    name:  'encumbrance',
     effect: speed => speed * multiplier
   });
 
@@ -298,7 +298,7 @@ function setEncumbrancePenalties(entity, encumbrance) {
     const modifier = specialEffects[attrToMod];
     entity.combat.addMod(attrToMod)(modifier);
   }
-  
+
   return specialEffects;
 }
 
@@ -310,6 +310,6 @@ function getHelper(entity) {
 
 exports.CombatHelper = CombatHelper;
 exports.CombatUtil   = {
-  getHelper, decideHitLocation, 
+  getHelper, decideHitLocation,
   setEncumbrancePenalties
 };

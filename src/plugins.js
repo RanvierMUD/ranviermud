@@ -6,7 +6,7 @@ module.exports = {
 	init(verbose, config) {
 		const log   = message => { if (verbose) util.log(message); };
 		const debug = message => { if (verbose) util.debug(message); };
-		
+
 		log("Examining plugin directory - " + pluginsDir);
 		if (!fs.existsSync(pluginsDir)) {
 			fs.mkdirSync(pluginsDir);

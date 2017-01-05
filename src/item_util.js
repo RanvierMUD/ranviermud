@@ -187,8 +187,8 @@ function tooHeavy(player, item, items) {
 */
 function hold({ player, room, item }, callback) {
   const equipment = player.getEquipped();
-  const location  = player.findHoldingLocation(); 
-  
+  const location  = player.findHoldingLocation();
+
   player.addItem(item);
   if (room) { room.removeItem(item) };
   item.setRoom(null);
@@ -206,7 +206,7 @@ function hold({ player, room, item }, callback) {
  * @return void
 */
 function pickUp({ player, room, item, items }, callback) {
-  
+
   const container = player
     .getContainersWithCapacity(items, item.getAttribute('size'))
     .filter(it => it !== item)
@@ -243,11 +243,11 @@ function deleteFromEquipment(entity, item, location) {
  * @param tooLarge Boolean
  * @param tooHeavy Boolean
  * @param item object
- * @return failureMessage String 
+ * @return failureMessage String
 */
 function getFailureMessage(tooLarge, tooHeavy, item) {
   const itemName = item.getShortDesc();
-  
+
   if (tooLarge) { return `The ${itemName} will not fit in your inventory, it is too large.`; }
   if (tooHeavy) { return `The ${itemName} is too heavy for you to carry at the moment.`; }
   return `You cannot pick up ${itemName} right now.`;
@@ -269,7 +269,7 @@ function isHeld(player, item) {
 // return a boolean.
 
 
-/* It puts the item in the container 
+/* It puts the item in the container
  * //TODO: Consider deprecating this since it does mostly the same stuff as the above function 'pickUp'.
  * @param item, container, player, players
  * @return true if it succeeded
@@ -278,7 +278,7 @@ function putItemInContainer(item, container, player, players) {
     const containerName = container.getShortDesc();
     const itemName      = item.getShortDesc();
     container.addItem(item);
-    
+
     // Remove if equipped.
     if (item.isEquipped()) {
       item.setEquipped(false);

@@ -6,16 +6,16 @@ const Effects = require('./effects').Effects;
 const _id      = Symbol('id');
 const _options = Symbol('options');
 const _type    = Symbol('type');
-const _target  = Symbol('target'); 
+const _target  = Symbol('target');
 const _elapsed = Symbol('elapsed');
 const _started = Symbol('started');
 const _paused  = Symbol('paused');
 const _effect  = Symbol('effect');
 
 
-/* Effect class -- instantiates new effect, can be used to check for validity of effect, can be used 
- * @param {id: string, options: object, type: string, target: NPC | Player } 
- * @return 
+/* Effect class -- instantiates new effect, can be used to check for validity of effect, can be used
+ * @param {id: string, options: object, type: string, target: NPC | Player }
+ * @return
 */
 class Effect {
 
@@ -33,8 +33,8 @@ class Effect {
     if (this[_options].activate) { this[_options].activate(); }
   }
 
-  /* 
-   * Called when the effect is initialized 
+  /*
+   * Called when the effect is initialized
    * or when it is loaded back onto the player after login.
    * 1) Sets up timing if necessary.
    * 2) Sets up event listeners.
@@ -43,12 +43,12 @@ class Effect {
   init() {
     const target  = this[_target];
     const options = this[_options];
-    
+
     if (options.duration) {
       this[_started] = options.started || Date.now();
       this[_elapsed] = options.elapsed || 0;
     }
-      
+
     const effect = this[_effect];
 
     target.on('quit', () => {
@@ -59,7 +59,7 @@ class Effect {
     const events = Object.assign({},
       effect.events  || {},
       options.events || {});
-    
+
     for (let event in events) {
       const handler = events[event];
       if (!handler) { throw new ReferenceError("An event was registered for an effect, but it had no handler."); }
@@ -79,11 +79,11 @@ class Effect {
   getDescription() { return this[_options].desc || this[_effect].desc; }
   getAura()        { return this[_options].aura || this[_effect].aura; }
 
-  getDuration() { 
-    return parseInt(this[_options].duration, 10) || Infinity; 
+  getDuration() {
+    return parseInt(this[_options].duration, 10) || Infinity;
   }
 
-  getElapsed() { 
+  getElapsed() {
     if (isNaN(this[_started])) { return null; }
     return Date.now() - (this[_started] + this[_paused]);
   }
@@ -100,12 +100,12 @@ class Effect {
   isCurrent()      { return this.isTemporary() ? this.getElapsed() < this.getDuration() : true; }
   isTemporary()    { return this.getDuration() < Infinity; }
   isValid()        { return this.isCurrent() && this.checkPredicate(); }
-  
-  checkPredicate() { 
+
+  checkPredicate() {
     const options   = this[_options];
     const predicate = options.predicate;
-    return predicate ? 
-      predicate() : 
+    return predicate ?
+      predicate() :
       true;
   }
 
@@ -113,8 +113,8 @@ class Effect {
   deactivate() {
     this[_effect].deactivate();
 
-    if (this[_options].deactivate) { 
-      this[_options].deactivate(); 
+    if (this[_options].deactivate) {
+      this[_options].deactivate();
     }
 
     for (let event in this[_effect].events || {}) {
@@ -126,12 +126,12 @@ class Effect {
   }
 
   flatten() {
-    const savedOptions = Object.assign({}, 
-    this[_options], { 
-      started: this[_started], 
+    const savedOptions = Object.assign({},
+    this[_options], {
+      started: this[_started],
       elapsed: this[_elapsed],
       paused:  this[_started] ? Date.now() : null
-    }); 
+    });
     return {
       id:      this[_id],
       options: savedOptions,
@@ -143,20 +143,20 @@ class Effect {
 
 /* Validation helper for effect construction */
 const validate = (id, options, type, target) => {
-  if (!id) { 
-    throw new ReferenceError("Effects must have an ID to prevent stacking."); 
+  if (!id) {
+    throw new ReferenceError("Effects must have an ID to prevent stacking.");
   }
-  if (!options || !Object.keys(options).length) { 
-    throw new ReferenceError("Effects must take an options object."); 
+  if (!options || !Object.keys(options).length) {
+    throw new ReferenceError("Effects must take an options object.");
   }
-  if (!type) { 
-    throw new ReferenceError("Effects must have a generic effect type."); 
+  if (!type) {
+    throw new ReferenceError("Effects must have a generic effect type.");
   }
-  if (!target) { 
-    throw new ReferenceError("Effects must have a target."); 
+  if (!target) {
+    throw new ReferenceError("Effects must have a target.");
   }
-  if (!(target.addEffect)) { 
-    throw new TypeError("Effects can only target players or NPCs."); 
+  if (!(target.addEffect)) {
+    throw new TypeError("Effects can only target players or NPCs.");
   }
 }
 

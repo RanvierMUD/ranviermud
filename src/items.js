@@ -312,10 +312,10 @@ const Item = function ItemConstructor(config) {
 	/**
 	 * Get weight of all items inside of a container...
 	 * And the container.
-	 * @return Number weight 
+	 * @return Number weight
 	 */
 
-	self.getWeight = items => self.isContainer() ? 
+	self.getWeight = items => self.isContainer() ?
 				self.getContainerWeight(items) + self.getAttribute('weight') :
 				self.getAttribute('weight');
 
@@ -323,7 +323,7 @@ const Item = function ItemConstructor(config) {
 		.reduce((sum, item) => items.get(item).getWeight() + sum, 0);
 
 	self.getRemainingSizeCapacity = items => self.getAttribute('maxSizeCapacity') - self.getSizeOfContents(items);
-	
+
 	self.getSizeOfContents = items => self
 		.getInventory()
 		.reduce((sum, uid) => {

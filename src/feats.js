@@ -44,11 +44,11 @@ const Feats = {
         desc:          'Your skin has hardened into tough, leathery hide.',
         aura:          'leather',
         defenseBonus:   bonus,
-        healthBonus:    bonus * 5,  
+        healthBonus:    bonus * 5,
         activate:       () => player.combat.addSpeedMod({
           name: 'leatherskin',
           effect: speed => speed + 500
-        })  
+        })
       });
 
       player.say("<bold>Your skin hardens into a leathery hide.</bold>");
@@ -79,7 +79,7 @@ const Feats = {
         aura:          'steeliness',
         desc:          'Your skin has an iron-like chitin coating it.',
         defenseBonus:   bonus * 4,
-        healthBonus:    bonus + 5, 
+        healthBonus:    bonus + 5,
         activate:       () => player.combat.addSpeedMod({
           name: 'ironskin',
           effect: speed => speed * 1.5
@@ -141,9 +141,9 @@ const Feats = {
 
       player.addEffect('charm', {
         type: 'charm',
-        
+
         duration, bonus,
-        
+
         deactivate: () => player.warn('You are no longer radiating calm and peace.'),
         activate:   () => {
           const cost = Math.max(Math.ceil(player.getAttribute('cleverness') / 2), 2);
@@ -153,7 +153,7 @@ const Feats = {
             duration: cooldown + duration,
             cost
           });
-        },  
+        },
       });
     }
   },
@@ -172,9 +172,9 @@ const Feats = {
       const combatants = player.getInCombat();
       const potentialTargets = combatants.length === 1 ?
         combatants :
-        combatants.filter(enemy => args ? 
-          (enemy.hasKeyword(args) 
-          || enemy.getShortDesc().includes(args) 
+        combatants.filter(enemy => args ?
+          (enemy.hasKeyword(args)
+          || enemy.getShortDesc().includes(args)
           || enemy.getName().toString().includes(args)) :
           []);
 
@@ -193,21 +193,21 @@ const Feats = {
 
       const level    = player.getAttribute('level');
       const will     = player.getAttribute('willpower');
-      const cooldown = Math.max((60 * 1000) - (level * 1000), 6000); 
+      const cooldown = Math.max((60 * 1000) - (level * 1000), 6000);
       const duration = Math.min((level / 4) * 3000, 30 * 1000);
       const factor   = Math.round((level + will / 4) + (player.getAttribute('cleverness') / 8));
-      
+
       target.addEffect('stunned', {
         duration,
         factor,
         type: 'stun',
-        
+
         activate: () => {
           player.say(`<magenta>You concentrate on stifling ${target.getShortDesc()}.</magenta>`);
-          
+
           const sanityCost = 11 + Math.round(factor / 2);
           deductSanity(player, sanityCost);
-          
+
           player.addEffect('stun cooldown', {
             type: 'willpower_cooldown',
             duration: cooldown,
@@ -278,8 +278,8 @@ const Feats = {
         util.log(player.getName() + ' drains a ' + target.getShortDesc('en') + ' for ' + siphoned);
 
         const duration = (61 - player.getAttribute('level')) * 1000;
-        const cost     = Math.ceil(siphoned / player.getAttribute('level')); 
-        player.addEffect('siphoning', { 
+        const cost     = Math.ceil(siphoned / player.getAttribute('level'));
+        player.addEffect('siphoning', {
           type: 'willpower_cooldown',
           name: 'Using siphon',
           duration,
@@ -301,7 +301,7 @@ const Feats = {
     id:   'secondwind',
     name: 'Second Wind',
     description: 'Reinvigorate yourself in an instant.',
-   
+
    activate(player, args, rooms, npcs, players) {
       const cooldownNotOver = player.getEffects('secondwind');
 
@@ -324,18 +324,18 @@ const Feats = {
         type: 'haste',
         name: 'Secondwind',
         duration,
-        activate() { 
-          player.say('<magenta>You feel a fell energy coursing through your veins.</magenta>') 
+        activate() {
+          player.say('<magenta>You feel a fell energy coursing through your veins.</magenta>')
         },
-        
+
         deactivate() {
           player.combat.removeSpeedMod('secondwind');
-          
+
           player.addEffect('secondwind hangover', {
             duration: duration * 4,
             name: 'Recovering from second wind',
             type: 'slow',
-            
+
             activate() {
               player.combat.addSpeedMod({
                 name: 'secondwind hangover',
@@ -397,7 +397,7 @@ const Feats = {
           player.addEffect('regeneration cooldown', {
             name: 'Recovery from regeneration',
             type: 'weakness',
-            duration: cooldown 
+            duration: cooldown
           });
           player.say('<green>You feel a dull ache as your body stops stitching itself back together.</green>')
         },

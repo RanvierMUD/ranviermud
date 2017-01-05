@@ -154,7 +154,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, items, ca
     // Handle attacker fatigue
     const slowAttacker = Type.isPlayer(attacker) && !attacker.hasEnergy(energyCost, items);
     if (slowAttacker) {
-      attacker.combat.addSpeedMod({ 
+      attacker.combat.addSpeedMod({
         name: 'fatigue',
         modifier: speed => speed + 1000
       });

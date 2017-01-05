@@ -37,7 +37,7 @@ const Npcs = function NpcManager() {
 
 		log("\tExamining npc directory - " + npcs_dir);
 		fs.readdir(npcs_dir, (err, files) => {
-      
+
 			// Load any npc files
 			for (const j in files) {
 				const npc_file = npcs_dir + files[j];
@@ -263,13 +263,13 @@ const Npc = function NpcConstructor(config) {
    * @param object effect
    */
   self.addEffect = (id, options) => {
-    const effect = new Effect({ 
-      id, 
-      options, 
-      type: options.type, 
-      target: self 
+    const effect = new Effect({
+      id,
+      options,
+      type: options.type,
+      target: self
     });
-      
+
     self.removeEffect(id);
     self.effects.set(id, effect);
     effect.init();

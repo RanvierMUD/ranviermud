@@ -122,7 +122,7 @@ const Player = function PlayerConstructor(socket) {
   self.getAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
     Effects.evaluateAttrMods(self, attr) : false;
 
-  self.getRawAttribute = attr => typeof self.attributes[attr] !== 'undefined' ? 
+  self.getRawAttribute = attr => typeof self.attributes[attr] !== 'undefined' ?
     self.attributes[attr] : self.attributes;
 
   self.getPreference = pref => typeof self.preferences[pref] !== 'undefined' ?
@@ -167,9 +167,9 @@ const Player = function PlayerConstructor(socket) {
   self.fleeFromCombat   = ()          => self.inCombat = [];
   self.setInCombat      = combatant   => self.inCombat.push(combatant);
   self.getInCombat      = ()          => self.inCombat;
-  self.removeFromCombat = combatant   => 
+  self.removeFromCombat = combatant   =>
     self.inCombat = self.inCombat.filter(comb => combatant !== comb);
-  
+
 
   ///// ----- Skills and Training. ----- ///////
 
@@ -376,13 +376,13 @@ const Player = function PlayerConstructor(socket) {
    * @param object effect
    */
   self.addEffect = (id, options) => {
-    const effect = new Effect({ 
-      id, 
-      options, 
-      type: options.type, 
-      target: self 
+    const effect = new Effect({
+      id,
+      options,
+      type: options.type,
+      target: self
     });
-      
+
     self.removeEffect(id);
     self.effects.set(id, effect);
     effect.init();
@@ -395,7 +395,7 @@ const Player = function PlayerConstructor(socket) {
       return self.effects.delete(id);
     }
   }
-  
+
 
   ///// ----- Handle Inventory && Equipment. ----- ///////
 
@@ -430,7 +430,7 @@ const Player = function PlayerConstructor(socket) {
    */
   self.equip = (wearLocation, item) => {
     const uid = item.getUuid();
-    
+
     ItemUtil.deleteFromEquipment(self, item, wearLocation);
 
     self.equipment[wearLocation] = uid;
@@ -486,8 +486,8 @@ const Player = function PlayerConstructor(socket) {
     const holdingSpots = ['wield', 'offhand', 'held', 'offhand held'];
 
     // The spot is open if there is nothing in it or if the item they are trying to wield is already being held...
-    const openSpots = holdingSpots.filter(slot => !equipped[slot] || (item ? 
-        equipped[slot] === item.getUuid() : 
+    const openSpots = holdingSpots.filter(slot => !equipped[slot] || (item ?
+        equipped[slot] === item.getUuid() :
         true));
     return holdingSpots.length > 2;
   };
@@ -507,9 +507,9 @@ const Player = function PlayerConstructor(socket) {
 
   /** //TODO: Put this somewhere nice.
    * Instead of using effects, this is used to decide effects of encumbrance.
-   * A higher multiplier is a bad thing. 
-   * Action costs will be multiplied by the multiplier. 
-   * Things like dodge chance will be divided. 
+   * A higher multiplier is a bad thing.
+   * Action costs will be multiplied by the multiplier.
+   * Things like dodge chance will be divided.
    * @param items manager
    * @return object { multiplier, description }
    */
@@ -728,7 +728,7 @@ const Player = function PlayerConstructor(socket) {
         self.skills[skill.id] = 1;
       }
     }
-    
+
     // Hydrate and activate any effects
     self.effects = Data.loadEffects(self, data.effects);
 
@@ -759,28 +759,28 @@ const Player = function PlayerConstructor(socket) {
 
     const effects = Effects.stringify(self);
 
-    const { 
-      name, accountName, location, locale, 
+    const {
+      name, accountName, location, locale,
       prompt_string, combat_prompt, password,
       equipment, attributes, skills, feats,
       gender, preferences, explored, killed,
-      met, training, bodyParts, description 
+      met, training, bodyParts, description
     } = self;
-    
-    return JSON.stringify({ 
-      name,           accountName, 
-      location,       locale, 
-      prompt_string,  combat_prompt, 
+
+    return JSON.stringify({
+      name,           accountName,
+      location,       locale,
+      prompt_string,  combat_prompt,
       password,       equipment,
-      attributes,     skills, 
-      feats,          gender, 
-      preferences,    explored, 
-      killed,         met, 
-      training,       bodyParts, 
+      attributes,     skills,
+      feats,          gender,
+      preferences,    explored,
+      killed,         met,
+      training,       bodyParts,
       effects,        inventory,
       description
     });
-    
+
   };
 
 
@@ -798,8 +798,8 @@ const Player = function PlayerConstructor(socket) {
   self.useFeat = (featName, ...args) => {
     featName = featName.toLowerCase();
     const feat = Feats[featName];
-    return feat ? 
-      feat.activate(...args) : 
+    return feat ?
+      feat.activate(...args) :
       util.log(`ERROR: Feat not found: ${featName}`);
   };
 
