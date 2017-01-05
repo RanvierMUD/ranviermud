@@ -1,10 +1,5 @@
 'use strict';
 
-/**
- * Point of entry for the player. They aren't actually a player yet
- * @param Socket telnet socket
- */
-
 const util   = require('util');
 const crypto = require('crypto');
 
@@ -29,11 +24,8 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
   return function login(socket, stage, dontwelcome, name) {
 
-    socket.on('error', err => util.log('error: ', err));
-
     util.log("Login event detected... ", stage);
 
-    dontwelcome = EventUtil.swallowGarbage(dontwelcome);
     stage = stage || 'intro';
 
     if (Type.isPlayer(socket)) {
@@ -45,38 +37,30 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
     const repeat = EventUtil.gen_repeat(arguments, next);
 
     switch (stage) {
-
-      case 'intro':
+      case 'intro': {
         const motd = Data.loadMotd();
         if (motd) { socket.write(motd); }
         return next(socket, 'login');
-
-      case 'login':
+      }
+      case 'login': {
         if (!dontwelcome) {
           socket.write("Welcome, what is your name? ");
         }
 
-        //      If account, continue to player selection menu
-        //      Else, continue to account creation menu
+        // If account, continue to player selection menu
+        // Else, continue to account creation menu
 
         socket.once('data', name => {
-
-          if (!EventUtil.isNegot(name)) {
-            return next(socket, 'login', true);
-          }
-
-          name = name
-            .toString()
-            .trim();
+          name = name.toString().trim();
 
           //TODO: Blacklist/whitelist names here.
           //TODO: Put name validation functions in module
           if (/[^a-z]/i.test(name) || !name) {
-            socket.write("That's not really your name, now is it?\r\n");
+            say("That's not really your name, now is it?");
             return repeat();
           }
 
-          name = _.capitalize(name);
+          name = name[0].toUpperCase() + name.slice(1);
 
           let accountExists = Data.loadAccount(name);
 
@@ -88,10 +72,10 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
           return next(socket, 'password', false, name);
         });
+
         break;
-
-      case 'password':
-
+      }
+      case 'password': {
         util.log('Password...');
 
         if (!passwordAttempts[name]) {
@@ -109,7 +93,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
           return false;
         }
 
-        util.log('dontwelcome: ', dontwelcome);
         if (!dontwelcome) {
           socket.write("Enter your password: ");
           socket.toggleEcho();
@@ -131,18 +114,19 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
           }
           return next(socket, 'chooseChar', name);
         });
+
         break;
+      }
+      case 'chooseChar': {
 
-      case 'chooseChar':
-
-      /*
-      Player selection menu:
-        * Can select existing player
-        * Can view deceased (if applicable)
-        * Can create new (if less than 3 living chars)
-      */
-
-        say('Choose your fate:\r\n');
+        /*
+        Player selection menu:
+          * Can select existing player
+          * Can create new (if less than 3 living chars)
+        */
+        say("\r\n------------------------------");
+        say("|      Choose your fate");
+        say("------------------------------");
         name = name || dontwelcome;
 
         const accountAlreadyLoaded = accounts.getAccount(name);
@@ -157,7 +141,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
         if (accountAlreadyLoaded) {
           players.eachIf(multiplaying, bootPlayer);
           account = accountAlreadyLoaded;
-          account.updateScore();
           account.save();
         } else {
           account = new Account();
@@ -167,7 +150,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
         // This just gets their names.
         const characters = account.getCharacters();
-        const deceased   = account.getDeceased();
 
         const maxCharacters   = 3;
         const canAddCharacter = characters.length < maxCharacters;
@@ -184,21 +166,16 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
         }
 
         if (characters.length) {
+          options.push({ display: "Login As:" });
           characters.forEach(char => {
             options.push({
-              display: 'Enter World as ' + char,
+              display: char,
               onSelect: () => next(socket, 'done', null, char),
             });
           });
         }
 
-        if (deceased.length) {
-          options.push({
-            display: 'View Memorials',
-            onSelect: () => socket.emit('deceased', socket, null, account),
-          });
-        }
-
+        options.push({ display: "" });
         options.push({
           display: 'Quit',
           onSelect: () => socket.end(),
@@ -206,38 +183,40 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
         // Display options menu
 
-        options.forEach((opt, i) => {
-          const num = i + 1;
-          say('<cyan>[' + num + ']</cyan> <bold>' + opt.display + '</bold>\r');
+        let optionI = 0;
+        options.forEach((opt) => {
+          if (opt.onSelect) {
+            optionI++;
+            say(`| <cyan>[${optionI}]</cyan> ${opt.display}`);
+          } else {
+            say(`| <bold>${opt.display}</bold>`);
+          }
         });
 
+        socket.write('|\r\n`-> ');
+
         socket.once('data', choice => {
-          choice = choice
-            .toString()
-            .trim();
+          choice = choice.toString().trim();
           choice = parseInt(choice, 10) - 1;
           if (isNaN(choice)) {
             return repeat();
           }
 
-          const selection = options[choice];
+          const selection = options.filter(o => !!o.onSelect)[choice];
 
           if (selection) {
             util.log('Selected ' + selection.display);
-            selection.onSelect();
-          } else {
-            return repeat();
+            return selection.onSelect();
           }
 
+          return repeat();
         });
 
-
-      break;
-
+        break;
+      }
       //TODO: Refactor?
       //TODO: Put this in its own emitter or extract into method or something?
-      case 'done':
-
+      case 'done': {
         player = new Player(socket);
         player.load(Data.loadPlayer(name));
 
@@ -245,11 +224,9 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
         player.getSocket()
           .on('close', () => {
-            player.setTraining('beginTraining', Date.now());
-
             if (!player.isInCombat()) {
               util.log(player.getName() + ' has gone linkdead.');
-              player.save(() => players.removePlayer(player, true));
+              return player.save(() => players.removePlayer(player, true));
             } else {
               util.log(player.getName() + ' socket closed during combat!!!');
             }
@@ -258,22 +235,22 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
           });
 
         // Load the player's inventory (There's probably a better place to do this)
-        const inv = player.getInventory()
-          .map(itemConfig => {
-            const item = new Item(itemConfig);
-            items.addItem(item);
-            return item;
-          });
+        const inv = player.getInventory().map(itemConfig => {
+          const item = new Item(itemConfig);
+          items.addItem(item);
+          return item;
+        });
         player.setInventory(inv);
 
+        //TODO: Code for future MOTD goes here
+
         Commands.player_commands.look(null, player);
-        player.checkTraining();
 
         // All that shit done, let them play!
-        player.getSocket()
-              .emit("commands", player);
+        player.getSocket().emit("commands", player);
 
         break;
+      }
     }
   };
 }

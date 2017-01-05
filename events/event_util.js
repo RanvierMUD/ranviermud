@@ -3,13 +3,6 @@ const util = require('util');
 
 const Type = require('../src/type').Type;
 
-
-// Swallows telnet bullshit
-function swallowGarbage(dontwelcome) {
-  return typeof dontwelcome == -'undefined' ?
-    false : dontwelcome;
-}
-
 /**
  * Helper for advancing staged events
  * @param string stage
@@ -39,21 +32,13 @@ function gen_repeat(repeat_args, next) {
   };
 }
 
-// Decides if stuff is actually player input or no.
-function isNegot(buffer) {
-  return buffer[buffer.length - 1] === 0x0a || buffer[buffer.length - 1] === 0x0d;
-}
-
-
-const gen_say   = socket => string => socket.write(sty.parse(string + '\n'));
+const gen_say   = socket => string => socket.write(sty.parse(string + '\r\n'));
 const gen_write = socket => string => socket.write(sty.parse(string));
 
 const EventUtil = {
   gen_next,
   gen_repeat,
   gen_say,
-  isNegot,
-  swallowGarbage,
 };
 
 module.exports.EventUtil = EventUtil;

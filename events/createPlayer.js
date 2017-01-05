@@ -39,21 +39,15 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
      */
 
     switch (stage) {
-      case 'name':
+      case 'name': {
         say("<bold>What would you like to name your character?</bold> ");
         socket.once('data', name => {
-
-          if (!EventUtil.isNegot(name)) {
-            return repeat();
-          }
-
-          name = _.capitalize(name
-            .toString()
-            .trim());
+          name = name.toString().trim();
+          name = name[0].toUpperCase() + name.splice(1);
 
           const invalid = validate(name);
 
-          //TODO: Put any player name whitelisting/blacklisting here.
+          // TODO: Refactor to share validation logic with `login` event handler
           function validate(name) {
             if (name.length > 20) {
               return 'Too long, try a shorter name.';
@@ -67,26 +61,23 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
           if (invalid) {
             say(invalid);
             return repeat();
-          } else {
-
-            const exists = players.getByName(name) || Data.loadPlayer(name);
-
-            if (exists) {
-              say(`That name is already taken.`);
-              return repeat();
-            } else {
-              return next(socket, 'check', account, name);
-            }
           }
-        });
-      break;
 
-      case 'check':
+          const exists = players.getByName(name) || Data.loadPlayer(name);
+
+          if (exists) {
+            say(`That name is already taken.`);
+            return repeat();
+          }
+
+          return next(socket, 'check', account, name);
+        });
+        break;
+      }
+      case 'check': {
         say(`<bold>${name} doesn't exist, would you like to create it?</bold> <cyan>[y/n]</cyan> `);
         socket.once('data', confirmation => {
-          confirmation = confirmation.toString()
-            .trim()
-            .toLowerCase();
+          confirmation = confirmation.toString().trim().toLowerCase();
 
           if (!/[yn]/.test(confirmation)) {
             return repeat();
@@ -99,9 +90,10 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
 
           return next(socket, 'create', account, name);
         });
-        break;
 
-      case 'create':
+        break;
+      }
+      case 'create': {
         say('Creating character...');
         socket = new Player(socket);
 
@@ -117,16 +109,17 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         account.save();
 
         next(socket, 'gender');
-        break;
 
-      case 'gender':
-        const genders = ['m', 'f', 'a'];
+        break;
+      }
+      case 'gender': {
+        const genders = ['m', 'f', 'o'];
 
         say(`<bold>What is your character's gender?</bold>
         <cyan>
         [F]emale
         [M]ale
-        [A]ndrogynous
+        [O]ther
         </cyan>`);
 
         socket.getSocket()
@@ -137,7 +130,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
               .toLowerCase();
 
             if (!gender || _.hasNot(genders, gender)) {
-              say('Please specify a gender, or <cyan>[A]ndrogynous</cyan> if you\'d prefer.');
+              say('Please specify a gender, or <cyan>[O]ther</cyan> if you\'d prefer.');
               return repeat();
             }
 
@@ -145,9 +138,8 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
             next(socket, 'done');
           });
         break;
-
-        // 'done' assumes the argument passed to the event is a player, ...so always do that.
-      case 'done':
+      }
+      case 'done': {
         socket.setLocale("en");
         socket.setLocation(players.getDefaultLocation());
 
@@ -156,12 +148,11 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
           players.addPlayer(socket);
           Commands.player_commands.look('', socket);
           socket.prompt();
-          socket.getSocket()
-            .emit('commands', socket);
+          socket.getSocket().emit('commands', socket);
         });
 
         util.log("A NEW CHALLENGER APPROACHES: ", socket);
         break;
-
+      }
     }
   }
