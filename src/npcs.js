@@ -32,56 +32,56 @@ const Npcs = function NpcManager() {
    */
   self.load = (verbose, callback) => {
     verbose = verbose || false;
-		const log = (message) => { if (verbose) util.log(message); };
-		const debug = (message) => { if (verbose) util.debug(message); };
+    const log = (message) => { if (verbose) util.log(message); };
+    const debug = (message) => { if (verbose) util.debug(message); };
 
-		log("\tExamining npc directory - " + npcs_dir);
-		fs.readdir(npcs_dir, (err, files) => {
+    log("\tExamining npc directory - " + npcs_dir);
+    fs.readdir(npcs_dir, (err, files) => {
 
-			// Load any npc files
-			for (const j in files) {
-				const npc_file = npcs_dir + files[j];
-				if (!fs.statSync(npc_file).isFile()) continue;
-				if (!npc_file.match(/yml$/)) continue;
+      // Load any npc files
+      for (const j in files) {
+        const npc_file = npcs_dir + files[j];
+        if (!fs.statSync(npc_file).isFile()) continue;
+        if (!npc_file.match(/yml$/)) continue;
 
         let npc_def;
-				// parse the npc files
-				try {
+        // parse the npc files
+        try {
           const npcDefinitionYaml = fs.readFileSync(npc_file).toString('utf8');
           npc_def = require('js-yaml').load(npcDefinitionYaml);
-				} catch (e) {
-					log("\t\tError loading npc - " + npc_file + ' - ' + e.message);
-					continue;
-				}
+        } catch (e) {
+          log("\t\tError loading npc - " + npc_file + ' - ' + e.message);
+          continue;
+        }
 
-				// create and load the npcs
-				npc_def.forEach(npc => {
-					const validate = ['keywords', 'short_description', 'vnum'];
+        // create and load the npcs
+        npc_def.forEach(npc => {
+          const validate = ['keywords', 'short_description', 'vnum'];
 
-					let err = false;
-					for (var v in validate) {
-						if (!(validate[v] in npc)) {
-							log("\t\tError loading npc in file " + npc + ' - no ' + validate[v] + ' specified');
-							err = true;
-							return;
-						}
-					}
+          let err = false;
+          for (var v in validate) {
+            if (!(validate[v] in npc)) {
+              log("\t\tError loading npc in file " + npc + ' - no ' + validate[v] + ' specified');
+              err = true;
+              return;
+            }
+          }
 
           const hitMaxLoad = self.load_count[npc.vnum] && self.load_count[npc.vnum] >= npc.load_max
-					if (hitMaxLoad) {
-						log("\t\tMaxload of " + npc.load_max + " hit for npc " + npc.vnum);
-						return;
-					}
+          if (hitMaxLoad) {
+            log("\t\tMaxload of " + npc.load_max + " hit for npc " + npc.vnum);
+            return;
+          }
 
-					npc = new Npc(npc);
-					npc.setUuid(uuid.v4());
-					log("\t\tLoaded npc [uuid:" + npc.getUuid() + ', vnum:' + npc.vnum + ']');
-					self.add(npc);
-				});
-			}
+          npc = new Npc(npc);
+          npc.setUuid(uuid.v4());
+          log("\t\tLoaded npc [uuid:" + npc.getUuid() + ', vnum:' + npc.vnum + ']');
+          self.add(npc);
+        });
+      }
 
-			if (callback) { callback(); }
-		});
+      if (callback) { callback(); }
+    });
   };
 
   /**
@@ -188,7 +188,6 @@ const Npc = function NpcConstructor(config) {
     self.vnum = config.vnum;
     self.types = config.types || [];
     self.defenses = {};
-    self.inDialogue = false;
     self.room_description  = config.room_description;
     self.short_description = config.short_description;
 
@@ -242,10 +241,6 @@ const Npc = function NpcConstructor(config) {
   }
 
   self.isPacifist = () => !self.listeners('combat').length;
-
-  self.startDialogue = () => self.inDialogue = true;
-  self.endDialogue   = () => self.inDialogue = false;
-  self.isInDialogue  = () => self.inDialogue;
   /**#@-*/
 
   self.combat = CombatUtil.getHelper(self);

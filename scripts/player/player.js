@@ -15,48 +15,8 @@ exports.listeners = {
 
   //// Function wrappers needed to access "this" (Player obj)
 
-
-  //TODO: Use this for all sanity loss incidents.
-  sanityLoss(l10n) {
-    return function(cost, reason) {
-      reason = reason || 'experiencing terror';
-      const currentSanity = this.getAttribute('sanity');
-      this.setAttribute('sanity', Math.max(currentSanity - cost, 0));
-
-      //TODO: Different messages for different relative amounts of sanity loss.
-      this.say('You feel your sanity slipping after ' + reason + '.');
-    }
-  },
-
-  action: function(l10n) {
-    let previousEncumbranceState = '';
-    return function(cost, items) {
-      // If there is a cost to the emitted action,
-      // reduce it based on their athletics skill.
-      // Then, subtract it from their energy.
-      if (cost) {
-        const encumbrance = this.getEncumbrance(items);
-        const { multiplier, description } = encumbrance;
-
-        if (description !== previousEncumbranceState) {
-          if (previousEncumbranceState !== '') {
-            this.warn(`Your current encumbrance is ${description}.`);
-          }
-          previousEncumbranceState = description;
-        }
-        cost = Math.ceil((cost * multiplier) / this.getSkills('athletics'));
-
-        CombatUtil.setEncumbrancePenalties(this, encumbrance);
-        
-        const currentEnergy = this.getAttribute('energy');
-        const newEnergy     = Math.max(0, currentEnergy - cost);
-        this.setAttribute('energy', newEnergy);
-      }
-    }
-  },
-
   experience(l10n) {
-    return function(experience, reason) {
+    return function(experience) {
 
       const maxLevel = 60;
       if (this.getAttribute('level') >= maxLevel) {
@@ -67,7 +27,7 @@ exports.listeners = {
       const tnl = LevelUtil.expToLevel(this.getAttribute('level')) - this.getAttribute('experience');
       const relativeExp = (experience / tnl) >= .5 ? 'lot' : 'bit';
 
-      this.say("<bold><blue>You have learned a " + relativeExp + " about " + reason + ".</bold></blue>");
+      this.say("<bold><blue>You gain " + experience + " experience.</bold></blue>");
       if (experience >= tnl) {
         return this.emit('level');
       }
@@ -77,7 +37,7 @@ exports.listeners = {
   },
 
   tick(l10n) {
-    return function() { /*TODO: Emit sanity loss event here if applicable.*/
+    return function() {
       Effects.evaluateEffects(this, 'tick');
     }
   },
@@ -89,39 +49,21 @@ exports.listeners = {
       const name = this.getName();
       const newLevel = this.getAttribute('level') + 1;
       const healthGain = Math.ceil(this.getAttribute('max_health') * 1.10);
-      const energyGain = this.getAttribute('max_energy')
-                       + this.getAttribute('stamina')
-                       + this.getAttribute('quickness');
-
-      const sanityGain = this.getAttribute('max_sanity')
-                       + this.getAttribute('willpower')
-                       + this.getAttribute('cleverness');
+      const energyGain = Math.ceil(this.getAttribute('max_energy') * 1.10);
 
       util.log(name + ' gained health ' + healthGain);
       util.log(name + ' gained energy ' + energyGain);
-      util.log(name + ' gained sanity' + sanityGain);
-
       util.log(name + ' is now level ' + newLevel);
 
       this.sayL10n(l10n, 'LEVELUP');
 
-      const mutationPointsEarned = LevelUtil.getMutagenGain(newLevel);
-
-      if (mutationPointsEarned) {
-        this.sayL10n(l10n, 'MUTAGEN_GAIN');
-        const mutationPoints = this.getAttribute('mutagens');
-        this.setAttribute('mutagens', mutationPoints + mutationPointsEarned);
-      }
-
       this.setAttribute('level', newLevel);
       this.setAttribute('experience', 0);
-      this.setAttribute('attrPoints', (this.getAttribute('attrPoints') || 0) + 1);
 
       // Do whatever you want to do here when a player levels up...
       const attrToLevel = {
         'health': healthGain,
         'energy': energyGain,
-        'sanity': sanityGain,
       };
 
       for (const attr in attrToLevel) {
@@ -131,16 +73,6 @@ exports.listeners = {
         this.setAttribute(attr, this.getAttribute(max));
         this.say('<blue>You have gained ' + attr + '.</blue>');
       }
-
-      if (mutationPointsEarned) { this.say('\n<blue>You may be able to `manifest` new mutations.</blue>'); }
-      this.say('<blue>You may boost your stamina, quickness, cleverness, or willpower.</blue>');
-
-      // Add points for skills
-      const skillGain = LevelUtil.getTrainingTime(newLevel);
-      const newTrainingTime = this.getTraining('time') + skillGain;
-      util.log(name + ' can train x', newTrainingTime);
-      this.setTraining('time', newTrainingTime);
-      this.say('<cyan>You may train your skills for ' + newTrainingTime + ' hours.</cyan>')
     }
   },
 
@@ -152,8 +84,6 @@ exports.listeners = {
       const experiencePenalty = playerExp - Math.ceil((playerExp * 0.10));
 
       util.log(this.getName() + ' died.');
-      Commands.player_commands.remove('all', this, true);
-      Commands.player_commands.drop('all', this, true);
 
       this.setLocation(startLocation);
       this.emit('regen');
@@ -165,7 +95,7 @@ exports.listeners = {
     return function (room, attacker, defender, players, hitLocation) {
       players.eachIf(
         p => p.getLocation() === defender.getLocation() && p !== attacker,
-        p => p.emit('experience', LevelUtil.mobExp(defender.getAttribute('level')) * .33, 'dying')
+        p => p.emit('experience', LevelUtil.mobExp(defender.getAttribute('level')) * .33)
       );
     }
   },
@@ -226,37 +156,6 @@ exports.listeners = {
       [
         this.getShortDesc('en') + ' twists out of the way of ' + npc.getShortDesc('en') + '.',
         this.getShortDesc('en') + ' nimbly evades ' + npc.getShortDesc('en') + '.'
-      ];
-      Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
-    }
-  },
-
-  hit: function(l10n) {
-    return function (room, defender, players, hitLocation, damageDealt) {
-			const toRoom = Broadcast.toRoom(room, this, null, players);
-
-			const firstPartyMessage = [
-				'You punch ' + defender.getShortDesc('en') + ' in the ' + hitLocation + '.'
-			].map(msg => '<bold>' + msg + '</bold>');
-
-      const thirdPartyMessage = [
-				this.getShortDesc('en') + ' punches ' + defender.getShortDesc('en') + '.'
-			].map(msg => '<bold>' + msg + '</bold>');
-
-			Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
-		}
-  },
-
-  missedAttack: function(l10n) {
-    return function(room, npc, players, hitLocation) {
-      const toRoom = Broadcast.toRoom(room, this, npc, players);
-      const firstPartyMessage = [
-        'You swing and miss.',
-        'You whiff completely.'
-      ];
-      const thirdPartyMessage = [
-        this.getShortDesc('en') + ' swings and misses.',
-        this.getShortDesc('en') + ' tries to attack ' + npc.getShortDesc('en') + ' and whiffs.'
       ];
       Broadcast.consistentMessage(toRoom, { firstPartyMessage, thirdPartyMessage });
     }

@@ -43,7 +43,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         say("<bold>What would you like to name your character?</bold> ");
         socket.once('data', name => {
           name = name.toString().trim();
-          name = name[0].toUpperCase() + name.splice(1);
+          name = name[0].toUpperCase() + name.slice(1);
 
           const invalid = validate(name);
 

@@ -2,16 +2,15 @@
 
 const util = require('util');
 
-exports.effect = (players, items, npcs, rooms, Commands) => 
-  ({ 
-    attribute  = 'health', 
-    regenEvent = 'tick', 
-    isFeat     = false,  
+exports.effect = (players, items, npcs, rooms, Commands) =>
+  ({
+    attribute  = 'health',
+    regenEvent = 'tick',
     interval   = 1,
     bonus      = 1
   }, target) => {
     let currentInterval = 0;
-    
+
     return {
       activate() {},
       deactivate() {},

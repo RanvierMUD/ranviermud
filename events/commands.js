@@ -15,8 +15,6 @@ const Player      = require(src + 'player').Player;
 const Commands    = require(src + 'commands').Commands;
 const Channels    = require(src + 'channels').Channels;
 const Skills      = require(src + 'skills').Skills;
-const Feats       = require(src + 'feats').Feats;
-
 
 exports.event = (players, items, rooms, npcs, accounts, l10n) =>
   function commandLoop(player) {
@@ -35,7 +33,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
          * common direction shortcuts
          * commands
          * exits
-         * skills/feats
+         * skills
          * channels
          */
 
@@ -133,16 +131,15 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
           }
         }
 
-        // Handles skills, feats, exits
+        // Handles skills and exits
         function checkForSpecializedCommand(command, args) {
           const exit = Commands.room_exits(command, player);
 
           //TODO: Refactor as to not rely on negative conditionals as much?
           if (exit === false) {
             const isSkill = command in player.getSkills();
-            const isFeat  = command in player.getFeats();
 
-            if (!isSkill && !isFeat) {
+            if (!isSkill) {
               if (!(command in Channels)) {
                 player.say(command + " is not a valid command.");
                 return true;
@@ -151,8 +148,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
                 return true
               }
             } else {
-              const use = isSkill ? player.useSkill : player.useFeat;
-              use(command, player, args, rooms, npcs, players, items);
+              player.useSkill(command, player, args, rooms, npcs, players, items);
               return true;
             }
           }

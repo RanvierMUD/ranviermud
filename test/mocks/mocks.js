@@ -1,8 +1,6 @@
 const defaultAttributes = {
   max_health: 100,
   health:     80,
-  max_sanity: 100,
-  sanity:     90,
   energy:     90,
   max_energy: 100,
 
@@ -13,8 +11,6 @@ const defaultAttributes = {
 
   level:      1,
   experience: 0,
-  mutagens:   0,
-  attrPoints: 0,
 
 };
 
@@ -62,7 +58,6 @@ const Player = {
   attributes:  defaultAttributes,
   preferences: defaultPreferences,
   skills:      {},
-  feats:       {}
 };
 
 module.exports = {

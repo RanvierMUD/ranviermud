@@ -163,8 +163,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
           const difference  = npcLevel - playerLevel;
 
           const color = getNpcColor(difference)
-          const desc  = player.hasMet(npc) && npc.getName() ?
-            npc.getName() : npc.getRoomDesc('en');
+          const desc  = npc.getRoomDesc('en');
 
           player.say(
               '<'  + color + '>'

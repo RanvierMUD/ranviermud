@@ -51,24 +51,6 @@ const Commands = {
         util.log("@@Admin: " + player.getName() + " added skill:", skill);
       },
 
-    addFeat: (rooms, items, players, npcs, Commands) =>
-      (player, args) => {
-        const Feats = require('./feats').Feats;
-        args = _.splitArgs(args);
-
-        if (!player || !args) { return; }
-
-        const feat = Feats[args[0]] ? Feats[args[0]] : null;
-
-        if (feat) {
-          player.gainFeat(feat);
-          player.say("<red>ADMIN: Added " + feat.id + ".</red>");
-        } else {
-          return player.say("<red>ADMIN: No such feat.</red>");
-        }
-        util.log("@@Admin: " + player.getName() + " added feat:", feat.name);
-      },
-
     debugChar: (rooms, items, players, npcs, Commands) =>
       (player, args) => {
         const attrs = player.getAttributes();
@@ -375,9 +357,6 @@ function move(exit, player) {
     return true;
   }
 
-  const moveCost = exit.cost ? exit.cost : 1;
-  if (!player.hasEnergy(moveCost, items)) { return player.noEnergy(); }
-
   if (closedDoor) {
     Commands.player_commands.open(exit.direction, player);
   }
@@ -404,11 +383,8 @@ function move(exit, player) {
 
   player.setLocation(exit.location);
 
-  // Add room to list of explored rooms
-  const hasExplored = player.hasExplored(room.getLocation());
-
   // Force a re-look of the room
-  Commands.player_commands.look(null, player, hasExplored);
+  Commands.player_commands.look(null, player);
 
   // Trigger the playerEnter event
   // See example in scripts/npcs/1.js
@@ -431,7 +407,6 @@ function move(exit, player) {
   });
 
   return true;
-
 }
 
 /**

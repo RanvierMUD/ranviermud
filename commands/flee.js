@@ -9,8 +9,6 @@ const l10n = require('../src/l10n')(l10nFile);
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
 
-    if (!player.hasEnergy(2, items)) { return player.noEnergy(); }
-
     if (!player.isInCombat()) {
       return player.warn('You have nothing to flee from... right?');
     }
@@ -49,8 +47,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         const expGain = (cumulativeOpponentLevel - level) * 10;
         player.emit('experience', expGain, 'surviving to fight again another day');
       }
-
-      player.emit('sanityLoss', cumulativeOpponentLevel, 'fleeing under duress');
 
     } else {
       player.warn('You are cornered and unable to escape!');

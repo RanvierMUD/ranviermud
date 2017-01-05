@@ -12,8 +12,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 			return player.sayL10n(l10n, 'COMBAT_COMMAND_FAIL');
 		}
 
-		player.setTraining('beginTraining', Date.now());
-
 		player.save(() => players.removePlayer(player, true));
 
 		util.log(playerName + ' has quit.');

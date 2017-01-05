@@ -128,13 +128,6 @@ function CombatHelper(entity) {
         base) :
       base;
 
-  this.getSanityDamage = () => {
-    const damageRange = this._entity.getSanityDamage();
-    return damageRange ?
-      Random.inRange(...damageRange) :
-      damageRange;
-  }
-
   /**
    * Get the damage a player can do
    * @return int
@@ -206,14 +199,9 @@ function CombatHelper(entity) {
 
       const armor = location => {
         const base  = 0; //TODO: Defense skill?
-        const bonus = self.checkStance('precise') ?
-          self.getAttribute('willpower') + self.getAttribute('stamina') :
-          base;
         const item = self.getEquipped(location, true);
 
-        return item ?
-          item.getAttribute('defense') * bonus :
-          base;
+        return item ?  item.getAttribute('defense') : base;
       }
 
       let defense = armor(location);

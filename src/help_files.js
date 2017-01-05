@@ -23,19 +23,6 @@ const HelpFiles = {
     related: ['channels', 'whisper', 'emote', 'say', 'tell']
   },
 
-  DIALOGUE: {
-    title: 'Dialogue with NPCs',
-    body:  'Some non-player characters will react to things you say, whisper, or yell. You may find out if NPCs are capable of dialogue by using `introduce` on them. \nSome beings around the city will be shy until certain conditions are met.',
-    related: ['channels', 'introduce', 'npcs']
-  },
-
-  INTRODUCE: {
-    title: 'Introducing Yourself',
-    body:  'To see if a person or creature is capable of engaging in dialogue, `introduce` yourself to them. \nDon\'t be shy!',
-    usage: ['introduce [npc name]'],
-    related: ['dialogue', 'channels', 'npcs']
-  },
-
   LEVELS: {
     title: 'Leveling',
     body: 'Levels are gained by earning experience. Experience can be gained through a variety of ways.\nBy defeating enemies, exploring, learning, and helping others, you will advance.\nAs you advance, you will gain the ability to `boost` your attributes, `train` your skills, and `manifest` mutations.',

@@ -1,7 +1,6 @@
 - &baxter
   vnum: 5
   room: 1
-  script: '5-feline.js'
   keywords:
     en: ['cat', 'bax', 'baxter', 'truthteller', 'feline']
   types: ['feline']

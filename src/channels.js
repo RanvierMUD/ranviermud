@@ -1,5 +1,4 @@
 'use strict';
-const getGenderNoun = require('./status').getGenderNoun;
 const newLine = new RegExp('\\n');
 
 exports.Channels = {
@@ -34,11 +33,11 @@ exports.Channels = {
 
       const playerRoom = rooms.getAt(player.getLocation());
       const playerArea = playerRoom.getArea();
-      const vagueDesc = "a nearby " + getGenderNoun(player) + '\'s voice';
 
       const getAreaOf = entity => rooms.getAt(entity.getLocation()).getArea();
 
-      players.broadcastIf("<bold><red>You hear " + vagueDesc + " yelling '" + args + "!'</red></bold>",
+      players.broadcastIf(
+        "<bold><red>" + player.getName() + " yells '" + args + "!'</red></bold>",
         p => {
           const otherPlayerRoom = rooms.getAt(p.getLocation());
           const otherPlayerArea = otherPlayerRoom.getArea();
@@ -48,18 +47,8 @@ exports.Channels = {
           const notSamePlayer = player !== p;
 
           return sameArea && notSameRoom && notSamePlayer;
-        });
-
-      players.eachExcept(player, p => p.prompt());
-      players.broadcastIf("<bold><red>" + player.getName() + " yells '" + args + "!'</red></bold>",
-        p => {
-          const otherPlayerRoom = rooms.getAt(p.getLocation());
-
-          const sameRoom      = playerRoom === otherPlayerRoom;
-          const notSamePlayer = player !== p;
-
-          return sameRoom && notSamePlayer;
-        });
+        }
+      );
       player.say("<bold><red>You yell, \""+args+"!\"</red></bold>");
 
       npcs.eachIf(
