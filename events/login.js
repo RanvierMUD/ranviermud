@@ -112,13 +112,11 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
         util.log('dontwelcome: ', dontwelcome);
         if (!dontwelcome) {
           socket.write("Enter your password: ");
+          socket.toggleEcho();
         }
 
         socket.once('data', pass => {
-          // Skip garbage
-          if (pass[0] === 0xFA) {
-            return next(socket, 'password', true, name);
-          }
+          socket.toggleEcho();
 
           pass = crypto
             .createHash('md5')

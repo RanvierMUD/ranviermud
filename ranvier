@@ -41,7 +41,7 @@ const Type          = require('./src/type').Type;
 	// third party
 const Localize  = require('jall');
 const argv      = require('optimist').argv;
-const telnet    = require('./src/3rdparty/telnet.js');
+const telnet    = require('./src/telnet');
 const longjohn  = require('longjohn');
 const pe        = require('pretty-error').start();
 
@@ -101,7 +101,7 @@ function init(restartServer) {
 		/**
 		* Effectively the 'main' game loop but not really because it's a REPL
 		*/
-		server = new telnet.Server(socket => {
+		server = new telnet.TelnetServer({}, socket => {
 			socket.on('interrupt', () => {
 				socket.write("\n*interrupt*\n");
 			});
@@ -118,7 +118,7 @@ function init(restartServer) {
 			// @see: src/events.js - Events.events.login
 			socket.emit('login', socket);
 
-		});
+		}).netServer;
 
 		// start the server
 		server.listen(commander.port).on('error', err => {
@@ -152,7 +152,7 @@ function init(restartServer) {
 	load(success => {
 		if (success) {
 			util.log(util.format("Server started on port: %d %s", commander.port, '...' ));
-			server.emit('startup');
+            server.emit('startup');
 		} else {
 			process.exit(1);
 		}

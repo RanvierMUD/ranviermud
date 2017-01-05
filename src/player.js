@@ -572,6 +572,11 @@ const Player = function PlayerConstructor(socket) {
    * @param string data Stuff to write
    */
   self.write = (data, color) => {
+
+    if (!socket.writable) {
+        return;
+    }
+
     color = typeof color === 'boolean' ? color : true;
     if (!color) { ansi.disable(); }
     socket.write(ansi.parse(data));
