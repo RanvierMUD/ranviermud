@@ -1,6 +1,5 @@
 'use strict';
 const crypto = require('crypto');
-const EventEmitter = require('events');
 
 const Data   = require('./data').Data;
 
@@ -28,7 +27,7 @@ class Accounts {
   }
 }
 
-class Account extends EventEmitter {
+class Account {
 
   constructor () {
     super();
