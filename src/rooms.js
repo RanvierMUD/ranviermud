@@ -171,7 +171,6 @@ var Room = function Room(config) {
   self.description = '';
   self.exits = [];
   self.location = null;
-  self.biome = '';
   self.area = null;
 
   // these are only set after load, not on construction and is an array of vnums
@@ -217,8 +216,6 @@ var Room = function Room(config) {
   self.getNpcs = function() {
     return self.npcs;
   };
-
-  self.getBiome = () => self.biome;
 
   /**
    * Get the description, localized if possible

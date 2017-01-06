@@ -3,10 +3,6 @@
 const util = require('util');
 
 const _ = require('./helpers');
-const Effects = require('./effects.js').Effects;
-const move = require('./commands').Commands.move;
-const CommandUtil = require('./command_util').CommandUtil;
-const Doors = require('./doors').Doors;
 
 const l10n_dir = __dirname + '/../l10n/skills/';
 let l10ncache = {};
