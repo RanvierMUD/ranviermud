@@ -1,0 +1,44 @@
+-
+  title: 'A dark alcove'
+  location: 1
+  description: "You are in a dark alcove, with walls of stone and rotting wooden supports. You awoke here some time ago, with no recollection of how you arrived. To the northeast is a small passageway between numerous casks and crates. At the end of the passageway is a dim light source."
+  exits:
+    -
+      location: 2
+      direction: 'northeast'
+      leave_message:
+        en: ' sidles through the narrow passageway.'
+        es: ' sidles through the narrow passageway.'
+-
+ title: 'A dim passageway between the goods.'
+ location: 2
+ description: "You are stuffed between barrels of some fermenting substance and boxes of long-since-rotten foods and linens. At the southwestern end of this de-facto passageway is a dark, mildewy alcove, while light pours in from above a rickety ladder at the other end of the passageway to the northeast. \n Rodents scamper between your feet."
+ exits:
+   -
+     location: 1
+     direction: 'southwest'
+     leave_message: 
+       en: ' crams themselves into the small, dark alcove at the end of the passageway.'
+       es: ' crams themselves into the small, dark alcove at the end of the passageway.'
+   -
+     location: 3
+     direction: 'northeast'
+     leave_message:
+       en: ' heads towards the light.'
+       es: ' heads towards the light.'
+-
+  title: "A ladder ascending from the cellar."
+  location: 3
+  description: "Attached to the wall here is a ladder leading upwards into a dimly-lit basement. Nearly the rest of this floor is covered in barrels, crates, or rats, with the exception of a thin, winding passageway to the southwest."
+  exits:
+    -
+      location: 2
+      direction: 'southwest'
+    -
+      location: 4
+      direction: 'up'
+      leave_message:
+        en: ' climbs up the ladder.'
+        es: ' climbs up the ladder.'
+
+
