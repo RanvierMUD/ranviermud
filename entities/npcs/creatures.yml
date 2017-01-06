@@ -1,0 +1,81 @@
+- &rat
+  vnum: 1
+  room: 2
+  script: '1.js'
+  keywords:
+    en: ['rat', 'rodent']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a large rodent'
+    es: ''
+  description:
+    en: 'This mangey rat scampers about, its whiskers twitching.'
+    es: ''
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 20
+    health: 20
+    speed: 1.5
+    damage: 1-8
+    level: 1
+    experience: 250
+    to_hit: 5
+    dodge: 25
+  load_max: 7
+- *rat
+- *rat
+- <<: *rat
+  room: 2
+- <<: *rat
+  room: 3
+- <<: *rat
+  room: 5
+- <<: *rat
+  room: 6
+- *rat
+- &roach
+  vnum: 4
+  room: 7
+  keywords:
+    en: ['roach', 'cockroach', 'giant roach', 'bug']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a giant cockroach'
+    es: ''
+  description:
+    en: 'This cockroach is the size of a small dog; its antennae flicker back and forth with a hint of intelligence, and its mandibles click together menacingly.'
+    es: ''
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 25
+    health: 25
+    speed: 2
+    damage: 2-12
+    level: 2
+    experience: 350
+    to_hit: 5
+    dodge: 15
+  load_max: 7
+- &spider
+  vnum: 5
+  room: 14
+  keywords:
+    en: ['spider', 'spid', 'giant spider']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a giant spider'
+    es: 'spider'
+  description:
+    en: 'This spider has a body the size of your head; its thick furry legs legs are the size of small tree branches'
+    es: ''
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 30
+    health: 30
+    speed: 1.7
+    damage: 1-14
+    level: 3
+    experience: 400
+    dodge: 15
+  load_max: 7
+

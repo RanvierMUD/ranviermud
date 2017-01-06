@@ -2,7 +2,7 @@
 NodeJS based MUD engine with full localization support
 
 ## Features
-* Full localization for any strings displayed to the player after they log in. This isn't a common feature in MUDs so I'll explain it. Player A and Player B log in, play the same game and see a different language. Same items, npcs, rooms, etc, different language.
+* Full localization for any strings displayed to the player after they log in. This isn't a common feature in MUDs so I'll explain it. Player A and Player B log in, play the same game and see a different language. Same items, npcs, rooms, etc, different language. (disabled in this fork, for now -- none of it is translated, anyway -- it is commented out)
 * Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.
 * Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the event is emitted. Adding new events is easy as npc.emit('eventName');
 * Pfile saving in JSON, easy to parse for external usage

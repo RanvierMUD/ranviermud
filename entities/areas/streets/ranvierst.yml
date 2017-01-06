@@ -1,0 +1,7 @@
+- title: "Ranvier Street East"
+  location: 14
+  description: "Placeholder"
+  exits:
+    -
+      location: 12
+      direction: 'inn'

@@ -14,26 +14,47 @@ var Player = function(socket) {
 	self.name     = '';
 	self.location = null;
 	self.locale   = null;
-	self.prompt_string = '%health/%max_healthHP>';
+	self.prompt_string = "%health/%maxHP HP>";
 	self.combat_prompt =
-	   "<bold>[%health/%max_healthHP] 0--{======> %target_name: [%target_health/%target_max_health]</bold>\r\n>";
+	   "<bold>[%health/%maxHP HP>] 0--{======> %target_name: [%target_health/%target_max_health]</bold>\r\n>";
 	self.password = null;
 	self.inventory = [];
 	self.equipment = {};
+	self.barkDesc = 'a person';
+	self.shortDesc = 'A nondescript person is here.';
+	self.longDesc = "There is really nothing remarkable about this person's features.";
+
 
 	// In combat is either false or an NPC vnum
 	self.in_combat = false;
 
-	// Attributes
+	// Attributes -- add more based on an rpg system
 	self.attributes = {
-		max_health: 100,
-		health : 100,
+		strength: 5,
+		speed: 5,
+		intelligence: 5,
+		willpower: 5,
+		charisma: 5,
 		level: 1,
+		maxHP: 25,
+		health: 20,
+		maxPsion: 10,
+		psion: 4,
 		experience: 0,
+		fate: 1,
 		'class': ''
 	};
 
-	// Anything affecting the player
+	// Done after character creation and on level up
+	self.calculateAttributes = function() {
+		attr = self.attributes;
+		
+		attr.maxHP = ((attr.level * 5) + (attr.strength * 5) + (attr.willpower * 3));
+
+		attr.maxPsion = ((attr.level * 2) + (attr.willpower * 2) + (attr.intelligence * 2) + (attr.charisma));
+	};
+
+	// Anything affecting the player -- FIX TYPO
 	self.affects = {
 	};
 
@@ -52,6 +73,7 @@ var Player = function(socket) {
 	self.getSocket       = function () { return socket; };
 	self.getInventory    = function () { return self.inventory; };
 	self.getAttribute    = function (attr)  { return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
+	self.getAttributes   = function () { return self.attributes };
 	self.getSkills       = function (skill) { return typeof self.skills[skill] !== 'undefined'    ? self.skills[skill]    : self.skills; };
 	// Note, only retreives hash, not a real password
 	self.getPassword     = function () { return self.password; };
@@ -73,7 +95,7 @@ var Player = function(socket) {
 	/**
 	 * Get currently applied affects
 	 * @param string aff
-	 * @return Array|Object
+	 * @return Array|Object -- TYPO
 	 */
 	self.getAffects = function (aff)
 	{
@@ -190,7 +212,7 @@ var Player = function(socket) {
 	 */
 	self.writeL10n = function (l10n, key)
 	{
-		var locale = l10n.locale;
+		var locale = l10n.locale; //l10n -- what does it even do?
 		if (self.getLocale()) {
 			l10n.setLocale(self.getLocale());
 		}
@@ -310,7 +332,8 @@ var Player = function(socket) {
 	self.getAttackSpeed = function ()
 	{
 		var weapon = self.getEquipped('wield', true)
-		return weapon ? (weapon.getAttribute('speed') || 1) : 1;
+		return weapon ? (weapon.getAttribute('speed') - (self.getAttribute('speed') / 10) || 1) : 1.5 - (self.getAttribute('speed'))/10;
+		
 	};
 
 	/**
@@ -328,6 +351,39 @@ var Player = function(socket) {
 			)
 			: base;
 		return {min: damage[0], max: damage[1]};
+	};
+
+	/**
+	* Check to see if player dodges an attack
+	* @return bool
+	*/
+	self.getDodge = function (npcToHitBonus)
+	{
+		if (!npcToHitBonus)	{ npcToHitBonus = 1 }
+			
+		var dodgeChance = self.getAttribute('speed') * self.getAttribute('intelligence') + Math.floor(Math.random() * 10 - (10 + self.getAttribute('level')));
+		var hitChance = Math.floor(Math.random() * 100 + npcToHitBonus);
+
+		return (dodgeChance > hitChance);
+
+	}
+
+	/**
+	 * Rolls a die (for example, 2d6)
+	 * for use with skill-based checks and such.
+	 * You can set the number of dice, and the min and max number for each die as well as a bonus to be added after all dice are rolled. Min is optional and defaults to 1. Bonus is optional and defaults to 0.
+	 * @return number
+	 */
+	self.roll = function (dice, max, min, bonus)
+	{
+	  if (min === undefined) 
+	  	min = 1;
+
+	  if (bonus === undefined)
+	  	bonus = 0;
+
+	  return (dice * Math.floor(Math.random() * (max - min + 1)) + min) + bonus; 
+
 	};
 
 	/**

@@ -1,0 +1,48 @@
+- &revenant_small
+  vnum: 2
+  room: 11
+  script: '2.js'
+  keywords:
+    en: ['revenant', 'rev', 'shambling', 'sham']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a shambling revenant'
+    es: 'ES - revenant'
+  description:
+    en: 'The mindless shell of a former human, its mind erased by the psionic apocalypse.'
+    es: 'ES - revenant'
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 60
+    health: 60
+    speed: 1.9
+    damage: 5-11
+    level: 3
+    experience: 700
+    to_hit: 13
+    dodge: 20
+  load_max: 7
+- &revenant_large
+  vnum: 3
+  room: 12
+  script: '3.js'
+  keywords:
+    en: ['revenant', 'rev', 'hulking', 'hulk']
+    es: ['guardia', 'defensor']
+  short_description:
+    en: 'a hulking revenant'
+    es: 'ES - revenant'
+  description:
+    en: 'The mindless shell of a former human warrior, its mind erased by the psionic apocalypse.'
+    es: 'ES - revenant'
+  behaviors: "rtcombat"
+  attributes:
+    max_health: 70
+    health: 70
+    speed: 2.5
+    damage: 10-15
+    level: 5
+    experience: 1000
+    to_hit: 18
+    dodge: 15
+  load_max: 7
