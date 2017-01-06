@@ -1,15 +1,17 @@
-RanvierMUD Codebase - Version 0.0.1
-<white>  _____                  _</white>
-<white> |  __ \                (_)</white>
-<white> | |__) |__ _ _ ____   ___  ___ _ __</white>
-<white> |  _  // _` | '_ \ \ / / |/ _ \ '__|</white><green>   . ' .     </green>
-<white> | | \ \ (_| | | | \ V /| |  __/ |</white>  <green> .'       '. </green>
-<white> |_|  \_\__,_|_| |_|\_/ |_|\___|_|</white>  <green>'   _   ___ '</green>
-                                   <green>|   | | / __| |</green>
-  Barebones Node.js-based codebase <green>|   | | \__ \ |</green>
-                                   <green>|   | | |___/ |</green>
-                                   <green>| __' |       |</green>
-                                   <green> ' __/       .</green>
-                                   <green>   .       .'</green>
-                                   <green>     ' . '</green>
-                                                 
+<white>RanvierMUD Codebase - Version 0.0.1
+Shawn Biddle - Sean O'Donohue
+
+  _____                  _
+ |  __ \                (_)
+ | |__) |__ _ _ ____   ___  ___ _ __
+ |  _  // _` | '_ \ \ / / |/ _ \ '__|<bold><green>    . </green></bold>
+ | | \ \ (_| | | | \ V /| |  __/ |<bold><green>    .'   '.</green></bold>
+ |_|  \_\__,_|_| |_|\_/ |_|\___|_|<bold><green>  .' _  ___'.</green></bold>
+                                  <bold><green> |  | |/ __| |</green></bold>
+  Barebones Node.js-based codebase<bold><green> |  | |\__ \ |</green></bold>
+  <bold><white>github.com/shawncplus/ranviermud</bold></white> <bold><green>|  | ||___/ |</green></bold>
+                                  <bold><green> |  | |      |</green></bold>
+                                  <bold><green> '._' |    .'</green></bold>
+                                  <bold><green>    ._/  .'</green></bold>
+                                  <bold><green>       '</green></bold>
+</green></bold>
