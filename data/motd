@@ -1,13 +1,15 @@
-RANVIER v0.3.4 alpha server
-===========================
-RANVIER Alpha v0.4.1
-
-Currently testing:
-- Inventory system may still have kinks.
-- Effects system is entirely reworked so that effects persist and are more robust.
-
-
-* Please send me bug reports via Mudcoders Slack  *
-* www.mudcoders.com *
-
-E N J O Y
+RanvierMUD Codebase - Version 0.0.1
+<white>  _____                  _</white>
+<white> |  __ \                (_)</white>
+<white> | |__) |__ _ _ ____   ___  ___ _ __</white>
+<white> |  _  // _` | '_ \ \ / / |/ _ \ '__|</white><green>   . ' .     </green>
+<white> | | \ \ (_| | | | \ V /| |  __/ |</white>  <green> .'       '. </green>
+<white> |_|  \_\__,_|_| |_|\_/ |_|\___|_|</white>  <green>'   _   ___ '</green>
+                                   <green>|   | | / __| |</green>
+  Barebones Node.js-based codebase <green>|   | | \__ \ |</green>
+                                   <green>|   | | |___/ |</green>
+                                   <green>| __' |       |</green>
+                                   <green> ' __/       .</green>
+                                   <green>   .       .'</green>
+                                   <green>     ' . '</green>
+                                                 

@@ -39,7 +39,9 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
     switch (stage) {
       case 'intro': {
         const motd = Data.loadMotd();
-        if (motd) { socket.write(motd); }
+        if (motd) {
+          say(motd);
+        }
         return next(socket, 'login');
       }
       case 'login': {
