@@ -194,6 +194,7 @@ var Events = {
 					inv.push(item);
 				});
 				player.setInventory(inv);
+				player.calculateAttributes();
 
 
 				Commands.player_commands.look(null, player);
@@ -274,7 +275,9 @@ var Events = {
 		 *   check:  See if they actually want to create a player or not
 		 *   locale: Get the language they want to play in so we can give them
 		 *           the rest of the creation process in their language
-		 *   name:   ... get there name
+		 *   name:   ... get their name
+		 *   password: 	get their password
+		 *	 class: 	get their class
 		 *   done:   This is always the end step, here we register them in with
 		 *           the rest of the logged in players and where they log in
 		 *
@@ -317,23 +320,23 @@ var Events = {
 				});
 				break;
 			case 'locale':
-				arg.write("What language would you like to play in? [English, Spanish] ");
-				arg.once('data', function (locale)
-				{
+				//arg.write("What language would you like to play in? [English, Spanish] ");
+				//arg.once('data', function (locale)
+				//{
 					var locales = {
 						english: 'en',
 						spanish: 'es'
 					};
-					locale = locale.toString().trim().toLowerCase();
-					if (!(locale in locales)) {
-						arg.write("Sorry, that's not a valid language.\r\n");
-						return repeat();
-					}
-
+				//	locale = locale.toString().trim().toLowerCase();
+				//	if (!(locale in locales)) {
+				//		arg.write("Sorry, that's not a valid language.\r\n");
+				//		return repeat();
+				//	}
+				//
 					arg = new Player(arg);
-					arg.setLocale(locales[locale]);
+					arg.setLocale('en');	//change this if you do l10n
 					next(arg, 'name');
-				});
+				//});
 				break;
 			case 'name':
 				arg.write(L('NAME_PROMPT'));
@@ -380,24 +383,60 @@ var Events = {
 				});
 				break;
 			case 'class':
-				var classes = {w: '[W]arrior'};
+				var classes = {
+					d: '[D]efender',
+					t: '[T]roublemaker',
+					m: '[M]ystic',
+					n: 'Ti[n]kerer'
+				};
 				arg.sayL10n(l10n, 'CLASS_SELECT');
 				for (var r in classes) {
 					arg.say(classes[r]);
 				}
 				arg.getSocket().once('data', function (cls) {
 					cls = cls.toString().trim().toLowerCase();
-					var classes = {w: "warrior"};
+					var classes = {
+					d: "defender",
+					t: "troublemaker",
+					m: 'mystic',
+					n: 'tinkerer'
+					}; // REFACTOR -- not DRY
 					if (!(cls in classes)) {
-						arg.sayL10n(l10n,'INVALID_CLASS');
+						if (cls === 'help'){
+							arg.say("Defender:\nThe Defender was in training to become a guardian of civilization before the crisis. They are strong and hardy, having skills that allow them to turn the tide of battle through physical force and smart manuevering. They are masters of melee combat and survival. \n \nTroublemaker:\nThe Troublemaker uses sleight of hand, personality, and dexterity to make a fool out of their marks. These folks have no formal training but have most likely grown up on the streets as pickpockets, entertainers, street businesspeople, or rogues. They are experts in tricking their opponents, and excel at ranged combat and stealth. \n \nMystic:\nThe Mystic is a scholar of the arcane art and has tapped into the psionic powers of their own mind, and their environs. They harness these powers to heal their allies and harm their opponents in unexpected ways. However, they are academics and as such, are a bit squishy.\n \nTinkerer:\nThe Tinkerer uses gadgets, machines, and steam power to enhance their natural abilities. They can fix anything, and turn a pile of junk into a working piece of equipment. They are brilliant, but not strong.");
+						}
+						else
+							arg.sayL10n(l10n,'INVALID_CLASS');
 						return repeat();
 					}
 					arg.setAttribute('class', classes[cls]);
 					next(arg, 'done');
 				});
 				break;
-			// 'done' assumes the argument passed to the event is a player, ...so always do that.
+			
+
+			case 'attr':
+
+				
+				//have a total amount of attribute points (25? 30?)
+				var attrPool = 25;
+				
+				// show all attributes and allow player to add to or deduct from each
+
+				var attributes = {
+					s: {name: 'strength', value: 1},
+					p: {name: 'speed', value: 1},
+					i: {name: 'intelligence', value: 1},
+					w: {name: 'willpower', value: 1},
+					c: {name: 'charisma', value: 1}
+				};
+
+				// when player chooses an attribute, they are shown an explanation of what it does and they can set the amount if they have enough points in the pool.
+				// allow player to type 'done' to move on to next stage.
+
+				// 'done' assumes the argument passed to the event is a player, ...so always do that.
 			case 'done':
+				arg.calculateAttributes();
 				arg.setLocation(players.getDefaultLocation());
 				// create the pfile then send them on their way
 				arg.save(function () {

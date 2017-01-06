@@ -1,18 +1,18 @@
-- &leather_helmet
+- &tophat1
     vnum: 3
     short_description:
-        en: "a leather helmet"
+        en: "a ragged tophat"
         es: "el helmet de leathero"
     keywords:
-        en: [ "leather helmet", "helmet", "helm" ]
+        en: [ "ragged", "tophat"]
         es: [ "hat", "somberero" ]
     description:
-        en: "A roughly worn leather helmet."
+        en: "A roughly worn tophat."
         es: "Leather. Hat."
     room: 1
-    script: "3-leather_helmet.js"
+    script: "3-tophat1.js"
     behaviors: "wearable"
     attributes:
         defense: 1
-    load_max: 4
-- *leather_helmet
+    load_max: 3
+
