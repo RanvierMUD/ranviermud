@@ -1,0 +1,18 @@
+- &bottle
+    vnum: 2
+    short_description:
+        en: "a broken bottle"
+        es: "a main gauche"
+    keywords:
+        en: [ "broken bottle", "bottle", "broken" ]
+        es: [ "gauche", "main", "dagger" ]
+    description:
+        en: "A thick glass wine bottle. The bottom has been broken off, and jagged spikes of glass are all that is left."
+        es: "ES-A thick glass wine bottle. The bottom has been broken off, and jagged spikes of glass are all that is left."
+    room: 1
+    behaviors: "wieldable"
+    attributes:
+        speed: 1.6
+        damage: 3-10
+    load_max: 2
+

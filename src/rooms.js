@@ -25,7 +25,7 @@ var Rooms = function () {
 				log('For some reason reading the entities directory failed for areas' + err);
 				return;
 			}
-
+			log(files);
 			for (i in files) {
 				var file = rooms_dir + files[i];
 				if (!fs.statSync(file).isDirectory()) continue;
@@ -60,7 +60,7 @@ var Rooms = function () {
 						log("\tFound more than one area definition in the manifest for " + file + ' ... skipping');
 						break;
 					}
-
+					log(manifest[area] + ' ' + area + ': '+manifest);
 					if (!('title' in manifest[area])) {
 						log("\tFailed loading area " + area + ', it has no title.');
 						break;

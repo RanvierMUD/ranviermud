@@ -1,0 +1,45 @@
+- title: "The top of the staircase to the cellar"
+  location: 10
+  description: "The small wooden staircase leads downwards into a crowded, musty cellar. You can exit into what must have once been the kitchen. A faint stench of rotten meats is wafting in, and above, a gaping hole in the caved-in ceiling exposes the cloudy sky."
+  exits:
+  -
+    location: 9
+    direction: 'down'
+  -
+    location: 11
+    direction: 'kitchen'
+- title: "The kitchen"
+  location: 11
+  description: "This used to be a kitchen. The counters are covered in scratches and stains. An icebox, busted open, reeks of rotten food. A wood stove lies in disuse, ashes spilling onto the cold floor. Various implements are strewen about. Through a swinging door, nearly falling off its hinges, is the dining room. On the opposite side of the kitchen are stairs leading to the cellar."
+  exits:
+  -
+    location: 10
+    direction: 'stairs'
+  - 
+    location: 12
+    direction: 'dining room'
+- title: "The dining room"
+  location: 12
+  description: "The great table in the middle of this room lies split in half, chairs busted and strewn around it. Parts of what appear to be a human skeleton lay in one corner, while in another lay dozens of tankards, busted into small shards. On one end of the dining room is the kitchen, through a swinging door. On the opposite end is the exit to the streets of Ranvier. And through the splintered remains of a door are stairs leading upwards to the quarters."
+  exits:
+    -
+      location: 11
+      direction: 'kitchen'
+    -
+      location: 14
+      direction: 'street'
+    - 
+      location: 13
+      direction: 'stairs'
+- title: "The winding staircase"
+  location: 13
+  description: "The splintered banister winds upwards to a hallway overlooking the dining room. You can see doors, most of them still intact, to individual sleeping quarters. At the bottom of the stairs is the dining room, and the exit.\n Many of the steps are broken, preventing your ascent."
+  exits:
+    -
+      location: 12
+      direction: 'dining room'
+
+
+
+
+
