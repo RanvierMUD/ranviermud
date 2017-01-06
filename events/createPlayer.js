@@ -148,7 +148,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         // create the pfile then send them on their way
         socket.save(() => {
           players.addPlayer(socket);
-          Commands.player_commands.look('', socket);
+          Commands.player_commands.look.execute('', socket);
           socket.prompt();
           socket.getSocket().emit('commands', socket);
         });

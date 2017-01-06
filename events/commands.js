@@ -1,7 +1,7 @@
 'use strict';
 
 const src      = '../src/';
-const { Parser, InvalidCommandError } = require(src + 'interpreter');
+const { CommandParser, InvalidCommandError } = require(src + 'interpreter');
 const CommandTypes = require(src + 'commands').CommandTypes;
 
 exports.event = (players, items, rooms, npcs, accounts, l10n) => player => {
@@ -17,7 +17,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => player => {
     }
 
     try {
-      const result = Parser.parse(data);
+      const result = CommandParser.parse(data, player);
       if (!result) {
         throw null;
       }
@@ -25,7 +25,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => player => {
       switch (result.type) {
         case CommandTypes.ADMIN:
         case CommandTypes.PLAYER: {
-          result.command.execute(result.args);
+          result.command.execute(result.args, player);
           break;
         }
         case CommandTypes.SKILL: {
@@ -41,6 +41,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => player => {
       if (e instanceof InvalidCommandError) {
         player.say('That is not a valid command');
       }
+      util.log(`Error parsing command: ${data}`);
     }
 
     player.prompt();

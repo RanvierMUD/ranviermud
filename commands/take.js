@@ -96,7 +96,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
           player.emit('action', 1, items);
 
           if (item.getAttribute('damage')) {
-            return Commands.player_commands.wield(itemName, player);
+            return Commands.player_commands.wield.execute(itemName, player);
           }
         });
     }

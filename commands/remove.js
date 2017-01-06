@@ -11,7 +11,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     const target = _.firstWord(args);
 
-    if (target === 'all') { return Commands.player_commands.drop('all', player); }
+    if (target === 'all') { return Commands.player_commands.drop.execute('all', player); }
 
     const thing = CommandUtil.findItemInEquipment(items, target, player, true);
     

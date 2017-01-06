@@ -192,7 +192,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, items, ca
       util.log("Player's wimpiness kicks in...");
       util.log("Health: " + percentage + "% || Wimpiness: " + wimpiness + "%");
       player.say('You panic and try to flee.');
-      Commands.player_commands.flee(null, player);
+      Commands.player_commands.flee.execute(null, player);
     }
   }
 

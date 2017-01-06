@@ -246,7 +246,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
 
         //TODO: Code for future MOTD goes here
 
-        Commands.player_commands.look(null, player);
+        Commands.player_commands.look.execute(null, player);
 
         // All that shit done, let them play!
         player.getSocket().emit("commands", player);

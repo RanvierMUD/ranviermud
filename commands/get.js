@@ -68,7 +68,7 @@ exports.command = (rooms, items, players, npcs, Commands) =>
         location => {
           const itemName = item.getShortDesc();
           if (item.getAttribute('damage')) {
-            return Commands.player_commands.wield(item.getKeywords()[0], player);
+            return Commands.player_commands.wield.execute(item.getKeywords()[0], player);
           }
           item.emit('hold', location, room, player, players);
 

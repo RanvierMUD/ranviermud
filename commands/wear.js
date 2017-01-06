@@ -43,7 +43,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       }
       if (isWeapon(item)) {
         const keyword = item.getKeywords('en')[0];
-        return Commands.player_commands.wield(keyword, player);
+        return Commands.player_commands.wield.execute(keyword, player);
       }
       if (isWearable(item) && hasOpenSpot(item)) {
         return putOn(item);

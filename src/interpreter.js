@@ -13,17 +13,18 @@ class CommandParser {
    * @param {String} data
    * @return {command: Command, args: String}
    */
-  static parse(data) {
+  static parse(data, player) {
     data = data.trim();
 
     const parts = data.split(' ');
 
-    const command = parts.shift().replace(/[a-z]/i, '');
+    const command = parts.shift().replace(/[^a-z]/i, '');
+    console.log({parts});
     if (!command.length) {
       throw new InvalidCommandError();
     }
 
-    const args = parts.slice(1).join(' ');
+    const args = parts.join(' ');
 
     // Kludge so that 'l' alone will always force a look,
     // instead of mixing it up with lock or list.
@@ -90,10 +91,10 @@ class CommandParser {
 
     // see if they typed at least the beginning of a command and try to match
     for (let cmd in Commands.player_commands) {
-      if (cmd.name.indexOf(command) === 0) {
+      if (Commands.player_commands[cmd].name.indexOf(command) === 0) {
         return {
           type: CommandTypes.PLAYER,
-          command: cmd,
+          command: Commands.player_commands[cmd],
           args
         };
       }
