@@ -4,14 +4,12 @@ Shawn Biddle - Sean O'Donohue
   _____                  _
  |  __ \                (_)
  | |__) |__ _ _ ____   ___  ___ _ __
- |  _  // _` | '_ \ \ / / |/ _ \ '__|<bold><green>    . </green></bold>
- | | \ \ (_| | | | \ V /| |  __/ |<bold><green>    .'   '.</green></bold>
- |_|  \_\__,_|_| |_|\_/ |_|\___|_|<bold><green>  .' _  ___'.</green></bold>
-                                  <bold><green> |  | |/ __| |</green></bold>
-  Barebones Node.js-based codebase<bold><green> |  | |\__ \ |</green></bold>
-  <bold><white>github.com/shawncplus/ranviermud</bold></white> <bold><green>|  | ||___/ |</green></bold>
-                                  <bold><green> |  | |      |</green></bold>
-                                  <bold><green> '._' |    .'</green></bold>
-                                  <bold><green>    ._/  .'</green></bold>
-                                  <bold><green>       '</green></bold>
-</green></bold>
+ |  _  // _` | '_ \ \ / / |/ _ \ '__|<bold><green>    . ' .</green></bold>
+ | | \ \ (_| | | | \ V /| |  __/ |   <bold><green>. '       ' .</green></bold>
+ |_|  \_\__,_|_| |_|\_/ |_|\___|_| <bold><green> |    </green><white>.____.</white><green>   |</green></bold>
+                                   <bold><green> |    </green><white>| .__|</white><green>   |</green></bold>
+   Barebones Node.js-based codebase<bold><green> |    </green><white>| |   </white><green>   |</green></bold>
+   github.com/shawncplus/ranviermud<bold><green> |    </green><white>|_|   </white><green>   |</green></bold>
+                                   <bold><green>  ' .       . '</green></bold>
+                                   <bold><green>      ' . '</green></bold>
+
