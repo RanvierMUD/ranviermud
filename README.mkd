@@ -1,4 +1,4 @@
-[](https://raw.githubusercontent.com/shawncplus/ranviermud/staging/resources/logo.svg)
+<p align="center"><img src="https://raw.githubusercontent.com/shawncplus/ranviermud/staging/resources/logo.png"></p>
 
 # RanvierMUD
 NodeJS based MUD engine with full localization support
