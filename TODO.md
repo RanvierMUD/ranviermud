@@ -21,4 +21,4 @@
  * Move say/tell to real commands instead of channels
  * Move channels to a config file
 
-[ ] Revisit localization
+- [ ] Revisit localization
