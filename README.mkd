@@ -1,10 +1,7 @@
 # RanvierMUD
 NodeJS based MUD engine with full localization support
 
-## Development notes
-Included in this master branch is a stable version of [ranvier-gen](), in the plugins directory, for generating areas from the command line. (currently pretty buggy, I am planning on rewriting it soon)
-
-See the [gamedev](https://github.com/seanohue/ranviermud/tree/gamedev) branch for the latest features. The master branch will be the latest 'stable' release. The 'development' branch is the lightweight MUD engine branch for submitting PRs upstream.
+See the [staging](https://github.com/shawncplus/ranviermud/tree/gamedev) branch for the latest features. The master branch will be the latest 'stable' release.
 
 ## Features
 * Full localization (to be deprecated, without special characters it is not very useful right now.)
@@ -14,8 +11,7 @@ See the [gamedev](https://github.com/seanohue/ranviermud/tree/gamedev) branch fo
 * Rooms, items, and npcs are easily described in yaml. No weird bullshit ~~~~ and byte-specific parsing that requires a GUI editor to build.
 * Arbitrary room exits custom to each room not locked into n/s/e/w and it's not a pain in the ass to add them
 * Did I mention it's in blasting Javascript? No compiling, no C, no cygwin, no 15 year old spaghetti code.
-* Leveling, passive/active trainable skills, passive/active feats/talents/spells/what-have-you.
-* Turn-based PvE combat featuring different stances and a targeting system.
+* Leveling, passive/active skills, effects.
 * Basic channel system
 
 ## Requirements
