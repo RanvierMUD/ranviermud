@@ -14,26 +14,47 @@ var Player = function(socket) {
 	self.name     = '';
 	self.location = null;
 	self.locale   = null;
-	self.prompt_string = '%health/%max_healthHP>';
+	self.prompt_string = "%health/%maxHP HP>";
 	self.combat_prompt =
-	   "<bold>[%health/%max_healthHP] 0--{======> %target_name: [%target_health/%target_max_health]</bold>\r\n>";
+	   "<bold>[%health/%maxHP HP>] 0--{======> %target_name: [%target_health/%target_max_health]</bold>\r\n>";
 	self.password = null;
 	self.inventory = [];
 	self.equipment = {};
+	self.barkDesc = 'a person';
+	self.shortDesc = 'A nondescript person is here.';
+	self.longDesc = "There is really nothing remarkable about this person's features.";
+
 
 	// In combat is either false or an NPC vnum
 	self.in_combat = false;
 
-	// Attributes
+	// Attributes -- add more based on an rpg system
 	self.attributes = {
-		max_health: 100,
-		health : 100,
+		strength: 5,
+		speed: 5,
+		intelligence: 5,
+		willpower: 5,
+		charisma: 5,
 		level: 1,
+		maxHP: 25,
+		health: 20,
+		maxPsion: 10,
+		psion: 4,
 		experience: 0,
+		fate: 1,
 		'class': ''
 	};
 
-	// Anything affecting the player
+	// Done after character creation and on level up
+	self.calculateAttributes = function() {
+		attr = self.attributes;
+		
+		attr.maxHP = ((attr.level * 5) + (attr.strength * 5) + (attr.willpower * 3));
+
+		attr.maxPsion = ((attr.level * 2) + (attr.willpower * 2) + (attr.intelligence * 2) + (attr.charisma));
+	};
+
+	// Anything affecting the player -- FIX TYPO
 	self.affects = {
 	};
 
@@ -52,6 +73,7 @@ var Player = function(socket) {
 	self.getSocket       = function () { return socket; };
 	self.getInventory    = function () { return self.inventory; };
 	self.getAttribute    = function (attr)  { return typeof self.attributes[attr] !== 'undefined' ? self.attributes[attr] : false; };
+	self.getAttributes   = function () { return self.attributes };
 	self.getSkills       = function (skill) { return typeof self.skills[skill] !== 'undefined'    ? self.skills[skill]    : self.skills; };
 	// Note, only retreives hash, not a real password
 	self.getPassword     = function () { return self.password; };
@@ -73,7 +95,7 @@ var Player = function(socket) {
 	/**
 	 * Get currently applied affects
 	 * @param string aff
-	 * @return Array|Object
+	 * @return Array|Object -- TYPO
 	 */
 	self.getAffects = function (aff)
 	{
@@ -190,7 +212,7 @@ var Player = function(socket) {
 	 */
 	self.writeL10n = function (l10n, key)
 	{
-		var locale = l10n.locale;
+		var locale = l10n.locale; //l10n -- what does it even do?
 		if (self.getLocale()) {
 			l10n.setLocale(self.getLocale());
 		}
@@ -310,7 +332,8 @@ var Player = function(socket) {
 	self.getAttackSpeed = function ()
 	{
 		var weapon = self.getEquipped('wield', true)
-		return weapon ? (weapon.getAttribute('speed') || 1) : 1;
+		return weapon ? (weapon.getAttribute('speed') - (self.getAttribute('speed') / 10) || 1) : 1.5 - (self.getAttribute('speed'))/10;
+		
 	};
 
 	/**

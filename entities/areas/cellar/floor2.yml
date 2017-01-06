@@ -1,0 +1,67 @@
+- title: "A ladder descending into the cellar."
+  location: 4
+  description: "In the floor is an open trapdoor with a ladder leading down into the dark subbasement. A mildewy smell wafts upwards. Around you are rows and rows of shelves containing mostly broken bottles. The creaking wooden floor is littered with broken glass and splintered wood. Light filters in through small, high, slitted windows that afford no real view of the outside world."
+  exits:
+  -
+    location: 3
+    direction: 'down'
+    leave_message: 
+      en: ' carefully descends the ladder.'
+      es: ' carefully descends the ladder.'
+  -
+    location: 5
+    direction: 'south'
+- title: "A row of shelves"
+  location: 5
+  description: "Around you are rows and rows of shelves containing mostly broken bottles. The creaking wooden floor is littered with broken glass and splintered wood. Light filters in through small, high, slitted windows that afford no real view of the outside world.\nThis row of shelves leads south towards a wooden staircase and north to an open trapdoor."
+  exits:
+  -
+    location: 4
+    direction: 'north'
+  - 
+    location: 6
+    direction: 'south'
+- title: "A row of shelves"
+  location: 6
+  description: "Around you are rows and rows of shelves containing mostly broken bottles. The creaking wooden floor is littered with broken glass and splintered wood. Light filters in through small, high, slitted windows that afford no real view of the outside world.\nThis row of shelves leads south towards a wooden staircase and north to an open trapdoor. To the east is a small nook."
+  exits:
+  -
+    location: 5
+    direction: 'north'
+  -
+    location: 7
+    direction: 'east'
+  - 
+    location: 8
+    direction: 'south'
+
+- title: "A pile of junk"
+  location: 7
+  description: "Tucked between two shelves is this pile of junk. Broken glass, chunks of wood, screws, giant rusted gears, rubber gloves, and several unidentifiable pieces of debris lay on the ground."
+  exits:
+  -
+    location: 6
+    direction: 'west'
+- title: "A row of shelves"
+  location: 8
+  description: "Around you are rows and rows of shelves containing mostly broken bottles. The creaking wooden floor is littered with broken glass and splintered wood. Light filters in through small, high, slitted windows that afford no real view of the outside world.\nThis row of shelves leads south towards a wooden staircase and north to an open trapdoor. The staircase leads upwards, to a much larger room."
+  exits:
+  -
+    location: 6
+    direction: 'north'
+  -
+    location: 9
+    direction: 'south'
+- title: "A wooden staircase"
+  location: 9
+  description: "The small wooden staircase leads upwards into a large, open room. You can see that parts of the ceiling above you are missing. The thick wooden bannister is broken in a few places, but the steps themselves seem sturdy. Dust fills the air, but at least these stairs are free of broken glass."
+  exits:
+  -
+    location: 8
+    direction: 'south'
+  -
+    location: 10
+    direction: 'up'
+
+
+

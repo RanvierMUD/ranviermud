@@ -18,8 +18,13 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 	// Get the weapon speed or just use a standard 1 sec counter
 	var player_speed = player.getAttackSpeed() * 1000;
+
+	if (player_speed < 100) { player_speed = 100 }
+
 	// Same for npcs
 	var npc_speed    = npc.getAttackSpeed() * 1000;
+
+	if (npc_speed < 100) { npc_speed = 100 }
 
 	var weapon = player.getEquipped('wield', true);
 
@@ -31,9 +36,9 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 
 		var player_health  = player.getAttribute('health');
 		var damage = npc.getDamage();
-		damage = Math.min(player_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min))));
+		damage = Math.min(player_health, (damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min)))) - (Math.floor(player.getAttribute('willpower')/3)));
 
-		if (!damage) {
+		if (damage <= 0) {
 			if (weapon) {
 				weapon.emit('parry', player);
 			}
@@ -66,7 +71,8 @@ function initiate_combat (l10n, npc, player, room, npcs, callback)
 			return combat_end(true);
 		}
 
-		var damage = player.getDamage();
+		var str_bonus = Math.floor(player.getAttribute('strength') / 2);
+		var damage = player.getDamage() + str_bonus;
 		damage = Math.max(0, Math.min(npc_health, damage.min + Math.max(0, Math.floor(Math.random() * (damage.max - damage.min)))));
 
 		if (!damage) {
