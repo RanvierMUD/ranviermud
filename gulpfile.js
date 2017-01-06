@@ -24,7 +24,8 @@ const report = {
 
 var options = {
   todo: {
-    absolute: true
+    absolute: true,
+    fileName: 'gulpTODO.md'
   },
   lint: {
     rules: {
