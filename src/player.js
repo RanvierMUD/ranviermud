@@ -373,7 +373,7 @@ const Player = function PlayerConstructor(socket) {
     }
 
     pstring = pstring.replace(/%[a-z_]+/, '');
-    self.write("\r\n" + pstring);
+    self.say("\r\n" + pstring);
   };
 
   /**

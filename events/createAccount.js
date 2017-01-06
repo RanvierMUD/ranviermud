@@ -15,7 +15,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
    * @param {String}  name    account username
    * @param {Account} player account obj
    */
-  function createAccount(socket, stage, name) {
+  function createAccount(socket, stage, name, account) {
 
     const say = EventUtil.gen_say(socket);
     stage = stage || 'check';
@@ -55,7 +55,9 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
       //TODO: Validate password creation.
       case 'password': {
         say('Your password must be between 6 and 30 characters.\n<cyan>Enter your account password:</cyan> ');
+        socket.toggleEcho();
         socket.once('data', pass => {
+            socket.toggleEcho();
             pass = pass.toString().trim();
 
             if (!pass) {

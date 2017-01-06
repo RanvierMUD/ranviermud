@@ -22,6 +22,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
     player.getSocket()
       .once('data', data => {
         data = data.toString().trim();
+        player.getSocket().write('\r\n');
 
         const isCommand = data ? parseCommands(data) : false;
         commandPrompt();
