@@ -3,7 +3,7 @@
 # RanvierMUD
 NodeJS based MUD engine with full localization support
 
-See the [staging](https://github.com/shawncplus/ranviermud/tree/gamedev) branch for the latest features. The master branch will be the latest 'stable' release.
+See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features. The master branch will be the latest 'stable' release.
 
 ## Features
 * Full localization (to be deprecated, without special characters it is not very useful right now.)
