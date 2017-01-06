@@ -1,43 +1,12 @@
 'use strict';
-const LevelUtils = require("../../../src/levels").LevelUtils;
-const initCombat = require("../../../src/rtcombat").initCombat;
 const util = require('util');
 
 exports.listeners = {
   playerEnter: (l10n) => {
-    let callback = success => { /* Do stuff here*/ };
-    return function (room, rooms, player, players, npc, npcs, items) {
-
-      if (player && !player.isInCombat() && !npc.isInCombat() && !player.getEffects('charm')) {
-        util.log(npc.getShortDesc('en') + ' is on the offensive.');
-        initCombat(l10n, this, player, room, npcs, players, rooms, items, callback);
+    return (room, rooms, player, players, npc, npcs, items) => {
+      if (player && !player.isInCombat() && !npc.isInCombat()) {
+        npc.emit('combat', player, room, players, npcs, rooms, items, () => {});
       }
     }
   },
-
-  playerDropItem: (l10n) => {
-    let callback = success => { /* Do stuff here*/ };
-    return function (room, rooms, player, players, npc, npcs, items) {
-      if (!player.isInCombat() && !npc.isInCombat() && !player.getEffects('charm')) {
-        util.log(npc.getShortDesc('en') + ' is on the offensive.');
-        initCombat(l10n, this, player, room, npcs, players, rooms, items, callback);
-      }
-    }
-  },
-
-  tick: (l10n) => {
-    let callback = success => { /* Do stuff here*/ };
-    return function (room, rooms, player, players, npc, npcs, items) {
-      players.eachIf(
-        p => p.getLocation() === npc.getLocation(),
-        p => {
-          if (!p.isInCombat() && !npc.isInCombat() && !player.getEffects('charm')) {
-            util.log(npc.getShortDesc('en') + ' is on the offensive.');
-            initCombat(l10n, this, p, room, npcs, players, rooms, items, callback);
-          }
-        });
-
-    }
-  },
-
 };
