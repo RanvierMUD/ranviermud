@@ -110,7 +110,6 @@ class TelnetStream extends EventEmitter
   toggleEcho () {
     this.echoing = !this.echoing;
     this.telnetCommand(this.echoing ? WONT : WILL, OPT_ECHO);
-    this.telnetCommand(DONT, OPT_ECHO);
   }
 
   attach (connection) {

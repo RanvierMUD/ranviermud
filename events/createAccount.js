@@ -18,6 +18,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
   function createAccount(socket, stage, name, account) {
 
     const say = EventUtil.gen_say(socket);
+    const write = EventUtil.gen_write(socket);
     stage = stage || 'check';
 
     l10n.setLocale('en');
@@ -28,7 +29,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
     switch (stage) {
       case 'check': {
         let newAccount = null;
-        say(`<bold>Do you want your account's username to be ${name}?</bold> <cyan>[y/n]</cyan> `);
+        write(`<bold>Do you want your account's username to be ${name}?</bold> <cyan>[y/n]</cyan> `);
 
         socket.once('data', data => {
           data = data.toString('').trim();
@@ -54,31 +55,33 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
 
       //TODO: Validate password creation.
       case 'password': {
-        say('Your password must be between 6 and 30 characters.\n<cyan>Enter your account password:</cyan> ');
+        say('Your password must be between 6 and 30 characters.');
+        write('<cyan>Enter your account password:</cyan> ');
         socket.toggleEcho();
         socket.once('data', pass => {
-            socket.toggleEcho();
-            pass = pass.toString().trim();
+          socket.toggleEcho();
+          say('');
+          pass = pass.toString().trim();
 
-            if (!pass) {
-              say('You must use a password.');
-              return repeat();
-            }
-            if (pass.length <= 5) {
-              say('Your password is not long enough.');
-              return repeat();
-            }
-            if (pass.length > 30) {
-              say('Your password is too long.');
-              return repeat();
-            }
+          if (!pass) {
+            say('You must use a password.');
+            return repeat();
+          }
+          if (pass.length <= 5) {
+            say('Your password is not long enough.');
+            return repeat();
+          }
+          if (pass.length > 30) {
+            say('Your password is too long.');
+            return repeat();
+          }
 
-            // setPassword handles hashing
-            account.setPassword(pass);
-            accounts.addAccount(account);
+          // setPassword handles hashing
+          account.setPassword(pass);
+          accounts.addAccount(account);
 
-            account.getSocket().emit('createPlayer', account.getSocket(), 'name', account, null);
-          });
+          account.getSocket().emit('createPlayer', account.getSocket(), 'name', account, null);
+        });
         break;
       }
     }

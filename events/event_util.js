@@ -32,13 +32,14 @@ function gen_repeat(repeat_args, next) {
   };
 }
 
-const gen_say   = socket => string => socket.write(sty.parse(string + '\r\n'));
 const gen_write = socket => string => socket.write(sty.parse(string));
+const gen_say   = socket => string => socket.write(sty.parse(string + '\r\n'));
 
 const EventUtil = {
   gen_next,
   gen_repeat,
   gen_say,
+  gen_write
 };
 
 module.exports.EventUtil = EventUtil;

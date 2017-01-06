@@ -27,11 +27,11 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
   function createPlayer(socket, stage, account, name) {
     stage = stage || 'name';
 
-    const say = EventUtil.gen_say(socket);
-    l10n.setLocale("en");
-
     const next   = EventUtil.gen_next('createPlayer');
     const repeat = EventUtil.gen_repeat(arguments, next);
+    const say    = EventUtil.gen_say(socket);
+    const write  = EventUtil.gen_write(socket);
+    l10n.setLocale("en");
 
     /* Multi-stage character creation i.e., races, classes, etc.
      * Always emit 'done' in your last stage to keep it clean
@@ -40,8 +40,9 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
 
     switch (stage) {
       case 'name': {
-        say("<bold>What would you like to name your character?</bold> ");
+        write("<bold>What would you like to name your character?</bold> ");
         socket.once('data', name => {
+          say('');
           name = name.toString().trim();
           name = name[0].toUpperCase() + name.slice(1);
 
@@ -75,8 +76,9 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         break;
       }
       case 'check': {
-        say(`<bold>${name} doesn't exist, would you like to create it?</bold> <cyan>[y/n]</cyan> `);
+        write(`<bold>${name} doesn't exist, would you like to create it?</bold> <cyan>[y/n]</cyan> `);
         socket.once('data', confirmation => {
+          say('');
           confirmation = confirmation.toString().trim().toLowerCase();
 
           if (!/[yn]/.test(confirmation)) {

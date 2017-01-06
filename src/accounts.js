@@ -29,8 +29,7 @@ class Accounts {
 
 class Account {
 
-  constructor () {
-    super();
+  constructor() {
     this.username   = '';
     this.characters = [];
     this.password   = null;
