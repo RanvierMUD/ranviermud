@@ -46,7 +46,7 @@ class Item extends EventEmitter {
     this.room        = item.room        || null;
     this.roomDesc    = item.roomDesc || '';
     this.script      = item.script      || null;
-    this.type        = typeof item.type === 'string' ? ItemTypes.resolve(item.type) : item.type;
+    this.type        = typeof item.type === 'string' ? ItemTypes.resolve(item.type) : (item.type || ItemType.OBJECT);
     this.uuid        = item.uuid        || uuid.v4();
   }
 

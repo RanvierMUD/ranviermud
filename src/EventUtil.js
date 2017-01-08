@@ -31,8 +31,8 @@ function genRepeat(repeatArgs, next) {
   };
 }
 
-const generateWrite = socket => string => socket.write(sty.parse(string));
-const generateSay   = socket => string => socket.write(sty.parse(string + '\r\n'));
+const genWrite = socket => string => socket.write(sty.parse(string));
+const genSay   = socket => string => socket.write(sty.parse(string + '\r\n'));
 
 module.exports =  {
   genNext,
