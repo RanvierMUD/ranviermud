@@ -18,11 +18,6 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, room.description, 80);
       Broadcast.sayAt(player, '');
 
-      // show all the items in the rom
-      room.items.forEach(item => {
-        Broadcast.sayAt(player, `<magenta>${item.roomDesc}</magenta>`);
-      });
-
       // show all players
       room.players.forEach(otherPlayer => {
         if (otherPlayer === player) {
@@ -32,13 +27,19 @@ module.exports = (srcPath) => {
         Broadcast.sayAt(player, '[Player] ' + otherPlayer.name);
       });
 
+      // show all the items in the rom
+      room.items.forEach(item => {
+        Broadcast.sayAt(player, `<magenta>[Item] ${item.roomDesc}</magenta>`);
+      });
+
       room.npcs.forEach(npc => {
         Broadcast.sayAt(player, '[NPC] ' + npc.name);
       });
 
-      Broadcast.at(player, '[<yellow><bold>Obvious exits: </yellow></bold>');
+      Broadcast.at(player, '[<yellow><bold>Exits: </yellow></bold>');
       Broadcast.at(player, Array.from(room.exits).map(ex => ex.direction).join(' '));
       Broadcast.sayAt(player, ']');
+      Broadcast.sayAt(player, '');
     }
   };
 };

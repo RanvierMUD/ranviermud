@@ -25,8 +25,8 @@ class Room extends EventEmitter {
     }
 
     this.area = area;
-    this.defaultItems = def.items;
-    this.defaultNpcs  = def.npcs;
+    this.defaultItems = def.items || [];
+    this.defaultNpcs  = def.npcs || [];
     this.description = def.description;
     this.exits = def.exits;
     this.id = def.id;
@@ -60,6 +60,21 @@ class Room extends EventEmitter {
 
   removeItem(item) {
     this.items.delete(item);
+  }
+
+  hydrate(state) {
+    this.items = new Set();
+    this.defaultItems.forEach(defaultItemId => {
+      if (parseInt(defaultItemId, 10)) {
+        defaultItemId = this.area.name + ':' + defaultItemId;
+      }
+
+      console.log(`\tADDING: Adding item [${defaultItemId}] to room [${this.title}]`);
+      const newItem = state.ItemFactory.create(this.area, defaultItemId);
+      newItem.hydrate(state);
+      state.ItemManager.add(newItem);
+      this.addItem(newItem);
+    });
   }
 
   static getKey(room) {

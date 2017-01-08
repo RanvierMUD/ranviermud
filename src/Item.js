@@ -37,7 +37,7 @@ class Item extends EventEmitter {
     this.defaultInv  = item.defaultInv  || null;
     this.description = item.description || 'Nothing special.';
     this.id          = item.id;
-    this.inventory   = new Map();
+    this.inventory   = item.inventory   || new Map();
     this.isEquipped  = item.isEquipped  || false;
     this.isHeld      = item.isHeld      || false;
     this.keywords    = item.keywords;
@@ -63,11 +63,27 @@ class Item extends EventEmitter {
   }
 
   addItem(item) {
+    if (this.inventory === null) {
+      this.inventory = new Map();
+    }
     this.inventory.set(item.uuid, item);
   }
 
   removeItem(item) {
     this.inventory.delete(item.uuid);
+
+    // if we removed the last item unset the inventory
+    // This ensures that when it's reloaded it won't try to set
+    // its default inventory. Instead it will persist the fact
+    // that all the items were removed from it
+    if (!this.inventory.size) {
+      this.inventory = null;
+    }
+  }
+
+  hydrate(state) {
+    // TODO: repopulate any stored items on save
+    // this.inventory.doStuff();
   }
 
   serialize() {
@@ -89,7 +105,11 @@ class Item extends EventEmitter {
       type,
       uuid,
     } = this;
-    data.inventory = Array.from(this.inventory.values()).map(item => item.serialize);
+
+    data.inventory = this.inventory ?
+      Array.from(this.inventory.values()).map(item => item.serialize) :
+      this.inventory
+    ;
 
     return data;
   }

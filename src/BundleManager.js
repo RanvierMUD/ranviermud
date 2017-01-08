@@ -54,6 +54,10 @@ class BundleManager {
 
     if (fs.existsSync(paths.areas)) {
       this.loadAreas(bundle, paths.areas)
+
+      // Distribution is done after all areas are loaded in case items use areas from each other
+      console.log('Starting distribution...');
+      this.state.AreaManager.distributeItems(this.state);
     }
 
     if (fs.existsSync(paths.events)) {
@@ -108,9 +112,6 @@ class BundleManager {
     // load rooms
     if (fs.existsSync(paths.rooms)) {
       const rooms = this.loadRooms(area, paths.rooms);
-      // distribute items/npcs
-      //area.distributeItems(items);
-      //area.distributeNpcs(npcs);
     }
 
     return area;
@@ -122,9 +123,10 @@ class BundleManager {
     // parse the item files
     let items = Data.parseFile(itemsFile);
 
-    // create and load the items
-    items = items.map(item => new Item(area, item));
-    items.forEach(item => this.state.ItemManager.add);
+    // set the item definitions onto the factory
+    items.forEach(item => {
+      this.state.ItemFactory.setDefinition(area.name, item.id, item);
+    });
 
     util.log(`ENDLOAD: BUNDLE[${area.bundle}] AREA [${area.name}] Items`);
 
@@ -153,7 +155,10 @@ class BundleManager {
 
     // create and load the rooms
     rooms = rooms.map(room => new Room(area, room));
-    rooms.forEach(room => this.state.RoomManager.addRoom(room));
+    rooms.forEach(room => {
+      area.addRoom(room);
+      this.state.RoomManager.addRoom(room)
+    });
 
     util.log(`ENDLOAD: BUNDLE[${area.bundle}] AREA [${area.name}] Rooms`);
 

@@ -29,6 +29,7 @@ const AreaManager = require('./src/AreaManager');
 const CommandManager = require('./src/CommandManager');
 const EventManager = require('./src/EventManager');
 const ItemManager = require('./src/ItemManager');
+const ItemFactory = require('./src/ItemFactory');
 const PlayerManager = require('./src/PlayerManager');
 const RoomManager = require('./src/RoomManager');
 let BundleManager = require('./src/BundleManager');
@@ -55,6 +56,7 @@ const GameState = {
   CommandManager: new CommandManager(),
   EventManager: new EventManager(),
   ItemManager: new ItemManager(),
+  ItemFactory: new ItemFactory(),
   PlayerManager: new PlayerManager(),
   RoomManager: new RoomManager(),
 };

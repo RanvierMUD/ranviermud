@@ -32,19 +32,6 @@ class Area extends EventEmitter {
   removeNpc(npc) {
     this.npcs.delete(npc);
   }
-
-  /**
-   * Put items into their appropriate rooms/containers/npcs
-   */
-  distributeItems(items) {
-    this.putItemsInContainers(items);
-    this.putItemsInRooms(items);
-    this.giveItemsToNpcs(items);
-  }
-
-  distributeNpcs(npcs) {
-    // put npcs in their rooms
-  }
 }
 
 module.exports = Area;

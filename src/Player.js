@@ -102,7 +102,7 @@ class Player extends Character {
       };
     });
 
-    return {
+    let data = {
       account: this.account.name,
       attributes: this.attributes,
       combatPromptString: this.combatPromptString,
@@ -113,6 +113,17 @@ class Player extends Character {
       promptString: this.promptString,
       room: Room.getKey(this.room),
     };
+
+    data.inventory = this.inventory ?
+      Array.from(this.inventory.values()).map(item => item.serialize) :
+      this.inventory
+    ;
+    data.equipment = this.equipment ?
+      Array.from(this.equipment.values()).map(item => item.serialize) :
+      this.equipment
+    ;
+
+    return data;
   }
 
   /**

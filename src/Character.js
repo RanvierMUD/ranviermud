@@ -19,8 +19,8 @@ class Character extends EventEmitter
     super();
 
     this.name = data.name;
-    this.inventory = new Map();
-    this.equipment = new Map();
+    this.inventory = data.inventory || new Map();
+    this.equipment = data.equipment || new Map();
     this.inCombat = false;
     this.level = data.level || 1;
     this.experience = data.experience || 0;
@@ -80,6 +80,34 @@ class Character extends EventEmitter
   removeEffect(effectType) {
     this.effects.delete(effectType);
   }
+
+  equip(item, slot) {
+    // TODO
+  }
+
+  unequip(item) {
+    // TODO
+  }
+
+  addItem(item) {
+    if (this.inventory === null) {
+      this.inventory = new Map();
+    }
+    this.inventory.set(item.uuid, item);
+  }
+
+  removeItem(item) {
+    this.inventory.delete(item.uuid);
+
+    // if we removed the last item unset the inventory
+    // This ensures that when it's reloaded it won't try to set
+    // its default inventory. Instead it will persist the fact
+    // that all the items were removed from it
+    if (!this.inventory.size) {
+      this.inventory = null;
+    }
+  }
+
 }
 
 module.exports = Character;
