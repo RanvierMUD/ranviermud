@@ -20,11 +20,11 @@ class AreaManager {
   }
 
   /**
-   * Find any rooms/npcs with `items` refs and actually put items in there
+   * Populate rooms with npcs/items
    * @param {object} state GameState, see: ./ranvier
    * @return {boolean}
    */
-  distributeItems(state) {
+  distribute(state) {
     for (const area of this.areas) {
       console.log('Distributing to area ' + area.title);
       for (const [ roomId, room ] of area.rooms) {

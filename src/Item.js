@@ -12,7 +12,6 @@ const ItemType = require('./ItemType');
  * @property {boolean} isEquipped  Whether or not item is currently equipped
  * @property {Map}     inventory   Current items this item contains
  * @property {boolean} isHeld      Whether or not item is currently in an inventory (npc, player, or another object)
- * @property {number}  maxLoad     Max number of these items allowed to be in the game at one time
  * @property {string}  name        Name shown in inventory and when equipped
  * @property {Room}    room        Room the item is currently in
  * @property {string}  roomDesc    Description shown when item is seen in a room
@@ -41,7 +40,6 @@ class Item extends EventEmitter {
     this.isEquipped  = item.isEquipped  || false;
     this.isHeld      = item.isHeld      || false;
     this.keywords    = item.keywords;
-    this.maxLoad     = item.maxLoad;
     this.name        = item.name;
     this.room        = item.room        || null;
     this.roomDesc    = item.roomDesc || '';
@@ -97,7 +95,6 @@ class Item extends EventEmitter {
       isEquipped,
       isHeld,
       keywords,
-      maxLoad,
       name,
       room: room.id,
       roomDesc,

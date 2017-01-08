@@ -64,6 +64,11 @@ class Room extends EventEmitter {
 
   hydrate(state) {
     this.items = new Set();
+
+    // NOTE: This method effectively defines the fact that items/npcs do not
+    // persist through reboot unless they're stored on a player.
+    // If you would like to change that functionality this is the place
+
     this.defaultItems.forEach(defaultItemId => {
       if (parseInt(defaultItemId, 10)) {
         defaultItemId = this.area.name + ':' + defaultItemId;
@@ -74,6 +79,18 @@ class Room extends EventEmitter {
       newItem.hydrate(state);
       state.ItemManager.add(newItem);
       this.addItem(newItem);
+    });
+
+    this.defaultNpcs.forEach(defaultNpcId => {
+      if (parseInt(defaultNpcId, 10)) {
+        defaultNpcId = this.area.name + ':' + defaultNpcId;
+      }
+
+      console.log(`\tADDING: Adding npc [${defaultNpcId}] to room [${this.title}]`);
+      const newNpc = state.MobFactory.create(this.area, defaultNpcId);
+      newNpc.hydrate(state);
+      this.area.addNpc(newNpc);
+      this.addNpc(newNpc);
     });
   }
 

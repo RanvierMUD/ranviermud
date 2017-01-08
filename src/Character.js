@@ -108,6 +108,11 @@ class Character extends EventEmitter
     }
   }
 
+  hydrate(state) {
+    // TODO: repopulate any stored items on save
+    // this.inventory.doStuff();
+    // this.equipment.doStuff();
+  }
 }
 
 module.exports = Character;

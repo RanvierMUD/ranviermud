@@ -19,12 +19,29 @@ class Npc extends Character {
       }
     }
 
+    this.defaultItems = data.items || [];
+    this.defaultEquipment = data.equipment || [];
     this.area = data.area;
     this.keywords = data.keywords;
     this.description = data.description;
     this.id = data.id;
     this.uuid = data.uuid || uuid.v4();
-    this.maxLoad = data.maxLoad;
+  }
+
+  hydrate(state) {
+    super.hydrate(state);
+
+    this.defaultItems.forEach(defaultItemId => {
+      if (parseInt(defaultItemId, 10)) {
+        defaultItemId = this.area.name + ':' + defaultItemId;
+      }
+
+      console.log(`\tADDING: Adding item [${defaultItemId}] to npc [${this.name}]`);
+      const newItem = state.ItemFactory.create(this.area, defaultItemId);
+      newItem.hydrate(state);
+      state.ItemManager.add(newItem);
+      this.addItem(newItem);
+    });
   }
 }
 

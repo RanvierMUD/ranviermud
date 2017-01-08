@@ -7,5 +7,9 @@
   attributes:
       speed: 10
       damage: 1-15
-  maxLoad: 1
+- id: 2
+  name: "Slice of Cheese"
+  roomDesc: "A moldy slice of cheese"
+  keywords: [ "slice", "cheese", "moldy" ]
+  description: "A yellow, slightly moldy slice of cheese. Only a rat could find this appetizing."
 

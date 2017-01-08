@@ -30,6 +30,7 @@ const CommandManager = require('./src/CommandManager');
 const EventManager = require('./src/EventManager');
 const ItemManager = require('./src/ItemManager');
 const ItemFactory = require('./src/ItemFactory');
+const MobFactory = require('./src/MobFactory');
 const PlayerManager = require('./src/PlayerManager');
 const RoomManager = require('./src/RoomManager');
 let BundleManager = require('./src/BundleManager');
@@ -51,13 +52,23 @@ pe.skipNodeFiles();
 
 let server;
 const GameState = {
+  // Stores all logged in accounts
   AccountManager: new AccountManager(),
+  // Stores all loaded areas
   AreaManager: new AreaManager(),
+  // Stores all loaded commands
   CommandManager: new CommandManager(),
+  // Stores all loaded spells, just kidding, it stores events
   EventManager: new EventManager(),
-  ItemManager: new ItemManager(),
+  // Helper for creating/cloning items
   ItemFactory: new ItemFactory(),
+  // Stores all loaded items
+  ItemManager: new ItemManager(),
+  // Helper for creating/cloning Npcs (mobs)
+  MobFactory: new MobFactory(),
+  // Stores all connected players
   PlayerManager: new PlayerManager(),
+  // Stores all loaded rooms across all areas ever
   RoomManager: new RoomManager(),
 };
 

@@ -57,7 +57,7 @@ class BundleManager {
 
       // Distribution is done after all areas are loaded in case items use areas from each other
       console.log('Starting distribution...');
-      this.state.AreaManager.distributeItems(this.state);
+      this.state.AreaManager.distribute(this.state);
     }
 
     if (fs.existsSync(paths.events)) {
@@ -106,7 +106,6 @@ class BundleManager {
     // load npcs
     if (fs.existsSync(paths.npcs)) {
       const npcs = this.loadNpcs(area, paths.npcs);
-      npcs.forEach(npc => area.addNpc(npc));
     }
 
     // load rooms
@@ -140,7 +139,9 @@ class BundleManager {
     let npcs = Data.parseFile(npcsFile);
 
     // create and load the npcs
-    npcs = npcs.map(npc => new Npc(area, npc));
+    npcs = npcs.map(npc => {
+      this.state.MobFactory.setDefinition(area.name, npc.id, npc);
+    });
 
     util.log(`ENDLOAD: BUNDLE[${area.bundle}] AREA [${area.name}] Npcs`);
 
