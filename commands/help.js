@@ -1,19 +1,11 @@
 'use strict';
-const l10nFile  = __dirname + '/../l10n/commands/help.yml';
-const l10n      = require('../src/l10n')(l10nFile);
 const util      = require('util');
 const HelpFiles = require('../src/help_files').HelpFiles;
 const wrap      = require('wrap-ansi');
 const _         = require('../src/helpers');
 const sprintf = require('sprintf').sprintf;
 
-/*
-  NEW: {
-    title: 'Welcome to Ranvier',
-    body: 'Important topics include:',
-    related: 'levels','attributes','mutants','mental','physical','energy','combat','social',
-  },
-*/
+// TODO: Rewrite
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
@@ -55,9 +47,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function displayHelpFile(topic) {
       const file = HelpFiles[topic];
       if ( !file) {
-        return args in Commands.player_commands  ?
-          player.writeL10n(l10n, 'NO_HELP_FILE') :
-          player.writeL10n(l10n, 'NOT_FOUND');
+        util.log(`(admin help) Help page requested for '${topic}' by '${player.getName()}'`);
+        return player.say(`No help pages found for ${topic}.`);
       }
 
       // --- Helpers for printing out the help files. Help helpers.

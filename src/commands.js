@@ -3,25 +3,15 @@ const util    = require('util'),
   ansi        = require('sty').parse,
   fs          = require('fs'),
   CommandUtil = require('./command_util').CommandUtil,
-  l10nHelper  = require('./l10n');
-
-const Doors = require('./doors').Doors;
-const _     = require('./helpers');
+  Doors = require('./doors').Doors,
+  _     = require('./helpers')
+;
 
 // "Globals" to be specified later during config.
 let rooms   = null;
 let players = null;
 let items   = null;
 let npcs    = null;
-
-/**
- * Localization
- */
-let l10n       = null;
-const l10nFile = __dirname + '/../l10n/commands.yml';
-
-// shortcut for l10n.translate
-let L = null;
 
 const commands_dir = __dirname + '/../commands/';
 
@@ -106,11 +96,10 @@ const Commands = {
 
   /**
    * Configure the commands by using a joint players/rooms array
-   * and loading the l10n. The config object should look similar to
+   * The config object should look similar to
    * {
    *   rooms: instanceOfRoomsHere,
    *   players: instanceOfPlayerManager,
-   *   locale: 'en'
    * }
    * @param object config
    */
@@ -120,21 +109,6 @@ const Commands = {
     players = config.players;
     npcs    = config.npcs;
     items   = config.items;
-
-    util.log("Loading command l10n... ");
-    l10n = l10nHelper(l10nFile);
-    l10n.setLocale("en");
-    util.log("Done");
-
-    /**
-     * Hijack translate to also do coloring
-     * @param string text
-     * @param ...
-     * @return string
-     */
-    L = text => {
-      return ansi(l10n.translate.apply(null, [].slice.call(arguments)));
-    };
 
     // Load external commands
     fs.readdir(commands_dir, (err, files) => {
@@ -156,8 +130,6 @@ const Commands = {
       }
     });
   },
-
-  setLocale: locale => l10n.setLocale(locale),
 
   canPlayerMove: (exit, player) => {
       const room = rooms.getAt(player.getLocation());
@@ -196,7 +168,7 @@ function moveCharacter(exit, player) {
 
   const room = rooms.getAt(exit.location);
   if (!room) {
-    player.sayL10n(l10n, 'LIMBO');
+    util.log(`WARNING: exit '${exit.location}' is invalid`);
     return true;
   }
 
@@ -211,7 +183,7 @@ function moveCharacter(exit, player) {
           player.getName() + ' leaves.';
         p.say(leaveMessage);
       } catch (e) {
-        p.sayL10n(l10n, 'LEAVE', player.getName());
+        p.sayL10n('LEAVE', player.getName());
         util.log(e);
       }
       p.prompt();

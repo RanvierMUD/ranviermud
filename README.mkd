@@ -6,7 +6,6 @@ NodeJS based MUD engine with full localization support
 See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features. The master branch will be the latest 'stable' release.
 
 ## Features
-* Full localization (to be deprecated, without special characters it is not very useful right now.)
 * Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.
 * Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the event is emitted. Adding new events is easy as npc.emit('eventName'); See documentation on node event emitters for more.
 * Pfile saving in JSON, easy to parse for external usage.

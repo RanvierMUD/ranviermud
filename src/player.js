@@ -12,7 +12,6 @@ const Data = require('./data').Data,
   _        = require('./helpers');
 
 const npcs_scripts_dir = __dirname + '/../scripts/player/';
-const l10n_dir         = __dirname + '/../l10n/scripts/player/';
 const CombatUtil       = require('./combat_util').CombatUtil;
 const CommandUtil      = require('./command_util').CommandUtil;
 const ItemUtil         = require('./item_util').ItemUtil;
@@ -23,7 +22,6 @@ const Player = function PlayerConstructor(socket) {
   self.name        = '';
   self.description = 'A person';
   self.location    = null;
-  self.locale      = null;
   self.accountName = '';
 
   self.prompt_string = '[ %health/%max_health <bold>hp</bold> -- %energy/%max_energy <bold>energy</bold> ]';
@@ -82,7 +80,6 @@ const Player = function PlayerConstructor(socket) {
    */
   self.getPrompt       = () => self.prompt_string;
   self.getCombatPrompt = () => self.combat_prompt;
-  self.getLocale       = () => self.locale;
   self.getName         = () => self.name;
   self.getShortDesc    = () => self.name;
   self.getAccountName  = () => self.accountName;
@@ -110,7 +107,6 @@ const Player = function PlayerConstructor(socket) {
 
   self.setPrompt       = str => self.prompt_string = str;
   self.setCombatPrompt = str => self.combat_prompt = str;
-  self.setLocale       = locale => self.locale = locale;
   self.setName         = newname => self.name = newname;
   self.setAccountName  = accname => self.accountName = accname;
   self.setDescription  = newdesc => self.description = newdesc;
@@ -303,25 +299,6 @@ const Player = function PlayerConstructor(socket) {
   };
 
   /**
-   * Write based on player's locale -- DEPRECATED
-   * @param Localize l10n
-   * @param string   key
-   */
-
-  self.writeL10n = __deprecatedWrite;
-
-  function __deprecatedWrite(l10n, key) {
-    let locale = l10n.locale;
-    if (self.getLocale()) {
-      l10n.setLocale(self.getLocale());
-    }
-
-    self.write(l10n.translate.apply(null, [].slice.call(arguments).slice(1)));
-
-    if (locale) { l10n.setLocale(locale); }
-  }
-
-  /**
    * write() + newline
    * @see self.write
    */
@@ -333,24 +310,6 @@ const Player = function PlayerConstructor(socket) {
   };
 
   self.warn = data => self.say('<yellow>' + data + '</yellow>');
-
-  /**
-   * writeL10n() + newline
-   * @see self.writeL10n
-   */
-  self.sayL10n = __deprecatedSay;
-
-  function __deprecatedSay(l10n, key) {
-    let locale = l10n.locale;
-    if (self.getLocale()) {
-      l10n.setLocale(self.getLocale());
-    }
-
-    let translated = l10n.translate.apply(null, [].slice.call(arguments).slice(1));
-    self.say(translated, true);
-    if (locale) { l10n.setLocale(locale); }
-  }
-
 
   ///// ----- Prompts: ----- ///////
 
@@ -410,7 +369,6 @@ const Player = function PlayerConstructor(socket) {
    self.password = data.password;
 
    self.location = data.location;
-   self.locale = data.locale;
 
    self.description = data.description;
 
@@ -465,21 +423,28 @@ const Player = function PlayerConstructor(socket) {
     const effects = Effects.stringify(self);
 
     const {
-      name, accountName, location, locale,
+      name, accountName, location,
       prompt_string, combat_prompt, password,
       equipment, attributes, skills,
       gender, preferences, bodyParts, description
     } = self;
 
     return JSON.stringify({
-      name,           accountName,
-      location,       locale,
-      prompt_string,  combat_prompt,
-      password,       equipment,
-      attributes,     skills,
-      gender,         preferences,
-      bodyParts,      effects,
-      inventory,       description
+      name,
+      accountName,
+      location,
+      prompt_string,
+      combat_prompt,
+      password,
+      equipment,
+      attributes,
+      skills,
+      gender,
+      preferences,
+      bodyParts,
+      effects,
+      inventory,
+      description
     });
   };
 
@@ -518,12 +483,11 @@ const Player = function PlayerConstructor(socket) {
   /**
    * Players will have some defined events so load them on creation
    */
-  self._init = () =>
-    Data.loadListeners(
-      { script: "player.js" },
-      l10n_dir,
-      npcs_scripts_dir,
-      self);
+  self._init = () => Data.loadListeners(
+    { script: "player.js" },
+    npcs_scripts_dir,
+    self
+  );
 
   self._init();
 };

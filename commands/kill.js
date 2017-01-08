@@ -1,9 +1,5 @@
 'use strict';
 const CommandUtil = require('../src/command_util').CommandUtil;
-const l10nFile = __dirname + '/../l10n/commands/kill.yml';
-const _ = require('../src/helpers');
-const l10n = require('../src/l10n')(l10nFile);
-const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
     return (args, player) => {

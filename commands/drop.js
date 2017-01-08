@@ -1,6 +1,4 @@
 'use strict';
-const l10nFile = __dirname + '/../l10n/commands/drop.yml';
-const l10n = require('../src/l10n')(l10nFile);
 const CommandUtil = require('../src/command_util').CommandUtil;
 const util = require('util');
 
@@ -10,7 +8,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
 
     //TODO: Does this handle dropping a container with items in it?
     // Should remove all contents from player inventory and set the room for each of them.
-    
+
     args = args.toLowerCase();
 
     if (args === 'all') {
@@ -39,26 +37,26 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function drop(item) {
       let playerName = player.getName();
 
-      if (item.isEquipped() || isDead) { 
+      if (item.isEquipped() || isDead) {
         const isDropping = true;
-        const location = player.unequip(item, items, players, isDropping); 
+        const location = player.unequip(item, items, players, isDropping);
         if (!isDead) { item.emit('remove', location, room, player, players); }
       }
 
+      var shortDesc = item.getShortDesc();
       players.eachIf(
         p => CommandUtil.inSameRoom(p, player),
-        p => p.sayL10n(l10n, 'OTHER_DROPS', playerName, item.getShortDesc(p.getLocale()))
+        p => p.say(`${playerName} drops the ${shortDesc}`)
       );
 
-      let itemName = item.getShortDesc('en');
       if (!isDead) {
-        player.sayL10n(l10n, 'ITEM_DROP', itemName, false);
+        player.say(`You drop ${shortDesc}.`);
         room.getNpcs().forEach( id => {
           let npc = npcs.get(id);
           npc.emit('playerDropItem', room, rooms, player, players, npc, npcs, item, items);
         });
       }
-      util.log(`${playerName} drops ${itemName} at ${room.getLocation()}.`);
+      util.log(`${playerName} drops ${shortDesc} at ${room.getLocation()}.`);
 
       player.removeItem(item);
       const container = items.get(item.getContainer());
@@ -67,6 +65,5 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       item.setHolder(null);
       item.setRoom(room.getLocation());
     }
-
   };
 };

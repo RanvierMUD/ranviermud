@@ -4,11 +4,9 @@
 var fs = require('fs'),
   util = require('util'),
   events = require('events'),
-  Data = require('./data.js')
-  .Data;
+  Data = require('./data.js').Data;
 
 var rooms_dir = __dirname + '/../entities/areas/';
-var l10n_dir = __dirname + '/../l10n/scripts/rooms/';
 var rooms_scripts_dir = __dirname + '/../scripts/rooms/';
 
 var Rooms = function() {
@@ -25,6 +23,7 @@ var Rooms = function() {
       if (verbose) util.debug(message);
     };
 
+    // TODO: Refactor so only data.js knows how to read files
     // Load all the areas into th game
     fs.readdir(rooms_dir, function(err, files) {
       if (err) {
@@ -198,7 +197,7 @@ var Room = function Room(config) {
       return exit;
     });
 
-    Data.loadListeners(config, l10n_dir, rooms_scripts_dir, Data.loadBehaviors(config, 'rooms/', self));
+    Data.loadListeners(config, rooms_scripts_dir, Data.loadBehaviors(config, 'rooms/', self));
   };
 
   self.getLocation = function() {
@@ -219,52 +218,35 @@ var Room = function Room(config) {
 
   /**
    * Get the description, localized if possible
-   * @param string locale
    * @return string
    */
-  self.getDescription = function(locale) {
-    return typeof self.description === 'string' ?
-      self.description :
-      (locale in self.description ? self.description[locale] : 'UNTRANSLATED - Contact an admin');
+  self.getDescription = function() {
+    return self.description;
   };
 
-  self.getShortDesc = function(locale) {
-    return typeof self.short_desc === 'string' ?
-      self.short_desc :
-      (locale in self.short_desc ?
-        self.short_desc[locale] :
-        self.getDescription(locale));
+  self.getShortDesc = function() {
+    return self.short_desc || self.getDescription();
   };
 
-  self.getDarkDesc = function(locale) {
-    return typeof self.dark_desc === 'string' ?
-      self.dark_desc :
-      (locale in self.dark_desc ?
-        self.dark_desc[locale] :
-        self.getShortDesc(locale));
+  self.getDarkDesc = function() {
+    return self.dark_desc || self.getShortDesc();
   }
 
   /**
    * Get the title, localized if possible
-   * @param string locale
    * @return string
    */
-  self.getTitle = function(locale) {
-    return typeof self.title === 'string' ?
-      self.title :
-      (locale in self.title ? self.title[locale] : 'UNTRANSLATED - Contact an admin');
+  self.getTitle = function() {
+    return self.title;
   }
 
   /**
    * Get the leave message for an exit, localized if possible
    * @param object exit
-   * @param string locale
    * @return string
    */
-  self.getLeaveMessage = function(exit, locale) {
-    return typeof exit.leave_message === 'string' ?
-      self.leave_message :
-      (locale in self.leave_message ? self.leave_message[locale] : 'UNTRANSLATED - Contact an admin');
+  self.getLeaveMessage = function(exit) {
+    return self.leave_message;
   };
 
   /**

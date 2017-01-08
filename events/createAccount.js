@@ -3,7 +3,7 @@ const src       = '../src/';
 const Account   = require(src + 'accounts').Account;
 const EventUtil = require('./event_util').EventUtil;
 
-exports.event = (players, items, rooms, npcs, accounts, l10n) =>
+exports.event = (players, items, rooms, npcs, accounts) =>
   /**
    * Create an account
    * Stages:
@@ -20,8 +20,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
     const say = EventUtil.gen_say(socket);
     const write = EventUtil.gen_write(socket);
     stage = stage || 'check';
-
-    l10n.setLocale('en');
 
     const next   = EventUtil.gen_next('createAccount');
     const repeat = EventUtil.gen_repeat(arguments, next);

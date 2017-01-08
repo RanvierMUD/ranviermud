@@ -1,4 +1,0 @@
-DESCS_SET:
-  en: 'You will now be viewing $[1] room descriptions.'
-DESCS_OPTIONS:
-  en: 'You are currently using the $[1] option. Choices include `default`, `short`, and `verbose`.' 

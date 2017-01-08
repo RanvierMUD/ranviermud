@@ -1,4 +1,0 @@
-NOT_FOUND:
-    en: "That command was not found in the helpfiles. \nType 'commands' to see a list of possible commands."
-NO_HELP_FILE:
-    en: "No helpfile was found for that command.\nPlease contact an admin."

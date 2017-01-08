@@ -2,8 +2,6 @@
 const util = require('util');
 const CommandUtil = require('../src/command_util').CommandUtil;
 const Commands    = require('../src/commands.js');
-const l10nFile = __dirname + '/../l10n/commands/wear.yml';
-const l10n = require('../src/l10n')(l10nFile);
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
@@ -58,7 +56,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function isWearable(item) {
       if (!item.getAttribute('wearLocation')) {
         util.log("No wear location:" , item.getShortDesc('en'), item.wearLocation);
-        player.sayL10n(l10n, 'NO_WEAR_LOCATION', item.getShortDesc('en'));
+        player.say("You can't wear that.");
         return false;
       }
       return true;
@@ -67,7 +65,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function hasOpenSpot(item) {
       const wearLocation = item.getAttribute('wearLocation');
       const worn         = player.getEquipped(wearLocation);
-      
+
       if (worn) {
         util.log(`${player.getName()}: Cannot wear ${item.getShortDesc()} due to already wearing an item: ${worn} on ${wearLocation}`);
         player.warn(`You cannot wear the ${item.getShortDesc()}, you are already wearing the ${items.get(worn).getShortDesc('en')} on your ${wearLocation}.`);
@@ -79,11 +77,10 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function putOn(item) {
       const location = item.getAttribute('wearLocation');
       const room     = rooms.getAt(player.getLocation());
-      
+
       item.emit('wear', location, room, player, players);
       player.equip(location, item);
       return true;
     }
-
   };
 };

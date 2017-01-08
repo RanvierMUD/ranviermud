@@ -1,23 +1,11 @@
-- title:
-    en: "the kitchen"
+- title: "the kitchen"
   area: "The Serpent's Hiss"
   location: 2
-  description:
-    en: "A row of ranges takes up most of the space in this kitchen. Much of the steel is corroded and everything appears disused. This is a rat's haven. There is a door leading to the taproom, and another to a dry storage room."
-  short_desc:
-    en: "This room is filled with old and rusty culinary equipment. Two sets of swinging doors lead to the taproom and a storage room."
-  dark_desc:
-    en: "The dim glow from the taproom spills in and reflects off the crooked angles of the stovetops. Red eyes watch you from forgotten nooks and crannies."
+  description: "A row of ranges takes up most of the space in this kitchen. Much of the steel is corroded and everything appears disused. This is a rat's haven. There is a door leading to the taproom, and another to a dry storage room."
+  short_desc: "This room is filled with old and rusty culinary equipment. Two sets of swinging doors lead to the taproom and a storage room."
+  dark_desc: "The dim glow from the taproom spills in and reflects off the crooked angles of the stovetops. Red eyes watch you from forgotten nooks and crannies."
   exits:
     -
       location: 1
-      direction: 'taproom'
-      leave_message:
-        en: ' returns to the taproom.'
-    -
-      location: 8
-      direction: 'storage'
-      door:
-        open: false
-      leave_message:
-        en: ' nudges a crate of rice aside as they enter the dry storage room.'
+      direction: 'west'
+      leave_message: ' returns to the taproom.'

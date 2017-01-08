@@ -19,20 +19,9 @@ const util = require('util'),
   Skills = require('./skills').Skills,
   Accounts = require('./accounts').Accounts,
   Account = require('./accounts').Account,
-  EventUtil = require('../events/event_util').EventUtil,
-
-  //TODO: Deprecate this if possible.
-  l10nHelper = require('./l10n');
-
+  EventUtil = require('../events/event_util').EventUtil
+;
 const eventsDir = __dirname + '/../events/';
-
-/**
- * Localization
- */
-let l10n = null;
-const l10nFile = __dirname + '/../l10n/events.yml';
-// shortcut for l10n.translate
-let L = null;
 
 // Deps to be injected into events
 let players = null;
@@ -65,14 +54,6 @@ const Events = {
 
     const requiresConfig = ['login', 'commands', 'createAccount', 'createPlayer'];
 
-    if (!l10n) {
-      util.log("Loading event l10n... ");
-      l10n = l10nHelper(l10nFile);
-      util.log("Done");
-    }
-
-    l10n.setLocale(config.locale);
-
     fs.readdir(eventsDir,
     (err, files) => {
       if (err) { util.log(err); }
@@ -88,19 +69,9 @@ const Events = {
         const injector = require(eventFile).event;
         const name = files[file].split('.')[0];
 
-        Events.events[name] = injector(players, items, rooms, npcs, accounts, l10n);
+        Events.events[name] = injector(players, items, rooms, npcs, accounts);
       }
     });
-
-    /**
-     * Hijack translate to also do coloring
-     * @param string text
-     * @param ...
-     * @return string
-     */
-    L = function (text) {
-      return ansi(l10n.translate.apply(null, [].slice.call(arguments)));
-    };
   }
 };
 

@@ -20,7 +20,7 @@ function chooseRandomExit(chance) {
         const exits  = room.getExits();
         const chosen = Random.fromArray(exits);
 
-        util.log(npc.getShortDesc('en') + " moves to room #" + chosen.location);
+        util.log(npc.getShortDesc() + " moves to room #" + chosen.location);
 
         const openDoor     = Doors.isOpen(chosen);
         const canOpenDoors = npc.hasType('humanoid');
@@ -33,13 +33,12 @@ function chooseRandomExit(chance) {
 
           try {
             if (player) {
-              const locale = 'en';
               const msg = getLeaveMessage(player, chosenRoom);
-              player.say(npc.getShortDesc(locale) + msg);
+              player.say(npc.getShortDesc() + msg);
             }
 
-            const dest = chosenRoom.getTitle('en');
-            const src = room.getTitle('en');
+            const dest = chosenRoom.getTitle();
+            const src = room.getTitle();
 
             npc.emit('npcLeave', room, rooms, players, npcs, dest);
 

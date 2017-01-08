@@ -54,7 +54,7 @@ function findItemInEquipment(items, lookString, being, hydrate) {
   const equipment = _.values(being.getEquipped()).map(items.get);
   const thing = CommandUtil.parseDot(lookString, equipment,
     function(item) {
-      return item && item.hasKeyword(this.keyword, being.getLocale());
+      return item && item.hasKeyword(this.keyword);
     });
 
   return ifExists(thing, hydrate);
@@ -110,12 +110,10 @@ function findNpcInRoom(npcs, lookString, room, player, hydrate) {
 function findItemInInventory(lookString, being, hydrate) {
   let thing = CommandUtil.parseDot(lookString, being.getInventory(),
     function (item) {
-      return item && item.hasKeyword(this.keyword, being.getLocale());
+      return item && item.hasKeyword(this.keyword);
     });
   return ifExists(thing, hydrate);
 }
-
-
 
 /**
  * Parse 3.blah item notation
@@ -145,11 +143,7 @@ function parseDot(arg, objects, filterFunc) {
   if (!found.length) { return false; }
 
   const areMultiples = multi && !isNaN(nth) && nth && nth <= found.length
-  return areMultiples ?
-    found[nth - 1] :
-    found[0];
-
+  return areMultiples ?  found[nth - 1] : found[0];
 }
-
 
 exports.CommandUtil = CommandUtil;

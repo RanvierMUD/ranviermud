@@ -9,7 +9,6 @@ const fs = require('fs'),
 
 const npcs_dir = __dirname + '/../entities/npcs/';
 const npcs_scripts_dir = __dirname + '/../scripts/npcs/';
-const l10n_dir = __dirname + '/../l10n/scripts/npcs/';
 
 const CombatUtil = require('./combat_util').CombatUtil;
 
@@ -199,7 +198,7 @@ const Npc = function NpcConstructor(config) {
       self.defenses[armor] = config.defenses[armor];
     }
 
-    Data.loadListeners(config, l10n_dir, npcs_scripts_dir, Data.loadBehaviors(config, 'npcs/', self));
+    Data.loadListeners(config, npcs_scripts_dir, Data.loadBehaviors(config, 'npcs/', self));
   };
 
   /**#@+
@@ -279,32 +278,21 @@ const Npc = function NpcConstructor(config) {
   };
 
   /**
-   * Helper for getting strings that may or may not be translated
-   * @param string thing Property of npc
-   * @param string locale Locale of player
-   * @return string Translated string
-   */
-
-  /**
    * Get the description, localized if possible
-   * @param string locale
    * @return string
    */
   self.getDescription = () => self.description
 
   /**
    * Get the attack, localized if possible
-   * @param string locale
    * @return string
    */
   self.getAttack = () => self.attack;
 
   /**
    * Get the title, localized if possible
-   * @param string locale
    * @return string
-   */ //TODO: Consider passing in player object to see if player recognizes the item
-   // //      IS that an observer pattern?
+   */
   self.getShortDesc = () => self.short_description || self.description;
 
   self.getRoomDesc = () => self.room_description || self.short_description || self.description;
@@ -312,41 +300,16 @@ const Npc = function NpcConstructor(config) {
   self.getName = () => self.name;
   /**
    * Get the title, localized if possible
-   * @param string locale
    * @return string
    */
-  self.getKeywords = locale =>
-    Array.isArray(self.keywords) ?
-      self.keywords :
-      (locale in self.keywords ? self.keywords[locale] : 'UNTRANSLATED - Contact an admin');
+  self.getKeywords = () => Array.isArray(self.keywords) ? self.keywords : [];
 
   /**
    * check to see if an npc has a specific keyword
    * @param string keyword
-   * @param string locale
    * @return boolean
    */
-  self.hasKeyword = (keyword, locale) =>
-    Array.isArray(self.getKeywords(locale)) ?
-      self.getKeywords(locale).some( word => keyword === word ) :
-      self.getKeywords(locale).includes(keyword);
-
-  /**
-   * Get the damage to sanity an npc can do
-   * @return obj {min: int, max: int} || false
-   */
-  self.getSanityDamage = () => {
-    const damage = self.getAttribute('sanity_damage') ?
-      self.getAttribute('sanity_damage').split('-').map(n => parseInt(n, 10)) :
-      false;
-    return damage;
-  };
-
-  /**
-   * Helper to get just one area's defense
-   * @param string location
-   */
-  self.getDefense = location => parseInt(self.defenses[location || 'body'], 10) || 0;
+  self.hasKeyword = (keyword) => self.getKeywords().indexOf(keyword) !== -1;
 
   /**
    * Method to apply physical damage
@@ -360,7 +323,7 @@ const Npc = function NpcConstructor(config) {
       const damageDone = Math.max(1, dmg - calculateDefense(location));
 
       self.setAttribute('health', Math.max(0, self.getAttribute('health') - damageDone));
-      util.log('Damage done to ' + self.getShortDesc('en') + ': ' + damageDone);
+      util.log('Damage done to ' + self.getShortDesc() + ': ' + damageDone);
 
       return damageDone;
     }
@@ -377,7 +340,7 @@ const Npc = function NpcConstructor(config) {
     if (location !== 'body') {
       defense += self.getDefense('body');
     }
-    util.log(self.getShortDesc('en') + ' ' + location + ' def: ' + defense);
+    util.log(self.getShortDesc() + ' ' + location + ' def: ' + defense);
     return defense;
   }
 

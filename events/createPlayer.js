@@ -23,7 +23,7 @@ const Commands  = require(src + 'commands').Commands;
 
 const _ = require(src + 'helpers');
 
-exports.event = (players, items, rooms, npcs, accounts, l10n) =>
+exports.event = (players, items, rooms, npcs, accounts) =>
   function createPlayer(socket, stage, account, name) {
     stage = stage || 'name';
 
@@ -31,7 +31,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
     const repeat = EventUtil.gen_repeat(arguments, next);
     const say    = EventUtil.gen_say(socket);
     const write  = EventUtil.gen_write(socket);
-    l10n.setLocale("en");
 
     /* Multi-stage character creation i.e., races, classes, etc.
      * Always emit 'done' in your last stage to keep it clean
@@ -142,7 +141,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) =>
         break;
       }
       case 'done': {
-        socket.setLocale("en");
         socket.setLocation(players.getDefaultLocation());
 
         // create the pfile then send them on their way

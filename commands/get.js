@@ -1,6 +1,4 @@
 'use strict';
-const l10nFile = __dirname + '/../l10n/commands/get.yml';
-const l10n = require('../src/l10n')(l10nFile);
 const CommandUtil = require('../src/command_util').CommandUtil;
 const ItemUtil    = require('../src/item_util').ItemUtil;
 const util = require('util');

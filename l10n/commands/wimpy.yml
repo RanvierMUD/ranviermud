@@ -1,5 +1,0 @@
-WIMPY_SET:
-  en: 'Now you will flee combat when your health falls below $[1]%.'
-
-WIMPY:
-  en: 'Currently, you will flee combat when your health falls below $[1]%.'

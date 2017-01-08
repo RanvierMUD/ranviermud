@@ -4,20 +4,6 @@ const util = require('util');
 
 const _ = require('./helpers');
 
-const l10n_dir = __dirname + '/../l10n/skills/';
-let l10ncache = {};
-
-/**
- * Localization helper
- * @return string
- */
-const L = function(locale, cls, key /*, args... */ ) {
-  const l10nFile = l10n_dir + cls + '.yml';
-  const l10n = l10ncache[cls + locale] || require('./l10n')(l10nFile);
-  l10n.setLocale(locale);
-  return l10n.translate.apply(null, [].slice.call(arguments).slice(2));
-};
-
 // For activate functions:
 // Command event passes in player, args, rooms, npcs, players.
 

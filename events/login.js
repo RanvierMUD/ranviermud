@@ -16,7 +16,7 @@ const _           = require(src + 'helpers');
 
 const passwordAttempts = {};
 
-exports.event = (players, items, rooms, npcs, accounts, l10n) => {
+exports.event = (players, items, rooms, npcs, accounts) => {
 
   // Local variables persisted between stages.
   let account = null;
@@ -27,10 +27,6 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
     util.log("Login event detected... ", stage);
 
     stage = stage || 'intro';
-
-    if (Type.isPlayer(socket)) {
-      l10n.setLocale('en');
-    }
 
     const say    = EventUtil.gen_say(socket);
     const next   = EventUtil.gen_next('login');
@@ -103,6 +99,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => {
         socket.once('data', pass => {
           socket.toggleEcho();
 
+          // TODO: Replace MD5
           pass = crypto
             .createHash('md5')
             .update(pass.toString('').trim())

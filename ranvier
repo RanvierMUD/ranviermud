@@ -14,15 +14,15 @@
 
 //TODO: Refactor
 
-	// built-ins
+  // built-ins
 const net = require('net');
 const util = require('util');
-const	express = require('express');
+const express = require('express');
 const commander = require('commander');
 const wrap = require('wrap-ansi');
 const pkg = require('./package.json');
 
-	// local
+  // local
 const Commands = require('./src/commands').Commands;
 const PlayerManager = require('./src/player_manager').PlayerManager;
 const Rooms    = require('./src/rooms').Rooms;
@@ -33,12 +33,12 @@ const Events   = require('./src/events').Events;
 const Accounts = require('./src/accounts').Accounts;
 const Plugins  = require('./src/plugins');
 
-	// utilities
+  // utilities
 const CommandUtil   = require('./src/command_util').CommandUtil;
 const Time          = require('./src/time').Time;
 const Type          = require('./src/type').Type;
 
-	// third party
+  // third party
 const Localize  = require('jall');
 const argv      = require('optimist').argv;
 const telnet    = require('./src/telnet');
@@ -53,15 +53,15 @@ pe.skipNodeFiles();
  */
 
 // storage of main game entities
-let players, server, l10n;
-const	rooms    = new Rooms();
-const	items    = new Items();
-const	npcs     = new Npcs();
-const	accounts = new Accounts();
-const	Player  = require('./src/player').Player;
-const	Npc     = require('./src/npcs').Npc;
-const	Item    = require('./src/items').Item;
-const	Account = require('./src/accounts').Account;
+let players, server;
+const rooms    = new Rooms();
+const items    = new Items();
+const npcs     = new Npcs();
+const accounts = new Accounts();
+const Player  = require('./src/player').Player;
+const Npc     = require('./src/npcs').Npc;
+const Item    = require('./src/items').Item;
+const Account = require('./src/accounts').Account;
 const Effects = require('./src/effects').Effects;
 
 // server options
@@ -71,13 +71,13 @@ Type.config(Player, Npc, Item, Account);
 
 // cmdline options
 commander
-	.version(pkg.version)
-	.option('-s, --save [time]', 'Number of minutes between auto-save ticks [5]', 5)
-	.option('-r, --respawn [time]', 'Number of minutes between respawn ticks [120]', 120)
-	.option('-p, --port [portNumber]', 'Port to host telnet server [23]', 23)
-	.option('-l, --locale [lang]', 'Default locale for the server', 'en')
-	.option('-v, --verbose', 'Verbose console logging.', true)
-	.parse(process.argv);
+  .version(pkg.version)
+  .option('-s, --save [time]', 'Number of minutes between auto-save ticks [5]', 5)
+  .option('-r, --respawn [time]', 'Number of minutes between respawn ticks [120]', 120)
+  .option('-p, --port [portNumber]', 'Port to host telnet server [23]', 23)
+  .option('-l, --locale [lang]', 'Default locale for the server', 'en')
+  .option('-v, --verbose', 'Verbose console logging.', true)
+  .parse(process.argv);
 
 // Set debug variable
 process.env['NODE_DEBUG'] = 'net';
@@ -86,77 +86,77 @@ process.env['NODE_DEBUG'] = 'net';
  * Do the dirty work
  */
 function init(restartServer) {
-	util.log("START - Loading entities");
-	players = new PlayerManager([]);
-	restartServer = typeof restartServer === 'undefined' ? true : restartServer;
+  util.log("START - Loading entities");
+  players = new PlayerManager([]);
+  restartServer = typeof restartServer === 'undefined' ? true : restartServer;
 
-	const locale = commander.locale;
-	Commands.configure({ rooms, players, items, npcs, locale });
-	Effects.config({ players, items, npcs, rooms, Commands });
-	Events.configure({ players,items, locale, npcs, rooms, accounts, });
+  const locale = commander.locale;
+  Commands.configure({ rooms, players, items, npcs, locale });
+  Effects.config({ players, items, npcs, rooms, Commands });
+  Events.configure({ players,items, locale, npcs, rooms, accounts, });
 
-	if (restartServer) {
-		util.log("START - Starting server");
+  if (restartServer) {
+    util.log("START - Starting server");
 
-		/**
-		* Effectively the 'main' game loop but not really because it's a REPL
-		*/
-		server = new telnet.TelnetServer({}, socket => {
-			socket.on('interrupt', () => {
-				socket.write("\n*interrupt*\n");
-			});
+    /**
+    * Effectively the 'main' game loop but not really because it's a REPL
+    */
+    server = new telnet.TelnetServer({}, socket => {
+      socket.on('interrupt', () => {
+        socket.write("\n*interrupt*\n");
+      });
 
-			socket.on('error', err => util.log(err));
+      socket.on('error', err => util.log(err));
 
-			// Register all of the events
-			for (let event in Events.events) {
-				socket.on(event, Events.events[event]);
-			}
+      // Register all of the events
+      for (let event in Events.events) {
+        socket.on(event, Events.events[event]);
+      }
 
-			socket.write("Connecting...\n");
-			util.log("User connected...");
-			// @see: src/events.js - Events.events.login
-			socket.emit('login', socket);
+      socket.write("Connecting...\n");
+      util.log("User connected...");
+      // @see: src/events.js - Events.events.login
+      socket.emit('login', socket);
 
-		}).netServer;
+    }).netServer;
 
-		// start the server
-		server.listen(commander.port).on('error', err => {
-			if (err.code === 'EADDRINUSE') {
-				util.log("Cannot start server on port " + commander.port + ", address is already in use.");
-				util.log("Do you have a MUD server already running?");
-			} else if (err.code === 'EACCES') {
-				util.log("Cannot start server on port " + commander.port + ": permission denied.");
-				util.log("Are you trying to start it on a priviledged port without being root?");
-			} else {
-				util.log("Failed to start MUD server:");
-				util.log(err);
-			}
-			process.exit(1);
-		});
+    // start the server
+    server.listen(commander.port).on('error', err => {
+      if (err.code === 'EADDRINUSE') {
+        util.log("Cannot start server on port " + commander.port + ", address is already in use.");
+        util.log("Do you have a MUD server already running?");
+      } else if (err.code === 'EACCES') {
+        util.log("Cannot start server on port " + commander.port + ": permission denied.");
+        util.log("Are you trying to start it on a priviledged port without being root?");
+      } else {
+        util.log("Failed to start MUD server:");
+        util.log(err);
+      }
+      process.exit(1);
+    });
 
-		// save every 10 minutes
-		util.log("Setting autosave to " + commander.save + " minutes.");
-		clearInterval(saveInterval);
-		saveInterval = setInterval(save, commander.save * 60000);
+    // save every 10 minutes
+    util.log("Setting autosave to " + commander.save + " minutes.");
+    clearInterval(saveInterval);
+    saveInterval = setInterval(save, commander.save * 60000);
 
-		// respawn every 20 minutes, probably a better way to do this
-		util.log("Setting respawn to " + commander.respawn + " minutes.");
-		clearInterval(respawnInterval);
-		respawnInterval = setInterval(load, commander.respawn * 60000);
+    // respawn every 20 minutes, probably a better way to do this
+    util.log("Setting respawn to " + commander.respawn + " minutes.");
+    clearInterval(respawnInterval);
+    respawnInterval = setInterval(load, commander.respawn * 60000);
 
-		Plugins.init(true, { players, items, locale, npcs, rooms, server });
+    Plugins.init(true, { players, items, locale, npcs, rooms, server });
 
-	}
+  }
 
-	load(success => {
-		if (success) {
-			util.log(util.format("Server started on port: %d %s", commander.port, '...' ));
+  load(success => {
+    if (success) {
+      util.log(util.format("Server started on port: %d %s", commander.port, '...' ));
             server.emit('startup');
-		} else {
-			process.exit(1);
-		}
-	});
+    } else {
+      process.exit(1);
+    }
+  });
 };
 
 
@@ -168,10 +168,10 @@ init();
  * Save all connected players
  */
 function save(callback) {
-	util.log("Saving players...");
-	players.each(player => player.save());
-	util.log("Done");
-	if (callback) { callback(); }
+  util.log("Saving players...");
+  players.each(player => player.save());
+  util.log("Done");
+  if (callback) { callback(); }
 }
 
 /**
@@ -179,59 +179,60 @@ function save(callback) {
  * Configure the event and command modules after load. Doubles as a "respawn"
  */
 
+// TODO: Refactor all of this out of this file into package manager
 function load(callback) {
-	util.log("Loading rooms...");
-	rooms.load(commander.verbose, loadItems);
+  util.log("Loading rooms...");
+  rooms.load(commander.verbose, loadItems);
 
-	function loadItems() {
-		util.log("Done loading rooms.");
-		util.log("Loading items...");
-		items.load(commander.verbose, addItems);
-	}
+  function loadItems() {
+    util.log("Done loading rooms.");
+    util.log("Loading items...");
+    items.load(commander.verbose, addItems);
+  }
 
-	function addItems() {
-		util.log("Done loading items.");
+  function addItems() {
+    util.log("Done loading items.");
 
-		util.log("Adding items to rooms...");
-		items.each(addItemToRoom);
-		util.log("Done adding items to rooms.");
+    util.log("Adding items to rooms...");
+    items.each(addItemToRoom);
+    util.log("Done adding items to rooms.");
 
-		util.log("Loading npcs...");
-		npcs.load(commander.verbose, addNpcs);
-	}
+    util.log("Loading npcs...");
+    npcs.load(commander.verbose, addNpcs);
+  }
 
-	function addItemToRoom(item) {
-		if (item.getRoom()) {
-			const room = rooms.getAt(item.getRoom());
-			if (!room.hasItem(item)) {
-				room.addItem(item);
-			}
-		}
-	}
+  function addItemToRoom(item) {
+    if (item.getRoom()) {
+      const room = rooms.getAt(item.getRoom());
+      if (!room.hasItem(item)) {
+        room.addItem(item);
+      }
+    }
+  }
 
-	function addNpcs() {
-		util.log("Done loading NPCs...");
+  function addNpcs() {
+    util.log("Done loading NPCs...");
 
-		util.log("Adding npcs to rooms...");
-		npcs.each(addNpcToRoom);
-		util.log("Done.");
-		if (callback) {
-			callback(true);
-		}
-	}
+    util.log("Adding npcs to rooms...");
+    npcs.each(addNpcToRoom);
+    util.log("Done.");
+    if (callback) {
+      callback(true);
+    }
+  }
 
-	function addNpcToRoom(npc) {
-		const npcRoom = npc.getRoom();
-		if (npcRoom) {
-			const room = rooms.getAt(npcRoom);
-			if (!room.hasNpc(npc.getUuid())) {
-				room.addNpc(npc.getUuid());
-				npc.emit('spawn', room, rooms, players);
-			}
-		} else {
-			throw Error('Npc initialized without a room.');
-		}
-	}
+  function addNpcToRoom(npc) {
+    const npcRoom = npc.getRoom();
+    if (npcRoom) {
+      const room = rooms.getAt(npcRoom);
+      if (!room.hasNpc(npc.getUuid())) {
+        room.addNpc(npc.getUuid());
+        npc.emit('spawn', room, rooms, players);
+      }
+    } else {
+      throw Error('Npc initialized without a room.');
+    }
+  }
 
 }
 
@@ -239,10 +240,7 @@ function load(callback) {
 // Not game stuff, this is for the server executable
 const yaml = require('js-yaml');
 const fs   = require('fs');
-const serverL10nFile = fs.readFileSync(__dirname + '/l10n/server.yml').toString('utf8')
 process.stdin.setEncoding('utf8');
-l10n = new Localize(yaml.load(serverL10nFile), undefined, 'zz');
-l10n.throwOnMissingTranslation(false);
 
 const hotboot = args => serverOperation('HOTBOOT_WARN', hotbootServer, args);
 const restart = args => serverOperation('RESTART_WARN', restartServer, args);
@@ -251,59 +249,59 @@ const restart = args => serverOperation('RESTART_WARN', restartServer, args);
  * Commands that the server executable itself accepts
  */
 const server_commands = {
-	save,
-	/**
-	 * Hotboot, AKA do everything involved with a restart but keep players connected
-	 */
-	hotboot,
-	/**
-	 * Hard restart: saves and disconnects all connected players
-	 */
-	restart
+  save,
+  /**
+   * Hotboot, AKA do everything involved with a restart but keep players connected
+   */
+  hotboot,
+  /**
+   * Hard restart: saves and disconnects all connected players
+   */
+  restart
 };
 
 function serverOperation(warningStr, operation, args) {
-	args = args ? args.split(' ') : [];
-	const shouldWarn = args[0] && args[0] === 'warn';
+  args = args ? args.split(' ') : [];
+  const shouldWarn = args[0] && args[0] === 'warn';
 
-	let time = args[0] ? parseInt(args[shouldWarn ? 1 : 0], 10) : 0;
+  let time = args[0] ? parseInt(args[shouldWarn ? 1 : 0], 10) : 0;
 
-	if (time && time < 20) {
-		console.log("Gotta give the players a bit longer than that, might as well do it instantly...");
-		console.log("Doing nothing.");
-		return;
-	}
+  if (time && time < 20) {
+    console.log("Gotta give the players a bit longer than that, might as well do it instantly...");
+    console.log("Doing nothing.");
+    return;
+  }
 
-	time = time ? time * 1000 : 0;
+  time = time ? time * 1000 : 0;
 
-	if (shouldWarn) {
-		const warnPlayers = interval => {
-			players.broadcastL10n(l10n, warningStr, interval);
-			players.each(p => p.prompt());
-		};
+  if (shouldWarn) {
+    const warnPlayers = interval => {
+      players.broadcast(warningStr, interval);
+      players.each(p => p.prompt());
+    };
 
-		warnPlayers(time / 1000 + " seconds");
+    warnPlayers(time / 1000 + " seconds");
 
-		const warningInterval = Math.floor(time / 4);
-		setInterval( () => warnPlayers(warningInterval / 1000 + " seconds"), warningInterval );
-	}
+    const warningInterval = Math.floor(time / 4);
+    setInterval( () => warnPlayers(warningInterval / 1000 + " seconds"), warningInterval );
+  }
 
-	util.log(warningStr + " SERVER" + (time ? " IN " + (time / 1000) + " SECONDS " : ''));
-	setTimeout(operation, time);
+  util.log(warningStr + " SERVER" + (time ? " IN " + (time / 1000) + " SECONDS " : ''));
+  setTimeout(operation, time);
 }
 
 function hotbootServer() {
-	util.log("HOTBOOTING...");
-	save(() => init(false));
+  util.log("HOTBOOTING...");
+  save(() => init(false));
 }
 
 function restartServer() {
-	util.log("RESTARTING...");
-	save();
-	server.emit('shutdown');
-	server.close();
-	players.each( p => { p.getSocket().end(); });
-	init(true);
+  util.log("RESTARTING...");
+  save();
+  server.emit('shutdown');
+  server.close();
+  players.each( p => { p.getSocket().end(); });
+  init(true);
 }
 
 process.stdin.resume();
@@ -313,36 +311,36 @@ let wasDaytime = Time.isDay();
 
 setInterval(tick , 5000);
 function tick() {
-	let timeChange = wasDaytime !== Time.isDay();
+  let timeChange = wasDaytime !== Time.isDay();
 
-	if (timeChange) {
-		players.each( p => p.emit('timeChange', wasDaytime, rooms) );
-		wasDaytime = !wasDaytime;
-		util.log("The times, they are a-changin'...");
-	}
+  if (timeChange) {
+    players.each( p => p.emit('timeChange', wasDaytime, rooms) );
+    wasDaytime = !wasDaytime;
+    util.log("The times, they are a-changin'...");
+  }
 
-	players.each( p => p.emit('tick'));
+  players.each( p => p.emit('tick'));
 
-	npcs.each( npc => {
-		let room = rooms.getAt(npc.getRoom());
-		npc.emit('tick', room, rooms, null, players, npc, npcs, items);
-	});
+  npcs.each( npc => {
+    let room = rooms.getAt(npc.getRoom());
+    npc.emit('tick', room, rooms, null, players, npc, npcs, items);
+  });
 
-	let weatherHappened = Time.checkWeather(rooms, players);
-	if (weatherHappened) { util.log("WEATHER REPORT: " + weatherHappened); }
+  let weatherHappened = Time.checkWeather(rooms, players);
+  if (weatherHappened) { util.log("WEATHER REPORT: " + weatherHappened); }
 }
 
 process.stdin.on('data', data => {
-	data = data.trim();
-	const command = data.split(' ')[0];
+  data = data.trim();
+  const command = data.split(' ')[0];
 
-	if (!(command in server_commands)) {
-		console.log("That's not a real command...");
-		return;
-	}
+  if (!(command in server_commands)) {
+    console.log("That's not a real command...");
+    return;
+  }
 
-	const args = data.split(' ').slice(1).join(' ');
+  const args = data.split(' ').slice(1).join(' ');
 
-	server_commands[command](args);
+  server_commands[command](args);
 });
 // vim: set syn=javascript :

@@ -1,11 +1,6 @@
 'use strict';
-const CommandUtil = require('../src/command_util')
-  .CommandUtil;
-const sprintf = require('sprintf')
-  .sprintf;
-const l10nFile = __dirname + '/../l10n/commands/look.yml';
-const l10n = new require('jall')(require('js-yaml').load(require('fs')
-    .readFileSync(l10nFile).toString('utf8')), undefined, 'zz');
+const CommandUtil = require('../src/command_util').CommandUtil;
+const sprintf = require('sprintf').sprintf;
 const wrap  = require('wrap-ansi');
 const util  = require('util');
 
@@ -14,15 +9,13 @@ const Doors = require('../src/doors').Doors;
 const Type  = require('../src/type').Type;
 const _     = require('../src/helpers');
 
-l10n.throwOnMissingTranslation(false);
-
 //TODO: Test and refactor.
 
 exports.command = (rooms, items, players, npcs, Commands) => {
 
   return (args, player, hasExplored) => {
     const room = rooms.getAt(player.getLocation());
-    const locale = 'en';
+    console.log({'loc': player.getLocation(), rooms});
 
     if (args) {
       args = args.toLowerCase();
@@ -52,49 +45,11 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         return _.has(lookAtMe, args);
       }
 
-      // Then other players
       if (!thing) {
-        players.eachExcept( player,
-          p => {
-            if (p.getLocation() === player.getLocation()) {
-              lookAtOther(p);
-            }
-          });
+        return player.say("You don't see anything like that here.");
       }
 
-      function lookAtOther(p) {
-        const otherName = p.getName().toLowerCase();
-        if (args === otherName) {
-          thing = p;
-          player.say(thing.getName() + ' is here.');
-          p.sayL10n(l10n, 'BEING_LOOKED_AT', player.getName());
-        }
-      }
-
-
-      // Then look at exits
-      //TODO: Improve based on player stats/skills?
-      //FIXME: This does not really seem to be working.
-      //FIXME: Consider making it a 'scout' command/skill.
-      if (!thing) {
-        const exits       = room.getExits();
-        const isExit      = exit => (args === exit.direction);
-        const foundExit   = exits.find(isExit);
-        const canSee      = foundExit ? Doors.isOpen(foundExit) : false;
-
-        if (canSee) {
-          thing = rooms.getAt(foundExit.location);
-        } else if (foundExit) {
-          return player.warn('There is a door in the way...');
-        }
-
-      }
-
-      if (!thing) {
-        return player.sayL10n(l10n, 'ITEM_NOT_FOUND');
-      }
-
-      player.say(wrap(thing.getDescription(locale), 80));
+      player.say(wrap(thing.getDescription(), 80));
       if (Type.isPlayer(thing)) { showPlayerEquipment(thing, player); }
       if (Type.isItem(thing) && thing.isContainer()) {
         showContainerContents(thing, player);
@@ -121,34 +76,36 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     // Render the room and its exits
-    player.say(room.getArea() + ': ' + room.getTitle(locale));
+    player.say(room.getArea() + ': ' + room.getTitle());
 
     const descPreference = player.getPreference('roomdescs');
 
     if (Time.isDay()) {
       const showShortByDefault = hasExplored && descPreference !== 'verbose';
       if (showShortByDefault || descPreference === 'short') {
-        player.say(wrap(room.getShortDesc(locale), 80));
+        player.say(wrap(room.getShortDesc(), 80));
       } else {
-        player.say(wrap(room.getDescription(locale), 80));
+        player.say(wrap(room.getDescription(), 80));
       }
 
     } else {
-      player.say(wrap(room.getDarkDesc(locale), 80));
+      player.say(wrap(room.getDarkDesc(), 80));
     }
 
     player.say('');
 
     // display players in the same room
+    // TODO: REFACTOR
     players.eachIf(
       p => CommandUtil.inSameRoom(player, p),
-      p => player.sayL10n(l10n, 'IN_ROOM', p.getName()));
+      p => player.say(sprintf("%s is here.", p.getName()))
+    );
 
     // show all the items in the rom
     room.getItems()
       .forEach(id => {
         player.say('<magenta>'
-        + items.get(id).getRoomDesc(locale)
+        + items.get(id).getRoomDesc()
         + '</magenta>');
       });
 
@@ -184,7 +141,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         const item = items.get(equipped[slot]);
         playerLooking.say( sprintf(
             "%-15s %s", "<" + slot + ">",
-            item.getShortDesc(playerLooking.getLocale())
+            item.getShortDesc()
           ));
       }
 
@@ -194,7 +151,6 @@ exports.command = (rooms, items, players, npcs, Commands) => {
         playerLooking.say(pronoun + " are naked!");
       }
     }
-
   }
 };
 

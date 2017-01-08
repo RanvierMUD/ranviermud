@@ -14,17 +14,11 @@ const Type        = require('./type').Type;
 const Effects     = require('./effects').Effects;
 const Broadcast   = require('./broadcast').Broadcast;
 
-let dualWieldCancel = null; //FIXME: Could this be a problem with multiple players in combat all at once?
-
-function _initCombat(l10n, target, player, room, npcs, players, rooms, items, callback) {
-  const locale = 'en';
+function _initCombat(target, player, room, npcs, players, rooms, items, callback) {
   player.setInCombat(target);
   target.setInCombat(player);
 
   const broadcastToArea = Broadcast.toArea(player, players, rooms);
-
-  player.sayL10n(l10n, 'ATTACK', target.getShortDesc('en'));
-
 
   /**
    * Create attack round functions, then attach them
@@ -78,8 +72,8 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, items, ca
 
     // Assign constants for this round...
     const attackerSpeed = attacker.combat.getAttackSpeed(this.isSecondAttack);
-    const attackerDesc  = attacker.getShortDesc('en');
-    const defenderDesc  = defender.getShortDesc('en');
+    const attackerDesc  = attacker.getShortDesc();
+    const defenderDesc  = defender.getShortDesc();
     const attackDesc    = attacker.combat.getPrimaryAttackName();
 
     const defenderStartingHealth = defender.getAttribute('health');
@@ -159,9 +153,9 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, items, ca
       room.removeNpc(target.getUuid());
       npcs.destroy(target);
 
-      player.sayL10n(l10n, 'WIN', target.getShortDesc(locale));
+      player.say(`${target.getShortDesc()} is dead!`);
 
-      broadcastExceptPlayer('<bold>' + target.getShortDesc(locale) + ' dies.</bold>');
+      broadcastExceptPlayer('<bold>' + target.getShortDesc() + ' dies.</bold>');
 
       const exp = target.getAttribute('experience') ?
         target.getAttribute('experience') :
@@ -171,7 +165,7 @@ function _initCombat(l10n, target, player, room, npcs, players, rooms, items, ca
       player.emit('experience', exp);
     } else {
       util.log("** Player death: ", player.getName());
-      player.sayL10n(l10n, 'LOSE', target.getShortDesc(locale));
+      player.say('LOSE', target.getShortDesc());
       player.fleeFromCombat();
       player.emit('die');
 

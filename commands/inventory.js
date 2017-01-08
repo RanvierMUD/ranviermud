@@ -1,8 +1,8 @@
 'use strict';
-const l10nFile = __dirname + '/../l10n/commands/inventory.yml';
-const l10n = require('../src/l10n')(l10nFile);
 const _    = require('../src/helpers');
 const util = require('util');
+
+// TODO: Rewrite
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
@@ -16,7 +16,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     const equipment   = new Map();
     const longestSlot = Object.keys(equipped)
       .reduce((longest, key) => longest > key.length ? longest : key.length, 0);
-   
+
     let longest = 0;
 
     for (let slot in equipped) {
@@ -24,13 +24,13 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const name     = item.getShortDesc();
       const weight   = item.getWeight(items);
       const contents = item.isContainer() ? item.getInventory() : false;
-      const capacity = item.isContainer() ? 
+      const capacity = item.isContainer() ?
         getContainerCapacity(item) :
         null;
       equipment.set(slot, { name, weight, contents, capacity });
 
-      longest = name.length > longest ? 
-        name.length : 
+      longest = name.length > longest ?
+        name.length :
         longest;
     }
 
@@ -38,7 +38,7 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       `<bold>Your inventory:</bold>
       <cyan>Encumbrance: ${player.getCarriedWeight(items)}/${player.getMaxCarryWeight()} gravets</cyan>
       `);
-    
+
     const displayListItem = (name, nestingLevel) => player.say(`<cyan>${_.leftPad(nestingLevel)} - ${name}</cyan>`);
 
     for (let [slot, details] of equipment) {
@@ -54,8 +54,8 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     function displayContainerContents(contents, nestingLevel) {
       contents
         .map(items.get)
-        .forEach(item => item.isContainer() ? 
-          displayNestedContainer(item, nestingLevel) : 
+        .forEach(item => item.isContainer() ?
+          displayNestedContainer(item, nestingLevel) :
           displayListItem(item.getShortDesc(), nestingLevel));
     }
 
@@ -65,9 +65,9 @@ exports.command = (rooms, items, players, npcs, Commands) => {
     }
 
     function getContainerCapacity(item) {
-      return { 
-        max:     item.getAttribute('maxSizeCapacity'), 
-        current: item.getSizeOfContents(items) 
+      return {
+        max:     item.getAttribute('maxSizeCapacity'),
+        current: item.getSizeOfContents(items)
       };
     }
 
@@ -76,6 +76,5 @@ exports.command = (rooms, items, players, npcs, Commands) => {
       const { current, max } = capacity;
       return ` <green>${current}/${max} aums</green>`;
     }
-
   };
 };

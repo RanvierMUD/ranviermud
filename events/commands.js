@@ -1,10 +1,11 @@
 'use strict';
 
+const util = require('util');
 const src      = '../src/';
 const { CommandParser, InvalidCommandError } = require(src + 'interpreter');
 const CommandTypes = require(src + 'commands').CommandTypes;
 
-exports.event = (players, items, rooms, npcs, accounts, l10n) => player => {
+exports.event = (players, items, rooms, npcs, accounts) => player => {
   player.getSocket().once('data', data => {
     function loop () {
       player.getSocket().emit('commands', player);
@@ -41,7 +42,7 @@ exports.event = (players, items, rooms, npcs, accounts, l10n) => player => {
       if (e instanceof InvalidCommandError) {
         player.say('That is not a valid command');
       }
-      util.log(`Error parsing command: ${data}`);
+      util.log(`WARNING: Player tried non-existent command '${data}'`);
     }
 
     player.prompt();
