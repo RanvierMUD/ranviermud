@@ -29,7 +29,7 @@ class TelnetStream extends EventEmitter
     this.stream = null;
     this.maxInputLength = opts.maxInputLength || 512;
     this.echoing = true;
-  };
+  }
 
   get readable () {
     return this.stream.readable;
@@ -41,7 +41,7 @@ class TelnetStream extends EventEmitter
 
   end (string, enc) {
     this.stream.end(string, enc);
-  };
+  }
 
   write (data, encoding) {
     if (!Buffer.isBuffer(data)) {

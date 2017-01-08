@@ -1,17 +1,17 @@
 'use strict';
 
 module.exports = (srcPath) => {
-const EventUtil = require(srcPath + 'EventUtil');
-const Account = require(srcPath + 'Account');
+  const EventUtil = require(srcPath + 'EventUtil');
+  const Account = require(srcPath + 'Account');
 
   return {
     event: (state) => (socket, stage, name, account) => {
-      const say = EventUtil.gen_say(socket);
-      const write = EventUtil.gen_write(socket);
+      const say = EventUtil.genSay(socket);
+      const write = EventUtil.genWrite(socket);
       stage = stage || 'check';
 
-      const next   = EventUtil.gen_next('createAccount');
-      const repeat = EventUtil.gen_repeat(arguments, next);
+      const next   = EventUtil.genNext('createAccount');
+      const repeat = EventUtil.genRepeat(arguments, next);
 
       switch (stage) {
         case 'check': {

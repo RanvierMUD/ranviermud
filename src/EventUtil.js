@@ -1,3 +1,5 @@
+'use strict';
+
 const sty = require('sty');
 const util = require('util');
 
@@ -6,7 +8,7 @@ const util = require('util');
  * @param string stage
  * @param object firstarg Override for the default arg
  */
-function gen_next(event) {
+function genNext(event) {
   /**
    * Move to the next stage of a staged event
    * @param Socket|Player socket     Either a Socket or Player on which emit() will be called
@@ -23,18 +25,18 @@ function gen_next(event) {
  * @param Array repeat_args
  * @return function
  */
-function gen_repeat(repeat_args, next) {
+function genRepeat(repeatArgs, next) {
   return function () {
-    next.apply(null, [].slice.call(repeat_args))
+    next.apply(null, [].slice.call(repeatArgs))
   };
 }
 
-const gen_write = socket => string => socket.write(sty.parse(string));
-const gen_say   = socket => string => socket.write(sty.parse(string + '\r\n'));
+const generateWrite = socket => string => socket.write(sty.parse(string));
+const generateSay   = socket => string => socket.write(sty.parse(string + '\r\n'));
 
 module.exports =  {
-  gen_next,
-  gen_repeat,
-  gen_say,
-  gen_write
+  genNext,
+  genRepeat,
+  genSay,
+  genWrite
 };

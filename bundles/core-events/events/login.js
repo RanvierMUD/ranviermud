@@ -18,9 +18,9 @@ module.exports = (srcPath) => {
       return function login(socket, stage, args) {
         stage = stage || 'intro';
 
-        const say    = EventUtil.gen_say(socket);
-        const next   = EventUtil.gen_next('login');
-        const repeat = EventUtil.gen_repeat(arguments, next);
+        const say    = EventUtil.genSay(socket);
+        const next   = EventUtil.genNext('login');
+        const repeat = EventUtil.genRepeat(arguments, next);
 
         switch (stage) {
           case 'intro': {

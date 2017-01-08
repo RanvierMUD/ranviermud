@@ -23,10 +23,10 @@ module.exports = (srcPath) => {
     event : (state) => (socket, stage, args) => {
       stage = stage || 'name';
 
-      const next   = EventUtil.gen_next('createPlayer');
-      const repeat = EventUtil.gen_repeat(arguments, next);
-      const say    = EventUtil.gen_say(socket);
-      const write  = EventUtil.gen_write(socket);
+      const next   = EventUtil.genNext('createPlayer');
+      const repeat = EventUtil.genRepeat(arguments, next);
+      const say    = EventUtil.genSay(socket);
+      const write  = EventUtil.genWrite(socket);
 
       /* Multi-stage character creation i.e., races, classes, etc.
        * Always emit 'done' in your last stage to keep it clean

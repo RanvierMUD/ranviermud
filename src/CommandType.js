@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  COMMAND: 1,
-  SKILL: 2,
-  CHANNEL: 3,
+  COMMAND: new Symbol("COMMAND"),
+  SKILL: new Symbol("SKILL"),
+  CHANNEL: new Symbol("CHANNEL"),
 };
