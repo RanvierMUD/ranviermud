@@ -1,11 +1,17 @@
 'use strict';
 const util = require('util');
 
-exports.command = (rooms, items, players, npcs, Commands) => {
-  return (args, player) => {
-    player.save(() => {
-      util.log("Saving ", player);
-      player.say("Saved.");
-    });
+module.exports = (srcPath) => {
+  const Broadcast = require(srcPath + 'Broadcast');
+
+  return {
+    command: () => {
+      return (args, player) => {
+        player.save(() => {
+          util.log("Saving ", player);
+          Broadcast.sayAt(player, "Saved.");
+        });
+      };
+    }
   };
 };

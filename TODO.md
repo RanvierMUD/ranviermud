@@ -1,4 +1,5 @@
-- [ ] Refactor/rewrite entity loading
+- [ ] Rewrite script attachment to entities with the new bundle loader
+- [X] Refactor/rewrite entity loading
 
  * Why does the item specify where it loads instead of the location specifying?
  * Currently no "areas". Allow npcs/objects/rooms to be grouped under an "area" folder
@@ -12,13 +13,12 @@
  * Having a JSON blob doesn't work (help text needs to be auto-wrapped)
  * allow tokens in helpfiles so they can render dynamically
 
-- [ ] Remove examine
+- [X] Remove examine
 - [ ] Fix effects to only serialize options, not the entire effects array
-- [ ] Refactor command_util
 - [ ] Remove|move|refactor combat_util/rtcombat
 - [ ] Refactor channels to have types that will allow things like yell vs chat
 
  * Move say/tell to real commands instead of channels
  * Move channels to a config file
 
-- [ ] Revisit localization
+- [X] Revisit localization (Removed)

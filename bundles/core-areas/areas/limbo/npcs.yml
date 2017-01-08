@@ -1,0 +1,13 @@
+- id: 1
+  script: '1-rat.js'
+  types: ['beast', 'diseased']
+  keywords: ['rat']
+  name: 'Rat'
+  description: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
+  attributes:
+    maxHealth: 8
+    health: 8
+    speed: 2.5
+    damage: 1-7
+    level: 2
+  maxLoad: 4
