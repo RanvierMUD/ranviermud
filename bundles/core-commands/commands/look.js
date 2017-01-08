@@ -1,13 +1,13 @@
 'use strict';
-const CommandUtil = require('../src/command_util').CommandUtil;
+const CommandUtil = require('../../../src/command_util').CommandUtil;
 const sprintf = require('sprintf').sprintf;
 const wrap  = require('wrap-ansi');
 const util  = require('util');
 
-const Time  = require('../src/time').Time;
-const Doors = require('../src/doors').Doors;
-const Type  = require('../src/type').Type;
-const _     = require('../src/helpers');
+const Time  = require('../../../src/time').Time;
+const Doors = require('../../../src/doors').Doors;
+const Type  = require('../../../src/type').Type;
+const _     = require('../../../src/helpers');
 
 //TODO: Test and refactor.
 

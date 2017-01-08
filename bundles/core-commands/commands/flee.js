@@ -1,7 +1,7 @@
 'use strict';
-const CommandUtil = require('../src/command_util').CommandUtil;
-const Random = require('../src/random').Random;
-const move = require('../src/commands').Commands.move;
+const CommandUtil = require('../../../src/command_util').CommandUtil;
+const Random = require('../../../src/random').Random;
+const move = require('../../../src/commands').Commands.move;
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {
 

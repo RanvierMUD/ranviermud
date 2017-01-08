@@ -3,7 +3,7 @@ const util = require('util');
 const sprintf = require('sprintf')
   .sprintf;
 
-const _ = require('../src/helpers');
+const _ = require('../../../src/helpers');
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {

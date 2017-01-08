@@ -1,6 +1,6 @@
 'use strict';
 const sprintf = require('sprintf').sprintf;
-const LevelUtil = require('../src/levels').LevelUtil;
+const LevelUtil = require('../../../src/levels').LevelUtil;
 const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => {

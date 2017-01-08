@@ -1,6 +1,6 @@
 'use strict';
-const CommandUtil = require('../src/command_util').CommandUtil;
-const ItemUtil    = require('../src/item_util').ItemUtil;
+const CommandUtil = require('../../../src/command_util').CommandUtil;
+const ItemUtil    = require('../../../src/item_util').ItemUtil;
 const util = require('util');
 
 exports.command = (rooms, items, players, npcs, Commands) => 

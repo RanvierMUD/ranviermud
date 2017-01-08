@@ -9,6 +9,10 @@ const data_path          = __dirname + '/../data/';
 const behaviors_dir      = __dirname + '/../scripts/behaviors/';
 
 const Data = {
+  readFile: function (path) {
+    return JSON.parse(fs.readFileSync(path).toString('utf8'));
+  },
+
   /**
    * load the MOTD for the intro screen
    * @return string

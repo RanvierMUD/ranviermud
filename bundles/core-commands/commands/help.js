@@ -1,8 +1,8 @@
 'use strict';
 const util      = require('util');
-const HelpFiles = require('../src/help_files').HelpFiles;
+const HelpFiles = require('../../../src/help_files').HelpFiles;
 const wrap      = require('wrap-ansi');
-const _         = require('../src/helpers');
+const _         = require('../../../src/helpers');
 const sprintf = require('sprintf').sprintf;
 
 // TODO: Rewrite

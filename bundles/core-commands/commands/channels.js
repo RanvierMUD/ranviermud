@@ -1,5 +1,5 @@
 'use strict';
-const Channels = require('../src/channels').Channels;
+const Channels = require('../../../src/channels').Channels;
 
 exports.command = (rooms, items, players, npcs, Commands) => {
   return (args, player) => {

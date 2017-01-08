@@ -1,19 +1,11 @@
 'use strict';
-const util    = require('util'),
-  ansi        = require('sty').parse,
-  fs          = require('fs'),
-  CommandUtil = require('./command_util').CommandUtil,
-  Doors = require('./doors').Doors,
-  _     = require('./helpers')
-;
+const util    = require('util');
 
 // "Globals" to be specified later during config.
 let rooms   = null;
 let players = null;
 let items   = null;
 let npcs    = null;
-
-const commands_dir = __dirname + '/../commands/';
 
 // constants for command type
 const CommandTypes = {
@@ -26,12 +18,14 @@ const CommandTypes = {
 
 class Command {
   /**
-   * @param {number} type One of the CommandTypes constants
-   * @param {String} name Name of the command
-   * @param {Function} func Actual function to run when command is executed
+   * @param {number}   type   One of the CommandTypes constants
+   * @param {string}   name   Name of the command
+   * @param {string}   bundle Bundle the command came from
+   * @param {Function} func   Actual function to run when command is executed
    */
-  constructor(type, name, func) {
+  constructor(type, name, bundle, func) {
     this.type = type;
+    this.bundle = bundle;
     this.name = name;
     this.func = func;
   }
@@ -58,12 +52,12 @@ const Commands = {
 
     /**
      * Move player in a given direction from their current room
-     * @param string exit direction they tried to go
-     * @param Player player
+     * TODO: Move into core-commands
+     * @param {string} exit   direction they tried to go
+     * @param {Player} player
      * @return boolean False if the exit is inaccessible.
      */
-    _move: new Command(CommandTypes.PLAYER, '_move', (exit, player) => {
-
+    _move: new Command(CommandTypes.PLAYER, 'core-commands', '_move', (exit, player) => {
       const room = rooms.getAt(player.getLocation());
       if (!room) {
         return false;
@@ -95,12 +89,7 @@ const Commands = {
   },
 
   /**
-   * Configure the commands by using a joint players/rooms array
-   * The config object should look similar to
-   * {
-   *   rooms: instanceOfRoomsHere,
-   *   players: instanceOfPlayerManager,
-   * }
+   * Actually instantiate commands by passing in game state
    * @param object config
    */
   configure: function(config) {
@@ -110,25 +99,33 @@ const Commands = {
     npcs    = config.npcs;
     items   = config.items;
 
-    // Load external commands
-    fs.readdir(commands_dir, (err, files) => {
-      for (const name in files) {
-        const filename = files[name];
-        const commandFile = commands_dir + filename;
-        if (!fs.statSync(commandFile).isFile()) { continue; }
-        if (!commandFile.match(/js$/)) { continue; }
-
-        const commandName = filename.split('.')[0];
-
-        var cmdImport = require(commandFile) ;
-
-        Commands.player_commands[commandName] = new Command(
-          cmdImport.type || CommandTypes.PLAYER,
-          commandName,
-          cmdImport.command(rooms, items, players, npcs, Commands)
-        );
+    for (const commandName in Commands.player_commands) {
+      const cmd = Commands.player_commands[commandName];
+      if (cmd instanceof Command) {
+        continue;
       }
-    });
+
+      // Command is currently a latent import, hydrated into a full command
+      Commands.player_commands[commandName] = new Command(
+        cmd.import.type || CommandTypes.PLAYER,
+        cmd.bundle,
+        cmd.name,
+        cmd.import.command(rooms, items, players, npcs, Commands)
+      );
+    }
+  },
+
+  /**
+   * @param {string} bundle      Bundle the command came from
+   * @param {string} commandName
+   * @param {object} cmdImport   Result of require() of the command file
+   */
+  addCommand: (bundle, commandName, cmdImport) => {
+    Commands.player_commands[commandName] = {
+      bundle: bundle,
+      import: cmdImport,
+      name: commandName,
+    };
   },
 
   canPlayerMove: (exit, player) => {

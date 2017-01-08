@@ -13,9 +13,9 @@
 // - Finally, look in room
 
 const util        = require('util');
-const _           = require('../src/helpers');
-const CommandUtil = require('../src/command_util').CommandUtil;
-const Broadcast   = require('../src/broadcast').Broadcast;
+const _           = require('../../../src/helpers');
+const CommandUtil = require('../../../src/command_util').CommandUtil;
+const Broadcast   = require('../../../src/broadcast').Broadcast;
 
 exports.command = (rooms, items, players, npcs, Commands) =>
   (args, player) => {

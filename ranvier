@@ -23,6 +23,7 @@ const wrap = require('wrap-ansi');
 const pkg = require('./package.json');
 
   // local
+const telnet    = require('./src/telnet');
 const Commands = require('./src/commands').Commands;
 const PlayerManager = require('./src/player_manager').PlayerManager;
 const Rooms    = require('./src/rooms').Rooms;
@@ -32,6 +33,7 @@ const Data     = require('./src/data').Data;
 const Events   = require('./src/events').Events;
 const Accounts = require('./src/accounts').Accounts;
 const Plugins  = require('./src/plugins');
+const BundleManager = require('./src/bundles');
 
   // utilities
 const CommandUtil   = require('./src/command_util').CommandUtil;
@@ -39,9 +41,7 @@ const Time          = require('./src/time').Time;
 const Type          = require('./src/type').Type;
 
   // third party
-const Localize  = require('jall');
 const argv      = require('optimist').argv;
-const telnet    = require('./src/telnet');
 const longjohn  = require('longjohn');
 const pe        = require('pretty-error').start();
 
@@ -75,7 +75,6 @@ commander
   .option('-s, --save [time]', 'Number of minutes between auto-save ticks [5]', 5)
   .option('-r, --respawn [time]', 'Number of minutes between respawn ticks [120]', 120)
   .option('-p, --port [portNumber]', 'Port to host telnet server [23]', 23)
-  .option('-l, --locale [lang]', 'Default locale for the server', 'en')
   .option('-v, --verbose', 'Verbose console logging.', true)
   .parse(process.argv);
 
@@ -90,10 +89,11 @@ function init(restartServer) {
   players = new PlayerManager([]);
   restartServer = typeof restartServer === 'undefined' ? true : restartServer;
 
-  const locale = commander.locale;
-  Commands.configure({ rooms, players, items, npcs, locale });
+  BundleManager.loadBundles();
+
+  Commands.configure({ rooms, players, items, npcs });
   Effects.config({ players, items, npcs, rooms, Commands });
-  Events.configure({ players,items, locale, npcs, rooms, accounts, });
+  Events.configure({ players,items, npcs, rooms, accounts });
 
   if (restartServer) {
     util.log("START - Starting server");
@@ -145,14 +145,13 @@ function init(restartServer) {
     clearInterval(respawnInterval);
     respawnInterval = setInterval(load, commander.respawn * 60000);
 
-    Plugins.init(true, { players, items, locale, npcs, rooms, server });
-
+    Plugins.init(true, { players, items, npcs, rooms, server });
   }
 
   load(success => {
     if (success) {
       util.log(util.format("Server started on port: %d %s", commander.port, '...' ));
-            server.emit('startup');
+      server.emit('startup');
     } else {
       process.exit(1);
     }

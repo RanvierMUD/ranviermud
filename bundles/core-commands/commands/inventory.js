@@ -1,5 +1,5 @@
 'use strict';
-const _    = require('../src/helpers');
+const _    = require('../../../src/helpers');
 const util = require('util');
 
 // TODO: Rewrite

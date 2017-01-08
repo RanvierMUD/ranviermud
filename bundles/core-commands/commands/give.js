@@ -1,8 +1,8 @@
 'use strict';
 
-const CommandUtil = require('../src/command_util').CommandUtil;
-const Broadcast   = require('../src/broadcast').Broadcast;
-const _           = require('../src/helpers');
+const CommandUtil = require('../../../src/command_util').CommandUtil;
+const Broadcast   = require('../../../src/broadcast').Broadcast;
+const _           = require('../../../src/helpers');
 const util        = require('util');
 
 

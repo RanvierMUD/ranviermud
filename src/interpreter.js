@@ -50,7 +50,7 @@ class CommandParser {
       const adminCommand = command.slice(1);
       if (adminCommand in Commands.admin_commands) {
         return {
-          type: CommandTypes.PLAYER,
+          type: CommandTypes.ADMIN,
           command: Commands.admin_commands[adminCommand],
           args: args
         };
