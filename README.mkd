@@ -64,7 +64,7 @@ Connect to the server using `telnet localhost 23`
 - [ ] Remove sean's skills
 - [X] Remove examine
 - [ ] Fix effects to only serialize options, not the entire effects array
-- [ ] Remove|move|refactor combat_util/rtcombat
+- [ ] Remove/move/refactor combat_util/rtcombat
 
 ### Nice to have
 
