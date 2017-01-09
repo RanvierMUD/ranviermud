@@ -62,6 +62,8 @@ Connect to the server using `telnet localhost 23`
 
 ### Features/Bugs
 
+- [ ] Add and emit server events that bundles can bind to in `server-events/` that will effectly relace the old `plugin/` infrastructure
+- [ ] Using the new server events create a `core-api` bundle that provides a web api with authentication against player accounts and allows access to game data based on account privileges. To be used with [Sheath](https://github.com/seanohue/sheath-ranviermud)
 - [ ] Remove/refactor doors
 - [ ] Remove sean's skills
 - [X] Remove examine
