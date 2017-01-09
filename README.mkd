@@ -3,7 +3,9 @@
 # RanvierMUD
 NodeJS based MUD engine
 
-See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features. The master branch is _very_ old and shouldn't be used until it becomes the default branch on github.
+See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features.
+
+Ranvier is _not_ a websocket MUD. It does not have a web client. It is a plain ol' fashioned telnet MUD. Any client you use to connect to the MUD you played 15 years ago will work with Ranvier
 
 ## Features
 * Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy packaging and sharing of commands/areas/items/npcs/channels/behaviors
