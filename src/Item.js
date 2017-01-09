@@ -88,29 +88,31 @@ class Item extends EventEmitter {
   }
 
   serialize() {
+    console.log(this.attributes);
     const data = {
-      area: area.name,
-      attributes,
-      behaviors,
-      defaultInv,
-      description,
-      id,
-      isEquipped,
-      isHeld,
-      keywords,
-      name,
-      room: room.id,
-      roomDesc,
-      script,
-      type,
-      uuid,
-    } = this;
+      area: this.area.name,
+      attributes: this.attributes,
+      behaviors: this.behaviors,
+      defaultInv: this.defaultInv,
+      description: this.description,
+      id: this.id,
+      isEquipped: this.isEquipped,
+      isHeld: this.isHeld,
+      keywords: this.keywords,
+      name: this.name,
+      room: this.room ? this.room.id : null,
+      roomDesc: this.roomDesc,
+      script: this.script,
+      type: this.type,
+      uuid: this.uuid,
+    };
 
     data.inventory = this.inventory ?
       Array.from(this.inventory.values()).map(item => item.serialize) :
       this.inventory
     ;
 
+    console.log({ data });
     return data;
   }
 }

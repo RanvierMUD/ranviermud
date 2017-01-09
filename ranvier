@@ -51,32 +51,6 @@ pe.skipNodeFiles();
 // storage of main game entities
 
 let server;
-const GameState = {
-  // Stores all logged in accounts
-  AccountManager: new AccountManager(),
-  // Stores all loaded areas
-  AreaManager: new AreaManager(),
-  // Stores all loaded commands
-  CommandManager: new CommandManager(),
-  // Stores all loaded channels
-  ChannelManager: new ChannelManager(),
-  // Stores all loaded spells, just kidding, it stores events
-  EventManager: new EventManager(),
-  // Helper for creating/cloning items
-  ItemFactory: new ItemFactory(),
-  // Stores all loaded items
-  ItemManager: new ItemManager(),
-  // Helper for creating/cloning Npcs (mobs)
-  MobFactory: new MobFactory(),
-  // Stores all connected players
-  PlayerManager: new PlayerManager(),
-  // Stores all loaded rooms across all areas ever
-  RoomManager: new RoomManager(),
-};
-
-// Setup bundlemanager
-const BundleManager = new (require('./src/BundleManager'))(GameState);
-
 // server options
 let respawnInterval, saveInterval;
 
@@ -91,6 +65,7 @@ commander
 
 // Set debug variable
 process.env['NODE_DEBUG'] = 'net';
+let GameState = {};
 
 /**
  * Do the dirty work
@@ -98,6 +73,32 @@ process.env['NODE_DEBUG'] = 'net';
 function init(restartServer) {
   util.log("START - Loading entities");
   restartServer = typeof restartServer === 'undefined' ? true : restartServer;
+
+  GameState = {
+    // Stores all logged in accounts
+    AccountManager: new AccountManager(),
+    // Stores all loaded areas
+    AreaManager: new AreaManager(),
+    // Stores all loaded commands
+    CommandManager: new CommandManager(),
+    // Stores all loaded channels
+    ChannelManager: new ChannelManager(),
+    // Stores all loaded spells, just kidding, it stores events
+    EventManager: new EventManager(),
+    // Helper for creating/cloning items
+    ItemFactory: new ItemFactory(),
+    // Stores all loaded items
+    ItemManager: new ItemManager(),
+    // Helper for creating/cloning Npcs (mobs)
+    MobFactory: new MobFactory(),
+    // Stores all connected players
+    PlayerManager: new PlayerManager(),
+    // Stores all loaded rooms across all areas ever
+    RoomManager: new RoomManager(),
+  };
+
+  // Setup bundlemanager
+  const BundleManager = new (require('./src/BundleManager'))(GameState);
 
   BundleManager.loadBundles(GameState);
 
@@ -230,7 +231,6 @@ function restartServer() {
   save();
   server.emit('shutdown');
   server.close();
-  players.each( p => { p.getSocket().end(); });
   init(true);
 }
 

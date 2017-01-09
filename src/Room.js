@@ -56,10 +56,12 @@ class Room extends EventEmitter {
 
   addItem(item) {
     this.items.add(item);
+    item.room = this;
   }
 
   removeItem(item) {
     this.items.delete(item);
+    item.room = null;
   }
 
   hydrate(state) {

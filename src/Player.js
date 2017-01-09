@@ -125,7 +125,7 @@ class Player extends Character {
     };
 
     data.inventory = this.inventory ?
-      Array.from(this.inventory.values()).map(item => item.serialize) :
+      Array.from(this.inventory.values()).map(function (item) { return item.serialize() }) :
       this.inventory
     ;
 

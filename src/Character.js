@@ -94,10 +94,12 @@ class Character extends EventEmitter
       this.inventory = new Map();
     }
     this.inventory.set(item.uuid, item);
+    item.isHeld = true;
   }
 
   removeItem(item) {
     this.inventory.delete(item.uuid);
+    item.isHeld = false;
 
     // if we removed the last item unset the inventory
     // This ensures that when it's reloaded it won't try to set

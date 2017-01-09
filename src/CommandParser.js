@@ -108,6 +108,47 @@ class CommandParser {
     // TODO check skills
     return null;
   }
+
+  /**
+   * Parse "get 2.foo bar"
+   * @param {string}   search 2.foo
+   * @param {Iterable} list   Where to look for the item
+   * @return {*} Boolean on error otherwise an entry from the list
+   */
+  static parseDot(search, list) {
+    const parts = search.split('.');
+    let findNth = 1;
+    let keyword = null;
+    if (parts.length > 2) {
+      return null;
+    }
+
+    if (parts.length === 1) {
+      if (parseInt(parts[0], 10)) {
+        // they said get 3 foo instead of get 3.foo
+        return false;
+      }
+
+      keyword = parts[0];
+    } else {
+      [ keyword, findNth ] = parts;
+    }
+
+    let encountered = 0;
+    for (let entry of list) {
+      if (!('keywords' in  entry)) {
+        throw new Error('Items in list have no keywords');
+      }
+
+      if (entry.keywords.indexOf(keyword) !== -1) {
+        if (++encountered === findNth) {
+          return entry;
+        }
+      }
+    }
+
+    return false;
+  }
 }
 exports.CommandParser = CommandParser;
 
