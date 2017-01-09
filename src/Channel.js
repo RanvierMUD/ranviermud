@@ -64,8 +64,8 @@ class Channel {
       }
       case ChannelAudience.PRIVATE: {
         const targetPlayerName = message.split(' ')[0];
-        let targetPlayer = null;
-        if (targetPlayer = state.PlayerManager.getPlayer(targetPlayerName)) {
+        let targetPlayer = state.PlayerManager.getPlayer(targetPlayerName);
+        if (targetPlayer) {
           targets = new class {
             getBroadcastTargets() {
               return [targetPlayer];
@@ -128,7 +128,7 @@ class Channel {
     const colors = Array.isArray(this.color) ? this.color : [this.color];
 
     const open = colors.map(color => `<${color}>`).join('');
-    const close = colors.reverse().map(color => `</${color}>`).join('');;
+    const close = colors.reverse().map(color => `</${color}>`).join('');
 
     return open + message + close;
   }
