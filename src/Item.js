@@ -80,6 +80,9 @@ class Item extends EventEmitter {
   }
 
   hydrate(state) {
+    if (typeof this.area === 'string') {
+      this.area = state.AreaManager.getArea(this.area);
+    }
     // TODO: repopulate any stored items on save
     // this.inventory.doStuff();
   }

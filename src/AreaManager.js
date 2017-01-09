@@ -2,19 +2,23 @@
 
 class AreaManager {
   constructor() {
-    this.areas = new Set();
+    this.areas = new Map();
+  }
+
+  getArea(name) {
+    return this.areas.get(name);
   }
 
   addArea(area) {
-    this.areas.add(area);
+    this.areas.set(area.name, area);
   }
 
   removeArea(area) {
-    this.areas.delete(area);
+    this.areas.delete(area.name);
   }
 
   respawnAll() {
-    for (let area of this.areas) {
+    for (let [ name, area ] of this.areas) {
       area.emit('respawn');
     }
   }
@@ -25,7 +29,7 @@ class AreaManager {
    * @return {boolean}
    */
   distribute(state) {
-    for (const area of this.areas) {
+    for (const [ name, area ] of this.areas) {
       console.log('Distributing to area ' + area.title);
       for (const [ roomId, room ] of area.rooms) {
         console.log('Hydrating room ' + room.title);

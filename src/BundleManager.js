@@ -45,7 +45,7 @@ class BundleManager {
       areas: bundlePath + '/areas/',
       channels: bundlePath + '/channels.js',
       commands: bundlePath + '/commands/',
-      events: bundlePath + '/events/',
+      events: bundlePath + '/input-events/',
     };
 
     util.log(`LOAD: BUNDLE [${bundle}] START`);

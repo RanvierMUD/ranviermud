@@ -8,7 +8,6 @@ module.exports = (srcPath) => {
     command: () => {
       return (args, player) => {
         player.save(() => {
-          util.log("Saving ", player);
           Broadcast.sayAt(player, "Saved.");
         });
       };

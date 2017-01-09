@@ -78,7 +78,6 @@ module.exports = (srcPath) => {
             if (passwordAttempts[name] > maxFailedAttempts) {
               socket.write("Password attempts exceeded.\r\n");
               passwordAttempts[name] = 0;
-              util.log('Failed login - exceeded password attempts - ' + name);
               socket.end();
               return false;
             }
@@ -95,7 +94,6 @@ module.exports = (srcPath) => {
               pass = crypto.createHash('md5').update(pass.toString('').trim()).digest('hex');
 
               if (pass !== args.account.password) {
-                util.log("Failed password attempt by ", socket)
                 say('Incorrect password.\r\n');
                 passwordAttempts[name]++;
 
@@ -210,13 +208,16 @@ module.exports = (srcPath) => {
             player.hydrate(state);
 
             player.socket.on('close', () => {
-              if (!player.isInCombat) {
-                util.log(player.getName() + ' has gone linkdead.');
-              } else {
-                util.log(player.getName() + ' socket closed during combat!!!');
+              util.log(player.name + ' has gone linkdead.');
+              // try to fetch the person the player is fighting and dereference the player
+              if (player.inCombat.inCombat) {
+                player.inCombat.inCombat = null;
               }
 
-              state.PlayerManager.removePlayer(player);
+              player.save(() => {
+                player.room.removePlayer(player);
+                state.PlayerManager.removePlayer(player, true);
+              });
             });
 
             state.CommandManager.get('look').execute(null, player);

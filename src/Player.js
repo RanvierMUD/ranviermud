@@ -90,7 +90,17 @@ class Player extends Character {
       this.account = state.AccountManager.getAccount(this.account);
     }
 
-    // TODO: Hydrate items
+    if (Array.isArray(this.inventory)) {
+      const itemDefs = this.inventory;
+      this.inventory = new Map();
+      itemDefs.forEach(itemDef => {
+        let newItem = state.ItemFactory.create(state.AreaManager.getArea(itemDef.area), itemDef);
+        newItem.hydrate(state);
+        state.ItemManager.add(newItem);
+        this.addItem(newItem);
+      });
+    }
+
     // TODO: Hydrate effects
   }
 
@@ -117,10 +127,6 @@ class Player extends Character {
     data.inventory = this.inventory ?
       Array.from(this.inventory.values()).map(item => item.serialize) :
       this.inventory
-    ;
-    data.equipment = this.equipment ?
-      Array.from(this.equipment.values()).map(item => item.serialize) :
-      this.equipment
     ;
 
     return data;
