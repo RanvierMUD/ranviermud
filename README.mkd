@@ -6,6 +6,7 @@ NodeJS based MUD engine with full localization support
 See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features. The master branch will be the latest 'stable' release.
 
 ## Features
+* Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy packaging and sharing of commands/areas/items/npcs/channels/behaviors
 * Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.
 * Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the event is emitted. Adding new events is easy as npc.emit('eventName'); See documentation on node event emitters for more.
 * Pfile saving in JSON, easy to parse for external usage.
@@ -13,7 +14,8 @@ See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch 
 * Arbitrary room exits custom to each room not locked into n/s/e/w and it's not a pain in the ass to add them
 * Did I mention it's in blasting Javascript? No compiling, no C, no cygwin, no 15 year old spaghetti code.
 * Leveling, passive/active skills, effects.
-* Basic channel system
+* Flexible channel system
+* Incredibly simple-to-add commands
 
 ## Requirements
 
@@ -28,15 +30,43 @@ See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch 
 
 Connect to the server using `telnet localhost 23`
 
-## Tests
-Unit tests are in mocha and backfilling them is a work-in-progress. I'll try to follow TDD best practices from here on out.
-
-Run them with `npm test`.
-
-## Documentation
-Holy crap there is actually documentation and guides for this thing!
-[See the wiki right here.](https://github.com/shawncplus/ranviermud/wiki/Home)
-
 ## TODO:
-* See todos.md
-* Also, a wiki should/will be created for all the custom features from this branch of ranvierMUD. Eventually.
+
+### Critical
+
+- [ ] Respawn
+- [ ] "Hotboot" - Reload anything from a bundle. Changing core will require a restart
+- [ ] Rewrite script attachment to entities with the new bundle loader
+- [ ] Implement containers
+- [ ] Implement equipping (allow configuration of valid slots)
+- [ ] Implement some kind of helper for time-based events
+- [X] Refactor/rewrite entity loading
+
+  * Completely new bundle system in place
+
+- [X] Clean up object handling code (item_util, get, put, containers, equipment, inventory, etc)
+
+  * Object handling rewritten from scratch
+
+- [X] Revisit localization
+
+  Localization removed
+
+- [X] Implement global config file to allow sweeping changes without changing code
+- [X] Completely rewrite helpfiles
+- [X] Refactor channels to have types that will allow things like yell vs chat
+
+  * Channels were completely rewritten
+
+### Features/Bugs
+
+- [ ] Remove/refactor doors
+- [ ] Remove sean's skills
+- [X] Remove examine
+- [ ] Fix effects to only serialize options, not the entire effects array
+- [ ] Remove|move|refactor combat_util/rtcombat
+
+### Nice to have
+
+- [ ] Update help to autogenerate usage for channels
+- [ ] Update help to allow data like skill cost as tokens
