@@ -16,7 +16,7 @@
 - [X] Remove examine
 - [ ] Fix effects to only serialize options, not the entire effects array
 - [ ] Remove|move|refactor combat_util/rtcombat
-- [ ] Refactor channels to have types that will allow things like yell vs chat
+- [X] Refactor channels to have types that will allow things like yell vs chat
 
  * Move say/tell to real commands instead of channels
  * Move channels to a config file
