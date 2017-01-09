@@ -1,6 +1,6 @@
 <p align="center"><img src="https://raw.githubusercontent.com/shawncplus/ranviermud/staging/resources/logo.png"></p>
 
-# RanvierMUD
+# ranvier
 NodeJS based MUD engine
 
 See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features.
