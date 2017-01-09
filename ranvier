@@ -23,7 +23,8 @@ const wrap = require('wrap-ansi');
 const pkg = require('./package.json');
 
   // local
-const Telnet    = require('./src/Telnet');
+const Telnet = require('./src/Telnet');
+const Config = require('./src/Config');
 const AccountManager = require('./src/AccountManager');
 const AreaManager = require('./src/AreaManager');
 const CommandManager = require('./src/CommandManager');
@@ -51,8 +52,6 @@ pe.skipNodeFiles();
 // storage of main game entities
 
 let server;
-// server options
-let respawnInterval, saveInterval;
 
 // cmdline options
 commander
@@ -65,7 +64,10 @@ commander
 
 // Set debug variable
 process.env['NODE_DEBUG'] = 'net';
+
+// global state
 let GameState = {};
+let saveInterval;
 
 /**
  * Do the dirty work
@@ -95,12 +97,15 @@ function init(restartServer) {
     PlayerManager: new PlayerManager(),
     // Stores all loaded rooms across all areas ever
     RoomManager: new RoomManager(),
+
+    // All global server settings like default respawn time, save interval, port, what bundles to load, etc.
+    Config: Config,
   };
 
   // Setup bundlemanager
   const BundleManager = new (require('./src/BundleManager'))(GameState);
 
-  BundleManager.loadBundles(GameState);
+  BundleManager.loadBundles();
 
   if (restartServer) {
     util.log("START - Starting server");

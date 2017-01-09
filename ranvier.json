@@ -1,0 +1,11 @@
+{
+  "port": 3011,
+
+  "bundles": [
+    "core-areas",
+    "core-commands",
+    "core-effects",
+    "core-input-events",
+    "core-skills"
+  ]
+}

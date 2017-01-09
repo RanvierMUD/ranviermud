@@ -33,6 +33,11 @@ class BundleManager {
         continue;
       }
 
+      // only load bundles the user has configured to be loaded
+      if (this.state.Config.get('bundles', []).indexOf(bundle) === -1) {
+        continue;
+      }
+
       this.loadBundle(bundle, bundlePath);
     }
 
