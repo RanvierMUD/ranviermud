@@ -97,6 +97,14 @@ class Room extends EventEmitter {
   static getKey(room) {
     return room.area.name + ':' + room.id;
   }
+
+  /**
+   * Used by Broadcaster
+   * @return {Array<Character>}
+   */
+  getBroadcastTargets() {
+    return Array.from(this.players.values());
+  }
 }
 
 module.exports = Room;

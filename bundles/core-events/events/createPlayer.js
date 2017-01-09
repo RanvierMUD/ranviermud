@@ -18,6 +18,7 @@ const util = require('util');
 module.exports = (srcPath) => {
   const EventUtil = require(srcPath + 'EventUtil');
   const Player = require(srcPath + 'Player');
+  const Broadcast = require(srcPath + 'Broadcast');
 
   return {
     event : (state) => (socket, stage, args) => {

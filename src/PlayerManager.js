@@ -27,6 +27,10 @@ class PlayerManager extends EventEmitter {
     this.players.delete(player.name);
   }
 
+  filter(fn) {
+    return Array.from(this.players.values()).filter(fn);
+  }
+
   loadPlayer(account, username, force) {
     if (this.players.has(username) && !force) {
       return this.getPlayer(username);
@@ -52,6 +56,14 @@ class PlayerManager extends EventEmitter {
     for (const [ name, player] of this.players.entries()) {
       player.emit('save', playerCallback);
     }
+  }
+
+  /**
+   * Used by Broadcaster
+   * @return {Array<Character>}
+   */
+  getBroadcastTargets() {
+    return this.players;
   }
 }
 

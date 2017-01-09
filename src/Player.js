@@ -131,7 +131,7 @@ class Player extends Character {
    * @return {Array<Character>}
    */
   getBroadcastTargets() {
-    return [this.socket];
+    return [this];
   }
 }
 

@@ -42,14 +42,19 @@ class BundleManager {
   loadBundle(bundle, bundlePath) {
     // TODO: Use bundles.json file to see enabled bundles
     const paths = {
-      commands: bundlePath + '/commands/',
       areas: bundlePath + '/areas/',
+      channels: bundlePath + '/channels.js',
+      commands: bundlePath + '/commands/',
       events: bundlePath + '/events/',
     };
 
     util.log(`LOAD: BUNDLE [${bundle}] START`);
     if (fs.existsSync(paths.commands)) {
       this.loadCommands(bundle, paths.commands);
+    }
+
+    if (fs.existsSync(paths.channels)) {
+      this.loadChannels(bundle, paths.channels);
     }
 
     if (fs.existsSync(paths.areas)) {
@@ -191,6 +196,24 @@ class BundleManager {
     }
 
     util.log(`ENDLOAD: BUNDLE[${bundle}] Commands...`);
+  }
+
+  loadChannels(bundle, channelsFile) {
+    util.log(`LOAD: BUNDLE[${bundle}] Channels...`);
+
+    const injector = require(channelsFile);
+    let channels = injector(srcPath);
+
+    if (!Array.isArray(channels)) {
+      channels = [channels];
+    }
+
+    channels.forEach(channel => {
+      channel.bundle = bundle;
+      this.state.ChannelManager.add(channel);
+    });
+
+    util.log(`ENDLOAD: BUNDLE[${bundle}] Channels...`);
   }
 
   loadEvents(bundle, eventsDir) {

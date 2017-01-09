@@ -11,7 +11,7 @@ class CommandParser {
    * @param {String} data
    * @return {command: Command, args: String}
    */
-  static parse(CommandManager, data, player) {
+  static parse(state, data, player) {
     data = data.trim();
 
     const parts = data.split(' ');
@@ -29,7 +29,7 @@ class CommandParser {
     if (command === 'l') {
       return {
         type: CommandType.COMMAND,
-        command: CommandManager.get('look'),
+        command: state.CommandManager.get('look'),
         args: args
       };
     }
@@ -38,16 +38,8 @@ class CommandParser {
     if (command === 'i') {
       return {
         type: CommandType.COMMAND,
-        command: CommandManager.get('inventory'),
+        command: state.CommandManager.get('inventory'),
         args: args
-      };
-    }
-
-    if (CommandManager.get(command)) {
-      return {
-        type: CommandType.COMMAND,
-        command: CommandManager.get(command),
-        args
       };
     }
 
@@ -70,7 +62,7 @@ class CommandParser {
       const direction = directions[command];
       return {
         type: CommandType.COMMAND,
-        command: CommandManager.get('_move'),
+        command: state.CommandManager.get('_move'),
         args: direction
       };
     }
@@ -79,13 +71,22 @@ class CommandParser {
     if (player.canGo(command)) {
       return {
         type: CommandType.COMMAND,
-        command: CommandManager.get('_move'),
+        command: state.CommandManager.get('_move'),
         args: command
       };
     }
 
+    // see if they matched exactly a command
+    if (state.CommandManager.get(command)) {
+      return {
+        type: CommandType.COMMAND,
+        command: state.CommandManager.get(command),
+        args
+      };
+    }
+
     // see if they typed at least the beginning of a command and try to match
-    let found = CommandManager.find(command);
+    let found = state.CommandManager.find(command);
     if (found) {
       return {
         type: CommandType.COMMAND,
@@ -94,26 +95,17 @@ class CommandParser {
       };
     }
 
-    return;
-    // TODO
-    // check skills
-    if (command in player.getSkills()) {
-      return {
-        type: CommandType.SKILL,
-        skill: command,
-        args
-      };
-    }
-
     // finally check channels
-    if (command in Channels) {
+    found = state.ChannelManager.find(command);
+    if (found) {
       return {
         type: CommandType.CHANNEL,
-        channel: Channels[command],
+        channel: found,
         args
       };
     }
 
+    // TODO check skills
     return null;
   }
 }

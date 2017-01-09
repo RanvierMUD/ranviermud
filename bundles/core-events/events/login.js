@@ -210,7 +210,7 @@ module.exports = (srcPath) => {
             player.hydrate(state);
 
             player.socket.on('close', () => {
-              if (!player.isInCombat()) {
+              if (!player.isInCombat) {
                 util.log(player.getName() + ' has gone linkdead.');
               } else {
                 util.log(player.getName() + ' socket closed during combat!!!');

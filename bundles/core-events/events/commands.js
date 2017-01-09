@@ -21,7 +21,7 @@ module.exports = (src) => {
         }
 
         try {
-          const result = CommandParser.parse(state.CommandManager, data, player);
+          const result = CommandParser.parse(state, data, player);
           if (!result) {
             throw null;
           }
@@ -31,12 +31,8 @@ module.exports = (src) => {
               result.command.execute(result.args, player);
               break;
             }
-            case CommandTypes.SKILL: {
-              player.useSkill(result.skill, player, result.args, rooms, npcs, players, items);
-              break;
-            }
             case CommandTypes.CHANNEL: {
-              result.channel.use(result.args, player, players, rooms, npcs);
+              result.channel.send(state, player, result.args);
               break;
             }
           }

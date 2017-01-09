@@ -27,13 +27,13 @@ const Telnet    = require('./src/Telnet');
 const AccountManager = require('./src/AccountManager');
 const AreaManager = require('./src/AreaManager');
 const CommandManager = require('./src/CommandManager');
+const ChannelManager = require('./src/ChannelManager');
 const EventManager = require('./src/EventManager');
 const ItemManager = require('./src/ItemManager');
 const ItemFactory = require('./src/ItemFactory');
 const MobFactory = require('./src/MobFactory');
 const PlayerManager = require('./src/PlayerManager');
 const RoomManager = require('./src/RoomManager');
-let BundleManager = require('./src/BundleManager');
 //const EffectManager = require('./src/PlayerManager');
 
   // third party
@@ -58,6 +58,8 @@ const GameState = {
   AreaManager: new AreaManager(),
   // Stores all loaded commands
   CommandManager: new CommandManager(),
+  // Stores all loaded channels
+  ChannelManager: new ChannelManager(),
   // Stores all loaded spells, just kidding, it stores events
   EventManager: new EventManager(),
   // Helper for creating/cloning items
@@ -73,7 +75,7 @@ const GameState = {
 };
 
 // Setup bundlemanager
-BundleManager = new (require('./src/BundleManager'))(GameState);
+const BundleManager = new (require('./src/BundleManager'))(GameState);
 
 // server options
 let respawnInterval, saveInterval;
