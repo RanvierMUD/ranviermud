@@ -9,7 +9,8 @@ const fs = require('fs'),
     CommandType = require('./CommandType'),
     Item = require('./Item'),
     Npc = require('./Npc'),
-    Room = require('./Room')
+    Room = require('./Room'),
+    Helpfile = require('./Helpfile')
 ;
 
 const srcPath = __dirname + '/';
@@ -50,6 +51,7 @@ class BundleManager {
       areas: bundlePath + '/areas/',
       channels: bundlePath + '/channels.js',
       commands: bundlePath + '/commands/',
+      help: bundlePath + '/help/',
       events: bundlePath + '/input-events/',
     };
 
@@ -60,6 +62,10 @@ class BundleManager {
 
     if (fs.existsSync(paths.channels)) {
       this.loadChannels(bundle, paths.channels);
+    }
+
+    if (fs.existsSync(paths.help)) {
+      this.loadHelp(bundle, paths.help);
     }
 
     if (fs.existsSync(paths.areas)) {
@@ -77,7 +83,7 @@ class BundleManager {
   }
 
   loadAreas(bundle, areasDir) {
-    util.log(`LOAD: BUNDLE[${bundle}] Areas...`);
+    util.log(`\tLOAD: Areas...`);
 
     const dirs = fs.readdirSync(areasDir);
 
@@ -92,7 +98,7 @@ class BundleManager {
       this.state.AreaManager.addArea(area);
     }
 
-    util.log(`ENDLOAD: BUNDLE[${bundle}] Areas`);
+    util.log(`\tENDLOAD: Areas`);
   }
 
   loadArea(bundle, areaName, areaPath) {
@@ -127,7 +133,7 @@ class BundleManager {
   }
 
   loadItems(area, itemsFile) {
-    util.log(`LOAD: BUNDLE[${area.bundle}] [${area.name}] Items...`);
+    util.log(`\tLOAD: AREA [${area.name}] Items...`);
 
     // parse the item files
     let items = Data.parseFile(itemsFile);
@@ -137,13 +143,13 @@ class BundleManager {
       this.state.ItemFactory.setDefinition(area.name, item.id, item);
     });
 
-    util.log(`ENDLOAD: BUNDLE[${area.bundle}] AREA [${area.name}] Items`);
+    util.log(`\tENDLOAD: AREA [${area.name}] Items`);
 
     return items;
   }
 
   loadNpcs(area, npcsFile) {
-    util.log(`LOAD: BUNDLE[${area.bundle}] [${area.name}] Npcs...`);
+    util.log(`\tLOAD: AREA [${area.name}] Npcs...`);
 
     // parse the npc files
     let npcs = Data.parseFile(npcsFile);
@@ -153,13 +159,13 @@ class BundleManager {
       this.state.MobFactory.setDefinition(area.name, npc.id, npc);
     });
 
-    util.log(`ENDLOAD: BUNDLE[${area.bundle}] AREA [${area.name}] Npcs`);
+    util.log(`\tENDLOAD: AREA [${area.name}] Npcs`);
 
     return npcs;
   }
 
   loadRooms(area, roomsFile) {
-    util.log(`LOAD: BUNDLE[${area.bundle}] [${area.name}] Rooms...`);
+    util.log(`\tLOAD: AREA [${area.name}] Rooms...`);
 
     // parse the room files
     let rooms = Data.parseFile(roomsFile);
@@ -171,13 +177,13 @@ class BundleManager {
       this.state.RoomManager.addRoom(room)
     });
 
-    util.log(`ENDLOAD: BUNDLE[${area.bundle}] AREA [${area.name}] Rooms`);
+    util.log(`\tENDLOAD: AREA [${area.name}] Rooms`);
 
     return rooms;
   }
 
   loadCommands(bundle, commandsDir) {
-    util.log(`LOAD: BUNDLE[${bundle}] Commands...`);
+    util.log(`\tLOAD: Commands...`);
     const files = fs.readdirSync(commandsDir);
 
     for (const commandFile of files) {
@@ -188,24 +194,24 @@ class BundleManager {
 
       const commandName = path.basename(commandFile, path.extname(commandFile));
       const injector = require(commandPath);
-      const cmdImport = injector(srcPath);
+      let cmdImport = injector(srcPath);
+      cmdImport.command = cmdImport.command(this.state);
+
 
       const command = new Command(
-        cmdImport.type || CommandType.Player,
         bundle,
         commandName,
-        cmdImport.command(this.state),
-        cmdImport.aliases || []
+        cmdImport
       );
 
       this.state.CommandManager.add(command);
     }
 
-    util.log(`ENDLOAD: BUNDLE[${bundle}] Commands...`);
+    util.log(`\tENDLOAD: Commands...`);
   }
 
   loadChannels(bundle, channelsFile) {
-    util.log(`LOAD: BUNDLE[${bundle}] Channels...`);
+    util.log(`\tLOAD: Channels...`);
 
     const injector = require(channelsFile);
     let channels = injector(srcPath);
@@ -219,11 +225,36 @@ class BundleManager {
       this.state.ChannelManager.add(channel);
     });
 
-    util.log(`ENDLOAD: BUNDLE[${bundle}] Channels...`);
+    util.log(`\tENDLOAD: Channels...`);
+  }
+
+  loadHelp(bundle, helpDir) {
+    util.log(`\tLOAD: Help...`);
+    const files = fs.readdirSync(helpDir);
+
+    for (const helpFile of files) {
+      const helpPath = helpDir + helpFile;
+      if (!fs.statSync(helpPath).isFile()) {
+        continue;
+      }
+
+      const helpName = path.basename(helpFile, path.extname(helpFile));
+      const def = Data.parseFile(helpPath);
+
+      const hfile = new Helpfile(
+        bundle,
+        helpName,
+        def
+      );
+
+      this.state.HelpManager.add(hfile);
+    }
+
+    util.log(`\tENDLOAD: Help...`);
   }
 
   loadEvents(bundle, eventsDir) {
-    util.log(`LOAD: BUNDLE[${bundle}] Events...`);
+    util.log(`\tLOAD: Events...`);
     const files = fs.readdirSync(eventsDir);
 
     for (const eventFile of files) {
@@ -238,7 +269,7 @@ class BundleManager {
       this.state.EventManager.addEvent(eventName, eventImport.event(this.state));
     }
 
-    util.log(`ENDLOAD: BUNDLE[${bundle}] Events...`);
+    util.log(`\tENDLOAD: Events...`);
   }
 }
 

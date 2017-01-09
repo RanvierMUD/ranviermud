@@ -35,6 +35,7 @@ const ItemFactory = require('./src/ItemFactory');
 const MobFactory = require('./src/MobFactory');
 const PlayerManager = require('./src/PlayerManager');
 const RoomManager = require('./src/RoomManager');
+const HelpManager = require('./src/HelpManager');
 //const EffectManager = require('./src/PlayerManager');
 
   // third party
@@ -97,6 +98,8 @@ function init(restartServer) {
     PlayerManager: new PlayerManager(),
     // Stores all loaded rooms across all areas ever
     RoomManager: new RoomManager(),
+    // Stores all loaded helpfiles
+    HelpManager: new HelpManager(),
 
     // All global server settings like default respawn time, save interval, port, what bundles to load, etc.
     Config: Config,

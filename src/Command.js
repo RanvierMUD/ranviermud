@@ -1,5 +1,7 @@
 'use strict';
 
+const CommandType = require('./CommandType');
+
 class Command {
   /**
    * @param {CommandType} type One of the CommandTypes
@@ -7,12 +9,13 @@ class Command {
    * @param {string}   bundle Bundle the command came from
    * @param {Function} func   Actual function to run when command is executed
    */
-  constructor(type, bundle, name, func, aliases) {
-    this.type = type;
+  constructor(bundle, name, def) {
     this.bundle = bundle;
+    this.type = def.type || CommandType.PLAYER;
     this.name = name;
-    this.func = func;
-    this.aliases = aliases;
+    this.func = def.command;
+    this.aliases = def.aliases;
+    this.usage = def.usage || this.name;
   }
 
   /**

@@ -4,11 +4,11 @@
  * Why does the item specify where it loads instead of the location specifying?
  * Currently no "areas". Allow npcs/objects/rooms to be grouped under an "area" folder
 
-- [ ] Clean up object handling code (item_util, get, put, containers, equipment, inventory, etc)
+- [X] Clean up object handling code (item_util, get, put, containers, equipment, inventory, etc)
 - [ ] Remove/refactor doors
 - [ ] Look at tick code
 - [ ] Remove sean's skills
-- [ ] Completely rewrite helpfiles
+- [X] Completely rewrite helpfiles
 
  * Having a JSON blob doesn't work (help text needs to be auto-wrapped)
  * allow tokens in helpfiles so they can render dynamically
@@ -22,3 +22,5 @@
  * Move channels to a config file
 
 - [X] Revisit localization (Removed)
+- [ ] Update help to autogenerate usage for channels
+- [ ] Update help to allow data like skill cost as tokens
