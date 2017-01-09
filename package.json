@@ -5,6 +5,7 @@
     "type": "git",
     "url": "git://github.com/shawncplus/ranviermud.git"
   },
+  "license": "MIT",
   "scripts": {
     "start": "gulp && sudo ./ranvier -v --save=10 --respawn=10",
     "test": "gulp && npm run-script test:coverage",
