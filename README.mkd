@@ -5,19 +5,19 @@ NodeJS based MUD engine
 
 See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features.
 
-Ranvier is _not_ a websocket MUD. It does not have a web client. It is a plain ol' fashioned telnet MUD. Any client you use to connect to the MUD you played 15 years ago will work with Ranvier
+Ranvier is _not_ a websocket MUD. It does not have a web client. It is a plain ol' fashioned telnet MUD. Any client you use to connect to the MUD you played 15 years ago will work with Ranvier.
 
 ## Features
-* Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy packaging and sharing of commands/areas/items/npcs/channels/behaviors
+* Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy packaging and sharing of commands/areas/items/npcs/channels/behaviors.
 * Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.
 * Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the event is emitted. Adding new events is easy as npc.emit('eventName'); See documentation on node event emitters for more.
 * Pfile saving in JSON, easy to parse for external usage.
 * Rooms, items, and npcs are easily described in yaml. No weird bullshit ~~~~ and byte-specific parsing that requires a GUI editor to build.
-* Arbitrary room exits custom to each room not locked into n/s/e/w and it's not a pain in the ass to add them
+* Arbitrary room exits custom to each room not locked into n/s/e/w and it's not a pain in the ass to add them.
 * Did I mention it's in blasting Javascript? No compiling, no C, no cygwin, no 15 year old spaghetti code.
 * Leveling, passive/active skills, effects.
-* Flexible channel system
-* Incredibly simple-to-add commands
+* Flexible channel system.
+* Incredibly simple-to-add commands.
 
 ## Requirements
 
