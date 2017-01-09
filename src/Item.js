@@ -88,7 +88,6 @@ class Item extends EventEmitter {
   }
 
   serialize() {
-    console.log(this.attributes);
     const data = {
       area: this.area.name,
       attributes: this.attributes,
@@ -112,7 +111,6 @@ class Item extends EventEmitter {
       this.inventory
     ;
 
-    console.log({ data });
     return data;
   }
 }
