@@ -7,11 +7,12 @@ class Command {
    * @param {string}   bundle Bundle the command came from
    * @param {Function} func   Actual function to run when command is executed
    */
-  constructor(type, bundle, name, func) {
+  constructor(type, bundle, name, func, aliases) {
     this.type = type;
     this.bundle = bundle;
     this.name = name;
     this.func = func;
+    this.aliases = aliases;
   }
 
   /**

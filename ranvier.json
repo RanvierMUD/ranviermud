@@ -3,6 +3,7 @@
 
   "bundles": [
     "core-areas",
+    "core-channels",
     "core-commands",
     "core-effects",
     "core-input-events",

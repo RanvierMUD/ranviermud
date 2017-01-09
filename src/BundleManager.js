@@ -194,7 +194,8 @@ class BundleManager {
         cmdImport.type || CommandType.Player,
         bundle,
         commandName,
-        cmdImport.command(this.state)
+        cmdImport.command(this.state),
+        cmdImport.aliases || []
       );
 
       this.state.CommandManager.add(command);

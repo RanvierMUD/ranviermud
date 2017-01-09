@@ -13,6 +13,9 @@ class CommandManager {
 
   add(command) {
     this.commands.set(command.name, command);
+    if (command.aliases) {
+      command.aliases.forEach(alias => this.commands.set(alias, command));
+    }
   }
 
   remove(command) {
