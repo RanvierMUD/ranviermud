@@ -1,7 +1,7 @@
 <p align="center"><img src="https://raw.githubusercontent.com/shawncplus/ranviermud/staging/resources/logo.png"></p>
 
 # RanvierMUD
-NodeJS based MUD engine with full localization support
+NodeJS based MUD engine
 
 See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features. The master branch will be the latest 'stable' release.
 
