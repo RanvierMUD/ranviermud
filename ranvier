@@ -86,7 +86,7 @@ function init(restartServer) {
     // Stores all loaded channels
     ChannelManager: new ChannelManager(),
     // Stores all loaded spells, just kidding, it stores events
-    EventManager: new EventManager(),
+    InputEventManager: new EventManager(),
     // Helper for creating/cloning items
     ItemFactory: new ItemFactory(),
     // Stores all loaded items
@@ -123,9 +123,7 @@ function init(restartServer) {
       socket.on('error', err => util.log(err));
 
       // Register all of the events
-      for (let [event, func] of GameState.EventManager.events.entries()) {
-        socket.on(event, func);
-      }
+      GameState.InputEventManager.attach(socket);
 
       socket.write("Connecting...\n");
       util.log("User connected...");

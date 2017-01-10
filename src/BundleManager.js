@@ -52,7 +52,7 @@ class BundleManager {
       channels: bundlePath + '/channels.js',
       commands: bundlePath + '/commands/',
       help: bundlePath + '/help/',
-      events: bundlePath + '/input-events/',
+      inputEvents: bundlePath + '/input-events/',
     };
 
     util.log(`LOAD: BUNDLE [${bundle}] START`);
@@ -76,8 +76,8 @@ class BundleManager {
       this.state.AreaManager.distribute(this.state);
     }
 
-    if (fs.existsSync(paths.events)) {
-      this.loadEvents(bundle, paths.events)
+    if (fs.existsSync(paths.inputEvents)) {
+      this.loadInputEvents(bundle, paths.inputEvents)
     }
     util.log(`ENDLOAD: BUNDLE [${bundle}]`);
   }
@@ -253,12 +253,12 @@ class BundleManager {
     util.log(`\tENDLOAD: Help...`);
   }
 
-  loadEvents(bundle, eventsDir) {
+  loadInputEvents(bundle, inputEventsDir) {
     util.log(`\tLOAD: Events...`);
-    const files = fs.readdirSync(eventsDir);
+    const files = fs.readdirSync(inputEventsDir);
 
     for (const eventFile of files) {
-      const eventPath = eventsDir + eventFile;
+      const eventPath = inputEventsDir + eventFile;
       if (!fs.statSync(eventPath).isFile() || !eventFile.match(/js$/)) {
         continue;
       }
@@ -266,7 +266,7 @@ class BundleManager {
       const eventName = path.basename(eventFile, path.extname(eventFile));
       const eventImport = require(eventPath)(srcPath);
 
-      this.state.EventManager.addEvent(eventName, eventImport.event(this.state));
+      this.state.InputEventManager.add(eventName, eventImport.event(this.state));
     }
 
     util.log(`\tENDLOAD: Events...`);
