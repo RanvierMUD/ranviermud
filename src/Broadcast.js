@@ -2,19 +2,21 @@
 
 const ansi = require('sty');
 const wrap = require('wrap-ansi');
+const TypeUtil = require('./TypeUtil');
+const Broadcastable = require('./Broadcastable');
 
 class Broadcast {
-  static at(broadcastable, message, wrapWidth, useColor, formatter) {
+  static at(source, message, wrapWidth, useColor, formatter) {
     useColor = typeof useColor === 'boolean' ? useColor : true;
     formatter = formatter || ((target, message) => message);
 
-    if (!Broadcast.isBroadcastable(broadcastable)) {
+    if (!TypeUtil.is(source, Broadcastable)) {
       throw new Error(`Tried to broadcast message not non-broadcastable object: MESSAGE [${message}]`);
     }
 
     message = wrapWidth ? wrap(message, wrapWidth) : message;
 
-    const targets = broadcastable.getBroadcastTargets();
+    const targets = source.getBroadcastTargets();
     targets.forEach(target => {
       if (target.socket.writable) {
         target.socket.write(ansi.parse(formatter(target, message)));
@@ -22,18 +24,18 @@ class Broadcast {
     });
   }
 
-  static atFormatted(broadcastable, message, formatter, wrapWidth, useColor) {
-    Broadcast.at(broadcastable, message, wrapWidth, useColor, formatter);
+  static atFormatted(source, message, formatter, wrapWidth, useColor) {
+    Broadcast.at(source, message, wrapWidth, useColor, formatter);
   }
 
-  static sayAt(broadcastable, message, wrapWidth, useColor, formatter) {
-    Broadcast.at(broadcastable, message, wrapWidth, useColor, (target, message) => {
+  static sayAt(source, message, wrapWidth, useColor, formatter) {
+    Broadcast.at(source, message, wrapWidth, useColor, (target, message) => {
       return (formatter ? formatter(target, message) : message ) + '\r\n';
     });
   }
 
-  static sayAtFormatted(broadcastable, message, formatter, wrapWidth, useColor) {
-    Broadcast.sayAt(broadcastable, message, wrapWidth, useColor, formatter);
+  static sayAtFormatted(source, message, formatter, wrapWidth, useColor) {
+    Broadcast.sayAt(source, message, wrapWidth, useColor, formatter);
   }
 
   static isBroadcastable(obj) {

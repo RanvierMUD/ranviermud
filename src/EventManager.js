@@ -1,5 +1,7 @@
 'use strict';
 
+const TypeUtil = require('./TypeUtil');
+
 /**
  * Generic array hash table to store listener definitions `events` is a `Map`
  * whose keys are event names values are the `Set` of listeners to be attached
@@ -58,7 +60,7 @@ class EventManager {
       events = [events];
     } else if (!events) {
       events = this.events.keys();
-    } else if (typeof events[Symbol.iterator] !== 'function') {
+    } else if (!TypeUtil.iterable(events)) {
       throw new TypeError('events list passed to clear() is not iterable')
     }
 
