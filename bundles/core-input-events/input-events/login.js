@@ -157,7 +157,12 @@ module.exports = (srcPath) => {
               characters.forEach(char => {
                 options.push({
                   display: char,
-                  onSelect: () => next(socket, 'done', { name: char, account }),
+                  onSelect: () => {
+                    let player = state.PlayerManager.loadPlayer(account, char);
+                    player.socket = socket;
+                    player.hydrate(state);
+                    next(socket, 'done', { player });
+                  },
                 });
               });
             }
@@ -203,7 +208,7 @@ module.exports = (srcPath) => {
           }
 
           case 'done': {
-            player = state.PlayerManager.loadPlayer(args.account, args.name);
+            let player = args.player;
             player.socket = socket;
             player.hydrate(state);
 

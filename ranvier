@@ -17,7 +17,6 @@
   // built-ins
 const net = require('net');
 const util = require('util');
-const express = require('express');
 const commander = require('commander');
 const wrap = require('wrap-ansi');
 const pkg = require('./package.json');

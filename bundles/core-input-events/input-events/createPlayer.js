@@ -25,7 +25,6 @@ module.exports = (srcPath) => {
       stage = stage || 'name';
 
       const next   = EventUtil.genNext('createPlayer');
-      const repeat = EventUtil.genRepeat(arguments, next);
       const say    = EventUtil.genSay(socket);
       const write  = EventUtil.genWrite(socket);
 
@@ -52,19 +51,22 @@ module.exports = (srcPath) => {
               if (name.length < 3) {
                 return 'Too short, try a longer name.';
               }
+              if (!/^[a-z]+$/i.test(name)) {
+                return 'Your name may only contain A-Z without spaces or special characters.';
+              }
               return false;
             }
 
             if (invalid) {
               say(invalid);
-              return repeat();
+              return next(socket, 'name', args);
             }
 
             const exists = state.PlayerManager.exists(name);
 
             if (exists) {
               say(`That name is already taken.`);
-              return repeat();
+              return next(socket, 'name', args);
             }
 
             return next(socket, 'check', { name, account: args.account });
@@ -78,7 +80,7 @@ module.exports = (srcPath) => {
             confirmation = confirmation.toString().trim().toLowerCase();
 
             if (!/[yn]/.test(confirmation)) {
-              return repeat();
+              return next(socket, 'check', args);
             }
 
             if (confirmation === 'n') {
@@ -101,26 +103,16 @@ module.exports = (srcPath) => {
 
           args.account.addCharacter(args.name);
           args.account.save();
-
-          next(socket, 'done', { player });
-
-          break;
-        }
-        case 'done': {
           // TODO: Don't do this
           let room = Array.from(state.RoomManager.rooms.values())[0];
-          args.player.room = room;
-          room.addPlayer(args.player);
+          player.room = room;
+          room.addPlayer(player);
+          state.PlayerManager.addPlayer(player);
 
           // create the pfile then send them on their way
-          args.player.save(() => {
-            state.PlayerManager.addPlayer(args.player);
-            state.CommandManager.get('look').execute('', args.player);
-            Broadcast.prompt(args.player);
-            args.player.socket.emit('commands', player.socket);
+          player.save(() => {
+            socket.emit('login', socket, 'done', { player });
           });
-
-          util.log("A NEW CHALLENGER APPROACHES: ", player.socket);
           break;
         }
       }
