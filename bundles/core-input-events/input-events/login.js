@@ -7,6 +7,7 @@ module.exports = (srcPath) => {
   const Data = require(srcPath + 'Data');
   const EventUtil = require(srcPath + 'EventUtil');
   const Broadcast = require(srcPath + 'Broadcast');
+  const InputValidation = require(srcPath + 'InputValidation');
 
   return {
     event: (state) => {
@@ -41,11 +42,10 @@ module.exports = (srcPath) => {
             socket.once('data', name => {
               name = name.toString().trim();
 
-              //TODO: Blacklist/whitelist names here.
-              //TODO: Put name validation functions in module
-              if (/[^a-z]/i.test(name) || !name) {
-                say("That's not really your name, now is it?");
-                return repeat();
+              const invalid = InputValidation.isInvalidName(name);
+              if (invalid) {
+                say(invalid);
+                return next(socket, 'login', args);
               }
 
               name = name[0].toUpperCase() + name.slice(1);

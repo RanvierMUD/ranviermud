@@ -19,6 +19,7 @@ module.exports = (srcPath) => {
   const EventUtil = require(srcPath + 'EventUtil');
   const Player = require(srcPath + 'Player');
   const Broadcast = require(srcPath + 'Broadcast');
+  const InputValidation = require(srcPath + 'InputValidation');
 
   return {
     event : (state) => (socket, stage, args) => {
@@ -40,33 +41,14 @@ module.exports = (srcPath) => {
             say('');
             name = name.toString().trim();
 
-            if (/[^a-z]/i.test(name) || !name) {
-              say("That's not really your name, now is it?");
-              return repeat();
-            }
-
-            name = name[0].toUpperCase() + name.slice(1);
-
-            const invalid = validate(name);
-
-            // TODO: Refactor to share validation logic with `login` event handler
-            function validate(name) {
-              if (name.length > 20) {
-                return 'Too long, try a shorter name.';
-              }
-              if (name.length < 3) {
-                return 'Too short, try a longer name.';
-              }
-              if (!/^[a-z]+$/i.test(name)) {
-                return 'Your name may only contain A-Z without spaces or special characters.';
-              }
-              return false;
-            }
+            const invalid = InputValidation.isInvalidName(name);
 
             if (invalid) {
               say(invalid);
               return next(socket, 'name', args);
             }
+
+            name = name[0].toUpperCase() + name.slice(1);
 
             const exists = state.PlayerManager.exists(name);
 
