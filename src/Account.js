@@ -2,6 +2,8 @@
 const crypto = require('crypto');
 const Data = require('./Data');
 
+const ranvierConfig = require('../ranvier.json');
+
 class Account {
 
   constructor(data) {
@@ -30,6 +32,22 @@ class Account {
     Data.save('account', this.username, this, callback);
   }
 
+  static validateName(name) {
+    if (!name) {
+      return 'Please enter a name.';
+    }
+    if (name.length > ranvierConfig.maxAccountNameLength) {
+      return 'Too long, try a shorter name.';
+    }
+    if (name.length < ranvierConfig.minAccountNameLength) {
+      return 'Too short, try a longer name.';
+    }
+    if (!/^[a-z]+$/i.test(name)) {
+      return 'Your name may only contain A-Z without spaces or special characters.';
+    }
+    return false;
+  }
+
   serialize() {
     const {
       username,
@@ -43,6 +61,7 @@ class Account {
       password
     };
   }
+
 }
 
 module.exports = Account;

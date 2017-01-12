@@ -7,7 +7,7 @@ module.exports = (srcPath) => {
   const Data = require(srcPath + 'Data');
   const EventUtil = require(srcPath + 'EventUtil');
   const Broadcast = require(srcPath + 'Broadcast');
-  const InputValidation = require(srcPath + 'InputValidation');
+  const Account = require(srcPath + 'Account');
 
   return {
     event: (state) => {
@@ -42,7 +42,7 @@ module.exports = (srcPath) => {
             socket.once('data', name => {
               name = name.toString().trim();
 
-              const invalid = InputValidation.isInvalidName(name);
+              const invalid = Account.validateName(name);
               if (invalid) {
                 say(invalid);
                 return next(socket, 'login', args);
@@ -52,7 +52,7 @@ module.exports = (srcPath) => {
 
               account = Data.exists('account', name);
 
-              // That player doesn't exist so ask if them to create it
+              // That player account doesn't exist so ask if them to create it
               if (!account) {
                 util.log('No account found');
                 return socket.emit('createAccount', socket, 'check', name);
@@ -148,7 +148,7 @@ module.exports = (srcPath) => {
             if (canAddCharacter) {
               options.push({
                 display: 'Create New Character',
-                onSelect: () => socket.emit('createPlayer', socket, null, account),
+                onSelect: () => socket.emit('createPlayer', socket, null, { account }),
               });
             }
 

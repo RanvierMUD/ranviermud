@@ -38,6 +38,7 @@ class AccountManager {
       acc => acc.getUsername().toLowerCase() === name.toLowerCase()
     );
   }
+
 }
 
 module.exports = AccountManager;

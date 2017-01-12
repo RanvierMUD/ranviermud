@@ -1,6 +1,7 @@
 'use strict';
 
 const Npc = require('./Npc');
+const Data = require('./data');
 
 /**
  * Stores definitions of npcs to allow for easy creation/cloning
@@ -19,6 +20,9 @@ class MobFactory {
     this.npcs.set(area + ':' + id, def);
   }
 
+  exists(id) {
+    return Data.exists('npc', id);
+  }
 
   /**
    * Create a new instance of a given npc definition. Resulting npc will not be held or equipped

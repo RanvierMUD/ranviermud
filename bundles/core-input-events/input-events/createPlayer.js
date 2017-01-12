@@ -19,7 +19,6 @@ module.exports = (srcPath) => {
   const EventUtil = require(srcPath + 'EventUtil');
   const Player = require(srcPath + 'Player');
   const Broadcast = require(srcPath + 'Broadcast');
-  const InputValidation = require(srcPath + 'InputValidation');
 
   return {
     event : (state) => (socket, stage, args) => {
@@ -41,7 +40,7 @@ module.exports = (srcPath) => {
             say('');
             name = name.toString().trim();
 
-            const invalid = InputValidation.isInvalidName(name);
+            const invalid = Player.validateName(name);
 
             if (invalid) {
               say(invalid);
@@ -57,7 +56,7 @@ module.exports = (srcPath) => {
               return next(socket, 'name', args);
             }
 
-            return next(socket, 'check', { name, account: args.account });
+            return next(socket, 'check', Object.assign({}, args, { name }));
           });
           break;
         }

@@ -5,6 +5,8 @@ const Data = require('./Data');
 const Room = require('./Room');
 const Character = require('./Character');
 
+const ranvierConfig = require('../ranvier.json');
+
 class Player extends Character {
   constructor(data) {
     super(data);
@@ -139,6 +141,23 @@ class Player extends Character {
   getBroadcastTargets() {
     return [this];
   }
+
+  static validateName(name) {
+    if (!name) {
+      return 'Please enter a name.';
+    }
+    if (name.length > ranvierConfig.maxPlayerNameLength) {
+      return 'Too long, try a shorter name.';
+    }
+    if (name.length < ranvierConfig.minPlayerNameLength) {
+      return 'Too short, try a longer name.';
+    }
+    if (!/^[a-z]+$/i.test(name)) {
+      return 'Your name may only contain A-Z without spaces or special characters.';
+    }
+    return false;
+  }
+
 }
 
 module.exports = Player;
