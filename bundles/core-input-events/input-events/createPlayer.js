@@ -40,9 +40,9 @@ module.exports = (srcPath) => {
             say('');
             name = name.toString().trim();
 
-            if (!name) {
-              say('<yellow>Please enter a name.</yellow>');
-              return next(socket, 'name');
+            if (/[^a-z]/i.test(name) || !name) {
+              say("That's not really your name, now is it?");
+              return repeat();
             }
 
             name = name[0].toUpperCase() + name.slice(1);
