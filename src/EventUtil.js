@@ -31,8 +31,6 @@ function genRepeat(repeatArgs, next) {
   };
 }
 
-
-
 const genWrite = socket => string => socket.write(sty.parse(string));
 const genSay   = socket => string => socket.write(sty.parse(string + '\r\n'));
 
