@@ -39,6 +39,12 @@ module.exports = (srcPath) => {
           socket.once('data', name => {
             say('');
             name = name.toString().trim();
+
+            if (!name) {
+              say('<yellow>Please enter a name.</yellow>');
+              return next(socket, 'name');
+            }
+
             name = name[0].toUpperCase() + name.slice(1);
 
             const invalid = validate(name);
