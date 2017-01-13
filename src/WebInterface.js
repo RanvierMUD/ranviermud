@@ -14,14 +14,14 @@ class WebInterface {
   }
 
   init() {
-
+    util.log("this.state.PlayerManager.players", this.state.PlayerManager.players);
     // Routes for the API's GET response.
     router.get('/',        (req, res) => res.json(this.state));
-    router.get('/npcs',    (req, res) => res.json(this.state.MobFactory.npcs));
-    router.get('/players', (req, res) => res.json(this.state.PlayerManager.players));
-    router.get('/items',   (req, res) => res.json(this.state.ItemManager.items));
-    router.get('/rooms',   (req, res) => res.json(this.state.RoomManager.rooms));
-    router.get('/help',    (req, res) => res.json(this.state.HelpManager.helps));
+    router.get('/npcs',    (req, res) => res.json({ npcs: this.state.MobFactory }));
+    router.get('/players', (req, res) => res.json({ players: this.state.PlayerManager.players }));     
+    router.get('/items',   (req, res) => res.json({ items: this.state.ItemManager.items }));
+    router.get('/rooms',   (req, res) => res.json({ rooms: this.state.RoomManager.rooms }));
+    router.get('/help',    (req, res) => res.json({ help: this.state.HelpManager.helps }));
 
     app.use('/api', router);
 
