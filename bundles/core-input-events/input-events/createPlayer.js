@@ -39,28 +39,15 @@ module.exports = (srcPath) => {
           socket.once('data', name => {
             say('');
             name = name.toString().trim();
-            name = name[0].toUpperCase() + name.slice(1);
 
-            const invalid = validate(name);
-
-            // TODO: Refactor to share validation logic with `login` event handler
-            function validate(name) {
-              if (name.length > 20) {
-                return 'Too long, try a shorter name.';
-              }
-              if (name.length < 3) {
-                return 'Too short, try a longer name.';
-              }
-              if (!/^[a-z]+$/i.test(name)) {
-                return 'Your name may only contain A-Z without spaces or special characters.';
-              }
-              return false;
-            }
+            const invalid = Player.validateName(name);
 
             if (invalid) {
               say(invalid);
               return next(socket, 'name', args);
             }
+
+            name = name[0].toUpperCase() + name.slice(1);
 
             const exists = state.PlayerManager.exists(name);
 
@@ -69,7 +56,7 @@ module.exports = (srcPath) => {
               return next(socket, 'name', args);
             }
 
-            return next(socket, 'check', { name, account: args.account });
+            return next(socket, 'check', Object.assign({}, args, { name }));
           });
           break;
         }

@@ -16,7 +16,7 @@ function genNext(event) {
    * @param ...
    */
   return function (socket, nextstage) {
-    socket.emit.apply(socket, [event].concat([].slice.call(arguments)));
+    socket.emit(event, ...arguments);
   }
 }
 
@@ -27,14 +27,14 @@ function genNext(event) {
  */
 function genRepeat(repeatArgs, next) {
   return function () {
-    next.apply(null, [].slice.call(repeatArgs))
+    next(...repeatArgs);
   };
 }
 
 const genWrite = socket => string => socket.write(sty.parse(string));
 const genSay   = socket => string => socket.write(sty.parse(string + '\r\n'));
 
-module.exports =  {
+module.exports =  {  
   genNext,
   genRepeat,
   genSay,

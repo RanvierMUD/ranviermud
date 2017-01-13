@@ -8,5 +8,10 @@
     "core-effects",
     "core-input-events",
     "core-skills"
-  ]
+  ],
+
+  "maxAccountNameLength": 20,
+  "minAccountNameLength": 3,
+  "maxPlayerNameLength": 20,
+  "minPlayerNameLength": 3
 }

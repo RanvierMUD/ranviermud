@@ -7,6 +7,7 @@ module.exports = (srcPath) => {
   const Data = require(srcPath + 'Data');
   const EventUtil = require(srcPath + 'EventUtil');
   const Broadcast = require(srcPath + 'Broadcast');
+  const Account = require(srcPath + 'Account');
 
   return {
     event: (state) => {
@@ -41,18 +42,17 @@ module.exports = (srcPath) => {
             socket.once('data', name => {
               name = name.toString().trim();
 
-              //TODO: Blacklist/whitelist names here.
-              //TODO: Put name validation functions in module
-              if (/[^a-z]/i.test(name) || !name) {
-                say("That's not really your name, now is it?");
-                return repeat();
+              const invalid = Account.validateName(name);
+              if (invalid) {
+                say(invalid);
+                return next(socket, 'login', args);
               }
 
               name = name[0].toUpperCase() + name.slice(1);
 
               account = Data.exists('account', name);
 
-              // That player doesn't exist so ask if them to create it
+              // That player account doesn't exist so ask if them to create it
               if (!account) {
                 util.log('No account found');
                 return socket.emit('createAccount', socket, 'check', name);
@@ -148,7 +148,7 @@ module.exports = (srcPath) => {
             if (canAddCharacter) {
               options.push({
                 display: 'Create New Character',
-                onSelect: () => socket.emit('createPlayer', socket, null, account),
+                onSelect: () => socket.emit('createPlayer', socket, null, { account }),
               });
             }
 

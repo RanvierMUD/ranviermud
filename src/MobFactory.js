@@ -19,7 +19,6 @@ class MobFactory {
     this.npcs.set(area + ':' + id, def);
   }
 
-
   /**
    * Create a new instance of a given npc definition. Resulting npc will not be held or equipped
    * and will _not_ have its default contents. If you want it to also populate its default contents
