@@ -101,13 +101,19 @@ function init(restartServer) {
     HelpManager: new HelpManager(),
 
     // All global server settings like default respawn time, save interval, port, what bundles to load, etc.
-    Config: Config,
+    Config,
+  
   };
 
   // Setup bundlemanager
   const BundleManager = new (require('./src/BundleManager'))(GameState);
 
   BundleManager.loadBundles();
+
+  // Set up web API
+  const WebInterface = new (require('./src/WebInterface'))(GameState);
+
+  WebInterface.init();
 
   if (restartServer) {
     util.log("START - Starting server");
