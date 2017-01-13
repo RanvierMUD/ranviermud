@@ -14,7 +14,7 @@ class WebInterface {
   }
 
   init() {
-    router.get('/', (req, res) => res.json({ message: 'hooray! welcome to our api!' }));
+    router.get('/', (req, res) => res.json(this.state));
 
     app.use('/api', router);
 
