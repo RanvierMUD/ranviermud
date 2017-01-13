@@ -4,8 +4,7 @@ const util = require('util');
 const Data = require('./Data');
 const Room = require('./Room');
 const Character = require('./Character');
-
-const ranvierConfig = require('../ranvier.json');
+const Config = require('./Config');
 
 class Player extends Character {
   constructor(data) {
@@ -143,13 +142,16 @@ class Player extends Character {
   }
 
   static validateName(name) {
+    const maxLength = Config.get('maxPlayerNameLength');
+    const minLength = Config.get('minPlayerNameLength');
+
     if (!name) {
       return 'Please enter a name.';
     }
-    if (name.length > ranvierConfig.maxPlayerNameLength) {
+    if (name.length > maxLength) {
       return 'Too long, try a shorter name.';
     }
-    if (name.length < ranvierConfig.minPlayerNameLength) {
+    if (name.length < minLength) {
       return 'Too short, try a longer name.';
     }
     if (!/^[a-z]+$/i.test(name)) {

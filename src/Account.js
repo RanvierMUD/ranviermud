@@ -1,8 +1,7 @@
 'use strict';
 const crypto = require('crypto');
 const Data = require('./Data');
-
-const ranvierConfig = require('../ranvier.json');
+const Config = require('./Config');
 
 class Account {
 
@@ -33,13 +32,16 @@ class Account {
   }
 
   static validateName(name) {
+    const maxLength = Config.get('maxAccountNameLength');
+    const minLength = Config.get('minAccountNameLength');
+
     if (!name) {
       return 'Please enter a name.';
     }
-    if (name.length > ranvierConfig.maxAccountNameLength) {
+    if (name.length > maxLength) {
       return 'Too long, try a shorter name.';
     }
-    if (name.length < ranvierConfig.minAccountNameLength) {
+    if (name.length < minLength) {
       return 'Too short, try a longer name.';
     }
     if (!/^[a-z]+$/i.test(name)) {
