@@ -106,12 +106,12 @@ class Player extends Character {
   }
 
   serialize() {
-    let prefs = Array.from(this.preferences.entries()).map(pref => {
-      return {
+    console.log('into serialize...');
+    let prefs = Array.from(this.preferences.entries()).map(pref => 
+      ({
         key: pref[0],
         value: pref[1]
-      };
-    });
+      }));
 
     let data = {
       account: this.account.name,
@@ -126,9 +126,11 @@ class Player extends Character {
     };
 
     data.inventory = this.inventory ?
-      Array.from(this.inventory.values()).map(function (item) { return item.serialize() }) :
-      this.inventory
-    ;
+      Array.from(this.inventory.values()).map(item => item.serialize) :
+      this.inventory;
+
+    util.log("STRINGIFYING PLAYER:");
+    console.log(data);
 
     return data;
   }
