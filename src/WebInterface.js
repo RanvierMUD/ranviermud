@@ -7,9 +7,7 @@ const express    = require('express');
 const bodyParser = require('body-parser');
 const app        = express();
 const router     = express.Router();
-
 app.use(bodyParser.urlencoded({ extended: true }));
-const secret = fs.readFileSync(__dirname + '/../.ranvierSecret');
 
 const Config = require('./Config');
 
@@ -21,7 +19,6 @@ class WebInterface {
   }
 
   init() {
-    util.log("this.state.PlayerManager.players", this.state.PlayerManager.players);
 
     const message = { message: "RanvierMUD API Endpoints: /npcs /players /items /rooms /help" };
     // Routes for the API's GET response.
@@ -45,6 +42,14 @@ class WebInterface {
       if (account.password !== req.body.password) {
         util.log(`[WEB] ${accountName} Auth Failed: Incorrect password.`);
         return res.json({ success: false, message: `${accountName} password incorrect.`});
+      }
+
+      let secret;
+      try {
+        secret = fs.readFileSync(__dirname + '/../.ranvierSecret');
+      } catch(e) {
+        util.log(`[WEB] Authenticated requests not available without a .ranverSecret file...`);
+        return res.json({ success: false, message: 'Authentication failed, contact the administrator. '});
       }
 
       const token = jwt.sign(account, secret, {

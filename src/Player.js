@@ -106,7 +106,6 @@ class Player extends Character {
   }
 
   serialize() {
-    console.log('into serialize...');
     let prefs = Array.from(this.preferences.entries()).map(pref => 
       ({
         key: pref[0],
@@ -128,9 +127,6 @@ class Player extends Character {
     data.inventory = this.inventory ?
       Array.from(this.inventory.values()).map(item => item.serialize) :
       this.inventory;
-
-    util.log("STRINGIFYING PLAYER:");
-    console.log(data);
 
     return data;
   }
