@@ -1,10 +1,17 @@
-const util    = require('util');
-const express = require('express');
-const app     = express();
-const router  = express.Router();
+const util = require('util');
+const fs   = require('fs');
+const jwt  = require('jsonwebtoken');
+
+// Set up an Express app for the Web API.
+const express    = require('express');
+const bodyParser = require('body-parser');
+const app        = express();
+const router     = express.Router();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+const secret = fs.readFileSync(__dirname + '/../.ranvierSecret');
 
 const Config = require('./Config');
-
 
 class WebInterface {
   
@@ -24,6 +31,31 @@ class WebInterface {
     router.get('/items',   this.getResponseData(this.state.ItemManager, 'items'));
     router.get('/rooms',   this.getResponseData(this.state.RoomManager, 'rooms'));
     router.get('/help',    this.getResponseData(this.state.HelpManager, 'helps'));
+
+    router.post('/authenticate', (req, res) => {
+      const accountName = req.body.name;
+      const account = this.state.AccountManager.findByName(accountName);
+      
+      if (!account) {
+        util.log(`[WEB] ${accountName} Auth Failed: Account not found.`);
+        return res.json({ success: false, message: `${accountName} was not found.`});
+      }
+
+      // Both passwords should be hashed... right?
+      if (account.password !== req.body.password) {
+        util.log(`[WEB] ${accountName} Auth Failed: Incorrect password.`);
+        return res.json({ success: false, message: `${accountName} password incorrect.`});
+      }
+
+      const token = jwt.sign(account, secret, {
+        expiresIn: "24h"
+      });
+
+      util.log(`[WEB] ${accountName} Auth Success!`);
+      return res.json({ success: true, token, message: `${accountName} authenticated.`});
+      
+    });
+
 
     app.use('/api', router);
 
@@ -54,9 +86,11 @@ class WebInterface {
       }
 
       try {
+        util.log('[WEB] Request success.');
         return res.json({ [name]: response });
       } catch (err) {
-        return res.json({ error: `An error has occurred: ${err}.` });
+        util.log(`[WEB] Request failed: ${err}`);
+        return res.json({ success: false, message: `An error has occurred: ${err}.` });
       } 
 
     }

@@ -11,6 +11,10 @@ class Account {
     this.password   = data.password;
   }
 
+  getUsername() {
+    return this.username;
+  }
+
   addCharacter(username) {
     this.characters.push(username);
   }

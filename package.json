@@ -27,11 +27,13 @@
     "yaml": ""
   },
   "devDependencies": {
+    "body-parser": "^1.15.2",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-eslint": "^2.0.0",
     "gulp-todo": "^4.1.0",
     "istanbul": "^0.4.4",
+    "jsonwebtoken": "^7.2.1",
     "mocha": "^2.5.3",
     "mocha-istanbul": "^0.3.0",
     "sinon": "^1.17.5"
