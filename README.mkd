@@ -32,6 +32,34 @@ Ranvier is _not_ a websocket MUD. It does not have a web client. It is a plain o
 
 Connect to the server using `telnet localhost 23`
 
+## Web API 
+
+There is an in-progress Web interface for viewing information about the MUD and building areas in real time.
+Currently, the following routes are supported:
+```
+GET: 
+  /api/items
+  /api/npcs
+  /api/players
+  /api/rooms
+
+POST:
+  /api/authenticate
+```
+
+Currently, none of the routes are protected, so authentication does not do much in and of itself.
+On server startup, a `.ranvierSecret` file will be created with the server's API secret, to be used by a web client.
+
+Authentication is done by sending a url-encoded POST request to the end point with the following information:
+```
+{
+  name: [ account name ]
+  password: [ account password ]
+}
+```
+
+If authenticated, the response will contain a token that is good for 24 hours.
+
 ## TODO
 
 ### Critical
@@ -74,3 +102,5 @@ Connect to the server using `telnet localhost 23`
 
 - [ ] Update help to autogenerate usage for channels
 - [ ] Update help to allow data like skill cost as tokens
+- [X] Web API for getting information about the world.
+- [ ] Web API for building/editing the world, with authentication.
