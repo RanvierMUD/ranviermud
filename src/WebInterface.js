@@ -26,7 +26,7 @@ class WebInterface {
     this.setUpGetRoutes();
 
     // Authentication route.
-    router.post('/authenticate', this.authenticate);
+    router.post('/authenticate', (req, res) => this.authenticate(req, res));
 
     app.use('/api', router);
 
@@ -71,7 +71,7 @@ class WebInterface {
       return res.json({ success: false, message: `${accountName} was not found.`});
     }
 
-    if (account.password !== req.body.password) {
+    if (!bcrypt.compareSync(req.body.password, account.password)) {
       util.log(`[WEB] ${accountName} Auth Failed: Incorrect password.`);
       return res.json({ success: false, message: `${accountName} password incorrect.`});
     }
