@@ -12,6 +12,7 @@
     "test:coverage": "istanbul --include-all-sources cover _mocha -- -R dot --recursive ./test/**/*.spec.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.0",
     "colorize": "",
     "commander": "",
     "express": "^4.14.0",

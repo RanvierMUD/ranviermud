@@ -1,7 +1,7 @@
 'use strict';
 
 const util   = require('util');
-const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 
 module.exports = (srcPath) => {
   const Data = require(srcPath + 'Data');
@@ -89,11 +89,9 @@ module.exports = (srcPath) => {
 
             socket.once('data', pass => {
               socket.toggleEcho();
-
-              // TODO: Replace MD5
-              pass = crypto.createHash('md5').update(pass.toString('').trim()).digest('hex');
-
-              if (pass !== args.account.password) {
+              pass = pass.toString().trim();
+              
+              if (!bcrypt.compareSync(pass, args.account.password)) {
                 say('Incorrect password.\r\n');
                 passwordAttempts[name]++;
 
