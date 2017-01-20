@@ -113,6 +113,7 @@ class Player extends Character {
       }));
 
     let data = {
+      name: this.name,
       account: this.account.name,
       attributes: this.attributes,
       combatPromptString: this.combatPromptString,

@@ -115,7 +115,7 @@ class WebInterface {
       for (let [key, value] of entities) {
         if (!value) { continue; }
         const val = value.serialize ? value.serialize() : value;
-        response.push([key, val]);
+        response.push(val);
       }
     }
 
