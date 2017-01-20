@@ -50,11 +50,9 @@ class WebInterface {
   }
 
   setUpGetRoutes() {
-    const message = { message: "RanvierMUD API Endpoints: /npcs /players /items /rooms /help" };
     const { MobFactory, PlayerManager, ItemManager, RoomManager, HelpManager } = this.state;
 
     // Routes for the API's GET response.
-    router.get('/',        (req, res) => res.json(message));
     router.get('/npcs',    this.getResponseData(MobFactory, 'npcs'));
     router.get('/players', this.getResponseData(PlayerManager, 'players'));     
     router.get('/items',   this.getResponseData(ItemManager, 'items'));
