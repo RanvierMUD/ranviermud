@@ -87,10 +87,9 @@ class WebInterface {
   getResponseData(manager, name) {
     return (req, res) => {
       const response = this.parseEntitiesIntoResponse(manager, name);
-      util.log('[WEB] Request made for ${name}.');
+      util.log(`[WEB] Request made for ${name}.`);
 
       try {
-        util.log('[WEB] Request success.');
         return res.json({ [name]: response });
       } catch (err) {
         util.log(`[WEB] Request failed: ${err}`);
@@ -108,7 +107,7 @@ class WebInterface {
     }
 
     if (entities instanceof Map) {
-      handleMap(entities, reponse);
+      handleMap(entities, response);
     }
 
     function handleMap(entities, response) {
