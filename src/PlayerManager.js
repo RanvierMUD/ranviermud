@@ -16,7 +16,7 @@ class PlayerManager extends EventEmitter {
   }
 
   addPlayer(player) {
-    this.players.set(player.name, player);
+    this.players.set(this.keyify(player), player);
   }
 
   removePlayer(player, killSocket) {
@@ -24,11 +24,22 @@ class PlayerManager extends EventEmitter {
       player.socket.end();
     }
 
-    this.players.delete(player.name);
+    this.players.delete(this.keyify(player));
   }
 
+  /**
+   * @return {array}
+   */
+  getPlayersAsArray() {
+    return Array.from(this.players.values());
+  }
+
+  /**
+   * @param {Function} fn Filter function
+   * @return {array}
+   */
   filter(fn) {
-    return Array.from(this.players.values()).filter(fn);
+    return this.getPlayersAsArray().filter(fn);
   }
 
   loadPlayer(account, username, force) {
@@ -48,12 +59,16 @@ class PlayerManager extends EventEmitter {
     return player;
   }
 
+  keyify(player) {
+    return player.name.toLowerCase();
+  }
+
   exists(name) {
     return Data.exists('player', name);
   }
 
   saveAll(playerCallback) {
-    for (const [ name, player] of this.players.entries()) {
+    for (const [ name, player ] of this.players.entries()) {
       player.emit('save', playerCallback);
     }
   }

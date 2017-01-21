@@ -1,7 +1,8 @@
 'use strict';
 
 const Broadcast = require('./Broadcast');
-const ChannelAudience = require('./ChannelAudience');
+const ChannelAudienceWorld = require('./ChannelAudience/World');
+const ChannelAudiencePrivate = require('./ChannelAudience/Private');
 
 /**
  * @property {ChannelAudience} audience People who receive messages from this channel
@@ -11,7 +12,7 @@ const ChannelAudience = require('./ChannelAudience');
 class Channel {
   constructor(data) {
     this.bundle = null; // for debugging purposes, which bundle it came from
-    this.audience = data.audience || ChannelAudience.WORLD;
+    this.audience = data.audience || (new ChannelAudienceWorld());
     this.color = data.color || null;
     this.name = data.name;
     this.description = data.description;
@@ -21,6 +22,11 @@ class Channel {
     };
   }
 
+  /**
+   * @param {GameState} state
+   * @param {Player}    sender
+   * @param {string}    message
+   */
   send(state, sender, message) {
     if (!message.length) {
       Broadcast.sayAt(sender, `Channel: ${this.name}`);
@@ -30,59 +36,29 @@ class Channel {
       return this.showUsage(sender);
     }
 
-    let targets = null;
-    switch (this.audience) {
-      case ChannelAudience.ROOM: {
-        targets = new class {
-          getBroadcastTargets() {
-            return sender.room.getBroadcastTargets().filter(player => player !== sender);
-          }
-        };
-        break;
-      }
-      case ChannelAudience.AREA: {
-        // It would be more elevant to just pass the area but that could be super inneficient if an area has
-        // lots of rooms to iterate over all the rooms to find all the players, so instead just filter
-        // the player list
-        targets = new class {
-          getBroadcastTargets() {
-            return state.PlayerManager.filter(player => {
-              return player.room && player.room.area === sender.room.area && player !== sender;
-            });
-          }
-        };
-        break;
-      }
-      case ChannelAudience.WORLD: {
-        targets = state.PlayerManager;
-        targets = new class {
-          getBroadcastTargets() {
-            return state.PlayerManager.filter(player => player !== sender);
-          }
-        };
-        break;
-      }
-      case ChannelAudience.PRIVATE: {
-        const targetPlayerName = message.split(' ')[0];
-        let targetPlayer = state.PlayerManager.getPlayer(targetPlayerName);
-        if (targetPlayer) {
-          targets = new class {
-            getBroadcastTargets() {
-              return [targetPlayer];
-            }
-          };
-          break;
-        }
-        return Broadcast.sayAt(sender, "That player isn't online.");
-      }
-      default: {
-        return util.log(`Channel [${this.name} has invalid audience [${this.audience}]`);
-      }
+    if (!this.audience) {
+      return util.log(`Channel [${this.name} has invalid audience [${this.audience}]`);
     }
-    Broadcast.sayAt(sender, this.formatter.sender(sender, message, this.colorify.bind(this)));
 
-    Broadcast.sayAtFormatted(targets, message, (target, message) => {
-      return this.formatter.target(target, sender, message, this.colorify.bind(this));
+    this.audience.configure({ state, sender, message });
+    const targets = this.audience.getBroadcastTargets();
+    if (!targets.length) {
+        return Broadcast.sayAt(sender, "With no one to hear your message it disappears in the wind.");
+    }
+
+    // Allow audience to change message e.g., strip target name
+    message = this.audience.alterMessage(message);
+
+    // Private channels also send the target player to the formatter
+    if (this.audience instanceof ChannelAudiencePrivate) {
+      Broadcast.sayAt(sender, this.formatter.sender(sender, targets[0], message, this.colorify.bind(this)));
+    } else {
+      Broadcast.sayAt(sender, this.formatter.sender(sender, null, message, this.colorify.bind(this)));
+    }
+
+    // send to audience targets
+    Broadcast.sayAtFormatted(this.audience, message, (target, message) => {
+      return this.formatter.target(sender, target, message, this.colorify.bind(this));
     });
   }
 
@@ -102,22 +78,24 @@ class Channel {
    * E.g., you may want "chat" to say "You chat, 'message here'"
    * @param {Player} sender
    * @param {string} message
+   * @param {Functino} colorify
    * @return {string}
    */
-  formatToSender(sender, message, colorify) {
+  formatToSender(sender, target, message, colorify) {
     return colorify(`[${this.name}] ${sender.name}: ${message}`);
   }
 
   /**
    * How to render the message to everyone else
    * E.g., you may want "chat" to say "Playername chats, 'message here'"
-   * @param {Player} target
    * @param {Player} sender
+   * @param {Player} target
    * @param {string} message
+   * @param {Functino} colorify
    * @return {string}
    */
-  formatToReceipient(target, sender, message, colorify) {
-    return this.formatToSender(sender, message, colorify);
+  formatToReceipient(sender, target, message, colorify) {
+    return this.formatToSender(sender, target, message, colorify);
   }
 
   colorify(message) {
