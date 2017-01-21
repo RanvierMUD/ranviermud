@@ -129,7 +129,7 @@ function init(restartServer) {
       util.log("User connected...");
 
       // @see: bundles/core-events/events/login.js
-      socket.emit('login', socket);
+      socket.emit('intro', socket);
     }).netServer;
 
     // start the server

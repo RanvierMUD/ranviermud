@@ -2,13 +2,17 @@
 
 const util = require('util');
 
+/**
+ * Main command loop. All player input after login goes through here.
+ * If you want to swap out the command parser this is the place to do it
+ */
 module.exports = (src) => {
   const { CommandParser, InvalidCommandError } = require(src + 'CommandParser');
   const CommandTypes = require(src + 'CommandType');
   const Broadcast = require(src + 'Broadcast');
 
   return {
-    event: (state) => player => {
+    event: state => player => {
       player.socket.once('data', data => {
         function loop () {
           player.socket.emit('commands', player);
