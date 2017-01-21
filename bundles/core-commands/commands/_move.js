@@ -33,12 +33,20 @@ module.exports = (srcPath) => {
       }
 
       exit = exits.pop();
-      player.room.emit('playerLeave', player);
-      player.room.removePlayer(player);
       const nextRoom =  state.RoomManager.getRoom(exit.roomId, player.room.area);
+
+      player.room.emit('playerLeave', player, nextRoom);
+      for (const npc of player.room.npcs) {
+        npc.emit('playerLeave', player, nextRoom);
+      }
+      player.room.removePlayer(player);
+
       player.room = nextRoom;
       nextRoom.addPlayer(player);
       nextRoom.emit('playerEnter', player);
+      for (const npc of nextRoom.npcs) {
+        npc.emit('playerEnter', player);
+      }
 
       state.CommandManager.get('look').execute('', player);
       return true;

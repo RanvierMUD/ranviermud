@@ -49,6 +49,7 @@ class BundleManager {
     // TODO: Use bundles.json file to see enabled bundles
     const paths = {
       areas: bundlePath + '/areas/',
+      behaviors: bundlePath + '/behaviors/',
       channels: bundlePath + '/channels.js',
       commands: bundlePath + '/commands/',
       help: bundlePath + '/help/',
@@ -64,6 +65,10 @@ class BundleManager {
       this.loadChannels(bundle, paths.channels);
     }
 
+    if (fs.existsSync(paths.behaviors)) {
+      this.loadBehaviors(bundle, paths.behaviors);
+    }
+
     if (fs.existsSync(paths.help)) {
       this.loadHelp(bundle, paths.help);
     }
@@ -72,7 +77,6 @@ class BundleManager {
       this.loadAreas(bundle, paths.areas)
 
       // Distribution is done after all areas are loaded in case items use areas from each other
-      console.log('Starting distribution...');
       this.state.AreaManager.distribute(this.state);
     }
 
@@ -133,7 +137,7 @@ class BundleManager {
   }
 
   loadItems(area, itemsFile) {
-    util.log(`\tLOAD: AREA [${area.name}] Items...`);
+    util.log(`\t\tLOAD: Items...`);
 
     // parse the item files
     let items = Data.parseFile(itemsFile);
@@ -143,13 +147,13 @@ class BundleManager {
       this.state.ItemFactory.setDefinition(area.name, item.id, item);
     });
 
-    util.log(`\tENDLOAD: AREA [${area.name}] Items`);
+    util.log(`\t\tENDLOAD: Items`);
 
     return items;
   }
 
   loadNpcs(area, npcsFile) {
-    util.log(`\tLOAD: AREA [${area.name}] Npcs...`);
+    util.log(`\t\tLOAD: Npcs...`);
 
     // parse the npc files
     let npcs = Data.parseFile(npcsFile);
@@ -157,15 +161,17 @@ class BundleManager {
     // create and load the npcs
     npcs = npcs.map(npc => {
       this.state.MobFactory.setDefinition(area.name, npc.id, npc);
+
+      // TODO: Load events
     });
 
-    util.log(`\tENDLOAD: AREA [${area.name}] Npcs`);
+    util.log(`\t\tENDLOAD: Npcs`);
 
     return npcs;
   }
 
   loadRooms(area, roomsFile) {
-    util.log(`\tLOAD: AREA [${area.name}] Rooms...`);
+    util.log(`\t\tLOAD: Rooms...`);
 
     // parse the room files
     let rooms = Data.parseFile(roomsFile);
@@ -177,7 +183,7 @@ class BundleManager {
       this.state.RoomManager.addRoom(room)
     });
 
-    util.log(`\tENDLOAD: AREA [${area.name}] Rooms`);
+    util.log(`\t\tENDLOAD: Rooms`);
 
     return rooms;
   }
@@ -270,6 +276,39 @@ class BundleManager {
     }
 
     util.log(`\tENDLOAD: Events...`);
+  }
+
+  loadBehaviors(bundle, behaviorsDir) {
+    util.log(`\tLOAD: Behaviors...`);
+    function loadEntityBehaviors(type, manager, state) {
+      util.log(`\t\tLOAD: BEHAVIORS [${type}]...`);
+      let typeDir = behaviorsDir + type + '/';
+      const files = fs.readdirSync(typeDir);
+
+      for (const behaviorFile of files) {
+        const behaviorPath = typeDir + behaviorFile;
+        if (!fs.statSync(behaviorPath).isFile() || !behaviorFile.match(/js$/)) {
+          continue;
+        }
+
+        const behaviorName = path.basename(behaviorFile, path.extname(behaviorFile));
+        util.log(`\t\t\tLOAD: BEHAVIORS [${type}] ${behaviorName}...`);
+        const behaviorListeners = require(behaviorPath)(srcPath).listeners;
+
+        for (const eventName in behaviorListeners) {
+          if (!behaviorListeners.hasOwnProperty(eventName)) {
+            continue;
+          }
+
+          manager.addListener(behaviorName, eventName, behaviorListeners[eventName](state));
+        }
+      }
+    }
+
+    loadEntityBehaviors('npc', this.state.MobBehaviorManager, this.state);
+    loadEntityBehaviors('item', this.state.ItemBehaviorManager, this.state);
+
+    util.log(`\tENDLOAD: Behaviors...`);
   }
 }
 

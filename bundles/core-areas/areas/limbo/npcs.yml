@@ -4,6 +4,7 @@
   keywords: ['rat']
   name: 'Rat'
   description: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
+  behaviors: ['test']
   items: [2]
   attributes:
     maxHealth: 8

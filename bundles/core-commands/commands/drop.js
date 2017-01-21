@@ -37,6 +37,9 @@ module.exports = (srcPath) => {
 
       player.removeItem(item);
       player.room.addItem(item);
+      for (const npc of player.room.npcs) {
+        npc.emit('playerDropItem', player, item);
+      }
 
       Broadcast.sayAt(player, `Dropped: ${item.name}`);
     }

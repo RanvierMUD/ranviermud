@@ -91,7 +91,7 @@ module.exports = (srcPath) => {
         choice = choice.toString().trim();
         choice = parseInt(choice, 10) - 1;
         if (isNaN(choice)) {
-          return repeat();
+          return socket.emit('choose-character', socket, args);
         }
 
         const selection = options.filter(o => !!o.onSelect)[choice];

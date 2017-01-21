@@ -1,5 +1,7 @@
 'use strict';
 
+const util = require('util');
+
 class AreaManager {
   constructor() {
     this.areas = new Map();
@@ -30,9 +32,7 @@ class AreaManager {
    */
   distribute(state) {
     for (const [ name, area ] of this.areas) {
-      console.log('Distributing to area ' + area.title);
       for (const [ roomId, room ] of area.rooms) {
-        console.log('Hydrating room ' + room.title);
         room.hydrate(state);
       }
     }

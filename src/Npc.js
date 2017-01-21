@@ -2,6 +2,7 @@
 
 const Character = require('./Character');
 const uuid = require('node-uuid');
+const util = require('util');
 
 /**
  * @property {number} id   Area-relative id (vnum)
@@ -21,6 +22,7 @@ class Npc extends Character {
 
     this.defaultItems = data.items || [];
     this.defaultEquipment = data.equipment || [];
+    this.behaviors = data.behaviors || [];
     this.area = data.area;
     this.keywords = data.keywords;
     this.description = data.description;
@@ -36,11 +38,20 @@ class Npc extends Character {
         defaultItemId = this.area.name + ':' + defaultItemId;
       }
 
-      console.log(`\tADDING: Adding item [${defaultItemId}] to npc [${this.name}]`);
+      util.log(`\tDIST: Adding item [${defaultItemId}] to npc [${this.name}]`);
       const newItem = state.ItemFactory.create(this.area, defaultItemId);
       newItem.hydrate(state);
       state.ItemManager.add(newItem);
       this.addItem(newItem);
+    });
+
+    this.behaviors && this.behaviors.forEach(behaviorName => {
+      let behavior = state.MobBehaviorManager.get(behaviorName);
+      if (!behavior) {
+        return;
+      }
+
+      behavior.attach(this);
     });
   }
 }

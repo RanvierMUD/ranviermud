@@ -1,5 +1,6 @@
 'use strict';
 const EventEmitter = require('events');
+const util = require('util');
 
 /**
  * @property {Area}          area         Area room is in
@@ -48,10 +49,12 @@ class Room extends EventEmitter {
 
   addNpc(npc) {
     this.npcs.add(npc);
+    npc.room = this;
   }
 
   removeNpc(npc) {
     this.npcs.delete(npc);
+    npc.room = null;
   }
 
   addItem(item) {
@@ -76,7 +79,7 @@ class Room extends EventEmitter {
         defaultItemId = this.area.name + ':' + defaultItemId;
       }
 
-      console.log(`\tADDING: Adding item [${defaultItemId}] to room [${this.title}]`);
+      util.log(`\tDIST: Adding item [${defaultItemId}] to room [${this.title}]`);
       const newItem = state.ItemFactory.create(this.area, defaultItemId);
       newItem.hydrate(state);
       state.ItemManager.add(newItem);
@@ -88,7 +91,7 @@ class Room extends EventEmitter {
         defaultNpcId = this.area.name + ':' + defaultNpcId;
       }
 
-      console.log(`\tADDING: Adding npc [${defaultNpcId}] to room [${this.title}]`);
+      util.log(`\tDIST: Adding npc [${defaultNpcId}] to room [${this.title}]`);
       const newNpc = state.MobFactory.create(this.area, defaultNpcId);
       newNpc.hydrate(state);
       this.area.addNpc(newNpc);

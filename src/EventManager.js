@@ -39,7 +39,7 @@ class EventManager {
   attach(emitter) {
     for (const [ event, listeners ] of this.events) {
       for (const listener of listeners) {
-        emitter.on(event, listener);
+        emitter.on(event, listener.bind(emitter));
       }
     }
   }

@@ -29,6 +29,7 @@ const AreaManager = require('./src/AreaManager');
 const CommandManager = require('./src/CommandManager');
 const ChannelManager = require('./src/ChannelManager');
 const EventManager = require('./src/EventManager');
+const BehaviorManager = require('./src/BehaviorManager');
 const ItemManager = require('./src/ItemManager');
 const ItemFactory = require('./src/ItemFactory');
 const MobFactory = require('./src/MobFactory');
@@ -85,7 +86,7 @@ function init(restartServer) {
     CommandManager: new CommandManager(),
     // Stores all loaded channels
     ChannelManager: new ChannelManager(),
-    // Stores all loaded spells, just kidding, it stores events
+    // Stores all loaded spells, just kidding, it stores input events
     InputEventManager: new EventManager(),
     // Helper for creating/cloning items
     ItemFactory: new ItemFactory(),
@@ -93,6 +94,9 @@ function init(restartServer) {
     ItemManager: new ItemManager(),
     // Helper for creating/cloning Npcs (mobs)
     MobFactory: new MobFactory(),
+    // Store behavior events for items/npcs
+    MobBehaviorManager: new BehaviorManager(),
+    ItemBehaviorManager: new BehaviorManager(),
     // Stores all connected players
     PlayerManager: new PlayerManager(),
     // Stores all loaded rooms across all areas ever
