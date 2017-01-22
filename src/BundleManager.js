@@ -280,33 +280,34 @@ class BundleManager {
 
   loadBehaviors(bundle, behaviorsDir) {
     util.log(`\tLOAD: Behaviors...`);
+
     function loadEntityBehaviors(type, manager, state) {
       util.log(`\t\tLOAD: BEHAVIORS [${type}]...`);
       let typeDir = behaviorsDir + type + '/';
 
-      if (fs.existsSync(typeDir)) {
-        const files = fs.readdirSync(typeDir);
+      if (!fs.existsSync(typeDir)) {
+        util.log(`\t\t\tNOT LOADED: there are no BEHAVIORS [${type}]`);
+      }
 
-        for (const behaviorFile of files) {
-          const behaviorPath = typeDir + behaviorFile;
-          if (!fs.statSync(behaviorPath).isFile() || !behaviorFile.match(/js$/)) {
+      const files = fs.readdirSync(typeDir);
+
+      for (const behaviorFile of files) {
+        const behaviorPath = typeDir + behaviorFile;
+        if (!fs.statSync(behaviorPath).isFile() || !behaviorFile.match(/js$/)) {
+          continue;
+        }
+
+        const behaviorName = path.basename(behaviorFile, path.extname(behaviorFile));
+        util.log(`\t\t\tLOAD: BEHAVIORS [${type}] ${behaviorName}...`);
+        const behaviorListeners = require(behaviorPath)(srcPath).listeners;
+
+        for (const eventName in behaviorListeners) {
+          if (!behaviorListeners.hasOwnProperty(eventName)) {
             continue;
           }
 
-          const behaviorName = path.basename(behaviorFile, path.extname(behaviorFile));
-          util.log(`\t\t\tLOAD: BEHAVIORS [${type}] ${behaviorName}...`);
-          const behaviorListeners = require(behaviorPath)(srcPath).listeners;
-
-          for (const eventName in behaviorListeners) {
-            if (!behaviorListeners.hasOwnProperty(eventName)) {
-              continue;
-            }
-
-            manager.addListener(behaviorName, eventName, behaviorListeners[eventName](state));
-          }
+          manager.addListener(behaviorName, eventName, behaviorListeners[eventName](state));
         }
-      } else {
-        util.log(`\t\t\tNOT LOADED: there are no BEHAVIORS [${type}]`);
       }
     }
 
