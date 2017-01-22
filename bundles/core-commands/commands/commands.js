@@ -50,10 +50,8 @@ module.exports = (srcPath) => {
         }
       }
 
-      // append another line if need be
-      if ((i - 1) % 3 !== 0) {
-        Broadcast.sayAt(player, '');
-      }
+      // end with a line break
+      Broadcast.sayAt(player, '');
     }
   };
 };
