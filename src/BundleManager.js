@@ -283,25 +283,30 @@ class BundleManager {
     function loadEntityBehaviors(type, manager, state) {
       util.log(`\t\tLOAD: BEHAVIORS [${type}]...`);
       let typeDir = behaviorsDir + type + '/';
-      const files = fs.readdirSync(typeDir);
 
-      for (const behaviorFile of files) {
-        const behaviorPath = typeDir + behaviorFile;
-        if (!fs.statSync(behaviorPath).isFile() || !behaviorFile.match(/js$/)) {
-          continue;
-        }
+      if (fs.existsSync(typeDir)) {
+        const files = fs.readdirSync(typeDir);
 
-        const behaviorName = path.basename(behaviorFile, path.extname(behaviorFile));
-        util.log(`\t\t\tLOAD: BEHAVIORS [${type}] ${behaviorName}...`);
-        const behaviorListeners = require(behaviorPath)(srcPath).listeners;
-
-        for (const eventName in behaviorListeners) {
-          if (!behaviorListeners.hasOwnProperty(eventName)) {
+        for (const behaviorFile of files) {
+          const behaviorPath = typeDir + behaviorFile;
+          if (!fs.statSync(behaviorPath).isFile() || !behaviorFile.match(/js$/)) {
             continue;
           }
 
-          manager.addListener(behaviorName, eventName, behaviorListeners[eventName](state));
+          const behaviorName = path.basename(behaviorFile, path.extname(behaviorFile));
+          util.log(`\t\t\tLOAD: BEHAVIORS [${type}] ${behaviorName}...`);
+          const behaviorListeners = require(behaviorPath)(srcPath).listeners;
+
+          for (const eventName in behaviorListeners) {
+            if (!behaviorListeners.hasOwnProperty(eventName)) {
+              continue;
+            }
+
+            manager.addListener(behaviorName, eventName, behaviorListeners[eventName](state));
+          }
         }
+      } else {
+        util.log(`\t\t\tNOT LOADED: there are no BEHAVIORS [${type}]`);
       }
     }
 
