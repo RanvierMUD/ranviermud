@@ -282,13 +282,13 @@ class BundleManager {
     util.log(`\tLOAD: Behaviors...`);
 
     function loadEntityBehaviors(type, manager, state) {
-      util.log(`\t\tLOAD: BEHAVIORS [${type}]...`);
       let typeDir = behaviorsDir + type + '/';
 
       if (!fs.existsSync(typeDir)) {
-        util.log(`\t\t\tNOT LOADED: there are no BEHAVIORS [${type}]`);
+        return;
       }
 
+      util.log(`\t\tLOAD: BEHAVIORS [${type}]...`);
       const files = fs.readdirSync(typeDir);
 
       for (const behaviorFile of files) {
@@ -313,6 +313,7 @@ class BundleManager {
 
     loadEntityBehaviors('npc', this.state.MobBehaviorManager, this.state);
     loadEntityBehaviors('item', this.state.ItemBehaviorManager, this.state);
+    loadEntityBehaviors('room', this.state.RoomBehaviorManager, this.state);
 
     util.log(`\tENDLOAD: Behaviors...`);
   }

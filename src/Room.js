@@ -97,6 +97,15 @@ class Room extends EventEmitter {
       this.area.addNpc(newNpc);
       this.addNpc(newNpc);
     });
+
+    this.behaviors && this.behaviors.forEach(behaviorName => {
+      let behavior = state.RoomBehaviorManager.get(behaviorName);
+      if (!behavior) {
+        return;
+      }
+
+      behavior.attach(this);
+    });
   }
 
   static getKey(room) {

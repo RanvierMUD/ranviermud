@@ -94,9 +94,10 @@ function init(restartServer) {
     ItemManager: new ItemManager(),
     // Helper for creating/cloning Npcs (mobs)
     MobFactory: new MobFactory(),
-    // Store behavior events for items/npcs
+    // Store behavior events for various entities
     MobBehaviorManager: new BehaviorManager(),
     ItemBehaviorManager: new BehaviorManager(),
+    RoomBehaviorManager: new BehaviorManager(),
     // Stores all connected players
     PlayerManager: new PlayerManager(),
     // Stores all loaded rooms across all areas ever
