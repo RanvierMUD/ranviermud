@@ -83,8 +83,15 @@ class Item extends EventEmitter {
     if (typeof this.area === 'string') {
       this.area = state.AreaManager.getArea(this.area);
     }
-    // TODO: repopulate any stored items on save
-    // this.inventory.doStuff();
+
+    if (Array.isArray(this.inventory)) {
+      if (!this.inventory.length) {
+        this.inventory = null;
+      }
+
+      // TODO: repopulate any stored items on save
+      // this.inventory.doStuff();
+    }
   }
 
   serialize() {
