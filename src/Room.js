@@ -28,6 +28,7 @@ class Room extends EventEmitter {
     this.area = area;
     this.defaultItems = def.items || [];
     this.defaultNpcs  = def.npcs || [];
+    this.behaviors  = def.behaviors || [];
     this.description = def.description;
     this.exits = def.exits;
     this.id = def.id;
