@@ -29,7 +29,6 @@ class WebInterface {
     this.setUpGetRoutes();
     app.listen(this.port);
     util.log(`[WEB]: Web API activated and running on port ${this.port}.`);
-    util.log(`[WEB]: Web API Secret: ${this.secret}`);
   }
 
   setUpMiddleWare() {
