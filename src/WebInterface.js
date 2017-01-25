@@ -18,7 +18,7 @@ class WebInterface {
     this.state  = state;
     this.port   = Config.get('webPort') || 9000;
 
-    this.whiteListed = [
+    this.whiteListed = Config.get('webWhitelist') || [
       'localhost'
     ];
   }
@@ -55,7 +55,7 @@ class WebInterface {
   getResponseData(manager, name) {
     return (req, res) => {
       const response = this.parseEntitiesIntoResponse(manager, name);
-      return res.json({ success: false, message: `An error has occurred: ${err}.` });
+      return res.json({ [name]: response });
     }
   }
 
