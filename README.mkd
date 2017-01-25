@@ -36,29 +36,19 @@ Connect to the server using `telnet localhost 23`
 
 There is an in-progress Web interface for viewing information about the MUD and building areas in real time.
 Currently, the following routes are supported:
+
 ```
 GET: 
   /api/items
   /api/npcs
   /api/players
   /api/rooms
-
-POST:
-  /api/authenticate
+  /api/help
 ```
 
-Currently, none of the routes are protected, so authentication does not do much in and of itself.
-On server startup, a `.ranvierSecret` file will be created with the server's API secret, to be used by a web client.
+Right now, you can whitelist IPs by adding them to a key called `webWhitelist` in ranvier.json.
+By default only the local host IP is whitelisted.
 
-Authentication is done by sending a url-encoded POST request to the end point with the following information:
-```
-{
-  name: [ account name ]
-  password: [ account password ]
-}
-```
-
-If authenticated, the response will contain a token that is good for 24 hours.
 
 ## TODO
 
