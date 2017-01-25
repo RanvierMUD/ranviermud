@@ -60,28 +60,6 @@ class WebInterface {
     router.get('/help',    this.getResponseData(HelpManager, 'helps'));
   }
 
-  authenticate(req, res) {
-    const accountName = req.body.name;
-    const account = this.state.AccountManager.findByName(accountName);
-    
-    if (!account) {
-      util.log(`[WEB] ${accountName} Auth Failed: Account not found.`);
-      return res.json({ success: false, message: `${accountName} was not found.`});
-    }
-
-    if (!bcrypt.compareSync(req.body.password, account.password)) {
-      util.log(`[WEB] ${accountName} Auth Failed: Incorrect password.`);
-      return res.json({ success: false, message: `${accountName} password incorrect.`});
-    }
-
-    let secret    = this.getSecret();
-    let expiresIn = "24h";
-    const token   = jwt.sign(account, secret, { expiresIn });
-
-    util.log(`[WEB] ${accountName} Auth Success!`);
-    return res.json({ success: true, token, message: `${accountName} authenticated. Token good for ${expiresIn}.`});
-  }
-
   getResponseData(manager, name) {
     return (req, res) => {
       const response = this.parseEntitiesIntoResponse(manager, name);
@@ -117,6 +95,28 @@ class WebInterface {
     }
 
     return response;
+  }
+
+  authenticate(req, res) {
+    const accountName = req.body.name;
+    const account = this.state.AccountManager.findByName(accountName);
+    
+    if (!account) {
+      util.log(`[WEB] ${accountName} Auth Failed: Account not found.`);
+      return res.json({ success: false, message: `${accountName} was not found.`});
+    }
+
+    if (!bcrypt.compareSync(req.body.password, account.password)) {
+      util.log(`[WEB] ${accountName} Auth Failed: Incorrect password.`);
+      return res.json({ success: false, message: `${accountName} password incorrect.`});
+    }
+
+    let secret    = this.getSecret();
+    let expiresIn = "24h";
+    const token   = jwt.sign(account, secret, { expiresIn });
+
+    util.log(`[WEB] ${accountName} Auth Success!`);
+    return res.json({ success: true, token, message: `${accountName} authenticated. Token good for ${expiresIn}.`});
   }
 
 }
