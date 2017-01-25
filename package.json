@@ -16,6 +16,7 @@
     "colorize": "",
     "commander": "",
     "express": "^4.14.0",
+    "express-jwt": "^5.1.0",
     "js-yaml": "",
     "longjohn": "^0.2.11",
     "node-uuid": "",
@@ -24,6 +25,7 @@
     "purdy": "^2.2.0",
     "sprintf": "",
     "sty": "",
+    "whitelist-ips": "^1.0.1",
     "wrap-ansi": "^2.0.0",
     "yaml": ""
   },
