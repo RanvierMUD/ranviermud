@@ -35,8 +35,13 @@ class WebInterface {
     app.use('/api', router);
     app.use(whitelist(['127.0.0.1']));
     app.use((err, req, res, next) => {
-      console.error(err.stack);
-      res.status(500).send('Server Error');
+      if (err.name == "WhitelistIpError") {
+        util.log(`[WEB]: Forbidden request: ${req.ip}`);
+        res.status(403).send('Forbidden');
+      } else {
+        util.log(`[WEB]: Illegal request: ${req.originalUrl}`);
+        res.status(404).send('Not Found');
+      }
     });
   }
 
