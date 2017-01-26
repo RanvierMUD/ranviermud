@@ -11,3 +11,4 @@ coverage/
 *.debug
 gulpTODO.md
 *.sublime-*
+.ranvierSecret

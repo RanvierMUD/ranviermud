@@ -1,5 +1,6 @@
 {
   "port": 3011,
+  "webPort": 9001,
 
   "bundles": [
     "core-areas",

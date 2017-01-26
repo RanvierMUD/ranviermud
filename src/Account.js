@@ -1,7 +1,7 @@
 'use strict';
-const crypto = require('crypto');
-const Data = require('./Data');
-const Config = require('./Config');
+const bcrypt = require('bcryptjs');
+const Data   = require('./Data');
+const Config  = require('./Config');
 
 class Account {
 
@@ -9,6 +9,10 @@ class Account {
     this.username   = data.username;
     this.characters = data.characters || [];
     this.password   = data.password;
+  }
+
+  getUsername() {
+    return this.username;
   }
 
   addCharacter(username) {
@@ -24,7 +28,12 @@ class Account {
   }
 
   _hashPassword(pass) {
-    return crypto.createHash('md5').update(pass).digest('hex');
+    const salt = bcrypt.genSaltSync(10);
+    return bcrypt.hashSync(pass, salt);
+  }
+
+  checkPassword(pass) {
+    return bcrypt.compareSync(pass, this.password);
   }
 
   save(callback) {

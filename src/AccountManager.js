@@ -29,7 +29,7 @@ class AccountManager {
 
     let account = new Account(data);
     this.addAccount(account);
-
+    
     return account;
   }
 

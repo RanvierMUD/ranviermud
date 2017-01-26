@@ -1,6 +1,6 @@
 'use strict';
 
-const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 
 /**
  * Account password event
@@ -37,11 +37,8 @@ module.exports = (srcPath) => {
       socket.once('data', pass => {
         socket.toggleEcho();
 
-        // TODO: Replace MD5
-        pass = crypto.createHash('md5').update(pass.toString('').trim()).digest('hex');
-
-        if (pass !== args.account.password) {
-          say('Incorrect password.\r\n');
+        if (!args.account.checkPassword(pass.toString().trim())) {
+          socket.write("Incorrect password.\r\n");
           passwordAttempts[name]++;
 
           return socket.emit('password', socket, args);
