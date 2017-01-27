@@ -37,7 +37,7 @@ class Helpfile {
 
     let footer = bar;
     if (this.related.length) {
-      footer = "<yellow>-----------------------------------RELATED--------------------------------------</yellow>\r\n"
+      footer = "<yellow>------------------------------------RELATED--------------------------------------</yellow>\r\n"
       const related = this.related.join(', ');
       footer += (new Array(width / 2 - Math.ceil(related.length / 2)).join(' '));
       footer += related + '\r\n';

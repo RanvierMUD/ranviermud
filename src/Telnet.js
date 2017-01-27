@@ -130,6 +130,7 @@ class TelnetStream extends EventEmitter
         connection.fresh = false;
       }
 
+      databuf = inputbuf.slice(0, inputlen);
       // fresh makes sure that even if we haven't gotten a newline but the client
       // sent us some initial negotiations to still interpret them
       if (!databuf.toString().match(/[\r\n]/) && !connection.fresh) {
@@ -138,7 +139,6 @@ class TelnetStream extends EventEmitter
 
       // If multiple commands were sent \r\n separated in the same packet process
       // them separately. Some client auto-connect features do this
-      databuf = inputbuf.slice(0, inputlen);
       let bucket = [];
       for (let i = 0; i < inputlen; i++) {
         if (databuf[i] !== 10) { // \n
@@ -147,6 +147,10 @@ class TelnetStream extends EventEmitter
           this.input(Buffer.from(bucket));
           bucket = [];
         }
+      }
+
+      if (bucket.length) {
+        this.input(Buffer.from(bucket));
       }
 
       inputbuf = new Buffer(this.maxInputLength);
