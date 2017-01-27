@@ -1,1 +1,1 @@
-{"attributes":{"maxHealth":100,"health":100,"maxMana":200,"mana":200,"maxEnergy":200,"energy":200,"strength":20,"intelligence":20,"wisdom":20,"dexterity":20,"constitution":20},"experience":0,"level":1,"prefs":[],"room":"limbo:2","inventory":[]}
+{"name":"Admin","attributes":{"maxHealth":100,"health":100,"maxMana":200,"mana":200,"maxEnergy":200,"energy":200,"strength":20,"intelligence":20,"wisdom":20,"dexterity":20,"constitution":20},"experience":0,"level":1,"prefs":[],"room":"limbo:1","inventory":[]}
