@@ -119,9 +119,16 @@ class TelnetStream extends EventEmitter
 
     connection.on('error', err => console.error('Telnet Stream Error: ', err));
 
+    this.stream.write("\r\n");
     connection.on('data', (databuf) => {
       databuf.copy(inputbuf, inputlen);
       inputlen += databuf.length;
+
+      // immediately start consuming data if we begin receiving normal data
+      // instead of telnet negotiation
+      if (connection.fresh && databuf[0] !== IAC) {
+        connection.fresh = false;
+      }
 
       // fresh makes sure that even if we haven't gotten a newline but the client
       // sent us some initial negotiations to still interpret them
