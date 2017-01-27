@@ -1,5 +1,5 @@
 {
-  "port": 3011,
+  "port": 23,
   "webPort": 9001,
 
   "bundles": [
