@@ -136,7 +136,19 @@ class TelnetStream extends EventEmitter
         return;
       }
 
-      this.input(inputbuf.slice(0, inputlen));
+      // If multiple commands were sent \r\n separated in the same packet process
+      // them separately. Some client auto-connect features do this
+      databuf = inputbuf.slice(0, inputlen);
+      let bucket = [];
+      for (let i = 0; i < inputlen; i++) {
+        if (databuf[i] !== 10) { // \n
+          bucket.push(databuf[i]);
+        } else {
+          this.input(Buffer.from(bucket));
+          bucket = [];
+        }
+      }
+
       inputbuf = new Buffer(this.maxInputLength);
       inputlen = 0;
     });
