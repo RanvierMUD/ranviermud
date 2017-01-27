@@ -123,7 +123,9 @@ class TelnetStream extends EventEmitter
       databuf.copy(inputbuf, inputlen);
       inputlen += databuf.length;
 
-      if (!databuf.toString().match(/[\r\n]/)) {
+      // fresh makes sure that even if we haven't gotten a newline but the client
+      // sent us some initial negotiations to still interpret them
+      if (!databuf.toString().match(/[\r\n]/) && !connection.fresh) {
         return;
       }
 
@@ -163,6 +165,7 @@ class TelnetStream extends EventEmitter
         case WILL:
         case WONT:
         case DO:
+          this.telnetCommand(WONT, inputbuf[i + 2]);
         case DONT:
           i += 3;
           break;
@@ -179,6 +182,10 @@ class TelnetStream extends EventEmitter
       }
     }
 
+    if (this.stream.fresh) {
+      this.stream.fresh = false;
+      return;
+    }
     this.emit('data', cleanbuf.slice(0, cleanlen - 1));
   }
 }
@@ -191,6 +198,7 @@ class TelnetServer
    */
   constructor (streamOpts, listener) {
     this.netServer = net.createServer({}, (connection) => {
+      connection.fresh = true;
       var stream = new TelnetStream(streamOpts);
       stream.attach(connection);
       this.netServer.emit('connected', stream);
