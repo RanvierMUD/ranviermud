@@ -173,9 +173,8 @@ class TelnetStream extends EventEmitter
     let cleanbuf = Buffer.alloc(inputbuf.length);
     let i = 0;
     let cleanlen = 0;
-    let inSB = false;
     while (i < inputbuf.length) {
-      if (inputbuf[i] !== IAC && !inSB) {
+      if (inputbuf[i] !== IAC) {
         cleanbuf[cleanlen++] = inputbuf[i++];
         continue;
       }
@@ -194,7 +193,6 @@ class TelnetStream extends EventEmitter
           break;
         case SB:
           // swallow subnegotiations
-          inSB = true;
           i += 2;
           let sublen = 0;
           while (inputbuf[i++] !== SE) {sublen++;}

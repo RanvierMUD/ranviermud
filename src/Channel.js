@@ -42,15 +42,15 @@ class Channel {
 
     this.audience.configure({ state, sender, message });
     const targets = this.audience.getBroadcastTargets();
-    if (!targets.length) {
-        return Broadcast.sayAt(sender, "With no one to hear your message it disappears in the wind.");
-    }
 
     // Allow audience to change message e.g., strip target name
     message = this.audience.alterMessage(message);
 
     // Private channels also send the target player to the formatter
     if (this.audience instanceof ChannelAudiencePrivate) {
+      if (!targets.length) {
+        return Broadcast.sayAt(sender, "With no one to hear your message it disappears in the wind.");
+      }
       Broadcast.sayAt(sender, this.formatter.sender(sender, targets[0], message, this.colorify.bind(this)));
     } else {
       Broadcast.sayAt(sender, this.formatter.sender(sender, null, message, this.colorify.bind(this)));
