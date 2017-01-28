@@ -2,48 +2,12 @@
 
 const Npc = require('./Npc');
 const BehaviorManager = require('./BehaviorManager');
+const EntityFactory = require('./EntityFactory');
 
 /**
  * Stores definitions of npcs to allow for easy creation/cloning
- * TODO: Refactor shared methods in ItemFactory/MobFactory to a base EntityFactory
  */
-class MobFactory {
-  constructor() {
-    this.npcs = new Map();
-    this.scripts = new BehaviorManager();
-  }
-
-  /**
-   * @param {string} areaName
-   * @param {number} id
-   * @return {Object}
-   */
-  getDefinition(areaName, id) {
-    const key = areaName.match(/[a-z\-_]+:\d+/) ? areaName : this._makeMobKey(areaName, id);
-    return this.npcs.get(key);
-  }
-
-  /**
-   * @param {string} areaName
-   * @param {number} id
-   * @param {Object} def
-   */
-  setDefinition(areaName, id, def) {
-    this.npcs.set(this._makeMobKey(areaName, id), def);
-  }
-
-  /**
-   * Add an event listener from a script to a specific item
-   * @see BehaviorManager::addListener
-   * @param {string}   areaName
-   * @param {number}   id
-   * @param {string}   event
-   * @param {Function} listener
-   */
-  addScriptListener(areaName, id, event, listener) {
-    this.scripts.addListener(this._makeMobKey(areaName, id), event, listener);
-  }
-
+class MobFactory extends EntityFactory {
   /**
    * Create a new instance of a given npc definition. Resulting npc will not be held or equipped
    * and will _not_ have its default contents. If you want it to also populate its default contents
@@ -54,12 +18,7 @@ class MobFactory {
    * @return {Npc}
    */
   create(area, definition) {
-    definition = typeof definition === 'object' ? definition : this.getDefinition(definition);
-    const npc = new Npc(area, definition);
-    const mobKey = this._makeMobKey(area.name, definition.id);
-    if (this.scripts.has(mobKey)) {
-      this.scripts.get(mobKey).attach(npc);
-    }
+    const npc = this.createByType(area, definition, Npc);
     npc.area = area;
     return npc;
   }
@@ -74,21 +33,11 @@ class MobFactory {
     let data = npc.serialize();
     delete data.uuid;
     delete data.inventory;
-    data.isHeld = false;
-    data.isEquipped = false;
+    data.room = null;
 
     let newNpc = new Npc(data);
     newNpc.area = npc.area;
-  }
-
-  /**
-   * Create the key used by the npcs and scripts maps
-   * @param {string} areaName
-   * @param {number} id
-   * @return {string}
-   */
-  _makeMobKey(area, id) {
-    return area + ':' + id;
+    return newNpc;
   }
 }
 
