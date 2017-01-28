@@ -92,6 +92,15 @@ class Item extends EventEmitter {
       // TODO: repopulate any stored items on save
       // this.inventory.doStuff();
     }
+
+    this.behaviors && this.behaviors.forEach(behaviorName => {
+      let behavior = state.ItemBehaviorManager.get(behaviorName);
+      if (!behavior) {
+        return;
+      }
+
+      behavior.attach(this);
+    });
   }
 
   serialize() {
