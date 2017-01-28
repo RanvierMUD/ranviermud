@@ -59,7 +59,7 @@ module.exports = (srcPath) => {
   }
 
   return {
-    command : (state) => (args, player) => {
+    command: (state) => (args, player) => {
       if (!player.room) {
         util.log(player.getName() + ' is in limbo.');
         return Broadcast.sayAt(player, 'You are in a deep, dark void.');
