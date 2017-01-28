@@ -97,6 +97,7 @@ class Room extends EventEmitter {
       newNpc.hydrate(state);
       this.area.addNpc(newNpc);
       this.addNpc(newNpc);
+      newNpc.emit('spawn');
     });
 
     this.behaviors && this.behaviors.forEach(behaviorName => {

@@ -4,6 +4,7 @@
   keywords: [ "shiv", "rusty", "shank", "rus", "metal", "rust" ]
   description: "A short, jagged metal shard, discolored with red corrosion. Rather than a handle, someone has wrapped grimy grip tape around the base of the instrument."
   behaviors: "wieldable"
+  script: "1-shiv"
   attributes:
       speed: 10
       damage: 1-15

@@ -39,6 +39,7 @@ module.exports = (srcPath) => {
       player.addItem(item);
 
       Broadcast.sayAt(player, `Picked up: ${item.name}`);
+      item.emit('get', player);
     }
   };
 };

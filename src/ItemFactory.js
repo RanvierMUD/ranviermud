@@ -1,6 +1,7 @@
 'use strict';
 
 const Item = require('./Item');
+const BehaviorManager = require('./BehaviorManager');
 
 /**
  * Stores definitions of items to allow for easy creation/cloning of objects
@@ -8,17 +9,39 @@ const Item = require('./Item');
 class ItemFactory {
   constructor() {
     this.items = new Map();
+    this.scripts = new BehaviorManager();
   }
 
-  getDefinition(area, id) {
-    const key = area.match(/[a-z\-_]+:\d+/) ? area : (area + ':' + id);
+  /**
+   * @param {string} areaName
+   * @param {number} id
+   * @return {Object}
+   */
+  getDefinition(areaName, id) {
+    const key = areaName.match(/[a-z\-_]+:\d+/) ? areaName : this._makeItemKey(areaName, id);
     return this.items.get(key);
   }
 
-  setDefinition(area, id, def) {
-    this.items.set(area + ':' + id, def);
+  /**
+   * @param {string} areaName
+   * @param {number} id
+   * @param {Object} def
+   */
+  setDefinition(areaName, id, def) {
+    this.items.set(this._makeItemKey(areaName, id), def);
   }
 
+  /**
+   * Add an event listener from a script to a specific item
+   * @see BehaviorManager::addListener
+   * @param {string}   areaName
+   * @param {number}   id
+   * @param {string}   event
+   * @param {Function} listener
+   */
+  addScriptListener(areaName, id, event, listener) {
+    this.scripts.addListener(this._makeItemKey(areaName, id), event, listener);
+  }
 
   /**
    * Create a new instance of a given item definition. Resulting item will not be held or equipped
@@ -31,6 +54,11 @@ class ItemFactory {
   create(area, definition) {
     definition = typeof definition === 'object' ? definition : this.getDefinition(definition);
     const item = new Item(area, definition);
+    const itemKey = this._makeItemKey(area.name, definition.id);
+    const script = this.scripts.has(itemKey) && this.scripts.get(itemKey);
+    if (script) {
+      script.attach(item);
+    }
     return item;
   }
 
@@ -48,6 +76,16 @@ class ItemFactory {
     data.isEquipped = false;
 
     return new Item(data);
+  }
+
+  /**
+   * Create the key used by the items and scripts maps
+   * @param {string} areaName
+   * @param {number} id
+   * @return {string}
+   */
+  _makeItemKey(areaName, id) {
+    return areaName + ':' + id;
   }
 }
 

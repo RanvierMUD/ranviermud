@@ -7,7 +7,7 @@ module.exports = (srcPath) => {
   return  {
     listeners: {
       spawn: state => function () {
-        util.log(`${this.name} spawned into room ${room.title}`);
+        util.log(`${this.name} spawned into room ${this.room.title}`);
       },
 
       playerEnter: state => function (player) {

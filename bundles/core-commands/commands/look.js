@@ -36,7 +36,7 @@ module.exports = (srcPath) => {
         Broadcast.sayAt(player, '[NPC] ' + npc.name);
       });
 
-      Broadcast.at(player, '[<yellow><bold>Exits: </yellow></bold>');
+      Broadcast.at(player, '[<yellow><bold>Exits</yellow></bold>: ');
       Broadcast.at(player, Array.from(room.exits).map(ex => ex.direction).join(' '));
       Broadcast.sayAt(player, ']');
       Broadcast.sayAt(player, '');

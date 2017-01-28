@@ -145,6 +145,15 @@ class BundleManager {
     // set the item definitions onto the factory
     items.forEach(item => {
       this.state.ItemFactory.setDefinition(area.name, item.id, item);
+      if (item.script) {
+        const scriptPath = path.dirname(itemsFile) + '/scripts/items/' + item.script + '.js';
+        if (!fs.existsSync(scriptPath)) {
+          return;
+        }
+
+        util.log(`\t\t\tLoading Item Script [${area.name}:${item.id}] ${item.script}`);
+        this.loadEntityScript(this.state.ItemFactory, area.name, item.id, scriptPath);
+      }
     });
 
     util.log(`\t\tENDLOAD: Items`);
@@ -162,12 +171,33 @@ class BundleManager {
     npcs = npcs.map(npc => {
       this.state.MobFactory.setDefinition(area.name, npc.id, npc);
 
-      // TODO: Load events
+      if (npc.script) {
+        const scriptPath = path.dirname(npcsFile) + '/scripts/npcs/' + npc.script + '.js';
+        if (!fs.existsSync(scriptPath)) {
+          return;
+        }
+
+        util.log(`\t\t\tLoading NPC Script [${area.name}:${npc.id}] ${npc.script}`);
+        this.loadEntityScript(this.state.MobFactory, area.name, npc.id, scriptPath);
+      }
     });
 
     util.log(`\t\tENDLOAD: Npcs`);
 
     return npcs;
+  }
+
+  loadEntityScript(factory, areaName, entityId, scriptPath) {
+    const scriptListeners = require(scriptPath)(srcPath).listeners;
+
+    for (const eventName in scriptListeners) {
+      if (!scriptListeners.hasOwnProperty(eventName)) {
+        continue;
+      }
+
+      util.log(`\t\t\t\tEvent: ${eventName}`);
+      factory.addScriptListener(areaName, entityId, eventName, scriptListeners[eventName](this.state));
+    }
   }
 
   loadRooms(area, roomsFile) {
@@ -181,6 +211,26 @@ class BundleManager {
     rooms.forEach(room => {
       area.addRoom(room);
       this.state.RoomManager.addRoom(room)
+      if (room.script) {
+        const scriptPath = path.dirname(roomsFile) + '/scripts/rooms/' + room.script + '.js';
+        if (!fs.existsSync(scriptPath)) {
+          return;
+        }
+
+        util.log(`\t\t\tLoading Room Script [${area.name}:${room.id}] ${room.script}`);
+        // TODO: Maybe abstract this into its own method? Doesn't make much sense now
+        // given that rooms are created only once so we can just attach the listeners
+        // immediately
+        const scriptListeners = require(scriptPath)(srcPath).listeners;
+        for (const eventName in scriptListeners) {
+          if (!scriptListeners.hasOwnProperty(eventName)) {
+            continue;
+          }
+
+          util.log(`\t\t\t\tEvent: ${eventName}`);
+          room.on(eventName, scriptListeners[eventName](this.state));
+        }
+      }
     });
 
     util.log(`\t\tENDLOAD: Rooms`);

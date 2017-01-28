@@ -22,6 +22,15 @@ class BehaviorManager {
   }
 
   /**
+   * Check to see if a behavior exists
+   * @param {string} name
+   * @return {boolean}
+   */
+  has(name) {
+    return this.behaviors.has(name);
+  }
+
+  /**
    * @param {string}   behaviorName
    * @param {Function} listener
    */
