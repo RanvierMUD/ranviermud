@@ -136,12 +136,24 @@ class CommandParser {
 
     let encountered = 0;
     for (let entry of list) {
-      if (!('keywords' in  entry)) {
-        throw new Error('Items in list have no keywords');
+      // if entry is an array the list was a Map, not a Set
+      if (list instanceof Map) {
+        entry = entry[1];
+      }
+      if (!('keywords' in entry) && !('name' in entry)) {
+        throw new Error('Items in list have no keywords or name');
       }
 
-      if (entry.keywords.indexOf(keyword) !== -1) {
-        if (++encountered === findNth) {
+      if (entry.keywords && entry.keywords.indexOf(keyword) !== -1) {
+        if (encountered + 1 === findNth) {
+          encountered++;
+          return entry;
+        }
+      }
+
+      if (entry.name && entry.name.toLowerCase().indexOf(keyword) !== -1) {
+        if (encountered + 1 === findNth) {
+          encountered++;
           return entry;
         }
       }
