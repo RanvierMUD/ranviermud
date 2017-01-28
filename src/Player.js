@@ -103,6 +103,7 @@ class Player extends Character {
     }
 
     // TODO: Hydrate effects
+    // TODO: Hydrate equipment
   }
 
   serialize() {
@@ -126,9 +127,10 @@ class Player extends Character {
     };
 
     data.inventory = this.inventory ?
-      Array.from(this.inventory.values()).map(item => item.serialize) :
+      Array.from(this.inventory.values()).map(item => item.serialize()) :
       this.inventory;
 
+    // TODO: serialize equipment
     return data;
   }
 

@@ -23,7 +23,7 @@ module.exports = (srcPath) => {
       let source = null, search = null;
       if (parts.length === 1) {
         search = parts[0];
-        source = player.inventory.values();
+        source = player.inventory;
       } else {
         // TODO
         return Broadcast.sayAt(player, 'Getting items from containers is not yet supported');

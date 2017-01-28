@@ -2,6 +2,7 @@
 
 const EventEmitter = require('events');
 const EffectMap = require('./EffectMap');
+const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
 
 /**
  * @property {string} name      Name shown on look/who/login
@@ -81,12 +82,21 @@ class Character extends EventEmitter
     this.effects.delete(effectType);
   }
 
-  equip(item, slot) {
-    // TODO
+  equip(item) {
+    this.removeItem(item);
+    if (this.equipment.has(item.slot)) {
+      throw new EquipSlotTakenError();
+    }
+
+    this.equipment.set(item.slot, item);
+    item.isEquipped = true;
   }
 
-  unequip(item) {
-    // TODO
+  unequip(slot) {
+    const item = this.equipment.get(slot);
+    item.isEquipped = false;
+    this.equipment.delete(slot);
+    this.addItem(item);
   }
 
   addItem(item) {

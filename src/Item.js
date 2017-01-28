@@ -31,21 +31,22 @@ class Item extends EventEmitter {
     }
 
     this.area = area;
-    this.attributes  = item.attributes  || {};
-    this.behaviors   = item.behaviors   || null;
-    this.defaultInv  = item.defaultInv  || null;
+    this.attributes  = item.attributes || {};
+    this.behaviors   = item.behaviors || null;
+    this.defaultInv  = item.defaultInv || null;
     this.description = item.description || 'Nothing special.';
     this.id          = item.id;
-    this.inventory   = item.inventory   || new Map();
-    this.isEquipped  = item.isEquipped  || false;
-    this.isHeld      = item.isHeld      || false;
+    this.inventory   = item.inventory || new Map();
+    this.isEquipped  = item.isEquipped || false;
+    this.isHeld      = item.isHeld || false;
     this.keywords    = item.keywords;
     this.name        = item.name;
-    this.room        = item.room        || null;
+    this.room        = item.room || null;
     this.roomDesc    = item.roomDesc || '';
-    this.script      = item.script      || null;
+    this.script      = item.script || null;
+    this.slot        = item.slot || null;
     this.type        = typeof item.type === 'string' ? ItemTypes.resolve(item.type) : (item.type || ItemType.OBJECT);
-    this.uuid        = item.uuid        || uuid.v4();
+    this.uuid        = item.uuid || uuid.v4();
   }
 
   getAttribute(attr) {
@@ -118,6 +119,7 @@ class Item extends EventEmitter {
       room: this.room ? this.room.id : null,
       roomDesc: this.roomDesc,
       script: this.script,
+      slot: this.slot,
       type: this.type,
       uuid: this.uuid,
     };

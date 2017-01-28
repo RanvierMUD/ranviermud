@@ -111,11 +111,16 @@ class CommandParser {
 
   /**
    * Parse "get 2.foo bar"
-   * @param {string}   search 2.foo
-   * @param {Iterable} list   Where to look for the item
+   * @param {string}   search    2.foo
+   * @param {Iterable} list      Where to look for the item
+   * @param {boolean}  returnKey If `list` is a Map, true to return the KV tuple instead of just the entry
    * @return {*} Boolean on error otherwise an entry from the list
    */
-  static parseDot(search, list) {
+  static parseDot(search, list, returnKey = false) {
+    if (!list) {
+      return null;
+    }
+
     const parts = search.split('.');
     let findNth = 1;
     let keyword = null;
@@ -135,26 +140,30 @@ class CommandParser {
     }
 
     let encountered = 0;
-    for (let entry of list) {
-      // if entry is an array the list was a Map, not a Set
+    for (let entity of list) {
+      let key, entry;
       if (list instanceof Map) {
-        entry = entry[1];
+        [key, entry] = entity;
+      } else {
+        entry = entity;
       }
+
       if (!('keywords' in entry) && !('name' in entry)) {
         throw new Error('Items in list have no keywords or name');
       }
 
+      // prioritize keywords over item/player names
       if (entry.keywords && entry.keywords.indexOf(keyword) !== -1) {
         if (encountered + 1 === findNth) {
           encountered++;
-          return entry;
+          return returnKey ? [key, entry] : entry;
         }
       }
 
       if (entry.name && entry.name.toLowerCase().indexOf(keyword) !== -1) {
         if (encountered + 1 === findNth) {
           encountered++;
-          return entry;
+          return returnKey ? [key, entry] : entry;
         }
       }
     }
