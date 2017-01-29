@@ -91,6 +91,7 @@ class Player extends Character {
       this.account = state.AccountManager.getAccount(this.account);
     }
 
+    // Hydrate inventory
     if (Array.isArray(this.inventory)) {
       const itemDefs = this.inventory;
       this.inventory = new Map();
@@ -102,8 +103,22 @@ class Player extends Character {
       });
     }
 
+    // Hydrate equipment
+    if (this.equipment && !(this.equipment instanceof Map)) {
+      const eqDefs = this.equipment;
+      this.equipment = new Map();
+      for (const slot in eqDefs) {
+        const itemDef = eqDefs[slot];
+        let newItem = state.ItemFactory.create(state.AreaManager.getArea(itemDef.area), itemDef);
+        newItem.hydrate(state);
+        state.ItemManager.add(newItem);
+        this.equip(newItem);
+      }
+    } else {
+      this.equipment = new Map();
+    }
+
     // TODO: Hydrate effects
-    // TODO: Hydrate equipment
   }
 
   serialize() {
@@ -130,7 +145,16 @@ class Player extends Character {
       Array.from(this.inventory.values()).map(item => item.serialize()) :
       this.inventory;
 
-    // TODO: serialize equipment
+    if (this.equipment) {
+      let eq = {};
+      for (let [ slot, item ] of this.equipment) {
+        eq[slot] = item.serialize();
+      }
+      data.equipment = eq;
+    } else {
+      data.equipment = null;
+    }
+
     return data;
   }
 

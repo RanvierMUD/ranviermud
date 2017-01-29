@@ -60,7 +60,6 @@ module.exports = (srcPath) => {
             onSelect: () => {
               let player = state.PlayerManager.loadPlayer(account, char);
               player.socket = socket;
-              player.hydrate(state);
               socket.emit('done', socket, { player });
             },
           });

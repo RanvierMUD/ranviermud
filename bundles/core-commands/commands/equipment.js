@@ -12,10 +12,12 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, "You are completely naked!");
       }
 
-      Broadcast.sayAt(player, "Currently Eqiupped:");
+      Broadcast.sayAt(player, "Currently Equipped:");
       for (const [slot, item] of player.equipment) {
         Broadcast.sayAt(player, `  <${slot}> ${item.name}`);
       }
+
+      Broadcast.sayAt(player, '');
     }
   };
 };
