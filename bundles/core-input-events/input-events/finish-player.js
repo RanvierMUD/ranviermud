@@ -23,8 +23,10 @@ module.exports = (srcPath) => {
       // TODO: Don't do this, have a server config for player starting room
       let room = Array.from(state.RoomManager.rooms.values())[0];
       player.room = room;
-      room.addPlayer(player);
-      state.PlayerManager.addPlayer(player);
+      player.save();
+
+      // reload from manager so events are set
+      player = state.PlayerManager.loadPlayer(state, player.account, player.name);
 
       // create the pfile then send them on their way
       player.save(() => {

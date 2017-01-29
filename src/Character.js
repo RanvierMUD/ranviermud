@@ -8,11 +8,11 @@ const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
  * @property {string} name      Name shown on look/who/login
  * @property {Map}    inventory
  * @property {boolean|Character} inCombat Character they are in combat with
- * @property {number} level
- * @property {object} attributes
+ * @property {number}    level
+ * @property {object}    attributes
  * @property {EffectMap} effects List of current effects applied to the character
- * @property {Map}    skills     List of all character's skills
- * @property {Room}   room       Room the character is currently in
+ * @property {Map}       skills     List of all character's skills
+ * @property {Room}      room       Room the character is currently in
  */
 class Character extends EventEmitter
 {

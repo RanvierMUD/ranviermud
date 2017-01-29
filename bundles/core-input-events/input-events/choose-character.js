@@ -58,7 +58,7 @@ module.exports = (srcPath) => {
           options.push({
             display: char,
             onSelect: () => {
-              let player = state.PlayerManager.loadPlayer(account, char);
+              let player = state.PlayerManager.loadPlayer(state, account, char);
               player.socket = socket;
               socket.emit('done', socket, { player });
             },

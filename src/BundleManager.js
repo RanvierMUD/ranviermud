@@ -54,6 +54,7 @@ class BundleManager {
       commands: bundlePath + '/commands/',
       help: bundlePath + '/help/',
       inputEvents: bundlePath + '/input-events/',
+      playerEvents: bundlePath + '/player-events.js',
     };
 
     util.log(`LOAD: BUNDLE [${bundle}] START`);
@@ -69,6 +70,14 @@ class BundleManager {
       this.loadBehaviors(bundle, paths.behaviors);
     }
 
+    if (fs.existsSync(paths.inputEvents)) {
+      this.loadInputEvents(bundle, paths.inputEvents)
+    }
+
+    if (fs.existsSync(paths.playerEvents)) {
+      this.loadPlayerEvents(bundle, paths.playerEvents);
+    }
+
     if (fs.existsSync(paths.help)) {
       this.loadHelp(bundle, paths.help);
     }
@@ -80,10 +89,24 @@ class BundleManager {
       this.state.AreaManager.distribute(this.state);
     }
 
-    if (fs.existsSync(paths.inputEvents)) {
-      this.loadInputEvents(bundle, paths.inputEvents)
-    }
     util.log(`ENDLOAD: BUNDLE [${bundle}]`);
+  }
+
+  loadPlayerEvents(bundle, eventsFile) {
+    util.log(`\tLOAD: Player Events...`);
+
+    const playerListeners = require(eventsFile)(srcPath).listeners;
+
+    for (const eventName in playerListeners) {
+      if (!playerListeners.hasOwnProperty(eventName)) {
+        continue;
+      }
+
+      util.log(`\t\tEvent: ${eventName}`);
+      this.state.PlayerManager.addListener(eventName, playerListeners[eventName](this.state));
+    }
+
+    util.log(`\tENDLOAD: Player Events...`);
   }
 
   loadAreas(bundle, areasDir) {
