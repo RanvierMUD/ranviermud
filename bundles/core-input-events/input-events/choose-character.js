@@ -8,23 +8,13 @@ const util = require('util');
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const EventUtil = require(srcPath + 'EventUtil');
+  const Config     = require(srcPath + 'Config');
 
   return {
     event: state => (socket, args) => {
       let account = args.account;
 
       const say = EventUtil.genSay(socket);
-
-      // check to see if they have another character logged in, if so boot them
-      for (const character of account.characters) {
-        let otherPlayer = state.PlayerManager.getPlayer(character);
-        if (otherPlayer) {
-          Broadcast.sayAt(otherPlayer, "Replaced.");
-          otherPlayer.emit('quit');
-          util.log(`Replaced: ${otherPlayer.name}`);
-          state.PlayerManager.removePlayer(otherPlayer);
-        }
-      }
 
       /*
       Player selection menu:
@@ -38,8 +28,10 @@ module.exports = (srcPath) => {
       // This just gets their names.
       const characters = account.characters;
 
-      const maxCharacters   = 3;
+      const maxCharacters   = Config.get("maxCharacters");
       const canAddCharacter = characters.length < maxCharacters;
+      const canMultiplay    = Config.get("allowMultiplay");
+
 
       let options  = [];
       let selected = '';
@@ -58,12 +50,54 @@ module.exports = (srcPath) => {
           options.push({
             display: char,
             onSelect: () => {
-              let player = state.PlayerManager.loadPlayer(account, char);
+              handleMultiplaying(char); 
+              const player = state.PlayerManager.loadPlayer(account, char);
               player.socket = socket;
               socket.emit('done', socket, { player });
             },
           });
         });
+      }
+
+      /* 
+      If multiplaying is not allowed:
+      * Check all PCs on this person's account
+      * Kick any that are currently logged-in.
+      * Otherwise, have them take over the session
+      * if they are logging into a PC that is already on.
+      */
+      function handleMultiplaying(selectedChar) {
+        if (!canMultiplay) {
+          for (const character of account.characters) {
+            kickIfAccountLoggedIn(character);
+          }
+        } else {
+          util.log("Multiplaying is allowed...");
+          replaceIfCharacterLoggedIn(selectedChar);
+        }
+      }
+
+      function kickIfAccountLoggedIn(character) {
+        const otherPlayer = state.PlayerManager.getPlayer(character); 
+        if (otherPlayer) {
+          bootPlayer(otherPlayer, "Replaced. No multiplaying allowed.");
+        }
+      }
+
+      function replaceIfSameCharacter(selectedChar) {
+        const player = state.PlayerManager.getPlayer(selectedChar);
+        if (player) {
+          bootPlayer(player, "Replaced by a new session.");
+        }     
+      }
+
+      function bootPlayer(player, reason) {
+        player.save(() => {
+          util.log(`Booting ${player.name}: ${reason}`);
+          Broadcast.sayAt(player, reason);
+          player.socket.emit('close');
+        });
+        state.PlayerManager.removePlayer(player);
       }
 
       options.push({ display: "" });
