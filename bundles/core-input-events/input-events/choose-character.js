@@ -73,7 +73,7 @@ module.exports = (srcPath) => {
           }
         } else {
           util.log("Multiplaying is allowed...");
-          replaceIfCharacterLoggedIn(selectedChar);
+          replaceIfCharLoggedIn(selectedChar);
         }
       }
 
@@ -84,7 +84,7 @@ module.exports = (srcPath) => {
         }
       }
 
-      function replaceIfSameCharacter(selectedChar) {
+      function replaceIfCharLoggedIn(selectedChar) {
         const player = state.PlayerManager.getPlayer(selectedChar);
         if (player) {
           bootPlayer(player, "Replaced by a new session.");
