@@ -11,7 +11,6 @@ module.exports = (srcPath) => {
   return {
     event: state => (socket, args) => {
       let player = args.player;
-      player.socket = socket;
       player.hydrate(state);
 
       player.socket.on('close', () => {

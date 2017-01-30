@@ -15,7 +15,7 @@ class PlayerManager extends EventEmitter {
   }
 
   getPlayer(name) {
-    return this.players.get(name);
+    return this.players.get(name.toLowerCase());
   }
 
   addPlayer(player) {

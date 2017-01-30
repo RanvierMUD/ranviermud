@@ -15,5 +15,8 @@
   "maxAccountNameLength": 20,
   "minAccountNameLength": 3,
   "maxPlayerNameLength": 20,
-  "minPlayerNameLength": 3
+  "minPlayerNameLength": 3,
+
+  "maxCharacters": 3,
+  "allowMultiplay": false
 }
