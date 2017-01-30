@@ -40,7 +40,10 @@ module.exports = (srcPath) => {
       if (canAddCharacter) {
         options.push({
           display: 'Create New Character',
-          onSelect: () => socket.emit('create-player', socket, { account }),
+          onSelect: () => { 
+            handleMultiplaying();
+            socket.emit('create-player', socket, { account })
+          },
         });
       }
 
@@ -71,7 +74,7 @@ module.exports = (srcPath) => {
           for (const character of account.characters) {
             kickIfAccountLoggedIn(character);
           }
-        } else {
+        } else if (selectedChar) {
           util.log("Multiplaying is allowed...");
           replaceIfCharLoggedIn(selectedChar);
         }
