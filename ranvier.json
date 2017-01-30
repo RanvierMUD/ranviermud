@@ -8,6 +8,7 @@
     "core-commands",
     "core-effects",
     "core-input-events",
+    "core-player-events",
     "core-skills"
   ],
 

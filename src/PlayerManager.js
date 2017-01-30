@@ -3,12 +3,15 @@
 const EventEmitter = require('events');
 const Data = require('./Data');
 const Player = require('./Player');
+const EventManager = require('./EventManager');
 
 class PlayerManager extends EventEmitter {
   constructor() {
     super();
     this.players = new Map();
+    this.events = new EventManager();
     this.on('save', this.saveAll);
+    this.on('effectTick', this.tickAll);
   }
 
   getPlayer(name) {
@@ -35,6 +38,14 @@ class PlayerManager extends EventEmitter {
   }
 
   /**
+   * @param {string}   behaviorName
+   * @param {Function} listener
+   */
+  addListener(event, listener) {
+    this.events.add(event, listener);
+  }
+
+  /**
    * @param {Function} fn Filter function
    * @return {array}
    */
@@ -42,7 +53,7 @@ class PlayerManager extends EventEmitter {
     return this.getPlayersAsArray().filter(fn);
   }
 
-  loadPlayer(account, username, force) {
+  loadPlayer(state, account, username, force) {
     if (this.players.has(username) && !force) {
       return this.getPlayer(username);
     }
@@ -54,6 +65,7 @@ class PlayerManager extends EventEmitter {
     player.account = account;
 
     // TODO: Load scripts
+    this.events.attach(player);
 
     this.addPlayer(player);
     return player;
@@ -70,6 +82,12 @@ class PlayerManager extends EventEmitter {
   saveAll(playerCallback) {
     for (const [ name, player ] of this.players.entries()) {
       player.emit('save', playerCallback);
+    }
+  }
+
+  tickAll(playerCallback) {
+    for (const [ name, player ] of this.players.entries()) {
+      player.emit('effectTick');
     }
   }
 

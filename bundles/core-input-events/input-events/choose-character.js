@@ -54,7 +54,7 @@ module.exports = (srcPath) => {
             display: char,
             onSelect: () => {
               handleMultiplaying(char); 
-              const player = state.PlayerManager.loadPlayer(account, char);
+              const player = state.PlayerManager.loadPlayer(state, account, char);
               player.socket = socket;
               socket.emit('done', socket, { player });
             },

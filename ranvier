@@ -68,7 +68,7 @@ process.env['NODE_DEBUG'] = 'net';
 
 // global state
 let GameState = {};
-let saveInterval;
+let saveInterval, tickInterval;
 
 /**
  * Do the dirty work
@@ -86,7 +86,7 @@ function init(restartServer) {
     CommandManager: new CommandManager(),
     // Stores all loaded channels
     ChannelManager: new ChannelManager(),
-    // Stores all loaded spells, just kidding, it stores input events
+    // Stores all loaded spells, just kidding, it stores input (socket) events
     InputEventManager: new EventManager(),
     // Helper for creating/cloning items
     ItemFactory: new ItemFactory(),
@@ -107,7 +107,6 @@ function init(restartServer) {
 
     // All global server settings like default respawn time, save interval, port, what bundles to load, etc.
     Config,
-  
   };
 
   // Setup bundlemanager
@@ -163,6 +162,11 @@ function init(restartServer) {
     clearInterval(saveInterval);
     saveInterval = setInterval(save, commander.save * 1000);
 
+    // Ticks for effect processing happen every second
+    clearInterval(tickInterval);
+    tickInterval = setInterval(() => {
+      GameState.PlayerManager.emit('effectTick');
+    }, 1000);
 
     // TODO: RESPAWN
   }
@@ -189,66 +193,12 @@ const yaml = require('js-yaml');
 const fs   = require('fs');
 process.stdin.setEncoding('utf8');
 
-const hotboot = args => serverOperation('HOTBOOT_WARN', hotbootServer, args);
-const restart = args => serverOperation('RESTART_WARN', restartServer, args);
-
 /**
  * Commands that the server executable itself accepts
  */
 const server_commands = {
   save,
-  /**
-   * Hotboot, AKA do everything involved with a restart but keep players connected
-   */
-  hotboot,
-  /**
-   * Hard restart: saves and disconnects all connected players
-   */
-  restart
 };
-
-function serverOperation(warningStr, operation, args) {
-  args = args ? args.split(' ') : [];
-  const shouldWarn = args[0] && args[0] === 'warn';
-
-  let time = args[0] ? parseInt(args[shouldWarn ? 1 : 0], 10) : 0;
-
-  if (time && time < 20) {
-    console.log("Gotta give the players a bit longer than that, might as well do it instantly...");
-    console.log("Doing nothing.");
-    return;
-  }
-
-  time = time ? time * 1000 : 0;
-
-  if (shouldWarn) {
-    const warnPlayers = interval => {
-      players.broadcast(warningStr, interval);
-      players.each(p => p.prompt());
-    };
-
-    warnPlayers(time / 1000 + " seconds");
-
-    const warningInterval = Math.floor(time / 4);
-    setInterval( () => warnPlayers(warningInterval / 1000 + " seconds"), warningInterval );
-  }
-
-  util.log(warningStr + " SERVER" + (time ? " IN " + (time / 1000) + " SECONDS " : ''));
-  setTimeout(operation, time);
-}
-
-function hotbootServer() {
-  util.log("HOTBOOTING...");
-  save(() => init(false));
-}
-
-function restartServer() {
-  util.log("RESTARTING...");
-  save();
-  server.emit('shutdown');
-  server.close();
-  init(true);
-}
 
 process.stdin.resume();
 
