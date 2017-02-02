@@ -56,10 +56,10 @@ By default only the local host IP is whitelisted.
 
 - [ ] Respawn
 - [ ] "Hotboot" - Reload anything from a bundle. Changing core will require a restart
-- [ ] Rewrite script attachment to entities with the new bundle loader
+- [X] Rewrite script attachment to entities with the new bundle loader
 - [ ] Implement containers
-- [ ] Implement equipping (allow configuration of valid slots)
-- [ ] Implement some kind of helper for time-based events
+- [X] Implement equipping
+- [X] Implement some kind of helper for time-based events (Implemented by way of ticks)
 - [X] Refactor/rewrite entity loading
 
   * Completely new bundle system in place
@@ -90,7 +90,7 @@ By default only the local host IP is whitelisted.
 
 ### Nice to have
 
-- [ ] Update help to autogenerate usage for channels
+- [X] Update help to autogenerate usage for channels
 - [ ] Update help to allow data like skill cost as tokens
 - [X] Web API for getting information about the world.
 - [ ] Web API for building/editing the world, with authentication.
