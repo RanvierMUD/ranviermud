@@ -11,6 +11,7 @@ class Player extends Character {
     super(data);
 
     this.account = data.account || null;
+    this.experience = data.experience || 0;
     this.password  = data.password;
     this.prompt = '[ %health/%maxHealth <bold>hp</bold> -- %energy/%maxEnergy <bold>energy</bold> ]';
     this.combatPrompt = '[ %health/%maxHealth <bold>hp</bold> -- %energy/%maxEnergy <bold>energy</bold> ]';

@@ -24,7 +24,6 @@ class Character extends EventEmitter
     this.equipment = data.equipment || new Map();
     this.inCombat = false;
     this.level = data.level || 1;
-    this.experience = data.experience || 0;
     this.room = data.room || null;
 
     // TODO: Maybe move default attributes out somewhere?

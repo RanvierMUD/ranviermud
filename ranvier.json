@@ -9,7 +9,8 @@
     "core-effects",
     "core-input-events",
     "core-player-events",
-    "core-skills"
+    "core-skills",
+    "debug-commands"
   ],
 
   "maxAccountNameLength": 20,
