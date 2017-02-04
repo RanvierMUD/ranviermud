@@ -18,6 +18,7 @@ Ranvier is _not_ a websocket MUD. It does not have a web client. It is a plain o
 * Leveling, passive/active skills, effects.
 * Flexible channel system.
 * Incredibly simple-to-add commands.
+* Quest system allowing for starting/progress/completion from any event in the game
 
 ## Requirements
 
