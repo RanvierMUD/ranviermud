@@ -15,7 +15,6 @@ module.exports = (srcPath) => {
         name: args.name,
         account: args.account
       });
-      player.socket = socket;
 
       args.account.addCharacter(args.name);
       args.account.save();
@@ -27,11 +26,9 @@ module.exports = (srcPath) => {
 
       // reload from manager so events are set
       player = state.PlayerManager.loadPlayer(state, player.account, player.name);
+      player.socket = socket;
 
-      // create the pfile then send them on their way
-      player.save(() => {
-        socket.emit('done', socket, { player });
-      });
+      socket.emit('done', socket, { player });
     }
   };
 };

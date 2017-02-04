@@ -5,6 +5,7 @@ const Data = require('./Data');
 const Room = require('./Room');
 const Character = require('./Character');
 const Config = require('./Config');
+const QuestTracker = require('./QuestTracker');
 
 class Player extends Character {
   constructor(data) {
@@ -17,6 +18,18 @@ class Player extends Character {
     this.combatPrompt = '[ %health/%maxHealth <bold>hp</bold> -- %energy/%maxEnergy <bold>energy</bold> ]';
     this.socket = data.socket || null;
     this.preferences = data.preferences || new Map();
+    this.questData = data.questData || {
+      completed: [],
+      active: []
+    };
+
+    this.questTracker = new QuestTracker(this);
+  }
+
+  emit(event, ...args) {
+    super.emit(event, ...args);
+
+    this.questTracker.emit(event, ...args);
   }
 
   /**
@@ -35,7 +48,7 @@ class Player extends Character {
     }
 
     // replace any unknown tokens
-    prompt = prompt.replace(/%([a-z_]+?)/, '[BAD: $1');
+    prompt = prompt.replace(/%([a-z_]+?)/, '[BAD: $1]');
 
     return prompt;
   }
@@ -119,6 +132,9 @@ class Player extends Character {
       this.equipment = new Map();
     }
 
+    // Hydrate quests
+    this.questTracker.hydrate(state, this.questData);
+
     // TODO: Hydrate effects
   }
 
@@ -140,6 +156,7 @@ class Player extends Character {
       prefs,
       promptString: this.promptString,
       room: Room.getKey(this.room),
+      questData: this.questTracker.serialize()
     };
 
     data.inventory = this.inventory ?

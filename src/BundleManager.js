@@ -134,6 +134,7 @@ class BundleManager {
       rooms: areaPath + '/rooms.yml',
       items: areaPath + '/items.yml',
       npcs: areaPath + '/npcs.yml',
+      quests: areaPath + '/quests.js',
     };
 
     const manifest = Data.parseFile(paths.manifest);
@@ -154,6 +155,11 @@ class BundleManager {
     // load rooms
     if (fs.existsSync(paths.rooms)) {
       const rooms = this.loadRooms(area, paths.rooms);
+    }
+
+    // load quests
+    if (fs.existsSync(paths.quests)) {
+      const rooms = this.loadQuests(area, paths.quests);
     }
 
     return area;
@@ -259,6 +265,20 @@ class BundleManager {
     util.log(`\t\tENDLOAD: Rooms`);
 
     return rooms;
+  }
+
+  loadQuests(area, questsFile) {
+    util.log(`\t\tLOAD: Quests...`);
+
+    const injector = require(questsFile);
+    let quests = injector(srcPath);
+
+    for (const id in quests) {
+      util.log(`\t\t\tLoading Quest [${area.name}:${id}]`);
+      this.state.QuestFactory.add(area.name, id, quests[id].type, quests[id].config);
+    }
+
+    util.log(`\t\tENDLOAD: Quests...`);
   }
 
   loadCommands(bundle, commandsDir) {

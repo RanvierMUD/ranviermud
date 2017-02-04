@@ -32,6 +32,7 @@ class Room extends EventEmitter {
     this.description = def.description;
     this.exits = def.exits;
     this.id = def.id;
+    this.globalId = def.globalId; // EntityFactory key
     this.script = def.script;
     this.title = def.title;
 

@@ -48,10 +48,10 @@ module.exports = (srcPath) => {
 
       // Emit events after the look command so that any messages
       // sent by events appear after the room desc/prompt
-      nextRoom.emit('playerEnter', player);
       for (const npc of nextRoom.npcs) {
         npc.emit('playerEnter', player);
       }
+      nextRoom.emit('playerEnter', player);
       return true;
     }
   }

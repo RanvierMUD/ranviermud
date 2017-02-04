@@ -40,6 +40,7 @@ module.exports = (srcPath) => {
 
       Broadcast.sayAt(player, `Picked up: ${item.name}`);
       item.emit('get', player);
+      player.emit('get', item);
     }
   };
 };

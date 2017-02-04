@@ -36,6 +36,7 @@ class Item extends EventEmitter {
     this.defaultInv  = item.defaultInv || null;
     this.description = item.description || 'Nothing special.';
     this.id          = item.id;
+    this.globalId    = item.globalId; // EntityFactory key
     this.inventory   = item.inventory || new Map();
     this.isEquipped  = item.isEquipped || false;
     this.isHeld      = item.isHeld || false;

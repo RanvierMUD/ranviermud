@@ -37,6 +37,7 @@ module.exports = (srcPath) => {
 
       player.removeItem(item);
       player.room.addItem(item);
+      player.emit('drop', item);
       for (const npc of player.room.npcs) {
         npc.emit('playerDropItem', player, item);
       }

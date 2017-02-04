@@ -28,7 +28,9 @@ class EntityFactory {
    * @param {Object} def
    */
   setDefinition(areaName, id, def) {
-    this.entities.set(this._makeEntityKey(areaName, id), def);
+    const key = this._makeEntityKey(areaName, id);
+    def.globalId = key;
+    this.entities.set(key, def);
   }
 
   /**

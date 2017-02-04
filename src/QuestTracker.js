@@ -1,0 +1,111 @@
+'use strict';
+
+/**
+ * Keeps track of player quest progress
+ *
+ * @property {Player} player
+ * @property {Map}    completedQuests
+ * @property {Map}    activeQuests
+ */
+class QuestTracker {
+  constructor(player) {
+    this.player = player;
+
+    this.completedQuests = new Map();
+    this.activeQuests = new Map();
+  }
+
+  /**
+   * Proxy events to all active quests
+   * @param {string} event
+   * @param {...*}   args
+   */
+  emit(event, ...args) {
+    for (const [ qid, quest ] of this.activeQuests) {
+      quest.emit(event, ...args);
+    }
+  }
+
+  /**
+   * @param {string} qid
+   * @return {boolean}
+   */
+  isActive(qid) {
+    return this.activeQuests.has(qid);
+  }
+
+  /**
+   * @param {string} qid
+   * @return {boolean}
+   */
+  isComplete(qid) {
+    return this.completedQuests.has(qid);
+  }
+
+  /**
+   * @param {string} qid
+   */
+  complete(qid) {
+    if (!this.isActive(qid)) {
+      throw new Error('Quest not started');
+    }
+
+    this.completedQuests.set(qid, {
+      started: this.activeQuests.get(qid).started,
+      completedAt: (new Date()).toJSON()
+    });
+
+    this.activeQuests.delete(qid);
+  }
+
+  /**
+   * @param {Quest} quest
+   * @return {boolean}
+   */
+  canStart(quest) {
+    return !this.isActive(quest.id) && quest.config.requires.every((qid) => {
+      return this.isComplete(qid);
+    });
+  }
+
+  /**
+   * @param {Quest} queset
+   */
+  start(quest) {
+    if (this.activeQuests.has(quest.id)) {
+      throw new Error('Quest already started');
+    }
+
+    quest.started = (new Date()).toJSON();
+    this.activeQuests.set(quest.id, quest);
+    quest.emit('start');
+  }
+
+  /**
+   * @param {GameState} state
+   * @param {object}    questData Data pulled from the pfile
+   */
+  hydrate(state, questData) {
+    this.completedQuests = new Map(questData.completed);
+    for (const [qid, data] of questData.active) {
+      const quest = state.QuestFactory.create(state, qid, data.state, this.player);
+      quest.started = data.started;
+
+      this.activeQuests.set(qid, quest);
+    }
+  }
+
+  /**
+   * @return {object}
+   */
+  serialize() {
+    return {
+      completed: [...this.completedQuests],
+      active: [...this.activeQuests].map(([qid, quest]) => {
+        return [qid, quest.serialize()]
+      }),
+    };
+  }
+}
+
+module.exports = QuestTracker;
