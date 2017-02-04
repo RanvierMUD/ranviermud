@@ -15,7 +15,8 @@ class Quest extends EventEmitter {
     this.config = Object.assign({
       title: 'Missing Quest Title',
       desc: 'Missing Quest Description',
-      requires: []
+      requires: [],
+      repeatable: false
     }, config);
 
     this.player = player;
@@ -36,6 +37,10 @@ class Quest extends EventEmitter {
     return {
       state: this.state
     }
+  }
+
+  complete() {
+    this.emit('complete');
   }
 }
 

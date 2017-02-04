@@ -5,7 +5,8 @@
   description: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
   behaviors: ['test']
   script: '1-rat'
-  items: [2]
+  items: ['limbo:2']
+  quests: ['limbo:2']
   attributes:
     maxHealth: 8
     health: 8

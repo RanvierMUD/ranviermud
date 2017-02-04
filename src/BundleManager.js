@@ -140,7 +140,12 @@ class BundleManager {
     const manifest = Data.parseFile(paths.manifest);
 
     let area = new Area(bundle, areaName, manifest);
-    // TODO: Load listeners
+
+    // load quests
+    // Quests have to be loaded first so items/rooms/npcs that are questors have the quest defs available
+    if (fs.existsSync(paths.quests)) {
+      const rooms = this.loadQuests(area, paths.quests);
+    }
 
     // load items
     if (fs.existsSync(paths.items)) {
@@ -155,11 +160,6 @@ class BundleManager {
     // load rooms
     if (fs.existsSync(paths.rooms)) {
       const rooms = this.loadRooms(area, paths.rooms);
-    }
-
-    // load quests
-    if (fs.existsSync(paths.quests)) {
-      const rooms = this.loadQuests(area, paths.quests);
     }
 
     return area;
@@ -199,6 +199,15 @@ class BundleManager {
     // create and load the npcs
     npcs = npcs.map(npc => {
       this.state.MobFactory.setDefinition(area.name, npc.id, npc);
+
+      if (npc.quests) {
+        // Update quest definitions with their questor
+        for (const qid of npc.quests) {
+          const quest = this.state.QuestFactory.get(qid);
+          quest.config.npc = area.name + ':' + npc.id;
+          this.state.QuestFactory.set(qid, quest);
+        }
+      }
 
       if (npc.script) {
         const scriptPath = path.dirname(npcsFile) + '/scripts/npcs/' + npc.script + '.js';

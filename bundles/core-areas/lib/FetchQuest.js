@@ -8,6 +8,7 @@ const Quest = require('../../../src/Quest');
 class FetchQuest extends Quest {
   constructor(qid, config, player) {
     config = Object.assign({
+      autoComplete: false,
       removeItem: false,
       reward: 0
     }, config);
@@ -23,13 +24,13 @@ class FetchQuest extends Quest {
   }
 
   getProgress() {
-    const percent = this.state.count / this.config.targetCount;
+    const percent = (this.state.count / this.config.targetCount) * 100;
     const display = `${this.config.title}: [${this.state.count}/${this.config.targetCount}]`;
     return { percent, display };
   }
 
   _getItem(item) {
-    if (item.globalId !== this.config.targetItem) {
+    if (item.globalId !== this.config.targetItem || this.state.count >= this.config.targetCount) {
       return;
     }
 
@@ -38,25 +39,36 @@ class FetchQuest extends Quest {
     this.emit('progress', this.getProgress());
 
     if (this.state.count >= this.config.targetCount) {
-      this.emit('complete');
-
-      // this fetch quest by default removes all the quest items from the player inv
-      if (this.config.removeItem) {
-        for (let i = 0; i < this.config.targetCount; i++) {
-          for (const [uuid, item] of this.player.inventory) {
-            if (item.globalId === this.config.targetItem) {
-              this.player.removeItem(item);
-            }
-          }
-        }
+      if (this.config.autoComplete) {
+        this.complete();
+      } else {
+        this.emit('turn-in-ready');
       }
-
-      this.player.emit('experience', this.config.reward(this, this.player));
     }
   }
 
+  complete() {
+    if (this.state.count < this.config.targetCount) {
+      return;
+    }
+
+    // this fetch quest by default removes all the quest items from the player inv
+    if (this.config.removeItem) {
+      for (let i = 0; i < this.config.targetCount; i++) {
+        for (const [uuid, item] of this.player.inventory) {
+          if (item.globalId === this.config.targetItem) {
+            this.player.removeItem(item);
+          }
+        }
+      }
+    }
+
+    super.complete();
+    this.player.emit('experience', this.config.reward(this, this.player));
+  }
+
   _dropItem(item) {
-    if (item.globalId !== this.config.targetItem) {
+    if (!this.state.count || item.globalId !== this.config.targetItem) {
       return;
     }
 

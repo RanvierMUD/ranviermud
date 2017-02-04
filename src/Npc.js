@@ -28,6 +28,7 @@ class Npc extends Character {
     this.description = data.description;
     this.id = data.id;
     this.uuid = data.uuid || uuid.v4();
+    this.quests = data.quests || [];
   }
 
   hydrate(state) {
@@ -53,6 +54,10 @@ class Npc extends Character {
 
       behavior.attach(this);
     });
+  }
+
+  getKey() {
+    return this.area.name + ':' + this.id;
   }
 }
 

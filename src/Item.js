@@ -132,6 +132,10 @@ class Item extends EventEmitter {
 
     return data;
   }
+
+  getKey() {
+    return this.area.name + ':' + this.id;
+  }
 }
 
 module.exports = Item;

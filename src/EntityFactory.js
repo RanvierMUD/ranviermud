@@ -57,8 +57,10 @@ class EntityFactory {
    */
   createByType(area, definition, type) {
     definition = typeof definition === 'object' ? definition : this.getDefinition(definition);
-    const entity = new type(area, definition);
     const entityKey = this._makeEntityKey(area.name, definition.id);
+    definition.globalId = entityKey;
+    const entity = new type(area, definition);
+
     if (this.scripts.has(entityKey)) {
       this.scripts.get(entityKey).attach(entity);
     }

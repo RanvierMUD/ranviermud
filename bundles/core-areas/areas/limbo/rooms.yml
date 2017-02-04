@@ -3,6 +3,7 @@
   id: 1
   description: "A featureless white room. A pitch black void in the shape of archway can be seen on the east side of the room."
   npcs: [1]
+  items: [1]
   script: "1-test"
   exits:
     - roomId: 2
@@ -12,8 +13,8 @@
   title: "Test Room 2"
   id: 2
   description: "A completely black room. Somehow all of the light that should be coming from the room to the west does not pass through the archway. A single lightbulb hangs from the ceiling illuminating a small area."
-  items: [1]
   behaviors: [ 'test' ]
+  items: [2]
   exits:
     - roomId: 'limbo:1'
       direction: 'west'

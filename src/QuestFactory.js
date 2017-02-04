@@ -14,6 +14,10 @@ class QuestFactory {
     this.quests.set(this._makeQuestKey(areaName, id), { type, config });
   }
 
+  set(qid, val) {
+    this.quests.set(qid, val);
+  }
+
   /**
    * Get a quest definition. Use `create` if you want an instance of a quest
    * @param {string} qid
@@ -48,6 +52,10 @@ class QuestFactory {
     instance.on('progress', (progress) => {
       Broadcast.sayAt(player, `\r\n<bold><yellow>${progress.display}</yellow></bold>`);
       player.save();
+    });
+
+    instance.on('turn-in-ready', () => {
+      Broadcast.sayAt(player, `\r\n<bold><yellow>${instance.config.title} ready to turn in!</yellow></bold>`);
     });
 
     instance.on('complete', () => {

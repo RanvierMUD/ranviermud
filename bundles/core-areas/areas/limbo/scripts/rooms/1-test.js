@@ -9,7 +9,7 @@ module.exports = (srcPath) => {
       playerEnter: state => function (player) {
         Broadcast.sayAt(player, 'The floorboards creak as you enter the room.');
 
-        const quest = state.QuestFactory.create(state, 'limbo:1', {}, player);
+        let quest = state.QuestFactory.create(state, 'limbo:1', {}, player);
         if (player.questTracker.canStart(quest)) {
           player.questTracker.start(quest);
         } else {

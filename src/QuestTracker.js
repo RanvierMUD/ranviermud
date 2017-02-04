@@ -42,6 +42,10 @@ class QuestTracker {
     return this.completedQuests.has(qid);
   }
 
+  get(qid) {
+    return this.activeQuests.get(qid);
+  }
+
   /**
    * @param {string} qid
    */
@@ -63,6 +67,10 @@ class QuestTracker {
    * @return {boolean}
    */
   canStart(quest) {
+    if (this.completedQuests.has(quest.id) && !quest.config.repeatable) {
+      return false;
+    }
+
     return !this.isActive(quest.id) && quest.config.requires.every((qid) => {
       return this.isComplete(qid);
     });

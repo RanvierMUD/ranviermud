@@ -5,7 +5,7 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const CommandParser = require(srcPath + 'CommandParser').CommandParser;
 
-  function lookRoom(player) {
+  function lookRoom(state, player) {
     const room = player.room;
 
     // Render the room
@@ -28,6 +28,26 @@ module.exports = (srcPath) => {
     });
 
     room.npcs.forEach(npc => {
+      // show quest state as [!], [%], [?] for available, in progress, ready to complete respectively
+      let hasNewQuest, hasActiveQuest, hasReadyQuest;
+      if (npc.quests) {
+        const quests = npc.quests.map(qid => state.QuestFactory.create(state, qid, {}, player));
+        hasNewQuest = quests.find(quest => player.questTracker.canStart(quest));
+        hasReadyQuest = quests.find(quest => {
+          return player.questTracker.isActive(quest.id) && player.questTracker.get(quest.id).getProgress().percent >= 100;
+        });
+        hasActiveQuest = quests.find(quest => {
+          return player.questTracker.isActive(quest.id) && player.questTracker.get(quest.id).getProgress().percent < 100;
+        });
+
+        let questString = '';
+        if (hasNewQuest || hasActiveQuest || hasReadyQuest) {
+          questString += hasNewQuest ? '[<bold><yellow>!</yellow></bold>]' : '';
+          questString += hasActiveQuest ? '[<bold><yellow>%</yellow></bold>]' : '';
+          questString += hasReadyQuest ? '[<bold><yellow>?</yellow></bold>]' : '';
+          Broadcast.at(player, questString + ' ');
+        }
+      }
       Broadcast.sayAt(player, '[NPC] ' + npc.name);
     });
 
@@ -59,7 +79,7 @@ module.exports = (srcPath) => {
   }
 
   return {
-    command: (state) => (args, player) => {
+    command: state => (args, player) => {
       if (!player.room) {
         util.log(player.getName() + ' is in limbo.');
         return Broadcast.sayAt(player, 'You are in a deep, dark void.');
@@ -69,7 +89,7 @@ module.exports = (srcPath) => {
         return lookEntity(player, args);
       }
 
-      lookRoom(player);
+      lookRoom(state, player);
     }
   };
 };
