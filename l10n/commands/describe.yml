@@ -1,4 +1,0 @@
-DESCRIPTION_SET:
-    en: "<bold>Description set.</bold>"
-NO_DESCRIPTION:
-    en: "<bold>Please enter a new description for your character.</bold> \nThe current description is: \n$[1]"

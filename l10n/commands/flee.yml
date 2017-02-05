@@ -1,9 +1,0 @@
-FLEE_FAIL:
-  en: 'You are unable to escape.'
-
-FLEE_SUCCEED:
-  en: 'You manage to flee in one piece.'
-
-NO_FIGHT:
-  en: "You have nothing to flee from... right?"
-

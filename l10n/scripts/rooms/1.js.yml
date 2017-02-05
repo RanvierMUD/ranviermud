@@ -1,8 +1,0 @@
-BEER:
-  en: "You examine the equipment behind the bar and find that it may still be functional..."
-BEER_OTHER:
-  en: "$[1] examines the equipment behind the bar, hemming and hawwing all the while."
-LIGHTS:
-  en: "Gazing up at the lanterns, it is impossible for you to discern what causes them to glow as they do."
-LIGHTS_OTHERS:
-  en: "$[1] gazes up at the lanterns hanging above for a moment."

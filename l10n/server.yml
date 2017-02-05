@@ -1,6 +1,0 @@
-HOTBOOT_WARN:
-    en: "The server is hotbooting in $[1]"
-    es: "ES-The server is hotboot in $[1]"
-RESTART_WARN:
-    en: "The server is warning in $[1]"
-    es: "ES-The server is warn in $[1]"
