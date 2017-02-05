@@ -12,3 +12,6 @@ coverage/
 gulpTODO.md
 *.sublime-*
 .ranvierSecret
+
+# ignore mkdocs build target
+site/
