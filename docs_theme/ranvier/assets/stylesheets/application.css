@@ -177,7 +177,7 @@ kbd {
   .md-typeset h5 {
     text-transform: uppercase; }
   .md-typeset h1, .md-typeset h2, .md-typeset h3, .md-typeset h4, .md-typeset .toctitle {
-    font-family: Geo, sans-serif;
+    font-family: 'Fugaz One', sans-serif;
     color: #689F63; }
   .md-typeset hr {
     margin: 1.5em 0;
@@ -459,7 +459,7 @@ hr {
     .no-js .md-header-nav__button.md-icon--search {
       display: none; }
   .md-header-nav__title {
-    font-family: 'Geo';
+    font-family: 'Fugaz One';
     padding: 0 2rem;
     font-size: 1.8rem;
     line-height: 4.8rem; }
@@ -551,6 +551,7 @@ hr {
     display: block;
     padding: 1.2rem 1.2rem 0;
     font-weight: 700;
+    text-align: center;
     text-overflow: ellipsis;
     overflow: hidden; }
     .md-nav__title::before {
@@ -1565,7 +1566,7 @@ hr {
   html .md-nav--primary .md-nav__title::before {
     display: block;
     position: absolute;
-    top: 0.4rem;
+    top: calc(50% - 2rem);
     left: 0.4rem;
     width: 4rem;
     height: 4rem;
