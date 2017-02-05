@@ -19,12 +19,6 @@
         </span>
       </div>
       <div class="md-flex__cell md-flex__cell--shrink">
-        {% block search_box %}
-          <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
-          {% include "partials/search.html" %}
-        {% endblock %}
-      </div>
-      <div class="md-flex__cell md-flex__cell--shrink">
           <div class="md-header-nav__source">
             {% if config.repo_url %}
               {% include "partials/source.html" %}
