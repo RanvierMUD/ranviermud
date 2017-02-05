@@ -167,8 +167,8 @@ function init(restartServer) {
     // Ticks for effect processing happen every second
     clearInterval(tickInterval);
     tickInterval = setInterval(() => {
-      GameState.PlayerManager.emit('effectTick');
-    }, 1000);
+      GameState.PlayerManager.emit('updateTick');
+    }, 500);
 
     // TODO: RESPAWN
   }

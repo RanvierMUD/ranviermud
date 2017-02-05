@@ -7,13 +7,6 @@ module.exports = (srcPath) => {
   return  {
     listeners: {
       /**
-       * Effect ticks are every second
-       */
-      effectTick: state => function () {
-        // TODO: Process events
-      },
-
-      /**
        * Handle player gaining experience/leveling up
        * @param {number} amount Exp gained
        */
