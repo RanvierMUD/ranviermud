@@ -176,11 +176,14 @@ kbd {
     letter-spacing: -0.01em; }
   .md-typeset h5 {
     text-transform: uppercase; }
+  .md-typeset h1, .md-typeset h2, .md-typeset h3, .md-typeset h4 {
+    font-family: Geo, sans-serif;
+    color: #689F63; }
   .md-typeset hr {
     margin: 1.5em 0;
     border-bottom: 0.1rem dotted rgba(0, 0, 0, 0.26); }
   .md-typeset a {
-    color: #333333;
+    color: #197910;
     word-break: break-word; }
     .md-typeset a, .md-typeset a::before {
       -webkit-transition: color 0.125s;
@@ -1705,10 +1708,6 @@ hr {
     margin: 0; } }
 
 @media only screen and (min-width: 60em) {
-
-  .md-content {
-    margin-right: 24.2rem; }
-
   .md-header-nav__button.md-icon--search {
     display: none; }
 
