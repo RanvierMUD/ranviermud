@@ -14,7 +14,7 @@
       <div class="md-flex__cell md-flex__cell--stretch">
         <span class="md-flex__ellipsis md-header-nav__title">
           {% block site_name %}
-            {{ config.site_name }}
+          <a href="{{ nav.homepage.url }}" title="{{ config.site_name }}">{{ config.site_name }}</a>
           {% endblock %}
         </span>
       </div>
