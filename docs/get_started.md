@@ -33,7 +33,7 @@ Options are described below as `key (default value)`
 :    Port the web API runs on
 
 `bundles`
-:    List of enabled bundles, for details see the [Bundles](bundles.md) section
+:    List of enabled bundles, for details see the [Bundles](extending/bundles.md) section
 
 `maxAccountNameLength` (_20_)
 `minAccountNameLength` (_3_)
@@ -44,3 +44,9 @@ Options are described below as `key (default value)`
 
 `allowMultiplay` (_false_)
 :    If enabled players can log into multiple players on their account at once
+
+## Adding Content
+
+To begin adding content you should first have an understanding of the [Project
+Structure](structure.md). After that all of the details of adding content can
+be seen in the [Bundles](extending/bundles.md) section.

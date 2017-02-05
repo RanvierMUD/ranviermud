@@ -12,6 +12,7 @@ markdown_extensions:
     - def_list
     - toc:
         permalink: true
+        title: 'Contents'
 google_analytics: ["UA-28253658-1", "auto"]
 
 pages:
@@ -19,3 +20,18 @@ pages:
 - Overview: index.md
 - Get Started: get_started.md
 - Project Structure: structure.md
+- Extending:
+    - Bundles: 'extending/bundles.md'
+    - Areas:
+        - Creating an Area: 'extending/areas/index.md'
+        - Items: 'extending/areas/items.md'
+        - NPCs: 'extending/areas/npcs.md'
+        - Rooms: 'extending/areas/rooms.md'
+        - Scripting: 'extending/areas/scripting.md'
+    - Behaviors: 'extending/behaviors.md'
+    - Commands: 'extending/commands.md'
+    - Helpfiles: 'extending/help.md'
+    - Input Events: 'extending/input-events.md'
+    - Skills: 'extending/skills.md'
+    - Channels: 'extending/channels.md'
+    - Player Events: 'extending/player-events.md'

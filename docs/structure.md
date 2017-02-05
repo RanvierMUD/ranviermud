@@ -1,6 +1,6 @@
 
 <pre>
-  bundles/         - Contains available bundles, see the <a href="/bundles/">Bundles</a> section
+  bundles/         - Contains available bundles, see the <a href="/extending/bundles/">Bundles</a> section
   data/
     account/       - Account files
     player/        - Pfiles

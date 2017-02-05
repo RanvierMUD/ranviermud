@@ -7,6 +7,10 @@ See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch 
 
 Ranvier is _not_ a websocket MUD. It does not have a web client. It is a plain ol' fashioned telnet MUD. Any client you use to connect to the MUD you played 15 years ago will work with Ranvier.
 
+## Documentation
+
+Docs can be found on our website [ranviermud.com](http://www.ranviermud.com)
+
 ## Features
 * Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy packaging and sharing of commands/areas/items/npcs/channels/behaviors.
 * Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.

@@ -148,7 +148,7 @@ kbd {
     font-weight: 300;
     letter-spacing: -0.01em;
     line-height: 1.3; }
-  .md-typeset h2 {
+  .md-typeset h2, .md-typeset .toctitle {
     margin: 4rem 0 1.6rem;
     font-size: 2.5rem;
     font-weight: 300;
@@ -176,7 +176,7 @@ kbd {
     letter-spacing: -0.01em; }
   .md-typeset h5 {
     text-transform: uppercase; }
-  .md-typeset h1, .md-typeset h2, .md-typeset h3, .md-typeset h4 {
+  .md-typeset h1, .md-typeset h2, .md-typeset h3, .md-typeset h4, .md-typeset .toctitle {
     font-family: Geo, sans-serif;
     color: #689F63; }
   .md-typeset hr {
