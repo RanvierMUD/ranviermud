@@ -46,7 +46,6 @@ class BundleManager {
   }
 
   loadBundle(bundle, bundlePath) {
-    // TODO: Use bundles.json file to see enabled bundles
     const paths = {
       areas: bundlePath + '/areas/',
       behaviors: bundlePath + '/behaviors/',
