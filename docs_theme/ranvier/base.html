@@ -35,9 +35,9 @@
     {% endblock %}
     {% block fonts %}
       {% if config.extra.font != "none" %}
-        {% set text = config.extra.get("font", {}).text | default("Roboto") %}
+        {% set text = config.extra.get("font", {}).text | default("Open Sans") %}
         {% set code = config.extra.get("font", {}).code
-                    | default("Roboto Mono") %}
+                    | default("PT Mono") %}
         {% set font = text + ':300,400,400i,700|' + code | replace(' ', '+') %}
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family={{ font }}">
         <style>body,input{font-family:"{{ text }}","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"{{ code }}","Courier New",Courier,monospace}</style>
