@@ -3,13 +3,14 @@
   keywords: ['rat']
   name: 'Rat'
   description: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
-  behaviors: ['test']
+  behaviors:
+    - test
+    - combat
   script: '1-rat'
   items: ['limbo:2']
   quests: ['limbo:2']
   attributes:
-    maxHealth: 8
-    health: 8
+    maxHealth: 100
     speed: 2.5
     damage: 1-7
     level: 2

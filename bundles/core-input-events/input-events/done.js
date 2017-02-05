@@ -15,10 +15,10 @@ module.exports = (srcPath) => {
 
       player.socket.on('close', () => {
         util.log(player.name + ' has gone linkdead.');
-        // try to fetch the person the player is fighting and dereference the player
-        if (player.inCombat.inCombat) {
-          player.inCombat.inCombat = null;
-        }
+        // TODO: try to fetch the person the player is fighting and dereference the player
+        //if (player.inCombat.inCombat) {
+        //  player.inCombat.inCombat = null;
+        //}
 
         player.save(() => {
           player.room.removePlayer(player);

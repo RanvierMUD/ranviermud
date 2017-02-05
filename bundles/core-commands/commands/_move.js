@@ -28,7 +28,7 @@ module.exports = (srcPath) => {
         throw 'Be more specific. Which way would you like to go?';
       }
 
-      if (player.inCombat) {
+      if (player.isInCombat()) {
         throw 'You are in the middle of a fight!';
       }
 

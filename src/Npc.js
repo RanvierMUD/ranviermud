@@ -31,6 +31,14 @@ class Npc extends Character {
     this.quests = data.quests || [];
   }
 
+  /**
+   * @param {string} behavior
+   * @return {boolean}
+   */
+  hasBehavior(behavior) {
+    return this.behaviors.includes(behavior);
+  }
+
   hydrate(state) {
     super.hydrate(state);
 

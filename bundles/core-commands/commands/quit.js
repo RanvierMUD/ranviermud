@@ -5,7 +5,7 @@ module.exports = (srcPath) => {
 
   return {
     command: (state) => (args, player) => {
-      if (player.inCombat) {
+      if (player.isInCombat()) {
         Broadcast.sayAt(player, "You're too busy fighting for your life!");
       }
 

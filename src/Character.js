@@ -5,12 +5,12 @@ const EffectMap = require('./EffectMap');
 const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
 
 /**
- * @property {string} name      Name shown on look/who/login
- * @property {Map}    inventory
- * @property {boolean|Character} inCombat Character they are in combat with
+ * @property {string}    name       Name shown on look/who/login
+ * @property {Map}       inventory
+ * @property {Set}       combatants Enemies this character is currently in combat with
  * @property {number}    level
  * @property {object}    attributes
- * @property {EffectMap} effects List of current effects applied to the character
+ * @property {EffectMap} effects    List of current effects applied to the character
  * @property {Map}       skills     List of all character's skills
  * @property {Room}      room       Room the character is currently in
  */
@@ -22,7 +22,7 @@ class Character extends EventEmitter
     this.name = data.name;
     this.inventory = data.inventory || new Map();
     this.equipment = data.equipment || new Map();
-    this.inCombat = false;
+    this.combatants = new Set();
     this.level = data.level || 1;
     this.room = data.room || null;
 
@@ -79,6 +79,38 @@ class Character extends EventEmitter
 
   removeEffect(effectType) {
     this.effects.delete(effectType);
+  }
+
+  /**
+   * Check to see if this character is currently in combat or if they are
+   * currently in combat with a specific character
+   * @param {?Character} target
+   * @return boolean
+   */
+  isInCombat(target) {
+    return target ? this.combatants.has(target) : this.combatants.size > 0;
+  }
+
+  /**
+   * @param {Character} target
+   */
+  addCombatant(target) {
+    if (this.isInCombat(target)) {
+      return;
+    }
+
+    this.combatants.add(target);
+  }
+
+  /**
+   * @param {Character} target
+   */
+  removeCombatant(target) {
+    if (!this.combatants.has(target)) {
+      return;
+    }
+
+    this.combatants.delete(target);
   }
 
   equip(item) {

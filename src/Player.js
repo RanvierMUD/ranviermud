@@ -68,7 +68,7 @@ class Player extends Character {
       return false;
     }
 
-    if (this.inCombat) {
+    if (this.isInCombat()) {
       return false;
     }
 
