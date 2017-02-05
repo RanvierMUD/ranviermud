@@ -13,6 +13,8 @@ markdown_extensions:
     - toc:
         permalink: true
         title: 'Contents'
+    - pymdownx.tasklist:
+        custom_checkbox: true
 google_analytics: ["UA-28253658-1", "auto"]
 
 pages:
