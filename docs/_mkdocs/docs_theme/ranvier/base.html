@@ -40,6 +40,7 @@
       {% for path in extra_css %}
         <link rel="stylesheet" href="{{ path }}">
       {% endfor %}
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans|PT+Mono|Material+Icons|Fugaz+One" rel="stylesheet">
       <style>body,input{font-family:'Open Sans',sans-serif}code,kbd,pre{font-family:"PT Mono","Courier New",Courier,monospace}</style>
     {% endblock %}
     {% block extrahead %}{% endblock %}
@@ -109,14 +110,6 @@
       {% endblock %}
     </div>
     {% block scripts %}
-      <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
-      <script>
-        WebFont.load({
-          google: {
-            families: ['Material Icons', 'Fugaz One', 'Open Sans', 'PT Mono']
-          }
-        });
-      </script>
       {% for path in extra_javascript %}
         <script src="{{ path }}"></script>
       {% endfor %}

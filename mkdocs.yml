@@ -5,7 +5,7 @@ site_author: Shawn Biddle
 docs_dir: docs
 repo_url: https://github.com/shawncplus/ranviermud
 theme: null
-theme_dir: docs_theme/ranvier
+theme_dir: docs/_mkdocs/docs_theme/ranvier
 extra:
     logo: '_static/images/logo.png'
 markdown_extensions:
