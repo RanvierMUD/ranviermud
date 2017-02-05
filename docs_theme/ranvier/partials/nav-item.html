@@ -41,15 +41,16 @@
     {% endif %}
   </li>
 {% else %}
+  {% if nav_item.active %}
+  <li class="md-nav__item md-nav__item--active">
+    <a href="{{ nav_item.url }}" title="{{ nav_item.title }}" class="md-nav__link md-nav__link--active">
+      {{ nav_item.title }}
+    </a>
+  {% else %}
   <li class="md-nav__item">
-    {% if nav_item.active %}
-      <a href="{{ nav_item.url }}" title="{{ nav_item.title }}" class="md-nav__link md-nav__link--active">
-        {{ nav_item.title }}
-      </a>
-    {% else %}
-      <a href="{{ nav_item.url }}" title="{{ nav_item.title }}" class="md-nav__link">
-        {{ nav_item.title }}
-      </a>
-    {% endif %}
+    <a href="{{ nav_item.url }}" title="{{ nav_item.title }}" class="md-nav__link">
+      {{ nav_item.title }}
+    </a>
+  {% endif %}
   </li>
 {% endif %}

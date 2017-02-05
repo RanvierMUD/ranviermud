@@ -592,6 +592,12 @@ hr {
       color: rgba(0, 0, 0, 0.54); }
     .md-nav__link:active, .md-nav__link--active {
       color: #333333; }
+    .md-nav__link--active {
+      text-shadow: rgba(0, 0, 0, 0.2) 1px 1px;
+      font-weight: 700; }
+    .md-nav__link--active::before {
+      content: '';
+      border-left: 3px solid #689F63; }
     .md-nav__link:hover {
       color: #689F63; }
   .md-nav__source {
@@ -1611,6 +1617,11 @@ hr {
   .md-nav--primary .md-nav__item {
     padding: 0;
     border-top: 0.1rem solid rgba(0, 0, 0, 0.07); }
+
+  .md-nav__link--active::before {
+    border-left: 0; }
+  .md-nav__item--active {
+    border-left: 4px solid #689F63; }
 
   .md-nav--primary .md-nav__item--nested > .md-nav__link {
     padding-right: 4.8rem; }

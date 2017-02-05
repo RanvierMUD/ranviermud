@@ -31,7 +31,6 @@
       {% endif %}
     {% endblock %}
     {% block libs %}
-      <script src="{{ base_url }}/assets/javascripts/modernizr.js"></script>
     {% endblock %}
     {% block fonts %}
       {% if config.extra.font != "none" %}
@@ -121,8 +120,6 @@
       {% endblock %}
     </div>
     {% block scripts %}
-      <script src="{{ base_url }}/assets/javascripts/application.js"></script>
-      <script>var config={url:{base:"{{ base_url }}"}},app=new Application(config);app.initialize()</script>
       {% for path in extra_javascript %}
         <script src="{{ path }}"></script>
       {% endfor %}
