@@ -73,10 +73,6 @@ input {
   border: 0;
   outline: 0; }
 
-.readme-logo {
-  max-width: 160px;
-}
-
 .md-icon, .md-nav__title::before, .md-nav__button, .md-nav__link::after, .admonition::before, .md-typeset .footnote-backref, .md-typeset .critic.comment::before, .md-typeset .task-list-control .task-list-indicator::before {
   font-family: "Material Icons";
   font-style: normal;
@@ -428,6 +424,10 @@ hr {
 
 .md-content__inner {
   margin: 2.4rem 1.6rem; }
+
+.md-content__inner.md-typeset .readme-logo {
+  max-width: 160px;
+}
 
 .md-content__edit {
   float: right; }
