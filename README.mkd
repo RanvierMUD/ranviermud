@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/shawncplus/ranviermud/staging/resources/logo.png"></p>
+<p align="center"><img class="readme-logo" src="https://raw.githubusercontent.com/shawncplus/ranviermud/staging/resources/logo.png"></p>
 
 # ranvier
 NodeJS based MUD engine
