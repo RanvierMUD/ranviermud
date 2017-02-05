@@ -11,7 +11,7 @@ class PlayerManager extends EventEmitter {
     this.players = new Map();
     this.events = new EventManager();
     this.on('save', this.saveAll);
-    this.on('effectTick', this.tickAll);
+    this.on('updateTick', this.tickAll);
   }
 
   getPlayer(name) {
@@ -87,7 +87,7 @@ class PlayerManager extends EventEmitter {
 
   tickAll(playerCallback) {
     for (const [ name, player ] of this.players.entries()) {
-      player.emit('effectTick');
+      player.emit('updateTick');
     }
   }
 
