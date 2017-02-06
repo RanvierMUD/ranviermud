@@ -62,7 +62,7 @@ By default only the local host IP is whitelisted.
 
 - [ ] Respawn
 - [ ] "Hotboot" - Reload anything from a bundle. Changing core will require a restart
-- [ ] Implement containers
+- [X] Implement containers
 - [X] Rewrite script attachment to entities with the new bundle loader
 - [X] Implement equipping
 - [X] Implement some kind of helper for time-based events (Implemented by way of ticks)
