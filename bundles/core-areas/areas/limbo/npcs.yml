@@ -1,6 +1,7 @@
 - id: 1
   keywords: ['rat']
   name: 'Rat'
+  level: 2
   description: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
   behaviors:
     - combat
@@ -11,11 +12,10 @@
     maxHealth: 100
     speed: 2.5
     damage: 1-7
-    level: 2
 - id: 2
   keywords: ["wise", "old", "man"]
   name: "Wise Old Man"
+  level: 99
   description: "A wise looking old man sits on the ground with legs crossed."
   attributes:
     maxHealth: 100
-    level: 99

@@ -10,6 +10,7 @@ extra:
     logo: '_static/images/logo.png'
 markdown_extensions:
     - def_list
+    - codehilite
     - toc:
         permalink: true
         title: 'Contents'
@@ -29,6 +30,7 @@ pages:
         - Items: 'extending/areas/items.md'
         - NPCs: 'extending/areas/npcs.md'
         - Rooms: 'extending/areas/rooms.md'
+        - Quests: 'extending/areas/quests.md'
         - Scripting: 'extending/areas/scripting.md'
     - Behaviors: 'extending/behaviors.md'
     - Commands: 'extending/commands.md'

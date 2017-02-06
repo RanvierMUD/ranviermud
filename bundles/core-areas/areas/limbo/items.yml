@@ -1,7 +1,7 @@
 - id: 1
   name: "Rusty Shiv"
   roomDesc: "a razor-sharp shiv coated in rust"
-  keywords: [ "shiv", "rusty", "shank", "rus", "metal", "rust" ]
+  keywords: [ "shiv", "rusty", "shank", "metal", "rust" ]
   description: "A short, jagged metal shard, discolored with red corrosion. Rather than a handle, someone has wrapped grimy grip tape around the base of the instrument."
   script: "1-shiv"
   slot: 'wield'
@@ -14,6 +14,7 @@
   keywords: [ "slice", "cheese", "moldy" ]
   description: "A yellow, slightly moldy slice of cheese. Only a rat could find this appetizing."
 - id: 3
+  type: CONTAINER
   name: "Wooden Chest"
   roomDesc: "A wooden chest rests open in the corner, its hinges badly rusted."
   keywords: [ "wooden", "chest" ]

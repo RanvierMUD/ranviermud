@@ -137,6 +137,9 @@ kbd {
   .md-typeset h1, .md-typeset h2, .md-typeset h3, .md-typeset h4, .md-typeset .toctitle {
     font-family: 'Fugaz One', sans-serif;
     color: #689F63; }
+  .md-typeset hr {
+    margin: 1.5em 0;
+    border-bottom: 0.1rem dotted rgba(0, 0, 0, 0.26); }
   .md-typeset a {
     color: #197910;
     word-break: break-word; }
