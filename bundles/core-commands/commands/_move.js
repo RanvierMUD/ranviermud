@@ -54,5 +54,5 @@ module.exports = (srcPath) => {
       nextRoom.emit('playerEnter', player);
       return true;
     }
-  }
+  };
 };

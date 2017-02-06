@@ -27,7 +27,7 @@ module.exports = (srcPath) => {
       },
 
       damaged: state => function (amount) {
-        util.log(`${self.name} damaged ${amount}`);
+        util.log(`${this.name} damaged ${amount}`);
       },
 
       npcLeave: state => function (target, destination) {
@@ -39,4 +39,4 @@ module.exports = (srcPath) => {
       },
     }
   };
-}
+};

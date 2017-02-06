@@ -30,5 +30,5 @@ module.exports = (srcPath) => {
         reward: (quest, player) => LevelUtil.mobExp(player.level) * 3
       }
     }
-  }
+  };
 };

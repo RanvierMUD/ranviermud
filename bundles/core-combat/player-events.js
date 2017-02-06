@@ -134,7 +134,7 @@ module.exports = (srcPath) => {
 
           for (const target of this.combatants) {
             let currentPerc = Math.floor((target.attributes.health / target.attributes.maxHealth) * 100);
-            let buf = `<bold>${target.name}</bold>: `
+            let buf = `<bold>${target.name}</bold>: `;
             buf += '<red>[<bold>';
             buf += new Array(Math.ceil((currentPerc / 100) * percWidth)).join('#') + '|';
             buf += new Array(percWidth - Math.ceil((currentPerc  / 100) * percWidth)).join(' ');

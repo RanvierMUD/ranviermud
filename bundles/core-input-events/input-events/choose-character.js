@@ -42,7 +42,7 @@ module.exports = (srcPath) => {
           display: 'Create New Character',
           onSelect: () => { 
             handleMultiplaying();
-            socket.emit('create-player', socket, { account })
+            socket.emit('create-player', socket, { account });
           },
         });
       }
