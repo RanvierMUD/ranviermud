@@ -10,7 +10,7 @@ module.exports = (srcPath) => {
       type: FetchQuest,
       config: {
         title: "Find A Weapon",
-        desc: "You're defenseless! Pick up the shiv on the ground by typing 'get shiv'",
+        desc: "You're defenseless! Pick up the shiv from the chest by typing 'get shiv chest'",
         targetCount: 1,
         targetItem: "limbo:1",
         autoComplete: true,

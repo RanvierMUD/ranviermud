@@ -20,5 +20,7 @@
   "minPlayerNameLength": 3,
 
   "maxCharacters": 3,
-  "allowMultiplay": false
+  "allowMultiplay": false,
+
+  "startingRoom": "limbo:1"
 }

@@ -15,7 +15,7 @@ module.exports = (srcPath) => {
 
       if (!hfile) {
         util.log(`MISSING-HELP: [${args}]`);
-        return Broadcast.sayAt(player, "Sorry, I couldn't fine an entry for that topic.");
+        return Broadcast.sayAt(player, "Sorry, I couldn't find an entry for that topic.");
       }
 
       Broadcast.sayAt(player, hfile.render(state));

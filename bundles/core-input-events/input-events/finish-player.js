@@ -19,8 +19,7 @@ module.exports = (srcPath) => {
       args.account.addCharacter(args.name);
       args.account.save();
 
-      // TODO: Don't do this, have a server config for player starting room
-      let room = Array.from(state.RoomManager.rooms.values())[0];
+      const room = state.RoomManager.getRoom(state.Config.get('startingRoom'));
       player.room = room;
       player.save();
 
