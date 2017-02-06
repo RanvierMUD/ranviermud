@@ -12,6 +12,29 @@ module.exports = (srcPath) => {
   return  {
     listeners: {
       updateTick: state => function () {
+        // Check to see if the player has died since the last combat tick. If
+        // we only did the check right when the player was damaged then you
+        // could potentially wind up in a situation where the player performed
+        // a mid-round attack that killed the target, then the next round the
+        // target kills the player. So let's not let that happen.
+        if (this.attributes.health <= 0) {
+          this.combatants.forEach(combatant => {
+            this.removeCombatant(combatant);
+            combatant.removeCombatant(this);
+            if (!combatant.isInCombat()) {
+              combatant.attributes.health = combatant.attributes.maxHealth;
+            }
+          }, this);
+
+          const target = this.combatData.killedBy;
+          if (target) {
+            Broadcast.sayAt(this, `<bold><red>${target.name} killed you!</red></bold>`);
+            target.emit('deathblow', this);
+            this.emit('killed', target);
+          }
+          return;
+        }
+
         if (!this.isInCombat()) {
           return;
         }
@@ -20,12 +43,32 @@ module.exports = (srcPath) => {
         const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
         const playerSpeed = 1.5;
         const targetSpeed = 2;
-        const playerDamage = rand(10, 20);
-        const targetDamage = rand(1, 10);
+        const playerDamage = rand(5, 20);
+        const targetDamage = rand(5, 20);
 
         let hadActions = false;
         for (const target of this.combatants) {
           // player actions
+          if (target.attributes.health <= 0) {
+            this.removeCombatant(target);
+            target.removeCombatant(this);
+
+            Broadcast.sayAt(this, `<bold>${target.name} is <red>Dead</red>!</bold>`);
+            target.emit('killed', this);
+            this.emit('deathblow', target);
+
+            // TODO: For now respawn happens here, this is shitty
+            const newNpc = state.MobFactory.create(target.area, target.getKey());
+            newNpc.hydrate(state);
+            if (newNpc.room) {
+              newNpc.room.removeNpc(newNpc);
+            }
+            target.room.addNpc(newNpc);
+            target.emit('spawn');
+            target.area.removeNpc(target);
+            continue;
+          }
+
           if (this.combatData.lag <= 0) {
             hadActions = true;
             const damage = Math.min(playerDamage, target.attributes.health);
@@ -33,26 +76,6 @@ module.exports = (srcPath) => {
             target.emit('hit', this, damage);
             target.attributes.health -= damage;
             Broadcast.sayAt(this, `You strike <bold>${target.name}</bold> for <bold>${damage}</bold> damage`);
-
-            if (target.attributes.health <= 0) {
-              this.removeCombatant(target);
-              target.removeCombatant(this);
-
-              Broadcast.sayAt(this, `<bold>${target.name} is <red>Dead</red>!</bold>`);
-              target.emit('killed', this);
-              this.emit('deathblow', target);
-
-              // TODO: For now respawn happens here, this is shitty
-              const newNpc = state.MobFactory.create(target.area, target.getKey());
-              newNpc.hydrate(state);
-              if (newNpc.room) {
-                newNpc.room.removeNpc(newNpc);
-              }
-              target.room.addNpc(newNpc);
-              target.emit('spawn');
-              target.area.removeNpc(target);
-              continue;
-            }
 
             this.combatData.lag = playerSpeed * 1000;
           } else {
@@ -71,19 +94,7 @@ module.exports = (srcPath) => {
             Broadcast.sayAt(this, `<bold>${target.name}</bold> hit you for <bold><red>${damage}</red></bold> damage`);
 
             if (this.attributes.health <= 0) {
-              this.combatants.forEach(combatant => {
-                this.removeCombatant(combatant);
-              }, this);
-              target.removeCombatant(this);
-
-              Broadcast.sayAt(this, `<bold><red>${target.name} killed you!</red></bold>`);
-              target.emit('deathblow', this);
-              this.emit('killed', target);
-
-              // For now if the NPC killed the player and has no other targets just reset them to max health
-              if (!target.isInCombat()) {
-                target.attributes.health = target.attributes.maxHealth;
-              }
+              this.combatData.killedBy = target;
               break;
             }
 
@@ -144,6 +155,7 @@ module.exports = (srcPath) => {
         // Restore health to full on death for now
         this.attributes.health = this.attributes.maxHealth;
         Broadcast.sayAt(this, "Whoops, that sucked!");
+        Broadcast.prompt(this);
       },
 
       /**
@@ -153,6 +165,7 @@ module.exports = (srcPath) => {
       deathblow: state => function (target) {
         this.emit('experience', LevelUtil.mobExp(target.level));
         this.attributes.health = this.attributes.maxHealth;
+        Broadcast.prompt(this);
       }
     }
   };
