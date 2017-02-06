@@ -24,26 +24,30 @@ Ranvier configuration is stored in the `ranvier.json` file in the root of the pr
 
 ### Options
 
-Options are described below as `key (default value)`
+`field` _`type`_ `(default)`
 
-`port` (23)
+----
+
+`port` _`number`_ `(23)`
 :    Port that the game runs on
 
-`webPort` (9001)
+`webPort` _`number`_ `(9001)`
 :    Port the web API runs on
 
-`bundles`
+`bundles` _`array<string>`_
 :    List of enabled bundles, for details see the [Bundles](extending/bundles.md) section
 
-`maxAccountNameLength` (_20_)
-`minAccountNameLength` (_3_)
-`maxPlayerNameLength` (_30_)
-`minPlayerNameLength` (_3_)
-`maxCharacters` (_3_)
+`maxAccountNameLength` _`number`_ `(20)`
+`minAccountNameLength` _`number`_ (3)
+`maxPlayerNameLength` _`number`_ (30)
+`minPlayerNameLength` _`number`_ (3)
+`maxCharacters` _`number`_ (3)
 :    Account and character creation validation settings
 
-`allowMultiplay` (_false_)
+`allowMultiplay` _`boolean`_ `(false)`
 :    If enabled players can log into multiple players on their account at once
+
+`startingRoom` _`EntityRefernce`_ `("limbo:1")`
 
 ## Adding Content
 
