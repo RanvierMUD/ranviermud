@@ -13,6 +13,7 @@ functionality expected in most Diku-style MUDs.
 * `core-areas` - Small example area demonstrating diku-style rooms, npcs,
   items, and quests.
 * `core-channels` - Set of example channels: say, tell, yell, and chat
+* `core-combat` - Basic diku style real-time auto combat
 * `core-effects` - (_currently unused_) Set of example spell effects
 * `core-input-events` - Diku-style implementation of login flow with accounts
   and Diku-style command interpretation

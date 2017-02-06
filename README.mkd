@@ -23,6 +23,7 @@ Docs can be found on our website [ranviermud.com](http://www.ranviermud.com)
 * Flexible channel system.
 * Incredibly simple-to-add commands.
 * Quest system allowing for starting/progress/completion from any event in the game
+* Simple Diku-style combat system
 
 ## Requirements
 
@@ -78,7 +79,7 @@ By default only the local host IP is whitelisted.
 - [ ] Add and emit server events that bundles can bind to in `server-events/` that will effectly relace the old `plugin/` infrastructure
 - [ ] Using the new server events create a `core-api` bundle that provides a web api with authentication against player accounts and allows access to game data based on account privileges. To be used with [Sheath](https://github.com/seanohue/sheath-ranviermud)
 - [ ] Fix effects to only serialize options, not the entire effects array
-- [ ] Remove/move/refactor combat_util/rtcombat
+- [X] Implement basic combat system
 
 ### Nice to have
 
