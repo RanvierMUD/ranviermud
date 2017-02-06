@@ -1,3 +1,4 @@
+/*jshint node: true, esversion: 6 */
 'use strict';
 
 const fs = require('fs'),

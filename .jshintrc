@@ -1,4 +1,4 @@
 {
     "node": true,
-    "esnext": true
+    "esversion": 6
 }
