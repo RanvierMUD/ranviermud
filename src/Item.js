@@ -87,17 +87,30 @@ class Item extends EventEmitter {
       this.area = state.AreaManager.getArea(this.area);
     }
 
-    this.defaultItems.forEach(defaultItemId => {
-      if (parseInt(defaultItemId, 10)) {
-        defaultItemId = this.area.name + ':' + defaultItemId;
-      }
+    // if the item was saved with a custom inventory hydrate it
+    if (Array.isArray(this.inventory)) {
+      const itemDefs = this.inventory;
+      this.inventory = new Map();
+      itemDefs.forEach(itemDef => {
+        let newItem = state.ItemFactory.create(state.AreaManager.getArea(itemDef.area), itemDef);
+        newItem.hydrate(state);
+        state.ItemManager.add(newItem);
+        this.addItem(newItem);
+      });
+    } else {
+    // otherwise load its default inv
+        this.defaultItems.forEach(defaultItemId => {
+          if (parseInt(defaultItemId, 10)) {
+            defaultItemId = this.area.name + ':' + defaultItemId;
+          }
 
-      util.log(`\tDIST: Adding item [${defaultItemId}] to item [${this.name}]`);
-      const newItem = state.ItemFactory.create(this.area, defaultItemId);
-      newItem.hydrate(state);
-      state.ItemManager.add(newItem);
-      this.addItem(newItem);
-    });
+          util.log(`\tDIST: Adding item [${defaultItemId}] to item [${this.name}]`);
+          const newItem = state.ItemFactory.create(this.area, defaultItemId);
+          newItem.hydrate(state);
+          state.ItemManager.add(newItem);
+          this.addItem(newItem);
+        });
+    }
 
     if (this.behaviors) {
       this.behaviors.forEach(behaviorName => {
@@ -132,7 +145,7 @@ class Item extends EventEmitter {
     };
 
     data.inventory = this.inventory ?
-      Array.from(this.inventory.values()).map(item => item.serialize) :
+      Array.from(this.inventory.values()).map(item => item.serialize()) :
       this.inventory
     ;
 
