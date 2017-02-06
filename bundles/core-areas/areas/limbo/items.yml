@@ -20,3 +20,5 @@
   keywords: [ "wooden", "chest" ]
   description: "Time has not been kind to this chest. It seems to be held together solely by the dirt and rust."
   items: [ "limbo:1" ]
+  attributes:
+    noPickup: true

@@ -40,6 +40,10 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, "You don't see anything like that here.");
       }
 
+      if (item.attributes.noPickup) {
+        return Broadcast.sayAt(player, `${item.name} can't be picked up.`);
+      }
+
       if (container) {
         container.removeItem(item);
       } else {
