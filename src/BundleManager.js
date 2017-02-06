@@ -70,7 +70,7 @@ class BundleManager {
     }
 
     if (fs.existsSync(paths.inputEvents)) {
-      this.loadInputEvents(bundle, paths.inputEvents)
+      this.loadInputEvents(bundle, paths.inputEvents);
     }
 
     if (fs.existsSync(paths.playerEvents)) {
@@ -82,7 +82,7 @@ class BundleManager {
     }
 
     if (fs.existsSync(paths.areas)) {
-      this.loadAreas(bundle, paths.areas)
+      this.loadAreas(bundle, paths.areas);
 
       // Distribution is done after all areas are loaded in case items use areas from each other
       this.state.AreaManager.distribute(this.state);
@@ -247,7 +247,7 @@ class BundleManager {
     rooms = rooms.map(room => new Room(area, room));
     rooms.forEach(room => {
       area.addRoom(room);
-      this.state.RoomManager.addRoom(room)
+      this.state.RoomManager.addRoom(room);
       if (room.script) {
         const scriptPath = path.dirname(roomsFile) + '/scripts/rooms/' + room.script + '.js';
         if (!fs.existsSync(scriptPath)) {

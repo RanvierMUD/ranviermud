@@ -61,7 +61,7 @@ class EventManager {
     } else if (!events) {
       events = this.events.keys();
     } else if (!TypeUtil.iterable(events)) {
-      throw new TypeError('events list passed to clear() is not iterable')
+      throw new TypeError('events list passed to clear() is not iterable');
     }
 
     for (const event of events) {

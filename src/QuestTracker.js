@@ -109,9 +109,7 @@ class QuestTracker {
   serialize() {
     return {
       completed: [...this.completedQuests],
-      active: [...this.activeQuests].map(([qid, quest]) => {
-        return [qid, quest.serialize()]
-      }),
+      active: [...this.activeQuests].map(([qid, quest]) =>  [qid, quest.serialize()]),
     };
   }
 }

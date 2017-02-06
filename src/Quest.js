@@ -34,9 +34,7 @@ class Quest extends EventEmitter {
   }
 
   serialize() {
-    return {
-      state: this.state
-    }
+    return { state: this.state };
   }
 
   complete() {

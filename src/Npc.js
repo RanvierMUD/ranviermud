@@ -16,7 +16,7 @@ class Npc extends Character {
 
     for (const prop of validate) {
       if (!(prop in data)) {
-        throw new ReferenceError(`NPC in area [${area.name}] missing required property [${prop}]`)
+        throw new ReferenceError(`NPC in area [${area.name}] missing required property [${prop}]`);
       }
     }
 
@@ -56,14 +56,16 @@ class Npc extends Character {
       this.addItem(newItem);
     });
 
-    this.behaviors && this.behaviors.forEach(behaviorName => {
-      let behavior = state.MobBehaviorManager.get(behaviorName);
-      if (!behavior) {
-        return;
-      }
+    if (this.behaviors) {
+      this.behaviors.forEach(behaviorName => {
+        let behavior = state.MobBehaviorManager.get(behaviorName);
+        if (!behavior) {
+          return;
+        }
 
-      behavior.attach(this);
-    });
+        behavior.attach(this);
+      });
+    }
   }
 
   getKey() {

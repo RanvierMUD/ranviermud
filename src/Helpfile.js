@@ -20,9 +20,9 @@ class Helpfile {
     let body = this.body;
     const name = this.name;
 
-    const bar = "<yellow>---------------------------------------------------------------------------------</yellow>\r\n"
+    const bar = "<yellow>---------------------------------------------------------------------------------</yellow>\r\n";
 
-    const width = 80
+    const width = 80;
     let header = bar;
     // center name
     header += (new Array(width / 2 - Math.ceil(name.length / 2)).join(' '));
@@ -37,7 +37,7 @@ class Helpfile {
 
     let footer = bar;
     if (this.related.length) {
-      footer = "<yellow>------------------------------------RELATED--------------------------------------</yellow>\r\n"
+      footer = "<yellow>------------------------------------RELATED--------------------------------------</yellow>\r\n";
       const related = this.related.join(', ');
       footer += (new Array(width / 2 - Math.ceil(related.length / 2)).join(' '));
       footer += related + '\r\n';

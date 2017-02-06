@@ -71,7 +71,7 @@ class Character extends EventEmitter
   }
 
   hasEffect(effectType) {
-    return this.effects.has(type);
+    return this.effects.has(effectType);
   }
 
   addEffect(effect) {

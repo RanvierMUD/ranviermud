@@ -56,7 +56,7 @@ class EffectMap {
 
   serialize() {
     let flattened = [];
-    for (const [id, effect] of target.getEffects()) {
+    for (const [id, effect] of this.effects) {
       flattened.push([id, effect.flatten()]);
     }
 

@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const Effects = require('./effects').Effects;
 
@@ -142,7 +142,7 @@ class Effect {
 }
 
 /* Validation helper for effect construction */
-const validate = (id, options, type, target) => {
+function validate (id, options, type, target) {
   if (!id) {
     throw new ReferenceError("Effects must have an ID to prevent stacking.");
   }

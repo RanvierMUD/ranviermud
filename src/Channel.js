@@ -3,6 +3,7 @@
 const Broadcast = require('./Broadcast');
 const ChannelAudienceWorld = require('./ChannelAudience/World');
 const ChannelAudiencePrivate = require('./ChannelAudience/Private');
+const util = require('util');
 
 /**
  * @property {ChannelAudience} audience People who receive messages from this channel
@@ -63,13 +64,10 @@ class Channel {
   }
 
   showUsage(sender) {
-    switch (this.audience) {
-      case ChannelAudience.PRIVATE: {
-        return Broadcast.sayAt(sender, `Usage: ${this.name} [target] [message]`);
-      }
-      default: {
-        return Broadcast.sayAt(sender, `Usage: ${this.name} [message]`);
-      }
+    if (this.audience instanceof ChannelAudienceWorld) {
+      Broadcast.sayAt(sender, `Usage: ${this.name} [target] [message]`);
+    } else {
+      Broadcast.sayAt(sender, `Usage: ${this.name} [message]`);
     }
   }
 

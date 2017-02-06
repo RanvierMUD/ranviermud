@@ -188,6 +188,7 @@ class TelnetStream extends EventEmitter
         case WONT:
         case DO:
           this.telnetCommand(WONT, inputbuf[i + 2]);
+          /* falls through */
         case DONT:
           i += 3;
           break;

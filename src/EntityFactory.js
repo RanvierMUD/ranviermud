@@ -52,14 +52,14 @@ class EntityFactory {
    *
    * @param {Area}          area
    * @param {Object|string} definition Entity definition or definition id
-   * @param {Class}         type       Type of entity to instantiate
+   * @param {Class}         Type       Type of entity to instantiate
    * @return {type}
    */
-  createByType(area, definition, type) {
+  createByType(area, definition, Type) {
     definition = typeof definition === 'object' ? definition : this.getDefinition(definition);
     const entityKey = this._makeEntityKey(area.name, definition.id);
     definition.globalId = entityKey;
-    const entity = new type(area, definition);
+    const entity = new Type(area, definition);
 
     if (this.scripts.has(entityKey)) {
       this.scripts.get(entityKey).attach(entity);

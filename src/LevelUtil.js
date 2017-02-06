@@ -19,7 +19,7 @@ const reduction = level => {
       val = 1 - (level - 10) / 100;
       break;
     case (level >= 28 && level <= 59):
-      val = .82;
+      val = 0.82;
       break;
     default:
       val = 1;

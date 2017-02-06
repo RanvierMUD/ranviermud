@@ -60,7 +60,7 @@ class WebInterface {
     return (req, res) => {
       const response = this.parseEntitiesIntoResponse(manager, name);
       return res.json({ [name]: response });
-    }
+    };
   }
 
   parseEntitiesIntoResponse(manager, name) {

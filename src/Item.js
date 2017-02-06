@@ -27,7 +27,7 @@ class Item extends EventEmitter {
 
     for (const prop of validate) {
       if (!(prop in item)) {
-        throw new ReferenceError(`Item in area [${area.name}] missing required property [${prop}]`)
+        throw new ReferenceError(`Item in area [${area.name}] missing required property [${prop}]`);
       }
     }
 
@@ -99,14 +99,16 @@ class Item extends EventEmitter {
       this.addItem(newItem);
     });
 
-    this.behaviors && this.behaviors.forEach(behaviorName => {
-      let behavior = state.ItemBehaviorManager.get(behaviorName);
-      if (!behavior) {
-        return;
-      }
+    if (this.behaviors) {
+      this.behaviors.forEach(behaviorName => {
+        let behavior = state.ItemBehaviorManager.get(behaviorName);
+        if (!behavior) {
+          return;
+        }
 
-      behavior.attach(this);
-    });
+        behavior.attach(this);
+      });
+    }
   }
 
   serialize() {
