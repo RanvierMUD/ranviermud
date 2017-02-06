@@ -1,5 +1,6 @@
 const EventEmitter = require('events');
 const uuid = require('node-uuid');
+const util = require('util');
 const ItemType = require('./ItemType');
 
 /**
@@ -33,7 +34,7 @@ class Item extends EventEmitter {
     this.area = area;
     this.attributes  = item.attributes || {};
     this.behaviors   = item.behaviors || null;
-    this.defaultInv  = item.defaultInv || null;
+    this.defaultItems = item.items || [];
     this.description = item.description || 'Nothing special.';
     this.id          = item.id;
     this.globalId    = item.globalId; // EntityFactory key
@@ -86,14 +87,17 @@ class Item extends EventEmitter {
       this.area = state.AreaManager.getArea(this.area);
     }
 
-    if (Array.isArray(this.inventory)) {
-      if (!this.inventory.length) {
-        this.inventory = null;
+    this.defaultItems.forEach(defaultItemId => {
+      if (parseInt(defaultItemId, 10)) {
+        defaultItemId = this.area.name + ':' + defaultItemId;
       }
 
-      // TODO: repopulate any stored items on save
-      // this.inventory.doStuff();
-    }
+      util.log(`\tDIST: Adding item [${defaultItemId}] to item [${this.name}]`);
+      const newItem = state.ItemFactory.create(this.area, defaultItemId);
+      newItem.hydrate(state);
+      state.ItemManager.add(newItem);
+      this.addItem(newItem);
+    });
 
     this.behaviors && this.behaviors.forEach(behaviorName => {
       let behavior = state.ItemBehaviorManager.get(behaviorName);

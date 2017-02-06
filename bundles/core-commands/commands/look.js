@@ -4,6 +4,7 @@ const util  = require('util');
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const CommandParser = require(srcPath + 'CommandParser').CommandParser;
+  const Item = require(srcPath + 'Item');
 
   function lookRoom(state, player) {
     const room = player.room;
@@ -60,10 +61,19 @@ module.exports = (srcPath) => {
   function lookEntity(player, args) {
     const room = player.room;
 
-    let entity = CommandParser.parseDot(args, room.items);
-    entity = entity || CommandParser.parseDot(args, room.players);
-    entity = entity || CommandParser.parseDot(args, room.npcs);
-    entity = entity || CommandParser.parseDot(args, player.inventory);
+    args = args.split(' ');
+    let search = null;
+
+    if (args.length > 1) {
+      search = args[0] === 'in' ? args[1] : args[0];
+    } else {
+      search = args[0];
+    }
+
+    let entity = CommandParser.parseDot(search, room.items);
+    entity = entity || CommandParser.parseDot(search, room.players);
+    entity = entity || CommandParser.parseDot(search, room.npcs);
+    entity = entity || CommandParser.parseDot(search, player.inventory);
 
     if (!entity) {
       return Broadcast.sayAt(player, "You don't see anything like that here.");
@@ -76,6 +86,20 @@ module.exports = (srcPath) => {
     }
 
     Broadcast.sayAt(player, entity.description);
+
+    if (entity instanceof Item) {
+      if (!entity.inventory || !entity.inventory.size) {
+        return Broadcast.sayAt(player, `${entity.name} is empty.`);
+      }
+
+      Broadcast.sayAt(player, "Contents:");
+
+      for (const [ uuid, item ] of entity.inventory) {
+        Broadcast.sayAt(player, "  " + item.name);
+      }
+
+      Broadcast.sayAt(player, '');
+    }
   }
 
   return {

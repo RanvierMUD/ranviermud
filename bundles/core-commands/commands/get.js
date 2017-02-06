@@ -20,13 +20,18 @@ module.exports = (srcPath) => {
       // get 3.foo from bar -> get 3.foo bar
       const parts = args.split(' ').filter(arg => !arg.match(/from/));
 
-      let source = null, search = null;
+      let source = null, search = null, container = null;
       if (parts.length === 1) {
         search = parts[0];
         source = player.room.items;
       } else {
-        // TODO
-        return Broadcast.sayAt(player, 'Getting items from containers is not yet supported');
+        container = Parser.parseDot(parts[1], player.room.items);
+        if (!container) {
+          return Broadcast.sayAt(player, "You don't see anything like that here.");
+        }
+
+        search = parts[0];
+        source = container.inventory;
       }
 
       const item = Parser.parseDot(search, source);
@@ -35,7 +40,11 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, "You don't see anything like that here.");
       }
 
-      player.room.removeItem(item);
+      if (container) {
+        container.removeItem(item);
+      } else {
+        player.room.removeItem(item);
+      }
       player.addItem(item);
 
       Broadcast.sayAt(player, `Picked up: ${item.name}`);

@@ -13,4 +13,9 @@
   roomDesc: "A moldy slice of cheese"
   keywords: [ "slice", "cheese", "moldy" ]
   description: "A yellow, slightly moldy slice of cheese. Only a rat could find this appetizing."
-
+- id: 3
+  name: "Wooden Chest"
+  roomDesc: "A wooden chest rests open in the corner, its hinges badly rusted."
+  keywords: [ "wooden", "chest" ]
+  description: "Time has not been kind to this chest. It seems to be held together solely by the dirt and rust."
+  items: [ "limbo:1" ]
