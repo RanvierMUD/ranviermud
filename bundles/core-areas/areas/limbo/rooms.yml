@@ -15,6 +15,7 @@
   description: "A completely black room. Somehow all of the light that should be coming from the room to the west does not pass through the archway. A single lightbulb hangs from the ceiling illuminating a small area."
   behaviors: [ 'test' ]
   items: [2]
+  npcs: [2]
   exits:
     - roomId: 'limbo:1'
       direction: 'west'

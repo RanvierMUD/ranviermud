@@ -12,7 +12,7 @@ module.exports = (srcPath) => {
 
       let buf = '<blue>[<bold>';
       const maxWidth = 77;
-      buf += new Array(Math.floor((currentPerc / 100) * maxWidth)).join('#') + '|';
+      buf += new Array(Math.ceil((currentPerc / 100) * maxWidth)).join('#') + '|';
       buf += new Array(maxWidth - Math.ceil((currentPerc  / 100) * maxWidth)).join(' ');
       buf += '</bold>]</blue>';
       Broadcast.sayAt(player, buf);

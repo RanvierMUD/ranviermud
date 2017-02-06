@@ -13,6 +13,10 @@ module.exports = (srcPath) => {
 
       playerEnter: state => function (player) {
         Broadcast.sayAt(player, 'A rat hisses as you enter the room.');
+      },
+
+      deathblow: state => function (player) {
+        Broadcast.sayAt(player.room, `The rat seems to snicker evilly as ${player.name} drops dead from their wounds.`);
       }
     }
   };

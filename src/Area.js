@@ -30,6 +30,9 @@ class Area extends EventEmitter {
   }
 
   removeNpc(npc) {
+    if (npc.room) {
+      npc.room.removeNpc(npc);
+    }
     this.npcs.delete(npc);
   }
 }

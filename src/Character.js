@@ -23,6 +23,7 @@ class Character extends EventEmitter
     this.inventory = data.inventory || new Map();
     this.equipment = data.equipment || new Map();
     this.combatants = new Set();
+    this.combatData = {};
     this.level = data.level || 1;
     this.room = data.room || null;
 
