@@ -22,7 +22,7 @@ module.exports = (srcPath) => {
             this.removeCombatant(combatant);
             combatant.removeCombatant(this);
             if (!combatant.isInCombat()) {
-              combatant.setAttribute('health', combatant.getRawAttribute('maxHealth'));
+              combatant.setAttribute('health', combatant.getAttribute('maxHealth'));
             }
           }, this);
 
@@ -115,7 +115,7 @@ module.exports = (srcPath) => {
           this.combatData = {};
 
           // TODO: There is no regen at the moment so if they won just reset their health
-          this.setAttribute('health', this.getRawAttribute('maxHealth'));
+          this.setAttribute('health', this.getAttribute('maxHealth'));
         }
 
         if (hadActions) {
@@ -157,7 +157,7 @@ module.exports = (srcPath) => {
        */
       killed: state => function (target) {
         // Restore health to full on death for now
-        this.setAttribute('health', this.getRawAttribute('maxHealth'));
+        this.setAttribute('health', this.getAttribute('maxHealth'));
         Broadcast.sayAt(this, "Whoops, that sucked!");
         Broadcast.prompt(this);
       },
@@ -168,7 +168,7 @@ module.exports = (srcPath) => {
        */
       deathblow: state => function (target) {
         this.emit('experience', LevelUtil.mobExp(target.level));
-        this.setAttribute('health', this.getRawAttribute('maxHealth'));
+        this.setAttribute('health', this.getAttribute('maxHealth'));
         Broadcast.prompt(this);
       }
     }
