@@ -56,11 +56,11 @@ class Character extends EventEmitter
   }
 
   setAttribute(attr, value) {
-    this.attributes.setAttribute(attr, value);
+    this.attributes.set(attr, value);
   } 
 
   getRawAttribute(attr) {
-    return this.attributes.getAttribute(attr);
+    return this.attributes.get(attr);
   }
 
   hasEffect(effectType) {
