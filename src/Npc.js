@@ -29,7 +29,9 @@ class Npc extends Character {
     this.id = data.id;
     this.uuid = data.uuid || uuid.v4();
     this.quests = data.quests || [];
+    this.entityReference = data.entityReference; 
   }
+
 
   /**
    * @param {string} behavior
