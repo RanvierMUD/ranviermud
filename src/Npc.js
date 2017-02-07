@@ -67,10 +67,6 @@ class Npc extends Character {
       });
     }
   }
-
-  getKey() {
-    return this.area.name + ':' + this.id;
-  }
 }
 
 module.exports = Npc;

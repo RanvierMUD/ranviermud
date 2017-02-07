@@ -5,6 +5,7 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const CommandParser = require(srcPath + 'CommandParser').CommandParser;
   const Item = require(srcPath + 'Item');
+  const ItemType = require(srcPath + 'ItemType');
 
   function lookRoom(state, player) {
     const room = player.room;
@@ -87,7 +88,7 @@ module.exports = (srcPath) => {
 
     Broadcast.sayAt(player, entity.description);
 
-    if (entity instanceof Item) {
+    if (entity instanceof Item && entity.type === ItemType.CONTAINER) {
       if (!entity.inventory || !entity.inventory.size) {
         return Broadcast.sayAt(player, `${entity.name} is empty.`);
       }

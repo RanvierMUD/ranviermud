@@ -1,8 +1,9 @@
 'use strict';
 
-const EventEmitter = require('events');
 const EffectMap = require('./EffectMap');
 const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
+const EventEmitter = require('events');
+const Inventory = require('./Inventory');
 
 /**
  * @property {string}    name       Name shown on look/who/login
@@ -20,7 +21,7 @@ class Character extends EventEmitter
     super();
 
     this.name = data.name;
-    this.inventory = data.inventory || new Map();
+    this.inventory = new Inventory(data.inventory || []);
     this.equipment = data.equipment || new Map();
     this.combatants = new Set();
     this.combatData = {};
@@ -132,16 +133,11 @@ class Character extends EventEmitter
   }
 
   addItem(item) {
-    if (this.inventory === null) {
-      this.inventory = new Map();
-    }
-    this.inventory.set(item.uuid, item);
-    item.isHeld = true;
+    this.inventory.addItem(item);
   }
 
   removeItem(item) {
-    this.inventory.delete(item.uuid);
-    item.isHeld = false;
+    this.inventory.removeItem(item);
 
     // if we removed the last item unset the inventory
     // This ensures that when it's reloaded it won't try to set
@@ -153,9 +149,6 @@ class Character extends EventEmitter
   }
 
   hydrate(state) {
-    // TODO: repopulate any stored items on save
-    // this.inventory.doStuff();
-    // this.equipment.doStuff();
   }
 }
 

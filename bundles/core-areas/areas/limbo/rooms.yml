@@ -6,7 +6,7 @@
   items: ["limbo:3"]
   script: "1-test"
   exits:
-    - roomId: 2
+    - roomId: "limbo:2"
       direction: "east"
       leaveMessage: " steps into the void and disappears."
 -

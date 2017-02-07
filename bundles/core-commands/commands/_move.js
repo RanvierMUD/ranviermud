@@ -33,7 +33,7 @@ module.exports = (srcPath) => {
       }
 
       exit = exits.pop();
-      const nextRoom =  state.RoomManager.getRoom(exit.roomId, player.room.area);
+      const nextRoom =  state.RoomManager.getRoom(exit.roomId)
 
       player.room.emit('playerLeave', player, nextRoom);
       for (const npc of player.room.npcs) {

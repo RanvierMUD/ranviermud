@@ -173,15 +173,16 @@ class BundleManager {
 
     // set the item definitions onto the factory
     items.forEach(item => {
-      this.state.ItemFactory.setDefinition(area.name, item.id, item);
+      const entityRef = this.state.ItemFactory.createEntityRef(area.name, item.id);
+      this.state.ItemFactory.setDefinition(entityRef, item);
       if (item.script) {
         const scriptPath = path.dirname(itemsFile) + '/scripts/items/' + item.script + '.js';
         if (!fs.existsSync(scriptPath)) {
           return;
         }
 
-        util.log(`\t\t\tLoading Item Script [${area.name}:${item.id}] ${item.script}`);
-        this.loadEntityScript(this.state.ItemFactory, area.name, item.id, scriptPath);
+        util.log(`\t\t\tLoading Item Script [${entityRef}] ${item.script}`);
+        this.loadEntityScript(this.state.ItemFactory, entityRef, scriptPath);
       }
     });
 
@@ -198,13 +199,14 @@ class BundleManager {
 
     // create and load the npcs
     npcs = npcs.map(npc => {
-      this.state.MobFactory.setDefinition(area.name, npc.id, npc);
+      const entityRef = this.state.MobFactory.createEntityRef(area.name, npc.id);
+      this.state.MobFactory.setDefinition(entityRef, npc);
 
       if (npc.quests) {
         // Update quest definitions with their questor
         for (const qid of npc.quests) {
           const quest = this.state.QuestFactory.get(qid);
-          quest.config.npc = area.name + ':' + npc.id;
+          quest.config.npc = entityRef;
           this.state.QuestFactory.set(qid, quest);
         }
       }
@@ -215,8 +217,8 @@ class BundleManager {
           return;
         }
 
-        util.log(`\t\t\tLoading NPC Script [${area.name}:${npc.id}] ${npc.script}`);
-        this.loadEntityScript(this.state.MobFactory, area.name, npc.id, scriptPath);
+        util.log(`\t\t\tLoading NPC Script [${entityRef}] ${npc.script}`);
+        this.loadEntityScript(this.state.MobFactory, entityRef, scriptPath);
       }
     });
 
@@ -225,7 +227,7 @@ class BundleManager {
     return npcs;
   }
 
-  loadEntityScript(factory, areaName, entityId, scriptPath) {
+  loadEntityScript(factory, entityRef, scriptPath) {
     const scriptListeners = require(scriptPath)(srcPath).listeners;
 
     for (const eventName in scriptListeners) {
@@ -234,7 +236,7 @@ class BundleManager {
       }
 
       util.log(`\t\t\t\tEvent: ${eventName}`);
-      factory.addScriptListener(areaName, entityId, eventName, scriptListeners[eventName](this.state));
+      factory.addScriptListener(entityRef, eventName, scriptListeners[eventName](this.state));
     }
   }
 

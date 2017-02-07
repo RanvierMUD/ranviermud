@@ -4,6 +4,7 @@ const util  = require('util');
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const ItemType = require(srcPath + 'ItemType');
 
   return {
     command : (state) => (args, player) => {
@@ -28,6 +29,10 @@ module.exports = (srcPath) => {
         container = Parser.parseDot(parts[1], player.room.items);
         if (!container) {
           return Broadcast.sayAt(player, "You don't see anything like that here.");
+        }
+
+        if (container.type !== ItemType.CONTAINER) {
+          return Broadcast.sayAt(player, `${container.name} isn't a container.`);
         }
 
         search = parts[0];

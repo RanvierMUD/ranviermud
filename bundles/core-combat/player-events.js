@@ -58,7 +58,7 @@ module.exports = (srcPath) => {
             this.emit('deathblow', target);
 
             // TODO: For now respawn happens here, this is shitty
-            const newNpc = state.MobFactory.create(target.area, target.getKey());
+            const newNpc = state.MobFactory.clone(target);
             newNpc.hydrate(state);
             if (newNpc.room) {
               newNpc.room.removeNpc(newNpc);

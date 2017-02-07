@@ -1,7 +1,11 @@
+'use strict';
+
 const EventEmitter = require('events');
 const uuid = require('node-uuid');
 const util = require('util');
+
 const ItemType = require('./ItemType');
+const Inventory = require('./Inventory');
 
 /**
  * @property {Area}    area        Area the item belongs to (warning: this is not the area is currently in but the
@@ -36,9 +40,9 @@ class Item extends EventEmitter {
     this.behaviors   = item.behaviors || null;
     this.defaultItems = item.items || [];
     this.description = item.description || 'Nothing special.';
+    this.entityReference = item.entityReference; // EntityFactory key
     this.id          = item.id;
-    this.globalId    = item.globalId; // EntityFactory key
-    this.inventory   = item.inventory || new Map();
+    this.inventory   = item.inventory ? new Inventory(item.inventory) : null;
     this.isEquipped  = item.isEquipped || false;
     this.isHeld      = item.isHeld || false;
     this.keywords    = item.keywords;
@@ -88,28 +92,17 @@ class Item extends EventEmitter {
     }
 
     // if the item was saved with a custom inventory hydrate it
-    if (Array.isArray(this.inventory)) {
-      const itemDefs = this.inventory;
-      this.inventory = new Map();
-      itemDefs.forEach(itemDef => {
-        let newItem = state.ItemFactory.create(state.AreaManager.getArea(itemDef.area), itemDef);
+    if (this.inventory) {
+      this.inventory.hydrate(state);
+    } else {
+    // otherwise load its default inv
+      this.defaultItems.forEach(defaultItemId => {
+        util.log(`\tDIST: Adding item [${defaultItemId}] to item [${this.name}]`);
+        const newItem = state.ItemFactory.create(this.area, defaultItemId);
         newItem.hydrate(state);
         state.ItemManager.add(newItem);
         this.addItem(newItem);
       });
-    } else {
-    // otherwise load its default inv
-        this.defaultItems.forEach(defaultItemId => {
-          if (parseInt(defaultItemId, 10)) {
-            defaultItemId = this.area.name + ':' + defaultItemId;
-          }
-
-          util.log(`\tDIST: Adding item [${defaultItemId}] to item [${this.name}]`);
-          const newItem = state.ItemFactory.create(this.area, defaultItemId);
-          newItem.hydrate(state);
-          state.ItemManager.add(newItem);
-          this.addItem(newItem);
-        });
     }
 
     if (this.behaviors) {
@@ -125,35 +118,10 @@ class Item extends EventEmitter {
   }
 
   serialize() {
-    const data = {
-      area: this.area.name,
-      attributes: this.attributes,
-      behaviors: this.behaviors,
-      defaultInv: this.defaultInv,
-      description: this.description,
-      id: this.id,
-      isEquipped: this.isEquipped,
-      isHeld: this.isHeld,
-      keywords: this.keywords,
-      name: this.name,
-      room: this.room ? this.room.id : null,
-      roomDesc: this.roomDesc,
-      script: this.script,
-      slot: this.slot,
-      type: this.type,
-      uuid: this.uuid,
+    return {
+      entityReference: this.entityReference,
+      inventory: this.inventory && this.inventory.serialize(),
     };
-
-    data.inventory = this.inventory ?
-      Array.from(this.inventory.values()).map(item => item.serialize()) :
-      this.inventory
-    ;
-
-    return data;
-  }
-
-  getKey() {
-    return this.area.name + ':' + this.id;
   }
 }
 

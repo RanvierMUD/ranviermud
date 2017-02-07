@@ -7,8 +7,21 @@ class AreaManager {
     this.areas = new Map();
   }
 
+  /**
+   * @param {string} name
+   * @return Area
+   */
   getArea(name) {
     return this.areas.get(name);
+  }
+
+  /**
+   * @param {string} entityRef
+   * @return Area
+   */
+  getAreaByReference(entityRef) {
+    const [ name ] = entityRef.split(':');
+    return this.getArea(name);
   }
 
   addArea(area) {

@@ -13,36 +13,41 @@ class EntityFactory {
   }
 
   /**
+   * Create the key used by the entities and scripts maps
    * @param {string} areaName
    * @param {number} id
-   * @return {Object}
+   * @return {string}
    */
-  getDefinition(areaName, id) {
-    const key = areaName.match(/[a-z\-_]+:\d+/) ? areaName : this._makeEntityKey(areaName, id);
-    return this.entities.get(key);
+  createEntityRef(area, id) {
+    return area + ':' + id;
   }
 
   /**
-   * @param {string} areaName
-   * @param {number} id
+   * @param {string} entityRef
+   * @return {Object}
+   */
+  getDefinition(entityRef) {
+    return this.entities.get(entityRef);
+  }
+
+  /**
+   * @param {string} entityRef
    * @param {Object} def
    */
-  setDefinition(areaName, id, def) {
-    const key = this._makeEntityKey(areaName, id);
-    def.globalId = key;
-    this.entities.set(key, def);
+  setDefinition(entityRef, def) {
+    def.entityReference = entityRef;
+    this.entities.set(entityRef, def);
   }
 
   /**
    * Add an event listener from a script to a specific item
    * @see BehaviorManager::addListener
-   * @param {string}   areaName
-   * @param {number}   id
+   * @param {string}   entityRef
    * @param {string}   event
    * @param {Function} listener
    */
-  addScriptListener(areaName, id, event, listener) {
-    this.scripts.addListener(this._makeEntityKey(areaName, id), event, listener);
+  addScriptListener(entityRef, event, listener) {
+    this.scripts.addListener(entityRef, event, listener);
   }
 
   /**
@@ -50,35 +55,34 @@ class EntityFactory {
    * and will _not_ have its default contents. If you want it to also populate its default contents
    * you must manually call `npc.hydrate(state)`
    *
-   * @param {Area}          area
-   * @param {Object|string} definition Entity definition or definition id
-   * @param {Class}         Type       Type of entity to instantiate
+   * @param {Area}   area
+   * @param {string} entityRef
+   * @param {Class}  Type      Type of entity to instantiate
    * @return {type}
    */
-  createByType(area, definition, Type) {
-    definition = typeof definition === 'object' ? definition : this.getDefinition(definition);
-    const entityKey = this._makeEntityKey(area.name, definition.id);
-    definition.globalId = entityKey;
+  createByType(area, entityRef, Type) {
+    const definition = this.getDefinition(entityRef);
     const entity = new Type(area, definition);
 
-    if (this.scripts.has(entityKey)) {
-      this.scripts.get(entityKey).attach(entity);
+    if (this.scripts.has(entityRef)) {
+      this.scripts.get(entityRef).attach(entity);
     }
+
     return entity;
   }
 
-  clone() {
-    throw new Error('Cannot clone a base Entity');
+  create() {
+    throw new Error("No type specified for Entity.create");
   }
 
   /**
-   * Create the key used by the entities and scripts maps
-   * @param {string} areaName
-   * @param {number} id
-   * @return {string}
+   * Clone an existing item. Resulting item will not be held or equipped and will _not_ have its default contents
+   * If you want it to also populate its default contents you must manually call `item.hydrate(state)`
+   * @param {Item} item
+   * @return {Item}
    */
-  _makeEntityKey(area, id) {
-    return area + ':' + id;
+  clone(entity) {
+    return this.create(entity.area, entity.entityReference);
   }
 }
 

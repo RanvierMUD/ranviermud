@@ -30,9 +30,9 @@ class Room extends EventEmitter {
     this.defaultNpcs  = def.npcs || [];
     this.behaviors  = def.behaviors || [];
     this.description = def.description;
+    this.entityReference = this.area.name + ':' + def.id;
     this.exits = def.exits;
     this.id = def.id;
-    this.globalId = def.globalId; // EntityFactory key
     this.script = def.script;
     this.title = def.title;
 
@@ -111,10 +111,6 @@ class Room extends EventEmitter {
         behavior.attach(this);
       });
     }
-  }
-
-  static getKey(room) {
-    return room.area.name + ':' + room.id;
   }
 
   /**

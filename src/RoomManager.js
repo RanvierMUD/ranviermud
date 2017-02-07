@@ -7,19 +7,16 @@ class RoomManager {
     this.rooms = new Map();
   }
 
-  getRoom(roomKey, area) {
-    if (parseInt(roomKey, 10) && area) {
-      roomKey = area.name + ':' + roomKey;
-    }
-    return this.rooms.get(roomKey);
+  getRoom(entityRef) {
+    return this.rooms.get(entityRef);
   }
 
   addRoom(room) {
-    this.rooms.set(Room.getKey(room), room);
+    this.rooms.set(room.entityReference, room);
   }
 
   removeRoom(room) {
-    this.rooms.delete(Room.getKey(room));
+    this.rooms.delete(room.entityReference);
   }
 }
 

@@ -26,6 +26,11 @@ class Player extends Character {
     this.questTracker = new QuestTracker(this);
   }
 
+  /**
+   * Proxy all events on the player to the quest tracker
+   * @param {string} event
+   * @param {...*}   args
+   */
   emit(event, ...args) {
     super.emit(event, ...args);
 
@@ -106,18 +111,10 @@ class Player extends Character {
     }
 
     // Hydrate inventory
-    if (Array.isArray(this.inventory)) {
-      const itemDefs = this.inventory;
-      this.inventory = new Map();
-      itemDefs.forEach(itemDef => {
-        let newItem = state.ItemFactory.create(state.AreaManager.getArea(itemDef.area), itemDef);
-        newItem.hydrate(state);
-        state.ItemManager.add(newItem);
-        this.addItem(newItem);
-      });
-    }
+    this.inventory.hydrate(state);
 
     // Hydrate equipment
+    // maybe refactor Equipment to be an object like Inventory?
     if (this.equipment && !(this.equipment instanceof Map)) {
       const eqDefs = this.equipment;
       this.equipment = new Map();
@@ -126,6 +123,7 @@ class Player extends Character {
         let newItem = state.ItemFactory.create(state.AreaManager.getArea(itemDef.area), itemDef);
         newItem.hydrate(state);
         state.ItemManager.add(newItem);
+        newItem.isEquipped = true;
         this.equip(newItem);
       }
     } else {
@@ -146,22 +144,19 @@ class Player extends Character {
       }));
 
     let data = {
-      name: this.name,
       account: this.account.name,
       attributes: this.attributes,
       combatPromptString: this.combatPromptString,
       experience: this.experience,
+      inventory: this.inventory && this.inventory.serialize(),
       level: this.level,
+      name: this.name,
       password: this.password,
       prefs,
       promptString: this.promptString,
-      room: Room.getKey(this.room),
-      questData: this.questTracker.serialize()
+      questData: this.questTracker.serialize(),
+      room: this.room.entityReference,
     };
-
-    data.inventory = this.inventory ?
-      Array.from(this.inventory.values()).map(item => item.serialize()) :
-      this.inventory;
 
     if (this.equipment) {
       let eq = {};

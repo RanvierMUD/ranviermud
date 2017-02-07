@@ -115,7 +115,7 @@ module.exports = (srcPath) => {
         return;
       }
 
-      if (quest.config.npc && ![...player.room.npcs].find((npc) => npc.getKey() === quest.config.npc)) {
+      if (quest.config.npc && ![...player.room.npcs].find((npc) => npc.entityReference === quest.config.npc)) {
         const npc = state.MobFactory.getDefinition(quest.config.npc);
         return Broadcast.sayAt(player, `The questor [${npc.name}] is not in this room.`);
       }
