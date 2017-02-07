@@ -84,6 +84,7 @@ class EntityFactory {
   clone(entity) {
     return this.create(entity.area, entity.entityReference);
   }
+  
 }
 
 module.exports = EntityFactory;

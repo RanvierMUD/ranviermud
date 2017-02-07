@@ -17,12 +17,12 @@ module.exports = (srcPath) => {
         // could potentially wind up in a situation where the player performed
         // a mid-round attack that killed the target, then the next round the
         // target kills the player. So let's not let that happen.
-        if (this.attributes.health <= 0) {
+        if (this.getAttribute('health') <= 0) {
           this.combatants.forEach(combatant => {
             this.removeCombatant(combatant);
             combatant.removeCombatant(this);
             if (!combatant.isInCombat()) {
-              combatant.attributes.health = combatant.attributes.maxHealth;
+              combatant.setAttribute('health', combatant.getAttribute('maxHealth'));
             }
           }, this);
 
@@ -49,7 +49,7 @@ module.exports = (srcPath) => {
         let hadActions = false;
         for (const target of this.combatants) {
           // player actions
-          if (target.attributes.health <= 0) {
+          if (target.getAttribute('health') <= 0) {
             this.removeCombatant(target);
             target.removeCombatant(this);
 
@@ -71,10 +71,11 @@ module.exports = (srcPath) => {
 
           if (this.combatData.lag <= 0) {
             hadActions = true;
-            const damage = Math.min(playerDamage, target.attributes.health);
+            const damage = Math.min(playerDamage, target.getAttribute('health'));
 
             target.emit('hit', this, damage);
-            target.attributes.health -= damage;
+            const startingHealth = target.getRawAttribute('health');
+            target.setAttribute('health', startingHealth - damage);
             Broadcast.sayAt(this, `You strike <bold>${target.name}</bold> for <bold>${damage}</bold> damage`);
 
             this.combatData.lag = playerSpeed * 1000;
@@ -87,20 +88,23 @@ module.exports = (srcPath) => {
           // target actions
           if (target.combatData.lag <= 0) {
             hadActions = true;
-            const damage = Math.min(targetDamage, this.attributes.health);
+            const damage = Math.min(targetDamage, this.getAttribute('health'));
 
             this.emit('hit', target, damage);
-            this.attributes.health -= damage;
+
+            const startingHealth = this.getRawAttribute('health');
+            this.setAttribute('health', startingHealth - damage);
+
             Broadcast.sayAt(this, `<bold>${target.name}</bold> hit you for <bold><red>${damage}</red></bold> damage`);
 
-            if (this.attributes.health <= 0) {
+            if (this.getAttribute('health') <= 0) {
               this.combatData.killedBy = target;
               break;
             }
 
             target.combatData.lag = targetSpeed * 1000;
           } else {
-            const elapsed = Date.now() -  target.combatData.roundStarted;
+            const elapsed = Date.now() - target.combatData.roundStarted;
             target.combatData.lag -= elapsed;
           }
           target.combatData.roundStarted = Date.now();
@@ -111,7 +115,7 @@ module.exports = (srcPath) => {
           this.combatData = {};
 
           // TODO: There is no regen at the moment so if they won just reset their health
-          this.attributes.health = this.attributes.maxHealth;
+          this.setAttribute('health', this.getAttribute('maxHealth'));
         }
 
         if (hadActions) {
@@ -124,22 +128,22 @@ module.exports = (srcPath) => {
           }
 
           // render health bars
-          let currentPerc = Math.floor((this.attributes.health / this.attributes.maxHealth) * 100);
+          let currentPerc = Math.floor((this.getAttribute('health') / this.getAttribute('maxHealth')) * 100);
           let buf = '<bold>You</bold>: <green>[<bold>';
           buf += new Array(Math.ceil((currentPerc / 100) * percWidth)).join('#') + '|';
           buf += new Array(percWidth - Math.ceil((currentPerc  / 100) * percWidth)).join(' ');
           buf += '</bold>]</green>';
-          buf += ` <bold>${this.attributes.health}/${this.attributes.maxHealth}</bold>`;
+          buf += ` <bold>${this.getAttribute('health')}/${this.getAttribute('maxHealth')}</bold>`;
           Broadcast.sayAt(this, buf);
 
           for (const target of this.combatants) {
-            let currentPerc = Math.floor((target.attributes.health / target.attributes.maxHealth) * 100);
+            let currentPerc = Math.floor((target.getAttribute('health') / target.getAttribute('maxHealth')) * 100);
             let buf = `<bold>${target.name}</bold>: `;
             buf += '<red>[<bold>';
             buf += new Array(Math.ceil((currentPerc / 100) * percWidth)).join('#') + '|';
             buf += new Array(percWidth - Math.ceil((currentPerc  / 100) * percWidth)).join(' ');
             buf += '</bold>]</red>';
-            buf += ` <bold>${target.attributes.health}/${target.attributes.maxHealth}</bold>`;
+            buf += ` <bold>${target.getAttribute('health')}/${target.getAttribute('maxHealth')}</bold>`;
             Broadcast.sayAt(this, buf);
           }
 
@@ -153,7 +157,7 @@ module.exports = (srcPath) => {
        */
       killed: state => function (target) {
         // Restore health to full on death for now
-        this.attributes.health = this.attributes.maxHealth;
+        this.setAttribute('health', this.getAttribute('maxHealth'));
         Broadcast.sayAt(this, "Whoops, that sucked!");
         Broadcast.prompt(this);
       },
@@ -164,7 +168,7 @@ module.exports = (srcPath) => {
        */
       deathblow: state => function (target) {
         this.emit('experience', LevelUtil.mobExp(target.level));
-        this.attributes.health = this.attributes.maxHealth;
+        this.setAttribute('health', this.getAttribute('maxHealth'));
         Broadcast.prompt(this);
       }
     }

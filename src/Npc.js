@@ -29,7 +29,9 @@ class Npc extends Character {
     this.id = data.id;
     this.uuid = data.uuid || uuid.v4();
     this.quests = data.quests || [];
+    this.entityReference = data.entityReference; 
   }
+
 
   /**
    * @param {string} behavior
@@ -42,7 +44,7 @@ class Npc extends Character {
   hydrate(state) {
     super.hydrate(state);
 
-    this.attributes.health = this.attributes.maxHealth;
+    this.setAttribute('health', this.getRawAttribute('maxHealth'));
 
     this.defaultItems.forEach(defaultItemId => {
       if (parseInt(defaultItemId, 10)) {

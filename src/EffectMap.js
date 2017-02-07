@@ -40,7 +40,7 @@ class EffectMap {
    */
   evaluateAttribute(attr) {
     this.validateEffects();
-
+    
     let attrValue = this.target.getRawAttribute(attr) || 0;
     for (const [ id, effect] of this.effects) {
       const modifier = effect.getModifiers()[attr];

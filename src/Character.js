@@ -4,6 +4,9 @@ const EffectMap = require('./EffectMap');
 const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
 const EventEmitter = require('events');
 const Inventory = require('./Inventory');
+const Attributes = require('./Attributes');
+const Config = require('./Config');
+
 
 /**
  * @property {string}    name       Name shown on look/who/login
@@ -28,34 +31,19 @@ class Character extends EventEmitter
     this.level = data.level || 1;
     this.room = data.room || null;
 
-    // TODO: Maybe move default attributes out somewhere?
-    this.attributes = data.attributes || {
-
-      maxHealth: 100,
-      health:    100,
-      maxMana:   200,
-      mana:      200,
-      maxEnergy: 200,
-      energy:    200,
-
-      strength:     20,
-      intelligence: 20,
-      wisdom:       20,
-      dexterity:    20,
-      constitution: 20,
-    };
+    this.attributes = new Attributes(data.attributes || Config.get('defaultAttributes'));
 
     this.effects = new EffectMap(this);
     this.skills = new Map();
   }
 
   getAttributes() {
-      var attrs = Object.assign({}, this.attributes);
-      for (const attr in attrs) {
-        attrs[attr] = this.getAttribute(attr);
-      }
+    var attrs = {};
+    for (const [attr, value] of this.attributes) {
+      attrs[attr] = value;
+    }
 
-      return attrs;
+    return attrs;
   }
 
   /**
@@ -67,8 +55,12 @@ class Character extends EventEmitter
     return this.effects.evaluateAttribute(attr);
   }
 
+  setAttribute(attr, value) {
+    this.attributes.set(attr, value);
+  } 
+
   getRawAttribute(attr) {
-    return this.attributes[attr];
+    return this.attributes.get(attr);
   }
 
   hasEffect(effectType) {
