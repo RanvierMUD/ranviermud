@@ -22,5 +22,21 @@
   "maxCharacters": 3,
   "allowMultiplay": false,
 
-  "startingRoom": "limbo:1"
+  "startingRoom": "limbo:1",
+
+  "defaultAttributes": {
+    "maxHealth": 100,
+    "health":    100,
+    "maxMana":   200,
+    "mana":      200,
+    "maxEnergy": 200,
+    "energy":    200,
+
+    "strength":     20,
+    "intelligence": 20,
+    "wisdom":       20,
+    "dexterity":    20,
+    "constitution": 20
+  }
+
 }

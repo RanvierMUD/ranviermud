@@ -145,7 +145,7 @@ class Player extends Character {
 
     let data = {
       account: this.account.name,
-      attributes: this.attributes,
+      attributes: this.getAttributes(),
       combatPromptString: this.combatPromptString,
       experience: this.experience,
       inventory: this.inventory && this.inventory.serialize(),
