@@ -14,6 +14,7 @@ functionality expected in most Diku-style MUDs.
   items, and quests.
 * `core-channels` - Set of example channels: say, tell, yell, and chat
 * `core-combat` - Basic diku style real-time auto combat
+* `core-commands` - Set of basic diku style commands: movement, look, get, drop, wear, who, etc.
 * `core-effects` - (_currently unused_) Set of example spell effects
 * `core-input-events` - Diku-style implementation of login flow with accounts
   and Diku-style command interpretation
