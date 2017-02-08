@@ -7,12 +7,13 @@ class Attributes extends Map
     super();
 
     // Rehydrate or create new attributes.
-    for (let [name, value] of attributes.entries()) {
+    for (let [name, value] of Object.entries(attributes)) {
+      console.log("name:", name, "value:", value);
       if (isNaN(value)) {
         const { base, delta } = value;
-        this.add(name, new Attribute(name, base, delta));
+        this.set(name, new Attribute(name, base, delta));
       } else {
-        this.add(name, new Attribute(name, value));
+        this.set(name, new Attribute(name, value));
       }
     }
   }

@@ -57,7 +57,19 @@ class Character extends EventEmitter
   }
 
   getAttribute(attr) {
-    return this.getMaxAttribute(attr) - this.attributes.get(attr).getDelta();
+    return this.getMaxAttribute(attr) - this.attributes.get(attr).delta;
+  }
+
+  setAttributeToMax(attr) {
+    this.attributes.get(attr).setDelta(0);
+  }
+
+  raiseAttribute(attr, amount) {
+    this.attributes.get(attr).raise(amount);
+  }
+
+  lowerAttribute(attr, amount) {
+    this.attributes.get(attr).lower(amount);
   }
 
   hasEffect(effectType) {

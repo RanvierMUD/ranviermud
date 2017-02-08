@@ -29,6 +29,7 @@ class Npc extends Character {
     this.id = data.id;
     this.uuid = data.uuid || uuid.v4();
     this.quests = data.quests || [];
+    this.damage = data.damage;
     this.entityReference = data.entityReference; 
   }
 
@@ -41,10 +42,19 @@ class Npc extends Character {
     return this.behaviors.includes(behavior);
   }
 
+  serialize() {
+    return Object.assign(super.serialize(), { damage: this.damage });
+  }
+
+  getDamage() {
+    const range = this.damage.split('-');
+    return { min: range[0], max: range[1] };
+  }
+
   hydrate(state) {
     super.hydrate(state);
 
-    this.setAttribute('health', this.getRawAttribute('maxHealth'));
+    this.setAttributeToMax('health');
 
     this.defaultItems.forEach(defaultItemId => {
       if (parseInt(defaultItemId, 10)) {

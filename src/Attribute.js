@@ -2,10 +2,10 @@ class Attribute
 {
   constructor(name, base, delta = 0) {
     if (isNaN(base)) { 
-      throw new TypeError("Base attribute must be a number."); 
+      throw new TypeError(`Base attribute must be a number, got ${base}.`); 
     }
     if (isNaN(delta)) {
-      throw new TypeError("Attribute delta must be a number.");
+      throw new TypeError(`Attribute delta must be a number, got ${delta}.`);
     }
     this.name = name;
     this.base = base;
@@ -22,7 +22,11 @@ class Attribute
   }
 
   setBase(amount) {
-    this.base = amount;
+    this.base = Math.max(amount, 0);
+  }
+
+  setDelta(amount) {
+    this.delta = Math.min(amount, 0);
   }
 
   serialize() {
