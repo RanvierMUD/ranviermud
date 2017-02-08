@@ -128,22 +128,22 @@ module.exports = (srcPath) => {
           }
 
           // render health bars
-          let currentPerc = Math.floor((this.getAttribute('health') / this.getAttribute('maxHealth')) * 100);
+          let currentPerc = Math.floor((this.getAttribute('health') / this.geMaxtAttribute('health')) * 100);
           let buf = '<bold>You</bold>: <green>[<bold>';
           buf += new Array(Math.ceil((currentPerc / 100) * percWidth)).join('#') + '|';
           buf += new Array(percWidth - Math.ceil((currentPerc  / 100) * percWidth)).join(' ');
           buf += '</bold>]</green>';
-          buf += ` <bold>${this.getAttribute('health')}/${this.getAttribute('maxHealth')}</bold>`;
+          buf += ` <bold>${this.getAttribute('health')}/${this.getMaxAttribute('health')}</bold>`;
           Broadcast.sayAt(this, buf);
 
           for (const target of this.combatants) {
-            let currentPerc = Math.floor((target.getAttribute('health') / target.getAttribute('maxHealth')) * 100);
+            let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
             let buf = `<bold>${target.name}</bold>: `;
             buf += '<red>[<bold>';
             buf += new Array(Math.ceil((currentPerc / 100) * percWidth)).join('#') + '|';
             buf += new Array(percWidth - Math.ceil((currentPerc  / 100) * percWidth)).join(' ');
             buf += '</bold>]</red>';
-            buf += ` <bold>${target.getAttribute('health')}/${target.getAttribute('maxHealth')}</bold>`;
+            buf += ` <bold>${target.getAttribute('health')}/${target.getMaxAttribute('health')}</bold>`;
             Broadcast.sayAt(this, buf);
           }
 
