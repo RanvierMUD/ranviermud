@@ -34,20 +34,22 @@ class EffectMap {
   }
 
   /**
+   * Gets the effective "max" value of an attribute (before subtracting delta).
    * Does the work of actaully applying attribute modification
    * Currently does not allow attrs to go negative
    * @param {string} attr
    */
-  evaluateAttribute(attr) {
+  evaluate(attr) {
     this.validateEffects();
     
-    let attrValue = this.target.getRawAttribute(attr) || 0;
-    for (const [ id, effect] of this.effects) {
-      const modifier = effect.getModifiers()[attr];
+    let attrName  = attr.name;
+    let attrValue = attr.base || 0;
+
+    for (const [ id, effect ] of this.effects) {
+      const modifier = effect.getModifiers()[attrName];
       if (!modifier) {
         continue;
       }
-
       attrValue = modifier(attrValue);
     }
 

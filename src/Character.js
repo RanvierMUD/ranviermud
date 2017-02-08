@@ -39,28 +39,51 @@ class Character extends EventEmitter
 
   getAttributes() {
     var attrs = {};
-    for (const [attr, value] of this.attributes) {
-      attrs[attr] = value;
+    
+    for (const [name, attr] of this.attributes) {
+      attrs[name] = attr.serialize();
     }
 
     return attrs;
   }
 
   /**
-   * Get current value of attribute (as modified by effects)
+   * Get current maximum value of attribute (as modified by effects.)
    * @param {string} attr
    * @return {number}
    */
-  getAttribute(attr) {
-    return this.effects.evaluateAttribute(attr);
+  getMaxAttribute(attr) {
+    const attribute = this.attributes.get(attr);
+    return this.effects.evaluate(attribute);
   }
 
-  setAttribute(attr, value) {
-    this.attributes.set(attr, value);
-  } 
+  /* Get value of attribute including changes to the attribute.
+   * @param {string} attr
+   * @return {number}
+  */
+  getAttribute(attr) {
+    return this.getMaxAttribute(attr) + this.attributes.get(attr).delta;
+  }
 
-  getRawAttribute(attr) {
-    return this.attributes.get(attr);
+  /* Clears any changes to the attribute, setting it to its base value.
+   * @param {string} attr
+   * @return void
+  */
+  setAttributeToMax(attr) {
+    this.attributes.get(attr).setDelta(0);
+  }
+
+  /* Adds to the delta of the attribute
+   * @param {string} attr
+   * @param {number} amount
+   * @return void
+  */
+  raiseAttribute(attr, amount) {
+    this.attributes.get(attr).raise(amount);
+  }
+
+  lowerAttribute(attr, amount) {
+    this.attributes.get(attr).lower(amount);
   }
 
   hasEffect(effectType) {

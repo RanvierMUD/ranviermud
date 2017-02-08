@@ -22,7 +22,7 @@ module.exports = (srcPath) => {
             this.removeCombatant(combatant);
             combatant.removeCombatant(this);
             if (!combatant.isInCombat()) {
-              combatant.setAttribute('health', combatant.getAttribute('maxHealth'));
+              combatant.setAttributeToMax('health');
             }
           }, this);
 
@@ -74,8 +74,8 @@ module.exports = (srcPath) => {
             const damage = Math.min(playerDamage, target.getAttribute('health'));
 
             target.emit('hit', this, damage);
-            const startingHealth = target.getRawAttribute('health');
-            target.setAttribute('health', startingHealth - damage);
+            const startingHealth = target.getAttribute('health');
+            target.lowerAttribute('health', damage);
             Broadcast.sayAt(this, `You strike <bold>${target.name}</bold> for <bold>${damage}</bold> damage`);
 
             this.combatData.lag = playerSpeed * 1000;
@@ -91,9 +91,9 @@ module.exports = (srcPath) => {
             const damage = Math.min(targetDamage, this.getAttribute('health'));
 
             this.emit('hit', target, damage);
-
-            const startingHealth = this.getRawAttribute('health');
-            this.setAttribute('health', startingHealth - damage);
+            
+            const startingHealth = this.getAttribute('health');
+            this.lowerAttribute('health', damage);
 
             Broadcast.sayAt(this, `<bold>${target.name}</bold> hit you for <bold><red>${damage}</red></bold> damage`);
 
@@ -115,7 +115,7 @@ module.exports = (srcPath) => {
           this.combatData = {};
 
           // TODO: There is no regen at the moment so if they won just reset their health
-          this.setAttribute('health', this.getAttribute('maxHealth'));
+          this.setAttributeToMax('health');
         }
 
         if (hadActions) {
@@ -128,22 +128,22 @@ module.exports = (srcPath) => {
           }
 
           // render health bars
-          let currentPerc = Math.floor((this.getAttribute('health') / this.getAttribute('maxHealth')) * 100);
+          let currentPerc = Math.floor((this.getAttribute('health') / this.getMaxAttribute('health')) * 100);
           let buf = '<bold>You</bold>: <green>[<bold>';
           buf += new Array(Math.ceil((currentPerc / 100) * percWidth)).join('#') + '|';
           buf += new Array(percWidth - Math.ceil((currentPerc  / 100) * percWidth)).join(' ');
           buf += '</bold>]</green>';
-          buf += ` <bold>${this.getAttribute('health')}/${this.getAttribute('maxHealth')}</bold>`;
+          buf += ` <bold>${this.getAttribute('health')}/${this.getMaxAttribute('health')}</bold>`;
           Broadcast.sayAt(this, buf);
 
           for (const target of this.combatants) {
-            let currentPerc = Math.floor((target.getAttribute('health') / target.getAttribute('maxHealth')) * 100);
+            let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
             let buf = `<bold>${target.name}</bold>: `;
             buf += '<red>[<bold>';
             buf += new Array(Math.ceil((currentPerc / 100) * percWidth)).join('#') + '|';
             buf += new Array(percWidth - Math.ceil((currentPerc  / 100) * percWidth)).join(' ');
             buf += '</bold>]</red>';
-            buf += ` <bold>${target.getAttribute('health')}/${target.getAttribute('maxHealth')}</bold>`;
+            buf += ` <bold>${target.getAttribute('health')}/${target.getMaxAttribute('health')}</bold>`;
             Broadcast.sayAt(this, buf);
           }
 
@@ -157,7 +157,7 @@ module.exports = (srcPath) => {
        */
       killed: state => function (target) {
         // Restore health to full on death for now
-        this.setAttribute('health', this.getAttribute('maxHealth'));
+        this.setAttributeToMax('health');
         Broadcast.sayAt(this, "Whoops, that sucked!");
         Broadcast.prompt(this);
       },
@@ -168,7 +168,7 @@ module.exports = (srcPath) => {
        */
       deathblow: state => function (target) {
         this.emit('experience', LevelUtil.mobExp(target.level));
-        this.setAttribute('health', this.getAttribute('maxHealth'));
+        this.setAttributeToMax('health');
         Broadcast.prompt(this);
       }
     }

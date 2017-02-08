@@ -19,12 +19,12 @@ exports.effect = (players, items, npcs, rooms, Commands) =>
         [regenEvent]: () => {
           currentInterval++;
           if (currentInterval % interval === 0) {
-            const startingAttribute = target.getRawAttribute(attribute);
-            const maximum           = target.getRawAttribute(`max_${attribute}`);
+            const startingAttribute = target.getAttribute(attribute);
+            const maximum           = target.getMaxAttribute(attribute);
             if (startingAttribute === maximum) { return; }
 
             const regenAttribute = Math.min(maximum, startingAttribute + bonus);
-            target.setAttribute(attribute, regenAttribute);
+            target.raiseAttribute(attribute, regenAttribute);
           }
         },
       },

@@ -16,9 +16,9 @@ In Ranvier all npcs for an area are defined in a single file within the area fol
   items: ['limbo:2']
   quests: ['limbo:2']
   attributes:
-    maxHealth: 100
+    health: 100
     speed: 2.5
-    damage: 1-7
+  damage: 1-7
 - id: 2
   keywords: ["wise", "old", "man"]
   name: "Wise Old Man"

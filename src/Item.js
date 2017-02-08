@@ -55,6 +55,7 @@ class Item extends EventEmitter {
     this.uuid        = item.uuid || uuid.v4();
   }
 
+  // TODO: Implement Attributes/Attribute classes for items?
   getAttribute(attr) {
     return this.attributes[attr];
   }
