@@ -12,6 +12,7 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
 
   return {
+    aliases: [ "go", "walk" ],
     command: (state) => (exit, player) => {
       const room = player.room;
       if (!room) {

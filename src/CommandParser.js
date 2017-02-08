@@ -58,11 +58,12 @@ class CommandParser {
       'sw': 'southwest',
     };
 
+    const moveCommand = state.Config.get("moveCommand");
     if (command in directions) {
       const direction = directions[command];
       return {
         type: CommandType.COMMAND,
-        command: state.CommandManager.get('_move'),
+        command: state.CommandManager.get(moveCommand),
         args: direction
       };
     }
@@ -71,7 +72,7 @@ class CommandParser {
     if (player.canGo(command)) {
       return {
         type: CommandType.COMMAND,
-        command: state.CommandManager.get('_move'),
+        command: state.CommandManager.get(moveCommand),
         args: command
       };
     }

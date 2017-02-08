@@ -24,6 +24,8 @@
 
   "startingRoom": "limbo:1",
 
+  "moveCommand": "move",
+
   "defaultAttributes": {
     "maxHealth": 100,
     "health":    100,
