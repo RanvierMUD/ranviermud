@@ -40,7 +40,7 @@ class Character extends EventEmitter
   getAttributes() {
     var attrs = {};
     for (const [attr, value] of this.attributes) {
-      attrs[attr] = value;
+      attrs[attr] = value.toPrimitive();
     }
 
     return attrs;
@@ -51,16 +51,12 @@ class Character extends EventEmitter
    * @param {string} attr
    * @return {number}
    */
-  getAttribute(attr) {
+  getMaxAttribute(attr) {
     return this.effects.evaluateAttribute(attr);
   }
 
-  setAttribute(attr, value) {
-    this.attributes.set(attr, value);
-  } 
-
-  getRawAttribute(attr) {
-    return this.attributes.get(attr);
+  getAttribute(attr) {
+    return this.getMaxAttribute(attr) - this.attributes.get(attr).getDelta();
   }
 
   hasEffect(effectType) {
