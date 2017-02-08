@@ -17,7 +17,7 @@ class Attribute
   }
 
   raise(amount) {
-    const newDelta = Math.min(this.delta - amount, 0);
+    const newDelta = Math.min(this.delta + amount, 0);
     this.delta = newDelta;
   }
 

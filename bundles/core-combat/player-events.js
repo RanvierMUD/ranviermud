@@ -91,7 +91,7 @@ module.exports = (srcPath) => {
             const damage = Math.min(targetDamage, this.getAttribute('health'));
 
             this.emit('hit', target, damage);
-
+            
             const startingHealth = this.getAttribute('health');
             this.lowerAttribute('health', damage);
 
