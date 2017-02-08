@@ -38,7 +38,7 @@ class EffectMap {
    * Currently does not allow attrs to go negative
    * @param {string} attr
    */
-  evaluateAttribute(attr) {
+  evaluate(attr) {
     this.validateEffects();
     
     let attrValue = this.target.getRawAttribute(attr) || 0;

@@ -52,7 +52,8 @@ class Character extends EventEmitter
    * @return {number}
    */
   getMaxAttribute(attr) {
-    return this.effects.evaluateAttribute(attr);
+    const attribute = this.attributes.get(attr);
+    return this.effects.evaluate(attribute);
   }
 
   getAttribute(attr) {
