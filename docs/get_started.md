@@ -48,6 +48,13 @@ Ranvier configuration is stored in the `ranvier.json` file in the root of the pr
 :    If enabled players can log into multiple players on their account at once
 
 `startingRoom` _`EntityReference`_ `("limbo:1")`
+:    Room player is placed in when first created
+
+`moveCommand` _`string`_ `("move")`
+:    Name of the command that will handle when the character types a movement direction (See [`src/CommandParser.js`](https://github.com/shawncplus/ranviermud/blob/staging/src/CommandParser.js) for natively supported directions)
+
+`defaultAttributes` _`object`_ 
+:    See [`ranvier.json`](https://github.com/shawncplus/ranviermud/blob/staging/ranvier.json) for defaults. These are the starting attributes (health, mana, strength, etc.) that are assigned to characters upon creation
 
 ## Adding Content
 
