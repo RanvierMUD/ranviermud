@@ -128,7 +128,7 @@ module.exports = (srcPath) => {
           }
 
           // render health bars
-          let currentPerc = Math.floor((this.getAttribute('health') / this.geMaxtAttribute('health')) * 100);
+          let currentPerc = Math.floor((this.getAttribute('health') / this.getMaxAttribute('health')) * 100);
           let buf = '<bold>You</bold>: <green>[<bold>';
           buf += new Array(Math.ceil((currentPerc / 100) * percWidth)).join('#') + '|';
           buf += new Array(percWidth - Math.ceil((currentPerc  / 100) * percWidth)).join(' ');
