@@ -39,15 +39,16 @@ class Character extends EventEmitter
 
   getAttributes() {
     var attrs = {};
-    for (const [attr, value] of this.attributes) {
-      attrs[attr] = value.toPrimitive();
+    
+    for (const [name, attr] of this.attributes) {
+      attrs[name] = attr.serialize();
     }
 
     return attrs;
   }
 
   /**
-   * Get current value of attribute (as modified by effects)
+   * Get current maximum value of attribute (as modified by effects.)
    * @param {string} attr
    * @return {number}
    */
@@ -56,14 +57,27 @@ class Character extends EventEmitter
     return this.effects.evaluate(attribute);
   }
 
+  /* Get value of attribute including changes to the attribute.
+   * @param {string} attr
+   * @return {number}
+  */
   getAttribute(attr) {
     return this.getMaxAttribute(attr) - this.attributes.get(attr).delta;
   }
 
+  /* Clears any changes to the attribute, setting it to its base value.
+   * @param {string} attr
+   * @return void
+  */
   setAttributeToMax(attr) {
     this.attributes.get(attr).setDelta(0);
   }
 
+  /* Adds to the delta of the attribute
+   * @param {string} attr
+   * @param {number} amount
+   * @return void
+  */
   raiseAttribute(attr, amount) {
     this.attributes.get(attr).raise(amount);
   }

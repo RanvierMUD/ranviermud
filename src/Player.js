@@ -14,8 +14,8 @@ class Player extends Character {
     this.account = data.account || null;
     this.experience = data.experience || 0;
     this.password  = data.password;
-    this.prompt = '[ %health/%maxHealth <bold>hp</bold> -- %energy/%maxEnergy <bold>energy</bold> ]';
-    this.combatPrompt = '[ %health/%maxHealth <bold>hp</bold> -- %energy/%maxEnergy <bold>energy</bold> ]';
+    this.prompt = ({healthStr, energyStr, }) => `[ ${healthStr} <bold>hp</bold> -- ${energyStr} <bold>energy</bold> ]`;
+    this.combatPrompt = ({healthStr, energyStr, }) => `[ ${healthStr} <bold>hp</bold> -- ${energyStr} <bold>energy</bold> ]`;
     this.socket = data.socket || null;
     this.preferences = data.preferences || new Map();
     this.questData = data.questData || {
@@ -39,23 +39,22 @@ class Player extends Character {
 
   /**
    * Convert prompt tokens into actual data
-   * @param {string} prompt
-   * @param {object} data
+   * @param {function} promptBuilder (data) => prompt template
+   * @param {object} extraData (key is used by promptBuilder)
    */
-  interpolatePrompt(prompt, data) {
-    data = Object.assign(
-      data || {},
-      this.getAttributes()
-    );
+  interpolatePrompt(promptBuilder, extraData = {}) {
+    const buildAttributeStr = attr => `${this.getAttribute(attr)}/${this.getMaxAttribute(attr)}`;
+    const healthStr = buildAttributeStr('health');
+    const energyStr = buildAttributeStr('energy');
 
-    for (const key in data) {
-      prompt = prompt.replace('%' + key, data[key]);
-    }
+    //TODO: The attr strings could likely be built in a more programmatic fashion.
+    // How could this be redone to allow for customization of the prompt without major
+    // edits to the Player class?
+    const promptData = Object.assign({}, extraData, {
+      healthStr, energyStr
+    });
 
-    // replace any unknown tokens
-    prompt = prompt.replace(/%([a-z_]+?)/, '[BAD: $1]');
-
-    return prompt;
+    return promptBuilder(promptData);
   }
 
   canGo(exit) {
