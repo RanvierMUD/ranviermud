@@ -8,11 +8,16 @@
  * @property {Map}    activeQuests
  */
 class QuestTracker {
-  constructor(player) {
+  /**
+   * @param {Player} player
+   * @param {Array}  active
+   * @param {Array}  completed
+   */
+  constructor(player, active, completed) {
     this.player = player;
 
-    this.completedQuests = new Map();
-    this.activeQuests = new Map();
+    this.activeQuests = new Map(active);
+    this.completedQuests = new Map(completed);
   }
 
   /**
@@ -93,9 +98,8 @@ class QuestTracker {
    * @param {GameState} state
    * @param {object}    questData Data pulled from the pfile
    */
-  hydrate(state, questData) {
-    this.completedQuests = new Map(questData.completed);
-    for (const [qid, data] of questData.active) {
+  hydrate(state) {
+    for (const [qid, data] of this.activeQuests) {
       const quest = state.QuestFactory.create(state, qid, data.state, this.player);
       quest.started = data.started;
 

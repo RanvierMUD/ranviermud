@@ -19,7 +19,7 @@ module.exports = (srcPath) => {
       args.account.addCharacter(args.name);
       args.account.save();
 
-      const room = state.RoomManager.getRoom(state.Config.get('startingRoom'));
+      const room = state.RoomManager.startingRoom;
       player.room = room;
       player.save();
 

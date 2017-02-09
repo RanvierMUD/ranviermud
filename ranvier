@@ -22,22 +22,22 @@ const wrap = require('wrap-ansi');
 const pkg = require('./package.json');
 
   // local
-const Telnet = require('./src/Telnet');
-const Config = require('./src/Config');
 const AccountManager = require('./src/AccountManager');
 const AreaManager = require('./src/AreaManager');
-const CommandManager = require('./src/CommandManager');
-const ChannelManager = require('./src/ChannelManager');
-const EventManager = require('./src/EventManager');
 const BehaviorManager = require('./src/BehaviorManager');
-const ItemManager = require('./src/ItemManager');
+const ChannelManager = require('./src/ChannelManager');
+const CommandManager = require('./src/CommandManager');
+const Config = require('./src/Config');
+const EffectFactory = require('./src/EffectFactory');
+const EventManager = require('./src/EventManager');
+const HelpManager = require('./src/HelpManager');
 const ItemFactory = require('./src/ItemFactory');
+const ItemManager = require('./src/ItemManager');
 const MobFactory = require('./src/MobFactory');
 const PlayerManager = require('./src/PlayerManager');
 const QuestFactory = require('./src/QuestFactory');
 const RoomManager = require('./src/RoomManager');
-const HelpManager = require('./src/HelpManager');
-//const EffectManager = require('./src/PlayerManager');
+const Telnet = require('./src/Telnet');
 
   // third party
 const argv      = require('optimist').argv;
@@ -106,6 +106,8 @@ function init(restartServer) {
     RoomManager: new RoomManager(),
     // Stores all loaded helpfiles
     HelpManager: new HelpManager(),
+    // Store all effect types
+    EffectFactory: new EffectFactory(),
 
     // All global server settings like default respawn time, save interval, port, what bundles to load, etc.
     Config,

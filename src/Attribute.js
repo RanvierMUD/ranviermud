@@ -30,8 +30,8 @@ class Attribute
   }
 
   serialize() {
-    const { delta, base, name } = this;
-    return { delta, base, name };
+    const { delta, base } = this;
+    return { delta, base };
   }
 }
 

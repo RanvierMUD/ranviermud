@@ -15,15 +15,14 @@ class Player extends Character {
     this.experience = data.experience || 0;
     this.password  = data.password;
     this.prompt = ({healthStr, energyStr, }) => `[ ${healthStr} <bold>hp</bold> -- ${energyStr} <bold>energy</bold> ]`;
-    this.combatPrompt = ({healthStr, energyStr, }) => `[ ${healthStr} <bold>hp</bold> -- ${energyStr} <bold>energy</bold> ]`;
     this.socket = data.socket || null;
     this.preferences = data.preferences || new Map();
-    this.questData = data.questData || {
+    const questData = Object.assign({
       completed: [],
       active: []
-    };
+    }, data.quests);
 
-    this.questTracker = new QuestTracker(this);
+    this.questTracker = new QuestTracker(this, questData.active, questData.completed);
   }
 
   /**
@@ -88,21 +87,11 @@ class Player extends Character {
       const room = state.RoomManager.getRoom(this.room);
       if (!room) {
         util.log(`WARNING: Player ${this.name} was saved to invalid room ${this.room}.`);
-        this.emit('quit');
-        return;
+        room = state.RoomManager.getStartingRoom();
       }
 
       this.room = room;
       room.addPlayer(this);
-    }
-
-    if (Array.isArray(this.preferences)) {
-      let prefMap = new Map();
-      this.preferences.forEach(pref => {
-        prefMap.set(pref.key, pref.value);
-      });
-
-      this.preferences = prefMap;
     }
 
     if (typeof this.account === 'string') {
@@ -130,32 +119,20 @@ class Player extends Character {
     }
 
     // Hydrate quests
-    this.questTracker.hydrate(state, this.questData);
+    this.questTracker.hydrate(state);
 
-    // TODO: Hydrate effects
+    super.hydrate(state);
   }
 
   serialize() {
-    let prefs = Array.from(this.preferences.entries()).map(pref => 
-      ({
-        key: pref[0],
-        value: pref[1]
-      }));
 
-    let data = {
+    let data = Object.assign(super.serialize(), {
       account: this.account.name,
-      attributes: this.getAttributes(),
-      combatPromptString: this.combatPromptString,
       experience: this.experience,
       inventory: this.inventory && this.inventory.serialize(),
-      level: this.level,
-      name: this.name,
       password: this.password,
-      prefs,
-      promptString: this.promptString,
-      questData: this.questTracker.serialize(),
-      room: this.room.entityReference,
-    };
+      quests: this.questTracker.serialize(),
+    });
 
     if (this.equipment) {
       let eq = {};

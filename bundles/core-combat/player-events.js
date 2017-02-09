@@ -31,6 +31,9 @@ module.exports = (srcPath) => {
             Broadcast.sayAt(this, `<bold><red>${target.name} killed you!</red></bold>`);
             target.emit('deathblow', this);
             this.emit('killed', target);
+          } else {
+            Broadcast.sayAt(this, `<bold><red>You died!</red></bold>`);
+            this.emit('killed', this);
           }
           return;
         }

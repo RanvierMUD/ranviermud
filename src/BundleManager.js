@@ -44,6 +44,9 @@ class BundleManager {
     }
 
     util.log('ENDLOAD: BUNDLES');
+
+    this.state.RoomManager.startingRoom = this.state.RoomManager.getRoom(this.state.Config.get('startingRoom'));
+    util.log(`CONFIG: Starting Room [${this.state.RoomManager.startingRoom.entityReference}]`);
   }
 
   loadBundle(bundle, bundlePath) {
@@ -52,6 +55,7 @@ class BundleManager {
       behaviors: bundlePath + '/behaviors/',
       channels: bundlePath + '/channels.js',
       commands: bundlePath + '/commands/',
+      effects: bundlePath + '/effects/',
       help: bundlePath + '/help/',
       inputEvents: bundlePath + '/input-events/',
       playerEvents: bundlePath + '/player-events.js',
@@ -87,6 +91,10 @@ class BundleManager {
 
       // Distribution is done after all areas are loaded in case items use areas from each other
       this.state.AreaManager.distribute(this.state);
+    }
+
+    if (fs.existsSync(paths.effects)) {
+      this.loadEffects(bundle, paths.effects);
     }
 
     util.log(`ENDLOAD: BUNDLE [${bundle}]`);
@@ -281,8 +289,8 @@ class BundleManager {
   loadQuests(area, questsFile) {
     util.log(`\t\tLOAD: Quests...`);
 
-    const injector = require(questsFile);
-    let quests = injector(srcPath);
+    const loader = require(questsFile);
+    let quests = loader(srcPath);
 
     for (const id in quests) {
       util.log(`\t\t\tLoading Quest [${area.name}:${id}]`);
@@ -303,8 +311,8 @@ class BundleManager {
       }
 
       const commandName = path.basename(commandFile, path.extname(commandFile));
-      const injector = require(commandPath);
-      let cmdImport = injector(srcPath);
+      const loader = require(commandPath);
+      let cmdImport = loader(srcPath);
       cmdImport.command = cmdImport.command(this.state);
 
 
@@ -323,8 +331,8 @@ class BundleManager {
   loadChannels(bundle, channelsFile) {
     util.log(`\tLOAD: Channels...`);
 
-    const injector = require(channelsFile);
-    let channels = injector(srcPath);
+    const loader = require(channelsFile);
+    let channels = loader(srcPath);
 
     if (!Array.isArray(channels)) {
       channels = [channels];
@@ -420,6 +428,26 @@ class BundleManager {
     loadEntityBehaviors('room', this.state.RoomBehaviorManager, this.state);
 
     util.log(`\tENDLOAD: Behaviors...`);
+  }
+
+  loadEffects(bundle, effectsDir) {
+    util.log(`\tLOAD: Effects...`);
+    const files = fs.readdirSync(effectsDir);
+
+    for (const effectFile of files) {
+      const effectPath = effectsDir + effectFile;
+      if (!fs.statSync(effectPath).isFile() || !effectFile.match(/js$/)) {
+        continue;
+      }
+
+      const effectName = path.basename(effectFile, path.extname(effectFile));
+      const loader = require(effectPath);
+
+      util.log(`\t\t${effectName}`);
+      this.state.EffectFactory.add(effectName, loader(srcPath));
+    }
+
+    util.log(`\tENDLOAD: Effects...`);
   }
 }
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const EffectMap = require('./EffectMap');
+const EffectList = require('./EffectList');
 const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
 const EventEmitter = require('events');
 const Inventory = require('./Inventory');
@@ -14,7 +14,7 @@ const Config = require('./Config');
  * @property {Set}       combatants Enemies this character is currently in combat with
  * @property {number}    level
  * @property {object}    attributes
- * @property {EffectMap} effects    List of current effects applied to the character
+ * @property {EffectList} effects    List of current effects applied to the character
  * @property {Map}       skills     List of all character's skills
  * @property {Room}      room       Room the character is currently in
  */
@@ -33,18 +33,19 @@ class Character extends EventEmitter
 
     this.attributes = new Attributes(data.attributes || Config.get('defaultAttributes'));
 
-    this.effects = new EffectMap(this);
+    this.effects = new EffectList(this, data.effects);
     this.skills = new Map();
   }
 
-  getAttributes() {
-    var attrs = {};
-    
-    for (const [name, attr] of this.attributes) {
-      attrs[name] = attr.serialize();
-    }
+  /**
+   * Proxy all events on the player to effects
+   * @param {string} event
+   * @param {...*}   args
+   */
+  emit(event, ...args) {
+    super.emit(event, ...args);
 
-    return attrs;
+    this.effects.emit(event, ...args);
   }
 
   /**
@@ -54,7 +55,7 @@ class Character extends EventEmitter
    */
   getMaxAttribute(attr) {
     const attribute = this.attributes.get(attr);
-    return this.effects.evaluate(attribute);
+    return this.effects.evaluateAttribute(attribute);
   }
 
   /* Get value of attribute including changes to the attribute.
@@ -86,16 +87,16 @@ class Character extends EventEmitter
     this.attributes.get(attr).lower(amount);
   }
 
-  hasEffect(effectType) {
-    return this.effects.has(effectType);
+  hasEffect(effect) {
+    return this.effects.has(effect);
   }
 
   addEffect(effect) {
-    this.effects.set(effect.type, effect);
+    this.effects.add(effect);
   }
 
-  removeEffect(effectType) {
-    this.effects.delete(effectType);
+  removeEffect(effect) {
+    this.effects.remove(effect);
   }
 
   /**
@@ -164,6 +165,22 @@ class Character extends EventEmitter
   }
 
   hydrate(state) {
+    this.effects.hydrate(state);
+
+    // inventory is hydrated in the subclasses because npc and players hydrate their inventories differently
+  }
+
+  /**
+   * @return {Object}
+   */
+  serialize() {
+    return {
+      attributes: this.attributes.serialize(),
+      level: this.level,
+      name: this.name,
+      room: this.room.entityReference,
+      effects: this.effects.serialize(),
+    };
   }
 }
 

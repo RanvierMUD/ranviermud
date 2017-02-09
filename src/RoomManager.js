@@ -5,6 +5,7 @@ const Room = require('./Room');
 class RoomManager {
   constructor() {
     this.rooms = new Map();
+    this.startingRoom = null;
   }
 
   getRoom(entityRef) {

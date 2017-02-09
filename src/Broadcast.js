@@ -18,7 +18,7 @@ class Broadcast {
 
     const targets = source.getBroadcastTargets();
     targets.forEach(target => {
-      if (target.socket.writable) {
+      if (target.socket && target.socket.writable) {
         target.socket.write(ansi.parse(formatter(target, message)));
       }
     });
