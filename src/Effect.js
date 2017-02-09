@@ -47,6 +47,10 @@ class Effect extends EventEmitter {
     return this.config.description;
   }
 
+  get duration() {
+    return this.config.duration;
+  }
+
   set duration(dur) {
     this.config.duration = dur;
   }
@@ -111,27 +115,25 @@ class Effect extends EventEmitter {
    * @param {Damage} damage
    * @return {Damage}
    */
-  modifyIncomingDamage(damage) {
+  modifyOutgoingDamage(damage) {
     throw new Error('TODO');
   }
 
   serialize() {
+    let config = Object.assign({}, this.config);
+    config.duration = config.duration === Infinity ? 'inf' : config.duration;
+
     return {
       id: this.id,
       elapsed: this.elapsed,
-      duration: this.config.duration === Infinity ? 'inf' : this.config.duration,
       state: this.state,
-    }
+      config,
+    };
   }
 
   hydrate(data) {
-    if (data.duration) {
-        if (data.duration === 'inf') {
-            this.config.duration = Infinity;
-        } else {
-            this.config.duration = data.duration;
-        }
-    }
+    data.config.duration = data.config.duration === 'inf' ? Infinity : data.config.duration;
+    this.config = data.config;
 
     if (!isNaN(data.elapsed)) {
       this.startedAt = Date.now() - data.elapsed;
