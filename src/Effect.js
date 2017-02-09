@@ -119,11 +119,20 @@ class Effect extends EventEmitter {
     return {
       id: this.id,
       elapsed: this.elapsed,
+      duration: this.config.duration === Infinity ? 'inf' : this.config.duration,
       state: this.state,
     }
   }
 
   hydrate(data) {
+    if (data.duration) {
+        if (data.duration === 'inf') {
+            this.config.duration = Infinity;
+        } else {
+            this.config.duration = data.duration;
+        }
+    }
+
     if (!isNaN(data.elapsed)) {
       this.startedAt = Date.now() - data.elapsed;
     }

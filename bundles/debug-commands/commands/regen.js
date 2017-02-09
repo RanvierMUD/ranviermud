@@ -6,10 +6,7 @@ module.exports = (srcPath) => {
 
   return {
     command : state => (args, player) => {
-      const options = {
-        state: { magnitude: 3 }
-      };
-      let regenEffect = state.EffectFactory.create(state, 'regen', options, player);
+      let regenEffect = state.EffectFactory.create('regen', player, {}, { magnitude: 3 });
       player.addEffect(regenEffect);
     }
   };

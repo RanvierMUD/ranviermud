@@ -38,15 +38,19 @@ class EffectFactory {
   }
 
   /**
-   * @param {GameState} GameState
-   * @param {string}    id        effect id
-   * @param {object}    config    Override configuration {@see Effect.constructor}
-   * @param {Player}    target
+   * @param {string}  id      effect id
+   * @param {Player}  target
+   * @param {?object} config  Effect.config override
+   * @param {?object} state   Effect.state override
+   * @param {object} 
    * @return {Effect}
    */
-  create(GameState, id, config, target) {
+  create(id, target, config = {}, state = {}) {
     const entry = this.effects.get(id);
-    const effect = new Effect(id, Object.assign(entry.definition, config), target);
+    let def = Object.assign({}, entry.definition);
+    def.config = Object.assign(def.config, config);
+    def.state = Object.assign(def.state, state);
+    const effect = new Effect(id, def, target);
     entry.eventManager.attach(effect);
 
     return effect;

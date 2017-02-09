@@ -122,7 +122,7 @@ class EffectList {
     const effects = this.effects;
     this.effects = new Set();
     for (const newEffect of effects) {
-      const effect = state.EffectFactory.create(state, newEffect.id, {}, this.target);
+      const effect = state.EffectFactory.create(newEffect.id, this.target);
       effect.hydrate(newEffect);
       this.add(effect);
     }
