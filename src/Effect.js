@@ -47,12 +47,8 @@ class Effect extends EventEmitter {
     return this.config.description;
   }
 
-  /**
-   * Get duration in seconds
-   * @return {number}
-   */
-  get duration() {
-    return Math.floor(this.config.duration / 1000);;
+  set duration(dur) {
+    this.config.duration = dur;
   }
 
   get elapsed () {
@@ -64,11 +60,11 @@ class Effect extends EventEmitter {
   }
 
   get remaining() {
-    return this.duration - Math.floor(this.elapsed / 1000);
+    return Math.floor((this.config.duration - this.elapsed) / 1000);
   }
 
   isCurrent() {
-    return this.elapsed < this.duration;
+    return this.elapsed < this.config.duration;
   }
 
   activate() {
@@ -99,7 +95,7 @@ class Effect extends EventEmitter {
    * @return 
    */
   modifyAttribute(attrName, currentValue) {
-    const modifier = this.modifiers.attributes[attrName] || (_ => _);
+    const modifier = (this.modifiers.attributes[attrName] || (_ => _)).bind(this);
     return modifier(currentValue);
   }
 

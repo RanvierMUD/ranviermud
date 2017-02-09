@@ -66,6 +66,10 @@ class Character extends EventEmitter
     return this.getMaxAttribute(attr) + this.attributes.get(attr).delta;
   }
 
+  getBaseAttribute(attr) {
+    return this.attributes.get(attr).base;
+  }
+
   /* Clears any changes to the attribute, setting it to its base value.
    * @param {string} attr
    * @return void

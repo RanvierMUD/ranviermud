@@ -5,6 +5,7 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
 
   return {
+    aliases: [ "affects" ],
     command : (state) => (args, player) => {
       Broadcast.sayAt(player, "Current Effects:");
 
@@ -24,6 +25,3 @@ module.exports = (srcPath) => {
     }
   };
 };
-
-
-
