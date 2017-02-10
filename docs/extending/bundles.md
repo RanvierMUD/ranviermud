@@ -38,6 +38,8 @@ Each individual bundle is a standalone modification to the game, think of them
 like a Skyrim mod. A mod could add a single item or it could completely
 transform the game. Unlike Skyrim mods load order does not matter.
 
+To create a new bundle simply create a new directory underneath `bundles/`. Inside your bundle directory you may have any or all of the folders/files below.
+
 ### What's in a Bundle
 
 A bundle can contain any or all of the following children though it's suggested that you keep your bundles as modular as possible. Click on any of the items below to see an in-depth tutorial.
