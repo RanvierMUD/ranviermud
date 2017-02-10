@@ -39,3 +39,4 @@ pages:
     - Skills: 'extending/skills.md'
     - Channels: 'extending/channels.md'
     - Player Events: 'extending/player-events.md'
+    - Effects: 'extending/effects.md'
