@@ -11,6 +11,12 @@ Ranvier is _not_ a websocket MUD. It does not have a web client. It is a plain o
 
 Docs can be found on our website [ranviermud.com](http://www.ranviermud.com)
 
+## Slack
+
+We have a slack channel you can use to ask questions, suggest features, or just keep up to date with the project. [https://ranviermud.slack.com](https://ranviermud.slack.com)
+
+[Get an invite](https://ranviermud.signup.team/)
+
 ## Features
 * Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy packaging and sharing of commands/areas/items/npcs/channels/behaviors.
 * Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.
