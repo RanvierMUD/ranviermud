@@ -21,9 +21,6 @@ module.exports = (srcPath) => {
           this.combatants.forEach(combatant => {
             this.removeCombatant(combatant);
             combatant.removeCombatant(this);
-            if (!combatant.isInCombat()) {
-              combatant.setAttributeToMax('health');
-            }
           }, this);
 
           const target = this.combatData.killedBy;
@@ -39,6 +36,12 @@ module.exports = (srcPath) => {
         }
 
         if (!this.isInCombat()) {
+          if (this.getAttribute('health') < this.getMaxAttribute('health')) {
+            let regenEffect = state.EffectFactory.create('regen', this, {}, { magnitude: 15 });
+            if (this.addEffect(regenEffect)) {
+              regenEffect.activate();
+            }
+          }
           return;
         }
 
@@ -94,7 +97,7 @@ module.exports = (srcPath) => {
             const damage = Math.min(targetDamage, this.getAttribute('health'));
 
             this.emit('hit', target, damage);
-            
+
             const startingHealth = this.getAttribute('health');
             this.lowerAttribute('health', damage);
 
@@ -116,9 +119,6 @@ module.exports = (srcPath) => {
         if (!this.isInCombat()) {
           // reset combat data to remove any lag
           this.combatData = {};
-
-          // TODO: There is no regen at the moment so if they won just reset their health
-          this.setAttributeToMax('health');
         }
 
         if (hadActions) {
@@ -132,21 +132,14 @@ module.exports = (srcPath) => {
 
           // render health bars
           let currentPerc = Math.floor((this.getAttribute('health') / this.getMaxAttribute('health')) * 100);
-          let buf = '<bold>You</bold>: <green>[<bold>';
-          buf += new Array(Math.ceil((currentPerc / 100) * percWidth)).join('#') + '|';
-          buf += new Array(percWidth - Math.ceil((currentPerc  / 100) * percWidth)).join(' ');
-          buf += '</bold>]</green>';
-          buf += ` <bold>${this.getAttribute('health')}/${this.getMaxAttribute('health')}</bold>`;
+          let progress = Broadcast.progress(percWidth, currentPerc, "green");
+          let buf = `<bold>You</bold>: ${progress} <bold>${this.getAttribute('health')}/${this.getMaxAttribute('health')}</bold>`;
           Broadcast.sayAt(this, buf);
 
           for (const target of this.combatants) {
             let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
-            let buf = `<bold>${target.name}</bold>: `;
-            buf += '<red>[<bold>';
-            buf += new Array(Math.ceil((currentPerc / 100) * percWidth)).join('#') + '|';
-            buf += new Array(percWidth - Math.ceil((currentPerc  / 100) * percWidth)).join(' ');
-            buf += '</bold>]</red>';
-            buf += ` <bold>${target.getAttribute('health')}/${target.getMaxAttribute('health')}</bold>`;
+            let progress = Broadcast.progress(percWidth, currentPerc, "red");
+            let buf = `<bold>${target.name}</bold>: ${progress} <bold>${target.getAttribute('health')}/${target.getMaxAttribute('health')}</bold>`;
             Broadcast.sayAt(this, buf);
           }
 
@@ -159,8 +152,6 @@ module.exports = (srcPath) => {
        * @param {Character} target
        */
       killed: state => function (target) {
-        // Restore health to full on death for now
-        this.setAttributeToMax('health');
         Broadcast.sayAt(this, "Whoops, that sucked!");
         Broadcast.prompt(this);
       },
@@ -171,7 +162,6 @@ module.exports = (srcPath) => {
        */
       deathblow: state => function (target) {
         this.emit('experience', LevelUtil.mobExp(target.level));
-        this.setAttributeToMax('health');
         Broadcast.prompt(this);
       }
     }

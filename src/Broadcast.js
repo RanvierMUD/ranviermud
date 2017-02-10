@@ -45,6 +45,31 @@ class Broadcast {
   static prompt(player, extra, wrapWidth, useColor) {
     Broadcast.sayAt(player, player.interpolatePrompt(player.prompt, extra), wrapWidth, useColor);
   }
+
+  /**
+   * Generate an ASCII art progress bar
+   * @param {number} width Max width
+   * @param {number} percent Current percent
+   * @param {string} color
+   * @param {string} barChar Character to use for the current progress
+   * @param {string} fillChar Character to use for the rest
+   * @param {string} delimiters Characters to wrap the bar in
+   * @return {string}
+   */
+  static progress(width, percent, color, barChar = "#", fillChar = " ", delimiters = "()") {
+    width -= 3; // account for delimiters and tip of bar
+    barChar = barChar[0];
+    fillChar = fillChar[0];
+    const [ leftDelim, rightDelim ] = delimiters;
+    const openColor = `<${color}>`;
+    const closeColor = `</${color}>`;
+    let buf = openColor + leftDelim + "<bold>";
+    const widthPercent = Math.round((percent / 100) * width);
+    buf += new Array(widthPercent).join(barChar) + (percent === 100 ? '' : ')');
+    buf += new Array(width - widthPercent).join(fillChar);
+    buf += "</bold>" + rightDelim + closeColor;
+    return buf;
+  }
 }
 
 module.exports = Broadcast;

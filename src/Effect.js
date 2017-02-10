@@ -3,7 +3,7 @@
 const EventEmitter = require('events');
 
  /** @typedef EffectModifiers {{attributes: !Object<string,function>}} */
-const EffectModifiers;
+var EffectModifiers;
 
 /**
  * @property {object}    config Effect configuration (name/desc/duration/etc.)
@@ -11,6 +11,7 @@ const EffectModifiers;
  * @property {boolean}   config.hidden       If this effect is shown in the character's effect list
  * @property {boolean}   config.stackable    If multiple effects with the same `config.type` can be applied at once
  * @property {string}    config.type         The effect category, mainly used when disallowing stacking
+ * @property {boolean|number} config.tickInterval Number of seconds between calls to the `updateTick` listener
  * @property {string}    description
  * @property {number}    duration    Total duration of effect in _milliseconds_
  * @property {number}    elapsed     Get elapsed time in _milliseconds_
@@ -35,6 +36,7 @@ class Effect extends EventEmitter {
       name: 'Unnamed Effect',
       stackable: true,
       type: 'undef',
+      ticketInterval: false
     }, def.config);
 
     this.target = target;
@@ -47,6 +49,11 @@ class Effect extends EventEmitter {
     // internal state saved across player load e.g., stacks, amount of damage shield remaining, whatever
     // Default state can be found in config.state
     this.state = Object.assign({}, def.state);
+
+    // If an effect has a tickInterval it should always apply when first activated
+    if (this.config.tickInterval && !this.state.tickInterval) {
+      this.state.lastTick = -Infinity;
+    }
 
     if (this.config.autoActivate) {
       this.on('effectAdded', this.activate);
@@ -93,12 +100,22 @@ class Effect extends EventEmitter {
   }
 
   activate() {
+    if (this.active) {
+      return;
+    }
+
     this.startedAt = Date.now() - this.elapsed;
     this.emit('eventActivated');
+    this.active = true;
   }
 
   deactivate() {
+    if (!this.active) {
+      return;
+    }
+
     this.emit('eventDeactivated');
+    this.active = false;
   }
 
   /**
@@ -147,10 +164,16 @@ class Effect extends EventEmitter {
     let config = Object.assign({}, this.config);
     config.duration = config.duration === Infinity ? 'inf' : config.duration;
 
+    let state = Object.assign({}, this.state);
+    // store lastTick as a difference so we can make sure to start where we left off when we hydrate
+    if (state.lastTick && isFinite(state.lastTick))  {
+      state.lastTick = Date.now() - state.lastTick;
+    }
+
     return {
       id: this.id,
       elapsed: this.elapsed,
-      state: this.state,
+      state,
       config,
     };
   }
@@ -161,6 +184,10 @@ class Effect extends EventEmitter {
 
     if (!isNaN(data.elapsed)) {
       this.startedAt = Date.now() - data.elapsed;
+    }
+
+    if (!isNaN(data.state.lastTick)) {
+      data.state.lastTick = Date.now() - data.state.lastTick;
     }
     this.state = data.state;
   }

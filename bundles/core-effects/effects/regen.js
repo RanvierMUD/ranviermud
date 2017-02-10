@@ -11,17 +11,34 @@ module.exports = srcPath => {
       description: "You are regenerating health over time.",
       stackable: false,
       type: 'regen.health',
+      tickInterval: 3
     },
     state: {
-      magnitude: 10
+      magnitude: 10,
+      interval: 3,
+      lastTick: -Infinity // always tick when first activated
     },
     listeners: {
+      effectedAdded: function () {
+        if (this.target.isInCombat()) {
+          this.remove();
+        }
+      },
+
       eventActivated: function () {
+        if (this.target.isInCombat()) {
+          return;
+        }
+
         Broadcast.sayAt(this.target, "Starting regeneration!");
         Broadcast.prompt(this.target);
       },
 
       eventDeactivated: function () {
+        if (this.target.isInCombat()) {
+          return;
+        }
+
         Broadcast.sayAt(this.target, "Regen ended!");
         Broadcast.prompt(this.target);
       },
@@ -34,7 +51,10 @@ module.exports = srcPath => {
         }
 
         this.target.raiseAttribute('health', this.state.magnitude);
-        Broadcast.prompt(this.target);
+      },
+
+      combatStart: function () {
+        this.remove();
       }
     }
   };

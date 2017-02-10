@@ -38,6 +38,17 @@ class EffectList {
   emit(event, ...args) {
     this.validateEffects();
     for (const effect of this.effects) {
+      if (effect.paused) {
+        continue;
+      }
+
+      if (effect.config.tickInterval) {
+        const sinceLastTick = Date.now() - effect.state.lastTick;
+        if (sinceLastTick < effect.config.tickInterval * 1000) {
+          continue;
+        }
+        effect.state.lastTick = Date.now();
+      }
       effect.emit(event, ...args);
     }
   }
@@ -46,6 +57,12 @@ class EffectList {
    * @param {Effect} effect
    */
   add(effect) {
+    for (const activeEffect of this.effects) {
+      if (!activeEffect.config.stackable && effect.config.type === activeEffect.config.type) {
+        return false;
+      }
+    }
+
     this.effects.add(effect);
     effect.emit('effectAdded');
     effect.on('remove', () => this.remove(effect));

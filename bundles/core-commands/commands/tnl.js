@@ -10,12 +10,7 @@ module.exports = (srcPath) => {
       const totalTnl = LevelUtil.expToLevel(player.level + 1);
       const currentPerc = player.experience ? Math.floor((player.experience / totalTnl) * 100) : 0;
 
-      let buf = '<blue>[<bold>';
-      const maxWidth = 77;
-      buf += new Array(Math.ceil((currentPerc / 100) * maxWidth)).join('#') + '|';
-      buf += new Array(maxWidth - Math.ceil((currentPerc  / 100) * maxWidth)).join(' ');
-      buf += '</bold>]</blue>';
-      Broadcast.sayAt(player, buf);
+      Broadcast.sayAt(player, Broadcast.progress(80, currentPerc, "blue"));
       Broadcast.sayAt(player, `Level: ${player.level}`);
       Broadcast.sayAt(player, `${player.experience}/${totalTnl} (${currentPerc}%, ${totalTnl - player.experience} til next level)`);
     }

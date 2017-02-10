@@ -121,6 +121,7 @@ class Character extends EventEmitter
       return;
     }
 
+    this.emit('combatStart', target);
     this.combatants.add(target);
   }
 
