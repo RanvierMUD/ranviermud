@@ -45,25 +45,25 @@ To create a new bundle simply create a new directory underneath `bundles/`. Insi
 A bundle can contain any or all of the following children though it's suggested that you keep your bundles as modular as possible. Click on any of the items below to see an in-depth tutorial.
 
 <pre>
-<a href="areas/index.md">areas/</a>
+<a href="../areas/">areas/</a>
   Areas contain items, rooms, npcs, and quests.
-<a href="behaviors.md">behaviors/</a>
+<a href="../behaviors/">behaviors/</a>
   Behaviors are scripts that are shared between entities of the same type (rooms, items, npcs)
-<a href="commands.md">commands/</a>
+<a href="../commands/">commands/</a>
   What it says on the tin, commands to add to the game
-<a href="help.md">help/</a>
+<a href="../help/">help/</a>
   Helpfiles
-<a href="effects.md">effects/</a>
+<a href="../effects/">effects/</a>
   Effects that can be applied to characters (NPCs/Players)
-<a href="input-events.md">input-events/</a>
+<a href="../input-events/">input-events/</a>
   Input events are events that happen on the socket, this involves login and command interpreting.
   <strong>Warning:</strong> Because of input events important role it is generally not advised to load more than one
   bundle with input events
-<a href="skills.md">skills/</a> <em>(Currently Unused)</em>
+<a href="../skills/">skills/</a> <em>(Currently Unused)</em>
   Player skills
-<a href="channels.md">channels.js</a>
+<a href="../channels/">channels.js</a>
   Communication channels
-<a href="player-events.md">player-events.js</a>
+<a href="../player-events/">player-events.js</a>
   Basically everything the player does triggers an event on them that can be attached to and perform
   functionality such as experience, leveling, combat, and time based calculations
 </pre>
