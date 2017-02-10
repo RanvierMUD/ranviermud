@@ -4,6 +4,7 @@ const util = require('util');
 
 module.exports = srcPath => {
   const Broadcast = require(srcPath + 'Broadcast');
+  const Heal = require(srcPath + 'Heal');
 
   return {
     config: {
@@ -25,24 +26,6 @@ module.exports = srcPath => {
         }
       },
 
-      eventActivated: function () {
-        if (this.target.isInCombat()) {
-          return;
-        }
-
-        Broadcast.sayAt(this.target, "Starting regeneration!");
-        Broadcast.prompt(this.target);
-      },
-
-      eventDeactivated: function () {
-        if (this.target.isInCombat()) {
-          return;
-        }
-
-        Broadcast.sayAt(this.target, "Regen ended!");
-        Broadcast.prompt(this.target);
-      },
-
       updateTick: function () {
         const start = this.target.getAttribute('health');
         const max = this.target.getMaxAttribute('health');
@@ -50,7 +33,8 @@ module.exports = srcPath => {
           return this.remove();
         }
 
-        this.target.raiseAttribute('health', this.state.magnitude);
+        const heal = new Heal('health', this.state.magnitude, null, "physical", "effect:" + this.config.type);
+        heal.commit(this.target);
       },
 
       combatStart: function () {

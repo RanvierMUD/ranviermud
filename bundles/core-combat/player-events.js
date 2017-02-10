@@ -8,6 +8,7 @@ const util = require('util');
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const LevelUtil = require(srcPath + 'LevelUtil');
+  const Damage = require(srcPath + 'Damage');
 
   return  {
     listeners: {
@@ -37,7 +38,7 @@ module.exports = (srcPath) => {
 
         if (!this.isInCombat()) {
           if (this.getAttribute('health') < this.getMaxAttribute('health')) {
-            let regenEffect = state.EffectFactory.create('regen', this, {}, { magnitude: 15 });
+            let regenEffect = state.EffectFactory.create('regen', this, { hidden: true }, { magnitude: 15 });
             if (this.addEffect(regenEffect)) {
               regenEffect.activate();
             }
@@ -77,12 +78,9 @@ module.exports = (srcPath) => {
 
           if (this.combatData.lag <= 0) {
             hadActions = true;
-            const damage = Math.min(playerDamage, target.getAttribute('health'));
-
-            target.emit('hit', this, damage);
-            const startingHealth = target.getAttribute('health');
-            target.lowerAttribute('health', damage);
-            Broadcast.sayAt(this, `You strike <bold>${target.name}</bold> for <bold>${damage}</bold> damage`);
+            const damage = new Damage('health', playerDamage, this, "physical", "weapon");
+            damage.commit(target);
+            Broadcast.sayAt(this, `You strike <bold>${target.name}</bold> for <bold>${damage.finalAmount}</bold> damage`);
 
             this.combatData.lag = playerSpeed * 1000;
           } else {
@@ -94,15 +92,9 @@ module.exports = (srcPath) => {
           // target actions
           if (target.combatData.lag <= 0) {
             hadActions = true;
-            const damage = Math.min(targetDamage, this.getAttribute('health'));
-
-            this.emit('hit', target, damage);
-
-            const startingHealth = this.getAttribute('health');
-            this.lowerAttribute('health', damage);
-
-            Broadcast.sayAt(this, `<bold>${target.name}</bold> hit you for <bold><red>${damage}</red></bold> damage`);
-
+            const damage = new Damage('health', targetDamage, target, "physical", "weapon");
+            damage.commit(this);
+            Broadcast.sayAt(this, `<bold>${target.name}</bold> hit you for <bold><red>${damage.finalAmount}</red></bold> damage`);
             if (this.getAttribute('health') <= 0) {
               this.combatData.killedBy = target;
               break;
@@ -124,7 +116,6 @@ module.exports = (srcPath) => {
         if (hadActions) {
           Broadcast.sayAt(this, '');
           Broadcast.prompt(this);
-          const percWidth = 50;
 
           if (!this.isInCombat()) {
             return;
@@ -132,13 +123,13 @@ module.exports = (srcPath) => {
 
           // render health bars
           let currentPerc = Math.floor((this.getAttribute('health') / this.getMaxAttribute('health')) * 100);
-          let progress = Broadcast.progress(percWidth, currentPerc, "green");
+          let progress = Broadcast.progress(50, currentPerc, "green");
           let buf = `<bold>You</bold>: ${progress} <bold>${this.getAttribute('health')}/${this.getMaxAttribute('health')}</bold>`;
           Broadcast.sayAt(this, buf);
 
           for (const target of this.combatants) {
             let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
-            let progress = Broadcast.progress(percWidth, currentPerc, "red");
+            let progress = Broadcast.progress(50, currentPerc, "red");
             let buf = `<bold>${target.name}</bold>: ${progress} <bold>${target.getAttribute('health')}/${target.getMaxAttribute('health')}</bold>`;
             Broadcast.sayAt(this, buf);
           }

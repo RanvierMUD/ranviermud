@@ -27,7 +27,7 @@ class EffectList {
    */
   entries() {
     this.validateEffects();
-    return this.effects.entries();
+    return [...this.effects];
   }
 
   /**
@@ -122,10 +122,10 @@ class EffectList {
   evaluateIncomingDamage(damage) {
     this.validateEffects();
 
-    let amount = damage.amount;
+    let amount = damage.finalAmount;
 
-    for (const [ id, effect ] of this.effects) {
-      amount = effect.modifyIncomingDamage(Damage);
+    for (const effect of this.effects) {
+      amount = effect.modifyIncomingDamage(damage);
     }
 
     return Math.max(amount, 0) || 0;
@@ -138,10 +138,10 @@ class EffectList {
   evaluateOutgoingDamage(damage) {
     this.validateEffects();
 
-    let amount = damage.amount;
+    let amount = damage.finalAmount;
 
-    for (const [ id, effect ] of this.effects) {
-      amount = effect.modifyOutgoingDamage(Damage);
+    for (const effect of this.effects) {
+      amount = effect.modifyOutgoingDamage(damage);
     }
 
     return Math.max(amount, 0) || 0;

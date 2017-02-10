@@ -44,6 +44,8 @@ class Effect extends EventEmitter {
     this.paused = 0;
     this.modifiers = Object.assign({
       attributes: {},
+      incomingDamage: damage => damage.finalAmount,
+      outgoingDamage: damage => damage.finalAmount,
     }, def.modifiers);
 
     // internal state saved across player load e.g., stacks, amount of damage shield remaining, whatever
@@ -149,7 +151,8 @@ class Effect extends EventEmitter {
    * @return {Damage}
    */
   modifyIncomingDamage(damage) {
-    throw new Error('TODO');
+    const modifier = this.modifiers.incomingDamage.bind(this);
+    return modifier(damage);
   }
 
   /**
@@ -157,7 +160,8 @@ class Effect extends EventEmitter {
    * @return {Damage}
    */
   modifyOutgoingDamage(damage) {
-    throw new Error('TODO');
+    const modifier = this.modifiers.outgoingDamage.bind(this);
+    return modifier(damage);
   }
 
   serialize() {

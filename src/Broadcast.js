@@ -57,6 +57,7 @@ class Broadcast {
    * @return {string}
    */
   static progress(width, percent, color, barChar = "#", fillChar = " ", delimiters = "()") {
+    percent = Math.max(0, percent);
     width -= 3; // account for delimiters and tip of bar
     barChar = barChar[0];
     fillChar = fillChar[0];
@@ -64,9 +65,9 @@ class Broadcast {
     const openColor = `<${color}>`;
     const closeColor = `</${color}>`;
     let buf = openColor + leftDelim + "<bold>";
-    const widthPercent = Math.round((percent / 100) * width);
-    buf += new Array(widthPercent).join(barChar) + (percent === 100 ? '' : ')');
-    buf += new Array(width - widthPercent).join(fillChar);
+    const widthPercent = (percent / 100) * width;
+    buf += new Array(Math.ceil(widthPercent)).join(barChar) + (percent === 100 ? '' : ')');
+    buf += new Array(width - Math.floor(widthPercent)).join(fillChar);
     buf += "</bold>" + rightDelim + closeColor;
     return buf;
   }

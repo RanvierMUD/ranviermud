@@ -9,11 +9,15 @@ module.exports = (srcPath) => {
     command : (state) => (args, player) => {
       Broadcast.sayAt(player, "Current Effects:");
 
-      if (!player.effects.size) {
+      const effects = player.effects.entries().filter(effect => {
+        return !effect.config.hidden;
+      });
+
+      if (!effects.length) {
         return Broadcast.sayAt(player, "  None.");
       }
 
-      for (const [effect] of player.effects.entries()) {
+      for (const effect of effects) {
         Broadcast.at(player, `  ${effect.name}: `);
         if (effect.duration === Infinity) {
           Broadcast.sayAt(player, "Permanent");

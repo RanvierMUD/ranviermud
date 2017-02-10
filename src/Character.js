@@ -136,6 +136,24 @@ class Character extends EventEmitter
     this.combatants.delete(target);
   }
 
+  /**
+   * @see EffectList.evaluateIncomingDamage
+   * @param {Damage} damage
+   * @return {number}
+   */
+  evaluateIncomingDamage(damage) {
+    return this.effects.evaluateIncomingDamage(damage);
+  }
+
+  /**
+   * @see EffectList.evaluateOutgoingDamage
+   * @param {Damage} damage
+   * @return {number}
+   */
+  evaluateOutgoingDamage(damage) {
+    return this.effects.evaluateOutgoingDamage(damage);
+  }
+
   equip(item) {
     this.removeItem(item);
     if (this.equipment.has(item.slot)) {
