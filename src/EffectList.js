@@ -1,48 +1,61 @@
 'use strict';
 
+/**
+ * Self-managing list of effects for a target
+ * @property {Set}    effects
+ * @property {number} size Number of currently active effects
+ * @property {Character} target
+ */
 class EffectList {
+  /**
+   * @param {Character} target
+   * @param {Array<Object|Effect>} effects array of serialized effects (Object) or actual Effect instances
+   */
   constructor(target, effects) {
     this.effects = new Set(effects);
     this.target = target;
   }
 
   get size() {
+    this.validateEffects();
     return this.effects.size;
   }
 
+  /**
+   * Get current list of effects as an array
+   * @return {Array<Effect>}
+   */
   entries() {
+    this.validateEffects();
     return this.effects.entries();
   }
 
   /**
-   * Proxy events to all effects
+   * Proxy an event to all effects
    * @param {string} event
    * @param {...*}   args
    */
   emit(event, ...args) {
+    this.validateEffects();
     for (const effect of this.effects) {
       effect.emit(event, ...args);
     }
   }
 
-  set(key, effect, init) {
-    if (this.effects.has(key)) {
-      this.effects.get(key).removeEffect(key);
-    }
-
-    this.effects.set(key, effect);
-
-    if (init) {
-      effect.init();
-    }
-  }
-
+  /**
+   * @param {Effect} effect
+   */
   add(effect) {
     this.effects.add(effect);
     effect.emit('effectAdded');
     effect.on('remove', () => this.remove(effect));
   }
 
+  /**
+   * Deactivate and remove an effect
+   * @param {Effect} effect
+   * @throws ReferenceError
+   */
   remove(effect) {
     if (!this.effects.has(effect)) {
       throw new ReferenceError("Trying to remove effect that was never added");
@@ -76,6 +89,9 @@ class EffectList {
     let attrValue = attr.base || 0;
 
     for (const effect of this.effects) {
+      if (effect.paused) {
+        continue;
+      }
       attrValue = effect.modifyAttribute(attrName, attrValue);
     }
 
@@ -115,6 +131,7 @@ class EffectList {
   }
 
   serialize() {
+    this.validateEffects();
     return [...this.effects].map(effect => effect.serialize());
   }
 

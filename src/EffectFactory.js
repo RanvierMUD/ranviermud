@@ -3,6 +3,9 @@
 const EventManager = require('./EventManager');
 const Effect = require('./Effect');
 
+/** typedef {{config: Object<string,*>, listeners: Object<String,function (...*)>}} */
+const EffectConfig;
+
 /**
  * @property {Map} effects
  */
@@ -11,6 +14,10 @@ class EffectFactory {
     this.effects = new Map();
   }
 
+  /**
+   * @param {string} id
+   * @param {EffectConfig} config
+   */
   add(id, config) {
     if (this.effects.has(id)) {
       return;

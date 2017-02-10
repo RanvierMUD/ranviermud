@@ -2,11 +2,25 @@
 
 const EventEmitter = require('events');
 
+ /** @typedef EffectModifiers {{attributes: !Object<string,function>}} */
+const EffectModifiers;
+
 /**
+ * @property {object}    config Effect configuration (name/desc/duration/etc.)
+ * @property {boolean}   config.autoActivate If this effect immediately activates itself when added to the target
+ * @property {boolean}   config.hidden       If this effect is shown in the character's effect list
+ * @property {boolean}   config.stackable    If multiple effects with the same `config.type` can be applied at once
+ * @property {string}    config.type         The effect category, mainly used when disallowing stacking
+ * @property {string}    description
+ * @property {number}    duration    Total duration of effect in _milliseconds_
+ * @property {number}    elapsed     Get elapsed time in _milliseconds_
  * @property {string}    id     filename minus .js
- * @property {object}    def    Effect definition
+ * @property {EffectModifiers} modifiers Attribute modifier functions
+ * @property {string}    name
+ * @property {number}    remaining Number of seconds remaining
+ * @property {number}    startedAt Date.now() time this effect became active
+ * @property {object}    state  Configuration of this _type_ of effect (magnitude, element, stat, etc.)
  * @property {Character} target Character this effect is... effecting
- * @property {object}    config
  */
 class Effect extends EventEmitter {
   constructor(id, def, target) {
@@ -55,6 +69,9 @@ class Effect extends EventEmitter {
     this.config.duration = dur;
   }
 
+  /**
+   * @return {number}
+   */
   get elapsed () {
     if (!this.startedAt) {
       return null;
@@ -63,6 +80,10 @@ class Effect extends EventEmitter {
     return this.paused || (Date.now() - this.startedAt);
   }
 
+  /**
+   * Get remaining time in seconds
+   * @return {number}
+   */
   get remaining() {
     return Math.floor((this.config.duration - this.elapsed) / 1000);
   }
@@ -80,6 +101,9 @@ class Effect extends EventEmitter {
     this.emit('eventDeactivated');
   }
 
+  /**
+   * Remove this effect from its target
+   */
   remove() {
     this.emit('remove');
   }
