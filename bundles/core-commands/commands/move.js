@@ -3,10 +3,9 @@ const util  = require('util');
 
 /**
  * Move player in a given direction from their current room
- * TODO: Move into core-commands
  * @param {string} exit   direction they tried to go
  * @param {Player} player
- * @return boolean False if the exit is inaccessible.
+ * @return {boolean} False if the exit is inaccessible.
  */
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
@@ -34,7 +33,7 @@ module.exports = (srcPath) => {
       }
 
       exit = exits.pop();
-      const nextRoom =  state.RoomManager.getRoom(exit.roomId)
+      const nextRoom =  state.RoomManager.getRoom(exit.roomId);
 
       player.room.emit('playerLeave', player, nextRoom);
       for (const npc of player.room.npcs) {

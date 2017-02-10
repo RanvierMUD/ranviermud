@@ -84,7 +84,7 @@ class Player extends Character {
 
   hydrate(state) {
     if (typeof this.room === 'string') {
-      const room = state.RoomManager.getRoom(this.room);
+      let room = state.RoomManager.getRoom(this.room);
       if (!room) {
         util.log(`WARNING: Player ${this.name} was saved to invalid room ${this.room}.`);
         room = state.RoomManager.getStartingRoom();
