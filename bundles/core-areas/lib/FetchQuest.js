@@ -30,7 +30,7 @@ class FetchQuest extends Quest {
   }
 
   _getItem(item) {
-    if (item.globalId !== this.config.targetItem || this.state.count >= this.config.targetCount) {
+    if (item.entityReference !== this.config.targetItem || this.state.count >= this.config.targetCount) {
       return;
     }
 
@@ -56,7 +56,7 @@ class FetchQuest extends Quest {
     if (this.config.removeItem) {
       for (let i = 0; i < this.config.targetCount; i++) {
         for (const [uuid, item] of this.player.inventory) {
-          if (item.globalId === this.config.targetItem) {
+          if (item.entityReference === this.config.targetItem) {
             this.player.removeItem(item);
           }
         }
@@ -68,7 +68,7 @@ class FetchQuest extends Quest {
   }
 
   _dropItem(item) {
-    if (!this.state.count || item.globalId !== this.config.targetItem) {
+    if (!this.state.count || item.entityReference !== this.config.targetItem) {
       return;
     }
 

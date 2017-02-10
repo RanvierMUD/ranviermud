@@ -172,6 +172,7 @@ class Character extends EventEmitter
   }
 
   addItem(item) {
+    this.inventory = this.inventory || new Inventory([]);
     this.inventory.addItem(item);
   }
 
