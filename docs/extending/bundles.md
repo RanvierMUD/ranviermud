@@ -15,7 +15,7 @@ functionality expected in most Diku-style MUDs.
 * `core-channels` - Set of example channels: say, tell, yell, and chat
 * `core-combat` - Basic diku style real-time auto combat
 * `core-commands` - Set of basic diku style commands: movement, look, get, drop, wear, who, etc.
-* `core-effects` - (_currently unused_) Set of example spell effects
+* `core-effects` - Set of example spell effects
 * `core-input-events` - Diku-style implementation of login flow with accounts
   and Diku-style command interpretation
     * **Warning:** Disabling this bundle is ill-advised unless you have studied
@@ -51,6 +51,8 @@ A bundle can contain any or all of the following children though it's suggested 
   What it says on the tin, commands to add to the game
 <a href="/extending/help.md">help/</a>
   Helpfiles
+<a href="/extending/effects.md">effects/</a>
+  Effects that can be applied to characters (NPCs/Players)
 <a href="/extending/input-events.md">input-events/</a>
   Input events are events that happen on the socket, this involves login and command interpreting.
   <strong>Warning:</strong> Because of input events important role it is generally not advised to load more than one
