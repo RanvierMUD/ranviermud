@@ -6,7 +6,6 @@
     player/        - Pfiles
     motd           - MOTD (screen shown at login)
   docs/            - This documentation
-  effects/         - <em>(deprecated)</em> Available effects
   resources/       - Logos and other external resources related to the Ranvier project but not the MUD itself
   src/             - Core engine code, see <a href="/core/">Core</a> for details
   test/            - Unit tests for core code
