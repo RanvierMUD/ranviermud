@@ -6,7 +6,7 @@ const TypeUtil = require('./TypeUtil');
 const Broadcastable = require('./Broadcastable');
 
 class Broadcast {
-  static at(source, message, wrapWidth, useColor, formatter) {
+  static at(source, message = '', wrapWidth = false, useColor = true, formatter = null) {
     useColor = typeof useColor === 'boolean' ? useColor : true;
     formatter = formatter || ((target, message) => message);
 
@@ -42,8 +42,26 @@ class Broadcast {
     return Reflect.has(obj, 'getBroadcastTargets');
   }
 
+  /**
+   * Render the player's prompt including any extra prompts
+   * @param {Player} player
+   * @param {object} extra     extra data to avail to the prompt string interpolator
+   * @param {number} wrapWidth
+   * @param {boolean} useColor
+   */
   static prompt(player, extra, wrapWidth, useColor) {
     Broadcast.sayAt(player, player.interpolatePrompt(player.prompt, extra), wrapWidth, useColor);
+    let needsNewline = player.extraPrompts.size > 0;
+    for (const [id, extraPrompt] of player.extraPrompts) {
+      Broadcast.sayAt(player, extraPrompt.renderer(), wrapWidth, useColor);
+      if (extraPrompt.removeOnRender) {
+        player.removePrompt(id);
+      }
+    }
+
+    if (needsNewline) {
+      Broadcast.sayAt(player);
+    }
   }
 
   /**
@@ -66,8 +84,8 @@ class Broadcast {
     const closeColor = `</${color}>`;
     let buf = openColor + leftDelim + "<bold>";
     const widthPercent = (percent / 100) * width;
-    buf += new Array(Math.ceil(widthPercent)).join(barChar) + (percent === 100 ? '' : ')');
-    buf += new Array(width - Math.floor(widthPercent)).join(fillChar);
+    buf += new Array(Math.round(widthPercent)).join(barChar) + (percent === 100 ? '' : ')');
+    buf += new Array(width - Math.round(widthPercent)).join(fillChar);
     buf += "</bold>" + rightDelim + closeColor;
     return buf;
   }

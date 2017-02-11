@@ -7,6 +7,16 @@ const Character = require('./Character');
 const Config = require('./Config');
 const QuestTracker = require('./QuestTracker');
 
+/**
+ * @property {Account} account
+ * @property {number}  experience current experience this level
+ * @property {string}  password
+ * @property {string}  prompt     default prompt string
+ * @property {net.Socket} socket
+ * @property {QuestTracker} questTracker
+ * @property {Map<string,function ()>} extraPrompts Extra prompts to render after the default prompt
+ * @property {{completed: Array, active: Array}} questData
+ */
 class Player extends Character {
   constructor(data) {
     super(data);
@@ -15,8 +25,8 @@ class Player extends Character {
     this.experience = data.experience || 0;
     this.password  = data.password;
     this.prompt = ({healthStr, energyStr, }) => `[ ${healthStr} <bold>hp</bold> -- ${energyStr} <bold>energy</bold> ]`;
+    this.extraPrompts = new Map();
     this.socket = data.socket || null;
-    this.preferences = data.preferences || new Map();
     const questData = Object.assign({
       completed: [],
       active: []
@@ -54,6 +64,24 @@ class Player extends Character {
     });
 
     return promptBuilder(promptData);
+  }
+
+  /**
+   * Add a line of text to be displayed immediately after the prompt when the prompt is displayed
+   * @param {string}      id       Unique prompt id
+   * @param {function ()} renderer Function to call to render the prompt string
+   * @param {?boolean}    removeOnRender When true prompt will remove itself once rendered
+   *    otherwise prompt will continue to be rendered until removed.
+   */
+  addPrompt(id, renderer, removeOnRender = false) {
+    this.extraPrompts.set(id, { removeOnRender, renderer });
+  }
+
+  /**
+   * @param {string} id
+   */
+  removePrompt(id) {
+    this.extraPrompts.delete(id);
   }
 
   canGo(exit) {

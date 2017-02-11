@@ -42,7 +42,7 @@ class EffectList {
         continue;
       }
 
-      if (effect.config.tickInterval) {
+      if (event === 'updateTick' && effect.config.tickInterval) {
         const sinceLastTick = Date.now() - effect.state.lastTick;
         if (sinceLastTick < effect.config.tickInterval * 1000) {
           continue;

@@ -1,6 +1,7 @@
 'use strict';
 
 const util = require('util');
+const leftPad = require('left-pad');
 
 /**
  * Auto combat module
@@ -24,6 +25,7 @@ module.exports = (srcPath) => {
             combatant.removeCombatant(this);
           }, this);
 
+          this.removePrompt('combat');
           const target = this.combatData.killedBy;
           if (target) {
             Broadcast.sayAt(this, `<bold><red>${target.name} killed you!</red></bold>`);
@@ -37,6 +39,7 @@ module.exports = (srcPath) => {
         }
 
         if (!this.isInCombat()) {
+          // Make player regenerate health while out of combat
           if (this.getAttribute('health') < this.getMaxAttribute('health')) {
             let regenEffect = state.EffectFactory.create('regen', this, { hidden: true }, { magnitude: 15 });
             if (this.addEffect(regenEffect)) {
@@ -111,30 +114,37 @@ module.exports = (srcPath) => {
         if (!this.isInCombat()) {
           // reset combat data to remove any lag
           this.combatData = {};
+          this.removePrompt('combat');
         }
 
         if (hadActions) {
+          if (this.isInCombat()) {
+            this.addPrompt('combat', () => {
+              if (!this.isInCombat()) {
+                return '';
+              }
+              // player health bar
+              const playerName = "You";
+              const targetNameLengths = [...this.combatants].map(t => t.name.length);
+              const nameWidth = Math.max(playerName.length, ...targetNameLengths);
+              const progWidth = 60 - nameWidth;
+              let currentPerc = Math.floor((this.getAttribute('health') / this.getMaxAttribute('health')) * 100);
+              let progress = Broadcast.progress(progWidth, currentPerc, "green");
+              let buf = `<bold>${leftPad(playerName, nameWidth)}</bold>: ${progress} <bold>${this.getAttribute('health')}/${this.getMaxAttribute('health')}</bold>`;
+
+              // target health bar
+              for (const target of this.combatants) {
+                let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
+                let progress = Broadcast.progress(progWidth, currentPerc, "red");
+                buf += `\r\n<bold>${leftPad(target.name, nameWidth)}</bold>: ${progress} <bold>${target.getAttribute('health')}/${target.getMaxAttribute('health')}</bold>`;
+              }
+
+              return buf;
+            });
+          }
+
           Broadcast.sayAt(this, '');
           Broadcast.prompt(this);
-
-          if (!this.isInCombat()) {
-            return;
-          }
-
-          // render health bars
-          let currentPerc = Math.floor((this.getAttribute('health') / this.getMaxAttribute('health')) * 100);
-          let progress = Broadcast.progress(50, currentPerc, "green");
-          let buf = `<bold>You</bold>: ${progress} <bold>${this.getAttribute('health')}/${this.getMaxAttribute('health')}</bold>`;
-          Broadcast.sayAt(this, buf);
-
-          for (const target of this.combatants) {
-            let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
-            let progress = Broadcast.progress(50, currentPerc, "red");
-            let buf = `<bold>${target.name}</bold>: ${progress} <bold>${target.getAttribute('health')}/${target.getMaxAttribute('health')}</bold>`;
-            Broadcast.sayAt(this, buf);
-          }
-
-          Broadcast.sayAt(this, ''); // add a blank line after health prompts
         }
       },
 
