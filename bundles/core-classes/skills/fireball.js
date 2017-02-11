@@ -39,7 +39,7 @@ module.exports = (srcPath) => {
         source: this
       });
 
-      Broadcast.sayAt(player, '<red>You shift your feet and let loose a mighty attack!</red>');
+      Broadcast.sayAt(player, '<bold>With a wave of your hand you unleash a <red>fire</red></bold><yellow>b<bold>all</bold></yellow> <bold>at your target!</bold>');
       const finalAmount = damage.commit(target);
     },
 
