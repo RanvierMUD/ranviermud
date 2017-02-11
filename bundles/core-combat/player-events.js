@@ -35,7 +35,6 @@ module.exports = (srcPath) => {
         for (const target of this.combatants) {
           target.combatData.speed = target.combatData.speed || targetSpeed;
 
-
           // player actions
           if (target.getAttribute('health') <= 0) {
 
