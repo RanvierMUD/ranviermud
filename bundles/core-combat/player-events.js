@@ -119,7 +119,7 @@ module.exports = (srcPath) => {
         }
 
         function makeAttack(attacker, defender) {
-          const amount = state.RandomUtil.range(5, 20);
+          const amount = state.RandomUtil.inRange(5, 20);
           hadActions = true;
 
           const damage = new Damage({
@@ -144,18 +144,22 @@ module.exports = (srcPath) => {
 
           const target = killer || deadEntity.combatData.killedBy;
           
-          let deathMessage = `<bold><red>You died!</red></bold>`;
           if (target) {
-            deathMessage = `<bold><red>${target.name} killed you!</red></bold>`;      
             target.emit('deathblow', deadEntity);
             if (!target.isInCombat()) {
               startRegeneration(target);
             }
           }
 
-          Broadcast.sayAt(deadEntity, deathMessage);
-          deadEntity.emit('killed', target || deadEntity);
+          const deathMessage = target ? 
+            `<bold><red>${target.name} killed you!</red></bold>` :
+            `<bold><red>You died!</red></bold>`;
 
+          if (Broadcast.isBroadcastable(deadEntity)) {
+            Broadcast.sayAt(deadEntity, deathMessage);
+          }
+
+          deadEntity.emit('killed', target || deadEntity);
         }
 
         // Make characters regenerate health while out of combat
