@@ -56,7 +56,7 @@ class EffectFactory {
     const entry = this.effects.get(id);
     let def = Object.assign({}, entry.definition);
     def.config = Object.assign(def.config, config);
-    def.state = Object.assign(def.state, state);
+    def.state = Object.assign(def.state || {}, state);
     const effect = new Effect(id, def, target);
     entry.eventManager.attach(effect);
 

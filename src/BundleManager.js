@@ -11,6 +11,8 @@ const fs = require('fs'),
     Item = require('./Item'),
     Npc = require('./Npc'),
     Room = require('./Room'),
+    Skill = require('./Skill'),
+    SkillType = require('./SkillType'),
     Helpfile = require('./Helpfile')
 ;
 
@@ -59,6 +61,7 @@ class BundleManager {
       help: bundlePath + '/help/',
       inputEvents: bundlePath + '/input-events/',
       playerEvents: bundlePath + '/player-events.js',
+      skills: bundlePath + '/skills/',
     };
 
     util.log(`LOAD: BUNDLE [${bundle}] START`);
@@ -95,6 +98,10 @@ class BundleManager {
 
     if (fs.existsSync(paths.effects)) {
       this.loadEffects(bundle, paths.effects);
+    }
+
+    if (fs.existsSync(paths.skills)) {
+      this.loadSkills(bundle, paths.skills);
     }
 
     util.log(`ENDLOAD: BUNDLE [${bundle}]`);
@@ -448,6 +455,36 @@ class BundleManager {
     }
 
     util.log(`\tENDLOAD: Effects...`);
+  }
+
+  loadSkills(bundle, skillsDir) {
+    util.log(`\tLOAD: Skills...`);
+    const files = fs.readdirSync(skillsDir);
+
+    for (const skillFile of files) {
+      const skillPath = skillsDir + skillFile;
+      if (!fs.statSync(skillPath).isFile() || !skillFile.match(/js$/)) {
+        continue;
+      }
+
+      const skillName = path.basename(skillFile, path.extname(skillFile));
+      const loader = require(skillPath);
+      let skillImport = loader(srcPath);
+      if (skillImport.run) {
+        skillImport.run = skillImport.run(this.state);
+      }
+
+      util.log(`\t\t${skillName}`);
+      const skill = new Skill(skillName, skillImport, this.state);
+
+      if (skill.type === SkillType.SKILL) {
+        this.state.SkillManager.add(skill);
+      } else {
+        this.state.SpellManager.add(skill);
+      }
+    }
+
+    util.log(`\tENDLOAD: Skills...`);
   }
 }
 

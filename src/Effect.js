@@ -36,7 +36,8 @@ class Effect extends EventEmitter {
       name: 'Unnamed Effect',
       stackable: true,
       type: 'undef',
-      ticketInterval: false
+      ticketInterval: false,
+      skill: null
     }, def.config);
 
     this.target = target;
@@ -44,8 +45,8 @@ class Effect extends EventEmitter {
     this.paused = 0;
     this.modifiers = Object.assign({
       attributes: {},
-      incomingDamage: damage => damage.finalAmount,
-      outgoingDamage: damage => damage.finalAmount,
+      incomingDamage: (damage, current) => current,
+      outgoingDamage: (damage, current) => current,
     }, def.modifiers);
 
     // internal state saved across player load e.g., stacks, amount of damage shield remaining, whatever
@@ -94,7 +95,7 @@ class Effect extends EventEmitter {
    * @return {number}
    */
   get remaining() {
-    return Math.floor((this.config.duration - this.elapsed) / 1000);
+    return this.config.duration - this.elapsed;
   }
 
   isCurrent() {
@@ -150,18 +151,18 @@ class Effect extends EventEmitter {
    * @param {Damage} damage
    * @return {Damage}
    */
-  modifyIncomingDamage(damage) {
+  modifyIncomingDamage(damage, currentAmount) {
     const modifier = this.modifiers.incomingDamage.bind(this);
-    return modifier(damage);
+    return modifier(damage, currentAmount);
   }
 
   /**
    * @param {Damage} damage
    * @return {Damage}
    */
-  modifyOutgoingDamage(damage) {
+  modifyOutgoingDamage(damage, currentAmount) {
     const modifier = this.modifiers.outgoingDamage.bind(this);
-    return modifier(damage);
+    return modifier(damage, currentAmount);
   }
 
   serialize() {
@@ -177,12 +178,13 @@ class Effect extends EventEmitter {
     return {
       id: this.id,
       elapsed: this.elapsed,
+      skill: this.skill && this.skill.id,
       state,
       config,
     };
   }
 
-  hydrate(data) {
+  hydrate(state, data) {
     data.config.duration = data.config.duration === 'inf' ? Infinity : data.config.duration;
     this.config = data.config;
 
@@ -194,6 +196,10 @@ class Effect extends EventEmitter {
       data.state.lastTick = Date.now() - data.state.lastTick;
     }
     this.state = data.state;
+
+    if (data.skill) {
+      this.skill = state.SkillManager.get(data.skill);
+    }
   }
 }
 

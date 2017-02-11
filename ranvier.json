@@ -11,6 +11,7 @@
     "core-player-events",
     "core-skills",
     "core-combat",
+    "core-classes",
     "debug-commands"
   ],
 

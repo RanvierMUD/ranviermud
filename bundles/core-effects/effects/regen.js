@@ -16,8 +16,7 @@ module.exports = srcPath => {
     },
     state: {
       magnitude: 10,
-      interval: 3,
-      lastTick: -Infinity // always tick when first activated
+      interval: 3
     },
     listeners: {
       effectedAdded: function () {

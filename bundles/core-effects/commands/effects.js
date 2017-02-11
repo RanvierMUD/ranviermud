@@ -1,5 +1,6 @@
 'use strict';
 const util  = require('util');
+const humanize = (sec) => { return require('humanize-duration')(sec, { round: true }); };
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
@@ -22,7 +23,7 @@ module.exports = (srcPath) => {
         if (effect.duration === Infinity) {
           Broadcast.sayAt(player, "Permanent");
         } else {
-          Broadcast.sayAt(player, ` ${effect.remaining} seconds remaining`);
+          Broadcast.sayAt(player, ` ${humanize(effect.remaining)} remaining`);
         }
         Broadcast.sayAt(player, "\t" + effect.description);
       }

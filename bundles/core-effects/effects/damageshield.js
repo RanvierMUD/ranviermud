@@ -11,7 +11,6 @@ module.exports = srcPath => {
     config: {
       name: 'Damage Shield',
       description: "You are temporarily protected from damage!",
-      duration: 30 * 1000,
       stackable: false,
       type: 'shield',
     },
@@ -22,22 +21,21 @@ module.exports = srcPath => {
     },
     modifiers: {
       outgoingDamage: damage => damage.finalAmount,
-      incomingDamage: function (damage) {
-        if (damage instanceof Heal) {
-          return damage.finalAmount;
+      incomingDamage: function (damage, currentAmount) {
+        if (damage instanceof Heal || damage.attribute !== 'health') {
+          return currentAmount;
         }
 
-        let amount = damage.finalAmount;
-        const absorbed = Math.min(this.state.remaining, amount);
+        const absorbed = Math.min(this.state.remaining, currentAmount);
         this.state.remaining -= absorbed;
-        amount -= absorbed;
+        currentAmount -= absorbed;
 
         Broadcast.sayAt(this.target, `Your damage shield absorbs <bold>${absorbed}</bold> damage!`);
         if (!this.state.remaining) {
           this.remove();
         }
 
-        return amount;
+        return currentAmount;
       }
     },
     listeners: {
@@ -47,7 +45,7 @@ module.exports = srcPath => {
         if (this.target instanceof Player) {
           this.target.addPrompt("damageshield", () => {
             const width = 60 - "Shield".length;
-            const remaining = `<bold>${this.state.remaining}/${this.state.magnitude}</bold>`
+            const remaining = `<bold>${this.state.remaining}/${this.state.magnitude}</bold>`;
             return "<bold>Shield:</bold> " + Broadcast.progress(width, (this.state.remaining / this.state.magnitude) * 100, "cyan") + ` ${remaining}`;
           });
         }

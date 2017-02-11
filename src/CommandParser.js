@@ -106,8 +106,17 @@ class CommandParser {
       };
     }
 
-    // TODO check skills
-    return null;
+    // finally check channels
+    found = state.SkillManager.find(command);
+    if (found) {
+      return {
+        type: CommandType.SKILL,
+        skill: found,
+        args
+      };
+    }
+
+    throw new InvalidCommandError();
   }
 
   /**

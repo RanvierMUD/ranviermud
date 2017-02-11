@@ -7,7 +7,7 @@ module.exports = (srcPath) => {
   return  {
     listeners: {
       /**
-       * Handle player gaining experience/leveling up
+       * Handle player gaining experience
        * @param {number} amount Exp gained
        */
       experience: state => function (amount) {
@@ -17,7 +17,7 @@ module.exports = (srcPath) => {
 
         // level up, currently wraps experience if they gain more than needed for multiple levels
         if (this.experience + amount > totalTnl) {
-          Broadcast.sayAt(this, '                                   <bold><blue>!Level Up!</blue></bold>                                   ');
+          Broadcast.sayAt(this, '                                   <bold><blue>!Level Up!</blue></bold>');
           Broadcast.sayAt(this, '[<bold><blue>' + (new Array(77).join('#')) + '|]</blue></bold>');
 
           let nextTnl = totalTnl;
@@ -25,6 +25,7 @@ module.exports = (srcPath) => {
             amount = (this.experience + amount) - nextTnl;
             this.experience = amount;
             this.level++;
+            this.emit('level');
             nextTnl = LevelUtil.expToLevel(this.level + 1);
             Broadcast.sayAt(this, `<blue>You are now level <bold>${this.level}</bold>!</blue>`);
           }

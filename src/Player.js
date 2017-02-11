@@ -23,6 +23,7 @@ class Player extends Character {
 
     this.account = data.account || null;
     this.experience = data.experience || 0;
+    this.playerClass = null;
     this.password  = data.password;
     this.prompt = ({healthStr, energyStr, }) => `[ ${healthStr} <bold>hp</bold> -- ${energyStr} <bold>energy</bold> ]`;
     this.extraPrompts = new Map();
@@ -156,6 +157,7 @@ class Player extends Character {
   serialize() {
 
     let data = Object.assign(super.serialize(), {
+      playerClass: this.playerClass && this.playerClass.id,
       account: this.account.name,
       experience: this.experience,
       inventory: this.inventory && this.inventory.serialize(),

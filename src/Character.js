@@ -123,6 +123,7 @@ class Character extends EventEmitter
 
     this.emit('combatStart', target);
     this.combatants.add(target);
+    target.addCombatant(this);
   }
 
   /**
@@ -134,6 +135,7 @@ class Character extends EventEmitter
     }
 
     this.combatants.delete(target);
+    target.removeCombatant(this);
   }
 
   /**

@@ -125,7 +125,7 @@ class EffectList {
     let amount = damage.finalAmount;
 
     for (const effect of this.effects) {
-      amount = effect.modifyIncomingDamage(damage);
+      amount = effect.modifyIncomingDamage(damage, amount);
     }
 
     return Math.max(amount, 0) || 0;
@@ -141,7 +141,7 @@ class EffectList {
     let amount = damage.finalAmount;
 
     for (const effect of this.effects) {
-      amount = effect.modifyOutgoingDamage(damage);
+      amount = effect.modifyOutgoingDamage(damage, amount);
     }
 
     return Math.max(amount, 0) || 0;
@@ -157,7 +157,7 @@ class EffectList {
     this.effects = new Set();
     for (const newEffect of effects) {
       const effect = state.EffectFactory.create(newEffect.id, this.target);
-      effect.hydrate(newEffect);
+      effect.hydrate(state, newEffect);
       this.add(effect);
     }
   }

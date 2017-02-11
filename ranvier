@@ -36,7 +36,9 @@ const ItemManager = require('./src/ItemManager');
 const MobFactory = require('./src/MobFactory');
 const PlayerManager = require('./src/PlayerManager');
 const QuestFactory = require('./src/QuestFactory');
+const RandomUtil = require('./src/RandomUtil');
 const RoomManager = require('./src/RoomManager');
+const SkillManager = require('./src/SkillManager');
 const Telnet = require('./src/Telnet');
 
   // third party
@@ -79,38 +81,26 @@ function init(restartServer) {
   restartServer = typeof restartServer === 'undefined' ? true : restartServer;
 
   GameState = {
-    // Stores all logged in accounts
     AccountManager: new AccountManager(),
-    // Stores all loaded areas
     AreaManager: new AreaManager(),
-    // Stores all loaded commands
-    CommandManager: new CommandManager(),
-    // Stores all loaded channels
     ChannelManager: new ChannelManager(),
-    // Stores all loaded spells, just kidding, it stores input (socket) events
+    CommandManager: new CommandManager(),
+    Config, // All global server settings like default respawn time, save interval, port, what bundles to load, etc.
+    EffectFactory: new EffectFactory(),
+    HelpManager: new HelpManager(),
     InputEventManager: new EventManager(),
-    // Helper for creating/cloning items
-    ItemFactory: new ItemFactory(),
-    // Stores all loaded items
-    ItemManager: new ItemManager(),
-    // Helper for creating/cloning Npcs (mobs)
-    MobFactory: new MobFactory(),
-    // Store behavior events for various entities
-    MobBehaviorManager: new BehaviorManager(),
     ItemBehaviorManager: new BehaviorManager(),
-    RoomBehaviorManager: new BehaviorManager(),
-    // Stores all connected players
+    ItemFactory: new ItemFactory(),
+    ItemManager: new ItemManager(),
+    MobBehaviorManager: new BehaviorManager(),
+    MobFactory: new MobFactory(),
     PlayerManager: new PlayerManager(),
     QuestFactory: new QuestFactory(),
-    // Stores all loaded rooms across all areas ever
+    RoomBehaviorManager: new BehaviorManager(),
+    RandomUtil, // randomutil is part of state and not just an include incase seeding has to be done
     RoomManager: new RoomManager(),
-    // Stores all loaded helpfiles
-    HelpManager: new HelpManager(),
-    // Store all effect types
-    EffectFactory: new EffectFactory(),
-
-    // All global server settings like default respawn time, save interval, port, what bundles to load, etc.
-    Config,
+    SkillManager: new SkillManager(),
+    SpellManager: new SkillManager(),
   };
 
   // Setup bundlemanager

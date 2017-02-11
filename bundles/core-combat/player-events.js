@@ -50,11 +50,10 @@ module.exports = (srcPath) => {
         }
 
         // TODO: For now player/enemy speed is a fixed 2.5 seconds, base it off weapon speed later
-        const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
         const playerSpeed = 1.5;
         const targetSpeed = 2;
-        const playerDamage = rand(5, 20);
-        const targetDamage = rand(5, 20);
+        const playerDamage = state.RandomUtil.range(5, 20);
+        const targetDamage = state.RandomUtil.range(5, 20);
 
         let hadActions = false;
         for (const target of this.combatants) {
@@ -166,9 +165,9 @@ module.exports = (srcPath) => {
 
         let buf = '';
         if (damage.source) {
-          buf = `Your <bold>${damage.source.name}</bold> hit`
+          buf = `Your <bold>${damage.source.name}</bold> hit`;
         } else {
-          buf = "You hit"
+          buf = "You hit";
         }
 
         buf += ` <bold>${target.name}</bold> for <bold>${damage.finalAmount}</bold> damage.`;
@@ -186,17 +185,18 @@ module.exports = (srcPath) => {
 
         let buf = '';
         if (heal.source) {
-          buf = `Your <bold>${heal.source.name}</bold> healed`
+          buf = `Your <bold>${heal.source.name}</bold> healed`;
         } else {
-          buf = "You heal"
+          buf = "You heal";
         }
 
-        buf += ` <bold>${target.name}</bold> for <bold><green>${heal.finalAmount}</green></bold> points`;
+        buf += '<bold> ' + (target === this ? 'You' : `${target.name}`);
+        buf += ` <bold><green>${heal.finalAmount}</green></bold> ${heal.attribute}`;
         Broadcast.sayAt(this, buf);
       },
 
       damaged: state => function (damage) {
-        if (damage.hidden) {
+        if (damage.hidden || damage.attribute !== 'health') {
           return;
         }
 
@@ -206,7 +206,7 @@ module.exports = (srcPath) => {
         }
 
         if (damage.source) {
-          buf += (damage.attacker ? "'s " : "") + `<bold>${damage.source.name}</bold>`
+          buf += (damage.attacker ? "'s " : "") + `<bold>${damage.source.name}</bold>`;
         } else if (!damage.attacker) {
           buf += "Something";
         }

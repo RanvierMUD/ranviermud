@@ -39,10 +39,14 @@ module.exports = (src) => {
               result.channel.send(state, player, result.args);
               break;
             }
+            case CommandTypes.SKILL: {
+              result.skill.execute(result.args, player);
+              break;
+            }
           }
         } catch (e) {
           if (e instanceof InvalidCommandError) {
-            player.say('That is not a valid command');
+            Broadcast.sayAt(player, "Huh?");
           }
           util.log(`WARNING: Player tried non-existent command '${data}'`);
           console.log(e);
