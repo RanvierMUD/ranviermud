@@ -108,7 +108,8 @@ class Player extends Character {
       this.equipment = new Map();
       for (const slot in eqDefs) {
         const itemDef = eqDefs[slot];
-        let newItem = state.ItemFactory.create(state.AreaManager.getArea(itemDef.area), itemDef);
+        let newItem = state.ItemFactory.create(state.AreaManager.getArea(itemDef.area), itemDef.entityReference);
+        newItem.inventory = itemDef.inventory;
         newItem.hydrate(state);
         state.ItemManager.add(newItem);
         newItem.isEquipped = true;
