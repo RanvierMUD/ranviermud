@@ -81,9 +81,12 @@ module.exports = (srcPath) => {
 
           if (this.combatData.lag <= 0) {
             hadActions = true;
-            const damage = new Damage('health', playerDamage, this, "physical", "weapon");
+            const damage = new Damage({
+              attribute: "health",
+              amount: playerDamage,
+              attacker: this
+            });
             damage.commit(target);
-            Broadcast.sayAt(this, `You strike <bold>${target.name}</bold> for <bold>${damage.finalAmount}</bold> damage`);
 
             this.combatData.lag = playerSpeed * 1000;
           } else {
@@ -95,9 +98,12 @@ module.exports = (srcPath) => {
           // target actions
           if (target.combatData.lag <= 0) {
             hadActions = true;
-            const damage = new Damage('health', targetDamage, target, "physical", "weapon");
+            const damage = new Damage({
+              attribute: "health",
+              amount: targetDamage,
+              attacker: target
+            });
             damage.commit(this);
-            Broadcast.sayAt(this, `<bold>${target.name}</bold> hit you for <bold><red>${damage.finalAmount}</red></bold> damage`);
             if (this.getAttribute('health') <= 0) {
               this.combatData.killedBy = target;
               break;
@@ -149,10 +155,71 @@ module.exports = (srcPath) => {
       },
 
       /**
-       * Player was killed
+       * When the player hits a target
+       * @param {Damage} damage
        * @param {Character} target
        */
-      killed: state => function (target) {
+      hit: state => function (damage, target) {
+        if (damage.hidden) {
+          return;
+        }
+
+        let buf = '';
+        if (damage.source) {
+          buf = `Your <bold>${damage.source.name}</bold> hit`
+        } else {
+          buf = "You hit"
+        }
+
+        buf += ` <bold>${target.name}</bold> for <bold>${damage.finalAmount}</bold> damage.`;
+        Broadcast.sayAt(this, buf);
+      },
+
+      /**
+       * @param {Heal} heal
+       * @param {Character} target
+       */
+      heal: state => function (heal, target) {
+        if (heal.hidden) {
+          return;
+        }
+
+        let buf = '';
+        if (heal.source) {
+          buf = `Your <bold>${heal.source.name}</bold> healed`
+        } else {
+          buf = "You heal"
+        }
+
+        buf += ` <bold>${target.name}</bold> for <bold><green>${heal.finalAmount}</green></bold> points`;
+        Broadcast.sayAt(this, buf);
+      },
+
+      damaged: state => function (damage) {
+        if (damage.hidden) {
+          return;
+        }
+
+        let buf = '';
+        if (damage.attacker) {
+          buf = `<bold>${damage.attacker.name}</bold>`;
+        }
+
+        if (damage.source) {
+          buf += (damage.attacker ? "'s " : "") + `<bold>${damage.source.name}</bold>`
+        } else if (!damage.attacker) {
+          buf += "Something";
+        }
+
+        buf += ` hit <bold>You</bold> for <bold><red>${damage.finalAmount}</red></bold> damage`;
+        Broadcast.sayAt(this, buf);
+      },
+
+      /**
+       * Player was killed
+       * @param {Character} killer
+       */
+      killed: state => function (killer) {
         Broadcast.sayAt(this, "Whoops, that sucked!");
         Broadcast.prompt(this);
       },

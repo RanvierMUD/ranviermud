@@ -16,12 +16,30 @@ class Damage {
    * @param {?string} type Damage type e.g., physical, fire, etc.
    * @param {?string} source A damage source identifier. e.g., "skill:kick", "weapon", etc.
    */
-  constructor(attribute, amount, attacker = null, type = "physical", source = null) {
+  constructor(config) {
+    const {
+      attribute,
+      amount = null,
+      attacker = null,
+      type = "physical",
+      source = null,
+      hidden = false
+    } = config;
+
+    if (amount === null) {
+      throw new TypeError("Damage amount null");
+    }
+
+    if (attribute === null) {
+      throw new TypeError("Damage attribute null");
+    }
+
     this.attribute = attribute;
     this.type = type;
     this.amount = this.finalAmount = amount;
     this.source = source;
     this.attacker = attacker;
+    this.hidden = hidden;
   }
 
   /**
@@ -43,6 +61,9 @@ class Damage {
   commit(target) {
     this.finalAmount = this.evaluate(target);
     target.lowerAttribute(this.attribute, this.finalAmount);
+    if (this.attacker) {
+      this.attacker.emit('hit', this, target);
+    }
     target.emit('damaged', this);
   }
 }

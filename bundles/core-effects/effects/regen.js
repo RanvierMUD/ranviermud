@@ -33,7 +33,13 @@ module.exports = srcPath => {
           return this.remove();
         }
 
-        const heal = new Heal('health', this.state.magnitude, null, "physical", "effect:" + this.config.type);
+        const heal = new Heal({
+          attribute: "health",
+          amount: this.state.magnitude,
+          attacker: this.target,
+          source: this,
+          hidden: true,
+        });
         heal.commit(this.target);
       },
 
