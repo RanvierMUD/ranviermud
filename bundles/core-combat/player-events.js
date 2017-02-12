@@ -10,6 +10,7 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const LevelUtil = require(srcPath + 'LevelUtil');
   const Damage = require(srcPath + 'Damage');
+  const Player = require(srcPath + 'Player');
 
   return  {
     listeners: {
@@ -137,12 +138,12 @@ module.exports = (srcPath) => {
             combatant.removeCombatant(deadEntity);
           }, deadEntity);
 
-          if (Reflect.has(deadEntity, 'removePrompt')) {
+          if (deadEntity instanceof Player) {
             deadEntity.removePrompt('combat');
           }
 
           const target = killer || deadEntity.combatData.killedBy;
-          
+
           if (target) {
             target.emit('deathblow', deadEntity);
             if (!target.isInCombat()) {
@@ -150,7 +151,7 @@ module.exports = (srcPath) => {
             }
           }
 
-          const deathMessage = target ? 
+          const deathMessage = target ?
             `<bold><red>${target.name} killed you!</red></bold>` :
             `<bold><red>You died!</red></bold>`;
 
