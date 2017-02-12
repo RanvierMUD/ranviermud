@@ -1,4 +1,5 @@
 'use strict';
+
 const sprintf = require('sprintf');
 
 /**
@@ -6,7 +7,6 @@ const sprintf = require('sprintf');
  */
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
 
   return {
     aliases: [ 'pending' ],

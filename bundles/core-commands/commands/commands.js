@@ -5,7 +5,6 @@ const sprintf = require('sprintf');
 module.exports = (srcPath) => {
   
   const Broadcast = require(srcPath + 'Broadcast');
-  const CommandType = require(srcPath + 'CommandType');
 
   return {
     aliases: ['channels'],
@@ -16,7 +15,7 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, "<bold><white>===============================================</bold></white>");
 
       let i = 0;
-      for (let [ name , command ] of state.CommandManager.commands) {
+      for (let [ name ] of state.CommandManager.commands) {
         // hide "private" commands
         if (name[0] === '_') {
           continue;
@@ -38,7 +37,7 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, "<bold><white>===============================================</bold></white>");
 
       i = 0;
-      for (let [ name , command ] of state.ChannelManager.channels) {
+      for (let [ name ] of state.ChannelManager.channels) {
         // hide "private" commands
         if (name[0] === '_') {
           continue;

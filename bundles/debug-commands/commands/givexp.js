@@ -1,9 +1,7 @@
 'use strict';
-const util  = require('util');
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
 
   return {
     command : (state) => (args, player) => {
@@ -22,4 +20,3 @@ module.exports = (srcPath) => {
     }
   };
 };
-

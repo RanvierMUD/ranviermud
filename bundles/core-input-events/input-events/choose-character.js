@@ -34,7 +34,6 @@ module.exports = (srcPath) => {
 
 
       let options  = [];
-      let selected = '';
 
       // Configure account options menu
       if (canAddCharacter) {

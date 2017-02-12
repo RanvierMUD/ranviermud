@@ -1,9 +1,7 @@
 'use strict';
-const util  = require('util');
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
   const SkillFlag = require(srcPath + 'SkillFlag');
 
   return {
@@ -25,4 +23,3 @@ module.exports = (srcPath) => {
     }
   };
 };
-

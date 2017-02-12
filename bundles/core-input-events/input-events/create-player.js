@@ -1,15 +1,11 @@
 'use strict';
 
-
-const util = require('util');
-
 /**
  * Player creation event
  */
 module.exports = (srcPath) => {
   const EventUtil = require(srcPath + 'EventUtil');
   const Player = require(srcPath + 'Player');
-  const Broadcast = require(srcPath + 'Broadcast');
 
   return {
     event : (state) => (socket, args) => {
@@ -43,4 +39,3 @@ module.exports = (srcPath) => {
     }
   };
 };
-

@@ -1,6 +1,4 @@
 'use strict';
-const util  = require('util');
-
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
@@ -86,7 +84,7 @@ module.exports = (srcPath) => {
       }
 
       for (let i in active) {
-        const [qid, quest] = active[i];
+        const [, quest] = active[i];
         Broadcast.sayAt(player, (parseInt(i, 10) + 1) + '. <bold><yellow>' + quest.getProgress().display + '</yellow></bold>');
         if (quest.config.npc) {
           const npc = state.MobFactory.getDefinition(quest.config.npc);
@@ -105,7 +103,7 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, "Invalid quest, use 'quest log' to see your active quests.");
       }
 
-      const [ qid, quest ] = active[targetQuest];
+      const [, quest ] = active[targetQuest];
 
       if (quest.getProgress().percent < 100) {
         Broadcast.sayAt(player, `${quest.config.title} isn't complete yet.`);

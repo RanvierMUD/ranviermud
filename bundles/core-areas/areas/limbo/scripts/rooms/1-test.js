@@ -2,7 +2,6 @@
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const util = require('util');
 
   return  {
     listeners: {

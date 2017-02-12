@@ -1,7 +1,5 @@
 'use strict';
 
-const util = require('util');
-
 /**
  * Implementation effect for second wind skill
  */

@@ -1,5 +1,4 @@
 'use strict';
-const util  = require('util');
 
 /**
  * Move player in a given direction from their current room
@@ -8,8 +7,6 @@ const util  = require('util');
  * @return {boolean} False if the exit is inaccessible.
  */
 module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
-
   return {
     aliases: [ "go", "walk" ],
     command: (state) => (exit, player) => {

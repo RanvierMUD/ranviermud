@@ -1,5 +1,4 @@
 'use strict';
-const util  = require('util');
 const humanize = (sec) => { return require('humanize-duration')(sec, { round: true }); };
 
 module.exports = (srcPath) => {

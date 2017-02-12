@@ -5,8 +5,6 @@
  */
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const Damage = require(srcPath + 'Damage');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
   const SkillType = require(srcPath + 'SkillType');
 
   // config placed here just for easy copy/paste of this skill later on

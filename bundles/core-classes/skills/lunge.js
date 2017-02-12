@@ -6,7 +6,6 @@
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Damage = require(srcPath + 'Damage');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
   const SkillType = require(srcPath + 'SkillType');
 
   const damagePercent = 500;
@@ -22,7 +21,7 @@ module.exports = (srcPath) => {
     requiresTarget: true,
     resource: {
       attribute: 'energy',
-      cost: 20
+      cost: energyCost,
     },
     cooldown: 5,
 
@@ -40,7 +39,7 @@ module.exports = (srcPath) => {
       });
 
       Broadcast.sayAt(player, '<red>You shift your feet and let loose a mighty attack!</red>');
-      const finalAmount = damage.commit(target);
+      damage.commit(target);
     },
 
     info: (player) => {

@@ -55,7 +55,7 @@ class FetchQuest extends Quest {
     // this fetch quest by default removes all the quest items from the player inv
     if (this.config.removeItem) {
       for (let i = 0; i < this.config.targetCount; i++) {
-        for (const [uuid, item] of this.player.inventory) {
+        for (const [, item] of this.player.inventory) {
           if (item.entityReference === this.config.targetItem) {
             this.player.removeItem(item);
           }

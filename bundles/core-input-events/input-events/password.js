@@ -1,15 +1,9 @@
 'use strict';
 
-const bcrypt = require('bcryptjs');
-
 /**
  * Account password event
  */
 module.exports = (srcPath) => {
-  const Data = require(srcPath + 'Data');
-  const Account = require(srcPath + 'Account');
-  const Broadcast = require(srcPath + 'Broadcast');
-
   let passwordAttempts = {};
   const maxFailedAttempts = 2;
 

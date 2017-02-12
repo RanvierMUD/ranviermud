@@ -94,7 +94,7 @@ module.exports = (srcPath) => {
 
       Broadcast.sayAt(player, "Contents:");
 
-      for (const [ uuid, item ] of entity.inventory) {
+      for (const [, item ] of entity.inventory) {
         Broadcast.sayAt(player, "  " + item.name);
       }
     }

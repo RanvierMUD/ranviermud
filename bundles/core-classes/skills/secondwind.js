@@ -4,9 +4,6 @@
  * Basic warrior passive
  */
 module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
-  const Heal = require(srcPath + 'Heal');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
   const SkillType = require(srcPath + 'SkillType');
   const SkillFlag = require(srcPath + 'SkillFlag');
 

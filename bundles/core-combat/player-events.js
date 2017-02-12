@@ -1,6 +1,5 @@
 'use strict';
 
-const util = require('util');
 const leftPad = require('left-pad');
 
 /**
