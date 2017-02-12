@@ -51,6 +51,7 @@ module.exports = (srcPath) => {
             }
             target.room.addNpc(newNpc);
             target.emit('spawn');
+            target.room.area.removeNpc(target);
             continue;
           }
 
