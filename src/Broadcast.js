@@ -19,6 +19,10 @@ class Broadcast {
     const targets = source.getBroadcastTargets();
     targets.forEach(target => {
       if (target.socket && target.socket.writable) {
+        if (target.socket._prompted) {
+          target.socket.write('\r\n');
+          target.socket._prompted = false;
+        }
         target.socket.write(ansi.parse(formatter(target, message)));
       }
     });
@@ -60,8 +64,10 @@ class Broadcast {
     }
 
     if (needsNewline) {
-      Broadcast.sayAt(player);
+      Broadcast.at(player, '> ');
     }
+
+    player.socket._prompted = true;
   }
 
   /**

@@ -47,9 +47,10 @@ module.exports = (src) => {
         } catch (e) {
           if (e instanceof InvalidCommandError) {
             Broadcast.sayAt(player, "Huh?");
+          } else {
+            console.log(e);
           }
           util.log(`WARNING: Player tried non-existent command '${data}'`);
-          console.log(e);
         }
 
         Broadcast.prompt(player);

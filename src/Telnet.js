@@ -183,11 +183,12 @@ class TelnetStream extends EventEmitter
       // so just swallow everything inside an IAC sequence
       // i += (number of bytes including IAC)
       const cmd = inputbuf[i + 1];
+      const opt = inputbuf[i + 2];
       switch (cmd) {
         case WILL:
         case WONT:
         case DO:
-          this.telnetCommand(WONT, inputbuf[i + 2]);
+          this.telnetCommand(WONT, opt);
           /* falls through */
         case DONT:
           i += 3;
