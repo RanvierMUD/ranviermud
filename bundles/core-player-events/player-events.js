@@ -1,11 +1,27 @@
 'use strict';
 
+const sprintf = require('sprintf');
+
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const LevelUtil = require(srcPath + 'LevelUtil');
 
   return  {
     listeners: {
+      commandQueued: state => function (commandIndex) {
+        const command = this.commandQueue.queue[commandIndex];
+        const ttr = sprintf('%.1f', this.commandQueue.getTimeTilRun(commandIndex));
+        Broadcast.sayAt(this, `<bold><yellow>Executing</yellow> '<white>${command.label}</white>' <yellow>in</yellow> <white>${ttr}</white> seconds.`);
+      },
+
+      updateTick: state => function () {
+        if (this.commandQueue.hasPending && this.commandQueue.lagRemaining <= 0) {
+          Broadcast.sayAt(this);
+          this.commandQueue.execute();
+          Broadcast.prompt(this);
+        }
+      },
+
       /**
        * Handle player gaining experience
        * @param {number} amount Exp gained

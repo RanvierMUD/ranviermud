@@ -56,6 +56,9 @@ Ranvier configuration is stored in the `ranvier.json` file in the root of the pr
 `defaultAttributes` _`object`_ 
 :    See [`ranvier.json`](https://github.com/shawncplus/ranviermud/blob/staging/ranvier.json) for defaults. These are the starting attributes (health, mana, strength, etc.) that are assigned to characters upon creation
 
+`skillLag` _`number`_
+:    Defuault milleconds of lag to apply after a skill is used before they can use another skill. Can be configured per skill
+
 ## Adding Content
 
 To begin adding content you should first have an understanding of the [Project

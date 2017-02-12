@@ -3,6 +3,7 @@
 const util = require('util');
 const Attributes = require('./Attributes');
 const Character = require('./Character');
+const CommandQueue = require('./CommandQueue');
 const Config = require('./Config');
 const Data = require('./Data');
 const QuestTracker = require('./QuestTracker');
@@ -36,6 +37,16 @@ class Player extends Character {
     }, data.quests);
 
     this.questTracker = new QuestTracker(this, questData.active, questData.completed);
+
+    this.commandQueue = new CommandQueue();
+  }
+
+  /**
+   * @see CommandQueue::enqueue
+   */
+  queueCommand(executable, lag) {
+    const index = this.commandQueue.enqueue(executable, lag);
+    this.emit('commandQueued', index);
   }
 
   /**

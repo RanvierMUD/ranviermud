@@ -19,7 +19,10 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, "No such spell.");
       }
 
-      spell.execute(targetArgs || "", player);
+      player.queueCommand({
+        execute: _ => spell.execute(targetArgs || "", player),
+        label: `cast ${args}`,
+      }, spell.lag || state.Config.get('skillLag') || 1000);
     }
   };
 };

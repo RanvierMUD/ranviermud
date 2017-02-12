@@ -106,7 +106,7 @@ module.exports = (srcPath) => {
               // Set up helper functions for health-bar-building.
               const getHealthPercentage = entity => Math.floor((entity.getAttribute('health') / entity.getMaxAttribute('health')) * 100);
               const formatProgressBar = (name, progress, entity) =>
-                `<bold>${leftPad(name, nameWidth)}</bold>: ${progress} <bold>${entity.getAttribute('health')}/${entity.getMaxAttribute('health')}</bold>`
+                `<bold>${leftPad(name, nameWidth)}</bold>: ${progress} <bold>${entity.getAttribute('health')}/${entity.getMaxAttribute('health')}</bold>`;
 
               // Build player health bar.
               let currentPerc = getHealthPercentage(this);

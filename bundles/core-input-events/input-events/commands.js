@@ -31,15 +31,22 @@ module.exports = (src) => {
 
           switch (result.type) {
             case CommandTypes.COMMAND: {
+              // commands have no lag and are not queued, just immediately execute them
               result.command.execute(result.args, player);
               break;
             }
             case CommandTypes.CHANNEL: {
+              // same with channels
               result.channel.send(state, player, result.args);
               break;
             }
             case CommandTypes.SKILL: {
-              result.skill.execute(result.args, player);
+              // See bundles/core-player-events/player-events.js commandQueued and updateTick for when these
+              // actually get executed
+              player.queueCommand({
+                execute: _ => result.skill.execute(result.args, player),
+                label: data,
+              }, result.skill.lag || state.Config.get('skillLag') || 1000);
               break;
             }
           }
