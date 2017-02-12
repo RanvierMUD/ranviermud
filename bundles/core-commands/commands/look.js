@@ -56,7 +56,6 @@ module.exports = (srcPath) => {
     Broadcast.at(player, '[<yellow><bold>Exits</yellow></bold>: ');
       Broadcast.at(player, Array.from(room.exits).map(ex => ex.direction).join(' '));
       Broadcast.sayAt(player, ']');
-      Broadcast.sayAt(player, '');
   }
 
   function lookEntity(player, args) {
@@ -98,8 +97,6 @@ module.exports = (srcPath) => {
       for (const [ uuid, item ] of entity.inventory) {
         Broadcast.sayAt(player, "  " + item.name);
       }
-
-      Broadcast.sayAt(player, '');
     }
   }
 

@@ -11,8 +11,11 @@ const WONT    = 252;
 const WILL    = 251;
 const SB      = 250;
 const SE      = 240;
+const GA      = 249;
+const EOR     = 239;
 
 const OPT_ECHO = 1;
+const OPT_EOR = 25;
 
 /**
  * The following is an intentionally dismissive telnet parser,
@@ -29,6 +32,7 @@ class TelnetStream extends EventEmitter
     this.stream = null;
     this.maxInputLength = opts.maxInputLength || 512;
     this.echoing = true;
+    this.gaMode = null;
   }
 
   get readable () {
@@ -112,6 +116,14 @@ class TelnetStream extends EventEmitter
     this.telnetCommand(this.echoing ? WONT : WILL, OPT_ECHO);
   }
 
+  goAhead() {
+    if (!this.gaMode) {
+      return;
+    }
+
+    this.stream.write(new Buffer([IAC, this.gaMode]));
+  }
+
   attach (connection) {
     this.stream = connection;
     let inputbuf = new Buffer(this.maxInputLength);
@@ -185,12 +197,28 @@ class TelnetStream extends EventEmitter
       const cmd = inputbuf[i + 1];
       const opt = inputbuf[i + 2];
       switch (cmd) {
-        case WILL:
-        case WONT:
         case DO:
-          this.telnetCommand(WONT, opt);
-          /* falls through */
+          switch (opt) {
+            case OPT_EOR:
+              this.gaMode = EOR;
+              break;
+            default:
+              this.telnetCommand(WONT, opt);
+              break;
+          }
+          i += 3;
+          break;
         case DONT:
+          switch (opt) {
+            case OPT_EOR:
+              this.gaMode = GA;
+              break;
+          }
+          i += 3;
+          break;
+        case WILL:
+          /* falls through */
+        case WONT:
           i += 3;
           break;
         case SB:
@@ -224,6 +252,7 @@ class TelnetServer
       connection.fresh = true;
       var stream = new TelnetStream(streamOpts);
       stream.attach(connection);
+      stream.telnetCommand(WILL, OPT_EOR);
       this.netServer.emit('connected', stream);
     });
 

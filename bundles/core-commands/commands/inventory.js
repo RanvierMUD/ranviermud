@@ -17,8 +17,6 @@ module.exports = (srcPath) => {
       for (const [ uuid, item ] of player.inventory) {
         Broadcast.sayAt(player, item.name);
       }
-
-      Broadcast.sayAt(player, '');
     }
   };
 };

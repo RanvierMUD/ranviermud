@@ -18,7 +18,6 @@ module.exports = (src) => {
           player.socket.emit('commands', player);
         }
         data = data.toString().trim();
-        Broadcast.sayAt(player, '');
 
         if (!data.length) {
           return loop();

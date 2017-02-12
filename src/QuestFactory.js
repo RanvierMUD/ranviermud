@@ -46,7 +46,6 @@ class QuestFactory {
         Broadcast.sayAt(player, (new Array(80)).join('-'));
         Broadcast.sayAt(player, `<bold><yellow>${instance.config.desc}</yellow></bold>`);
       }
-      Broadcast.sayAt(player, '');
     });
 
     instance.on('progress', (progress) => {

@@ -16,7 +16,6 @@ module.exports = (srcPath) => {
       });
 
       Broadcast.sayAt(player, numPlayers + ' total');
-      Broadcast.sayAt(player, '');
     }
   };
 };

@@ -42,8 +42,6 @@ module.exports = (srcPath) => {
           Broadcast.sayAt(player, `[<bold><yellow>${symbol}</yellow></bold>] - ${displayIndex}. ${quest.config.title}`);
         }
       }
-
-      Broadcast.sayAt(player, '');
     }
 
     static start(state, player, options) {

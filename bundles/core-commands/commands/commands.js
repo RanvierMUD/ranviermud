@@ -24,16 +24,16 @@ module.exports = (srcPath) => {
 
         Broadcast.at(player, sprintf("%-20s", name));
         if (++i % 3 === 0) {
-          Broadcast.sayAt(player, '');
+          Broadcast.sayAt(player);
         }
       }
       // append another line if need be
       if ((i - 1) % 3 !== 0) {
-        Broadcast.sayAt(player, '');
+        Broadcast.sayAt(player);
       }
 
       // channels
-      Broadcast.sayAt(player, '');
+      Broadcast.sayAt(player);
       Broadcast.sayAt(player, "<bold><white>                  Channels</bold></white>");
       Broadcast.sayAt(player, "<bold><white>===============================================</bold></white>");
 
