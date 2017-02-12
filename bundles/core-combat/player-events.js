@@ -11,6 +11,7 @@ module.exports = (srcPath) => {
   const LevelUtil = require(srcPath + 'LevelUtil');
   const Damage = require(srcPath + 'Damage');
   const Player = require(srcPath + 'Player');
+  const RandomUtil = require(srcPath + 'RandomUtil');
 
   return  {
     listeners: {
@@ -56,6 +57,7 @@ module.exports = (srcPath) => {
           }
 
           if (this.combatData.lag <= 0) {
+            hadActions = true;
             makeAttack(this, target);
           } else {
             const elapsed = Date.now() - this.combatData.roundStarted;
@@ -66,6 +68,7 @@ module.exports = (srcPath) => {
 
           // target actions
           if (target.combatData.lag <= 0) {
+            hadActions = true;
             makeAttack(target, this);
 
             //TODO: Better way or timing of checking for death?
@@ -116,60 +119,6 @@ module.exports = (srcPath) => {
 
           Broadcast.sayAt(this, '');
           Broadcast.prompt(this);
-        }
-
-        function makeAttack(attacker, defender) {
-          const amount = state.RandomUtil.inRange(5, 20);
-          hadActions = true;
-
-          const damage = new Damage({
-            attribute: "health",
-            amount,
-            attacker
-          });
-          damage.commit(defender);
-
-          attacker.combatData.lag = attacker.combatData.speed * 1000;
-        }
-
-        function handleDeath(deadEntity, killer) {
-          deadEntity.combatants.forEach(combatant => {
-            deadEntity.removeCombatant(combatant);
-            combatant.removeCombatant(deadEntity);
-          }, deadEntity);
-
-          if (deadEntity instanceof Player) {
-            deadEntity.removePrompt('combat');
-          }
-
-          const target = killer || deadEntity.combatData.killedBy;
-
-          if (target) {
-            target.emit('deathblow', deadEntity);
-            if (!target.isInCombat()) {
-              startRegeneration(target);
-            }
-          }
-
-          const deathMessage = target ?
-            `<bold><red>${target.name} killed you!</red></bold>` :
-            `<bold><red>You died!</red></bold>`;
-
-          if (Broadcast.isBroadcastable(deadEntity)) {
-            Broadcast.sayAt(deadEntity, deathMessage);
-          }
-
-          deadEntity.emit('killed', target || deadEntity);
-        }
-
-        // Make characters regenerate health while out of combat
-        function startRegeneration(entity) {
-          if (entity.getAttribute('health') < entity.getMaxAttribute('health')) {
-            let regenEffect = state.EffectFactory.create('regen', entity, { hidden: true }, { magnitude: 15 });
-            if (entity.addEffect(regenEffect)) {
-              regenEffect.activate();
-            }
-          }
         }
 
       },
@@ -255,4 +204,62 @@ module.exports = (srcPath) => {
       }
     }
   };
+
+  function makeAttack(attacker, defender) {
+    const amount = RandomUtil.inRange(5, 20);
+
+    const damage = new Damage({
+      attribute: "health",
+      amount,
+      attacker
+    });
+    damage.commit(defender);
+
+    attacker.combatData.lag = attacker.combatData.speed * 1000;
+  }
+
+  function handleDeath(deadEntity, killer) {
+    deadEntity.combatants.forEach(combatant => {
+      deadEntity.removeCombatant(combatant);
+      combatant.removeCombatant(deadEntity);
+    }, deadEntity);
+
+    if (deadEntity instanceof Player) {
+      deadEntity.removePrompt('combat');
+    }
+
+    const target = killer || deadEntity.combatData.killedBy;
+
+    if (target) {
+      target.emit('deathblow', deadEntity);
+      if (!target.isInCombat()) {
+        startRegeneration(target);
+      }
+    }
+
+    const deathMessage = target ?
+      `<bold><red>${target.name} killed you!</red></bold>` :
+      `<bold><red>You died!</red></bold>`;
+
+    if (Broadcast.isBroadcastable(deadEntity)) {
+      Broadcast.sayAt(deadEntity, deathMessage);
+    }
+
+    deadEntity.emit('killed', target || deadEntity);
+  }
+
+  // Make characters regenerate health while out of combat
+  function startRegeneration(entity) {
+    if (entity.getAttribute('health') < entity.getMaxAttribute('health')) {
+      let regenEffect = state.EffectFactory.create('regen', entity, { hidden: true }, { magnitude: 15 });
+      if (entity.addEffect(regenEffect)) {
+        regenEffect.activate();
+      }
+    }
+  }
+
+
 };
+
+
+

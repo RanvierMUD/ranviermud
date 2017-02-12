@@ -36,7 +36,6 @@ const ItemManager = require('./src/ItemManager');
 const MobFactory = require('./src/MobFactory');
 const PlayerManager = require('./src/PlayerManager');
 const QuestFactory = require('./src/QuestFactory');
-const RandomUtil = require('./src/RandomUtil');
 const RoomManager = require('./src/RoomManager');
 const SkillManager = require('./src/SkillManager');
 const Telnet = require('./src/Telnet');
@@ -97,7 +96,6 @@ function init(restartServer) {
     PlayerManager: new PlayerManager(),
     QuestFactory: new QuestFactory(),
     RoomBehaviorManager: new BehaviorManager(),
-    RandomUtil, // randomutil is part of state and not just an include incase seeding has to be done
     RoomManager: new RoomManager(),
     SkillManager: new SkillManager(),
     SpellManager: new SkillManager(),
