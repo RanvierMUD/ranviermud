@@ -6,11 +6,13 @@ const EventEmitter = require('events');
 var EffectModifiers;
 
 /**
- * @property {object}    config Effect configuration (name/desc/duration/etc.)
- * @property {boolean}   config.autoActivate If this effect immediately activates itself when added to the target
- * @property {boolean}   config.hidden       If this effect is shown in the character's effect list
- * @property {boolean}   config.stackable    If multiple effects with the same `config.type` can be applied at once
- * @property {string}    config.type         The effect category, mainly used when disallowing stacking
+ * @property {object}  config Effect configuration (name/desc/duration/etc.)
+ * @property {boolean} config.autoActivate If this effect immediately activates itself when added to the target
+ * @property {boolean} config.hidden       If this effect is shown in the character's effect list
+ * @property {boolean} config.unique       If multiple effects with the same `config.type` can be applied at once
+ * @property {number}  config.maxStacks    When adding an effect of the same type it adds a stack to the current
+ *     effect up to maxStacks instead of adding the effect. Implies `config.unique`
+ * @property {string}  config.type         The effect category, mainly used when disallowing stacking
  * @property {boolean|number} config.tickInterval Number of seconds between calls to the `updateTick` listener
  * @property {string}    description
  * @property {number}    duration    Total duration of effect in _milliseconds_
@@ -30,11 +32,12 @@ class Effect extends EventEmitter {
     this.id = id;
     this.config = Object.assign({
       autoActivate: true,
-      description: 'Effect configured without description',
+      description: '',
       duration: Infinity,
       hidden: false,
       name: 'Unnamed Effect',
-      stackable: true,
+      maxStacks: 0,
+      unique: true,
       type: 'undef',
       ticketInterval: false,
       skill: null

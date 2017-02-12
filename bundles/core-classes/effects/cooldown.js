@@ -10,6 +10,7 @@ module.exports = srcPath => {
     config: {
       name: 'Cooldown',
       description: 'Cannot use ability while on cooldown.',
+      unique: false,
       type: 'cooldown',
     },
     state: {

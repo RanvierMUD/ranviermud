@@ -54,11 +54,11 @@ class QuestFactory {
     });
 
     instance.on('turn-in-ready', () => {
-      Broadcast.sayAt(player, `\r\n<bold><yellow>${instance.config.title} ready to turn in!</yellow></bold>`);
+      Broadcast.sayAt(player, `<bold><yellow>${instance.config.title} ready to turn in!</yellow></bold>`);
     });
 
     instance.on('complete', () => {
-      Broadcast.sayAt(player, `\r\n<bold><yellow>Quest Complete: ${instance.config.title}!</yellow></bold>`);
+      Broadcast.sayAt(player, `<bold><yellow>Quest Complete: ${instance.config.title}!</yellow></bold>`);
       player.questTracker.complete(instance.id);
       player.save();
     });

@@ -10,7 +10,6 @@ module.exports = srcPath => {
     config: {
       name: 'Regenerate Health',
       description: "You are regenerating health over time.",
-      stackable: false,
       type: 'regen.health',
       tickInterval: 3
     },

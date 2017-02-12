@@ -58,8 +58,16 @@ class EffectList {
    */
   add(effect) {
     for (const activeEffect of this.effects) {
-      if (!activeEffect.config.stackable && effect.config.type === activeEffect.config.type) {
-        return false;
+      if (effect.config.type === activeEffect.config.type) {
+        if (activeEffect.config.maxStacks) {
+          activeEffect.state.stack = Math.min(activeEffect.state.maxStacks, activeEffect.state.stack + 1);
+          activeEffect.state.stack - activeEffect.state.stack + 1;
+          return false;
+        }
+
+        if (activeEffect.config.unique) {
+          return false;
+        }
       }
     }
 

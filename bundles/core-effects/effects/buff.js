@@ -10,7 +10,6 @@ module.exports = srcPath => {
       name: 'Buff Strength',
       description: "You feel stronger!",
       duration: 30 * 1000,
-      stackable: false,
       type: 'buff.strength',
     },
     state: {

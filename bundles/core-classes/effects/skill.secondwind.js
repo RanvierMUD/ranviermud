@@ -12,8 +12,6 @@ module.exports = srcPath => {
   return {
     config: {
       name: 'Second Wind',
-      description: '',
-      stackable: false,
       type: 'skill:secondwind'
     },
     listeners: {

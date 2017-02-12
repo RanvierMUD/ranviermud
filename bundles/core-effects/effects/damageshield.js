@@ -11,7 +11,6 @@ module.exports = srcPath => {
     config: {
       name: 'Damage Shield',
       description: "You are temporarily protected from damage!",
-      stackable: false,
       type: 'shield',
     },
     state: {
