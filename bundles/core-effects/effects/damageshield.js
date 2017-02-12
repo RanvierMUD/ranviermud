@@ -6,6 +6,7 @@ module.exports = srcPath => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Heal = require(srcPath + 'Heal');
   const Player = require(srcPath + 'Player');
+  const Flag = require(srcPath + 'EffectFlag');
 
   return {
     config: {
@@ -13,6 +14,7 @@ module.exports = srcPath => {
       description: "You are temporarily protected from damage!",
       type: 'shield',
     },
+    flags: [Flag.BUFF],
     state: {
       magnitude: 50,
       remaining: 50,

@@ -1,11 +1,12 @@
 'use strict';
 
 const util = require('util');
-const Data = require('./Data');
-const Room = require('./Room');
+const Attributes = require('./Attributes');
 const Character = require('./Character');
 const Config = require('./Config');
+const Data = require('./Data');
 const QuestTracker = require('./QuestTracker');
+const Room = require('./Room');
 
 /**
  * @property {Account} account
@@ -22,11 +23,12 @@ class Player extends Character {
     super(data);
 
     this.account = data.account || null;
+    this.attributes = new Attributes(data.attributes || Config.get('defaultAttributes'));
     this.experience = data.experience || 0;
-    this.playerClass = null;
-    this.password  = data.password;
-    this.prompt = ({healthStr, energyStr, }) => `[ ${healthStr} <bold>hp</bold> -- ${energyStr} <bold>energy</bold> ]`;
     this.extraPrompts = new Map();
+    this.password  = data.password;
+    this.playerClass = null;
+    this.prompt = ({healthStr, energyStr, }) => `[ ${healthStr} <bold>hp</bold> -- ${energyStr} <bold>energy</bold> ]`;
     this.socket = data.socket || null;
     const questData = Object.assign({
       completed: [],

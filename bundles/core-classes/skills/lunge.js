@@ -9,7 +9,7 @@ module.exports = (srcPath) => {
   const Parser = require(srcPath + 'CommandParser').CommandParser;
   const SkillType = require(srcPath + 'SkillType');
 
-  const damagePercent = 100;
+  const damagePercent = 500;
   const energyCost = 20;
 
   function getDamage(player) {

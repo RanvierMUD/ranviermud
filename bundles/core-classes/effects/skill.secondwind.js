@@ -8,12 +8,14 @@ const util = require('util');
 module.exports = srcPath => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Heal = require(srcPath + 'Heal');
+  const Flag = require(srcPath + 'EffectFlag');
 
   return {
     config: {
       name: 'Second Wind',
       type: 'skill:secondwind'
     },
+    flags: [Flag.BUFF],
     listeners: {
       damaged: function (damage) {
         if (damage.attribute !== 'energy') {

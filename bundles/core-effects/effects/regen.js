@@ -5,6 +5,7 @@ const util = require('util');
 module.exports = srcPath => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Heal = require(srcPath + 'Heal');
+  const Flag = require(srcPath + 'EffectFlag');
 
   return {
     config: {
@@ -13,6 +14,7 @@ module.exports = srcPath => {
       type: 'regen.health',
       tickInterval: 3
     },
+    flags: [Flag.BUFF],
     state: {
       magnitude: 10,
       interval: 3

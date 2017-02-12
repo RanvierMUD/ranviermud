@@ -88,7 +88,7 @@ class Skill {
     }
 
     if (this.resource.cost) {
-      if (player.getAttribute(this.resource.attribute) < this.resource.cost) {
+      if (!this.hasEnoughResource(player)) {
         return Broadcast.sayAt(player, `You do not have enough ${this.resource.attribute}.`);
       }
 
@@ -159,6 +159,13 @@ class Skill {
 
   getCooldownId() {
     return "skill:" + this.id;
+  }
+
+  hasEnoughResource(player) {
+    return !this.resource.cost || (
+      player.hasAttribute(this.resource.attribute) &&
+      player.getAttribute(this.resource.attribute) >= this.resource.cost
+    );
   }
 }
 

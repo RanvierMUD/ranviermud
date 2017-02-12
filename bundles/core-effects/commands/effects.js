@@ -4,6 +4,7 @@ const humanize = (sec) => { return require('humanize-duration')(sec, { round: tr
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
+  const Flag = require(srcPath + 'EffectFlag');
 
   return {
     aliases: [ "affects" ],
@@ -19,7 +20,13 @@ module.exports = (srcPath) => {
       }
 
       for (const effect of effects) {
-        Broadcast.at(player, `  ${effect.name}: `);
+        let color = 'white';
+        if (effect.flags.includes(Flag.BUFF)) {
+          color = 'green';
+        } else if (effect.flags.includes(Flag.DEBUFF)) {
+          color = 'red';
+        }
+        Broadcast.at(player, `<bold><${color}>  ${effect.name}</${color}></bold>: `);
         if (effect.duration === Infinity) {
           Broadcast.sayAt(player, "Permanent");
         } else {

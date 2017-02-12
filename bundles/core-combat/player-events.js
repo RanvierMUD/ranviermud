@@ -52,7 +52,6 @@ module.exports = (srcPath) => {
             }
             target.room.addNpc(newNpc);
             target.emit('spawn');
-            target.area.removeNpc(target);
             continue;
           }
 
@@ -168,8 +167,8 @@ module.exports = (srcPath) => {
           buf = "You heal";
         }
 
-        buf += '<bold> ' + (target === this ? 'You' : `${target.name}`);
-        buf += ` <bold><green>${heal.finalAmount}</green></bold> ${heal.attribute}`;
+        buf += '<bold> ' + (target === this ? 'Yourself' : `${target.name}`);
+        buf += ` <bold><green>${heal.finalAmount}</green></bold> ${heal.attribute}.`;
         Broadcast.sayAt(this, buf);
       },
 

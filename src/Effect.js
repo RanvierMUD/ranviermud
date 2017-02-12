@@ -30,6 +30,7 @@ class Effect extends EventEmitter {
     super();
 
     this.id = id;
+    this.flags = def.flags || [];
     this.config = Object.assign({
       autoActivate: true,
       description: '',
@@ -59,6 +60,7 @@ class Effect extends EventEmitter {
     // If an effect has a tickInterval it should always apply when first activated
     if (this.config.tickInterval && !this.state.tickInterval) {
       this.state.lastTick = -Infinity;
+      this.state.ticks = 0;
     }
 
     if (this.config.autoActivate) {

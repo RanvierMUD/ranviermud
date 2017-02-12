@@ -48,6 +48,7 @@ class EffectList {
           continue;
         }
         effect.state.lastTick = Date.now();
+        effect.state.ticks++;
       }
       effect.emit(event, ...args);
     }

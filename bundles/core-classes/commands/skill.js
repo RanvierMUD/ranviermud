@@ -24,7 +24,7 @@ module.exports = (srcPath) => {
         Broadcast.sayAt(player, `Cooldown: <bold>${skill.cooldownLength}</bold> seconds`);
       }
       Broadcast.sayAt(player, (new Array(80)).join('-'));
-      Broadcast.sayAt(player, skill.info());
+      Broadcast.sayAt(player, skill.info(player));
     }
   };
 };

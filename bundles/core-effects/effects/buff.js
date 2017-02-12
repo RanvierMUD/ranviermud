@@ -4,6 +4,7 @@ const util = require('util');
 
 module.exports = srcPath => {
   const Broadcast = require(srcPath + 'Broadcast');
+  const Flag = require(srcPath + 'EffectFlag');
 
   return {
     config: {
@@ -12,6 +13,7 @@ module.exports = srcPath => {
       duration: 30 * 1000,
       type: 'buff.strength',
     },
+    flags: [Flag.BUFF],
     state: {
       magnitude: 5
     },

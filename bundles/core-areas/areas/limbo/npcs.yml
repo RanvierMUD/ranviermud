@@ -10,7 +10,6 @@
   quests: ['limbo:2']
   attributes:
     health: 100
-    speed: 2.5
   damage: 1-7
 - id: 2
   keywords: ["wise", "old", "man"]

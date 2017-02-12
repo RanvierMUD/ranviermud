@@ -11,6 +11,10 @@ class Area extends EventEmitter {
     this.suggestedRange = manifest.suggestedLevel;
     this.rooms = new Map();
     this.npcs = new Set();
+
+    this.on('updateTick', () => {
+      this.update();
+    });
   }
 
   getRoomById(id) {
@@ -34,6 +38,16 @@ class Area extends EventEmitter {
       npc.room.removeNpc(npc);
     }
     this.npcs.delete(npc);
+  }
+
+  update() {
+    for (const npc of this.npcs) {
+      npc.emit('updateTick');
+    }
+
+    for(const [id, room] of this.rooms) {
+      room.emit('updateTick');
+    }
   }
 }
 

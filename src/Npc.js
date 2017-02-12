@@ -1,8 +1,10 @@
 'use strict';
 
-const Character = require('./Character');
-const uuid = require('node-uuid');
 const util = require('util');
+const uuid = require('node-uuid');
+const Attributes = require('./Attributes');
+const Character = require('./Character');
+const Config = require('./Config');
 
 /**
  * @property {number} id   Area-relative id (vnum)
@@ -31,6 +33,7 @@ class Npc extends Character {
     this.quests = data.quests || [];
     this.damage = data.damage;
     this.entityReference = data.entityReference; 
+    this.attributes = new Attributes(Object.assign(Config.get('defaultAttributes'), data.attributes));
   }
 
 

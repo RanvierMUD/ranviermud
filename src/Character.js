@@ -1,11 +1,10 @@
 'use strict';
 
+const Attributes = require('./Attributes');
 const EffectList = require('./EffectList');
 const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
 const EventEmitter = require('events');
 const Inventory = require('./Inventory');
-const Attributes = require('./Attributes');
-const Config = require('./Config');
 
 
 /**
@@ -30,8 +29,7 @@ class Character extends EventEmitter
     this.combatData = {};
     this.level = data.level || 1;
     this.room = data.room || null;
-
-    this.attributes = new Attributes(data.attributes || Config.get('defaultAttributes'));
+    this.attributes = new Attributes([]);
 
     this.effects = new EffectList(this, data.effects);
     this.skills = new Map();
@@ -46,6 +44,10 @@ class Character extends EventEmitter
     super.emit(event, ...args);
 
     this.effects.emit(event, ...args);
+  }
+
+  hasAttribute(attr) {
+    return this.attributes.has(attr);
   }
 
   /**
@@ -121,7 +123,10 @@ class Character extends EventEmitter
       return;
     }
 
-    this.emit('combatStart', target);
+    if (!this.combatants.size) {
+      this.emit('combatStart', target);
+    }
+
     this.combatants.add(target);
     target.addCombatant(this);
   }
@@ -136,6 +141,10 @@ class Character extends EventEmitter
 
     this.combatants.delete(target);
     target.removeCombatant(this);
+
+    if (!this.combatants.size) {
+      this.emit('combatEnd');
+    }
   }
 
   /**
@@ -207,6 +216,10 @@ class Character extends EventEmitter
       room: this.room.entityReference,
       effects: this.effects.serialize(),
     };
+  }
+
+  getBroadcastTargets() {
+    return [];
   }
 }
 

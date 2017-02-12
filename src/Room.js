@@ -52,11 +52,13 @@ class Room extends EventEmitter {
   addNpc(npc) {
     this.npcs.add(npc);
     npc.room = this;
+    this.area.addNpc(npc);
   }
 
   removeNpc(npc) {
     this.npcs.delete(npc);
     npc.room = null;
+    this.area.removeNpc(npc);
   }
 
   addItem(item) {
