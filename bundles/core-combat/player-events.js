@@ -10,6 +10,8 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const LevelUtil = require(srcPath + 'LevelUtil');
   const Damage = require(srcPath + 'Damage');
+  const Player = require(srcPath + 'Player');
+  const RandomUtil = require(srcPath + 'RandomUtil');
 
   return  {
     listeners: {
@@ -20,51 +22,27 @@ module.exports = (srcPath) => {
         // a mid-round attack that killed the target, then the next round the
         // target kills the player. So let's not let that happen.
         if (this.getAttribute('health') <= 0) {
-          this.combatants.forEach(combatant => {
-            this.removeCombatant(combatant);
-            combatant.removeCombatant(this);
-          }, this);
-
-          this.removePrompt('combat');
-          const target = this.combatData.killedBy;
-          if (target) {
-            Broadcast.sayAt(this, `<bold><red>${target.name} killed you!</red></bold>`);
-            target.emit('deathblow', this);
-            this.emit('killed', target);
-          } else {
-            Broadcast.sayAt(this, `<bold><red>You died!</red></bold>`);
-            this.emit('killed', this);
-          }
-          return;
+          return handleDeath(state, this);
         }
 
         if (!this.isInCombat()) {
-          // Make player regenerate health while out of combat
-          if (this.getAttribute('health') < this.getMaxAttribute('health')) {
-            let regenEffect = state.EffectFactory.create('regen', this, { hidden: true }, { magnitude: 15 });
-            if (this.addEffect(regenEffect)) {
-              regenEffect.activate();
-            }
-          }
-          return;
+          return startRegeneration(state, this);
         }
 
         // TODO: For now player/enemy speed is a fixed 2.5 seconds, base it off weapon speed later
-        const playerSpeed = 1.5;
+        this.combatData.speed = 1.5;
         const targetSpeed = 2;
-        const playerDamage = state.RandomUtil.range(5, 20);
-        const targetDamage = state.RandomUtil.range(5, 20);
 
         let hadActions = false;
         for (const target of this.combatants) {
+          target.combatData.speed = target.combatData.speed || targetSpeed;
+
           // player actions
           if (target.getAttribute('health') <= 0) {
-            this.removeCombatant(target);
-            target.removeCombatant(this);
 
             Broadcast.sayAt(this, `<bold>${target.name} is <red>Dead</red>!</bold>`);
-            target.emit('killed', this);
-            this.emit('deathblow', target);
+
+            handleDeath(state, target, this);
 
             // TODO: For now respawn happens here, this is shitty
             const newNpc = state.MobFactory.clone(target);
@@ -80,35 +58,25 @@ module.exports = (srcPath) => {
 
           if (this.combatData.lag <= 0) {
             hadActions = true;
-            const damage = new Damage({
-              attribute: "health",
-              amount: playerDamage,
-              attacker: this
-            });
-            damage.commit(target);
-
-            this.combatData.lag = playerSpeed * 1000;
+            makeAttack(this, target);
           } else {
             const elapsed = Date.now() - this.combatData.roundStarted;
             this.combatData.lag -= elapsed;
           }
+
           this.combatData.roundStarted = Date.now();
 
           // target actions
           if (target.combatData.lag <= 0) {
             hadActions = true;
-            const damage = new Damage({
-              attribute: "health",
-              amount: targetDamage,
-              attacker: target
-            });
-            damage.commit(this);
+            makeAttack(target, this);
+
+            //TODO: Better way or timing of checking for death?
             if (this.getAttribute('health') <= 0) {
               this.combatData.killedBy = target;
               break;
             }
 
-            target.combatData.lag = targetSpeed * 1000;
           } else {
             const elapsed = Date.now() - target.combatData.roundStarted;
             target.combatData.lag -= elapsed;
@@ -122,26 +90,35 @@ module.exports = (srcPath) => {
           this.removePrompt('combat');
         }
 
+        // Show combat prompt and health bars.
         if (hadActions) {
           if (this.isInCombat()) {
             this.addPrompt('combat', () => {
               if (!this.isInCombat()) {
                 return '';
               }
-              // player health bar
+
+              // Set up some constants for formatting the health bars
               const playerName = "You";
               const targetNameLengths = [...this.combatants].map(t => t.name.length);
               const nameWidth = Math.max(playerName.length, ...targetNameLengths);
               const progWidth = 60 - nameWidth;
-              let currentPerc = Math.floor((this.getAttribute('health') / this.getMaxAttribute('health')) * 100);
-              let progress = Broadcast.progress(progWidth, currentPerc, "green");
-              let buf = `<bold>${leftPad(playerName, nameWidth)}</bold>: ${progress} <bold>${this.getAttribute('health')}/${this.getMaxAttribute('health')}</bold>`;
 
-              // target health bar
+              // Set up helper functions for health-bar-building.
+              const getHealthPercentage = entity => Math.floor((entity.getAttribute('health') / entity.getMaxAttribute('health')) * 100);
+              const formatProgressBar = (name, progress, entity) =>
+                `<bold>${leftPad(name, nameWidth)}</bold>: ${progress} <bold>${entity.getAttribute('health')}/${entity.getMaxAttribute('health')}</bold>`
+
+              // Build player health bar.
+              let currentPerc = getHealthPercentage(this);
+              let progress = Broadcast.progress(progWidth, currentPerc, "green");
+              let buf = formatProgressBar(playerName, progress, this);
+
+              // Build and add target health bars.
               for (const target of this.combatants) {
                 let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
                 let progress = Broadcast.progress(progWidth, currentPerc, "red");
-                buf += `\r\n<bold>${leftPad(target.name, nameWidth)}</bold>: ${progress} <bold>${target.getAttribute('health')}/${target.getMaxAttribute('health')}</bold>`;
+                buf += `\r\n${formatProgressBar(target.name, progress, target)}`;
               }
 
               return buf;
@@ -151,6 +128,7 @@ module.exports = (srcPath) => {
           Broadcast.sayAt(this, '');
           Broadcast.prompt(this);
         }
+
       },
 
       /**
@@ -234,4 +212,62 @@ module.exports = (srcPath) => {
       }
     }
   };
+
+  function makeAttack(attacker, defender) {
+    const amount = RandomUtil.inRange(5, 20);
+
+    const damage = new Damage({
+      attribute: "health",
+      amount,
+      attacker
+    });
+    damage.commit(defender);
+
+    attacker.combatData.lag = attacker.combatData.speed * 1000;
+  }
+
+  function handleDeath(state, deadEntity, killer) {
+    deadEntity.combatants.forEach(combatant => {
+      deadEntity.removeCombatant(combatant);
+      combatant.removeCombatant(deadEntity);
+    }, deadEntity);
+
+    if (deadEntity instanceof Player) {
+      deadEntity.removePrompt('combat');
+    }
+
+    const target = killer || deadEntity.combatData.killedBy;
+
+    if (target) {
+      target.emit('deathblow', deadEntity);
+      if (!target.isInCombat()) {
+        startRegeneration(state, target);
+      }
+    }
+
+    const deathMessage = target ?
+      `<bold><red>${target.name} killed you!</red></bold>` :
+      `<bold><red>You died!</red></bold>`;
+
+    if (Broadcast.isBroadcastable(deadEntity)) {
+      Broadcast.sayAt(deadEntity, deathMessage);
+    }
+
+    deadEntity.emit('killed', target || deadEntity);
+  }
+
+  // Make characters regenerate health while out of combat
+  function startRegeneration(state, entity) {
+    if (entity.getAttribute('health') < entity.getMaxAttribute('health')) {
+      let regenEffect = state.EffectFactory.create('regen', entity, { hidden: true }, { magnitude: 15 });
+      if (entity.addEffect(regenEffect)) {
+        regenEffect.activate();
+      }
+    }
+  }
+
+
 };
+
+
+
