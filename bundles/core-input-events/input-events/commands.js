@@ -44,7 +44,9 @@ module.exports = (src) => {
               // See bundles/core-player-events/player-events.js commandQueued and updateTick for when these
               // actually get executed
               player.queueCommand({
-                execute: _ => result.skill.execute(result.args, player),
+                execute: _ => {
+                  player.emit('useSkill', result.skill, result.args);
+                },
                 label: data,
               }, result.skill.lag || state.Config.get('skillLag') || 1000);
               break;
