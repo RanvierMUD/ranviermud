@@ -22,11 +22,11 @@ module.exports = (srcPath) => {
         // a mid-round attack that killed the target, then the next round the
         // target kills the player. So let's not let that happen.
         if (this.getAttribute('health') <= 0) {
-          return handleDeath(this);
+          return handleDeath(state, this);
         }
 
         if (!this.isInCombat()) {
-          return startRegeneration(this);
+          return startRegeneration(state, this);
         }
 
         // TODO: For now player/enemy speed is a fixed 2.5 seconds, base it off weapon speed later
@@ -42,7 +42,7 @@ module.exports = (srcPath) => {
 
             Broadcast.sayAt(this, `<bold>${target.name} is <red>Dead</red>!</bold>`);
 
-            handleDeath(target, this);
+            handleDeath(state, target, this);
 
             // TODO: For now respawn happens here, this is shitty
             const newNpc = state.MobFactory.clone(target);
@@ -97,20 +97,28 @@ module.exports = (srcPath) => {
               if (!this.isInCombat()) {
                 return '';
               }
-              // player health bar
+
+              // Set up some constants for formatting the health bars
               const playerName = "You";
               const targetNameLengths = [...this.combatants].map(t => t.name.length);
               const nameWidth = Math.max(playerName.length, ...targetNameLengths);
               const progWidth = 60 - nameWidth;
-              let currentPerc = Math.floor((this.getAttribute('health') / this.getMaxAttribute('health')) * 100);
-              let progress = Broadcast.progress(progWidth, currentPerc, "green");
-              let buf = `<bold>${leftPad(playerName, nameWidth)}</bold>: ${progress} <bold>${this.getAttribute('health')}/${this.getMaxAttribute('health')}</bold>`;
 
-              // target health bar
+              // Set up helper functions for health-bar-building.
+              const getHealthPercentage = entity => Math.floor((entity.getAttribute('health') / entity.getMaxAttribute('health')) * 100);
+              const formatProgressBar = (name, progress, entity) =>
+                `<bold>${leftPad(name, nameWidth)}</bold>: ${progress} <bold>${entity.getAttribute('health')}/${entity.getMaxAttribute('health')}</bold>`
+
+              // Build player health bar.
+              let currentPerc = getHealthPercentage(this);
+              let progress = Broadcast.progress(progWidth, currentPerc, "green");
+              let buf = formatProgressBar(playerName, progress, this);
+
+              // Build and add target health bars.
               for (const target of this.combatants) {
                 let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
                 let progress = Broadcast.progress(progWidth, currentPerc, "red");
-                buf += `\r\n<bold>${leftPad(target.name, nameWidth)}</bold>: ${progress} <bold>${target.getAttribute('health')}/${target.getMaxAttribute('health')}</bold>`;
+                buf += `\r\n${formatProgressBar(target.name, progress, target)}`;
               }
 
               return buf;
@@ -218,7 +226,7 @@ module.exports = (srcPath) => {
     attacker.combatData.lag = attacker.combatData.speed * 1000;
   }
 
-  function handleDeath(deadEntity, killer) {
+  function handleDeath(state, deadEntity, killer) {
     deadEntity.combatants.forEach(combatant => {
       deadEntity.removeCombatant(combatant);
       combatant.removeCombatant(deadEntity);
@@ -233,7 +241,7 @@ module.exports = (srcPath) => {
     if (target) {
       target.emit('deathblow', deadEntity);
       if (!target.isInCombat()) {
-        startRegeneration(target);
+        startRegeneration(state, target);
       }
     }
 
@@ -249,7 +257,7 @@ module.exports = (srcPath) => {
   }
 
   // Make characters regenerate health while out of combat
-  function startRegeneration(entity) {
+  function startRegeneration(state, entity) {
     if (entity.getAttribute('health') < entity.getMaxAttribute('health')) {
       let regenEffect = state.EffectFactory.create('regen', entity, { hidden: true }, { magnitude: 15 });
       if (entity.addEffect(regenEffect)) {
