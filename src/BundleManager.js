@@ -47,61 +47,32 @@ class BundleManager {
 
     util.log('ENDLOAD: BUNDLES');
 
+    // Distribution is done after all areas are loaded in case items use areas from each other
+    this.state.AreaManager.distribute(this.state);
+
     this.state.RoomManager.startingRoom = this.state.RoomManager.getRoom(this.state.Config.get('startingRoom'));
     util.log(`CONFIG: Starting Room [${this.state.RoomManager.startingRoom.entityReference}]`);
   }
 
   loadBundle(bundle, bundlePath) {
-    const paths = {
-      areas: bundlePath + '/areas/',
-      behaviors: bundlePath + '/behaviors/',
-      channels: bundlePath + '/channels.js',
-      commands: bundlePath + '/commands/',
-      effects: bundlePath + '/effects/',
-      help: bundlePath + '/help/',
-      inputEvents: bundlePath + '/input-events/',
-      playerEvents: bundlePath + '/player-events.js',
-      skills: bundlePath + '/skills/',
-    };
+    const features = [
+      { path: 'areas/', fn: 'loadAreas' },
+      { path: 'behaviors/', fn: 'loadBehaviors' },
+      { path: 'channels.js', fn: 'loadChannels' },
+      { path: 'commands/', fn: 'loadCommands' },
+      { path: 'effects/', fn: 'loadEffects' },
+      { path: 'help/', fn: 'loadHelp' },
+      { path: 'input-events/', fn: 'loadInputEvents' },
+      { path: 'player-events.js', fn: 'loadPlayerEvents' },
+      { path: 'skills/', fn: 'loadSkills' },
+    ];
 
     util.log(`LOAD: BUNDLE [${bundle}] START`);
-    if (fs.existsSync(paths.commands)) {
-      this.loadCommands(bundle, paths.commands);
-    }
-
-    if (fs.existsSync(paths.channels)) {
-      this.loadChannels(bundle, paths.channels);
-    }
-
-    if (fs.existsSync(paths.behaviors)) {
-      this.loadBehaviors(bundle, paths.behaviors);
-    }
-
-    if (fs.existsSync(paths.inputEvents)) {
-      this.loadInputEvents(bundle, paths.inputEvents);
-    }
-
-    if (fs.existsSync(paths.playerEvents)) {
-      this.loadPlayerEvents(bundle, paths.playerEvents);
-    }
-
-    if (fs.existsSync(paths.help)) {
-      this.loadHelp(bundle, paths.help);
-    }
-
-    if (fs.existsSync(paths.areas)) {
-      this.loadAreas(bundle, paths.areas);
-
-      // Distribution is done after all areas are loaded in case items use areas from each other
-      this.state.AreaManager.distribute(this.state);
-    }
-
-    if (fs.existsSync(paths.effects)) {
-      this.loadEffects(bundle, paths.effects);
-    }
-
-    if (fs.existsSync(paths.skills)) {
-      this.loadSkills(bundle, paths.skills);
+    for (const feature of features) {
+      const path = bundlePath + '/' + feature.path;
+      if (fs.existsSync(path)) {
+        this[feature.fn](bundle, path);
+      }
     }
 
     util.log(`ENDLOAD: BUNDLE [${bundle}]`);
