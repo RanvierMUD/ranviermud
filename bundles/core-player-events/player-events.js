@@ -1,6 +1,6 @@
 'use strict';
 
-const sprintf = require('sprintf');
+const sprintf = require('sprintf-js').sprintf;
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
