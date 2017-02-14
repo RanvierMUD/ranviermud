@@ -45,7 +45,7 @@ module.exports = (src) => {
               // actually get executed
               player.queueCommand({
                 execute: _ => {
-                  player.emit('useSkill', result.skill, result.args);
+                  player.emit('useAbility', result.skill, result.args);
                 },
                 label: data,
               }, result.skill.lag || state.Config.get('skillLag') || 1000);

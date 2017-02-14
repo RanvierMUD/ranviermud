@@ -10,7 +10,6 @@ module.exports = (srcPath) => {
 
   return {
     event: state => (socket, args) => {
-      EventUtil.genSay(socket)('Creating character...');
       let player = new Player({
         name: args.name,
         account: args.account
@@ -27,7 +26,7 @@ module.exports = (srcPath) => {
       player = state.PlayerManager.loadPlayer(state, player.account, player.name);
       player.socket = socket;
 
-      socket.emit('done', socket, { player });
+      socket.emit('choose-class', socket, { player });
     }
   };
 };

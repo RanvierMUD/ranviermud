@@ -10,6 +10,7 @@ const fs = require('fs'),
     CommandType = require('./CommandType'),
     Item = require('./Item'),
     Npc = require('./Npc'),
+    PlayerClass = require('./PlayerClass'),
     Room = require('./Room'),
     Skill = require('./Skill'),
     SkillType = require('./SkillType'),
@@ -59,6 +60,7 @@ class BundleManager {
       { path: 'areas/', fn: 'loadAreas' },
       { path: 'behaviors/', fn: 'loadBehaviors' },
       { path: 'channels.js', fn: 'loadChannels' },
+      { path: 'classes/', fn: 'loadClasses' },
       { path: 'commands/', fn: 'loadCommands' },
       { path: 'effects/', fn: 'loadEffects' },
       { path: 'help/', fn: 'loadHelp' },
@@ -67,7 +69,7 @@ class BundleManager {
       { path: 'skills/', fn: 'loadSkills' },
     ];
 
-    util.log(`LOAD: BUNDLE [${bundle}] START`);
+    util.log(`LOAD: BUNDLE [\x1B[1;33m${bundle}\x1B[0m] START`);
     for (const feature of features) {
       const path = bundlePath + '/' + feature.path;
       if (fs.existsSync(path)) {
@@ -75,7 +77,7 @@ class BundleManager {
       }
     }
 
-    util.log(`ENDLOAD: BUNDLE [${bundle}]`);
+    util.log(`ENDLOAD: BUNDLE [\x1B[1;32m${bundle}\x1B[0m]`);
   }
 
   loadPlayerEvents(bundle, eventsFile) {
@@ -456,6 +458,27 @@ class BundleManager {
     }
 
     util.log(`\tENDLOAD: Skills...`);
+  }
+
+  loadClasses(bundle, classesDir) {
+    util.log(`\tLOAD: Classes...`);
+    const files = fs.readdirSync(classesDir);
+
+    for (const classFile of files) {
+      const classPath = classesDir + classFile;
+      if (!fs.statSync(classPath).isFile() || !classFile.match(/js$/)) {
+        continue;
+      }
+
+      const className = path.basename(classFile, path.extname(classFile));
+      const loader = require(classPath);
+      let classImport = loader(srcPath);
+
+      util.log(`\t\t${className}`);
+      this.state.ClassManager.set(className, new PlayerClass(className, classImport));
+    }
+
+    util.log(`\tENDLOAD: Classes...`);
   }
 }
 

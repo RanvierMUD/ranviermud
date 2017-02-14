@@ -104,9 +104,6 @@ class Skill {
     }
 
     this.run(args, player, target);
-    if (this.cooldownLength) {
-      this.cooldown(this.cooldownLength, player);
-    }
   }
 
   activate(player) {
@@ -145,11 +142,15 @@ class Skill {
    * @param {number} duration Cooldown duration
    * @param {Player} player
    */
-  cooldown(duration, player) {
+  cooldown(player) {
+    if (!this.cooldownLength) {
+      return;
+    }
+
     const effect = this.state.EffectFactory.create(
       'cooldown',
       player,
-      { name: "Cooldown: " + this.name, duration: duration * 1000 },
+      { name: "Cooldown: " + this.name, duration: this.cooldownLength * 1000 },
       { cooldownId: this.getCooldownId() }
     );
     effect.skill = this;

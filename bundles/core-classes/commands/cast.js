@@ -19,7 +19,9 @@ module.exports = (srcPath) => {
       }
 
       player.queueCommand({
-        execute: _ => spell.execute(targetArgs || "", player),
+        execute: _ => {
+          player.emit('useAbility', spell, targetArgs);
+        },
         label: `cast ${args}`,
       }, spell.lag || state.Config.get('skillLag') || 1000);
     }

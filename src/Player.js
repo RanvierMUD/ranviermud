@@ -37,8 +37,54 @@ class Player extends Character {
     }, data.quests);
 
     this.questTracker = new QuestTracker(this, questData.active, questData.completed);
-
     this.commandQueue = new CommandQueue();
+
+    // Arbitrary data bundles are free to shove whatever they want in
+    // WARNING: values must be JSON.stringify-able
+    this.metadata = data.metadata || {};
+    this.playerClass = null;
+  }
+
+  /**
+   * Set a metadata value. Does _not_ autovivify, you will need to create the parent objects if they don't exist
+   * @param {string} key   Key to set. Supports dot notation e.g., `"foo.bar"`
+   * @param {*}      value Value must be JSON.stringify-able
+   */
+  setMeta(key, value) {
+    let parts = key.split('.');
+    const property = parts.pop();
+    let base = this.metadata;
+
+    while (parts.length) {
+      let part = parts.pop();
+      if (!(part in base)) {
+        throw new RangeError(`Metadata path invalid: ${key}`);
+      }
+      base = base[parts.pop()];
+    }
+
+    base[property] = value;
+  }
+
+  /**
+   * Get metadata about a player
+   * @param {string} key Key to fetch. Supports dot notation e.g., `"foo.bar"`
+   * @return {*}
+   */
+  getMeta(key) {
+    let parts = key.split('.');
+    const property = parts.pop();
+    let base = this.metadata;
+
+    while (parts.length) {
+      let part = parts.pop();
+      if (!(part in base)) {
+        return undefined;
+      }
+      base = base[part];
+    }
+
+    return base[property];
   }
 
   /**
@@ -70,7 +116,7 @@ class Player extends Character {
     const healthStr = buildAttributeStr('health');
     const energyStr = buildAttributeStr('energy');
 
-    //TODO: The attr strings could likely be built in a more programmatic fashion.
+    // TODO: The attr strings could likely be built in a more programmatic fashion.
     // How could this be redone to allow for customization of the prompt without major
     // edits to the Player class?
     const promptData = Object.assign({}, extraData, {
@@ -98,12 +144,18 @@ class Player extends Character {
     this.extraPrompts.delete(id);
   }
 
-  canGo(exit) {
+  /**
+   * Determine if a player can leave the current room to a given direction
+   * TODO: This shouldn't be here but there's not better place at the moment
+   * @param {string} direction
+   * @return {boolean}
+   */
+  canGo(direction) {
     if (!this.room) {
       return false;
     }
 
-    const exits = Array.from(this.room.exits).filter(e => e.direction.indexOf(exit) === 0);
+    const exits = Array.from(this.room.exits).filter(e => e.direction.indexOf(direction) === 0);
 
     if (!exits.length) {
       return false;
@@ -140,6 +192,10 @@ class Player extends Character {
       this.account = state.AccountManager.getAccount(this.account);
     }
 
+    if (this.getMeta('class')) {
+      this.playerClass = state.ClassManager.get(this.getMeta('class'));
+    }
+
     // Hydrate inventory
     this.inventory.hydrate(state);
 
@@ -168,7 +224,6 @@ class Player extends Character {
   }
 
   serialize() {
-
     let data = Object.assign(super.serialize(), {
       playerClass: this.playerClass && this.playerClass.id,
       account: this.account.name,
@@ -176,6 +231,7 @@ class Player extends Character {
       inventory: this.inventory && this.inventory.serialize(),
       password: this.password,
       quests: this.questTracker.serialize(),
+      metadata: this.metadata,
     });
 
     if (this.equipment) {
@@ -217,7 +273,6 @@ class Player extends Character {
     }
     return false;
   }
-
 }
 
 module.exports = Player;
