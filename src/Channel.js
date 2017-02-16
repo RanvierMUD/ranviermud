@@ -5,6 +5,8 @@ const ChannelAudienceWorld = require('./ChannelAudience/World');
 const ChannelAudiencePrivate = require('./ChannelAudience/Private');
 const util = require('util');
 
+class ChannelError extends Error {}
+
 /**
  * @property {ChannelAudience} audience People who receive messages from this channel
  * @property {string}          name     Actual name of the channel the user will type
@@ -13,10 +15,10 @@ const util = require('util');
 class Channel {
   constructor(config) {
     if (!config.name) {
-      throw new ReferenceError("Channels must have a name to be usable.");
+      throw new ChannelError("Channels must have a name to be usable.");
     }
     if (!config.audience) {
-      throw new ReferenceError(`Channel ${name} is missing a valid audience.`);
+      throw new ChannelError(`Channel ${name} is missing a valid audience.`);
     }
     this.name = config.name;
     this.description = config.description;
@@ -42,8 +44,7 @@ class Channel {
     }
 
     if (!this.audience) {
-      Broadcast.sayAt(sender, `Contact an administrator, ${this.name} is broken.`);
-      return util.log(`Channel [${this.name} has invalid audience [${this.audience}]`);
+      throw new ChannelError(`Channel [${this.name} has invalid audience [${this.audience}]`)
     }
 
     this.audience.configure({ state, sender, message });
@@ -77,7 +78,7 @@ class Channel {
   }
 
   showUsage(sender) {
-    if (this.audience instanceof ChannelAudienceWorld) {
+    if (this.audience instanceof ChannelAudiencePrivate) {
       Broadcast.sayAt(sender, `Usage: ${this.name} [target] [message]`);
     } else {
       Broadcast.sayAt(sender, `Usage: ${this.name} [message]`);
@@ -89,7 +90,7 @@ class Channel {
    * E.g., you may want "chat" to say "You chat, 'message here'"
    * @param {Player} sender
    * @param {string} message
-   * @param {Functino} colorify
+   * @param {Function} colorify
    * @return {string}
    */
   formatToSender(sender, target, message, colorify) {
@@ -102,7 +103,7 @@ class Channel {
    * @param {Player} sender
    * @param {Player} target
    * @param {string} message
-   * @param {Functino} colorify
+   * @param {Function} colorify
    * @return {string}
    */
   formatToReceipient(sender, target, message, colorify) {
