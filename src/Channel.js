@@ -11,13 +11,19 @@ const util = require('util');
  * @property {string}          color    Default color. This is purely a helper if you're using default format methods
  */
 class Channel {
-  constructor(data) {
-    this.bundle = null; // for debugging purposes, which bundle it came from
-    this.audience = data.audience || (new ChannelAudienceWorld());
-    this.color = data.color || null;
-    this.name = data.name;
-    this.description = data.description;
-    this.formatter = data.formatter || {
+  constructor(config) {
+    if (!config.name) {
+      throw new Error("Channels must have a name to be usable.");
+    }
+    if (!config.audience) {
+      throw new Error(`Channel ${name} is missing a valid audience.`);
+    }
+    this.name = config.name;
+    this.description = config.description;
+    this.bundle = config.bundle || null; // for debugging purposes, which bundle it came from
+    this.audience = config.audience || (new ChannelAudienceWorld());
+    this.color = config.color || null;
+    this.formatter = config.formatter || {
       sender: this.formatToSender.bind(this),
       target: this.formatToReceipient.bind(this),
     };
@@ -29,22 +35,20 @@ class Channel {
    * @param {string}    message
    */
   send(state, sender, message) {
+
+    // If they don't include a message, explain how to use the channel.
     if (!message.length) {
-      Broadcast.sayAt(sender, `Channel: ${this.name}`);
-      if (this.description) {
-        Broadcast.sayAt(sender, this.description);
-      }
-      return this.showUsage(sender);
+      return this.describeSelf(sender);
     }
 
     if (!this.audience) {
-      return util.log(`Channel [${this.name} has invalid audience [${this.audience}]`);
+      throw new Error(`Channel [${this.name} has invalid audience [${this.audience}]`)
     }
 
     this.audience.configure({ state, sender, message });
     const targets = this.audience.getBroadcastTargets();
 
-    // Allow audience to change message e.g., strip target name
+    // Allow audience to change message e.g., strip target name.
     message = this.audience.alterMessage(message);
 
     // Private channels also send the target player to the formatter
@@ -63,8 +67,16 @@ class Channel {
     });
   }
 
+  describeSelf(sender) {
+    Broadcast.sayAt(sender, `Channel: ${this.name}`);
+    if (this.description) {
+      Broadcast.sayAt(sender, this.description);
+    }
+    this.showUsage(sender);
+  }
+
   showUsage(sender) {
-    if (this.audience instanceof ChannelAudienceWorld) {
+    if (this.audience instanceof ChannelAudiencePrivate) {
       Broadcast.sayAt(sender, `Usage: ${this.name} [target] [message]`);
     } else {
       Broadcast.sayAt(sender, `Usage: ${this.name} [message]`);
@@ -76,7 +88,7 @@ class Channel {
    * E.g., you may want "chat" to say "You chat, 'message here'"
    * @param {Player} sender
    * @param {string} message
-   * @param {Functino} colorify
+   * @param {Function} colorify
    * @return {string}
    */
   formatToSender(sender, target, message, colorify) {
@@ -89,7 +101,7 @@ class Channel {
    * @param {Player} sender
    * @param {Player} target
    * @param {string} message
-   * @param {Functino} colorify
+   * @param {Function} colorify
    * @return {string}
    */
   formatToReceipient(sender, target, message, colorify) {
@@ -111,3 +123,5 @@ class Channel {
 }
 
 module.exports = Channel;
+
+

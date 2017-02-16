@@ -58,7 +58,7 @@ module.exports = (srcPath) => {
         },
 
         target: function (sender, target, message, colorify) {
-          return colorify(`Someone yell's from nearby, '${message}'`);
+          return colorify(`Someone yells from nearby, '${message}'`);
         }
       }
     }),

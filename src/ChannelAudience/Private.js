@@ -3,9 +3,10 @@
 const ChannelAudience = require('../ChannelAudience');
 
 /**
- * Audience class representing other players in the area as the sender
+ * Audience class representing a specific targeted player.
+ * Example: `tell` command or `whisper` command.
  */
-class Area extends ChannelAudience {
+class Private extends ChannelAudience {
   getBroadcastTargets() {
     const targetPlayerName = this.message.split(' ')[0];
     const targetPlayer = this.state.PlayerManager.getPlayer(targetPlayerName);
@@ -16,9 +17,9 @@ class Area extends ChannelAudience {
   }
 
   alterMessage(message) {
-    // strip target name from message
+    // Strips target name from message
     return message.split(' ').slice(1).join(' ');
   }
-} 
+}
 
-module.exports = Area;
+module.exports = Private;
