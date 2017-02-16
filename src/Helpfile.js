@@ -25,7 +25,7 @@ class Helpfile {
     const centerPadding = len => ' '.repeat(width / 2 - Math.ceil(len / 2));
 
     let header = bar;
-    header += centerPadding(80, name.length); // Center name.
+    header += centerPadding(name.length); // Center name.
     header += `<bold><white>${name}</white></bold>\r\n`;
     header += bar;
 
