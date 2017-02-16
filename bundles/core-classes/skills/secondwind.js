@@ -4,6 +4,7 @@
  * Basic warrior passive
  */
 module.exports = (srcPath) => {
+
   const SkillType = require(srcPath + 'SkillType');
   const SkillFlag = require(srcPath + 'SkillFlag');
 
