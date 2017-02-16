@@ -6,7 +6,7 @@ const ChannelAudience = require('../ChannelAudience');
  * Audience class representing a specific targeted player.
  * Example: `tell` command or `whisper` command.
  */
-class PrivateAudience extends ChannelAudience {
+class Private extends ChannelAudience {
   getBroadcastTargets() {
     const targetPlayerName = this.message.split(' ')[0];
     const targetPlayer = this.state.PlayerManager.getPlayer(targetPlayerName);
@@ -22,4 +22,4 @@ class PrivateAudience extends ChannelAudience {
   }
 }
 
-module.exports = PrivateAudience;
+module.exports = Private;
