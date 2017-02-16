@@ -22,10 +22,10 @@ class Helpfile {
 
     const bar = "<yellow>---------------------------------------------------------------------------------</yellow>\r\n";
     const width = 80;
-    const getHeaderPadding = len => (new Array(width / 2 - Math.ceil(len / 2)).join(' '))
+    const centerPadding = len => ' '.repeat(width / 2 - Math.ceil(len / 2));
 
     let header = bar;
-    header += getHeaderPadding(80, name.length); // Center name
+    header += centerPadding(80, name.length); // Center name.
     header += `<bold><white>${name}</white></bold>\r\n`;
     header += bar;
 
@@ -40,7 +40,7 @@ class Helpfile {
     if (this.related.length) {
       footer = "<yellow>------------------------------------RELATED--------------------------------------</yellow>\r\n";
       const related = this.related.join(', ');
-      footer += (new Array(width / 2 - Math.ceil(related.length / 2)).join(' '));
+      footer += centerPadding(related.length); // Center the related topics.
       footer += related + '\r\n';
       footer += bar;
     }
