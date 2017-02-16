@@ -5,8 +5,6 @@ const ChannelAudienceWorld = require('./ChannelAudience/World');
 const ChannelAudiencePrivate = require('./ChannelAudience/Private');
 const util = require('util');
 
-class ChannelError extends Error {}
-
 /**
  * @property {ChannelAudience} audience People who receive messages from this channel
  * @property {string}          name     Actual name of the channel the user will type
@@ -15,10 +13,10 @@ class ChannelError extends Error {}
 class Channel {
   constructor(config) {
     if (!config.name) {
-      throw new ChannelError("Channels must have a name to be usable.");
+      throw new Error("Channels must have a name to be usable.");
     }
     if (!config.audience) {
-      throw new ChannelError(`Channel ${name} is missing a valid audience.`);
+      throw new Error(`Channel ${name} is missing a valid audience.`);
     }
     this.name = config.name;
     this.description = config.description;
@@ -44,7 +42,7 @@ class Channel {
     }
 
     if (!this.audience) {
-      throw new ChannelError(`Channel [${this.name} has invalid audience [${this.audience}]`)
+      throw new Error(`Channel [${this.name} has invalid audience [${this.audience}]`)
     }
 
     this.audience.configure({ state, sender, message });
@@ -125,3 +123,5 @@ class Channel {
 }
 
 module.exports = Channel;
+
+
