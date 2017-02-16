@@ -11,7 +11,7 @@ module.exports = (srcPath) => {
       commandQueued: state => function (commandIndex) {
         const command = this.commandQueue.queue[commandIndex];
         const ttr = sprintf('%.1f', this.commandQueue.getTimeTilRun(commandIndex));
-        Broadcast.sayAt(this, `<bold><yellow>Executing</yellow> '<white>${command.label}</white>' <yellow>in</yellow> <white>${ttr}</white> seconds.`);
+        Broadcast.sayAt(this, `<bold><yellow>Executing</yellow> '<white>${command.label}</white>' <yellow>in</yellow> <white>${ttr}</white> <yellow>seconds.</yellow>`);
       },
 
       updateTick: state => function () {
