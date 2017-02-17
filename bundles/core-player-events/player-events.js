@@ -39,15 +39,15 @@ module.exports = (srcPath) => {
           let nextTnl = totalTnl;
           while (this.experience + amount > nextTnl) {
             amount = (this.experience + amount) - nextTnl;
-            this.experience = amount;
             this.level++;
+            this.experience = 0;
             nextTnl = LevelUtil.expToLevel(this.level + 1);
             Broadcast.sayAt(this, `<blue>You are now level <bold>${this.level}</bold>!</blue>`);
             this.emit('level');
           }
-        } else {
-          this.experience += amount;
         }
+
+        this.experience += amount;
 
         this.save();
 
