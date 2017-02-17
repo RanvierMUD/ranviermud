@@ -46,32 +46,9 @@ Connect to the server using `telnet localhost 23`
 
 ## Debugging in Visual Studio Code
 
-Visual Studio Code works great as long as you set the console to "externalTerminal". If you don't, the output will not be colored or recognize newlines.
+Visual Studio Code works great as long as you set the console to "externalTerminal" or "internalTerminal", "internalConsole" will *not* work. If you don't, the output will not recognize newlines or be colored.
 
-Example launch.json
-
-```
-{
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceRoot}\\ranvier",
-            "cwd": "${workspaceRoot}",
-            "args": ["-v", "--respawn=10"],
-            "console": "externalTerminal"
-        },
-        {
-            "type": "node",
-            "request": "attach",
-            "name": "Attach to Process",
-            "port": 5858
-        }
-    ]
-}
-```
+View the relevant Visual Studio Code [documentation](https://code.visualstudio.com/docs/editor/node-debugging#_launch-configuration-attributes).
 
 ## Web API 
 
