@@ -31,11 +31,17 @@ class Helpfile {
     header += `<bold><white>${name}</white></bold>\r\n`;
     header += bar;
 
-    const formatUsageSyntax = usage => `Syntax: ${usage}\r\n\r\n`;
+    const formatHeaderItem = (item, value) => `${item}: ${value}\r\n\r\n`;
     if (this.command) {
-      header += formatUsageSyntax(state.CommandManager.get(this.command).usage);
+      let actualCommand = state.CommandManager.get(this.command);
+
+      header += formatHeaderItem('Syntax', actualCommand.usage);
+      
+      if (actualCommand.aliases && actualCommand.aliases.length > 0){
+        header += formatHeaderItem('Aliases', actualCommand.aliases.join(', '));
+      }
     } else if (this.channel) {
-      header += formatUsageSyntax(state.ChannelManager.get(this.channel).showUsage());
+      header += formatHeaderItem('Syntax', state.ChannelManager.get(this.channel).showUsage());
     }
 
     let footer = bar;
