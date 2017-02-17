@@ -1,5 +1,7 @@
 'use strict';
 
+const Broadcast = require('./Broadcast');
+
 class Helpfile {
   constructor(bundle, name, options) {
     this.bundle = bundle;
@@ -45,7 +47,7 @@ class Helpfile {
       footer += bar;
     }
 
-    return header + this.body + footer;
+    return header + Broadcast.wrap(this.body, 80) + footer;
   }
 }
 
