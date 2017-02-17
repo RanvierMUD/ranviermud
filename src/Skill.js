@@ -70,41 +70,65 @@ class Skill {
     }
 
     if (this.requiresTarget && !target) {
-      if (!args.length) {
-        if (this.targetSelf) {
-          target = player;
-        } else if (player.isInCombat()) {
-          target = [...player.combatants][0];
-        } else {
-          return Broadcast.sayAt(player, `Use ${this.name} on whom?`);
-        }
-      } else {
-        target = Parser.parseDot(args, player.room.npcs);
-      }
-
+      target = this.searchForTargets(args, player)
       if (!target) {
         return Broadcast.sayAt(player,  `Use ${this.name} on whom?`);
       }
     }
 
     if (this.resource.cost) {
-      if (!this.hasEnoughResource(player)) {
-        return Broadcast.sayAt(player, `You do not have enough ${this.resource.attribute}.`);
+      const paid = this.payResourceCost(player);
+      if (!paid) {
+        return;
       }
-
-      // resource cost is calculated as damage so effects could potentially reduce resource costs
-      const damage = new Damage({
-        attribute: this.resource.attribute,
-        amount: this.resource.cost,
-        attacker: null,
-        hidden: true,
-        source: this
-      });
-      damage.commit(player);
     }
 
     this.run(args, player, target);
   }
+
+  /** Finds implicit targets.
+   * @param {string} args
+   * @param {Player} player
+   * @return {Entity|null} Found entity... or not.
+   */
+  searchForTargets(args, player) {
+    if (!args.length) {
+      if (this.targetSelf) {
+        return player;
+      } else if (player.isInCombat()) {
+        return [...player.combatants][0];
+      } else {
+        Broadcast.sayAt(player, `Use ${this.name} on whom?`);
+        return null;
+      }
+    } else {
+      return Parser.parseDot(args, player.room.npcs);
+    }
+  }
+
+  /**
+   * @param {Player} player
+   * @return {boolean} If the player has paid the resource cost.
+   */
+  payResourceCost(player) {
+    if (!this.hasEnoughResource(player)) {
+      Broadcast.sayAt(player, `You do not have enough ${this.resource.attribute}.`);
+      return false;
+    }
+
+    // resource cost is calculated as damage so effects could potentially reduce resource costs
+    const damage = new Damage({
+      attribute: this.resource.attribute,
+      amount: this.resource.cost,
+      attacker: null,
+      hidden: true,
+      source: this
+    });
+
+    damage.commit(player);
+    return true;
+  }
+
 
   activate(player) {
     if (!this.flags.includes(SkillFlag.PASSIVE)) {
