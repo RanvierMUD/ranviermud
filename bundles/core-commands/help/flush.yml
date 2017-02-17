@@ -1,0 +1,4 @@
+---
+command: flush
+body: |
+  Flush currently queued commands

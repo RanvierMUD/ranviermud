@@ -6,6 +6,7 @@ module.exports = (srcPath) => {
 
   return {
     aliases: [ 'level', 'experience' ],
+    usage: 'tnl',
     command: state => (args, player) => {
       const totalTnl = LevelUtil.expToLevel(player.level + 1);
       const currentPerc = player.experience ? Math.floor((player.experience / totalTnl) * 100) : 0;
