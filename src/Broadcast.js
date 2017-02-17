@@ -14,7 +14,7 @@ class Broadcast {
       throw new Error(`Tried to broadcast message not non-broadcastable object: MESSAGE [${message}]`);
     }
 
-    message = wrapWidth ? wrap(message, wrapWidth) : message;
+    message = wrapWidth ? Broadcast.wrap(message, wrapWidth) : message;
 
     const targets = source.getBroadcastTargets();
     targets.forEach(target => {
@@ -102,6 +102,14 @@ class Broadcast {
     buf += new Array(width - Math.round(widthPercent)).join(fillChar);
     buf += "</bold>" + rightDelim + closeColor;
     return buf;
+  }
+
+  static wrap(message, width) {
+    let out = wrap(message, 80);
+    // Fix \n not in a \r\n pair to prevent bad rendering on windows
+    out = out.replace(/\r\n/, '<NEWLINE>').split('\n');
+    out = out.join('\r\n').replace('<NEWLINE>', '\r\n');
+    return out;
   }
 }
 
