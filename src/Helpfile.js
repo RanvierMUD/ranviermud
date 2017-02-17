@@ -30,7 +30,13 @@ class Helpfile {
     header += bar;
 
     if (this.command) {
-      header += 'Syntax: ' + state.CommandManager.get(this.command).usage + '\r\n\r\n';
+      let actualCommand = state.CommandManager.get(this.command);
+
+      header += 'Syntax: ' + actualCommand.usage + '\r\n\r\n';
+
+      if (actualCommand.aliases && actualCommand.aliases.length > 0){
+        header += 'Aliases: ' + actualCommand.aliases.join(', ') + '\r\n\r\n';
+      }
     } else if (this.channel) {
       // TODO: get channel usage
     }
@@ -43,6 +49,7 @@ class Helpfile {
       footer += related + '\r\n';
       footer += bar;
     }
+    
 
     return header + this.body + footer;
   }
