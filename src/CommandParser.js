@@ -146,7 +146,8 @@ class CommandParser {
 
       keyword = parts[0];
     } else {
-      [ keyword, findNth ] = parts;
+      findNth = parseInt(parts[0], 10);
+      keyword = parts[1];
     }
 
     let encountered = 0;
@@ -164,15 +165,15 @@ class CommandParser {
 
       // prioritize keywords over item/player names
       if (entry.keywords && entry.keywords.indexOf(keyword) !== -1) {
-        if (encountered + 1 === findNth) {
-          encountered++;
+        encountered++;
+        if (encountered === findNth) {
           return returnKey ? [key, entry] : entry;
         }
       }
 
       if (entry.name && entry.name.toLowerCase().indexOf(keyword) !== -1) {
-        if (encountered + 1 === findNth) {
-          encountered++;
+        encountered++;
+        if (encountered === findNth) {
           return returnKey ? [key, entry] : entry;
         }
       }
