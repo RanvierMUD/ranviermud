@@ -6,7 +6,7 @@ class Helpfile {
     this.name = name;
 
     if (!options || !options.body) {
-      throw new Error(`Help file [${name}] has no content`);
+      throw new Error(`Help file [${name}] has no content.`);
     }
 
     this.keywords = options.keywords || [name];
@@ -21,25 +21,26 @@ class Helpfile {
     const name = this.name;
 
     const bar = "<yellow>---------------------------------------------------------------------------------</yellow>\r\n";
-
     const width = 80;
+    const centerPadding = len => ' '.repeat(width / 2 - Math.ceil(len / 2));
+
     let header = bar;
-    // center name
-    header += (new Array(width / 2 - Math.ceil(name.length / 2)).join(' '));
-    header += '<bold><white>' + name + '</white></bold>\r\n';
+    header += centerPadding(name.length); // Center name.
+    header += `<bold><white>${name}</white></bold>\r\n`;
     header += bar;
 
+    const formatUsageSyntax = usage => `Syntax: ${usage}\r\n\r\n`;
     if (this.command) {
-      header += 'Syntax: ' + state.CommandManager.get(this.command).usage + '\r\n\r\n';
+      header += formatUsageSyntax(state.CommandManager.get(this.command).usage);
     } else if (this.channel) {
-      // TODO: get channel usage
+      header += formatUsageSyntax(state.ChannelManager.get(this.channel).showUsage());
     }
 
     let footer = bar;
     if (this.related.length) {
       footer = "<yellow>------------------------------------RELATED--------------------------------------</yellow>\r\n";
       const related = this.related.join(', ');
-      footer += (new Array(width / 2 - Math.ceil(related.length / 2)).join(' '));
+      footer += centerPadding(related.length); // Center the related topics.
       footer += related + '\r\n';
       footer += bar;
     }
