@@ -22,6 +22,7 @@ pages:
 
 - Overview: index.md
 - Get Started: get_started.md
+- Server Config: server_config.md
 - Project Structure: structure.md
 - Extending:
     - Bundles: 'extending/bundles.md'
