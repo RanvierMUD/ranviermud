@@ -11,7 +11,7 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, "Casting spells must be surrounded in quotes e.g., cast 'fireball' target");
       }
 
-      const [,, spellName, targetArgs] = match;
+      const [ , , spellName, targetArgs] = match;
       const spell = state.SpellManager.find(spellName);
 
       if (!spell) {
