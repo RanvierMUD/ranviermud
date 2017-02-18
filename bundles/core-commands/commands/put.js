@@ -39,18 +39,17 @@ module.exports = (srcPath) => {
           return Broadcast.sayAt(player, `${toContainer.name} isn't a container.`);
       }
 
-      if (toContainer.attributes.maxItems && toContainer.inventory && toContainer.attributes.maxItems === toContainer.inventory.size) {
-        return Broadcast.sayAt(player, `${toContainer.name} has reached it's limit.`);
+      if (toContainer.attributes.maxItems && toContainer.inventory && toContainer.inventory.size >= toContainer.attributes.maxItems) {
+        return Broadcast.sayAt(player, `${toContainer.name} can't hold any more.`);
       }
 
-      toContainer.addItem(item);
       player.removeItem(item);
+      toContainer.addItem(item);
 
       Broadcast.sayAt(player, `You put a ${item.name} into the ${toContainer.name}`);
 
-      item.emit('put', player);
-      player.emit('put', item);
-
+      item.emit('put', player, toContainer);
+      player.emit('put', item, toContainer);
     }
   };
 };
