@@ -1,6 +1,6 @@
 {% if nav_item.children %}
   <li class="md-nav__item md-nav__item--nested">
-    {% if nav_item.active %}
+    {% if nav_item.active or opened %}
       <input class="md-toggle md-nav__toggle" data-md-toggle="{{ path }}" type="checkbox" id="{{ path }}" checked>
     {% else %}
       <input class="md-toggle md-nav__toggle" data-md-toggle="{{ path }}" type="checkbox" id="{{ path }}">
@@ -16,6 +16,7 @@
         {% set base = path %}
         {% for nav_item in nav_item.children %}
           {% set path = base + "-" + loop.index | string %}
+          {% set opened = null %}
           {% include "partials/nav-item.html"  %}
         {% endfor %}
       </ul>
