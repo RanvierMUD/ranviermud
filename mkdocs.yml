@@ -19,7 +19,6 @@ markdown_extensions:
 google_analytics: ["UA-28253658-1", "auto"]
 
 pages:
-
 - Overview: index.md
 - Get Started: get_started.md
 - Server Config: server_config.md
@@ -34,10 +33,11 @@ pages:
         - Quests: 'extending/areas/quests.md'
         - Scripting: 'extending/areas/scripting.md'
     - Behaviors: 'extending/behaviors.md'
+    - Channels: 'extending/channels.md'
+    - Classes: 'extending/classes.md'
     - Commands: 'extending/commands.md'
+    - Effects: 'extending/effects.md'
     - Helpfiles: 'extending/help.md'
     - Input Events: 'extending/input-events.md'
-    - Skills: 'extending/skills.md'
-    - Channels: 'extending/channels.md'
     - Player Events: 'extending/player-events.md'
-    - Effects: 'extending/effects.md'
+    - Skills: 'extending/skills.md'
