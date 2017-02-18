@@ -15,12 +15,12 @@ core-areas/
   areas/
     limbo/ - Actual area folder, name will be used as key for `area:id`
              pairs which you'll see for items/npcs
-      <a href="/extending/scripting.md">scripts/</a>     - Scripts for individual entities
+      <a href="scripting/">scripts/</a>     - Scripts for individual entities
       <a href="#the-manifest">manifest.yml</a> - <strong>Required</strong> - Metadata about the area itself
-      <a href="/extending/items.md">items.yml</a>    - Item definitions
-      <a href="/extending/npcs.md">npcs.yml</a>     - NPC definitions
-      <a href="/extending/rooms.md">rooms.yml</a>    - Room definitions
-      <a href="/extending/quests.md">quests.js</a>    - Quest implementations
+      <a href="items/">items.yml</a>    - Item definitions
+      <a href="npcs/">npcs.yml</a>     - NPC definitions
+      <a href="rooms/">rooms.yml</a>    - Room definitions
+      <a href="quests/">quests.js</a>    - Quest implementations
 </pre>
 
 ## The Manifest
