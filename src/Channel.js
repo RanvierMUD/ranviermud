@@ -68,19 +68,19 @@ class Channel {
   }
 
   describeSelf(sender) {
-    Broadcast.sayAt(sender, `Channel: ${this.name}`);
+    Broadcast.sayAt(sender, `\r\nChannel: ${this.name}`);
+    Broadcast.sayAt(sender, 'Syntax: ' + this.getUsage());
     if (this.description) {
       Broadcast.sayAt(sender, this.description);
     }
-    this.showUsage(sender);
   }
 
-  showUsage(sender) {
+  getUsage() {
     if (this.audience instanceof ChannelAudiencePrivate) {
-      Broadcast.sayAt(sender, `Usage: ${this.name} [target] [message]`);
-    } else {
-      Broadcast.sayAt(sender, `Usage: ${this.name} [message]`);
+      return `${this.name} <target> [message]`;
     }
+
+    return `${this.name} [message]`;
   }
 
   /**

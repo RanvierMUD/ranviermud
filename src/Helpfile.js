@@ -35,7 +35,7 @@ class Helpfile {
     if (this.command) {
       header += formatUsageSyntax(state.CommandManager.get(this.command).usage);
     } else if (this.channel) {
-      header += formatUsageSyntax(state.ChannelManager.get(this.channel).showUsage());
+      header += formatUsageSyntax(state.ChannelManager.get(this.channel).getUsage());
     }
 
     let footer = bar;
