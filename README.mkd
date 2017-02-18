@@ -23,7 +23,6 @@ We have a slack channel you can use to ask questions, suggest features, or just 
 * Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the event is emitted. Adding new events is easy as npc.emit('eventName'); See documentation on node event emitters for more.
 * Pfile saving in JSON, easy to parse for external usage.
 * Rooms, items, and npcs are easily described in yaml. No weird bullshit ~~~~ and byte-specific parsing that requires a GUI editor to build.
-* Arbitrary room exits custom to each room not locked into n/s/e/w and it's not a pain in the ass to add them.
 * Did I mention it's in blasting Javascript? No compiling, no C, no cygwin, no 15 year old spaghetti code.
 * Leveling, passive/active skills, effects.
 * Flexible channel system.
@@ -89,7 +88,7 @@ Visual Studio Code's built-in terminal will incorrectly render Ranvier output un
 
 - [ ] Add and emit server events that bundles can bind to in `server-events/` that will effectly relace the old `plugin/` infrastructure
 - [ ] Using the new server events create a `core-api` bundle that provides a web api with authentication against player accounts and allows access to game data based on account privileges. To be used with [Sheath](https://github.com/seanohue/sheath-ranviermud)
-- [ ] Fix effects to only serialize options, not the entire effects array
+- [X] Fix effects to only serialize options, not the entire effects array
 - [X] Implement basic combat system
 
 ### Nice to have
