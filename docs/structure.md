@@ -17,5 +17,5 @@
   open-cov.sh      - Script to run tests and open coverage report
   package.json     - NPM config
   <strong>ranvier*</strong>         - Ranvier server executable
-  ranvier.json     - Ranvier configs as described in <a href="/get_started/#server-configuration">Get Started</a>
+  ranvier.json     - Ranvier configs as described in <a href="/server_config/">Server Config</a>
 </pre>
