@@ -121,7 +121,7 @@ module.exports = (srcPath) => {
   }
 
   return {
-    usage: 'quest <log/list/complete/start> <npc> [number]',
+    usage: 'quest <log/list/complete/start> [npc] [number]',
     command : (state) => (args, player) => {
       args = args.trim();
 

@@ -5,6 +5,7 @@ module.exports = (srcPath) => {
   const Parser = require(srcPath + 'CommandParser').CommandParser;
 
   return {
+    usage: 'drop <item>',
     command : (state) => (args, player) => {
       args = args.trim();
 
