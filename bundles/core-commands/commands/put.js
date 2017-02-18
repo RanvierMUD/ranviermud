@@ -21,10 +21,11 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, "Where do you want to put it?");
       }
 
-      let fromList = player.inventory, fromArg = parts[0], item = null, toContainer = null, toArg = parts[1];
-
-      toContainer = Parser.parseDot(toArg, player.room.items);
-      item = Parser.parseDot(fromArg, fromList);
+      const fromList = player.inventory;
+      const fromArg = parts[0];
+      const toArg = parts[1];
+      const item = Parser.parseDot(fromArg, fromList);
+      const toContainer = Parser.parseDot(toArg, player.room.items);
 
       if (!item) {
         return Broadcast.sayAt(player, "You don't have that item.");
