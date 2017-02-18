@@ -1,0 +1,4 @@
+---
+command: put
+body: |
+  Put an item in a container
