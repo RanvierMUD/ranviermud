@@ -101,6 +101,7 @@ module.exports = (srcPath) => {
   }
 
   return {
+    usage: "look [thing]",
     command: state => (args, player) => {
       if (!player.room) {
         util.log(player.getName() + ' is in limbo.');

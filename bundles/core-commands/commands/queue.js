@@ -10,6 +10,7 @@ module.exports = (srcPath) => {
 
   return {
     aliases: [ 'pending' ],
+    usage: 'queue',
     command : (state) => (args, player) => {
       Broadcast.sayAt(player, '<bold><yellow>Command Queue:</yellow></bold>');
       if (!player.commandQueue.hasPending) {

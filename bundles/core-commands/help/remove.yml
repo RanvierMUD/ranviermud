@@ -1,0 +1,4 @@
+---
+command: remove
+body: |
+  Remove equipped item

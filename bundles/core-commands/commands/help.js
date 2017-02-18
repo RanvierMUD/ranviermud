@@ -6,6 +6,7 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
 
   return {
+    usage: 'help',
     command: (state) => (args, player) => {
       if (!args.length) {
         // look at `help help` if they haven't specified a file

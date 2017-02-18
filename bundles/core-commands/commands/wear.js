@@ -8,6 +8,7 @@ module.exports = (srcPath) => {
 
   return {
     aliases: [ 'wield' ],
+    usage: 'wear <item>',
     command : (state) => (arg, player) => {
       arg = arg.trim();
 

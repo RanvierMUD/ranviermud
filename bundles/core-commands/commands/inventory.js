@@ -4,6 +4,7 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
 
   return {
+    usage: 'inventory',
     command : (state) => (args, player) => {
       if (!player.inventory || !player.inventory.size) {
         return Broadcast.sayAt(player, "You aren't carrying anything.");

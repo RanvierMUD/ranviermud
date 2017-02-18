@@ -5,6 +5,7 @@ module.exports = (srcPath) => {
 
   return {
     aliases: ['worn'],
+    usage: 'equipment',
     command: (state) => (args, player) => {
       if (!player.equipment.size) {
         return Broadcast.sayAt(player, "You are completely naked!");

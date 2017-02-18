@@ -6,6 +6,7 @@ module.exports = (srcPath) => {
   const ItemType = require(srcPath + 'ItemType');
 
   return {
+    usage: 'get <item> [container]',
     command : (state) => (args, player) => {
       args = args.trim();
 
