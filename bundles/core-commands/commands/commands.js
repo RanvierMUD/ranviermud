@@ -48,12 +48,6 @@ module.exports = (srcPath) => {
           Broadcast.sayAt(player, '');
         }
       }
-
-      // Command Usage
-      Broadcast.sayAt(player);
-      Broadcast.sayAt(player, "<bold><white>                   Usage</bold></white>");
-      Broadcast.sayAt(player, "<bold><white>===============================================</bold></white>");
-      Broadcast.sayAt(player, "command <required> [optional]");
       
       // end with a line break
       Broadcast.sayAt(player, '');
