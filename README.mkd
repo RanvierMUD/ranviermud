@@ -44,12 +44,6 @@ We have a slack channel you can use to ask questions, suggest features, or just 
 
 Connect to the server using `telnet localhost 23`
 
-## Debugging in Visual Studio Code
-
-Visual Studio Code works great as long as you set the console to "externalTerminal" or "internalTerminal", "internalConsole" will *not* work. If you don't, the output will not recognize newlines or be colored.
-
-View the relevant Visual Studio Code [documentation](https://code.visualstudio.com/docs/editor/node-debugging#_launch-configuration-attributes).
-
 ## Web API 
 
 There is an in-progress Web interface for viewing information about the MUD and building areas in real time.
@@ -67,6 +61,11 @@ GET:
 Right now, you can whitelist IPs by adding them to a key called `webWhitelist` in ranvier.json.
 By default only the local host IP is whitelisted.
 
+## Common Issues
+
+### Debugging in Visual Studio Code
+
+Visual Studio Code's built-in terminal will incorrectly render Ranvier output unless you set the console to "externalTerminal" or "internalTerminal", "internalConsole" will *not* work. View the relevant Visual Studio Code documentation here: https://code.visualstudio.com/docs/editor/node-debugging#_launch-configuration-attributes
 
 ## TODO
 
