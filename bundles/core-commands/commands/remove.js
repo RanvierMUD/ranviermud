@@ -6,6 +6,7 @@ module.exports = (srcPath) => {
 
   return {
     aliases: [ 'unwield', 'unequip' ],
+    usage: 'remove <item>',
     command : (state) => (arg, player) => {
       arg = arg.trim();
 

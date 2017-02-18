@@ -1,0 +1,4 @@
+---
+command: inventory
+body: |
+  View current items in your inventory

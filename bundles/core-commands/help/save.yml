@@ -1,0 +1,4 @@
+---
+command: save
+body: |
+  Save current player state

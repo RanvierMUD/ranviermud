@@ -1,0 +1,9 @@
+---
+command: quest
+body: |
+  View information about quests
+  quest log               Show current quests
+  quest list npc          List quests for a given NPC
+  quest complete number   Complete the given quest
+  quest start npc number  Start the given quest by the given NPC
+  

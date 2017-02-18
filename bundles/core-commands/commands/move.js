@@ -9,6 +9,7 @@
 module.exports = (srcPath) => {
   return {
     aliases: [ "go", "walk" ],
+    usage: 'move [direction]',
     command: (state) => (exit, player) => {
       const room = player.room;
       if (!room) {
