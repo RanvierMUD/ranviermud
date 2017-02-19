@@ -37,7 +37,6 @@ pages:
     - Classes: 'extending/classes.md'
     - Commands: 'extending/commands.md'
     - Effects: 'extending/effects.md'
+    - Events: 'extending/events.md'
     - Helpfiles: 'extending/help.md'
-    - Input Events: 'extending/input-events.md'
-    - Player Events: 'extending/player-events.md'
     - Skills: 'extending/skills.md'
