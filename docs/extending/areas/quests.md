@@ -34,7 +34,7 @@ like this:
 
 ```
 bundles/
-  my-quests/
+  core-quests/
     lib/
       FetchQuest.js
 ```
@@ -79,8 +79,7 @@ class FetchQuest extends Quest {
   What should happen when the player picked up any item
   */
   _getItem(item) {
-    // Make sure the item they picked up is the item the quest wants and ignore
-    // any extra items they pick up after the target amount
+    // Make sure the item they picked up is the item the quest wants
     if (item.entityReference !== this.config.targetItem) {
       return;
     }
@@ -175,6 +174,8 @@ class FetchQuest extends Quest {
     this.player.emit('experience', this.config.reward(this, this.player));
   }
 }
+
+module.exports = FetchQuest;
 ```
 
 ## Creating Quests
