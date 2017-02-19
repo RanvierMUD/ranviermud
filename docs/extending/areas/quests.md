@@ -15,13 +15,16 @@ example, if a player picks up an item the `get` event will fire on the player. A
 
 ## Creating the new Quest type
 
-To have a quest that actually _does something_ you will first need to create a class which extends the core `Quest` class. Once you've created your custom quest type you can have as many quests as you like which are of this type, you don't need to create a custom type for each individual quest. But you will need one for each different type of quest, e.g., a type for kill quests, a type for fetch quests, etc.
+To have a quest that actually _does something_ you will first need to create a class which extends the core `Quest`
+class. Once you've created your custom quest type you can have as many quests as you like which are of this type, you
+don't need to create a custom type for each individual quest. But you will need one for each different type of quest,
+e.g., a type for kill quests, a type for fetch quests, etc.
 
 A fetch quest, we'll say, is as a quest that
 
 * requires the player to pick up a certain number of a certain item
 * can optionally complete automatically when the player picks up the required items or
-  they player has to turn in the quest in at the NPC they received the quest from
+  the player has to turn in the quest in at the NPC they received the quest from
 * optionally removes the items from the players inventory on completion
 * Rewards the player with some configurable amount of experience on completion
 
