@@ -10,7 +10,7 @@ class FetchQuest extends Quest {
     config = Object.assign({
       autoComplete: false,
       removeItem: false,
-      reward: 0,
+      reward: _ => 0, // dummy function to reward 0 experience by default
       targetCount: 1
     }, config);
 
