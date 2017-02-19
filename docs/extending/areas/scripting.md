@@ -24,6 +24,33 @@ lot when trying to figure out what script goes to what entity.
 
 See the relevant entity's guide section on how to add the script to the entity.
 
+## Behaviors
+
+Behaviors are scripts that you can reuse for the same entity types across multiple areas/bundles. For example maybe you
+want to have many different NPCs wander around or immediately attack players upon entering the room (aggro mobs) you can
+use behaviors for that.
+
+Behaviors are defined  exactly the same as normal scripts but are created inside the `behaviors/` directory inside your
+bundle but _outside_ of your area definition.
+
+```
+bundles/my-area/
+  areas/
+    limbo/
+    ...
+  behaviors/
+    npcs/
+      aggro.js
+    items/
+    rooms/
+```
+
+Again, see the relevant entity's guide section on how to add behaviors to the entity.
+
+> Tip: Behaviors can be used as flags. For example, if you say `behaviors: ['combat']` on an NPC you don't need to
+> actually create a combat.js behavior file, `npc.hasBehavior('combat')` will still return true. This is used, as an
+> example, in the `kill` command in `core-combat` to differentiate pacifist NPCs from NPCs that can enter combat
+
 ## Default events
 
 This is a list of events that are emitted by default in Ranvier.

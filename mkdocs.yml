@@ -32,7 +32,6 @@ pages:
         - Rooms: 'extending/areas/rooms.md'
         - Quests: 'extending/areas/quests.md'
         - Scripting: 'extending/areas/scripting.md'
-    - Behaviors: 'extending/behaviors.md'
     - Channels: 'extending/channels.md'
     - Classes: 'extending/classes.md'
     - Commands: 'extending/commands.md'
