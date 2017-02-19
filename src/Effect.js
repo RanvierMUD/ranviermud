@@ -41,7 +41,6 @@ class Effect extends EventEmitter {
       unique: true,
       type: 'undef',
       tickInterval: false,
-      skill: null
     }, def.config);
 
     this.target = target;
@@ -203,7 +202,7 @@ class Effect extends EventEmitter {
     this.state = data.state;
 
     if (data.skill) {
-      this.skill = state.SkillManager.get(data.skill);
+      this.skill = state.SkillManager.get(data.skill) || state.SpellManager.get(data.skill);
     }
   }
 }
