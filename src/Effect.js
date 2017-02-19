@@ -40,7 +40,7 @@ class Effect extends EventEmitter {
       maxStacks: 0,
       unique: true,
       type: 'undef',
-      ticketInterval: false,
+      tickInterval: false,
       skill: null
     }, def.config);
 
