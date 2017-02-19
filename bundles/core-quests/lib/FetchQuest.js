@@ -10,7 +10,8 @@ class FetchQuest extends Quest {
     config = Object.assign({
       autoComplete: false,
       removeItem: false,
-      reward: 0
+      reward: 0,
+      targetCount: 1
     }, config);
 
     super(qid, config, player);
@@ -30,11 +31,15 @@ class FetchQuest extends Quest {
   }
 
   _getItem(item) {
-    if (item.entityReference !== this.config.targetItem || this.state.count >= this.config.targetCount) {
+    if (item.entityReference !== this.config.targetItem) {
       return;
     }
 
     this.state.count = (this.state.count || 0) + 1;
+
+    if (this.state.count > this.config.targetCount) {
+      return;
+    }
 
     this.emit('progress', this.getProgress());
 
@@ -73,6 +78,11 @@ class FetchQuest extends Quest {
     }
 
     this.state.count--;
+
+    if (this.state.count >= this.config.targetCount) {
+      return;
+    }
+
     this.emit('progress', this.getProgress());
   }
 }

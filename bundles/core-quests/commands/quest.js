@@ -21,7 +21,7 @@ module.exports = (srcPath) => {
       }
 
       let availableQuests = npc.quests
-        .map(qid => state.QuestFactory.create(state, qid, {}, player))
+        .map(qid => state.QuestFactory.create(state, qid, player))
         .filter(quest => (player.questTracker.canStart(quest) || player.questTracker.isActive(quest.id)))
       ;
 
@@ -64,7 +64,7 @@ module.exports = (srcPath) => {
       }
 
       let availableQuests = npc.quests
-        .map(qid => state.QuestFactory.create(state, qid, {}, player))
+        .map(qid => state.QuestFactory.create(state, qid, player))
         .filter(quest => (player.questTracker.canStart(quest) || player.questTracker.isActive(quest.id)))
       ;
 

@@ -30,11 +30,11 @@ class QuestFactory {
   /**
    * @param {GameState} GameState
    * @param {string}    qid
-   * @param {object}    state     current quest state
    * @param {Player}    player
+   * @param {object}    state     current quest state
    * @return {Quest}
    */
-  create(GameState, qid, state, player) {
+  create(GameState, qid, player, state = {}) {
     const quest = this.quests.get(qid);
     const instance = new quest.type(qid, quest.config, player);
     instance.state = Object.assign(instance.state, state);

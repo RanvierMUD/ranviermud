@@ -100,7 +100,7 @@ class QuestTracker {
    */
   hydrate(state) {
     for (const [qid, data] of this.activeQuests) {
-      const quest = state.QuestFactory.create(state, qid, data.state, this.player);
+      const quest = state.QuestFactory.create(state, qid, this.player, data.state);
       quest.started = data.started;
 
       this.activeQuests.set(qid, quest);
