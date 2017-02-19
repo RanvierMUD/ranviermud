@@ -40,7 +40,7 @@ class Effect extends EventEmitter {
       maxStacks: 0,
       unique: true,
       type: 'undef',
-      ticketInterval: false,
+      tickInterval: false,
       skill: null
     }, def.config);
 
@@ -145,7 +145,7 @@ class Effect extends EventEmitter {
   /**
    * @param {string} attrName
    * @param {number} currentValue
-   * @return 
+   * @return {number} attribute modified by effect
    */
   modifyAttribute(attrName, currentValue) {
     const modifier = (this.modifiers.attributes[attrName] || (_ => _)).bind(this);
