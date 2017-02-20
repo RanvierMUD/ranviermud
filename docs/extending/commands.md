@@ -128,10 +128,10 @@ module.exports = (srcPath) => {
       /*
       This is a perfect example of emitting events that your custom item scripts will
       listen for as described in the Scripting section of the Areas documentation. In
-      this instance if the item's script is listening for the `equip` event it will be
-      notified that the player just equipped the item
+      this instance if the item's script is listening for the `unequip` event it will be
+      notified that the player just unequipped the item
       */
-      item.emit('equip', player);
+      item.emit('unequip', player);
     }
   };
 };
