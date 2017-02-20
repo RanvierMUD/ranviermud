@@ -38,7 +38,7 @@ module.exports = (srcPath) => {
         state.AccountManager.addAccount(args.account);
         args.account.save();
 
-        socket.emit('create-player', socket, args);
+        socket.emit('confirm-new-password', socket, args);
       });
     }
   };
