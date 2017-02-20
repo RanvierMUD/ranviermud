@@ -77,7 +77,7 @@ Events are shown as:
 was already in combat when new combatants are added
 
 `damaged` _`(Damage damage)`_
-:    Something has decreased on of the NPC's attributes, not just health, applies to any attribute. See `src/Damage.js`
+:    Something has decreased one of the NPC's attributes, not just health, applies to any attribute. See `src/Damage.js`
 for details of information available from `damage` argument.
 
 `heal` _`(Heal heal, Character target)`_

@@ -7,13 +7,13 @@ commands that should give a decent overview of how you can access the game's sta
 ## Creating a New Command
 
 Commands in a bundle all go under the `commands/` folder in your bundle directory. So in our case we're creating two
-commands: `inventory`, and `who` so our bundle will look like this:
+commands: `inventory`, and `remove` so our bundle will look like this:
 
 ```
 bundles/my-commands/
   commands/
     inventory.js
-    who.js
+    remove.js
 ```
 
 The name of the file minus `.js` will be the command the user types so take that into consideration when naming the
@@ -43,9 +43,9 @@ module.exports = (srcPath) => {
 
 ## Example Commands
 
-Both of  commands happen to interact with the player but take note that you have access to the entirety of the game's
+Both of these commands happen to interact with the player but take note that you have access to the entirety of the game's
 state inside these commands. That includes all active players, all areas, rooms, NPCs, and items in the game, server
-configuration as defined in `ranvier.json` and more. See the `ranvier` executable's `GameState` variable for a list of
+configuration as defined in `ranvier.json`, and more. See the `ranvier` executable's `GameState` variable for a list of
 all the things you have access to. Further, the `core-commands` default bundle which ships with Ranvier has many example
 commands to work from.
 
