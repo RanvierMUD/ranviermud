@@ -2,3 +2,5 @@
 command: queue
 body: |
   View current queue of commands for the player
+related:
+- flush
