@@ -23,7 +23,7 @@ module.exports = (srcPath) => {
           return socket.emit('new-account-password', socket, args);
         }
 
-        return socket.emit('choose-character', socket, { account: args.account });
+        return socket.emit('create-player', socket, { account: args.account });
       });
     }
   };
