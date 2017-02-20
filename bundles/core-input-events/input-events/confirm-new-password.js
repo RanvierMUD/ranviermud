@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Account password event
+ * Account password confirmation station
  */
 module.exports = (srcPath) => {
   const EventUtil = require(srcPath + 'EventUtil');
