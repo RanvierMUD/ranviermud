@@ -17,19 +17,7 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, 'You are floating in the nether, it would disappear forever.');
       }
 
-      // get 3.foo from bar -> get 3.foo bar
-      const parts = args.split(' ').filter(arg => !arg.match(/from/));
-
-      let source = null, search = null;
-      if (parts.length === 1) {
-        search = parts[0];
-        source = player.inventory;
-      } else {
-        // TODO
-        return Broadcast.sayAt(player, 'Getting items from containers is not yet supported');
-      }
-
-      const item = Parser.parseDot(search, source);
+      const item = Parser.parseDot(args, player.inventory);
 
       if (!item) {
         return Broadcast.sayAt(player, "You aren't carrying anything like that.");
@@ -39,6 +27,7 @@ module.exports = (srcPath) => {
       player.room.addItem(item);
       player.emit('drop', item);
       item.emit('drop', player);
+
       for (const npc of player.room.npcs) {
         npc.emit('playerDropItem', player, item);
       }

@@ -33,7 +33,6 @@ pages:
         - Quests: 'extending/areas/quests.md'
         - Scripting: 'extending/areas/scripting.md'
     - Channels: 'extending/channels.md'
-    - Classes: 'extending/classes.md'
     - Commands: 'extending/commands.md'
     - Effects: 'extending/effects.md'
     - Events: 'extending/events.md'

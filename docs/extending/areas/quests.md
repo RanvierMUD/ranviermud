@@ -46,7 +46,7 @@ bundles/
 const Quest = require('../../../src/Quest');
 
 class FetchQuest extends Quest {
-  // Quest type constructor takes the qid (Quest id), a configuration of the this
+  // Quest type constructor takes the qid (Quest id), a configuration of this
   // particular quest, and the player the quest is active on
   constructor(qid, config, player) {
     // Here we'll add our custom configuration: autoComplete, removeItem, and the

@@ -7,9 +7,7 @@ module.exports = (srcPath) => {
   return {
     aliases: [ 'unwield', 'unequip' ],
     usage: 'remove <item>',
-    command : (state) => (arg, player) => {
-      arg = arg.trim();
-
+    command : state => (arg, player) => {
       if (!arg.length) {
         return Broadcast.sayAt(player, 'Remove what?');
       }
