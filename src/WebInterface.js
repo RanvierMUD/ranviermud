@@ -8,9 +8,13 @@ const whitelist  = require('whitelist-ips');
 const bodyParser = require('body-parser');
 const app        = express();
 const router     = express.Router();
+const celebrate  = require('celebrate');
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 const Config = require('./Config');
+const APIBuilder = require('./APIBuilder');
+const APIAdmin = require('./APIAdmin');
 
 class WebInterface {
   
@@ -26,14 +30,15 @@ class WebInterface {
   init() {
     util.log('[WEB] Initializing...');
     this.setUpMiddleWare();
-    this.setUpGetRoutes();
     app.listen(this.port);
     util.log(`[WEB]: Web API activated and running on port ${this.port}.`);
   }
 
   setUpMiddleWare() {
-    app.use('/api', router);
-    app.use(whitelist(['127.0.0.1']));
+    app.use('/api/builder', new APIBuilder(this.state).setupRoutes());
+    app.use('/api/admin', new APIAdmin(this.state).setupRoutes());
+    app.use(celebrate.errors());
+    app.use(whitelist(this.whiteListed));
     app.use((err, req, res, next) => {
       if (err.name == "WhitelistIpError") {
         util.log(`[WEB]: Forbidden request: ${req.ip}`);
@@ -44,48 +49,6 @@ class WebInterface {
       }
     });
   }
-
-  setUpGetRoutes() {
-    const { MobFactory, PlayerManager, ItemManager, RoomManager, HelpManager } = this.state;
-
-    // Routes for the API's GET response.
-    router.get('/npcs',    this.getResponseData(MobFactory, 'npcs'));
-    router.get('/players', this.getResponseData(PlayerManager, 'players'));     
-    router.get('/items',   this.getResponseData(ItemManager, 'items'));
-    router.get('/rooms',   this.getResponseData(RoomManager, 'rooms'));
-    router.get('/help',    this.getResponseData(HelpManager, 'helps'));
-  }
-
-  getResponseData(manager, name) {
-    return (req, res) => {
-      const response = this.parseEntitiesIntoResponse(manager, name);
-      return res.json({ [name]: response });
-    };
-  }
-
-  parseEntitiesIntoResponse(manager, name) {
-    const entities = manager[name];
-    let response   = [];
-    
-    if (entities instanceof Set) {
-      response = [...entities]; 
-    }
-
-    if (entities instanceof Map) {
-      handleMap(entities, response);
-    }
-
-    function handleMap(entities, response) {
-      for (let [key, value] of entities) {
-        if (!value) { continue; }
-        const val = value.serialize ? value.serialize() : value;
-        response.push(val);
-      }
-    }
-
-    return response;
-  }
-
 }
 
 module.exports = WebInterface;

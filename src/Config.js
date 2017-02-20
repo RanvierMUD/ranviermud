@@ -21,8 +21,25 @@ class Config {
     __cache[key] = val;
   }
 
+  static getAll() {
+    if (!__cache) {
+      Config.load();
+    }
+
+    return __cache;
+  }
+
   static load() {
     __cache = Data.parseFile(__dirname + '/../ranvier.json');
+  }
+
+  static loadDefaults() {
+    return Data.parseFile(__dirname + '/../ranvier.default.json');
+  }
+
+  static save(config) {
+    config = Object.assign(this.loadDefaults(), config);
+    Data.saveFile(__dirname + '/../ranvier.json', config);
   }
 }
 

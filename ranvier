@@ -45,6 +45,8 @@ const QuestFactory = require('./src/QuestFactory');
 const RoomManager = require('./src/RoomManager');
 const SkillManager = require('./src/SkillManager');
 
+const BundleFileManager = require('./src/FileManagement/BundleFileManager');
+
 const Telnet = require('./src/Telnet');
 
 // Wrapper for ranvier.json
@@ -107,6 +109,29 @@ function init(restartServer) {
   // Set up web API
   const WebInterface = new (require('./src/WebInterface'))(GameState);
   WebInterface.init();
+
+  const FileManager = new BundleFileManager(GameState);
+
+  FileManager.loadBundles(__dirname);
+
+  const coreAreaBundleDir = FileManager.getBundleDirectory('core-areas');
+
+  coreAreaBundleDir.createArea({name: 'new-area', title: 'My New Area', suggestedLevel: '1-10'});
+
+
+
+  // var manager = new BundleFileManager(__dirname, 'new-bundle', GameState);
+  // let newArea = manager.getArea('new-area');
+
+  // newArea.load();
+
+  // newArea.put('items', {
+  //   id: 1,
+  //   name: "Test",
+  //   roomDesc: "Test"
+  // });
+
+  
 
   if (restartServer) {
     util.log("START - Starting server");
