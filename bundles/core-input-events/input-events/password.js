@@ -4,11 +4,15 @@
  * Account password event
  */
 module.exports = (srcPath) => {
+  const EventUtil = require(srcPath + 'EventUtil');
+
   let passwordAttempts = {};
   const maxFailedAttempts = 2;
 
   return {
     event: state => (socket, args) => {
+      const write = EventUtil.genWrite(socket);
+
       let name = args.account.name;
 
       if (!passwordAttempts[name]) {
@@ -17,14 +21,14 @@ module.exports = (srcPath) => {
 
       // Boot and log any failed password attempts
       if (passwordAttempts[name] > maxFailedAttempts) {
-        socket.write("Password attempts exceeded.\r\n");
+        write("Password attempts exceeded.\r\n");
         passwordAttempts[name] = 0;
         socket.end();
         return false;
       }
 
       if (!args.dontwelcome) {
-        socket.write("Enter your password: ");
+        write("Enter your password: ");
         socket.toggleEcho();
       }
 
@@ -32,7 +36,7 @@ module.exports = (srcPath) => {
         socket.toggleEcho();
 
         if (!args.account.checkPassword(pass.toString().trim())) {
-          socket.write("Incorrect password.\r\n");
+          write("<red>Incorrect password.</red>\r\n");
           passwordAttempts[name]++;
 
           return socket.emit('password', socket, args);
