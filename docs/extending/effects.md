@@ -1,4 +1,4 @@
-Effects temporarily or permanently change attributes of their target. For example:
+Effects are often used for changing the attributes of their target. For example:
 
 * shielding them from harm
 * regenerating or damaging their health over time
@@ -15,4 +15,7 @@ A few examples of how effects can be combined with other aspects of Ranvier's en
 * A multiplier to experience points when grouped with other players.
 * Boots that make a warrior's Kick skill do 20% more damage.
 * A silence effect, preventing the player from using certain channels or casting certain spells.
-* Cause the player character to dream while sleeping.
+* Cause the player character to have prophetic dreams while sleeping.
+* A confusion spell causing a character to `say` gibberish every 30 seconds and `move` in random directions.
+
+You can be creative when using effects, since they are as fully scriptable as commands or events. In fact, as mentioned above, you have access to all player commands and events via the effects system.
