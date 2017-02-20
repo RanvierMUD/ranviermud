@@ -20,7 +20,7 @@ functionality expected in most Diku-style MUDs.
 * `core-input-events` - Diku-style implementation of login flow with accounts
   and Diku-style command interpretation
     * **Warning:** Disabling this bundle is ill-advised unless you have studied
-      well the [Input Events](/extending/input-events.md) documentation
+      well the [Events](events.md) documentation
 * `core-player-events` - Example implementation of experience/leveling for the player
 * `debug-commands` - Commands useful while debugging (`givexp` for example)
     * **Warning:** It is highly recommend that you disable this module for your
@@ -57,7 +57,7 @@ A bundle can contain any or all of the following children though it's suggested 
   Effects that can be applied to characters (NPCs/Players)
 <a href="../help/">help/</a>
   Helpfiles
-<a href="../input-events/">input-events/</a>
+<a href="../events/">input-events/</a>
   Input events are events that happen on the socket, this involves login and command interpreting.
   <strong>Warning:</strong> Because of input events' important role it is generally not advised to load more than one
   bundle with input events
@@ -65,7 +65,7 @@ A bundle can contain any or all of the following children though it's suggested 
   Player skills (Spells are just skills with the SPELL type)
 <a href="../channels/">channels.js</a>
   Communication channels
-<a href="../player-events/">player-events.js</a>
+<a href="../events/">player-events.js</a>
   Basically everything the player does triggers an event on them that can be attached to and perform
   functionality such as experience, leveling, combat, and time based calculations
 </pre>

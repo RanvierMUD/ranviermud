@@ -65,35 +65,3 @@ By default only the local host IP is whitelisted.
 ### Debugging in Visual Studio Code
 
 Visual Studio Code's built-in terminal will incorrectly render Ranvier output unless you set the console to "externalTerminal" or "internalTerminal", "internalConsole" will *not* work. View the relevant Visual Studio Code documentation here: https://code.visualstudio.com/docs/editor/node-debugging#_launch-configuration-attributes
-
-## TODO
-
-### Critical
-
-- [ ] Respawn
-- [ ] "Hotboot" - Reload anything from a bundle. Changing core will require a restart
-- [X] Implement containers
-- [X] Rewrite script attachment to entities with the new bundle loader
-- [X] Implement equipping
-- [X] Implement some kind of helper for time-based events (Implemented by way of ticks)
-- [X] Completely new bundle system in place
-- [X] Object handling rewritten from scratch
-- [X] Remove localization
-- [X] Implement global config file to allow sweeping changes without changing code
-- [X] Completely rewrite helpfiles
-- [X] Refactor channels to have types that will allow things like yell vs chat
-    Channels were completely rewritten
-
-### Features/Bugs
-
-- [ ] Add and emit server events that bundles can bind to in `server-events/` that will effectly relace the old `plugin/` infrastructure
-- [ ] Using the new server events create a `core-api` bundle that provides a web api with authentication against player accounts and allows access to game data based on account privileges. To be used with [Sheath](https://github.com/seanohue/sheath-ranviermud)
-- [X] Fix effects to only serialize options, not the entire effects array
-- [X] Implement basic combat system
-
-### Nice to have
-
-- [ ] Update help to allow data like skill cost as tokens
-- [ ] Web API for building/editing the world, with authentication.
-- [X] Web API for getting information about the world.
-- [X] Update help to autogenerate usage for channels
