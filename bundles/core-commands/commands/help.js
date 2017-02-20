@@ -30,7 +30,7 @@ module.exports = (srcPath) => {
           return Broadcast.sayAt(player, hfile.render(state));
         }
 
-        Broadast.sayAt(player, "<white>Search Results:</white>");
+        Broadcast.sayAt(player, "\r\n<white>Search Results:</white>");
         Broadcast.sayAt(player, "-----------------------------------------");
 
         for (const [name, help] of results) {
