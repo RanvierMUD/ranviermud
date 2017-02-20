@@ -1,4 +1,4 @@
-Effects are often used for changing the attributes of their target. For example:
+Effects can be used to modify a target in some way, temporary or permanent. For example:
 
 * shielding them from harm
 * regenerating or damaging their health over time
