@@ -36,7 +36,7 @@ class Helpfile {
       let actualCommand = state.CommandManager.get(this.command);
 
       header += formatHeaderItem('Syntax', actualCommand.usage);
-      
+
       if (actualCommand.aliases && actualCommand.aliases.length > 0){
         header += formatHeaderItem('Aliases', actualCommand.aliases.join(', '));
       }
