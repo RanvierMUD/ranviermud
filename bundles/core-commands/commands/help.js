@@ -15,30 +15,8 @@ module.exports = (srcPath) => {
 
       // `help search`
       if (args.indexOf('search') === 0) {
-        args = args.split(' ').slice(1).join(' ');
-        if (!args.length) {
-          // `help search` syntax is included in `help help`
-          return state.CommandManager.get('help').execute('help', player);
-        }
-
-        const results = state.HelpManager.find(args);
-        if (!results.size) {
-          return Broadcast.sayAt(player, "Sorry, no results were found for your search.");
-        }
-        if (results.size === 1) {
-          const [ _, hfile ] = [...results][0];
-          return Broadcast.sayAt(player, hfile.render(state));
-        }
-
-        Broadcast.sayAt(player, "\r\n<white>Search Results:</white>");
-        Broadcast.sayAt(player, "-----------------------------------------");
-
-        for (const [name, help] of results) {
-          Broadcast.sayAt(player, `<cyan>${name}</cyan>`);
-        }
-        return;
+        return searchHelpfiles(args, player, state);
       }
-
 
       const hfile = state.HelpManager.get(args);
 
@@ -50,4 +28,29 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, hfile.render(state));
     }
   };
+
+  function searchHelpfiles(args, player, state) {
+    args = args.split(' ').slice(1).join(' ');
+    if (!args.length) {
+      // `help search` syntax is included in `help help`
+      return state.CommandManager.get('help').execute('help', player);
+    }
+
+    const results = state.HelpManager.find(args);
+    if (!results.size) {
+      return Broadcast.sayAt(player, "Sorry, no results were found for your search.");
+    }
+    if (results.size === 1) {
+      const [ _, hfile ] = [...results][0];
+      return Broadcast.sayAt(player, hfile.render(state));
+    }
+    Broadcast.sayAt(player, "<yellow>---------------------------------------------------------------------------------</yellow>");
+    Broadcast.sayAt(player, "<white>Search Results:</white>");
+    Broadcast.sayAt(player, "<yellow>---------------------------------------------------------------------------------</yellow>");
+
+    for (const [name, help] of results) {
+      Broadcast.sayAt(player, `<cyan>${name}</cyan>`);
+    }
+  }
+
 };
