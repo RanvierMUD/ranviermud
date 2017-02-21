@@ -2,3 +2,7 @@
 command: put
 body: |
   Put an item in a container
+related:
+- get
+keywords:
+- loot

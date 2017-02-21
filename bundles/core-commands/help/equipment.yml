@@ -2,3 +2,9 @@
 command: equipment
 body: |
   View currently worn equipment
+related:
+  - inventory
+  - wear
+  - remove
+keywords:
+- loot

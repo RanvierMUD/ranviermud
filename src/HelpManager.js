@@ -20,11 +20,17 @@ class HelpManager {
    * @return {Help}
    */
   find(search) {
+    const results = new Map();
     for (const [ name, help ] of this.helps.entries()) {
       if (name.indexOf(search) === 0) {
-        return help;
+        results.set(name, help);
+        continue;
+      }
+      if (help.keywords.some(keyword => keyword.includes(search))) {
+        results.set(name, help);
       }
     }
+    return results;
   }
 }
 
