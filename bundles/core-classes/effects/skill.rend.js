@@ -15,11 +15,11 @@ module.exports = srcPath => {
     },
     flags: [Flag.DEBUFF],
     listeners: {
-      eventActivated: function () {
+      effectActivated: function () {
         Broadcast.sayAt(this.target, "<bold><red>You've suffered a deep wound, it's bleeding profusely</red></bold>");
       },
 
-      eventDeactivated: function () {
+      effectDeactivated: function () {
         Broadcast.sayAt(this.target, "Your wound has stopped bleeding.");
       },
 

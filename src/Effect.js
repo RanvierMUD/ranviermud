@@ -112,7 +112,7 @@ class Effect extends EventEmitter {
     }
 
     this.startedAt = Date.now() - this.elapsed;
-    this.emit('eventActivated');
+    this.emit('effectActivated');
     this.active = true;
   }
 
@@ -121,7 +121,7 @@ class Effect extends EventEmitter {
       return;
     }
 
-    this.emit('eventDeactivated');
+    this.emit('effectDeactivated');
     this.active = false;
   }
 

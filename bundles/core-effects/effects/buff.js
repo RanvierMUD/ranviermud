@@ -23,11 +23,11 @@ module.exports = srcPath => {
       }
     },
     listeners: {
-      eventActivated: function () {
+      effectActivated: function () {
         Broadcast.sayAt(this.target, "Strength courses through your veins!");
       },
 
-      eventDeactivated: function () {
+      effectDeactivated: function () {
         Broadcast.sayAt(this.target, "You feel weaker.");
       }
     }

@@ -38,7 +38,7 @@ module.exports = srcPath => {
       }
     },
     listeners: {
-      eventActivated: function () {
+      effectActivated: function () {
         Broadcast.sayAt(this.target, `A shield of energy shield envelops you, protecting you from harm!`);
 
         if (this.target instanceof Player) {
@@ -50,7 +50,7 @@ module.exports = srcPath => {
         }
       },
 
-      eventDeactivated: function () {
+      effectDeactivated: function () {
         Broadcast.sayAt(this.target, "The shield of energy around you dissipates.");
         if (this.target instanceof Player) {
           this.target.removePrompt("damageshield");

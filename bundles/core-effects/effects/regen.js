@@ -15,7 +15,6 @@ module.exports = srcPath => {
     flags: [Flag.BUFF],
     state: {
       magnitude: 10,
-      interval: 3
     },
     listeners: {
       effectedAdded: function () {
