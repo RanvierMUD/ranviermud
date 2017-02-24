@@ -15,7 +15,7 @@ class APIAdmin {
 
     router.get('/config', this.getConfig());
     router.put('/config', celebrate({body: validators.config}), this.putConfig());
-    
+
     return router;
   }
 

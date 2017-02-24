@@ -58,7 +58,6 @@ class BundleFileManager {
     return fs.existsSync(path.join(this.basePath, bundleName));
   }
 
-
   /**
    * Get a bundle directory by name
    * 
@@ -73,8 +72,6 @@ class BundleFileManager {
 
   /**
    * Create a new bundle directory
-   *
-   * @returns 
    *
    * @memberOf BundleFileManager
    */

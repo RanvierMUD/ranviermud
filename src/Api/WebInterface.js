@@ -17,7 +17,7 @@ const APIBuilder = require('./APIBuilder');
 const APIAdmin = require('./APIAdmin');
 
 class WebInterface {
-  
+
   constructor(state) {
     this.state  = state;
     this.port   = Config.get('webPort') || 9000;

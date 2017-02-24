@@ -27,7 +27,9 @@ class BundleFolder {
     if (reset) {
       this.areas = [];
     }
+
     this.loadAreas();
+
     return this;
   }
 

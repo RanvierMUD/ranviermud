@@ -1,7 +1,4 @@
 var joi = require('joi');
-var defaultJson = require('../ranvier.default.json');
-
-console.log('port: ' + defaultJson.port);
 
 module.exports = {
   item: joi.object().keys({

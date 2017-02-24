@@ -108,8 +108,6 @@ function init(restartServer) {
   const WebInterface = new (require('./src/Api/WebInterface'))(GameState);
   WebInterface.init();
 
-  
-
   if (restartServer) {
     util.log("START - Starting server");
 

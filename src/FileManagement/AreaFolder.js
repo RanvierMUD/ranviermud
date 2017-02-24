@@ -15,11 +15,6 @@ class AreaFolder extends EventEmitter {
     this.items = [];
     this.npcs = [];
     this.rooms = [];
-    this.entities = {
-      items: this.items,
-      npcs: this.npcs,
-      rooms: this.rooms
-    }
     this.manifest = {};
 
     this.filesToWatch = [
@@ -42,10 +37,12 @@ class AreaFolder extends EventEmitter {
       this.npcs = [];
       this.rooms = [];
     }
+
     this.loadManifest();
     this.loadNpcs();
     this.loadItems();
     this.loadRooms();
+
     return this;
   }
 
@@ -105,10 +102,8 @@ class AreaFolder extends EventEmitter {
     let existingNpc = this.getNpc(npc.id);
 
     if (existingNpc) {
-      //Set old = new
       Object.assign(existingNpc, npc);
     } else {
-      //Add new one
       this.npcs[this.npcs.length] = npc;
     }
 
