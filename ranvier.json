@@ -19,18 +19,6 @@
     "core-quests",
     "debug-commands"
   ],
-  "excludedBuilderBundles": [
-    "core-channels",
-    "core-commands",
-    "core-effects",
-    "core-input-events",
-    "core-player-events",
-    "core-skills",
-    "core-combat",
-    "core-classes",
-    "core-quests",
-    "debug-commands"
-  ],
   "maxAccountNameLength": 20,
   "minAccountNameLength": 3,
   "maxPlayerNameLength": 20,

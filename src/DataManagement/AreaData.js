@@ -6,7 +6,7 @@ const yaml = require('js-yaml');
 const chokidar = require('chokidar');
 const EventEmitter = require('events');
 
-class AreaFolder extends EventEmitter {
+class AreaData extends EventEmitter {
   constructor(state, name, baseFolder) {
     super();
     this.areaName = name;
@@ -143,4 +143,4 @@ class AreaFolder extends EventEmitter {
   }
 }
 
-module.exports = AreaFolder;
+module.exports = AreaData;

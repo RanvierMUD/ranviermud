@@ -5,20 +5,17 @@ const celebrate = require('celebrate');
 
 const Config = require('../Config');
 const validators = require('../Validators');
-const FileManager = require('../FileManagement/BundleFileManager');
+const FileManager = require('../DataManagement/BundleDataManager');
 
 class APIBuilder {
 
   constructor(state) {
-    this.state = state;
     this.fileManager = new FileManager(state);
     this.fileManager.loadBundles(path.join(__dirname, '..', '..'));
   }
 
   setupRoutes() {
-    const { MobFactory, PlayerManager, ItemManager, RoomManager, HelpManager } = this.state;
 
-    // Routes for the API's GET response.
     router.get('/bundles', this.getBundles.bind(this));
     router.get('/bundles/:bundleName', this.getBundle.bind(this));
     router.get('/bundles/:bundleName/areas', this.getAreas.bind(this));

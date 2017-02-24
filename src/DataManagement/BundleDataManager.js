@@ -5,18 +5,17 @@ const path = require('path');
 const yaml = require('js-yaml');
 const chokidar = require('chokidar');
 
-const BundleFolder = require('./BundleFolder');
+const BundleData = require('./BundleData');
 
 /**
- * File Manager for bundles
+ * Bundle Data Manager
  *
- * @class BundleFileManager
+ * @class BundleDataManager
  */
-class BundleFileManager {
+class BundleDataManager {
 
   constructor(state) {
     this.state = state;
-    this.excludedBuilderBundles = this.state.Config.get('excludedBuilderBundles', []);
     this.bundles = [];
   }
 
@@ -31,11 +30,6 @@ class BundleFileManager {
         continue;
       }
 
-      // only load bundles we allow builders to manage
-      if (this.excludedBuilderBundles.indexOf(bundle) > -1) {
-        continue;
-      }
-
       this.loadBundle(bundle);
     }
 
@@ -47,7 +41,7 @@ class BundleFileManager {
   }
 
   loadBundle(bundleName) {
-    this.bundles[bundleName] = new BundleFolder(this.state, bundleName, path.join(this.basePath, bundleName)).load();
+    this.bundles[bundleName] = new BundleData(this.state, bundleName, path.join(this.basePath, bundleName)).load();
   }
 
   getBundles() {
@@ -64,16 +58,16 @@ class BundleFileManager {
    * @param {any} bundleName 
    * @returns BundleFolder
    * 
-   * @memberOf BundleFileManager
+   * @memberOf BundleDataManager
    */
   getBundleDirectory (bundleName) {
     return this.bundles[bundleName];
   }
 
   /**
-   * Create a new bundle directory
+   * Create a new bundle
    *
-   * @memberOf BundleFileManager
+   * @memberOf BundleDataManager
    */
   createBundle(bundleName) {
     if (this.bundleExists(bundleName)) {
@@ -86,9 +80,9 @@ class BundleFileManager {
     fs.mkdirSync(newBundlePath);
     fs.mkdirSync(newBundleAreasPath);
 
-    this.bundles[bundleName] = new BundleFolder(this.state, bundleName, path.join(this.basePath, bundleName)).load();
+    this.bundles[bundleName] = new BundleData(this.state, bundleName, path.join(this.basePath, bundleName)).load();
   }
 
 }
 
-module.exports = BundleFileManager;
+module.exports = BundleDataManager;

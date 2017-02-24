@@ -33,9 +33,9 @@ module.exports = {
       throw new Error(`File [${filepath}] does not exist!`);
     }
 
-    const deserializers = {
-      '.yml': yaml.safeDump, 
-      '.yaml': yaml.safeDump, 
+    const serializers = {
+      '.yml': yaml.safeDump,
+      '.yaml': yaml.safeDump,
       '.json': function(data) {
         //Make it prettttty
         return JSON.stringify(data, null, 2);
@@ -43,11 +43,11 @@ module.exports = {
     };
 
     const ext = path.extname(filepath);
-    if (!(ext in deserializers)) {
+    if (!(ext in serializers)) {
       throw new Error(`File [${filepath}] does not have a valid deserializer!`);
     }
 
-    var dataToWrite = deserializers[ext](data);
+    var dataToWrite = serializers[ext](data);
 
     fs.writeFileSync(filepath, dataToWrite, 'utf8');
 

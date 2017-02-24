@@ -6,9 +6,9 @@ const yaml = require('js-yaml');
 const chokidar = require('chokidar');
 const EventEmitter = require('events');
 
-const AreaFolder = require('./AreaFolder');
+const AreaData = require('./AreaData');
 
-class BundleFolder {
+class BundleData {
   constructor(state, name, baseFolder) {
     this.baseAreasPath = path.join(baseFolder, 'areas');
     this.basePath = baseFolder;
@@ -48,7 +48,7 @@ class BundleFolder {
   }
 
   loadArea(area) {
-    this.areas[area] = new AreaFolder(this.state, area, path.join(this.baseAreasPath, area)).load();
+    this.areas[area] = new AreaData(this.state, area, path.join(this.baseAreasPath, area)).load();
   }
 
   getArea (area) {
@@ -92,4 +92,4 @@ class BundleFolder {
   }
 }
 
-module.exports = BundleFolder;
+module.exports = BundleData;
