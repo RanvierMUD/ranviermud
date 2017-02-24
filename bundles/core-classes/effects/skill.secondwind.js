@@ -37,7 +37,7 @@ module.exports = srcPath => {
         });
         heal.commit(this.target);
 
-        this.skill.cooldown(this.state.interval, this.target);
+        this.skill.cooldown(this.target);
       }
     }
   };

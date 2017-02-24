@@ -84,6 +84,7 @@ class Skill {
     }
 
     this.run(args, player, target);
+    this.cooldown(player);
   }
 
   /** Finds implicit targets.
@@ -132,7 +133,7 @@ class Skill {
 
   activate(player) {
     if (!this.flags.includes(SkillFlag.PASSIVE)) {
-      throw new Error('Trying to activate non-passive skill');
+      return;
     }
 
     if (!this.effect) {
@@ -148,11 +149,11 @@ class Skill {
   }
 
   /**
-   * @param {Player} player
+   * @param {Character} character
    * @return {boolean|Effect} If on cooldown returns the cooldown effect
    */
-  onCooldown(player) {
-    for (const effect of player.effects.entries()) {
+  onCooldown(character) {
+    for (const effect of character.effects.entries()) {
       if (effect.id === 'cooldown' && effect.state.cooldownId === this.getCooldownId()) {
         return effect;
       }
@@ -164,32 +165,32 @@ class Skill {
   /**
    * Put this skill on cooldown
    * @param {number} duration Cooldown duration
-   * @param {Player} player
+   * @param {Character} character
    */
-  cooldown(player) {
+  cooldown(character) {
     if (!this.cooldownLength) {
       return;
     }
 
     const effect = this.state.EffectFactory.create(
       'cooldown',
-      player,
+      character,
       { name: "Cooldown: " + this.name, duration: this.cooldownLength * 1000 },
       { cooldownId: this.getCooldownId() }
     );
     effect.skill = this;
 
-    player.addEffect(effect);
+    character.addEffect(effect);
   }
 
   getCooldownId() {
     return "skill:" + this.id;
   }
 
-  hasEnoughResource(player) {
+  hasEnoughResource(character) {
     return !this.resource.cost || (
-      player.hasAttribute(this.resource.attribute) &&
-      player.getAttribute(this.resource.attribute) >= this.resource.cost
+      character.hasAttribute(this.resource.attribute) &&
+      character.getAttribute(this.resource.attribute) >= this.resource.cost
     );
   }
 }

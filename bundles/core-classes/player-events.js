@@ -15,7 +15,6 @@ module.exports = srcPath => {
         }
 
         ability.execute(args, this);
-        ability.cooldown(this);
       },
 
       /**
@@ -31,6 +30,7 @@ module.exports = srcPath => {
         for (const abilityId of newSkills) {
           const skill = state.SkillManager.get(abilityId);
           Broadcast.sayAt(this, `<bold><yellow>You can now use skill: ${skill.name}.</yellow></bold>`);
+          skill.activate(this);
         }
 
         const newSpells = abilities[this.level].spells || [];
