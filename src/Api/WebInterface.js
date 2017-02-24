@@ -12,7 +12,7 @@ const celebrate  = require('celebrate');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const Config = require('./Config');
+const Config = require('../Config');
 const APIBuilder = require('./APIBuilder');
 const APIAdmin = require('./APIAdmin');
 
@@ -37,16 +37,14 @@ class WebInterface {
   setUpMiddleWare() {
     app.use('/api/builder', new APIBuilder(this.state).setupRoutes());
     app.use('/api/admin', new APIAdmin(this.state).setupRoutes());
+    app.set('json spaces', 2);
     app.use(celebrate.errors());
     app.use(whitelist(this.whiteListed));
     app.use((err, req, res, next) => {
       if (err.name == "WhitelistIpError") {
         util.log(`[WEB]: Forbidden request: ${req.ip}`);
         res.status(403).send('Forbidden');
-      } else {
-        util.log(`[WEB]: Illegal request: ${req.originalUrl}`);
-        res.status(404).send('Not Found');
-      }
+      } 
     });
   }
 }

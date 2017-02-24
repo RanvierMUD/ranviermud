@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const celebrate = require('celebrate');
-const validators = require('./Validators');
+const validators = require('../Validators');
 
-const Config = require('./Config');
+const Config = require('../Config');
 
 class APIAdmin {
 

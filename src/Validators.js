@@ -27,12 +27,19 @@ module.exports = {
 
   npc: joi.object().keys({
     id: joi.number().integer().required().min(1),
+    name: joi.string().required(),
     keywords: joi.array().items(joi.string()).min(1),
     level: joi.number().integer().required().min(1),
     description: joi.string().required(),
     items: joi.array().items(joi.string()),
     quests: joi.array().items(joi.string()),
     damaage: joi.string()
+  }),
+
+  area: joi.object().keys({
+    name: joi.string().required(),
+    title: joi.string().required(),
+    suggestedLevel: joi.string().required()
   }),
 
   config: joi.object().keys({

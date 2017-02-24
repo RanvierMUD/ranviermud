@@ -32,14 +32,16 @@ class BundleFolder {
   }
 
   loadAreas() {
-    const areas = fs.readdirSync(this.baseAreasPath);
+    if (fs.existsSync(this.baseAreasPath)) {
+      const areas = fs.readdirSync(this.baseAreasPath); 
 
-    for (const area of areas) {
-      if (fs.statSync(this.baseAreasPath).isFile()) {
-        continue;
+      for (const area of areas) {
+        if (fs.statSync(this.baseAreasPath).isFile()) {
+          continue;
+        }
+
+        this.loadArea(area);
       }
-
-      this.loadArea(area);
     }
   }
 
@@ -66,6 +68,10 @@ class BundleFolder {
       throw new Error('suggestedLevel is required');
     }
 
+    if (!fs.existsSync(this.baseAreasPath)) {
+      fs.mkdirSync(this.baseAreasPath);
+    }
+
     if (fs.existsSync(path.join(this.baseAreasPath, name))) {
       throw new Error(`${name} already exists`);
     }
@@ -78,6 +84,9 @@ class BundleFolder {
     });
 
     fs.writeFileSync(path.join(this.baseAreasPath, name, 'manifest.yml'), manifest);
+    fs.writeFileSync(path.join(this.baseAreasPath, name, 'items.yml'), '');
+    fs.writeFileSync(path.join(this.baseAreasPath, name, 'rooms.yml'), '');
+    fs.writeFileSync(path.join(this.baseAreasPath, name, 'npcs.yml'), '');
   }
 }
 

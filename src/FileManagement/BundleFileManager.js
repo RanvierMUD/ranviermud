@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
+const chokidar = require('chokidar');
 
 const AreaFileManager = require('./AreaFileManager');
 const BundleFolder = require('./BundleFolder');
@@ -21,7 +22,7 @@ class BundleFileManager {
   }
 
   loadBundles(baseDirectory) {
-    this.basePath = path.join(baseDirectory, "bundles") + "";
+    this.basePath = path.join(baseDirectory, "bundles");
 
     const bundles = fs.readdirSync(this.basePath);
 
@@ -38,10 +39,20 @@ class BundleFileManager {
 
       this.loadBundle(bundle);
     }
+
+    const watcher = chokidar.watch(this.basePath, {ignoreInitial: true});
+
+    watcher.on('addDir', newDir => {
+      this.loadBundle(path.basename(newDir));
+    });
   }
 
   loadBundle(bundleName) {
     this.bundles[bundleName] = new BundleFolder(this.state, bundleName, path.join(this.basePath, bundleName)).load();
+  }
+
+  getBundles() {
+    return this.bundles;
   }
 
   bundleExists(bundleName) {
@@ -69,13 +80,17 @@ class BundleFileManager {
    * @memberOf BundleFileManager
    */
   createBundle(bundleName) {
-    if (this.bundleExists()) {
+    if (this.bundleExists(bundleName)) {
       throw new Error(`Bundle ${bundleName} already exists`);
     }
 
     const newBundlePath = path.join(this.basePath, bundleName);
+    const newBundleAreasPath = path.join(this.basePath, bundleName, 'areas');
 
     fs.mkdirSync(newBundlePath);
+    fs.mkdirSync(newBundleAreasPath);
+
+    this.bundles[bundleName] = new BundleFolder(this.state, bundleName, path.join(this.basePath, bundleName)).load();
   }
 
 
