@@ -5,7 +5,6 @@ const path = require('path');
 const yaml = require('js-yaml');
 const chokidar = require('chokidar');
 
-const AreaFileManager = require('./AreaFileManager');
 const BundleFolder = require('./BundleFolder');
 
 /**
@@ -91,64 +90,6 @@ class BundleFileManager {
     fs.mkdirSync(newBundleAreasPath);
 
     this.bundles[bundleName] = new BundleFolder(this.state, bundleName, path.join(this.basePath, bundleName)).load();
-  }
-
-
-  /**
-   * Create an area under a bundle
-   *
-   * @param {any} area 
-   * @returns 
-   *
-   * @memberOf BundleFileManager
-   */
-  createArea(area) {
-    const {name, title, suggestedLevel} = area;
-
-    if (!name) {
-      throw new Error('name is required');
-    }
-
-    if (!title) {
-      throw new Error('title is required');
-    }
-
-    if (!suggestedLevel) {
-      throw new Error('suggestedLevel is required');
-    }
-
-    if (this.areaExists(name)) {
-      throw new Error(`Area ${name} already exists`);
-    }
-
-    if (!fs.existsSync(path.join(this.basePath, 'areas'))) {
-      fs.mkdirSync(path.join(this.basePath, 'areas'));
-    }
-
-    fs.mkdirSync(path.join(this.basePath, 'areas', name));
-
-    var manifest = yaml.dump({
-      title: title,
-      suggestedLevel: suggestedLevel
-    });
-
-    fs.writeFileSync(path.join(this.basePath, 'areas', name, 'manifest.yml'), manifest);
-
-    const areaFileManager = new AreaFileManager(this.baseDirectory, this.bundleName, name);
-
-    return areaFileManager;
-  }
-
-  getArea(areaName) {
-    if (!this.areaExists(areaName)) {
-      throw new Error(`Area ${area} does not exist. Did you create it?`);
-    }
-
-    return new AreaFileManager(this.baseDirectory, this.bundleName, areaName);
-  }
-
-  areaExists(areaName) {
-    return fs.existsSync(path.join(this.basePath, 'areas', areaName));
   }
 
 }
