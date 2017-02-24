@@ -30,6 +30,8 @@ class Character extends EventEmitter
     this.level = data.level || 1;
     this.room = data.room || null;
     this.attributes = new Attributes([]);
+    this.followers = new Set();
+    this.following = null;
 
     this.effects = new EffectList(this, data.effects);
     this.skills = new Map();
@@ -197,6 +199,35 @@ class Character extends EventEmitter
     if (!this.inventory.size) {
       this.inventory = null;
     }
+  }
+
+  follow(target) {
+    if (target === this) {
+      this.following = null;
+      return;
+    }
+
+    this.following = target;
+  }
+
+  unfollow() {
+    this.following = null;
+  }
+
+  addFollower(follower) {
+    this.followers.add(follower);
+  }
+
+  removeFollower(follower) {
+    this.followers.delete(follower);
+  }
+
+  isFollowing(target) {
+    return this.following === target;
+  }
+
+  hasFollower(target) {
+    return this.followers.has(target);
   }
 
   hydrate(state) {

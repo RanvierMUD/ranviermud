@@ -1,6 +1,6 @@
 - id: 1
   keywords: ['rat']
-  name: 'Rat'
+  name: A Rat
   level: 2
   description: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
   behaviors:
@@ -18,3 +18,9 @@
   description: "A wise looking old man sits on the ground with legs crossed."
   attributes:
     health: 100
+- id: 3
+  keywords: ["puppy", "dog", "loyal", "wide", "eyed", "wide-eyed"]
+  name: A Puppy
+  description: "A wide-eyed puppy stares up at you."
+  level: 1
+  script: '3-puppy'

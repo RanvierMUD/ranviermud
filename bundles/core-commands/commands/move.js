@@ -7,16 +7,19 @@
  * @return {boolean} False if the exit is inaccessible.
  */
 module.exports = (srcPath) => {
+  const Broadcast = require(srcPath + 'Broadcast');
+  const Player = require(srcPath + 'Player');
+
   return {
     aliases: [ "go", "walk" ],
     usage: 'move [direction]',
-    command: (state) => (exit, player) => {
+    command: (state) => (exitName, player) => {
       const room = player.room;
       if (!room) {
         return false;
       }
 
-      const exits = Array.from(room.exits).filter(e => e.direction.indexOf(exit) === 0);
+      const exits = Array.from(room.exits).filter(e => e.direction.indexOf(exitName) === 0);
 
       if (!exits.length) {
         return false;
@@ -30,7 +33,7 @@ module.exports = (srcPath) => {
         throw 'You are in the middle of a fight!';
       }
 
-      exit = exits.pop();
+      const exit = exits.pop();
       const nextRoom =  state.RoomManager.getRoom(exit.roomId);
 
       player.room.emit('playerLeave', player, nextRoom);
@@ -50,6 +53,17 @@ module.exports = (srcPath) => {
         npc.emit('playerEnter', player);
       }
       nextRoom.emit('playerEnter', player);
+
+      for (const follower of player.followers) {
+        if (follower instanceof Player) {
+          Broadcast.sayAt(follower, `\r\nYou follow ${player.name}.`);
+          state.CommandManager.get('move').execute(exitName, follower);
+        } else {
+          follower.room.removeNpc(follower);
+          nextRoom.addNpc(follower);
+        }
+      }
+
       return true;
     }
   };
