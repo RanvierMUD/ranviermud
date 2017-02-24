@@ -33,12 +33,8 @@ class Config {
     __cache = Data.parseFile(__dirname + '/../ranvier.json');
   }
 
-  static loadDefaults() {
-    return Data.parseFile(__dirname + '/../ranvier.default.json');
-  }
-
   static save(config) {
-    config = Object.assign(this.loadDefaults(), config);
+    config = Object.assign(this.getAll(), config);
     Data.saveFile(__dirname + '/../ranvier.json', config);
   }
 }
