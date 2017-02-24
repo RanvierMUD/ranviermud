@@ -18,7 +18,6 @@ module.exports = srcPath => {
 
       Broadcast.sayAt(player, `You ditch ${target.name} and they stop following you.`);
       Broadcast.sayAt(target, `${player.name} ditches you and you stop following them.`);
-      player.removeFollower(target);
       target.unfollow();
     }
   };

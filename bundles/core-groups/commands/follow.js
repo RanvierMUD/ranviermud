@@ -36,7 +36,6 @@ module.exports = srcPath => {
       Broadcast.sayAt(player, `You start following ${target.name}.`);
       Broadcast.sayAt(target, `${player.name} starts following you.`);
       player.follow(target);
-      target.addFollower(player);
     }
   };
 };

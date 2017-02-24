@@ -208,18 +208,22 @@ class Character extends EventEmitter
     }
 
     this.following = target;
+    target.addFollower(this);
   }
 
   unfollow() {
+    this.following.removeFollower(this);
     this.following = null;
   }
 
   addFollower(follower) {
     this.followers.add(follower);
+    follower.following = this;
   }
 
-  removeFollower(follower) {
-    this.followers.delete(follower);
+  removeFollower(target) {
+    this.followers.delete(target);
+    target.following = null;
   }
 
   isFollowing(target) {

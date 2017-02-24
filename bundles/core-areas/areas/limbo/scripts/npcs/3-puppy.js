@@ -13,7 +13,6 @@ module.exports = (srcPath) => {
 
         Broadcast.sayAt(player, 'The puppy lets out a happy bark and runs to your side.');
         this.follow(player);
-        player.addFollower(this);
       }
     }
   };
