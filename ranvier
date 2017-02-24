@@ -97,7 +97,7 @@ function init(restartServer) {
     RoomBehaviorManager: new BehaviorManager(),
     RoomManager: new RoomManager(),
     SkillManager: new SkillManager(),
-    SpellManager: new SkillManager(),
+    SpellManager: new SkillManager()
   };
 
   // Setup bundlemanager
@@ -105,7 +105,7 @@ function init(restartServer) {
   BundleManager.loadBundles();
 
   // Set up web API
-  const WebInterface = new (require('./src/WebInterface'))(GameState);
+  const WebInterface = new (require('./src/Api/WebInterface'))(GameState);
   WebInterface.init();
 
   if (restartServer) {

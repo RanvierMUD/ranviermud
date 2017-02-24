@@ -1,7 +1,11 @@
 {
   "port": 23,
   "webPort": 9001,
-
+  "webWhitelist": [
+    "localhost",
+    "127.0.0.1",
+    "::1"
+  ],
   "bundles": [
     "core-areas",
     "core-channels",
@@ -16,29 +20,23 @@
     "core-quests",
     "debug-commands"
   ],
-
   "maxAccountNameLength": 20,
   "minAccountNameLength": 3,
   "maxPlayerNameLength": 20,
   "minPlayerNameLength": 3,
-
   "maxCharacters": 3,
   "allowMultiplay": false,
-
   "startingRoom": "limbo:1",
   "moveCommand": "move",
-
   "defaultAttributes": {
-    "health":      100,
-    "mana":        200,
-    "energy":      200,
-
-    "strength":     20,
+    "health": 100,
+    "mana": 200,
+    "energy": 200,
+    "strength": 20,
     "intelligence": 20,
-    "wisdom":       20,
-    "dexterity":    20,
+    "wisdom": 20,
+    "dexterity": 20,
     "constitution": 20
   },
-
   "skillLag": 2000
 }
