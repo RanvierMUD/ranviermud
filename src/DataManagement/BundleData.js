@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const yaml = require('js-yaml');
 const chokidar = require('chokidar');
@@ -15,12 +15,6 @@ class BundleData {
     this.bundleName = name;
     this.areas = [];
     this.state = state;
-
-    let watcher = chokidar.watch(this.baseAreasPath, {ignoreInitial: true});
-
-    watcher.on('addDir', path => {
-      this.load(true);
-    })
   }
 
   load(reset) {
@@ -89,6 +83,23 @@ class BundleData {
     fs.writeFileSync(path.join(this.baseAreasPath, name, 'items.yml'), '');
     fs.writeFileSync(path.join(this.baseAreasPath, name, 'rooms.yml'), '');
     fs.writeFileSync(path.join(this.baseAreasPath, name, 'npcs.yml'), '');
+
+    this.areas[name] = new AreaData(this.state, name, path.join(this.baseAreasPath, name));
+
+    return this.areas[name];
+  }
+
+  areaExists(areaName) {
+    return fs.existsSync(path.join(this.baseAreasPath, areaName));
+  }
+
+  deleteArea(areaName) {
+    if (!this.areaExists(areaName)) {
+      throw new Error(`Area ${areaName} doesn't exist!`);
+    }
+
+    fs.removeSync(path.join(this.baseAreasPath, areaName));
+    this.areas[areaName] = null;
   }
 }
 
