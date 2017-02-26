@@ -94,8 +94,6 @@ describe("Bundle Data Tests", function() {
       });
     });
 
-    
-
     describe("areaExists", function(){
       it("returns true when an area exists", function(){
         expect(bundle.areaExists('test-area')).to.be.true;
@@ -329,6 +327,4 @@ describe("Bundle Data Tests", function() {
       });
     });
   });
-
-  
 });
