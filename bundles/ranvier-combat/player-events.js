@@ -112,11 +112,13 @@ module.exports = (srcPath) => {
               return buf;
             }
 
-            this.addPrompt('combat', combatPromptBuilder(this));
-            if (target instanceof Player && target.isInCombat()) {
-              target.addPrompt('combat', combatPromptBuilder(target));
-              Broadcast.sayAt(target, '');
-              Broadcast.prompt(target);
+            this.addPrompt('combat', () => combatPromptBuilder(this));
+            for (const target of this.combatants) {
+              if (target instanceof Player && target.isInCombat()) {
+                target.addPrompt('combat', () => combatPromptBuilder(target));
+                Broadcast.sayAt(target, '');
+                Broadcast.prompt(target);
+              }
             }
           }
 
