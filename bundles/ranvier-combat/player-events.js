@@ -81,14 +81,14 @@ module.exports = (srcPath) => {
         // Show combat prompt and health bars.
         if (hadActions) {
           if (this.isInCombat()) {
-            this.addPrompt('combat', () => {
-              if (!this.isInCombat()) {
+            const combatPromptBuilder = promptee => {
+              if (!promptee.isInCombat()) {
                 return '';
               }
 
               // Set up some constants for formatting the health bars
               const playerName = "You";
-              const targetNameLengths = [...this.combatants].map(t => t.name.length);
+              const targetNameLengths = [...promptee.combatants].map(t => t.name.length);
               const nameWidth = Math.max(playerName.length, ...targetNameLengths);
               const progWidth = 60 - nameWidth;
 
@@ -98,19 +98,26 @@ module.exports = (srcPath) => {
                 `<bold>${leftPad(name, nameWidth)}</bold>: ${progress} <bold>${entity.getAttribute('health')}/${entity.getMaxAttribute('health')}</bold>`;
 
               // Build player health bar.
-              let currentPerc = getHealthPercentage(this);
+              let currentPerc = getHealthPercentage(promptee);
               let progress = Broadcast.progress(progWidth, currentPerc, "green");
-              let buf = formatProgressBar(playerName, progress, this);
+              let buf = formatProgressBar(playerName, progress, promptee);
 
               // Build and add target health bars.
-              for (const target of this.combatants) {
+              for (const target of promptee.combatants) {
                 let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
                 let progress = Broadcast.progress(progWidth, currentPerc, "red");
                 buf += `\r\n${formatProgressBar(target.name, progress, target)}`;
               }
 
               return buf;
-            });
+            }
+
+            this.addPrompt('combat', combatPromptBuilder(this));
+            if (target instanceof Player && target.isInCombat()) {
+              target.addPrompt('combat', combatPromptBuilder(target));
+              Broadcast.sayAt(target, '');
+              Broadcast.prompt(target);
+            }
           }
 
           Broadcast.sayAt(this, '');
