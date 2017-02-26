@@ -21,7 +21,10 @@ In Ranvier all rooms for an area are defined in a single file within the area fo
   description: "A completely black room. Somehow all of the light that should be coming from the room to the west does not pass through the archway. A single lightbulb hangs from the ceiling illuminating a small area."
   behaviors: [ "test" ]
   items: ["limbo:2"]
-  npcs: ["limbo:2"]
+  npcs:
+    - id: "limbo:2"
+      respawnChance: 20
+      maxLoad: 5
   exits:
     - roomId: "limbo:1"
       direction: "west"
@@ -45,7 +48,7 @@ In Ranvier all rooms for an area are defined in a single file within the area fo
 :    ***required*** Long description of the room shown under the title on look
 
 `npcs` _`Array<EntityReference>`_
-:    List of NPCs to place in this room on initial load
+:    List of NPCs to place in this room on initial load. You can customize the number of max instances of the NPC per room and the respawn chance by making the `npcs` entry an object as described above in the "Test Room 2" entry
 
 `items` _`Array<EntityReference>`_
 :    List of items to place in this room on initial load

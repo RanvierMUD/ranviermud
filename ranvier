@@ -155,7 +155,7 @@ function init(restartServer) {
     clearInterval(tickInterval);
     tickInterval = setInterval(() => {
       GameState.PlayerManager.emit('updateTick');
-      GameState.AreaManager.tickAll();
+      GameState.AreaManager.tickAll(GameState);
     }, 500);
 
     // TODO: RESPAWN

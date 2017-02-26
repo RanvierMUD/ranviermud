@@ -1,5 +1,6 @@
 'use strict';
 const EventEmitter = require('events');
+const RandomUtil = require('./RandomUtil');
 const util = require('util');
 
 /**
@@ -39,6 +40,8 @@ class Room extends EventEmitter {
     this.items = new Set();
     this.npcs = new Set();
     this.players = new Set();
+
+    this.on('respawnTick', this.respawnTick);
   }
 
   addPlayer(player) {
@@ -71,6 +74,35 @@ class Room extends EventEmitter {
     item.room = null;
   }
 
+  respawnTick(state) {
+    this.defaultNpcs.forEach(defaultNpc => {
+      if (typeof defaultNpc === 'string') {
+        defaultNpc = { id: defaultNpc };
+      }
+
+      defaultNpc = Object.assign({
+        respawnChance: 25,
+        maxLoad: 1
+      }, defaultNpc);
+
+      const npcCount = [...this.npcs].filter(npc => npc.entityReference === defaultNpc.id).length;
+      const needsRespawn = npcCount < defaultNpc.maxLoad;
+
+      if (!needsRespawn) {
+        return;
+      }
+
+      if (RandomUtil.probability(defaultNpc.respawnChance)) {
+        util.log(`\tRESPAWN: Adding npc [${defaultNpc.id}] to room [${this.title}]`);
+        const newNpc = state.MobFactory.create(this.area, defaultNpc.id);
+        newNpc.hydrate(state);
+        this.area.addNpc(newNpc);
+        this.addNpc(newNpc);
+        newNpc.emit('spawn');
+      }
+    });
+  }
+
   hydrate(state) {
     this.items = new Set();
 
@@ -90,13 +122,13 @@ class Room extends EventEmitter {
       this.addItem(newItem);
     });
 
-    this.defaultNpcs.forEach(defaultNpcId => {
-      if (parseInt(defaultNpcId, 10)) {
-        defaultNpcId = this.area.name + ':' + defaultNpcId;
+    this.defaultNpcs.forEach(defaultNpc => {
+      if (typeof defaultNpc === 'string') {
+        defaultNpc = { id: defaultNpc };
       }
 
-      util.log(`\tDIST: Adding npc [${defaultNpcId}] to room [${this.title}]`);
-      const newNpc = state.MobFactory.create(this.area, defaultNpcId);
+      util.log(`\tDIST: Adding npc [${defaultNpc.id}] to room [${this.title}]`);
+      const newNpc = state.MobFactory.create(this.area, defaultNpc.id);
       newNpc.hydrate(state);
       this.area.addNpc(newNpc);
       this.addNpc(newNpc);

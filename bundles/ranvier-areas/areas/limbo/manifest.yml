@@ -1,2 +1,3 @@
 title: "Limbo"
-suggestedLevel: '1-9'
+info:
+  respawnInterval: 30

@@ -32,15 +32,9 @@ class AreaManager {
     this.areas.delete(area.name);
   }
 
-  tickAll() {
+  tickAll(state) {
     for (const [ name, area ] of this.areas) {
-      area.emit('updateTick');
-    }
-  }
-
-  respawnAll() {
-    for (const [ name, area ] of this.areas) {
-      area.emit('respawn');
+      area.emit('updateTick', state);
     }
   }
 

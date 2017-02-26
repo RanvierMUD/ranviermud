@@ -42,15 +42,6 @@ module.exports = (srcPath) => {
             Broadcast.sayAt(this, `<bold>${target.name} is <red>Dead</red>!</bold>`);
 
             handleDeath(state, target, this);
-
-            // TODO: For now respawn happens here, this is shitty
-            const newNpc = state.MobFactory.clone(target);
-            newNpc.hydrate(state);
-            if (newNpc.room) {
-              newNpc.room.removeNpc(newNpc);
-            }
-            target.room.addNpc(newNpc);
-            target.emit('spawn');
             target.room.area.removeNpc(target);
             continue;
           }

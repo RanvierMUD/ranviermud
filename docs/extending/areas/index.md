@@ -32,11 +32,12 @@ Example Manifest
 ``` yaml
 ---
 title: "My Area Title"
+info:
+  respawnInterval: 60
 ```
 
-In the future the manifest could be used to define any type of area-wide
-property such as biome, suggested level, respawn time, weather, etc.
-
+`respawnInterval` _`number`_
+:    Number of seconds between respawn ticks. See the [Room](rooms.md) section for respawn details
 
 ## Entity References
 

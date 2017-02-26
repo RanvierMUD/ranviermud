@@ -28,4 +28,10 @@
     The training dummy is almost human shaped although slightly out of proportion. The material it's made of is hard to
     discern; it seems to constantly change between metal, wood, cloth, and glass depending on the angle. There is a
     large red and white bullseye painted on its chest. The dummy has no eyes and mindlessly meanders about the area.
-  
+- id: 5
+  keywords: ["boss", "target", "dummy", "practice"]
+  name: "Boss Training Dummy"
+  level: 5
+  description: >-
+    This dummy is significantly larger than the others. Bright red with a monstrous figure it lumbers around the area
+    with a great echoing stomp. Where the other target dummies have a bullseye this dummy has a yellow exclamation mark.
