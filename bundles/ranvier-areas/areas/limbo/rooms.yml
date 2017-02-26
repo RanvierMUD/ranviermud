@@ -1,21 +1,60 @@
 - id: 1
-  title: "Test Room 1"
+  title: Test Room 1
   description: "A featureless white room. A pitch black void in the shape of archway can be seen on the east side of the room."
   npcs: ["limbo:1"]
   items: ["limbo:3"]
   script: "1-test"
   exits:
     - roomId: "limbo:2"
-      direction: "east"
+      direction: east
       leaveMessage: " steps into the void and disappears."
 - id: 2
   title: "Test Room 2"
-  description: "A completely black room. Somehow all of the light that should be coming from the room to the west does not pass through the archway. A single lightbulb hangs from the ceiling illuminating a small area."
-  behaviors: [ "test" ]
+  description: >-
+    A completely black room. Somehow all of the light that should be coming from the room to the west does not pass
+    through the archway. A single lightbulb hangs from the ceiling illuminating a small area. To the east you see a
+    large white dome. There is a sign above the entrance to the dome: "Training Area"
   items: ["limbo:2"]
   npcs: ["limbo:2", "limbo:3"]
   exits:
     - roomId: "limbo:1"
-      direction: "west"
+      direction: west
       leaveMessage: " steps into the light and disappears."
-
+    - roomId: "limbo:3"
+      direction: east
+- &trainingroom
+  id: 3
+  title: "Training Room"
+  description: >-
+    The entire area is covered by a large dome with a hexagonal grid surface. A beautiful blue sky reaches from horizon
+    to horizon, punctuated by the lines of the grid. The dome shimmers as virtual birds fly into and out of its surface.
+    The pure green grass is eerily undisturbed by you walking over it or by the simulated breeze.
+  npcs: ["limbo:4"]
+  exits:
+    - roomId: "limbo:2"
+      direction: west
+    - roomId: "limbo:4"
+      direction: north
+    - roomId: "limbo:6"
+      direction: east
+- <<: *trainingroom
+  id: 4
+  exits:
+    - roomId: "limbo:3"
+      direction: south
+    - roomId: "limbo:5"
+      direction: east
+- <<: *trainingroom
+  id: 5
+  exits:
+    - roomId: "limbo:4"
+      direction: west
+    - roomId: "limbo:6"
+      direction: south
+- <<: *trainingroom
+  id: 6
+  exits:
+    - roomId: "limbo:3"
+      direction: west
+    - roomId: "limbo:5"
+      direction: north

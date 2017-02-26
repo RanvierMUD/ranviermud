@@ -1,13 +1,10 @@
 - id: 1
-  name: "Rusty Shiv"
-  roomDesc: "a razor-sharp shiv coated in rust"
-  keywords: [ "shiv", "rusty", "shank", "metal", "rust" ]
-  description: "A short, jagged metal shard, discolored with red corrosion. Rather than a handle, someone has wrapped grimy grip tape around the base of the instrument."
-  script: "1-shiv"
+  name: "Rusty Sword"
+  roomDesc: "Rusted Sword"
+  keywords: [ "sword", "rusty", "metal", "rusted" ]
+  description: "An arm's-length, jagged metal sword discolored with red corrosion. The worn leather grip barely held on by fraying thread."
+  script: "1-sword"
   slot: 'wield'
-  attributes:
-      speed: 10
-      damage: 1-15
 - id: 2
   name: "Slice of Cheese"
   roomDesc: "A moldy slice of cheese"

@@ -67,15 +67,13 @@ module.exports = (srcPath) => {
 
           // target actions
           if (target.combatData.lag <= 0) {
-            hadActions = true;
-            makeAttack(target, this);
-
-            //TODO: Better way or timing of checking for death?
             if (this.getAttribute('health') <= 0) {
               this.combatData.killedBy = target;
               break;
             }
 
+            hadActions = true;
+            makeAttack(target, this);
           } else {
             const elapsed = Date.now() - target.combatData.roundStarted;
             target.combatData.lag -= elapsed;

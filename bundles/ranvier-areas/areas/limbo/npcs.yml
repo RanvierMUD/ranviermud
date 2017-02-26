@@ -3,18 +3,14 @@
   name: A Rat
   level: 2
   description: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
-  behaviors:
-    - combat
   script: '1-rat'
   items: ['limbo:2']
   quests: ['limbo:2']
-  attributes:
-    health: 100
-  damage: 1-7
 - id: 2
   keywords: ["wise", "old", "man"]
   name: "Wise Old Man"
   level: 99
+  behaviors: [ "pacifist" ]
   description: "A wise looking old man sits on the ground with legs crossed."
   attributes:
     health: 100
@@ -24,3 +20,12 @@
   description: "A wide-eyed puppy stares up at you."
   level: 1
   script: '3-puppy'
+- id: 4
+  keywords: ["dummy", "target", "practice"]
+  level: 2
+  name: "Training Dummy"
+  description: >-
+    The training dummy is almost human shaped although slightly out of proportion. The material it's made of is hard to
+    discern; it seems to constantly change between metal, wood, cloth, and glass depending on the angle. There is a
+    large red and white bullseye painted on its chest. The dummy has no eyes and mindlessly meanders about the area.
+  

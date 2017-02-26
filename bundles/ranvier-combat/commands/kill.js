@@ -21,7 +21,7 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, "They aren't here.");
       }
 
-      if (!npc.hasBehavior('combat')) {
+      if (npc.hasBehavior('pacifist')) {
         return Broadcast.sayAt(player, `${npc.name} is a pacifist and will not fight you.`);
       }
 
