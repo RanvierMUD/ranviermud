@@ -46,7 +46,7 @@ module.exports = (srcPath) => {
 Both of these commands happen to interact with the player but take note that you have access to the entirety of the game's
 state inside these commands. That includes all active players, all areas, rooms, NPCs, and items in the game, server
 configuration as defined in `ranvier.json`, and more. See the `ranvier` executable's `GameState` variable for a list of
-all the things you have access to. Further, the `core-commands` default bundle which ships with Ranvier has many example
+all the things you have access to. Further, the `ranvier-commands` default bundle which ships with Ranvier has many example
 commands to work from.
 
 ### inventory

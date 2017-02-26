@@ -41,7 +41,7 @@ module.exports = (src) => {
               break;
             }
             case CommandTypes.SKILL: {
-              // See bundles/core-player-events/player-events.js commandQueued and updateTick for when these
+              // See bundles/ranvier-player-events/player-events.js commandQueued and updateTick for when these
               // actually get executed
               player.queueCommand({
                 execute: _ => {

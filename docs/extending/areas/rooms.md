@@ -4,7 +4,7 @@ In Ranvier all rooms for an area are defined in a single file within the area fo
 
 ## Example File
 
-`bundles/core-areas/areas/limbo/rooms.yml`
+`bundles/ranvier-areas/areas/limbo/rooms.yml`
 ``` yaml
 - id: 1
   title: "Test Room 1"

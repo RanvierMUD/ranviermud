@@ -111,7 +111,7 @@ module.exports = srcPath => {
     /*
     Effect flags are completely optional and _arbitrary_ values that you can
     place in the `flags` array and then read later. By default flags are only
-    used by the `core-effects` bundle's `effects` command to color an active
+    used by the `ranvier-effects` bundle's `effects` command to color an active
     effect red or green. You can import flags from anywhere you want or simply
     hard code strings. The EffectFlag enum from src/ is just an _example_
     implementation.
@@ -395,4 +395,4 @@ create a new instance of the effect with any overrides you may want then call
 ## Further Reading
 
 Effects really are where the interesting pieces of the engine come together. You can see
-some example implementation of more effects in the `core-classes` bundle.
+some example implementation of more effects in the `ranvier-classes` bundle.

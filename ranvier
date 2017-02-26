@@ -127,7 +127,7 @@ function init(restartServer) {
       socket.write("Connecting...\n");
       util.log("User connected...");
 
-      // @see: bundles/core-events/events/login.js
+      // @see: bundles/ranvier-events/events/login.js
       socket.emit('intro', socket);
     }).netServer;
 

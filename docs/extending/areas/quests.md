@@ -28,13 +28,13 @@ A fetch quest, we'll say, is as a quest that
 * optionally removes the items from the players inventory on completion
 * Rewards the player with some configurable amount of experience on completion
 
-First we will create a new bundle called `core-quests`, we'll use this bundle as a library for all of our quest types.
+First we will create a new bundle called `ranvier-quests`, we'll use this bundle as a library for all of our quest types.
 And we'll create a file under this bundle in `lib/FetchQuest.js`. So you should have a directory structure that looks
 like this:
 
 ```
 bundles/
-  core-quests/
+  ranvier-quests/
     lib/
       FetchQuest.js
 ```
@@ -193,7 +193,7 @@ in bundles.
 'use strict';
 
 // Import our quest type
-const FetchQuest = require('../../../core-quests/lib/FetchQuest');
+const FetchQuest = require('../../../ranvier-quests/lib/FetchQuest');
 
 /*
 The bundle loader expects the quests.js file to return a function which accepts the
@@ -259,11 +259,11 @@ go over two examples of how you may want to do it.
 ### Questors
 
 The easiest approach is to make an NPC a quest giver (questor). This functionality is not
-a feature of the core engine itself but rather of the `quest` command in the `core-quests`
+a feature of the core engine itself but rather of the `quest` command in the `ranvier-quests`
 bundle. If you would like to modify the base functionality of how questors work see that bundle.
 
 The base functionality of questors also includes updates to the `look` command in
-`core-commands` which places small progress indicators next to the NPC's name when the
+`ranvier-commands` which places small progress indicators next to the NPC's name when the
 player sees the NPC in the room. For example:
 
 ```

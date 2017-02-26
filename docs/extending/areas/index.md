@@ -11,7 +11,7 @@ scripts, and quests.
 Click on any of the items to see more in-depth tutorials on their contents.
 
 <pre>
-core-areas/
+ranvier-areas/
   areas/
     limbo/ - Actual area folder, name will be used as key for `area:id`
              pairs which you'll see for items/npcs

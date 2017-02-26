@@ -49,7 +49,7 @@ Again, see the relevant entity's guide section on how to add behaviors to the en
 
 > Tip: Behaviors can be used as flags. For example, if you say `behaviors: ['combat']` on an NPC you don't need to
 > actually create a combat.js behavior file, `npc.hasBehavior('combat')` will still return true. This is used, as an
-> example, in the `kill` command in `core-combat` to differentiate pacifist NPCs from NPCs that can enter combat
+> example, in the `kill` command in `ranvier-combat` to differentiate pacifist NPCs from NPCs that can enter combat
 
 ## Default events
 
@@ -57,7 +57,7 @@ This is a list of events that are emitted by default in Ranvier.
 
 ***Engine*** - Events that come from the engine itself (from `src/`) and will _always_ be available.
 
-***Core Bundles*** - Events that come from one of the `core-*` example bundles and may not be available if you have
+***Core Bundles*** - Events that come from one of the `ranvier-*` example bundles and may not be available if you have
 disabled the core bundles.
 
 Events are shown as:

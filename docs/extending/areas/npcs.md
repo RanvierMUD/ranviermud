@@ -4,7 +4,7 @@ In Ranvier all npcs for an area are defined in a single file within the area fol
 
 ## Example File
 
-`bundles/core-areas/areas/limbo/npcs.yml`
+`bundles/ranvier-areas/areas/limbo/npcs.yml`
 ``` yaml
 - id: 1
   keywords: ['rat']

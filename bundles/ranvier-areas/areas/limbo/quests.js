@@ -1,6 +1,6 @@
 'use strict';
 
-const FetchQuest = require('../../../core-quests/lib/FetchQuest');
+const FetchQuest = require('../../../ranvier-quests/lib/FetchQuest');
 
 module.exports = (srcPath) => {
   const LevelUtil = require(srcPath + 'LevelUtil');

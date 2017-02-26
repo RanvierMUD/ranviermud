@@ -4,7 +4,7 @@ In Ranvier all items for an area are defined in a single file within the area fo
 
 ## Example File
 
-`bundles/core-areas/areas/limbo/npcs.yml`
+`bundles/ranvier-areas/areas/limbo/npcs.yml`
 ``` yaml
 - id: 1
   name: "Rusty Shiv"
