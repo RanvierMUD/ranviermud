@@ -2,6 +2,7 @@
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
+  const Player = require(srcPath + 'Player');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
 
   return {
@@ -41,6 +42,10 @@ module.exports = (srcPath) => {
       player.addCombatant(target);
       target.addCombatant(player);
       Broadcast.sayAt(player, 'Started combat!');
+      Broadcast.sayAtExcept([player, target], player.room, `${player.name} attacks ${target.name}!`);
+      if (target instanceof Player) {
+        Broadcast.sayAt(target, `${player.name} attacks you!`);
+      }
     }
   };
 };

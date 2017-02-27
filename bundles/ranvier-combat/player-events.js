@@ -251,7 +251,9 @@ module.exports = (srcPath) => {
     const deathMessage = killer ?
       `<bold><red>${killer.name} killed you!</red></bold>` :
       `<bold><red>You died!</red></bold>`;
-    const othersDeathMessage = `<bold><red>${deadEntity.name} collapses to the ground, dead.</bold></red>`;
+    const othersDeathMessage = killer ?
+      `<bold><red>${deadEntity.name} collapses to the ground, dead at the hands of ${killer.name}.</bold></red>` :
+      `<bold><red>${deadEntity.name} collapses to the ground, dead</bold></red>`;
 
     if (Broadcast.isBroadcastable(deadEntity)) {
       Broadcast.sayAt(deadEntity, deathMessage);
