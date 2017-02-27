@@ -28,29 +28,23 @@ class Broadcast {
     });
   }
 
-  static atExcept(excludes, source, message = '', wrapWidth = false, useColor = true, formatter) {
-    useColor = typeof useColor === 'boolean' ? useColor : true;
-    formatter = formatter || ((target, message) => message);
+  static atExcept(excludes, source, message, wrapWidth, useColor, formatter) {
 
     if (!TypeUtil.is(source, Broadcastable)) {
       throw new Error(`Tried to broadcast message not non-broadcastable object: MESSAGE [${message}]`);
     }
 
-    message = wrapWidth ? Broadcast.wrap(message, wrapWidth) : message;
+    // Could be an array or a single target.
     excludes = [].concat(excludes);
 
     const targets = source.getBroadcastTargets()
       .filter(target => !excludes.includes(target));
 
-    targets.forEach(target => {
-      if (target.socket && target.socket.writable) {
-        if (target.socket._prompted) {
-          target.socket.write('\r\n');
-          target.socket._prompted = false;
-        }
-        target.socket.write(ansi.parse(formatter(target, message)));
-      }
-    });
+    const newSource = {
+      getBroadcastTargets: () => targets
+    };
+
+    Broadcast.at(newSource, message, wrapWidth, useColor, formatter);
 
   }
 
@@ -60,6 +54,12 @@ class Broadcast {
 
   static sayAt(source, message, wrapWidth, useColor, formatter) {
     Broadcast.at(source, message, wrapWidth, useColor, (target, message) => {
+      return (formatter ? formatter(target, message) : message ) + '\r\n';
+    });
+  }
+
+  static sayAtExcept(excludes, source, message, wrapWidth, useColor, formatter) {
+    Broadcast.atExcept(excludes, source, message, wrapWidth, useColor, (target, message) => {
       return (formatter ? formatter(target, message) : message ) + '\r\n';
     });
   }

@@ -257,8 +257,14 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(deadEntity, deathMessage);
     }
 
-    Broadcast.sayAt
+    Broadcast.sayAtExcept(
+      (killer ? [killer, deadEntity] : deadEntity),
+      deadEntity.room,
+      othersDeathMessage);
 
+    if (killer) {
+      Broadcast.sayAt(killer, `<bold><red>You killed ${deadEntity.name}!`);
+    }
     deadEntity.emit('killed', killer || deadEntity);
   }
 
