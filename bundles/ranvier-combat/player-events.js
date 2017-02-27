@@ -264,7 +264,7 @@ module.exports = (srcPath) => {
       deadEntity.room,
       othersDeathMessage);
 
-    if (killer) {
+    if (killer && killer instanceof Player) {
       Broadcast.sayAt(killer, `<bold><red>You killed ${deadEntity.name}!`);
     }
     deadEntity.emit('killed', killer || deadEntity);
