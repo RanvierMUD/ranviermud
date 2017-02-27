@@ -1,5 +1,5 @@
 'use strict';
-
+const util = require('util');
 const leftPad = require('left-pad');
 
 /**
@@ -220,38 +220,46 @@ module.exports = (srcPath) => {
       attacker
     });
     damage.commit(defender);
+    if (defender.getAttribute('health') <= 0) {
+      defender.combatData.killedBy = attacker;
+    }
 
     attacker.combatData.lag = attacker.combatData.speed * 1000;
   }
 
   function handleDeath(state, deadEntity, killer) {
+
     deadEntity.combatants.forEach(combatant => {
       deadEntity.removeCombatant(combatant);
       combatant.removeCombatant(deadEntity);
-    }, deadEntity);
+    });
 
     if (deadEntity instanceof Player) {
       deadEntity.removePrompt('combat');
     }
 
-    const target = killer || deadEntity.combatData.killedBy;
+    killer = killer || deadEntity.combatData.killedBy;
+    util.log(`${killer ? killer.name : 'Something'} killed ${deadEntity.name}.`);
 
-    if (target) {
-      target.emit('deathblow', deadEntity);
-      if (!target.isInCombat()) {
-        startRegeneration(state, target);
+    if (killer) {
+      killer.emit('deathblow', deadEntity);
+      if (!killer.isInCombat()) {
+        startRegeneration(state, killer);
       }
     }
 
-    const deathMessage = target ?
-      `<bold><red>${target.name} killed you!</red></bold>` :
+    const deathMessage = killer ?
+      `<bold><red>${killer.name} killed you!</red></bold>` :
       `<bold><red>You died!</red></bold>`;
+    const othersDeathMessage = `<bold><red>${deadEntity.name} collapses to the ground, dead.</bold></red>`;
 
     if (Broadcast.isBroadcastable(deadEntity)) {
       Broadcast.sayAt(deadEntity, deathMessage);
     }
 
-    deadEntity.emit('killed', target || deadEntity);
+    Broadcast.sayAt
+
+    deadEntity.emit('killed', killer || deadEntity);
   }
 
   // Make characters regenerate health while out of combat

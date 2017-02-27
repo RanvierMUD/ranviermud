@@ -28,6 +28,32 @@ class Broadcast {
     });
   }
 
+  static atExcept(excludes, source, message = '', wrapWidth = false, useColor = true, formatter) {
+    useColor = typeof useColor === 'boolean' ? useColor : true;
+    formatter = formatter || ((target, message) => message);
+
+    if (!TypeUtil.is(source, Broadcastable)) {
+      throw new Error(`Tried to broadcast message not non-broadcastable object: MESSAGE [${message}]`);
+    }
+
+    message = wrapWidth ? Broadcast.wrap(message, wrapWidth) : message;
+    excludes = [].concat(excludes);
+
+    const targets = source.getBroadcastTargets()
+      .filter(target => !excludes.includes(target));
+
+    targets.forEach(target => {
+      if (target.socket && target.socket.writable) {
+        if (target.socket._prompted) {
+          target.socket.write('\r\n');
+          target.socket._prompted = false;
+        }
+        target.socket.write(ansi.parse(formatter(target, message)));
+      }
+    });
+
+  }
+
   static atFormatted(source, message, formatter, wrapWidth, useColor) {
     Broadcast.at(source, message, wrapWidth, useColor, formatter);
   }
