@@ -27,6 +27,14 @@ class Logger {
     }
   }
 
+  static setFileLogging(filename) {
+    winston.add(winston.transports.File, { filename });
+  }
+
+  static deactivateFileLogging() {
+    winston.remove(winston.transports.File);
+  }
+
 }
 
 module.exports = Logger;
