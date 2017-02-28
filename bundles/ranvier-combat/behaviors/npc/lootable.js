@@ -10,10 +10,6 @@ module.exports = srcPath => {
   return {
     listeners: {
       killed: state => function (config, killer) {
-        if (!killer || !(killer instanceof Player)) {
-          return;
-        }
-
         const lootTable = new LootTable(config);
         const items = lootTable.roll().map(
           item => state.ItemFactory.create(state.AreaManager.getAreaByReference(item), item)
@@ -37,7 +33,10 @@ module.exports = srcPath => {
         items.forEach(item => corpse.addItem(item));
 
         this.room.addItem(corpse);
-        state.CommandManager.get('look').execute(corpse.uuid, killer);
+
+        if (killer && killer instanceof Player) {
+          state.CommandManager.get('look').execute(corpse.uuid, killer);
+        }
       }
     }
   };
