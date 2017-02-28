@@ -2,7 +2,6 @@
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const Player = require(srcPath + 'Player');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
 
   return {
@@ -27,8 +26,16 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, "They aren't here.");
       }
 
-      if (target.hasBehavior && target.hasBehavior('pacifist')) {
+      const isPacifist = target => target.isNpc ?
+        target.hasBehavior('pacifist') :
+        target.getMeta('pvp') || false;
+
+      if (isPacifist(target)) {
         return Broadcast.sayAt(player, `${target.name} is a pacifist and will not fight you.`);
+      }
+
+      if (!target.isNpc && !player.getMeta('pvp')) {
+        return Broadcast.sayAt(player, 'You are not able to fight other players, try the `pvp` command first.');
       }
 
       player.combatData.lag = 0;
@@ -43,7 +50,7 @@ module.exports = (srcPath) => {
       target.addCombatant(player);
       Broadcast.sayAt(player, 'Started combat!');
       Broadcast.sayAtExcept([player, target], player.room, `${player.name} attacks ${target.name}!`);
-      if (target instanceof Player) {
+      if (!target.isNpc) {
         Broadcast.sayAt(target, `${player.name} attacks you!`);
       }
     }

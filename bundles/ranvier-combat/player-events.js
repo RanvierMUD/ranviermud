@@ -9,7 +9,6 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const LevelUtil = require(srcPath + 'LevelUtil');
   const Damage = require(srcPath + 'Damage');
-  const Player = require(srcPath + 'Player');
   const RandomUtil = require(srcPath + 'RandomUtil');
 
   return  {
@@ -42,7 +41,9 @@ module.exports = (srcPath) => {
             Broadcast.sayAt(this, `<bold>${target.name} is <red>Dead</red>!</bold>`);
 
             handleDeath(state, target, this);
-            target.room.area.removeNpc(target);
+            if (target.isNpc) {
+              target.room.area.removeNpc(target);
+            }
             continue;
           }
 
@@ -114,7 +115,7 @@ module.exports = (srcPath) => {
 
             this.addPrompt('combat', () => combatPromptBuilder(this));
             for (const target of this.combatants) {
-              if (target instanceof Player && target.isInCombat()) {
+              if (!target.isNpc && target.isInCombat()) {
                 target.addPrompt('combat', () => combatPromptBuilder(target));
                 Broadcast.sayAt(target, '');
                 Broadcast.prompt(target);
@@ -195,6 +196,9 @@ module.exports = (srcPath) => {
        * @param {Character} killer
        */
       killed: state => function (killer) {
+        if (killer !== this) {
+          Broadcast.sayAt(this, `You were killed by ${killer.name}.`);
+        }
         this.setAttributeToMax('health');
         Broadcast.sayAt(this, "Whoops, that sucked!");
         Broadcast.prompt(this);
@@ -205,6 +209,9 @@ module.exports = (srcPath) => {
        * @param {Character} target
        */
       deathblow: state => function (target) {
+        if (target && !this.isNpc) {
+          Broadcast.sayAt(killer, `<bold><red>You killed ${target.name}!`);
+        }
         this.emit('experience', LevelUtil.mobExp(target.level));
         Broadcast.prompt(this);
       }
@@ -234,7 +241,7 @@ module.exports = (srcPath) => {
       combatant.removeCombatant(deadEntity);
     });
 
-    if (deadEntity instanceof Player) {
+    if (!deadEntity.isNpc) {
       deadEntity.removePrompt('combat');
     }
 
@@ -248,25 +255,16 @@ module.exports = (srcPath) => {
       }
     }
 
-    const deathMessage = killer ?
-      `<bold><red>${killer.name} killed you!</red></bold>` :
-      `<bold><red>You died!</red></bold>`;
     const othersDeathMessage = killer ?
       `<bold><red>${deadEntity.name} collapses to the ground, dead at the hands of ${killer.name}.</bold></red>` :
       `<bold><red>${deadEntity.name} collapses to the ground, dead</bold></red>`;
-
-    if (Broadcast.isBroadcastable(deadEntity)) {
-      Broadcast.sayAt(deadEntity, deathMessage);
-    }
 
     Broadcast.sayAtExcept(
       (killer ? [killer, deadEntity] : deadEntity),
       deadEntity.room,
       othersDeathMessage);
 
-    if (killer && killer instanceof Player) {
-      Broadcast.sayAt(killer, `<bold><red>You killed ${deadEntity.name}!`);
-    }
+
     deadEntity.emit('killed', killer || deadEntity);
   }
 
