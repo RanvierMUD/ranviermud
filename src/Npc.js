@@ -81,6 +81,10 @@ class Npc extends Character {
       behavior.attach(this, config === true ? {} : config);
     }
   }
+
+  get isNpc() {
+    return true;
+  }
 }
 
 module.exports = Npc;

@@ -256,6 +256,10 @@ class Character extends EventEmitter
   getBroadcastTargets() {
     return [];
   }
+
+  get isNpc() {
+    return false;
+  }
 }
 
 module.exports = Character;

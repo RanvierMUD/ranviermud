@@ -16,26 +16,43 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, "You're too busy fighting!");
       }
 
-      const npc = Parser.parseDot(args, player.room.npcs);
-      if (!npc) {
+      const possibleTargets = [
+        ...player.room.npcs,
+        ...player.room.players
+      ];
+
+      const target = Parser.parseDot(args, possibleTargets);
+      if (!target) {
         return Broadcast.sayAt(player, "They aren't here.");
       }
 
-      if (npc.hasBehavior('pacifist')) {
-        return Broadcast.sayAt(player, `${npc.name} is a pacifist and will not fight you.`);
+      const isPacifist = target => target.isNpc ?
+        target.hasBehavior('pacifist') :
+        !target.getMeta('pvp');
+
+      if (isPacifist(target)) {
+        return Broadcast.sayAt(player, `${target.name} is a pacifist and will not fight you.`);
+      }
+
+      if (!target.isNpc && !player.getMeta('pvp')) {
+        return Broadcast.sayAt(player, 'You are not able to fight other players, try the `pvp` command first.');
       }
 
       player.combatData.lag = 0;
       player.combatData.roundStarted = Date.now();
 
-      if (!npc.isInCombat()) {
-        npc.combatData.lag = 2500; // give the player a 1 round advantage
-        npc.combatData.roundStarted = Date.now();
+      if (!target.isInCombat()) {
+        target.combatData.lag = 2500; // give the attacker a 1 round advantage
+        target.combatData.roundStarted = Date.now();
       }
 
-      player.addCombatant(npc);
-      npc.addCombatant(player);
+      player.addCombatant(target);
+      target.addCombatant(player);
       Broadcast.sayAt(player, 'Started combat!');
+      Broadcast.sayAtExcept(player.room, `${player.name} attacks ${target.name}!`, [player, target]);
+      if (!target.isNpc) {
+        Broadcast.sayAt(target, `${player.name} attacks you!`);
+      }
     }
   };
 };
