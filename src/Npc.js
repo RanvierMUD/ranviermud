@@ -24,7 +24,7 @@ class Npc extends Character {
 
     this.defaultItems = data.items || [];
     this.defaultEquipment = data.equipment || [];
-    this.behaviors = data.behaviors || [];
+    this.behaviors = new Map(Object.entries(data.behaviors || {}));
     this.area = data.area;
     this.keywords = data.keywords;
     this.description = data.description;
@@ -42,7 +42,7 @@ class Npc extends Character {
    * @return {boolean}
    */
   hasBehavior(behavior) {
-    return this.behaviors.includes(behavior);
+    return this.behaviors.has(behavior);
   }
 
   serialize() {
@@ -71,15 +71,14 @@ class Npc extends Character {
       this.addItem(newItem);
     });
 
-    if (this.behaviors) {
-      this.behaviors.forEach(behaviorName => {
-        let behavior = state.MobBehaviorManager.get(behaviorName);
-        if (!behavior) {
-          return;
-        }
+    for (const [behaviorName, config] of this.behaviors) {
+      let behavior = state.MobBehaviorManager.get(behaviorName);
+      if (!behavior) {
+        return;
+      }
 
-        behavior.attach(this);
-      });
+      // behavior may be a boolean in which case it will be `behaviorName: true`
+      behavior.attach(this, config === true ? {} : config);
     }
   }
 }

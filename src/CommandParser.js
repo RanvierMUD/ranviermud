@@ -139,11 +139,6 @@ class CommandParser {
     }
 
     if (parts.length === 1) {
-      if (parseInt(parts[0], 10)) {
-        // they said get 3 foo instead of get 3.foo
-        return false;
-      }
-
       keyword = parts[0];
     } else {
       findNth = parseInt(parts[0], 10);
@@ -164,7 +159,7 @@ class CommandParser {
       }
 
       // prioritize keywords over item/player names
-      if (entry.keywords && entry.keywords.indexOf(keyword) !== -1) {
+      if (entry.keywords && (entry.keywords.indexOf(keyword) !== -1 || entry.uuid === keyword)) {
         encountered++;
         if (encountered === findNth) {
           return returnKey ? [key, entry] : entry;

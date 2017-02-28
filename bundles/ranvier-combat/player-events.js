@@ -197,7 +197,6 @@ module.exports = (srcPath) => {
        */
       deathblow: state => function (target) {
         this.emit('experience', LevelUtil.mobExp(target.level));
-        Broadcast.prompt(this);
       }
     }
   };
@@ -243,6 +242,9 @@ module.exports = (srcPath) => {
     }
 
     deadEntity.emit('killed', target || deadEntity);
+    if (target instanceof Player) {
+      Broadcast.prompt(target);
+    }
   }
 
   // Make characters regenerate health while out of combat
