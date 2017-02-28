@@ -82,6 +82,10 @@ class Npc extends Character {
       });
     }
   }
+
+  get isNpc() {
+    return true;
+  }
 }
 
 module.exports = Npc;
