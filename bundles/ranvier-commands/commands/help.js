@@ -1,11 +1,10 @@
 'use strict';
 
-const util = require('util');
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Logger = require(srcPath + 'Logger');
-  
+
   return {
     usage: 'help [search] [topic keyword]',
     command: (state) => (args, player) => {

@@ -1,5 +1,4 @@
 'use strict';
-const util = require('util');
 const leftPad = require('left-pad');
 
 /**
@@ -245,7 +244,7 @@ module.exports = (srcPath) => {
     }
 
     killer = killer || deadEntity.combatData.killedBy;
-    util.log(`${killer ? killer.name : 'Something'} killed ${deadEntity.name}.`);
+    Logger.log(`${killer ? killer.name : 'Something'} killed ${deadEntity.name}.`);
 
     if (killer) {
       killer.emit('deathblow', deadEntity);

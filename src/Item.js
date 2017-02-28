@@ -2,7 +2,6 @@
 
 const EventEmitter = require('events');
 const uuid = require('node-uuid');
-const util = require('util');
 
 const ItemType = require('./ItemType');
 const Inventory = require('./Inventory');

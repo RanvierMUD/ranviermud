@@ -16,7 +16,6 @@
 
 /* NPM Modules */
 const net = require('net');
-const util = require('util');
 const commander = require('commander');
 const wrap = require('wrap-ansi');
 const argv = require('optimist').argv;

@@ -1,7 +1,5 @@
 'use strict';
 
-const util = require('util');
-
 /**
  * Main command loop. All player input after login goes through here.
  * If you want to swap out the command parser this is the place to do it

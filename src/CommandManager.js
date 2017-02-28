@@ -1,7 +1,5 @@
 'use strict';
 
-const util = require('util');
-
 class CommandManager {
   constructor() {
     this.commands = new Map();

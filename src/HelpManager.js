@@ -1,7 +1,5 @@
 'use strict';
 
-const util = require('util');
-
 class HelpManager {
   constructor() {
     this.helps = new Map();

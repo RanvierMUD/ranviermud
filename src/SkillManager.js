@@ -1,7 +1,5 @@
 'use strict';
 
-const util = require('util');
-
 const SkillFlag = require('./SkillFlag');
 
 class SkillManager {

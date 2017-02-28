@@ -1,7 +1,5 @@
 'use strict';
 
-const util = require('util');
-
 class ChannelManager {
   constructor() {
     this.channels = new Map();
