@@ -49,7 +49,7 @@ module.exports = (srcPath) => {
       player.addCombatant(target);
       target.addCombatant(player);
       Broadcast.sayAt(player, 'Started combat!');
-      Broadcast.sayAtExcept([player, target], player.room, `${player.name} attacks ${target.name}!`);
+      Broadcast.sayAtExcept(player.room, `${player.name} attacks ${target.name}!`, [player, target]);
       if (!target.isNpc) {
         Broadcast.sayAt(target, `${player.name} attacks you!`);
       }

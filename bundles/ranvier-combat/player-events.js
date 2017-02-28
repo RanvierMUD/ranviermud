@@ -260,10 +260,9 @@ module.exports = (srcPath) => {
       `<bold><red>${deadEntity.name} collapses to the ground, dead</bold></red>`;
 
     Broadcast.sayAtExcept(
-      (killer ? [killer, deadEntity] : deadEntity),
       deadEntity.room,
-      othersDeathMessage);
-
+      othersDeathMessage,
+      (killer ? [killer, deadEntity] : deadEntity),);
 
     deadEntity.emit('killed', killer || deadEntity);
   }

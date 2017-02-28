@@ -28,7 +28,7 @@ class Broadcast {
     });
   }
 
-  static atExcept(excludes, source, message, wrapWidth, useColor, formatter) {
+  static atExcept(source, message, excludes = [], wrapWidth, useColor, formatter) {
 
     if (!TypeUtil.is(source, Broadcastable)) {
       throw new Error(`Tried to broadcast message not non-broadcastable object: MESSAGE [${message}]`);
@@ -58,8 +58,8 @@ class Broadcast {
     });
   }
 
-  static sayAtExcept(excludes, source, message, wrapWidth, useColor, formatter) {
-    Broadcast.atExcept(excludes, source, message, wrapWidth, useColor, (target, message) => {
+  static sayAtExcept(source, message, excludes, wrapWidth, useColor, formatter) {
+    Broadcast.atExcept(source, message, excludes, wrapWidth, useColor, (target, message) => {
       return (formatter ? formatter(target, message) : message ) + '\r\n';
     });
   }
