@@ -50,12 +50,6 @@ const Telnet = require('./src/Telnet');
 // Wrapper for ranvier.json
 const Config = require('./src/Config');
 
-const Logger = require('./src/Logger');
-const logfile = Config.get('logfile');
-if (logfile) {
-  Logger.setFileLogging(logfile);
-}
-
 // cmdline options
 commander
   .version(pkg.version)
@@ -69,6 +63,12 @@ commander
 // 'net' by default to help find possible server errors.
 process.env['NODE_DEBUG'] = 'net';
 process.stdin.setEncoding('utf8');
+
+const Logger = require('./src/Logger');
+const logfile = Config.get('logfile');
+if (logfile) {
+  Logger.setFileLogging(logfile);
+}
 
 // Set logging level based on CLI option or environment variable.
 const logLevel = commander.verbose ?

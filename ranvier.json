@@ -38,5 +38,6 @@
     "dexterity": 20,
     "constitution": 20
   },
-  "skillLag": 2000
+  "skillLag": 2000,
+  "logfile": "./logtest.log"
 }

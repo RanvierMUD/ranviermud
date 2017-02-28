@@ -1,8 +1,15 @@
+'use strict';
+
 const winston = require('winston');
+
+// Reset Console transport and configure it to include ISO timestamp.
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
   'timestamp':true
 });
+
+const logDir = __dirname + '/log/';
+const logExt = '.log';
 
 class Logger {
 
@@ -46,7 +53,12 @@ class Logger {
 
   //TODO: Be able to set and deactivate file logging via a server command.
   static setFileLogging(filename) {
-    winston.add(winston.transports.File, { filename });
+    filename = logDir + filename;
+    if (!filename.endsWith(logExt)) {
+      filename += logExt;
+    }
+    console.log("Adding file logging at " + filename);
+    winston.add(winston.transports.File, { filename, timestamp: true });
   }
 
   static deactivateFileLogging() {
