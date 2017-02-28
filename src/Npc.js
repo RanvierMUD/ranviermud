@@ -64,7 +64,7 @@ class Npc extends Character {
         defaultItemId = this.area.name + ':' + defaultItemId;
       }
 
-      Logger.log(`\tDIST: Adding item [${defaultItemId}] to npc [${this.name}]`);
+      Logger.verbose(`\tDIST: Adding item [${defaultItemId}] to npc [${this.name}]`);
       const newItem = state.ItemFactory.create(this.area, defaultItemId);
       newItem.hydrate(state);
       state.ItemManager.add(newItem);

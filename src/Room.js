@@ -92,7 +92,7 @@ class Room extends EventEmitter {
       }
 
       if (RandomUtil.probability(defaultNpc.respawnChance)) {
-        Logger.log(`\tRESPAWN: Adding npc [${defaultNpc.id}] to room [${this.title}]`);
+        Logger.verbose(`\tRESPAWN: Adding npc [${defaultNpc.id}] to room [${this.title}]`);
         const newNpc = state.MobFactory.create(this.area, defaultNpc.id);
         newNpc.hydrate(state);
         this.area.addNpc(newNpc);
@@ -114,7 +114,7 @@ class Room extends EventEmitter {
         defaultItemId = this.area.name + ':' + defaultItemId;
       }
 
-      Logger.log(`\tDIST: Adding item [${defaultItemId}] to room [${this.title}]`);
+      Logger.verbose(`\tDIST: Adding item [${defaultItemId}] to room [${this.title}]`);
       const newItem = state.ItemFactory.create(this.area, defaultItemId);
       newItem.hydrate(state);
       state.ItemManager.add(newItem);
@@ -126,7 +126,7 @@ class Room extends EventEmitter {
         defaultNpc = { id: defaultNpc };
       }
 
-      Logger.log(`\tDIST: Adding npc [${defaultNpc.id}] to room [${this.title}]`);
+      Logger.verbose(`\tDIST: Adding npc [${defaultNpc.id}] to room [${this.title}]`);
       const newNpc = state.MobFactory.create(this.area, defaultNpc.id);
       newNpc.hydrate(state);
       this.area.addNpc(newNpc);
