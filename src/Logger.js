@@ -17,6 +17,9 @@ class Logger {
     winston.log('info', ...messages);
   }
 
+  /*
+    Appends red "ERROR" to the start of logs.
+  */
   static error(...messages) {
     winston.log('error', ...messages);
   }
@@ -27,6 +30,7 @@ class Logger {
     }
   }
 
+  //TODO: Be able to set and deactivate file logging via a server command.
   static setFileLogging(filename) {
     winston.add(winston.transports.File, { filename });
   }

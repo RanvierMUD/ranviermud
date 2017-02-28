@@ -14,7 +14,8 @@ const fs = require('fs'),
     Room = require('./Room'),
     Skill = require('./Skill'),
     SkillType = require('./SkillType'),
-    Helpfile = require('./Helpfile')
+    Helpfile = require('./Helpfile'),
+    Logger = require('./Logger')
 ;
 
 const srcPath = __dirname + '/';
@@ -29,7 +30,7 @@ class BundleManager {
    * Load in all bundles
    */
   loadBundles() {
-    util.log('LOAD: BUNDLES');
+    Logger.log('LOAD: BUNDLES');
 
     const bundles = fs.readdirSync(bundlesPath);
     for (const bundle of bundles) {
@@ -46,13 +47,13 @@ class BundleManager {
       this.loadBundle(bundle, bundlePath);
     }
 
-    util.log('ENDLOAD: BUNDLES');
+    Logger.log('ENDLOAD: BUNDLES');
 
     // Distribution is done after all areas are loaded in case items use areas from each other
     this.state.AreaManager.distribute(this.state);
 
     this.state.RoomManager.startingRoom = this.state.RoomManager.getRoom(this.state.Config.get('startingRoom'));
-    util.log(`CONFIG: Starting Room [${this.state.RoomManager.startingRoom.entityReference}]`);
+    Logger.log(`CONFIG: Starting Room [${this.state.RoomManager.startingRoom.entityReference}]`);
   }
 
   loadBundle(bundle, bundlePath) {
@@ -69,7 +70,7 @@ class BundleManager {
       { path: 'skills/', fn: 'loadSkills' },
     ];
 
-    util.log(`LOAD: BUNDLE [\x1B[1;33m${bundle}\x1B[0m] START`);
+    Logger.log(`LOAD: BUNDLE [\x1B[1;33m${bundle}\x1B[0m] START`);
     for (const feature of features) {
       const path = bundlePath + '/' + feature.path;
       if (fs.existsSync(path)) {
@@ -77,11 +78,11 @@ class BundleManager {
       }
     }
 
-    util.log(`ENDLOAD: BUNDLE [\x1B[1;32m${bundle}\x1B[0m]`);
+    Logger.log(`ENDLOAD: BUNDLE [\x1B[1;32m${bundle}\x1B[0m]`);
   }
 
   loadPlayerEvents(bundle, eventsFile) {
-    util.log(`\tLOAD: Player Events...`);
+    Logger.log(`\tLOAD: Player Events...`);
 
     const playerListeners = require(eventsFile)(srcPath).listeners;
 
@@ -90,15 +91,15 @@ class BundleManager {
         continue;
       }
 
-      util.log(`\t\tEvent: ${eventName}`);
+      Logger.log(`\t\tEvent: ${eventName}`);
       this.state.PlayerManager.addListener(eventName, playerListeners[eventName](this.state));
     }
 
-    util.log(`\tENDLOAD: Player Events...`);
+    Logger.log(`\tENDLOAD: Player Events...`);
   }
 
   loadAreas(bundle, areasDir) {
-    util.log(`\tLOAD: Areas...`);
+    Logger.log(`\tLOAD: Areas...`);
 
     const dirs = fs.readdirSync(areasDir);
 
@@ -113,7 +114,7 @@ class BundleManager {
       this.state.AreaManager.addArea(area);
     }
 
-    util.log(`\tENDLOAD: Areas`);
+    Logger.log(`\tENDLOAD: Areas`);
   }
 
   loadArea(bundle, areaName, areaPath) {
@@ -154,7 +155,7 @@ class BundleManager {
   }
 
   loadItems(area, itemsFile) {
-    util.log(`\t\tLOAD: Items...`);
+    Logger.log(`\t\tLOAD: Items...`);
 
     // parse the item files
     let items = Data.parseFile(itemsFile);
@@ -169,18 +170,18 @@ class BundleManager {
           return;
         }
 
-        util.log(`\t\t\tLoading Item Script [${entityRef}] ${item.script}`);
+        Logger.log(`\t\t\tLoading Item Script [${entityRef}] ${item.script}`);
         this.loadEntityScript(this.state.ItemFactory, entityRef, scriptPath);
       }
     });
 
-    util.log(`\t\tENDLOAD: Items`);
+    Logger.log(`\t\tENDLOAD: Items`);
 
     return items;
   }
 
   loadNpcs(area, npcsFile) {
-    util.log(`\t\tLOAD: Npcs...`);
+    Logger.log(`\t\tLOAD: Npcs...`);
 
     // parse the npc files
     let npcs = Data.parseFile(npcsFile);
@@ -205,12 +206,12 @@ class BundleManager {
           return;
         }
 
-        util.log(`\t\t\tLoading NPC Script [${entityRef}] ${npc.script}`);
+        Logger.log(`\t\t\tLoading NPC Script [${entityRef}] ${npc.script}`);
         this.loadEntityScript(this.state.MobFactory, entityRef, scriptPath);
       }
     });
 
-    util.log(`\t\tENDLOAD: Npcs`);
+    Logger.log(`\t\tENDLOAD: Npcs`);
 
     return npcs;
   }
@@ -223,13 +224,13 @@ class BundleManager {
         continue;
       }
 
-      util.log(`\t\t\t\tEvent: ${eventName}`);
+      Logger.log(`\t\t\t\tEvent: ${eventName}`);
       factory.addScriptListener(entityRef, eventName, scriptListeners[eventName](this.state));
     }
   }
 
   loadRooms(area, roomsFile) {
-    util.log(`\t\tLOAD: Rooms...`);
+    Logger.log(`\t\tLOAD: Rooms...`);
 
     // parse the room files
     let rooms = Data.parseFile(roomsFile);
@@ -245,7 +246,7 @@ class BundleManager {
           return;
         }
 
-        util.log(`\t\t\tLoading Room Script [${area.name}:${room.id}] ${room.script}`);
+        Logger.log(`\t\t\tLoading Room Script [${area.name}:${room.id}] ${room.script}`);
         // TODO: Maybe abstract this into its own method? Doesn't make much sense now
         // given that rooms are created only once so we can just attach the listeners
         // immediately
@@ -255,33 +256,33 @@ class BundleManager {
             continue;
           }
 
-          util.log(`\t\t\t\tEvent: ${eventName}`);
+          Logger.log(`\t\t\t\tEvent: ${eventName}`);
           room.on(eventName, scriptListeners[eventName](this.state));
         }
       }
     });
 
-    util.log(`\t\tENDLOAD: Rooms`);
+    Logger.log(`\t\tENDLOAD: Rooms`);
 
     return rooms;
   }
 
   loadQuests(area, questsFile) {
-    util.log(`\t\tLOAD: Quests...`);
+    Logger.log(`\t\tLOAD: Quests...`);
 
     const loader = require(questsFile);
     let quests = loader(srcPath);
 
     for (const id in quests) {
-      util.log(`\t\t\tLoading Quest [${area.name}:${id}]`);
+      Logger.log(`\t\t\tLoading Quest [${area.name}:${id}]`);
       this.state.QuestFactory.add(area.name, id, quests[id].type, quests[id].config);
     }
 
-    util.log(`\t\tENDLOAD: Quests...`);
+    Logger.log(`\t\tENDLOAD: Quests...`);
   }
 
   loadCommands(bundle, commandsDir) {
-    util.log(`\tLOAD: Commands...`);
+    Logger.log(`\tLOAD: Commands...`);
     const files = fs.readdirSync(commandsDir);
 
     for (const commandFile of files) {
@@ -305,11 +306,11 @@ class BundleManager {
       this.state.CommandManager.add(command);
     }
 
-    util.log(`\tENDLOAD: Commands...`);
+    Logger.log(`\tENDLOAD: Commands...`);
   }
 
   loadChannels(bundle, channelsFile) {
-    util.log(`\tLOAD: Channels...`);
+    Logger.log(`\tLOAD: Channels...`);
 
     const loader = require(channelsFile);
     let channels = loader(srcPath);
@@ -323,11 +324,11 @@ class BundleManager {
       this.state.ChannelManager.add(channel);
     });
 
-    util.log(`\tENDLOAD: Channels...`);
+    Logger.log(`\tENDLOAD: Channels...`);
   }
 
   loadHelp(bundle, helpDir) {
-    util.log(`\tLOAD: Help...`);
+    Logger.log(`\tLOAD: Help...`);
     const files = fs.readdirSync(helpDir);
 
     for (const helpFile of files) {
@@ -348,11 +349,11 @@ class BundleManager {
       this.state.HelpManager.add(hfile);
     }
 
-    util.log(`\tENDLOAD: Help...`);
+    Logger.log(`\tENDLOAD: Help...`);
   }
 
   loadInputEvents(bundle, inputEventsDir) {
-    util.log(`\tLOAD: Events...`);
+    Logger.log(`\tLOAD: Events...`);
     const files = fs.readdirSync(inputEventsDir);
 
     for (const eventFile of files) {
@@ -367,11 +368,11 @@ class BundleManager {
       this.state.InputEventManager.add(eventName, eventImport.event(this.state));
     }
 
-    util.log(`\tENDLOAD: Events...`);
+    Logger.log(`\tENDLOAD: Events...`);
   }
 
   loadBehaviors(bundle, behaviorsDir) {
-    util.log(`\tLOAD: Behaviors...`);
+    Logger.log(`\tLOAD: Behaviors...`);
 
     function loadEntityBehaviors(type, manager, state) {
       let typeDir = behaviorsDir + type + '/';
@@ -380,7 +381,7 @@ class BundleManager {
         return;
       }
 
-      util.log(`\t\tLOAD: BEHAVIORS [${type}]...`);
+      Logger.log(`\t\tLOAD: BEHAVIORS [${type}]...`);
       const files = fs.readdirSync(typeDir);
 
       for (const behaviorFile of files) {
@@ -390,7 +391,7 @@ class BundleManager {
         }
 
         const behaviorName = path.basename(behaviorFile, path.extname(behaviorFile));
-        util.log(`\t\t\tLOAD: BEHAVIORS [${type}] ${behaviorName}...`);
+        Logger.log(`\t\t\tLOAD: BEHAVIORS [${type}] ${behaviorName}...`);
         const behaviorListeners = require(behaviorPath)(srcPath).listeners;
 
         for (const eventName in behaviorListeners) {
@@ -407,11 +408,11 @@ class BundleManager {
     loadEntityBehaviors('item', this.state.ItemBehaviorManager, this.state);
     loadEntityBehaviors('room', this.state.RoomBehaviorManager, this.state);
 
-    util.log(`\tENDLOAD: Behaviors...`);
+    Logger.log(`\tENDLOAD: Behaviors...`);
   }
 
   loadEffects(bundle, effectsDir) {
-    util.log(`\tLOAD: Effects...`);
+    Logger.log(`\tLOAD: Effects...`);
     const files = fs.readdirSync(effectsDir);
 
     for (const effectFile of files) {
@@ -423,15 +424,15 @@ class BundleManager {
       const effectName = path.basename(effectFile, path.extname(effectFile));
       const loader = require(effectPath);
 
-      util.log(`\t\t${effectName}`);
+      Logger.log(`\t\t${effectName}`);
       this.state.EffectFactory.add(effectName, loader(srcPath));
     }
 
-    util.log(`\tENDLOAD: Effects...`);
+    Logger.log(`\tENDLOAD: Effects...`);
   }
 
   loadSkills(bundle, skillsDir) {
-    util.log(`\tLOAD: Skills...`);
+    Logger.log(`\tLOAD: Skills...`);
     const files = fs.readdirSync(skillsDir);
 
     for (const skillFile of files) {
@@ -447,7 +448,7 @@ class BundleManager {
         skillImport.run = skillImport.run(this.state);
       }
 
-      util.log(`\t\t${skillName}`);
+      Logger.log(`\t\t${skillName}`);
       const skill = new Skill(skillName, skillImport, this.state);
 
       if (skill.type === SkillType.SKILL) {
@@ -457,11 +458,11 @@ class BundleManager {
       }
     }
 
-    util.log(`\tENDLOAD: Skills...`);
+    Logger.log(`\tENDLOAD: Skills...`);
   }
 
   loadClasses(bundle, classesDir) {
-    util.log(`\tLOAD: Classes...`);
+    Logger.log(`\tLOAD: Classes...`);
     const files = fs.readdirSync(classesDir);
 
     for (const classFile of files) {
@@ -474,11 +475,11 @@ class BundleManager {
       const loader = require(classPath);
       let classImport = loader(srcPath);
 
-      util.log(`\t\t${className}`);
+      Logger.log(`\t\t${className}`);
       this.state.ClassManager.set(className, new PlayerClass(className, classImport));
     }
 
-    util.log(`\tENDLOAD: Classes...`);
+    Logger.log(`\tENDLOAD: Classes...`);
   }
 }
 
