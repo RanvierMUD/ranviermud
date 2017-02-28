@@ -44,7 +44,7 @@ describe("Bundle Data Tests", function() {
 
     describe("getBundleDirectory", function() {
       it("getBundleDirectory returns a bundle if it exists", function() {
-        expect(dataManager.getBundleDirectory('rooms-bundle')).to.not.be.null;
+        expect(dataManager.getBundleDirectory('rooms-bundle')).to.be.ok;
       });
 
       it("getBundleDirectory returns null if it doesn't exist", function() {
@@ -54,7 +54,7 @@ describe("Bundle Data Tests", function() {
 
     it("createBundle creates a bundle", function() {
       dataManager.createBundle('awesome-bundle');
-      expect(dataManager.getBundleDirectory('awesome-bundle')).to.not.be.null;
+      expect(dataManager.getBundleDirectory('awesome-bundle')).to.be.ok;
     });
   });
 
@@ -73,7 +73,7 @@ describe("Bundle Data Tests", function() {
 
     it("getArea returns an area", function() {
       const area = bundle.getArea('test-area');
-      expect(area).to.not.be.null;
+      expect(area).to.be.ok;
     });
 
     describe("createArea", function(){
