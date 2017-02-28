@@ -1,5 +1,5 @@
 'use strict';
-
+const util = require('util');
 const leftPad = require('left-pad');
 
 /**
@@ -9,7 +9,6 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const LevelUtil = require(srcPath + 'LevelUtil');
   const Damage = require(srcPath + 'Damage');
-  const Player = require(srcPath + 'Player');
   const RandomUtil = require(srcPath + 'RandomUtil');
 
   return  {
@@ -42,7 +41,9 @@ module.exports = (srcPath) => {
             Broadcast.sayAt(this, `<bold>${target.name} is <red>Dead</red>!</bold>`);
 
             handleDeath(state, target, this);
-            target.room.area.removeNpc(target);
+            if (target.isNpc) {
+              target.room.area.removeNpc(target);
+            }
             continue;
           }
 
@@ -81,14 +82,14 @@ module.exports = (srcPath) => {
         // Show combat prompt and health bars.
         if (hadActions) {
           if (this.isInCombat()) {
-            this.addPrompt('combat', () => {
-              if (!this.isInCombat()) {
+            const combatPromptBuilder = promptee => {
+              if (!promptee.isInCombat()) {
                 return '';
               }
 
               // Set up some constants for formatting the health bars
               const playerName = "You";
-              const targetNameLengths = [...this.combatants].map(t => t.name.length);
+              const targetNameLengths = [...promptee.combatants].map(t => t.name.length);
               const nameWidth = Math.max(playerName.length, ...targetNameLengths);
               const progWidth = 60 - nameWidth;
 
@@ -98,19 +99,28 @@ module.exports = (srcPath) => {
                 `<bold>${leftPad(name, nameWidth)}</bold>: ${progress} <bold>${entity.getAttribute('health')}/${entity.getMaxAttribute('health')}</bold>`;
 
               // Build player health bar.
-              let currentPerc = getHealthPercentage(this);
+              let currentPerc = getHealthPercentage(promptee);
               let progress = Broadcast.progress(progWidth, currentPerc, "green");
-              let buf = formatProgressBar(playerName, progress, this);
+              let buf = formatProgressBar(playerName, progress, promptee);
 
               // Build and add target health bars.
-              for (const target of this.combatants) {
+              for (const target of promptee.combatants) {
                 let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
                 let progress = Broadcast.progress(progWidth, currentPerc, "red");
                 buf += `\r\n${formatProgressBar(target.name, progress, target)}`;
               }
 
               return buf;
-            });
+            }
+
+            this.addPrompt('combat', () => combatPromptBuilder(this));
+            for (const target of this.combatants) {
+              if (!target.isNpc && target.isInCombat()) {
+                target.addPrompt('combat', () => combatPromptBuilder(target));
+                Broadcast.sayAt(target, '');
+                Broadcast.prompt(target);
+              }
+            }
           }
 
           Broadcast.sayAt(this, '');
@@ -186,6 +196,9 @@ module.exports = (srcPath) => {
        * @param {Character} killer
        */
       killed: state => function (killer) {
+        if (killer !== this) {
+          Broadcast.sayAt(this, `You were killed by ${killer.name}.`);
+        }
         this.setAttributeToMax('health');
         Broadcast.sayAt(this, "Whoops, that sucked!");
         Broadcast.prompt(this);
@@ -196,6 +209,9 @@ module.exports = (srcPath) => {
        * @param {Character} target
        */
       deathblow: state => function (target) {
+        if (target && !this.isNpc) {
+          Broadcast.sayAt(this, `<bold><red>You killed ${target.name}!`);
+        }
         this.emit('experience', LevelUtil.mobExp(target.level));
       }
     }
@@ -210,40 +226,46 @@ module.exports = (srcPath) => {
       attacker
     });
     damage.commit(defender);
+    if (defender.getAttribute('health') <= 0) {
+      defender.combatData.killedBy = attacker;
+    }
 
     attacker.combatData.lag = attacker.combatData.speed * 1000;
   }
 
   function handleDeath(state, deadEntity, killer) {
+
     deadEntity.combatants.forEach(combatant => {
       deadEntity.removeCombatant(combatant);
       combatant.removeCombatant(deadEntity);
-    }, deadEntity);
+    });
 
-    if (deadEntity instanceof Player) {
+    if (!deadEntity.isNpc) {
       deadEntity.removePrompt('combat');
     }
 
-    const target = killer || deadEntity.combatData.killedBy;
+    killer = killer || deadEntity.combatData.killedBy;
+    util.log(`${killer ? killer.name : 'Something'} killed ${deadEntity.name}.`);
 
-    if (target) {
-      target.emit('deathblow', deadEntity);
-      if (!target.isInCombat()) {
-        startRegeneration(state, target);
+    if (killer) {
+      killer.emit('deathblow', deadEntity);
+      if (!killer.isInCombat()) {
+        startRegeneration(state, killer);
       }
     }
 
-    const deathMessage = target ?
-      `<bold><red>${target.name} killed you!</red></bold>` :
-      `<bold><red>You died!</red></bold>`;
+    const othersDeathMessage = killer ?
+      `<bold><red>${deadEntity.name} collapses to the ground, dead at the hands of ${killer.name}.</bold></red>` :
+      `<bold><red>${deadEntity.name} collapses to the ground, dead</bold></red>`;
 
-    if (Broadcast.isBroadcastable(deadEntity)) {
-      Broadcast.sayAt(deadEntity, deathMessage);
-    }
+    Broadcast.sayAtExcept(
+      deadEntity.room,
+      othersDeathMessage,
+      (killer ? [killer, deadEntity] : deadEntity));
 
-    deadEntity.emit('killed', target || deadEntity);
-    if (target instanceof Player) {
-      Broadcast.prompt(target);
+    deadEntity.emit('killed', killer || deadEntity);
+    if (!killer.isNpc) {
+      Broadcast.prompt(killer);
     }
   }
 

@@ -28,12 +28,38 @@ class Broadcast {
     });
   }
 
+  static atExcept(source, message, excludes, wrapWidth, useColor, formatter) {
+
+    if (!TypeUtil.is(source, Broadcastable)) {
+      throw new Error(`Tried to broadcast message not non-broadcastable object: MESSAGE [${message}]`);
+    }
+
+    // Could be an array or a single target.
+    excludes = [].concat(excludes);
+
+    const targets = source.getBroadcastTargets()
+      .filter(target => !excludes.includes(target));
+
+    const newSource = {
+      getBroadcastTargets: () => targets
+    };
+
+    Broadcast.at(newSource, message, wrapWidth, useColor, formatter);
+
+  }
+
   static atFormatted(source, message, formatter, wrapWidth, useColor) {
     Broadcast.at(source, message, wrapWidth, useColor, formatter);
   }
 
   static sayAt(source, message, wrapWidth, useColor, formatter) {
     Broadcast.at(source, message, wrapWidth, useColor, (target, message) => {
+      return (formatter ? formatter(target, message) : message ) + '\r\n';
+    });
+  }
+
+  static sayAtExcept(source, message, excludes, wrapWidth, useColor, formatter) {
+    Broadcast.atExcept(source, message, excludes, wrapWidth, useColor, (target, message) => {
       return (formatter ? formatter(target, message) : message ) + '\r\n';
     });
   }
