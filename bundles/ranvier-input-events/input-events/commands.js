@@ -59,7 +59,7 @@ module.exports = (src) => {
           } else {
             Logger.error(e);
           }
-          Logger.log(`WARNING: Player tried non-existent command '${data}'`);
+          Logger.warn(`WARNING: Player tried non-existent command '${data}'`);
         }
 
         Broadcast.prompt(player);

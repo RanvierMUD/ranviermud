@@ -69,12 +69,12 @@ module.exports = (srcPath) => {
       */
       function handleMultiplaying(selectedChar) {
         if (!canMultiplay) {
-          Logger.info("Attempted multiplaying...");
+          Logger.log("Attempted multiplaying...");
           for (const character of account.characters) {
             kickIfAccountLoggedIn(character);
           }
         } else if (selectedChar) {
-          Logger.info("Multiplaying is allowed...");
+          Logger.log("Multiplaying is allowed...");
           replaceIfCharLoggedIn(selectedChar);
         }
       }

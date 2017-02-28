@@ -69,9 +69,13 @@ commander
 // 'net' by default to help find possible server errors.
 process.env['NODE_DEBUG'] = 'net';
 process.stdin.setEncoding('utf8');
-if (commander.verbose) {
-  process.env['LOG_LEVEL'] = 'verbose';
-}
+
+// Set logging level based on CLI option or environment variable.
+const logLevel = commander.verbose ?
+  'verbose' :
+  process.env['LOG_LEVEL'] || Config.get('logLevel') || 'debug';
+
+Logger.setLevel(logLevel);
 
 
 // Global state object, server instance and configurable intervals.
