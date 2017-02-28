@@ -1,10 +1,9 @@
 'use strict';
 
-const util   = require('util');
-
 module.exports = (srcPath) => {
   const Data = require(srcPath + 'Data');
   const Account = require(srcPath + 'Account');
+  const Logger = require(srcPath + 'Logger');
 
   return {
     event: state => (socket, args) => {
@@ -27,7 +26,7 @@ module.exports = (srcPath) => {
 
         // That player account doesn't exist so ask if them to create it
         if (!account) {
-          util.log('No account found');
+          Logger.error(`No account found as ${name}.`);
           return socket.emit('create-account', socket, name);
         }
 

@@ -6,6 +6,7 @@ const util = require('util');
 
 const ItemType = require('./ItemType');
 const Inventory = require('./Inventory');
+const Logger = require('./Logger');
 
 /**
  * @property {Area}    area        Area the item belongs to (warning: this is not the area is currently in but the
@@ -98,7 +99,7 @@ class Item extends EventEmitter {
     } else {
     // otherwise load its default inv
       this.defaultItems.forEach(defaultItemId => {
-        util.log(`\tDIST: Adding item [${defaultItemId}] to item [${this.name}]`);
+        Logger.log(`\tDIST: Adding item [${defaultItemId}] to item [${this.name}]`);
         const newItem = state.ItemFactory.create(this.area, defaultItemId);
         newItem.hydrate(state);
         state.ItemManager.add(newItem);

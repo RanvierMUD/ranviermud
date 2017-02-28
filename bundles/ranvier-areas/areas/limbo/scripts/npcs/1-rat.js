@@ -2,13 +2,13 @@
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const util = require('util');
+  const Logger = require(srcPath + 'Logger');
 
   return  {
     listeners: {
       spawn: state => function () {
         Broadcast.sayAt(this.room, "A rat scurries into view.");
-        util.log(`Spawned rat into Room [${this.room.title}]`);
+        Logger.log(`Spawned rat into Room [${this.room.title}]`);
       },
 
       playerEnter: state => function (player) {

@@ -1,10 +1,10 @@
 'use strict';
-const util  = require('util');
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
-  const EquipSlotTakenError = require(srcPath + 'EquipErrors').EquipSlotTakenError;
+  const { CommandParser: Parser } = require(srcPath + 'CommandParser');
+  const { EquipSlotTakenError } = require(srcPath + 'EquipErrors');
+  const Logger = require(srcPath + 'Logger');
 
   return {
     aliases: [ 'wield' ],
@@ -34,7 +34,7 @@ module.exports = (srcPath) => {
           return Broadcast.sayAt(player, `You will have to remove ${conflict.name} first.`);
         }
 
-        return util.log(err);
+        return Logger.error(err);
       }
 
       Broadcast.sayAt(player, `Equipped: ${item.name}`);

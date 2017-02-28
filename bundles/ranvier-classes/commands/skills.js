@@ -1,10 +1,10 @@
 'use strict';
 
 const sprintf = require('sprintf-js').sprintf;
-const util = require('util');
 
 module.exports = srcPath => {
   const Broadcast = require(srcPath + 'Broadcast');
+  const Logger = require(srcPath + 'Logger');
 
   return {
     aliases: ['abilities', 'spells'],
@@ -32,7 +32,7 @@ module.exports = srcPath => {
           let skill = state.SkillManager.get(skillId);
 
           if (!skill) {
-            util.log(`Invalid skill in ability table: ${player.playerClass.name}:${level}:${skillId}`);
+            Logger.error(`Invalid skill in ability table: ${player.playerClass.name}:${level}:${skillId}`);
             continue;
           }
 
@@ -55,7 +55,7 @@ module.exports = srcPath => {
           let spell = state.SpellManager.get(spellId);
 
           if (!spell) {
-            util.log(`Invalid spell in ability table: ${player.playerClass.name}:${level}:${spellId}`);
+            Logger.error(`Invalid spell in ability table: ${player.playerClass.name}:${level}:${spellId}`);
             continue;
           }
 
