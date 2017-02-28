@@ -210,7 +210,7 @@ module.exports = (srcPath) => {
        */
       deathblow: state => function (target) {
         if (target && !this.isNpc) {
-          Broadcast.sayAt(killer, `<bold><red>You killed ${target.name}!`);
+          Broadcast.sayAt(this, `<bold><red>You killed ${target.name}!`);
         }
         this.emit('experience', LevelUtil.mobExp(target.level));
         Broadcast.prompt(this);

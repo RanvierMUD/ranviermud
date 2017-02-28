@@ -28,7 +28,7 @@ module.exports = (srcPath) => {
 
       const isPacifist = target => target.isNpc ?
         target.hasBehavior('pacifist') :
-        target.getMeta('pvp') || false;
+        !target.getMeta('pvp');
 
       if (isPacifist(target)) {
         return Broadcast.sayAt(player, `${target.name} is a pacifist and will not fight you.`);
