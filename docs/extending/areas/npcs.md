@@ -11,7 +11,6 @@ In Ranvier all npcs for an area are defined in a single file within the area fol
   name: 'Rat'
   level: 2
   description: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
-  behaviors: [ 'combat' ]
   script: '1-rat'
   items: ['limbo:2']
   quests: ['limbo:2']
@@ -22,10 +21,21 @@ In Ranvier all npcs for an area are defined in a single file within the area fol
 - id: 2
   keywords: ["wise", "old", "man"]
   name: "Wise Old Man"
+  behaviors:
+    pacifist: true
   description: "A wise looking old man sits on the ground with legs crossed."
+- id: 3
+  keywords: ["dummy", "target", "practice"]
+  level: 2
+  name: "Training Dummy"
+  behaviors:
+    lootable:
+      table:
+        "limbo:4": 50
 ```
 
-Here we have two npcs. The rat can enter combat, has a custom script, a default inventory, hands out a quest and has some extra attributes. The old man is the most basic NPC you can have.
+Here we have two npcs. The rat can enter combat, has a custom script, a default inventory, hands out a quest and has
+some extra attributes. The old man is the most basic NPC you can have.
 
 ## Definition Fields
 
@@ -48,11 +58,13 @@ Here we have two npcs. The rat can enter combat, has a custom script, a default 
 `script` _`string`_
 :    Name of custom script to attach to this npc (See [Scripting](scripting.md))
 
-`behaviors` _`array<string>`_
-:    List of behaviors to attach to this npc (See [Scripting](scripting.md))
+`behaviors` _`Object<string,Object>`_
+:    List of behaviors to attach to this npc. Key is the behavior name, the value is the configuration for that
+behavior. For boolean (on/off) behaviors, `true` suffices for the config. (See [Scripting](scripting.md) for creating behaviors)
 
 `attributes` _`object`_
-:    Arbitrary list of attributes to attach to this NPC. There are no constraints on this so you are free to assign basically anything here that you want to look for inside commands/scripts/etc.
+:    Arbitrary list of attributes to attach to this NPC. There are no constraints on this so you are free to assign
+basically anything here that you want to look for inside commands/scripts/etc.
 
 `items` _`array<EntityReference>`_
 :    List of Entity References representing the NPC's default inventory

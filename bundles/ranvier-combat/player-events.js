@@ -213,7 +213,6 @@ module.exports = (srcPath) => {
           Broadcast.sayAt(this, `<bold><red>You killed ${target.name}!`);
         }
         this.emit('experience', LevelUtil.mobExp(target.level));
-        Broadcast.prompt(this);
       }
     }
   };
@@ -262,9 +261,12 @@ module.exports = (srcPath) => {
     Broadcast.sayAtExcept(
       deadEntity.room,
       othersDeathMessage,
-      (killer ? [killer, deadEntity] : deadEntity),);
+      (killer ? [killer, deadEntity] : deadEntity));
 
     deadEntity.emit('killed', killer || deadEntity);
+    if (!killer.isNpc) {
+      Broadcast.prompt(killer);
+    }
   }
 
   // Make characters regenerate health while out of combat

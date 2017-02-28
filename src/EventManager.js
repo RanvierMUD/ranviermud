@@ -35,11 +35,16 @@ class EventManager {
   /**
    * Attach all currently added events to the given emitter
    * @param {EventEmitter} emitter
+   * @param {Object} config
    */
-  attach(emitter) {
+  attach(emitter, config) {
     for (const [ event, listeners ] of this.events) {
       for (const listener of listeners) {
-        emitter.on(event, listener.bind(emitter));
+        if (config) {
+          emitter.on(event, listener.bind(emitter, config));
+        } else {
+          emitter.on(event, listener.bind(emitter));
+        }
       }
     }
   }

@@ -37,7 +37,7 @@ class Item extends EventEmitter {
 
     this.area = area;
     this.attributes  = item.attributes || {};
-    this.behaviors   = item.behaviors || null;
+    this.behaviors = new Map(Object.entries(item.behaviors || {}));
     this.defaultItems = item.items || [];
     this.description = item.description || 'Nothing special.';
     this.entityReference = item.entityReference; // EntityFactory key
@@ -69,14 +69,14 @@ class Item extends EventEmitter {
   }
 
   addItem(item) {
-    if (this.inventory === null) {
-      this.inventory = new Map();
+    if (!this.inventory) {
+      this.inventory = new Inventory([]);
     }
-    this.inventory.set(item.uuid, item);
+    this.inventory.addItem(item);
   }
 
   removeItem(item) {
-    this.inventory.delete(item.uuid);
+    this.inventory.removeItem(item);
 
     // if we removed the last item unset the inventory
     // This ensures that when it's reloaded it won't try to set
@@ -106,15 +106,15 @@ class Item extends EventEmitter {
       });
     }
 
-    if (this.behaviors) {
-      this.behaviors.forEach(behaviorName => {
-        let behavior = state.ItemBehaviorManager.get(behaviorName);
-        if (!behavior) {
-          return;
-        }
+    for (const [behaviorName, config] of this.behaviors) {
+      let behavior = state.ItemBehaviorManager.get(behaviorName);
+      if (!behavior) {
+        return;
+      }
 
-        behavior.attach(this);
-      });
+      // behavior may be a boolean in which case it will be `behaviorName: true`
+      config = config === true ? {} : config;
+      behavior.attach(this, config);
     }
   }
 

@@ -10,7 +10,8 @@
   keywords: ["wise", "old", "man"]
   name: "Wise Old Man"
   level: 99
-  behaviors: [ "pacifist" ]
+  behaviors:
+    pacifist: true
   description: "A wise looking old man sits on the ground with legs crossed."
   attributes:
     health: 100
@@ -24,6 +25,10 @@
   keywords: ["dummy", "target", "practice"]
   level: 2
   name: "Training Dummy"
+  behaviors:
+    lootable:
+      table:
+        "limbo:4": 50
   description: >-
     The training dummy is almost human shaped although slightly out of proportion. The material it's made of is hard to
     discern; it seems to constantly change between metal, wood, cloth, and glass depending on the angle. There is a

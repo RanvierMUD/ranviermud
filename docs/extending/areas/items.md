@@ -40,7 +40,8 @@ In Ranvier all items for an area are defined in a single file within the area fo
 :    ***required*** Item id unique among the items of the current area
 
 `type` _`ItemType`_ `(OBJECT)`
-:    See `src/ItemType.js`. Natively doesn't not change _functionality_, simply a helper for you to use in scripts to detect the item type
+:    See `src/ItemType.js`. Natively doesn't not change _functionality_, simply a helper for you to use in scripts to
+detect the item type
 
 `name` _`string`_
 :    ***required*** String seen in the player's inventory, equipment list
@@ -57,14 +58,17 @@ In Ranvier all items for an area are defined in a single file within the area fo
 `script` _`string`_
 :    Name of custom script to attach to this item (See [Scripting](scripting.md))
 
-`behaviors` _`array<string>`_
-:    List of behaviors to attach to this item (See [Scripting](scripting.md))
+`behaviors` _`Object<string,Object>`_
+:    List of behaviors to attach to this item. Key is the behavior name, the value is the configuration for that
+behavior. For boolean (on/off) behaviors, `true` suffices for the config. (See [Scripting](scripting.md) for creating behaviors)
 
 `slot` _`string`_
-:    If the item can be equipped `slot` identifies the wear location of the item. This can be an arbitrary string but you probably want to limit to a standard list of locations
+:    If the item can be equipped `slot` identifies the wear location of the item. This can be an arbitrary string but
+you probably want to limit to a standard list of locations
 
 `attributes` _`object`_
-:    Arbitrary list of attributes to attach to this object. There are no constraints on this so you are free to assign basically anything here that you want to look for inside commands/scripts/etc.
+:    Arbitrary list of attributes to attach to this object. There are no constraints on this so you are free to assign
+basically anything here that you want to look for inside commands/scripts/etc.
 
 `items` _`array<EntityReference>`_
 :    List of Entity References identifying which items should be loaded into this item's inventory
