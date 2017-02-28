@@ -8,7 +8,7 @@ winston.add(winston.transports.Console, {
   'timestamp':true
 });
 
-const logDir = __dirname + '/log/';
+const logDir = __dirname + '/../log/';
 const logExt = '.log';
 
 class Logger {
