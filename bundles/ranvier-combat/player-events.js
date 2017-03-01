@@ -9,6 +9,7 @@ module.exports = (srcPath) => {
   const LevelUtil = require(srcPath + 'LevelUtil');
   const Damage = require(srcPath + 'Damage');
   const RandomUtil = require(srcPath + 'RandomUtil');
+  const Logger = require(srcPath + 'Logger');
 
   return  {
     listeners: {
