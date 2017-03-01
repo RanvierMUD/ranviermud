@@ -33,8 +33,6 @@ class BundleDataManager {
 
       this.loadBundle(bundle);
     }
-
-    // this.watch();
   }
 
   loadBundle(bundleName) {
