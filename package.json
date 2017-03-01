@@ -19,6 +19,7 @@
     "commander": "",
     "express": "^4.14.0",
     "express-jwt": "^5.1.0",
+    "fs-extra": "^2.0.0",
     "humanize-duration": "^3.10.0",
     "joi": "^10.2.2",
     "js-yaml": "",
