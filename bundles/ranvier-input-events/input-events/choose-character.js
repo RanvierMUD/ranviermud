@@ -69,7 +69,6 @@ module.exports = (srcPath) => {
       */
       function handleMultiplaying(selectedChar) {
         if (!canMultiplay) {
-          Logger.log("Attempted multiplaying...");
           for (const character of account.characters) {
             kickIfAccountLoggedIn(character);
           }
@@ -95,7 +94,7 @@ module.exports = (srcPath) => {
 
       function bootPlayer(player, reason) {
         player.save(() => {
-          Logger.log(`Booting ${player.name}: ${reason}`);
+          Logger.warn(`Booting ${player.name}: ${reason}`);
           Broadcast.sayAt(player, reason);
           player.socket.emit('close');
         });
