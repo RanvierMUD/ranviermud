@@ -1,7 +1,5 @@
 'use strict';
 
-const util = require('util');
-
 class AreaManager {
   constructor() {
     this.areas = new Map();

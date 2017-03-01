@@ -3,7 +3,6 @@
 const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
-const util = require('util');
 
 const dataPath = __dirname + '/../data/';
 

@@ -1,4 +1,3 @@
-const util   = require('util');
 const fs     = require('fs');
 const bcrypt = require('bcryptjs');
 
@@ -13,6 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const Config = require('../Config');
+const Logger = require('../Logger');
 const APIBuilder = require('./APIBuilder');
 const APIAdmin = require('./APIAdmin');
 
@@ -28,10 +28,10 @@ class WebInterface {
   }
 
   init() {
-    util.log('[WEB] Initializing...');
+    Logger.log('[WEB] Initializing...');
     this.setUpMiddleWare();
     app.listen(this.port);
-    util.log(`[WEB]: Web API activated and running on port ${this.port}.`);
+    Logger.log(`[WEB]: Web API activated and running on port ${this.port}.`);
   }
 
   setUpMiddleWare() {
@@ -42,9 +42,9 @@ class WebInterface {
     app.use(whitelist(this.whiteListed));
     app.use((err, req, res, next) => {
       if (err.name == "WhitelistIpError") {
-        util.log(`[WEB]: Forbidden request: ${req.ip}`);
+        Logger.log(`[WEB]: Forbidden request: ${req.ip}`);
         res.status(403).send('Forbidden');
-      } 
+      }
     });
   }
 }

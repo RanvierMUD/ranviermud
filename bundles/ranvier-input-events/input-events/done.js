@@ -1,12 +1,12 @@
 'use strict';
 
-const util = require('util');
 
 /**
  * Login is done, allow the player to actually execute commands
  */
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
+  const Logger = require(srcPath + 'Logger');
 
   return {
     event: state => (socket, args) => {
@@ -14,7 +14,7 @@ module.exports = (srcPath) => {
       player.hydrate(state);
 
       player.socket.on('close', () => {
-        util.log(player.name + ' has gone linkdead.');
+        Logger.log(player.name + ' has gone linkdead.');
         // TODO: try to fetch the person the player is fighting and dereference the player
         //if (player.inCombat.inCombat) {
         //  player.inCombat.inCombat = null;

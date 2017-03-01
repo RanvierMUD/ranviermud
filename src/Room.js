@@ -1,8 +1,7 @@
 'use strict';
 const EventEmitter = require('events');
 const RandomUtil = require('./RandomUtil');
-const util = require('util');
-
+const Logger = require('./Logger');
 /**
  * @property {Area}          area         Area room is in
  * @property {Array<number>} defaultItems Default list of item ids that should load in this room
@@ -93,7 +92,7 @@ class Room extends EventEmitter {
       }
 
       if (RandomUtil.probability(defaultNpc.respawnChance)) {
-        util.log(`\tRESPAWN: Adding npc [${defaultNpc.id}] to room [${this.title}]`);
+        Logger.verbose(`\tRESPAWN: Adding npc [${defaultNpc.id}] to room [${this.title}]`);
         const newNpc = state.MobFactory.create(this.area, defaultNpc.id);
         newNpc.hydrate(state);
         this.area.addNpc(newNpc);
@@ -115,7 +114,7 @@ class Room extends EventEmitter {
         defaultItemId = this.area.name + ':' + defaultItemId;
       }
 
-      util.log(`\tDIST: Adding item [${defaultItemId}] to room [${this.title}]`);
+      Logger.verbose(`\tDIST: Adding item [${defaultItemId}] to room [${this.title}]`);
       const newItem = state.ItemFactory.create(this.area, defaultItemId);
       newItem.hydrate(state);
       state.ItemManager.add(newItem);
@@ -127,7 +126,7 @@ class Room extends EventEmitter {
         defaultNpc = { id: defaultNpc };
       }
 
-      util.log(`\tDIST: Adding npc [${defaultNpc.id}] to room [${this.title}]`);
+      Logger.verbose(`\tDIST: Adding npc [${defaultNpc.id}] to room [${this.title}]`);
       const newNpc = state.MobFactory.create(this.area, defaultNpc.id);
       newNpc.hydrate(state);
       this.area.addNpc(newNpc);

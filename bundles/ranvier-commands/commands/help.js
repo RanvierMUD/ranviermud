@@ -1,9 +1,9 @@
 'use strict';
 
-const util = require('util');
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
+  const Logger = require(srcPath + 'Logger');
 
   return {
     usage: 'help [search] [topic keyword]',
@@ -21,7 +21,7 @@ module.exports = (srcPath) => {
       const hfile = state.HelpManager.get(args);
 
       if (!hfile) {
-        util.log(`MISSING-HELP: [${args}]`);
+        Logger.error(`MISSING-HELP: [${args}]`);
         return Broadcast.sayAt(player, "Sorry, I couldn't find an entry for that topic.");
       }
 

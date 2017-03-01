@@ -1,7 +1,5 @@
 'use strict';
 
-const util = require('util');
-
 /**
  * Player class selection event
  */

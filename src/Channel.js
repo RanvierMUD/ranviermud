@@ -3,7 +3,6 @@
 const Broadcast = require('./Broadcast');
 const ChannelAudienceWorld = require('./ChannelAudience/World');
 const ChannelAudiencePrivate = require('./ChannelAudience/Private');
-const util = require('util');
 
 /**
  * @property {ChannelAudience} audience People who receive messages from this channel

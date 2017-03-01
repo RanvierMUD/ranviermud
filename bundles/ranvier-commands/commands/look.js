@@ -1,11 +1,11 @@
 'use strict';
-const util  = require('util');
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const CommandParser = require(srcPath + 'CommandParser').CommandParser;
   const Item = require(srcPath + 'Item');
   const ItemType = require(srcPath + 'ItemType');
+  const Logger = require(srcPath + 'Logger');
 
   function lookRoom(state, player) {
     const room = player.room;
@@ -104,7 +104,7 @@ module.exports = (srcPath) => {
     usage: "look [thing]",
     command: state => (args, player) => {
       if (!player.room) {
-        util.log(player.getName() + ' is in limbo.');
+        Logger.error(player.getName() + ' is in limbo.');
         return Broadcast.sayAt(player, 'You are in a deep, dark void.');
       }
 

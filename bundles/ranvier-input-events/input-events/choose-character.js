@@ -1,7 +1,5 @@
 'use strict';
 
-const util = require('util');
-
 /**
  * Account character selection event
  */
@@ -9,6 +7,7 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const EventUtil = require(srcPath + 'EventUtil');
   const Config     = require(srcPath + 'Config');
+  const Logger    = require(srcPath + 'Logger');
 
   return {
     event: state => (socket, args) => {
@@ -33,13 +32,13 @@ module.exports = (srcPath) => {
       const canMultiplay    = Config.get("allowMultiplay");
 
 
-      let options  = [];
+      let options = [];
 
       // Configure account options menu
       if (canAddCharacter) {
         options.push({
           display: 'Create New Character',
-          onSelect: () => { 
+          onSelect: () => {
             handleMultiplaying();
             socket.emit('create-player', socket, { account });
           },
@@ -70,17 +69,18 @@ module.exports = (srcPath) => {
       */
       function handleMultiplaying(selectedChar) {
         if (!canMultiplay) {
+          Logger.log("Attempted multiplaying...");
           for (const character of account.characters) {
             kickIfAccountLoggedIn(character);
           }
         } else if (selectedChar) {
-          util.log("Multiplaying is allowed...");
+          Logger.log("Multiplaying is allowed...");
           replaceIfCharLoggedIn(selectedChar);
         }
       }
 
       function kickIfAccountLoggedIn(character) {
-        const otherPlayer = state.PlayerManager.getPlayer(character); 
+        const otherPlayer = state.PlayerManager.getPlayer(character);
         if (otherPlayer) {
           bootPlayer(otherPlayer, "Replaced. No multiplaying allowed.");
         }
@@ -90,12 +90,12 @@ module.exports = (srcPath) => {
         const player = state.PlayerManager.getPlayer(selectedChar);
         if (player) {
           bootPlayer(player, "Replaced by a new session.");
-        }     
+        }
       }
 
       function bootPlayer(player, reason) {
         player.save(() => {
-          util.log(`Booting ${player.name}: ${reason}`);
+          Logger.log(`Booting ${player.name}: ${reason}`);
           Broadcast.sayAt(player, reason);
           player.socket.emit('close');
         });
@@ -132,7 +132,7 @@ module.exports = (srcPath) => {
         const selection = options.filter(o => !!o.onSelect)[choice];
 
         if (selection) {
-          util.log('Selected ' + selection.display);
+          Logger.log('Selected ' + selection.display);
           return selection.onSelect();
         }
 

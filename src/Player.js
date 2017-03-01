@@ -1,6 +1,5 @@
 'use strict';
 
-const util = require('util');
 const Attributes = require('./Attributes');
 const Character = require('./Character');
 const CommandQueue = require('./CommandQueue');
@@ -8,6 +7,7 @@ const Config = require('./Config');
 const Data = require('./Data');
 const QuestTracker = require('./QuestTracker');
 const Room = require('./Room');
+const Logger = require('./Logger');
 
 /**
  * @property {Account} account
@@ -180,7 +180,7 @@ class Player extends Character {
     if (typeof this.room === 'string') {
       let room = state.RoomManager.getRoom(this.room);
       if (!room) {
-        util.log(`WARNING: Player ${this.name} was saved to invalid room ${this.room}.`);
+        Logger.warn(`WARNING: Player ${this.name} was saved to invalid room ${this.room}.`);
         room = state.RoomManager.getStartingRoom();
       }
 

@@ -16,7 +16,6 @@
 
 /* NPM Modules */
 const net = require('net');
-const util = require('util');
 const commander = require('commander');
 const wrap = require('wrap-ansi');
 const argv = require('optimist').argv;
@@ -64,6 +63,19 @@ commander
 process.env['NODE_DEBUG'] = 'net';
 process.stdin.setEncoding('utf8');
 
+const Logger = require('./src/Logger');
+const logfile = Config.get('logfile');
+if (logfile) {
+  Logger.setFileLogging(logfile);
+}
+
+// Set logging level based on CLI option or environment variable.
+const logLevel = commander.verbose ?
+  'verbose' :
+  process.env['LOG_LEVEL'] || Config.get('logLevel') || 'debug';
+
+Logger.setLevel(logLevel);
+
 
 // Global state object, server instance and configurable intervals.
 let GameState = {};
@@ -74,7 +86,7 @@ let server;
  * Do the dirty work
  */
 function init(restartServer) {
-  util.log("START - Loading entities");
+  Logger.log("START - Loading entities");
   restartServer = typeof restartServer === 'undefined' ? true : restartServer;
 
   GameState = {
@@ -109,7 +121,7 @@ function init(restartServer) {
   WebInterface.init();
 
   if (restartServer) {
-    util.log("START - Starting server");
+    Logger.log("START - Starting server");
 
     /**
     * Effectively the 'main' game loop but not really because it's a REPL
@@ -119,13 +131,13 @@ function init(restartServer) {
         socket.write("\n*interrupt*\n");
       });
 
-      socket.on('error', err => util.log(err));
+      socket.on('error', Logger.error);
 
       // Register all of the input events (login, etc.)
       GameState.InputEventManager.attach(socket);
 
       socket.write("Connecting...\n");
-      util.log("User connected...");
+      Logger.log("User connected...");
 
       // @see: bundles/ranvier-events/events/login.js
       socket.emit('intro', socket);
@@ -134,20 +146,20 @@ function init(restartServer) {
     // Start the server and setup error handlers.
     server.listen(commander.port).on('error', err => {
       if (err.code === 'EADDRINUSE') {
-        util.log(`Cannot start server on port ${commander.port}, address is already in use.`);
-        util.log("Do you have a MUD server already running?");
+        Logger.error(`Cannot start server on port ${commander.port}, address is already in use.`);
+        Logger.error("Do you have a MUD server already running?");
       } else if (err.code === 'EACCES') {
-        util.log(`Cannot start server on port ${commander.port}: permission denied.`);
-        util.log("Are you trying to start it on a priviledged port without being root?");
+        Logger.error(`Cannot start server on port ${commander.port}: permission denied.`);
+        Logger.error("Are you trying to start it on a priviledged port without being root?");
       } else {
-        util.log("Failed to start MUD server:");
-        util.log(err);
+        Logger.error("Failed to start MUD server:");
+        Logger.error(err);
       }
       process.exit(1);
     });
 
     // Save every 10 minutes by default.
-    util.log(`Setting autosave to ${commander.save} seconds.`);
+    Logger.log(`Setting autosave to ${commander.save} seconds.`);
     clearInterval(saveInterval);
     saveInterval = setInterval(save, commander.save * 1000);
 
@@ -160,7 +172,7 @@ function init(restartServer) {
 
     // TODO: RESPAWN
   }
-  util.log(`Server started on port: ${commander.port}...`);
+  Logger.log(`Server started on port: ${commander.port}...`);
   server.emit('startup');
 };
 

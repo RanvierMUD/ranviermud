@@ -1,7 +1,5 @@
 'use strict';
 
-const util = require('util');
-
 /**
  * Main command loop. All player input after login goes through here.
  * If you want to swap out the command parser this is the place to do it
@@ -10,6 +8,7 @@ module.exports = (src) => {
   const { CommandParser, InvalidCommandError } = require(src + 'CommandParser');
   const CommandTypes = require(src + 'CommandType');
   const Broadcast = require(src + 'Broadcast');
+  const Logger = require(src + 'Logger');
 
   return {
     event: state => player => {
@@ -56,9 +55,9 @@ module.exports = (src) => {
           if (e instanceof InvalidCommandError) {
             Broadcast.sayAt(player, "Huh?");
           } else {
-            console.log(e);
+            Logger.error(e);
           }
-          util.log(`WARNING: Player tried non-existent command '${data}'`);
+          Logger.warn(`WARNING: Player tried non-existent command '${data}'`);
         }
 
         Broadcast.prompt(player);

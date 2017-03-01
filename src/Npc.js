@@ -1,10 +1,10 @@
 'use strict';
 
-const util = require('util');
 const uuid = require('node-uuid');
 const Attributes = require('./Attributes');
 const Character = require('./Character');
 const Config = require('./Config');
+const Logger = require('./Logger');
 
 /**
  * @property {number} id   Area-relative id (vnum)
@@ -64,7 +64,7 @@ class Npc extends Character {
         defaultItemId = this.area.name + ':' + defaultItemId;
       }
 
-      util.log(`\tDIST: Adding item [${defaultItemId}] to npc [${this.name}]`);
+      Logger.verbose(`\tDIST: Adding item [${defaultItemId}] to npc [${this.name}]`);
       const newItem = state.ItemFactory.create(this.area, defaultItemId);
       newItem.hydrate(state);
       state.ItemManager.add(newItem);
