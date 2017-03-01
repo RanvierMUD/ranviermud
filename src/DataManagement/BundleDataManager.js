@@ -49,10 +49,10 @@ class BundleDataManager {
 
   /**
    * Get a bundle directory by name
-   * 
+   *
    * @param {any} bundleName 
    * @returns BundleFolder
-   * 
+   *
    * @memberOf BundleDataManager
    */
   getBundleDirectory (bundleName) {
