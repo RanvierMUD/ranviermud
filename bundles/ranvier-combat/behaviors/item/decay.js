@@ -39,6 +39,10 @@ module.exports = srcPath => {
     if (rottedItem.type === ItemType.CONTAINER) {
       rottedItem.inventory.forEach(item => state.ItemManager.removeItem(item));
     }
+
+    if (rottedItem.container) {
+      rottedItem.container.removeItem(this);
+    }
   }
 
   function checkForHalfRotted(item, duration, now) {

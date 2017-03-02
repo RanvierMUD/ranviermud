@@ -7,6 +7,7 @@ class Inventory extends Map {
   addItem(item) {
     this.set(item.uuid, item);
     item.isHeld = true;
+    item.container = this;
   }
 
   /**
@@ -15,6 +16,7 @@ class Inventory extends Map {
   removeItem(item) {
     this.delete(item.uuid);
     item.isHeld = false;
+    item.container = null;
   }
 
   serialize() {
