@@ -187,6 +187,7 @@ class Character extends EventEmitter
   addItem(item) {
     this.inventory = this.inventory || new Inventory([]);
     this.inventory.addItem(item);
+    item.belongsTo = this;
   }
 
   removeItem(item) {
@@ -199,6 +200,7 @@ class Character extends EventEmitter
     if (!this.inventory.size) {
       this.inventory = null;
     }
+    item.belongsTo = null;
   }
 
   follow(target) {

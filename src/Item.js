@@ -71,6 +71,7 @@ class Item extends EventEmitter {
       this.inventory = new Inventory([]);
     }
     this.inventory.addItem(item);
+    item.belongsTo = this;
   }
 
   removeItem(item) {
@@ -83,6 +84,7 @@ class Item extends EventEmitter {
     if (!this.inventory.size) {
       this.inventory = null;
     }
+    item.belongsTo = null;
   }
 
   hydrate(state) {
