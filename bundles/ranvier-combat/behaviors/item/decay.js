@@ -1,6 +1,5 @@
 'use strict';
 
-
 module.exports = srcPath => {
   const ItemType = require(srcPath + 'ItemType');
   const Logger = require(srcPath + 'Logger');
@@ -44,7 +43,6 @@ module.exports = srcPath => {
 
   function checkForHalfRotted(item, duration, now) {
     const midpoint = decayEnd - (duration / 2);
-    Logger.log({midpoint, decayEnd, now});
     if (midpoint <= now) {
       const decayedDescription = " Parts of this have rotted away.";
       if (!item.description.endsWith(decayedDescription)) {
