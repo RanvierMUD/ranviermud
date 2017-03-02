@@ -22,6 +22,14 @@ class Area extends EventEmitter {
     });
   }
 
+  /**
+   * Get ranvier-root-relative path to this area
+   * @return {string}
+   */
+  get areaPath() {
+    return `${this.bundle}/areas/${this.name}`;
+  }
+
   getRoomById(id) {
     return this.rooms.get(id);
   }

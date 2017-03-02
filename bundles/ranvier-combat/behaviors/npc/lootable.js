@@ -10,7 +10,7 @@ module.exports = srcPath => {
   return {
     listeners: {
       killed: state => function (config, killer) {
-        const lootTable = new LootTable(config);
+        const lootTable = new LootTable(state, config);
         const items = lootTable.roll().map(
           item => state.ItemFactory.create(state.AreaManager.getAreaByReference(item), item)
         );
