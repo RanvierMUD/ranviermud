@@ -43,6 +43,7 @@ class Player extends Character {
     // WARNING: values must be JSON.stringify-able
     this.metadata = data.metadata || {};
     this.playerClass = null;
+    this.config = data.config || {};
   }
 
   /**
@@ -176,6 +177,10 @@ class Player extends Character {
     Data.save('player', this.name, this.serialize(), callback);
   }
 
+  setConfig(config) {
+    this.config = config;
+  }
+
   hydrate(state) {
     if (typeof this.room === 'string') {
       let room = state.RoomManager.getRoom(this.room);
@@ -232,6 +237,7 @@ class Player extends Character {
       password: this.password,
       quests: this.questTracker.serialize(),
       metadata: this.metadata,
+      config: this.config
     });
 
     if (this.equipment) {

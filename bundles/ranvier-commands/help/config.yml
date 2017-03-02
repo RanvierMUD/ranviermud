@@ -1,0 +1,15 @@
+---
+command: config
+body: |
+  Modify configuration settings
+
+  Extended usage
+  config list               - List configured settings
+  config set setting value  - Change setting value
+
+  Possible Settings / Values 
+  autoloot    - (true / false)
+  brief       - (true / false)
+
+  Example
+  config set autoloot true  - Turn on autoloot

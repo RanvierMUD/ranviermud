@@ -12,7 +12,7 @@ module.exports = (srcPath) => {
 
     // Render the room
     Broadcast.sayAt(player, room.title);
-    Broadcast.sayAt(player, room.description, 80);
+    Broadcast.sayAt(player, player.config.brief === true ? `[Brief] ${room.title}` : room.description, 80);
     Broadcast.sayAt(player, '');
 
     // show all players
