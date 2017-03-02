@@ -197,7 +197,7 @@ class Player extends Character {
     }
 
     // Hydrate inventory
-    this.inventory.hydrate(state);
+    this.inventory.hydrate(state, this);
 
     // Hydrate equipment
     // maybe refactor Equipment to be an object like Inventory?
