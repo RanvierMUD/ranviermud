@@ -2,7 +2,9 @@
 
 module.exports = srcPath => {
   const ItemType = require(srcPath + 'ItemType');
+  const Broadcast = require(srcPath + 'Broadcast');
   const Logger = require(srcPath + 'Logger');
+  const Player = require(srcPath + 'Player');
 
   let decayEnd;
 
@@ -25,20 +27,25 @@ module.exports = srcPath => {
         }
       },
 
-      decay: state => function() {
+      decay: state => function () {
         Logger.verbose(`${this.id} has decayed.`);
         state.ItemManager.remove(this);
 
-        if (this.room) {
-          this.room.removeItem(this);
+        const { room, type, belongsTo } = this;
+
+        if (room) {
+          room.removeItem(this);
         }
 
-        if (this.type === ItemType.CONTAINER) {
+        if (type === ItemType.CONTAINER) {
           this.inventory.forEach(item => destroyItem(state, item));
         }
 
-        if (this.belongsTo) {
-          this.belongsTo.removeItem(this);
+        if (belongsTo) {
+          belongsTo.removeItem(this);
+          if (belongsTo instanceof Player) {
+            Broadcast.sayAt(belongsTo, `Your ${this.name} has rotted away!`);
+          }
         }
       }
     }
