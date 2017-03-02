@@ -20,9 +20,13 @@ module.exports = srcPath => {
           name: `Corpse of ${this.name}`,
           roomDesc: `Corpse of ${this.name}`,
           description: `The rotting corpse of ${this.name}`,
+          behaviors: {
+            'decay': 300
+          }
           keywords: this.keywords.concat(['corpse']),
           type: 'CONTAINER',
           attributes: {
+            decay: true,
             noPickup: true,
             maxItems: items.length
           }
