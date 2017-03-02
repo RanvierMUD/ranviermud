@@ -8,36 +8,18 @@ module.exports = srcPath => {
   let decayStarted,
       decayEnd = Infinity;
 
-  // TODO: Make items receive updateTick event.
   return {
     listeners: {
       updateTick: state => function (config) {
-        Logger.log(config);
         let { duration } = config;
         duration = duration * 1000;
+        const now = Data.now();
+
         if (decayStarted) {
-          Logger.verbose(`${this.name} is decaying...`, {decayStarted, decayEnd});
-          if (decayEnd < Date.now()) {
-            Logger.verbose(`${this.name} is decayed.`, {decayStarted, decayEnd});
-            state.ItemManager.remove(this);
-
-            if (this.room) {
-              this.room.removeItem(this);
-            }
-
-            if (this.type === ItemType.CONTAINER) {
-              Logger.verbose(`Removing contents...`);
-              this.inventory.forEach(item => state.ItemManager.removeItem(item));
-            }
-
+          if (decayEnd < now) {
+            destroyItem(state, this);
           } else {
-            if (decayEnd - (duration / 2) <= Date.now()) {
-              Logger.verbose(`Editing desc of ${this.name} to show decay.`);
-              const decayedDescription = " Parts of this have rotted away.";
-              if (!this.roomDesc.endsWith(decayedDescription)) {
-                this.roomDesc += decayedDescription;
-              }
-            }
+            checkForHalfRotted(item, duration, now);
           }
         } else {
           decayStarted = true;
@@ -46,4 +28,30 @@ module.exports = srcPath => {
       }
     }
   };
+
+  function destroyItem(state, rottedItem) {
+    Logger.verbose(`${rottedItem.name} has decayed.`);
+    state.ItemManager.remove(rottedItem);
+
+    if (rottedItem.room) {
+      rottedItem.room.removeItem(rottedItem);
+    }
+
+    if (rottedItem.type === ItemType.CONTAINER) {
+      Logger.verbose(`Removing contents...`);
+      rottedItem.inventory.forEach(item => state.ItemManager.removeItem(item));
+    }
+  }
+
+  function checkForHalfRotted(item, duration, now) {
+    const midpoint = decayEnd - (duration / 2);
+    if (midpoint <= now) {
+      const decayedDescription = " Parts of this have rotted away.";
+      if (!item.roomDesc.endsWith(decayedDescription)) {
+        Logger.verbose(`Editing desc of ${item.name} to show decay.`);
+        item.roomDesc += decayedDescription;
+      }
+    }
+  }
+
 };
