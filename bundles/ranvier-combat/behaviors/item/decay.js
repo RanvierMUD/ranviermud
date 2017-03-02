@@ -30,7 +30,7 @@ module.exports = srcPath => {
   };
 
   function destroyItem(state, rottedItem) {
-    Logger.verbose(`${rottedItem.name} has decayed.`);
+    Logger.verbose(`${rottedItem.id} has decayed.`);
     state.ItemManager.remove(rottedItem);
 
     if (rottedItem.room) {
@@ -38,7 +38,6 @@ module.exports = srcPath => {
     }
 
     if (rottedItem.type === ItemType.CONTAINER) {
-      Logger.verbose(`Removing contents...`);
       rottedItem.inventory.forEach(item => state.ItemManager.removeItem(item));
     }
   }
@@ -49,7 +48,6 @@ module.exports = srcPath => {
     if (midpoint <= now) {
       const decayedDescription = " Parts of this have rotted away.";
       if (!item.description.endsWith(decayedDescription)) {
-        Logger.verbose(`Editing desc of ${item.name} to show decay.`);
         item.description += decayedDescription;
       }
     }
