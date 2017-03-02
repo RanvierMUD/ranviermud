@@ -4,8 +4,7 @@ module.exports = srcPath => {
   const ItemType = require(srcPath + 'ItemType');
   const Logger = require(srcPath + 'Logger');
 
-  let decayStarted,
-      decayEnd = Infinity;
+  let decayEnd;
 
   return {
     listeners: {
@@ -14,14 +13,13 @@ module.exports = srcPath => {
         duration = duration * 1000;
         const now = Date.now();
 
-        if (decayStarted) {
+        if (decayEnd) {
           if (decayEnd < now) {
             destroyItem(state, this);
           } else {
             checkForHalfRotted(this, duration, now);
           }
         } else {
-          decayStarted = true;
           decayEnd = Date.now() + duration;
         }
       }
@@ -37,14 +35,15 @@ module.exports = srcPath => {
     }
 
     if (rottedItem.type === ItemType.CONTAINER) {
-      rottedItem.inventory.forEach(item => state.ItemManager.removeItem(item));
+      rottedItem.inventory.forEach(item => destroyItem(state, item));
     }
 
-    if (rottedItem.container) {
-      rottedItem.container.removeItem(this);
+    if (rottedItem.belongsTo) {
+      rottedItem.belongsTo.removeItem(this);
     }
   }
 
+  //TODO: Just change metadata and the 'look' command.
   function checkForHalfRotted(item, duration, now) {
     const midpoint = decayEnd - (duration / 2);
     if (midpoint <= now) {

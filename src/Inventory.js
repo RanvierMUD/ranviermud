@@ -6,8 +6,7 @@ class Inventory extends Map {
    */
   addItem(item) {
     this.set(item.uuid, item);
-    item.isHeld = true;
-    item.container = this;
+    item.belongsTo = this;
   }
 
   /**
@@ -15,8 +14,7 @@ class Inventory extends Map {
    */
   removeItem(item) {
     this.delete(item.uuid);
-    item.isHeld = false;
-    item.container = null;
+    item.belongsTo = null;
   }
 
   serialize() {
@@ -43,7 +41,7 @@ class Inventory extends Map {
       let newItem = state.ItemFactory.create(area, def.entityReference);
       newItem.uuid = uuid;
       newItem.hydrate(state, def);
-      newItem.isHeld = true;
+      newItem.belongsTo = this;
       this.set(uuid, newItem);
       state.ItemManager.add(newItem);
     }
