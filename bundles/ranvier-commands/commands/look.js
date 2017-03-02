@@ -87,6 +87,10 @@ module.exports = (srcPath) => {
 
     Broadcast.sayAt(player, entity.description);
 
+    if (entity.timeUntilDecay) {
+      Broadcast.sayAt(player, `You estimate that ${entity.name} will rot away in ${entity.timeUntilDecay}.`);
+    }
+
     if (entity instanceof Item && entity.type === ItemType.CONTAINER) {
       if (!entity.inventory || !entity.inventory.size) {
         return Broadcast.sayAt(player, `${entity.name} is empty.`);
