@@ -11,15 +11,15 @@ module.exports = srcPath => {
   return {
     listeners: {
       updateTick: state => function (config) {
-        let { duration } = config;
+        let { duration = 60 } = config;
         duration = duration * 1000;
-        const now = Data.now();
+        const now = Date.now();
 
         if (decayStarted) {
           if (decayEnd < now) {
             destroyItem(state, this);
           } else {
-            checkForHalfRotted(item, duration, now);
+            checkForHalfRotted(this, duration, now);
           }
         } else {
           decayStarted = true;
@@ -45,11 +45,12 @@ module.exports = srcPath => {
 
   function checkForHalfRotted(item, duration, now) {
     const midpoint = decayEnd - (duration / 2);
+    Logger.log({midpoint, decayEnd, now});
     if (midpoint <= now) {
       const decayedDescription = " Parts of this have rotted away.";
-      if (!item.roomDesc.endsWith(decayedDescription)) {
+      if (!item.description.endsWith(decayedDescription)) {
         Logger.verbose(`Editing desc of ${item.name} to show decay.`);
-        item.roomDesc += decayedDescription;
+        item.description += decayedDescription;
       }
     }
   }
