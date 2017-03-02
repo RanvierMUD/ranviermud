@@ -11,7 +11,8 @@
   keywords: [ "slice", "cheese", "moldy" ]
   description: "A yellow, slightly moldy slice of cheese. Only a rat could find this appetizing."
   behaviors:
-    decay: 300
+    decay:
+      duration: 300
 - id: 3
   type: CONTAINER
   name: "Wooden Chest"

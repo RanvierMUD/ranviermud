@@ -106,7 +106,7 @@ class Item extends EventEmitter {
       });
     }
 
-    for (const [behaviorName, config] of this.behaviors) {
+    for (let [behaviorName, config] of this.behaviors) {
       let behavior = state.ItemBehaviorManager.get(behaviorName);
       if (!behavior) {
         return;

@@ -36,7 +36,7 @@ module.exports = (srcPath) => {
       }
 
       if (toContainer.type !== ItemType.CONTAINER) {
-          return Broadcast.sayAt(player, `${toContainer.name} isn't a container.`);
+        return Broadcast.sayAt(player, `${toContainer.name} isn't a container.`);
       }
 
       if (toContainer.attributes.maxItems && toContainer.inventory && toContainer.inventory.size >= toContainer.attributes.maxItems) {

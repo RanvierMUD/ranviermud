@@ -21,8 +21,10 @@ module.exports = srcPath => {
           roomDesc: `Corpse of ${this.name}`,
           description: `The rotting corpse of ${this.name}`,
           behaviors: {
-            'decay': 300
-          }
+            'decay': {
+              'duration': 300
+            }
+          },
           keywords: this.keywords.concat(['corpse']),
           type: 'CONTAINER',
           attributes: {
