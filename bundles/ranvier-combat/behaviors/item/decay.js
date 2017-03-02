@@ -15,33 +15,34 @@ module.exports = srcPath => {
 
         if (decayEnd) {
           if (decayEnd < now) {
-            destroyItem(state, this);
+            this.emit('decay');
           } else {
+            //TODO: Set some kind of metadata.
             checkForHalfRotted(this, duration, now);
           }
         } else {
           decayEnd = Date.now() + duration;
         }
+      },
+
+      decay: state => function() {
+        Logger.verbose(`${this.id} has decayed.`);
+        state.ItemManager.remove(this);
+
+        if (this.room) {
+          this.room.removeItem(this);
+        }
+
+        if (this.type === ItemType.CONTAINER) {
+          this.inventory.forEach(item => destroyItem(state, item));
+        }
+
+        if (this.belongsTo) {
+          this.belongsTo.removeItem(this);
+        }
       }
     }
   };
-
-  function destroyItem(state, rottedItem) {
-    Logger.verbose(`${rottedItem.id} has decayed.`);
-    state.ItemManager.remove(rottedItem);
-
-    if (rottedItem.room) {
-      rottedItem.room.removeItem(rottedItem);
-    }
-
-    if (rottedItem.type === ItemType.CONTAINER) {
-      rottedItem.inventory.forEach(item => destroyItem(state, item));
-    }
-
-    if (rottedItem.belongsTo) {
-      rottedItem.belongsTo.removeItem(this);
-    }
-  }
 
   //TODO: Just change metadata and the 'look' command.
   function checkForHalfRotted(item, duration, now) {
