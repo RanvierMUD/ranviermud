@@ -10,8 +10,8 @@ module.exports = srcPath => {
 
   const getTimeUntilDecay = now => {
     const rotSeconds = Math.round((decayEnd - now) / 1000);
-    if (rotSeconds === 1) {
-      return `right... now.`;
+    if (rotSeconds <= 1) {
+      return `a hearbeat.`;
     }
     if (rotSeconds < 121) {
       return `${rotSeconds} seconds`;
