@@ -5,16 +5,20 @@ module.exports = srcPath => {
   const ItemType = require(srcPath + 'ItemType');
   const Logger = require(srcPath + 'Logger');
 
-  let decayStart,
+  let decayStarted,
       decayEnd = Infinity;
+
+  // TODO: Make items receive updateTick event.
   return {
     listeners: {
       updateTick: state => function (config) {
-        const { duration } = config;
-        if (decayStart) {
-          Logger.verbose(`${this.name} is decaying...`, {decayStart, decayEnd});
+        Logger.log(config);
+        let { duration } = config;
+        duration = duration * 1000;
+        if (decayStarted) {
+          Logger.verbose(`${this.name} is decaying...`, {decayStarted, decayEnd});
           if (decayEnd < Date.now()) {
-            Logger.verbose(`${this.name} is decayed.`, {decayStart, decayEnd});
+            Logger.verbose(`${this.name} is decayed.`, {decayStarted, decayEnd});
             state.ItemManager.remove(this);
 
             if (this.room) {
@@ -27,7 +31,7 @@ module.exports = srcPath => {
             }
 
           } else {
-            if (decayEnd - (duration / 2) < Date.now()) {
+            if (decayEnd - (duration / 2) <= Date.now()) {
               Logger.verbose(`Editing desc of ${this.name} to show decay.`);
               const decayedDescription = " Parts of this have rotted away.";
               if (!this.roomDesc.endsWith(decayedDescription)) {
@@ -37,7 +41,7 @@ module.exports = srcPath => {
           }
         } else {
           decayStarted = true;
-          decayEnd = decayStart + duration;
+          decayEnd = Date.now() + duration;
         }
       }
     }

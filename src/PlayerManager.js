@@ -85,7 +85,7 @@ class PlayerManager extends EventEmitter {
     }
   }
 
-  tickAll(playerCallback) {
+  tickAll() {
     for (const [ name, player ] of this.players.entries()) {
       player.emit('updateTick');
     }

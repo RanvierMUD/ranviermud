@@ -12,6 +12,12 @@ class ItemManager {
   remove(item) {
     this.items.delete(item);
   }
+
+  tickAll() {
+    for (const item of this.items) {
+      item.emit('updateTick');
+    }
+  }
 }
 
 module.exports = ItemManager;

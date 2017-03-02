@@ -12,7 +12,7 @@
   description: "A yellow, slightly moldy slice of cheese. Only a rat could find this appetizing."
   behaviors:
     decay:
-      duration: 300
+      duration: 30
 - id: 3
   type: CONTAINER
   name: "Wooden Chest"
