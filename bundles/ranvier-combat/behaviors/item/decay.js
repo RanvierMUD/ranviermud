@@ -54,6 +54,7 @@ module.exports = srcPath => {
 
         if (room) {
           room.removeItem(this);
+          Broadcast.sayAt(room, `${this.name} has rotted away!`);
         }
 
         if (type === ItemType.CONTAINER) {
