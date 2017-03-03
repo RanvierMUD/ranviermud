@@ -48,32 +48,17 @@ module.exports = (srcPath) => {
         return state.CommandManager.get('help').execute('config', player);
       }
 
-      const possibleValues = [];
+      const possibleValues = ['on', 'off'];
 
-      const trueFalse = ['true', 'false'];
-      possibleValues['brief'] = trueFalse;
-      possibleValues['autoloot'] = trueFalse;
-
-      if (possibleValues[configToSet].indexOf(valueToSet) === -1) {
-        return Broadcast.sayAt(player, `<red>Value must be either: ${possibleValues[configToSet].join(', ')}</red>`);
+      if (possibleValues.indexOf(valueToSet) === -1) {
+        return Broadcast.sayAt(player, `<red>Value must be either: ${possibleValues.join(', ')}</red>`);
       }
 
-      const playerConfig = Data.load('player', player.name);
+      if (!player.getMeta('config')) {
+        player.setMeta('config', {});
+      }
 
-      const currentConfig = playerConfig['config'] || {};
-
-      const newConfig = {};
-
-      //We want an actual boolean, not "true" or "false"
-      newConfig[configToSet] = valueToSet === "true";
-
-      const finalConfig = Object.assign({}, currentConfig, newConfig);
-
-      playerConfig['config'] = finalConfig;
-
-      Data.save('player', player.name, playerConfig);
-
-      player.setConfig(finalConfig);
+      player.setMeta(`config.${configToSet}`, valueToSet);
 
       Broadcast.sayAt(player, 'Configuration value saved');
 

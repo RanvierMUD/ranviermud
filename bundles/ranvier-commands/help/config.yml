@@ -8,8 +8,8 @@ body: |
   config set setting value  - Change setting value
 
   Possible Settings / Values 
-  autoloot    - (true / false)
-  brief       - (true / false)
+  autoloot    - (on / off)
+  brief       - (on / off)
 
   Example
-  config set autoloot true  - Turn on autoloot
+  config set autoloot on  - Turn on autoloot

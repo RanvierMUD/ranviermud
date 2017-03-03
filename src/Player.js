@@ -43,7 +43,6 @@ class Player extends Character {
     // WARNING: values must be JSON.stringify-able
     this.metadata = data.metadata || {};
     this.playerClass = null;
-    this.config = data.config || {};
   }
 
   /**
@@ -61,7 +60,7 @@ class Player extends Character {
       if (!(part in base)) {
         throw new RangeError(`Metadata path invalid: ${key}`);
       }
-      base = base[parts.pop()];
+      base = base[part];
     }
 
     base[property] = value;
@@ -236,8 +235,7 @@ class Player extends Character {
       inventory: this.inventory && this.inventory.serialize(),
       password: this.password,
       quests: this.questTracker.serialize(),
-      metadata: this.metadata,
-      config: this.config
+      metadata: this.metadata
     });
 
     if (this.equipment) {
