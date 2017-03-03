@@ -27,8 +27,9 @@
   name: "Training Dummy"
   behaviors:
     lootable:
-      table:
-        "limbo:4": 50
+      pools:
+        - "limbo:junk"
+        - "limbo:2": 25
   description: >-
     The training dummy is almost human shaped although slightly out of proportion. The material it's made of is hard to
     discern; it seems to constantly change between metal, wood, cloth, and glass depending on the angle. There is a

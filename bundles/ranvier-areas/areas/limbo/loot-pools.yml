@@ -1,0 +1,8 @@
+---
+testa:
+  "limbo:1": 2
+testb:
+  "limbo:2": 5
+junk:
+  - "limbo:testa"
+  - "limbo:testb"
