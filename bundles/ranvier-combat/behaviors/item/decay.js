@@ -70,15 +70,4 @@ module.exports = srcPath => {
     }
   };
 
-  //TODO: Just change metadata and the 'look' command.
-  function checkForHalfRotted(item, duration, now) {
-    const midpoint = decayEnd - (duration / 2);
-    if (midpoint <= now) {
-      const decayedDescription = " Parts of this have rotted away.";
-      if (!item.description.endsWith(decayedDescription)) {
-        item.description += decayedDescription;
-      }
-    }
-  }
-
 };
