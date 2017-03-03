@@ -26,9 +26,12 @@ module.exports = (srcPath) => {
       if (directionsAvailable.includes(exit)) {
         return exit;
       }
+      //If we are either SE or NE, pre-pad
       if (exit.length === 2 && exit.includes('E')) {
         return ' -';
       }
+
+      //If we are either SW or NW, post-pad
       if (exit.length === 2 && exit.includes('W')) {
         return '- ';
       }
