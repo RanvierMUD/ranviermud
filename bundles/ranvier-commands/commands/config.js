@@ -16,10 +16,10 @@ module.exports = (srcPath) => {
       }
 
       const possibleCommands = ['set', 'list'];
-      const splitArgs = args.split(' ');
-      const command = splitArgs[0];
 
-      if (possibleCommands.indexOf(command) === -1) {
+      const [command, configToSet, valueToSet ] = args.split(' ');
+
+      if (!possibleCommands.includes(command)) {
         Broadcast.sayAt(player, `<red>Invalid config command: ${command}</red>`);
         return state.CommandManager.get('help').execute('config', player);
       }
@@ -28,37 +28,37 @@ module.exports = (srcPath) => {
         return listCurrentConfiguration();
       }
 
-      if (splitArgs.length === 1) {
+      if (!configToSet) {
         Broadcast.sayAt(player, 'Set what?');
         return state.CommandManager.get('help').execute('config', player);
       }
 
-      const configToSet = splitArgs[1];
       const possibleSettings = ['brief', 'autoloot'];
 
-      if (possibleSettings.indexOf(configToSet) === -1) {
+      if (!possibleSettings.includes(configToSet)) {
         Broadcast.sayAt(player, `<red>Invalid setting: ${configToSet}. Possible settings: ${possibleSettings.join(', ')}`);
         return state.CommandManager.get('help').execute('config', player);
       }
-
-      const valueToSet = splitArgs[2];
 
       if (!valueToSet) {
         Broadcast.sayAt(player, `<red>What value do you want to set for ${configToSet}?</red>`);
         return state.CommandManager.get('help').execute('config', player);
       }
 
-      const possibleValues = ['on', 'off'];
+      const possibleValues = {
+        on: true,
+        off: false
+      };
 
-      if (possibleValues.indexOf(valueToSet) === -1) {
-        return Broadcast.sayAt(player, `<red>Value must be either: ${possibleValues.join(', ')}</red>`);
+      if (possibleValues[valueToSet] === undefined) {
+        return Broadcast.sayAt(player, `<red>Value must be either: on / off</red>`);
       }
 
       if (!player.getMeta('config')) {
         player.setMeta('config', {});
       }
 
-      player.setMeta(`config.${configToSet}`, valueToSet);
+      player.setMeta(`config.${configToSet}`, possibleValues[valueToSet]);
 
       Broadcast.sayAt(player, 'Configuration value saved');
 

@@ -12,7 +12,7 @@ module.exports = (srcPath) => {
 
     // Render the room
     Broadcast.sayAt(player, room.title);
-    if (player.getMeta('config.brief') !== 'on') {
+    if (!player.getMeta('config.brief')) {
       Broadcast.sayAt(player, room.description, 80);
     }
     Broadcast.sayAt(player, '');
