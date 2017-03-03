@@ -6,6 +6,7 @@ module.exports = srcPath => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Player = require(srcPath + 'Player');
   const Item = require(srcPath + 'Item');
+  const Logger = require(srcPath + 'Logger');
 
   return {
     listeners: {
@@ -34,9 +35,9 @@ module.exports = srcPath => {
         });
 
         const behavior = state.ItemBehaviorManager.get('decay');
-        behavior.attach(this, { duration: 300 });
+        behavior.attach(corpse, { duration: 300 });
 
-        console.log(`Generated corpse: ${corpse.uuid}`);
+        Logger.log(`Generated corpse: ${corpse.uuid}`);
 
         items.forEach(item => corpse.addItem(item));
 
