@@ -27,7 +27,7 @@ module.exports = srcPath => {
         }
       },
 
-      decay: state => function () {
+      decay: state => function (item) {
         Logger.verbose(`${this.id} has decayed.`);
         state.ItemManager.remove(this);
 
@@ -38,8 +38,8 @@ module.exports = srcPath => {
           Broadcast.sayAt(room, `${this.name} has rotted away!`);
         }
 
-        if (type === ItemType.CONTAINER) {
-          this.inventory.forEach(item => destroyItem(state, item));
+        if (type === ItemType.CONTAINER && this.inventory) {
+          this.inventory.forEach(item => destroyItem(item));
         }
 
         if (belongsTo) {
@@ -49,6 +49,20 @@ module.exports = srcPath => {
       }
     }
   };
+
+  function destroyItem(state, itemToDestroy) {
+    Logger.verbose(`${itemToDestroy.id} has decayed.`);
+    state.ItemManager.remove(itemToDestroy);
+    const { room, type } = itemToDestroy;
+
+    if (room) {
+      room.removeItem(itemToDestroy);
+    }
+
+    if (type === ItemType.CONTAINER) {
+      itemToDestroy.inventory.forEach(item => destroyItem(state, item));
+    }
+  }
 
   function checkForOwner(owner, item) {
     while (owner) {
