@@ -20,19 +20,21 @@ module.exports = srcPath => {
           name: `Corpse of ${this.name}`,
           roomDesc: `Corpse of ${this.name}`,
           description: `The rotting corpse of ${this.name}`,
+          keywords: this.keywords.concat(['corpse']),
+          type: 'CONTAINER',
+          attributes: {
+            noPickup: true,
+            maxItems: items.length
+          },
           behaviors: {
             decay: {
               duration: 300
             }
           },
-          keywords: this.keywords.concat(['corpse']),
-          type: 'CONTAINER',
-          attributes: {
-            decay: true,
-            noPickup: true,
-            maxItems: items.length
-          }
         });
+
+        const behavior = state.ItemBehaviorManager.get('decay');
+        behavior.attach(this, { duration: 300 });
 
         console.log(`Generated corpse: ${corpse.uuid}`);
 
