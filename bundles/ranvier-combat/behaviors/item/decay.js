@@ -39,7 +39,7 @@ module.exports = srcPath => {
         }
 
         if (type === ItemType.CONTAINER && this.inventory) {
-          this.inventory.forEach(item => destroyItem(item));
+          this.inventory.forEach(item => destroyItem(state, item));
         }
 
         if (belongsTo) {
