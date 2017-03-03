@@ -7,11 +7,52 @@ module.exports = (srcPath) => {
   const ItemType = require(srcPath + 'ItemType');
   const Logger = require(srcPath + 'Logger');
 
+  function getDirectionsMap(player) {
+    const room = player.room;
+
+    const exitMap = new Map();
+    exitMap.set('east', 'E');
+    exitMap.set('west', 'W');
+    exitMap.set('south', 'S');
+    exitMap.set('north', 'N');
+    exitMap.set('southwest', 'SW');
+    exitMap.set('southeast', 'SE');
+    exitMap.set('northwest', 'NW');
+    exitMap.set('northeast', 'NE');
+
+    const directionsAvailable = room.exits.map(exit => exitMap.get(exit.direction));
+
+    const exits = Array.from(exitMap.values()).map(exit => {
+      if (directionsAvailable.includes(exit)) {
+        return exit;
+      }
+      if (exit.length === 2 && exit.includes('E')) {
+        return ' -';
+      }
+      if (exit.length === 2 && exit.includes('W')) {
+        return '- ';
+      }
+      return '-';
+    });
+
+    const [E, W, S, N, SW, SE, NW, NE] = exits;
+
+    const line1 = `<yellow><bold>${NW}</bold></yellow>     <yellow><bold>${N}</bold></yellow>     <yellow><bold>${NE}</bold></yellow>`;
+    const line2 = `<yellow><bold>${W}</bold></yellow> <---(M)---> <yellow><bold>${E}</bold></yellow>`;
+    const line3 = `<yellow><bold>${SW}</bold></yellow>     <yellow><bold>${S}</bold></yellow>     <yellow><bold>${SE}</bold></yellow>\r\n`;
+
+    return [line1, line2, line3];
+  }
+
   function lookRoom(state, player) {
     const room = player.room;
 
+    const [ line1, line2, line3 ] = getDirectionsMap(player);
+
     // Render the room
-    Broadcast.sayAt(player, room.title);
+    Broadcast.sayAt(player, Broadcast.pad(new Array(90).join(' '), `<yellow><bold>${room.title}</bold></yellow>`) + line1);
+    Broadcast.sayAt(player, Broadcast.pad(new Array(60).join(' '), '--------------------------------------------') + line2);
+    Broadcast.sayAt(player, Broadcast.pad(new Array(60).join(' '), ' ') + line3);
     Broadcast.sayAt(player, room.description, 80);
     Broadcast.sayAt(player, '');
 
@@ -52,10 +93,6 @@ module.exports = (srcPath) => {
       }
       Broadcast.sayAt(player, '[NPC] ' + npc.name);
     });
-
-    Broadcast.at(player, '[<yellow><bold>Exits</yellow></bold>: ');
-      Broadcast.at(player, Array.from(room.exits).map(ex => ex.direction).join(' '));
-      Broadcast.sayAt(player, ']');
   }
 
   function lookEntity(player, args) {
