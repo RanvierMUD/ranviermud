@@ -8,29 +8,10 @@ module.exports = srcPath => {
 
   let decayEnd;
 
-  const getTimeUntilDecay = now => {
-    const rotSeconds = Math.round((decayEnd - now) / 1000);
-    if (rotSeconds <= 1) {
-      return `a hearbeat.`;
-    }
-    if (rotSeconds < 121) {
-      return `${rotSeconds} seconds`;
-    }
-    const rotMinutes = Math.round(rotSeconds / 60);
-    if (rotMinutes < 121) {
-      return `${rotMinutes} minutes`;
-    }
-    const rotHours = Math.round(rotMinutes / 60);
-    if (rotHours < 49) {
-      return `${rotHours} hours`;
-    }
-    const rotDays = Math.round(rotHours / 24);
-    return `${rotDays} days`;
-  }
-
   return {
     listeners: {
       updateTick: state => function (config) {
+
         let { duration = 60 } = config;
         duration = duration * 1000;
         const now = Date.now();
@@ -78,6 +59,26 @@ module.exports = srcPath => {
         owner = owner.belongsTo;
       }
     }
+  }
+
+  function getTimeUntilDecay(now) {
+    const rotSeconds = Math.round((decayEnd - now) / 1000);
+    if (rotSeconds <= 1) {
+      return `a hearbeat.`;
+    }
+    if (rotSeconds < 121) {
+      return `${rotSeconds} seconds`;
+    }
+    const rotMinutes = Math.round(rotSeconds / 60);
+    if (rotMinutes < 121) {
+      return `${rotMinutes} minutes`;
+    }
+    const rotHours = Math.round(rotMinutes / 60);
+    if (rotHours < 49) {
+      return `${rotHours} hours`;
+    }
+    const rotDays = Math.round(rotHours / 24);
+    return `${rotDays} days`;
   }
 
 };

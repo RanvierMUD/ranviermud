@@ -42,7 +42,7 @@ module.exports = srcPath => {
         items.forEach(item => corpse.addItem(item));
 
         this.room.addItem(corpse);
-
+        state.ItemManager.add(corpse);
         if (killer && killer instanceof Player) {
           state.CommandManager.get('look').execute(corpse.uuid, killer);
         }
