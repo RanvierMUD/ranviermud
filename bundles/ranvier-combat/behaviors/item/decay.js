@@ -62,12 +62,21 @@ module.exports = srcPath => {
 
         if (belongsTo) {
           belongsTo.removeItem(this);
-          if (belongsTo instanceof Player) {
-            Broadcast.sayAt(belongsTo, `Your ${this.name} has rotted away!`);
-          }
+          checkForOwner(belongsTo, this);
         }
       }
     }
   };
+
+  function checkForOwner(owner, item) {
+    while (owner) {
+      if (owner instanceof Player) {
+        Broadcast.sayAt(owner, `Your ${item.name} has rotted away!`);
+        break;
+      } else {
+        owner = owner.belongsTo;
+      }
+    }
+  }
 
 };
