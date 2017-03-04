@@ -1,6 +1,7 @@
 'use strict';
 
 const leftPad = require('left-pad');
+const humanize = (sec) => { return require('humanize-duration')(sec, { round: true }); };
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
@@ -8,7 +9,6 @@ module.exports = (srcPath) => {
   const Item = require(srcPath + 'Item');
   const ItemType = require(srcPath + 'ItemType');
   const Logger = require(srcPath + 'Logger');
-  const humanizeDuration = require('humanize-duration');
 
   function getCompass(player) {
     const room = player.room;
@@ -142,7 +142,7 @@ module.exports = (srcPath) => {
     Broadcast.sayAt(player, entity.description);
 
     if (entity.timeUntilDecay) {
-      Broadcast.sayAt(player, `You estimate that ${entity.name} will rot away in ${humanizeDuration(entity.timeUntilDecay)}.`);
+      Broadcast.sayAt(player, `You estimate that ${entity.name} will rot away in ${humanize(entity.timeUntilDecay)}.`);
     }
 
     if (entity instanceof Item && entity.type === ItemType.CONTAINER) {

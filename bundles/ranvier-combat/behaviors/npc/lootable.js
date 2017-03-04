@@ -29,13 +29,13 @@ module.exports = srcPath => {
           },
           behaviors: {
             decay: {
-              duration: 300
+              duration: 180
             }
           },
         });
 
         const behavior = state.ItemBehaviorManager.get('decay');
-        behavior.attach(corpse, { duration: 300 });
+        behavior.attach(corpse, { duration: 180 });
 
         Logger.log(`Generated corpse: ${corpse.uuid}`);
 

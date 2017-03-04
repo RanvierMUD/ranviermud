@@ -6,24 +6,18 @@ module.exports = srcPath => {
   const Logger = require(srcPath + 'Logger');
   const Player = require(srcPath + 'Player');
 
-  let decayEnd;
-
   return {
     listeners: {
       updateTick: state => function (config) {
-
+        const now = Date.now();
         let { duration = 60 } = config;
         duration = duration * 1000;
-        const now = Date.now();
+        this.decaysAt = this.decaysAt || now + duration;
 
-        if (decayEnd) {
-          if (decayEnd < now) {
-            this.emit('decay');
-          } else {
-            this.timeUntilDecay = getTimeUntilDecay(now);
-          }
+        if (now >= this.decaysAt) {
+          this.emit('decay');
         } else {
-          decayEnd = Date.now() + duration;
+          this.timeUntilDecay = this.decaysAt - now;
         }
       },
 
@@ -73,9 +67,5 @@ module.exports = srcPath => {
         owner = owner.belongsTo;
       }
     }
-  }
-
-  function getTimeUntilDecay(now) {
-    return Math.round((decayEnd - now) / 1000);
   }
 };
