@@ -24,7 +24,12 @@ module.exports = (srcPath) => {
       }
 
       if (command === 'list') {
-        return listCurrentConfiguration();
+        Broadcast.sayAt(player, 'Current Settings:');
+        for (const key in player.metadata.config) {
+          const val = player.metadata.config[key] ? 'on' : 'off';
+          Broadcast.sayAt(player, `  ${key}: ${val}`);
+        }
+        return;
       }
 
       if (!configToSet) {
@@ -62,10 +67,6 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, 'Configuration value saved');
 
       function listCurrentConfiguration() {
-        Broadcast.sayAt(player, 'Current Settings\r\n');
-        for (const key in player.config) {
-          Broadcast.sayAt(player, `${key} = ${player.config[key]}`);
-        }
       }
     }
   };
