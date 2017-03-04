@@ -43,7 +43,7 @@ module.exports = {
 
     const ext = path.extname(filepath);
     if (!(ext in serializers)) {
-      throw new Error(`File [${filepath}] does not have a valid deserializer!`);
+      throw new Error(`File [${filepath}] does not have a valid serializer!`);
     }
 
     var dataToWrite = serializers[ext](data);
