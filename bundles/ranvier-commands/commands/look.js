@@ -1,5 +1,7 @@
 'use strict';
 
+const leftPad = require('left-pad');
+
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const CommandParser = require(srcPath + 'CommandParser').CommandParser;
@@ -7,7 +9,7 @@ module.exports = (srcPath) => {
   const ItemType = require(srcPath + 'ItemType');
   const Logger = require(srcPath + 'Logger');
 
-  function getDirectionsMap(player) {
+  function getCompass(player) {
     const room = player.room;
 
     const exitMap = new Map();
@@ -50,12 +52,12 @@ module.exports = (srcPath) => {
   function lookRoom(state, player) {
     const room = player.room;
 
-    const [ line1, line2, line3 ] = getDirectionsMap(player);
+    const [ line1, line2, line3 ] = getCompass(player);
 
     // Render the room
-    Broadcast.sayAt(player, Broadcast.pad(new Array(90).join(' '), `<yellow><bold>${room.title}</bold></yellow>`) + line1);
-    Broadcast.sayAt(player, Broadcast.pad(new Array(60).join(' '), '--------------------------------------------') + line2);
-    Broadcast.sayAt(player, Broadcast.pad(new Array(60).join(' '), ' ') + line3);
+    Broadcast.sayAt(player, `<yellow><bold>${room.title}</bold></yellow>` + leftPad(line1, 164 - room.title.length));
+    Broadcast.sayAt(player, '--------------------------------------------' + leftPad(line2, 90));
+    Broadcast.sayAt(player, leftPad(line3, 166));
     Broadcast.sayAt(player, room.description, 80);
     Broadcast.sayAt(player, '');
 
