@@ -176,10 +176,6 @@ class Player extends Character {
     Data.save('player', this.name, this.serialize(), callback);
   }
 
-  setConfig(config) {
-    this.config = config;
-  }
-
   hydrate(state) {
     if (typeof this.room === 'string') {
       let room = state.RoomManager.getRoom(this.room);

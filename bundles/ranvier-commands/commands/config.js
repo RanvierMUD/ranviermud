@@ -7,9 +7,8 @@ module.exports = (srcPath) => {
 
   return {
     usage: 'config <set/list> [setting] [value]',
+    aliases: ['toggle', 'options', 'set'],
     command: (state) => (args, player) => {
-      args = args.trim();
-
       if (!args.length) {
         Broadcast.sayAt(player, 'Configure what?');
         return state.CommandManager.get('help').execute('config', player);
