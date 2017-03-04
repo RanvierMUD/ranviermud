@@ -6,6 +6,7 @@ module.exports = (srcPath) => {
   const Item = require(srcPath + 'Item');
   const ItemType = require(srcPath + 'ItemType');
   const Logger = require(srcPath + 'Logger');
+  const humanizeDuration = require('humanize-duration');
 
   function lookRoom(state, player) {
     const room = player.room;
@@ -88,7 +89,7 @@ module.exports = (srcPath) => {
     Broadcast.sayAt(player, entity.description);
 
     if (entity.timeUntilDecay) {
-      Broadcast.sayAt(player, `You estimate that ${entity.name} will rot away in ${entity.timeUntilDecay}.`);
+      Broadcast.sayAt(player, `You estimate that ${entity.name} will rot away in ${humanizeDuration(entity.timeUntilDecay)}.`);
     }
 
     if (entity instanceof Item && entity.type === ItemType.CONTAINER) {
@@ -98,7 +99,7 @@ module.exports = (srcPath) => {
 
       Broadcast.sayAt(player, "Contents:");
 
-      for (const [, item ] of entity.inventory) {
+      for (const [_, item ] of entity.inventory) {
         Broadcast.sayAt(player, "  " + item.name);
       }
     }
