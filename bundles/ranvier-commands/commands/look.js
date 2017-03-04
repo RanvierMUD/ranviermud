@@ -55,6 +55,8 @@ module.exports = (srcPath) => {
     const [ line1, line2, line3 ] = getCompass(player);
 
     // Render the room
+    //The top line has 99 characters of ANSI coloring (114(COLORS) - 2(NW) - 1(N) - 2(NE) - 5(SPACING) - 5(SPACING))
+    //The 164 accounts for this
     Broadcast.sayAt(player, `<yellow><bold>${room.title}</bold></yellow>` + leftPad(line1, 164 - room.title.length));
     Broadcast.sayAt(player, '--------------------------------------------' + leftPad(line2, 90));
     Broadcast.sayAt(player, leftPad(line3, 166));
