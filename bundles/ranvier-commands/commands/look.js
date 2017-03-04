@@ -8,6 +8,7 @@ module.exports = (srcPath) => {
   const Item = require(srcPath + 'Item');
   const ItemType = require(srcPath + 'ItemType');
   const Logger = require(srcPath + 'Logger');
+  const humanizeDuration = require('humanize-duration');
 
   function getCompass(player) {
     const room = player.room;
@@ -140,6 +141,10 @@ module.exports = (srcPath) => {
 
     Broadcast.sayAt(player, entity.description);
 
+    if (entity.timeUntilDecay) {
+      Broadcast.sayAt(player, `You estimate that ${entity.name} will rot away in ${humanizeDuration(entity.timeUntilDecay)}.`);
+    }
+
     if (entity instanceof Item && entity.type === ItemType.CONTAINER) {
       if (!entity.inventory || !entity.inventory.size) {
         return Broadcast.sayAt(player, `${entity.name} is empty.`);
@@ -147,7 +152,7 @@ module.exports = (srcPath) => {
 
       Broadcast.sayAt(player, "Contents:");
 
-      for (const [, item ] of entity.inventory) {
+      for (const [_, item ] of entity.inventory) {
         Broadcast.sayAt(player, "  " + item.name);
       }
     }

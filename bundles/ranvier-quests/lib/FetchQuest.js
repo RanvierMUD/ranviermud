@@ -22,6 +22,7 @@ class FetchQuest extends Quest {
 
     this.on('get', this._getItem);
     this.on('drop', this._dropItem);
+    this.on('decay', this._dropItem);
   }
 
   getProgress() {

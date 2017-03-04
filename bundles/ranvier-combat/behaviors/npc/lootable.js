@@ -6,6 +6,7 @@ module.exports = srcPath => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Player = require(srcPath + 'Player');
   const Item = require(srcPath + 'Item');
+  const Logger = require(srcPath + 'Logger');
 
   return {
     listeners: {
@@ -25,15 +26,23 @@ module.exports = srcPath => {
           attributes: {
             noPickup: true,
             maxItems: items.length
-          }
+          },
+          behaviors: {
+            decay: {
+              duration: 300
+            }
+          },
         });
 
-        console.log(`Generated corpse: ${corpse.uuid}`);
+        const behavior = state.ItemBehaviorManager.get('decay');
+        behavior.attach(corpse, { duration: 300 });
+
+        Logger.log(`Generated corpse: ${corpse.uuid}`);
 
         items.forEach(item => corpse.addItem(item));
 
         this.room.addItem(corpse);
-
+        state.ItemManager.add(corpse);
         if (killer && killer instanceof Player) {
           state.CommandManager.get('look').execute(corpse.uuid, killer);
         }

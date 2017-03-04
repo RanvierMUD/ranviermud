@@ -21,6 +21,9 @@ In Ranvier all items for an area are defined in a single file within the area fo
   roomDesc: "A moldy slice of cheese"
   keywords: [ "slice", "cheese", "moldy" ]
   description: "A yellow, slightly moldy slice of cheese. Only a rat could find this appetizing."
+  behaviors:
+    decay:
+      duration: 240
 - id: 3
   type: CONTAINER
   name: "Wooden Chest"
