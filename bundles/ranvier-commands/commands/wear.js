@@ -23,7 +23,7 @@ module.exports = (srcPath) => {
       }
 
       if (!item.slot) {
-        return Broadcast.sayAt(player, `You can't wear ${item.name}.`);
+        return Broadcast.sayAt(player, `You can't wear ${item.display}.`);
       }
 
       try {
@@ -31,13 +31,13 @@ module.exports = (srcPath) => {
       } catch (err) {
         if (err instanceof EquipSlotTakenError) {
           const conflict = player.equipment.get(item.slot);
-          return Broadcast.sayAt(player, `You will have to remove ${conflict.name} first.`);
+          return Broadcast.sayAt(player, `You will have to remove ${conflict.display} first.`);
         }
 
         return Logger.error(err);
       }
 
-      Broadcast.sayAt(player, `Equipped: ${item.name}`);
+      Broadcast.sayAt(player, `<green>You equip:</green> ${item.display}<green>.</green>`);
       item.emit('equip', player);
     }
   };

@@ -61,7 +61,7 @@ const mobExp = level => 45 + (5 * level);
 * @param int level Target level
 * @return int
 */
-const expToLevel = level => Math.floor(((8 * level) + diff(level)) * mobExp(level) * reduction(level));
+const expToLevel = level => Math.floor(((4 * level) + diff(level)) * mobExp(level) * reduction(level));
 
 
 module.exports = {

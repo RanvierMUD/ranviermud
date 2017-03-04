@@ -7,9 +7,9 @@ module.exports = srcPath => {
 
   return {
     config: {
-      name: 'Regenerate Health',
-      description: "You are regenerating health over time.",
-      type: 'regen.health',
+      name: 'Regenerate',
+      description: "You are regenerating over time.",
+      type: 'regen',
       tickInterval: 3
     },
     flags: [Flag.BUFF],
@@ -17,32 +17,24 @@ module.exports = srcPath => {
       magnitude: 10,
     },
     listeners: {
-      effectedAdded: function () {
-        if (this.target.isInCombat()) {
-          this.remove();
-        }
-      },
-
       updateTick: function () {
-        const start = this.target.getAttribute('health');
-        const max = this.target.getMaxAttribute('health');
-        if (start >= max) {
-          return this.remove();
+        var regens = [
+          { pool: 'health', modifier: this.target.isInCombat() ? 0 : 1 },
+          // energy recovers 50% faster than health
+          { pool: 'energy', modifier: this.target.isInCombat() ? 0.25 : 1.5 },
+        ];
+
+        for (const regen of regens) {
+          let heal = new Heal({
+            attribute: regen.pool,
+            amount: Math.round(this.state.magnitude * regen.modifier),
+            attacker: this.target,
+            source: this,
+            hidden: true,
+          });
+          heal.commit(this.target);
         }
-
-        const heal = new Heal({
-          attribute: "health",
-          amount: this.state.magnitude,
-          attacker: this.target,
-          source: this,
-          hidden: true,
-        });
-        heal.commit(this.target);
       },
-
-      combatStart: function () {
-        this.remove();
-      }
     }
   };
 };

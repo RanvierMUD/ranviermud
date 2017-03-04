@@ -80,7 +80,7 @@ module.exports = (srcPath) => {
 
     // show all the items in the rom
     room.items.forEach(item => {
-      Broadcast.sayAt(player, `<magenta>[Item] ${item.roomDesc}</magenta>`);
+      Broadcast.sayAt(player, `[${item.qualityColorize('Item')}] <magenta>${item.roomDesc}</magenta>`);
     });
 
     room.npcs.forEach(npc => {
@@ -152,8 +152,8 @@ module.exports = (srcPath) => {
 
       Broadcast.sayAt(player, "Contents:");
 
-      for (const [_, item ] of entity.inventory) {
-        Broadcast.sayAt(player, "  " + item.name);
+      for (const [, item ] of entity.inventory) {
+        Broadcast.sayAt(player, "  " + item.display);
       }
     }
   }

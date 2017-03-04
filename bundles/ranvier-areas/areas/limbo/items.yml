@@ -24,8 +24,8 @@
     noPickup: true
     maxItems: 2
 - id: 4
-  type: JUNK
   name: "Scraps"
+  quality: poor
   roomDesc: "Scraps from a Training Dummy"
   keywords: [ "dummy", "scraps" ]
   description: "Splintered, shattered, and generally destroyed remains of a training dummy"

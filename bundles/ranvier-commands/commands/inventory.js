@@ -14,7 +14,7 @@ module.exports = (srcPath) => {
 
       // TODO: Implement grouping
       for (const [, item ] of player.inventory) {
-        Broadcast.sayAt(player, item.name);
+        Broadcast.sayAt(player, item.display);
       }
     }
   };

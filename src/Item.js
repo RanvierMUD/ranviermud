@@ -45,6 +45,7 @@ class Item extends EventEmitter {
     this.isEquipped  = item.isEquipped || false;
     this.keywords    = item.keywords;
     this.name        = item.name;
+    this.quality     = item.quality || 'common';
     this.room        = item.room || null;
     this.roomDesc    = item.roomDesc || '';
     this.script      = item.script || null;
@@ -85,6 +86,37 @@ class Item extends EventEmitter {
       this.inventory = null;
     }
     item.belongsTo = null;
+  }
+
+  get qualityColors() {
+    return ({
+      poor: ['bold', 'black'],
+      common: ['white'],
+      uncommon: ['bold', 'green'],
+      rare: ['bold', 'blue'],
+      epic: ['magenta'],
+      legendary: ['bold', 'red'],
+      artifact: ['yellow'],
+    })[this.quality];
+  }
+
+  /**
+   * Friendly display colorized by quality
+   */
+  get display() {
+    return this.qualityColorize(`[${this.name}]`);
+  }
+
+  /**
+   * Colorize the given string according to this item's quality
+   * @param {string} string
+   * @return string
+   */
+  qualityColorize(string) {
+    const colors = this.qualityColors;
+    const open = '<' + colors.join('><') + '>';
+    const close = '</' + colors.reverse().join('></') + '>';
+    return open + string + close;
   }
 
   hydrate(state) {

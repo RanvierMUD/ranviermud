@@ -20,7 +20,7 @@ module.exports = (srcPath) => {
 
       player.unequip(slot);
 
-      Broadcast.sayAt(player, `Un-equipped: ${item.name}`);
+      Broadcast.sayAt(player, `<green>You un-equip: </green>${item.display}<green>.</green>`);
       item.emit('unequip', player);
     }
   };

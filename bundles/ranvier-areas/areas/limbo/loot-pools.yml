@@ -4,5 +4,5 @@ testa:
 testb:
   "limbo:2": 5
 junk:
-  - "limbo:testa"
   - "limbo:testb"
+  - "limbo:4": 50
