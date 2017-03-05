@@ -1,6 +1,7 @@
 'use strict';
 
 const CommandType = require('./CommandType');
+const PlayerRoles = require('./PlayerRoles');
 
 class Command {
   /**
@@ -11,11 +12,12 @@ class Command {
    */
   constructor(bundle, name, def) {
     this.bundle = bundle;
-    this.type = def.type || CommandType.PLAYER;
+    this.type = def.type || CommandType.COMMAND;
     this.name = name;
     this.func = def.command;
     this.aliases = def.aliases;
     this.usage = def.usage || this.name;
+    this.roleRequired = def.roleRequired || PlayerRoles.PLAYER;
   }
 
   /**
