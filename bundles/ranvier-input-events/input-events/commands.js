@@ -30,7 +30,8 @@ module.exports = (src) => {
           }
           switch (result.type) {
             case CommandTypes.COMMAND: {
-              if (result.requiredRole && result.requiredRole > player.role) {
+              const { requiredRole = PlayerRoles.PLAYER } = result.command;
+              if (requiredRole > player.role) {
                 throw new RestrictedCommandError();
               }
               // commands have no lag and are not queued, just immediately execute them
@@ -55,11 +56,11 @@ module.exports = (src) => {
             }
           }
         } catch (error) {
-          switch(error) {
-            case InvalidCommandError:
+          switch(true) {
+            case error instanceof InvalidCommandError:
               Broadcast.sayAt(player, "Huh?");
               break;
-            case RestrictedCommandError:
+            case error instanceof RestrictedCommandError:
               Broadcast.sayAt(player, "You can't do that.");
               break;
             default:
