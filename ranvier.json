@@ -28,15 +28,5 @@
   "allowMultiplay": false,
   "startingRoom": "limbo:1",
   "moveCommand": "move",
-  "defaultAttributes": {
-    "health": 100,
-    "mana": 200,
-    "energy": 200,
-    "strength": 20,
-    "intelligence": 20,
-    "wisdom": 20,
-    "dexterity": 20,
-    "constitution": 20
-  },
   "skillLag": 2000
 }

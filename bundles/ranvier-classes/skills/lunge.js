@@ -8,11 +8,11 @@ module.exports = (srcPath) => {
   const Damage = require(srcPath + 'Damage');
   const SkillType = require(srcPath + 'SkillType');
 
-  const damagePercent = 500;
+  const damagePercent = 250;
   const energyCost = 20;
 
   function getDamage(player) {
-    return player.getAttribute('strength') * (damagePercent / 100);
+    return player.calculateWeaponDamage() * (damagePercent / 100);
   }
 
   return {
@@ -24,7 +24,7 @@ module.exports = (srcPath) => {
       attribute: 'energy',
       cost: energyCost,
     },
-    cooldown: 5,
+    cooldown: 6,
 
     run: state => function (args, player, target) {
       const damage = new Damage({
@@ -40,7 +40,7 @@ module.exports = (srcPath) => {
     },
 
     info: (player) => {
-      return `Make a strong attack against your target dealing <bold>${damagePercent}%</bold> of your Strength as Physical damage.`;
+      return `Make a strong attack against your target dealing <bold>${damagePercent}%</bold> weapon damage.`;
     }
   };
 };

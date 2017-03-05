@@ -1,62 +1,34 @@
 {
-  "attributes": [
-    [
-      "health",
-      {
-        "delta": 0,
-        "base": 100
-      }
-    ],
-    [
-      "mana",
-      {
-        "delta": 0,
-        "base": 200
-      }
-    ],
-    [
-      "energy",
-      {
-        "delta": 0,
-        "base": 200
-      }
-    ],
-    [
-      "strength",
-      {
-        "delta": 0,
-        "base": 20
-      }
-    ],
-    [
-      "intelligence",
-      {
-        "delta": 0,
-        "base": 20
-      }
-    ],
-    [
-      "wisdom",
-      {
-        "delta": 0,
-        "base": 20
-      }
-    ],
-    [
-      "dexterity",
-      {
-        "delta": 0,
-        "base": 20
-      }
-    ],
-    [
-      "constitution",
-      {
-        "delta": 0,
-        "base": 20
-      }
-    ]
-  ],
+  "attributes": {
+    "strength": {
+      "delta": 0,
+      "base": 17
+    },
+    "agility": {
+      "delta": 0,
+      "base": 10
+    },
+    "intellect": {
+      "delta": 0,
+      "base": 8
+    },
+    "stamina": {
+      "delta": 0,
+      "base": 11
+    },
+    "health": {
+      "delta": 0,
+      "base": 182
+    },
+    "energy": {
+      "delta": 0,
+      "base": 100
+    },
+    "armor": {
+      "delta": 0,
+      "base": 0
+    }
+  },
   "level": 1,
   "name": "Admin",
   "room": "limbo:1",

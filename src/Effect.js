@@ -147,8 +147,15 @@ class Effect extends EventEmitter {
    * @return {number} attribute modified by effect
    */
   modifyAttribute(attrName, currentValue) {
-    const modifier = (this.modifiers.attributes[attrName] || (_ => _)).bind(this);
-    return modifier(currentValue);
+    let modifier = _ => _;
+    if (typeof this.modifiers.attributes === 'function') {
+      modifier = (current) => {
+        return this.modifiers.attributes.bind(this)(attrName, current);
+      };
+    } else if (attrName in this.modifiers.attributes) {
+      modifier = this.modifiers.attributes[attrName];
+    }
+    return modifier.bind(this)(currentValue);
   }
 
   /**

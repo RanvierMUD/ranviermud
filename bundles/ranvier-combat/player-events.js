@@ -8,7 +8,6 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const LevelUtil = require(srcPath + 'LevelUtil');
   const Damage = require(srcPath + 'Damage');
-  const RandomUtil = require(srcPath + 'RandomUtil');
   const Logger = require(srcPath + 'Logger');
 
   return  {
@@ -29,13 +28,11 @@ module.exports = (srcPath) => {
           return;
         }
 
-        // TODO: For now player/enemy speed is a fixed 2.5 seconds, base it off weapon speed later
-        this.combatData.speed = 1.5;
-        const targetSpeed = 2;
+        this.combatData.speed = this.getWeaponSpeed();
 
         let hadActions = false;
         for (const target of this.combatants) {
-          target.combatData.speed = target.combatData.speed || targetSpeed;
+          target.combatData.speed = target.getWeaponSpeed();
 
           // player actions
           if (target.getAttribute('health') <= 0) {
@@ -220,7 +217,7 @@ module.exports = (srcPath) => {
   };
 
   function makeAttack(attacker, defender) {
-    const amount = RandomUtil.inRange(5, 20);
+    const amount = attacker.calculateWeaponDamage();
 
     const damage = new Damage({
       attribute: "health",

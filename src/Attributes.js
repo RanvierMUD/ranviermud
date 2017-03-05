@@ -3,16 +3,28 @@ const Attribute = require('./Attribute');
 
 class Attributes extends Map
 {
-  constructor(attributes) {
+  constructor(data) {
     super();
 
-    const values = Array.isArray(attributes) ? new Map(attributes) : Object.entries(attributes);
-    for (let [name, value] of values) {
-      if (!isNaN(value)) {
-        this.set(name, new Attribute(name, value));
-      } else {
-        this.set(name, new Attribute(name, value.base, value.delta));
-      }
+    data = data || {};
+
+    const baseStats = {
+      strength: 20,
+      agility: 20,
+      intellect: 20,
+      stamina: 20,
+      health: 100,
+      energy: 100,
+      armor: 0
+    };
+
+    for (const stat in baseStats) {
+      const statData = {
+        base: (data[stat] && data[stat].base) || baseStats[stat],
+        delta: (data[stat] && data[stat].delta) || 0,
+      };
+      const attribute = new Attribute(stat, statData.base, statData.delta);
+      this.set(stat, attribute);
     }
   }
 
@@ -27,7 +39,12 @@ class Attributes extends Map
   }
 
   serialize() {
-    return [...this].map(([name, attribute]) => [name, attribute.serialize()]);
+    let data = {};
+    [...this].forEach(([name, attribute]) => {
+      data[name] = attribute.serialize();
+    });
+
+    return data;
   }
 }
 

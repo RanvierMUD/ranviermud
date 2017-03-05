@@ -30,6 +30,16 @@ class EffectList {
     return [...this.effects];
   }
 
+  hasEffectType(type) {
+    return !!this.getByType(type);
+  }
+
+  getByType(type) {
+    return [...this.effects].find(effect => {
+      return effect.type === type;
+    });
+  }
+
   /**
    * Proxy an event to all effects
    * @param {string} event
