@@ -165,6 +165,19 @@ class Character extends EventEmitter
   }
 
   /**
+   * Fully remove this character from combat
+   */
+  removeFromCombat() {
+    if (!this.isInCombat()) {
+      return;
+    }
+
+    for (const combatant of this.combatants) {
+      this.removeCombatant(combatant);
+    }
+  }
+
+  /**
    * @param {string} args
    * @param {Player} player
    * @return {Entity|null} Found entity... or not.
