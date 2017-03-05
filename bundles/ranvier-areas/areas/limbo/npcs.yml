@@ -10,8 +10,7 @@
   keywords: ["wise", "old", "man"]
   name: "Wise Old Man"
   level: 99
-  behaviors:
-    pacifist: true
+  pacifist: true
   description: "A wise looking old man sits on the ground with legs crossed."
   attributes:
     health: 100
@@ -19,8 +18,7 @@
   keywords: ["puppy", "dog", "loyal", "wide", "eyed", "wide-eyed"]
   name: A Puppy
   description: "A wide-eyed puppy stares up at you."
-  behaviors:
-    pacifist: true
+  pacifist: true
   level: 1
   script: '3-puppy'
 - id: 4

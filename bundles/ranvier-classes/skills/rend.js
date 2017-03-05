@@ -22,6 +22,7 @@ module.exports = (srcPath) => {
     name: 'Rend',
     type: SkillType.SKILL,
     requiresTarget: true,
+    initiatesCombat: true,
     resource: {
       attribute: 'energy',
       cost,
@@ -29,10 +30,6 @@ module.exports = (srcPath) => {
     cooldown,
 
     run: state => function (args, player, target) {
-      if (!player.isInCombat(target)) {
-        return Broadcast.sayAt(player, "You're not fighting them at the moment.");
-      }
-
       const effect = state.EffectFactory.create(
         'skill.rend',
         target,

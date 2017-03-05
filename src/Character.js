@@ -5,6 +5,7 @@ const EffectList = require('./EffectList');
 const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
 const EventEmitter = require('events');
 const Inventory = require('./Inventory');
+const Parser = require('./CommandParser').CommandParser;
 
 
 /**
@@ -95,16 +96,34 @@ class Character extends EventEmitter
     this.attributes.get(attr).lower(amount);
   }
 
-  hasEffect(effect) {
-    return this.effects.has(effect);
-  }
-
   addEffect(effect) {
-    this.effects.add(effect);
+    return this.effects.add(effect);
   }
 
   removeEffect(effect) {
     this.effects.remove(effect);
+  }
+
+  /**
+   * Start combat with a given target.
+   * @param {Character} target
+   * @param {?number}   lag    Optional milliseconds of lag to apply before the first attack
+   */
+  initiateCombat(target, lag = 0) {
+    if (!this.isInCombat()) {
+      this.combatData.lag = lag;
+      this.combatData.roundStarted = Date.now();
+      this.emit('combatStart');
+    }
+
+    // this doesn't use `addCombatant` because `addCombatant` automatically
+    // adds this to the target's combatants list as well
+    this.combatants.add(target);
+    if (!target.isInCombat()) {
+      target.initiateCombat(this, 2500);
+    }
+
+    target.addCombatant(this);
   }
 
   /**
@@ -125,10 +144,6 @@ class Character extends EventEmitter
       return;
     }
 
-    if (!this.combatants.size) {
-      this.emit('combatStart', target);
-    }
-
     this.combatants.add(target);
     target.addCombatant(this);
   }
@@ -147,6 +162,38 @@ class Character extends EventEmitter
     if (!this.combatants.size) {
       this.emit('combatEnd');
     }
+  }
+
+  /**
+   * @param {string} args
+   * @param {Player} player
+   * @return {Entity|null} Found entity... or not.
+   */
+  findCombatant(search) {
+    if (!search.length) {
+      return null;
+    }
+
+    let possibleTargets = this.room.npcs;
+    if (this.getMeta('pvp')) {
+      possibleTargets = possibleTargets.concat(this.room.players);
+    }
+
+    const target = Parser.parseDot(search, possibleTargets);
+
+    if (!target) {
+      return null;
+    }
+
+    if (!target.isNpc && !target.getMeta('pvp')) {
+      throw new Error(`${target.name} has not opted into PvP.`);
+    }
+
+    if (target.pacifist) {
+      throw new Error(`${target.name} is a pacifist and will not fight.`);
+    }
+
+    return target;
   }
 
   /**

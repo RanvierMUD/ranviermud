@@ -14,6 +14,8 @@ module.exports = (srcPath) => {
   return  {
     listeners: {
       updateTick: state => function () {
+        startRegeneration(state, this);
+
         // Check to see if the player has died since the last combat tick. If
         // we only did the check right when the player was damaged then you
         // could potentially wind up in a situation where the player performed
@@ -24,7 +26,7 @@ module.exports = (srcPath) => {
         }
 
         if (!this.isInCombat()) {
-          return startRegeneration(state, this);
+          return;
         }
 
         // TODO: For now player/enemy speed is a fixed 2.5 seconds, base it off weapon speed later
@@ -166,8 +168,8 @@ module.exports = (srcPath) => {
           buf = "You heal";
         }
 
-        buf += '<bold> ' + (target === this ? 'Yourself' : `${target.name}`);
-        buf += ` <bold><green>${heal.finalAmount}</green></bold> ${heal.attribute}.`;
+        buf += '<bold> ' + (target === this ? 'Yourself' : `${target.name}`) + '</bold>';
+        buf += ` for <bold><green>${heal.finalAmount}</green></bold> ${heal.attribute}.`;
         Broadcast.sayAt(this, buf);
       },
 
@@ -271,16 +273,9 @@ module.exports = (srcPath) => {
 
   // Make characters regenerate health while out of combat
   function startRegeneration(state, entity) {
-    if (entity.getAttribute('health') < entity.getMaxAttribute('health')) {
-      let regenEffect = state.EffectFactory.create('regen', entity, { hidden: true }, { magnitude: 15 });
-      if (entity.addEffect(regenEffect)) {
-        regenEffect.activate();
-      }
+    let regenEffect = state.EffectFactory.create('regen', entity, { hidden: true }, { magnitude: 15 });
+    if (entity.addEffect(regenEffect)) {
+      regenEffect.activate();
     }
   }
-
-
 };
-
-
-
