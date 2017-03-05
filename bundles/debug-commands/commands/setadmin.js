@@ -14,7 +14,7 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, 'setadmin <player>');
       }
 
-      const target = Parser.parseDot(args, room.players);
+      const target = Parser.parseDot(args, player.room.players);
 
       if (!target) {
         return Broadcast.sayAt(player, 'They are not here.');
