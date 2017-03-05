@@ -3,9 +3,11 @@
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const SkillFlag = require(srcPath + 'SkillFlag');
+  const PlayerRoles = require(srcPath + 'PlayerRoles');
 
   return {
-    command : (state) => (args, player) => {
+    requiredRole: PlayerRoles.ADMIN,
+    command: (state) => (args, player) => {
       if (!args.length) {
         return Broadcast.sayAt(player, 'Give a passive skill. giveskill <name>');
       }

@@ -136,3 +136,56 @@ module.exports = (srcPath) => {
   };
 };
 ```
+
+## Creating Admin Commands
+
+It is possible in Ranvier to create commands that are only useable by privileged players. This is done by use of the `requiredRole` property, which defaults to `PLAYER`. See `src/PlayerRoles.js` for a list of roles and their rank.
+
+Here's an example of how you might build an admin command:
+
+#### setadmin
+
+```javascript
+'use strict';
+
+module.exports = (srcPath) => {
+  const Broadcast = require(srcPath + 'Broadcast');
+
+  // Require the PlayerRoles enum file for easy reference.
+  const PlayerRoles = require(srcPath + 'PlayerRoles');
+  const { CommandParser: Parser } = require(srcPath + 'CommandParser');
+
+  return {
+    /*
+     Here is where we can set the required role level.
+     If this were set to PlayerRoles.BUILDER, both ADMIN and BUILDERS could use it.
+     Anyone can use PLAYER commands and if 'requiredRole' is not set,
+     the command defaults to a PLAYER command.
+     */
+    requiredRole: PlayerRoles.ADMIN,
+    command: (state) => (args, player) => {
+      args = args.trim();
+
+      if (!args.length) {
+        return Broadcast.sayAt(player, 'setadmin <player>');
+      }
+
+      const target = Parser.parseDot(args, player.room.players);
+
+      if (!target) {
+        return Broadcast.sayAt(player, 'They are not here.');
+      }
+
+      if (target.role === PlayerRoles.ADMIN) {
+        return Broadcast.sayAt(player, 'They are already an administrator.');
+      }
+
+      // The role is just a property of the player, which gets saved like any other.
+      target.role = PlayerRoles.ADMIN;
+
+      Broadcast.sayAt(target, `You have been made an administrator by ${this.name}.`);
+      Broadcast.sayAt(player, `${target.name} is now an administrator.`);
+    }
+  };
+};
+```
