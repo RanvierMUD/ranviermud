@@ -40,6 +40,13 @@ class Room extends EventEmitter {
     this.npcs = new Set();
     this.players = new Set();
 
+    /**
+     * spawnedNpcs keeps track of NPCs even when they leave the room for the purposes of respawn. So if we spawn NPC A
+     * into the room and it walks away we don't want to respawn the NPC until it's killed or otherwise removed from the
+     * area
+     */
+    this.spawnedNpcs = new Set();
+
     this.on('respawnTick', this.respawnTick);
   }
 
@@ -84,7 +91,7 @@ class Room extends EventEmitter {
         maxLoad: 1
       }, defaultNpc);
 
-      const npcCount = [...this.npcs].filter(npc => npc.entityReference === defaultNpc.id).length;
+      const npcCount = [...this.spawnedNpcs].filter(npc => npc.entityReference === defaultNpc.id).length;
       const needsRespawn = npcCount < defaultNpc.maxLoad;
 
       if (!needsRespawn) {
@@ -92,14 +99,24 @@ class Room extends EventEmitter {
       }
 
       if (RandomUtil.probability(defaultNpc.respawnChance)) {
-        Logger.verbose(`\tRESPAWN: Adding npc [${defaultNpc.id}] to room [${this.title}]`);
-        const newNpc = state.MobFactory.create(this.area, defaultNpc.id);
-        newNpc.hydrate(state);
-        this.area.addNpc(newNpc);
-        this.addNpc(newNpc);
-        newNpc.emit('spawn');
+        this.spawnNpc(state, defaultNpc.id);
       }
     });
+  }
+
+  spawnNpc(state, entityRef) {
+    Logger.verbose(`\tSPAWN: Adding npc [${entityRef}] to room [${this.title}]`);
+    const newNpc = state.MobFactory.create(this.area, entityRef);
+    newNpc.hydrate(state);
+    newNpc.sourceRoom = this;
+    this.area.addNpc(newNpc);
+    this.addNpc(newNpc);
+    this.spawnedNpcs.add(newNpc);
+    newNpc.emit('spawn');
+  }
+
+  removeSpawnedNpc(npc) {
+    this.spawnedNpcs.delete(npc);
   }
 
   hydrate(state) {
@@ -117,6 +134,7 @@ class Room extends EventEmitter {
       Logger.verbose(`\tDIST: Adding item [${defaultItemId}] to room [${this.title}]`);
       const newItem = state.ItemFactory.create(this.area, defaultItemId);
       newItem.hydrate(state);
+      newItem.sourceRoom = this;
       state.ItemManager.add(newItem);
       this.addItem(newItem);
     });
@@ -126,12 +144,7 @@ class Room extends EventEmitter {
         defaultNpc = { id: defaultNpc };
       }
 
-      Logger.verbose(`\tDIST: Adding npc [${defaultNpc.id}] to room [${this.title}]`);
-      const newNpc = state.MobFactory.create(this.area, defaultNpc.id);
-      newNpc.hydrate(state);
-      this.area.addNpc(newNpc);
-      this.addNpc(newNpc);
-      newNpc.emit('spawn');
+      this.spawnNpc(state, defaultNpc.id);
     });
 
     if (this.behaviors) {
