@@ -40,7 +40,6 @@ module.exports = srcPath => {
           const owner = this.findOwner();
           if (owner) {
             Broadcast.sayAt(owner, `Your ${this.name} has rotted away!`);
-            Broadcast.prompt(owner);
           }
           belongsTo.removeItem(this);
         }
