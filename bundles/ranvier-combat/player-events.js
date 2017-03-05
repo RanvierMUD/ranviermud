@@ -113,7 +113,7 @@ module.exports = (srcPath) => {
               }
 
               return buf;
-            }
+            };
 
             this.addPrompt('combat', () => combatPromptBuilder(this));
             for (const target of this.combatants) {

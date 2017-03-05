@@ -64,4 +64,4 @@ module.exports = {
     }),
     skillLag: joi.number().integer().required()
   })
-}
+};

@@ -62,7 +62,8 @@ class EffectList {
       if (effect.config.type === activeEffect.config.type) {
         if (activeEffect.config.maxStacks) {
           activeEffect.state.stack = Math.min(activeEffect.state.maxStacks, activeEffect.state.stack + 1);
-          activeEffect.state.stack - activeEffect.state.stack + 1;
+          // TODO: does this even work?
+          activeEffect.state.stack = activeEffect.state.stack + 1;
           return false;
         }
 

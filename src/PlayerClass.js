@@ -49,7 +49,7 @@ class PlayerClass {
       if (level > player.level) {
         return false;
       }
-      return totalAbilities = totalAbilities.concat(abilities.skills || []).concat(abilities.spells || []);
+      totalAbilities = totalAbilities.concat(abilities.skills || []).concat(abilities.spells || []);
     });
     return totalAbilities;
   }
