@@ -144,6 +144,25 @@ module.exports = srcPath => {
           return current + this.state.magnitude;
         }
       }
+
+      /*
+      Alternatively, if the attribute you're modifying is dynamic you can use
+      this pattern which is used when you want a base effect that could apply
+      to multiple attributes.  See the `equip.js` effect for an example
+
+      state: {
+        stat: 'strength',
+        bonus: 5
+      },
+
+      attributes: function (attribute, current) {
+        if (attribute !== this.state.state) {
+          return current;
+        }
+
+        return current + this.state.bonus;
+      }
+      */
     },
 
     /*

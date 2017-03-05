@@ -19,9 +19,9 @@ const net = require('net');
 const commander = require('commander');
 const wrap = require('wrap-ansi');
 const argv = require('optimist').argv;
-//const longjohn = require('longjohn');
-//onst pe = require('pretty-error').start();
-//e.skipNodeFiles(); // Ignore native node files in stacktrace.
+const longjohn = require('longjohn');
+const pe = require('pretty-error').start();
+pe.skipNodeFiles(); // Ignore native node files in stacktrace.
 
 // Package.json for versioning
 const pkg = require('./package.json');
