@@ -16,7 +16,6 @@ const Logger = require('./Logger');
  * @property {number}  id          vnum
  * @property {boolean} isEquipped  Whether or not item is currently equipped
  * @property {Map}     inventory   Current items this item contains
- * @property {boolean} isHeld      Whether or not item is currently in an inventory (npc, player, or another object)
  * @property {string}  name        Name shown in inventory and when equipped
  * @property {Room}    room        Room the item is currently in
  * @property {string}  roomDesc    Description shown when item is seen in a room
@@ -44,9 +43,9 @@ class Item extends EventEmitter {
     this.id          = item.id;
     this.inventory   = item.inventory ? new Inventory(item.inventory) : null;
     this.isEquipped  = item.isEquipped || false;
-    this.isHeld      = item.isHeld || false;
     this.keywords    = item.keywords;
     this.name        = item.name;
+    this.quality     = item.quality || 'common';
     this.room        = item.room || null;
     this.roomDesc    = item.roomDesc || '';
     this.script      = item.script || null;
@@ -73,6 +72,7 @@ class Item extends EventEmitter {
       this.inventory = new Inventory([]);
     }
     this.inventory.addItem(item);
+    item.belongsTo = this;
   }
 
   removeItem(item) {
@@ -85,6 +85,38 @@ class Item extends EventEmitter {
     if (!this.inventory.size) {
       this.inventory = null;
     }
+    item.belongsTo = null;
+  }
+
+  get qualityColors() {
+    return ({
+      poor: ['bold', 'black'],
+      common: ['white'],
+      uncommon: ['bold', 'green'],
+      rare: ['bold', 'blue'],
+      epic: ['magenta'],
+      legendary: ['bold', 'red'],
+      artifact: ['yellow'],
+    })[this.quality];
+  }
+
+  /**
+   * Friendly display colorized by quality
+   */
+  get display() {
+    return this.qualityColorize(`[${this.name}]`);
+  }
+
+  /**
+   * Colorize the given string according to this item's quality
+   * @param {string} string
+   * @return string
+   */
+  qualityColorize(string) {
+    const colors = this.qualityColors;
+    const open = '<' + colors.join('><') + '>';
+    const close = '</' + colors.reverse().join('></') + '>';
+    return open + string + close;
   }
 
   hydrate(state) {
@@ -106,7 +138,7 @@ class Item extends EventEmitter {
       });
     }
 
-    for (const [behaviorName, config] of this.behaviors) {
+    for (let [behaviorName, config] of this.behaviors) {
       let behavior = state.ItemBehaviorManager.get(behaviorName);
       if (!behavior) {
         return;

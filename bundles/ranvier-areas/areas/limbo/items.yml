@@ -10,6 +10,9 @@
   roomDesc: "A moldy slice of cheese"
   keywords: [ "slice", "cheese", "moldy" ]
   description: "A yellow, slightly moldy slice of cheese. Only a rat could find this appetizing."
+  behaviors:
+    decay:
+      duration: 240
 - id: 3
   type: CONTAINER
   name: "Wooden Chest"
@@ -21,8 +24,8 @@
     noPickup: true
     maxItems: 2
 - id: 4
-  type: JUNK
   name: "Scraps"
+  quality: poor
   roomDesc: "Scraps from a Training Dummy"
   keywords: [ "dummy", "scraps" ]
   description: "Splintered, shattered, and generally destroyed remains of a training dummy"

@@ -46,7 +46,7 @@ module.exports = (srcPath) => {
       }
 
       if (item.attributes.noPickup) {
-        return Broadcast.sayAt(player, `${item.name} can't be picked up.`);
+        return Broadcast.sayAt(player, `${item.display} can't be picked up.`);
       }
 
       if (container) {
@@ -56,7 +56,7 @@ module.exports = (srcPath) => {
       }
       player.addItem(item);
 
-      Broadcast.sayAt(player, `Picked up: ${item.name}`);
+      Broadcast.sayAt(player, `<green>You receive loot: </green>${item.display}<green>.</green>`);
       item.emit('get', player);
       player.emit('get', item);
     }

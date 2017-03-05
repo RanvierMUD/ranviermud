@@ -14,7 +14,7 @@ const logExt = '.log';
 class Logger {
 
   static getLevel() {
-    return winston.level || process.env['LOG_LEVEL'] || 'debug';
+    return winston.level || process.env.LOG_LEVEL || 'debug';
   }
 
   static setLevel(level) {
@@ -48,7 +48,7 @@ class Logger {
     Only logs if the environment variable is set to VERBOSE.
   */
   static verbose(...messages) {
-    winston.log('verbose', ...messages)
+    winston.log('verbose', ...messages);
   }
 
   //TODO: Be able to set and deactivate file logging via a server command.

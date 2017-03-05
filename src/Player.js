@@ -60,7 +60,7 @@ class Player extends Character {
       if (!(part in base)) {
         throw new RangeError(`Metadata path invalid: ${key}`);
       }
-      base = base[parts.pop()];
+      base = base[part];
     }
 
     base[property] = value;
@@ -197,7 +197,7 @@ class Player extends Character {
     }
 
     // Hydrate inventory
-    this.inventory.hydrate(state);
+    this.inventory.hydrate(state, this);
 
     // Hydrate equipment
     // maybe refactor Equipment to be an object like Inventory?
@@ -231,7 +231,7 @@ class Player extends Character {
       inventory: this.inventory && this.inventory.serialize(),
       password: this.password,
       quests: this.questTracker.serialize(),
-      metadata: this.metadata,
+      metadata: this.metadata
     });
 
     if (this.equipment) {

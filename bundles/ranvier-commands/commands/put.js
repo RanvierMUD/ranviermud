@@ -36,7 +36,7 @@ module.exports = (srcPath) => {
       }
 
       if (toContainer.type !== ItemType.CONTAINER) {
-          return Broadcast.sayAt(player, `${toContainer.name} isn't a container.`);
+        return Broadcast.sayAt(player, `${toContainer.name} isn't a container.`);
       }
 
       if (toContainer.attributes.maxItems && toContainer.inventory && toContainer.inventory.size >= toContainer.attributes.maxItems) {
@@ -46,7 +46,7 @@ module.exports = (srcPath) => {
       player.removeItem(item);
       toContainer.addItem(item);
 
-      Broadcast.sayAt(player, `You put a ${item.name} into the ${toContainer.name}`);
+      Broadcast.sayAt(player, `<green>You put </green>${item.display}<gree> into </green>${toContainer.display}<green>.</green>`);
 
       item.emit('put', player, toContainer);
       player.emit('put', item, toContainer);

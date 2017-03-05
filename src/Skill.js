@@ -26,32 +26,34 @@ class Skill {
    */
   constructor(id, config, state) {
     const {
+      configureEffect = _ => _,
       cooldown = null,
-      run = _ => {},
+      effect = null,
       flags = [],
       info = _ => {},
+      initiatesCombat = false,
       name,
       requiresTarget = true,
-      targetSelf = false,
       resource = { attribute: 'energy', cost: 0 },
+      run = _ => {},
+      targetSelf = false,
       type = SkillType.SKILL,
-      effect = null,
-      configureEffect = _ => _,
     } = config;
 
-    this.id = id;
     this.configureEffect = configureEffect;
     this.cooldownLength = cooldown;
     this.effect = effect;
     this.flags = flags;
+    this.id = id;
     this.info = info.bind(this);
+    this.initiatesCombat = initiatesCombat;
     this.name = name;
+    this.requiresTarget = requiresTarget;
     this.resource = resource;
     this.run = run.bind(this);
     this.state = state;
-    this.type = type;
-    this.requiresTarget = requiresTarget;
     this.targetSelf = targetSelf;
+    this.type = type;
   }
 
   /**
@@ -70,9 +72,24 @@ class Skill {
     }
 
     if (this.requiresTarget && !target) {
-      target = this.searchForTargets(args, player)
+      if (!args || !args.length) {
+        if (this.targetSelf) {
+          target = player;
+        } else if (player.isInCombat()) {
+          target = [...player.combatants][0];
+        } else {
+          target = null;
+        }
+      } else {
+        try {
+          target = player.findCombatant(args);
+        } catch (e) {
+          return Broadcast.sayAt(player, e.message);
+        }
+      }
+
       if (!target) {
-        return Broadcast.sayAt(player,  `Use ${this.name} on whom?`);
+        return Broadcast.sayAt(player, `Use ${this.name} on whom?`);
       }
     }
 
@@ -81,6 +98,10 @@ class Skill {
       if (!paid) {
         return;
       }
+    }
+
+    if (this.initiatesCombat) {
+      player.initiateCombat(target);
     }
 
     this.run(args, player, target);

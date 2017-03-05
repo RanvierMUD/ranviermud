@@ -32,7 +32,7 @@ module.exports = (srcPath) => {
         npc.emit('playerDropItem', player, item);
       }
 
-      Broadcast.sayAt(player, `Dropped: ${item.name}`);
+      Broadcast.sayAt(player, `<green>You dropped: </green>${item.display}<green>.</green>`);
     }
   };
 };

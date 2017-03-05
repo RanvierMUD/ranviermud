@@ -19,22 +19,17 @@ module.exports = (srcPath) => {
         return false;
       }
 
-      const exits = Array.from(room.exits).filter(e => e.direction.indexOf(exitName) === 0);
-
-      if (!exits.length) {
-        return false;
-      }
-
-      if (exits.length > 1) {
-        throw 'Be more specific. Which way would you like to go?';
-      }
-
       if (player.isInCombat()) {
-        throw 'You are in the middle of a fight!';
+        return Broadcast.sayAt(player, 'You are in the middle of a fight!');
       }
 
-      const exit = exits.pop();
-      const nextRoom =  state.RoomManager.getRoom(exit.roomId);
+      const exit = state.RoomManager.findExit(room, exitName);
+
+      if (!exit) {
+        return Broadcast.sayAt(player, "You can't go that way.");
+      }
+
+      const nextRoom = state.RoomManager.getRoom(exit.roomId);
 
       player.room.emit('playerLeave', player, nextRoom);
       for (const npc of player.room.npcs) {

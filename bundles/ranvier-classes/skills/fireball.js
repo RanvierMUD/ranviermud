@@ -19,6 +19,7 @@ module.exports = (srcPath) => {
     name: 'Fireball',
     type: SkillType.SPELL,
     requiresTarget: true,
+    initiatesCombat: true,
     resource: {
       attribute: 'energy',
       cost: energyCost,
@@ -26,10 +27,6 @@ module.exports = (srcPath) => {
     cooldown: 10,
 
     run: state => function (args, player, target) {
-      if (!player.isInCombat(target)) {
-        return Broadcast.sayAt(player, "You're not fighting them at the moment.");
-      }
-
       const damage = new Damage({
         attribute: 'health',
         amount: getDamage(player),

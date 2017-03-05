@@ -13,7 +13,7 @@ module.exports = (srcPath) => {
 
       Broadcast.sayAt(player, "Currently Equipped:");
       for (const [slot, item] of player.equipment) {
-        Broadcast.sayAt(player, `  <${slot}> ${item.name}`);
+        Broadcast.sayAt(player, `  <${slot}> ${item.display}`);
       }
     }
   };

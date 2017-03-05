@@ -30,7 +30,7 @@ class APIAdmin {
     return (req, res) => {
       Config.save(req.body);
       return res.sendStatus(200);
-    }
+    };
   }
 
   getConfig() {

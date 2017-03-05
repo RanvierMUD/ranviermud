@@ -15,7 +15,7 @@ class Channel {
       throw new Error("Channels must have a name to be usable.");
     }
     if (!config.audience) {
-      throw new Error(`Channel ${name} is missing a valid audience.`);
+      throw new Error(`Channel ${config.name} is missing a valid audience.`);
     }
     this.name = config.name;
     this.description = config.description;
@@ -41,7 +41,7 @@ class Channel {
     }
 
     if (!this.audience) {
-      throw new Error(`Channel [${this.name} has invalid audience [${this.audience}]`)
+      throw new Error(`Channel [${this.name} has invalid audience [${this.audience}]`);
     }
 
     this.audience.configure({ state, sender, message });

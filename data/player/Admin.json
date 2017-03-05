@@ -1,1 +1,127 @@
-{"attributes":[["health",{"delta":0,"base":100}],["mana",{"delta":0,"base":200}],["energy",{"delta":0,"base":200}],["strength",{"delta":0,"base":20}],["intelligence",{"delta":0,"base":20}],["wisdom",{"delta":0,"base":20}],["dexterity",{"delta":0,"base":20}],["constitution",{"delta":0,"base":20}]],"level":1,"name":"Admin","room":"limbo:1","effects":[],"playerClass":"warrior","experience":0,"inventory":[],"quests":{"completed":[],"active":[["limbo:1",{"state":{"count":0}}]]},"metadata":{"class":"warrior"},"equipment":{}}
+{
+  "attributes": [
+    [
+      "health",
+      {
+        "delta": 0,
+        "base": 100
+      }
+    ],
+    [
+      "mana",
+      {
+        "delta": 0,
+        "base": 200
+      }
+    ],
+    [
+      "energy",
+      {
+        "delta": -20,
+        "base": 200
+      }
+    ],
+    [
+      "strength",
+      {
+        "delta": 0,
+        "base": 20
+      }
+    ],
+    [
+      "intelligence",
+      {
+        "delta": 0,
+        "base": 20
+      }
+    ],
+    [
+      "wisdom",
+      {
+        "delta": 0,
+        "base": 20
+      }
+    ],
+    [
+      "dexterity",
+      {
+        "delta": 0,
+        "base": 20
+      }
+    ],
+    [
+      "constitution",
+      {
+        "delta": 0,
+        "base": 20
+      }
+    ]
+  ],
+  "level": 8,
+  "name": "Admin",
+  "room": "limbo:3",
+  "effects": [
+    {
+      "id": "regen",
+      "elapsed": 730557,
+      "state": {
+        "magnitude": 15,
+        "lastTick": 1526,
+        "ticks": 239
+      },
+      "config": {
+        "autoActivate": true,
+        "description": "You are regenerating over time.",
+        "duration": "inf",
+        "hidden": true,
+        "name": "Regenerate",
+        "maxStacks": 0,
+        "unique": true,
+        "type": "regen",
+        "tickInterval": 3
+      }
+    },
+    {
+      "id": "cooldown",
+      "elapsed": 510,
+      "skill": "lunge",
+      "state": {
+        "cooldownId": "skill:lunge"
+      },
+      "config": {
+        "autoActivate": true,
+        "description": "Cannot use ability while on cooldown.",
+        "duration": 5000,
+        "hidden": false,
+        "name": "Cooldown: Lunge",
+        "maxStacks": 0,
+        "unique": false,
+        "type": "cooldown",
+        "tickInterval": false
+      }
+    }
+  ],
+  "playerClass": "warrior",
+  "experience": 2365,
+  "inventory": null,
+  "quests": {
+    "completed": [
+      [
+        "limbo:1",
+        {
+          "completedAt": "2017-03-04T21:42:13.899Z"
+        }
+      ]
+    ],
+    "active": []
+  },
+  "metadata": {
+    "class": "warrior"
+  },
+  "equipment": {
+    "wield": {
+      "entityReference": "limbo:1",
+      "inventory": null
+    }
+  }
+}

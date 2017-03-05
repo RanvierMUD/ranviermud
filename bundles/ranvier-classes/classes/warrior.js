@@ -14,6 +14,7 @@ module.exports = srcPath => {
     abilityTable: {
       3: {
         skills: ['rend'],
+        spells: ['heal'],
       },
       5: { skills: ['lunge'] },
      10: { skills: ['secondwind'] },
