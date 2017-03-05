@@ -2,7 +2,6 @@
 
 const CommandType = require('./CommandType');
 const PlayerRoles = require('./PlayerRoles');
-const { RestrictedCommandError } = require('./CommandParser');
 
 class Command {
   /**
@@ -28,10 +27,7 @@ class Command {
    * @return {*}
    */
   execute(args, player) {
-    if (player.role >= this.requiredRole) {
-      return this.func(args, player);
-    }
-    throw new RestrictedCommandError();
+    return this.func(args, player);
   }
 
 }

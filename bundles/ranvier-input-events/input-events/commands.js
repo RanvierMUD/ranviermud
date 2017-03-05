@@ -28,9 +28,11 @@ module.exports = (src) => {
           if (!result) {
             throw null;
           }
-
           switch (result.type) {
             case CommandTypes.COMMAND: {
+              if (result.requiredRole && result.requiredRole > player.role) {
+                throw new RestrictedCommandError();
+              }
               // commands have no lag and are not queued, just immediately execute them
               result.command.execute(result.args, player);
               break;
