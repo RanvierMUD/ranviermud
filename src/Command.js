@@ -17,7 +17,7 @@ class Command {
     this.func = def.command;
     this.aliases = def.aliases;
     this.usage = def.usage || this.name;
-    this.roleRequired = def.roleRequired || PlayerRoles.PLAYER;
+    this.requiredRole = def.requiredRole || PlayerRoles.PLAYER;
   }
 
   /**

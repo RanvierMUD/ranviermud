@@ -5,7 +5,7 @@ module.exports = (srcPath) => {
   const PlayerRoles = require(srcPath + 'PlayerRoles');
 
   return {
-    roleRequired: PlayerRoles.ADMIN,
+    requiredRole: PlayerRoles.ADMIN,
     command: (state) => (args, player) => {
       args = args.trim();
 

@@ -5,7 +5,7 @@ module.exports = (srcPath) => {
   const PlayerRoles = require(srcPath + 'PlayerRoles');
 
   return {
-    roleRequired: PlayerRoles.ADMIN,
+    requiredRole: PlayerRoles.ADMIN,
     command: state => (args, player) => {
       let regenEffect = state.EffectFactory.create('buff', player, { duration: 60 * 1000 }, { magnitude: 5 });
       player.addEffect(regenEffect);
