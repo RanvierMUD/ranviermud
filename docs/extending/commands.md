@@ -136,3 +136,66 @@ module.exports = (srcPath) => {
   };
 };
 ```
+
+## Creating Admin Commands
+
+It is possible in Ranvier to create commands that are only useable by privileged players. This is done by use of the `requiredRole` property, which defaults to `PLAYER`. Currently, the available roles are `PLAYER`, `BUILDER`, and `ADMIN` (in ascending order).
+
+As of right now, all of the built-in debug commands are restricted to `ADMIN`, and there are no `BUILDER`-level commands. The default Admin player has the `ADMIN` role and can be used to set privileges on other players using `setadmin`.
+
+Here's an example of how you might build an admin command:
+
+#### setadmin
+
+```javascript
+'use strict';
+
+module.exports = (srcPath) => {
+  const Broadcast = require(srcPath + 'Broadcast');
+
+  // Require the PlayerRoles enum file for easy reference.
+  const PlayerRoles = require(srcPath + 'PlayerRoles');
+  const { CommandParser: Parser } = require(srcPath + 'CommandParser');
+
+  return {
+    /*
+     Here is where we can set the required role level.
+     If this were set to PlayerRoles.BUILDER, both ADMINS
+     and BUILDERS could use it.
+     Anyone can use PLAYER commands and if 'requiredRole' is not set,
+     the command defaults to a PLAYER command.
+     */
+    requiredRole: PlayerRoles.ADMIN,
+    command: (state) => (args, player) => {
+      args = args.trim();
+
+      if (!args.length) {
+        return Broadcast.sayAt(player, 'setadmin <player>');
+      }
+
+      /*
+        We only want to be able to set privileges on players.
+        In this instance, we are requiring the admin and the player
+        to be in the same room but it could be edited to allow the
+        admin to use this command on any currently logged-in player.
+      */
+      const target = Parser.parseDot(args, player.room.players);
+
+      if (!target) {
+        return Broadcast.sayAt(player, 'They are not here.');
+      }
+
+      if (target.role === PlayerRoles.ADMIN) {
+        return Broadcast.sayAt(player, 'They are already an administrator.');
+      }
+
+      // The role is just a property of the player, which gets saved like any other.
+      target.role = PlayerRoles.ADMIN;
+
+      // Use Broadcast to notify both of the success.
+      Broadcast.sayAt(target, `You have been made an administrator by ${this.name}.`);
+      Broadcast.sayAt(player, `${target.name} is now an administrator.`);
+    }
+  };
+};
+```
