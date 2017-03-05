@@ -182,3 +182,4 @@ exports.CommandParser = CommandParser;
 class InvalidCommandError extends Error {}
 class RestrictedCommandError extends Error {}
 exports.InvalidCommandError = InvalidCommandError;
+exports.RestrictedCommandError = RestrictedCommandError;
