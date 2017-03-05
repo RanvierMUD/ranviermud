@@ -49,7 +49,7 @@ module.exports = (srcPath) => {
           type: FetchGoal,
           config: {
             title: 'Found Cheese',
-            count: 0,
+            count: 1,
             item: "limbo:2",
             removeItem: true,
           }
