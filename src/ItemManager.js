@@ -10,6 +10,14 @@ class ItemManager {
   }
 
   remove(item) {
+    if (item.room) {
+      item.room.removeItem(item);
+    }
+
+    if (item.belongsTo) {
+      item.belongsTo.removeItem(item);
+    }
+
     this.items.delete(item);
   }
 

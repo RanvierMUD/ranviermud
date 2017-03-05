@@ -87,8 +87,9 @@ class Room extends EventEmitter {
       }
 
       defaultNpc = Object.assign({
-        respawnChance: 25,
-        maxLoad: 1
+        respawnChance: 100,
+        maxLoad: 1,
+        replaceOnRespawn: false
       }, defaultNpc);
 
       const npcCount = [...this.spawnedNpcs].filter(npc => npc.entityReference === defaultNpc.id).length;
@@ -102,6 +103,45 @@ class Room extends EventEmitter {
         this.spawnNpc(state, defaultNpc.id);
       }
     });
+
+    this.defaultItems.forEach(defaultItem => {
+      if (typeof defaultItem === 'string') {
+        defaultItem = { id: defaultItem };
+      }
+
+      defaultItem = Object.assign({
+        respawnChance: 100,
+        maxLoad: 1,
+        replaceOnRespawn: false
+      }, defaultItem);
+
+      const itemCount = [...this.items].filter(item => item.entityReference === defaultItem.id).length;
+      const needsRespawn = itemCount < defaultItem.maxLoad;
+
+      if (!needsRespawn && !defaultItem.replaceOnRespawn) {
+        return;
+      }
+
+      if (RandomUtil.probability(defaultItem.respawnChance)) {
+        if (defaultItem.replaceOnRespawn) {
+          this.items.forEach(item => {
+            if (item.entityReference === defaultItem.id) {
+              state.ItemManager.remove(item);
+            }
+          });
+        }
+        this.spawnItem(state, defaultItem.id);
+      }
+    });
+  }
+
+  spawnItem(state, entityRef) {
+    Logger.verbose(`\tSPAWN: Adding item [${entityRef}] to room [${this.title}]`);
+    const newItem = state.ItemFactory.create(this.area, entityRef);
+    newItem.hydrate(state);
+    newItem.sourceRoom = this;
+    state.ItemManager.add(newItem);
+    this.addItem(newItem);
   }
 
   spawnNpc(state, entityRef) {
@@ -126,17 +166,12 @@ class Room extends EventEmitter {
     // persist through reboot unless they're stored on a player.
     // If you would like to change that functionality this is the place
 
-    this.defaultItems.forEach(defaultItemId => {
-      if (parseInt(defaultItemId, 10)) {
-        defaultItemId = this.area.name + ':' + defaultItemId;
+    this.defaultItems.forEach(defaultItem => {
+      if (typeof defaultItem === 'string') {
+        defaultItem = { id: defaultItem };
       }
 
-      Logger.verbose(`\tDIST: Adding item [${defaultItemId}] to room [${this.title}]`);
-      const newItem = state.ItemFactory.create(this.area, defaultItemId);
-      newItem.hydrate(state);
-      newItem.sourceRoom = this;
-      state.ItemManager.add(newItem);
-      this.addItem(newItem);
+      this.spawnItem(state, defaultItem.id);
     });
 
     this.defaultNpcs.forEach(defaultNpc => {
