@@ -39,6 +39,7 @@ module.exports = (srcPath) => {
 
       Broadcast.sayAt(player, `<green>You equip:</green> ${item.display}<green>.</green>`);
       item.emit('equip', player);
+      player.emit('equip', item.slot, item);
     }
   };
 };

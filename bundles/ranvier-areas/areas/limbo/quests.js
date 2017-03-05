@@ -1,34 +1,60 @@
 'use strict';
 
-const FetchQuest = require('../../../ranvier-quests/lib/FetchQuest');
+const FetchGoal = require('../../../ranvier-quests/lib/FetchGoal');
+const EquipGoal = require('../../../ranvier-quests/lib/EquipGoal');
 
 module.exports = (srcPath) => {
   const LevelUtil = require(srcPath + 'LevelUtil');
 
   return {
     1: {
-      type: FetchQuest,
       config: {
         title: "Find A Weapon",
-        desc: "You're defenseless! Pick up the sword from the chest by typing 'get sword chest'",
-        targetCount: 1,
-        targetItem: "limbo:1",
+        desc: "You're defenseless! Pick up the sword from the chest by typing 'get sword chest' then wield it with `wield sword`.",
         autoComplete: true,
-        reward: (quest, player) => LevelUtil.mobExp(player.level) * 5
-      }
+        reward: (quest, player) => {
+          player.emit('experience', LevelUtil.mobExp(player.level) * 5);
+        }
+      },
+      goals: [
+        {
+          type: FetchGoal,
+          config: {
+            title: 'Retrieved a Sword',
+            count: 1,
+            item: "limbo:1"
+          }
+        },
+        {
+          type: EquipGoal,
+          config: {
+            title: 'Equipped a Sword',
+            slot: 'wield'
+          }
+        }
+      ]
     },
 
     2: {
-      type: FetchQuest,
       config: {
         title: "One Cheese Please",
-        desc: "A rat has tasked you with finding it some cheese, better get to it.",
-        targetCount: 1,
-        targetItem: "limbo:2",
-        removeItem: true,
+        desc: "A rat's squeaks seem to indicate it wants some cheese. ",
         repeatable: true,
-        reward: (quest, player) => LevelUtil.mobExp(player.level) * 3
-      }
+        reward: (quest, player) => {
+          player.emit('experience', LevelUtil.mobExp(player.level) * 3);
+        }
+      },
+      goals: [
+        {
+          type: FetchGoal,
+          config: {
+            title: 'Found Cheese',
+            count: 0,
+            item: "limbo:2",
+            removeItem: true,
+          }
+        }
+      ]
     }
   };
 };

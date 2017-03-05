@@ -17,7 +17,7 @@
     [
       "energy",
       {
-        "delta": -20,
+        "delta": 0,
         "base": 200
       }
     ],
@@ -57,71 +57,19 @@
       }
     ]
   ],
-  "level": 8,
+  "level": 1,
   "name": "Admin",
-  "room": "limbo:3",
-  "effects": [
-    {
-      "id": "regen",
-      "elapsed": 730557,
-      "state": {
-        "magnitude": 15,
-        "lastTick": 1526,
-        "ticks": 239
-      },
-      "config": {
-        "autoActivate": true,
-        "description": "You are regenerating over time.",
-        "duration": "inf",
-        "hidden": true,
-        "name": "Regenerate",
-        "maxStacks": 0,
-        "unique": true,
-        "type": "regen",
-        "tickInterval": 3
-      }
-    },
-    {
-      "id": "cooldown",
-      "elapsed": 510,
-      "skill": "lunge",
-      "state": {
-        "cooldownId": "skill:lunge"
-      },
-      "config": {
-        "autoActivate": true,
-        "description": "Cannot use ability while on cooldown.",
-        "duration": 5000,
-        "hidden": false,
-        "name": "Cooldown: Lunge",
-        "maxStacks": 0,
-        "unique": false,
-        "type": "cooldown",
-        "tickInterval": false
-      }
-    }
-  ],
+  "room": "limbo:1",
+  "effects": [],
   "playerClass": "warrior",
-  "experience": 2365,
-  "inventory": null,
+  "experience": 0,
+  "inventory": [],
   "quests": {
-    "completed": [
-      [
-        "limbo:1",
-        {
-          "completedAt": "2017-03-04T21:42:13.899Z"
-        }
-      ]
-    ],
+    "completed": [],
     "active": []
   },
   "metadata": {
     "class": "warrior"
   },
-  "equipment": {
-    "wield": {
-      "entityReference": "limbo:1",
-      "inventory": null
-    }
-  }
+  "equipment": {}
 }

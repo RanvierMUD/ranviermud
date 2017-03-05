@@ -1,5 +1,5 @@
 Ranvier's quest system is left intentionally generic. However, this makes it incredibly powerful and extensible. 
-In this guide we will implement a new quest type called FetchQuest (player needs to retrieve an item), create a
+In this guide we will implement a new quest goal type called FetchGoal (player needs to retrieve an item), create a
 couple fetch quests, create a quest giver for one of the quests, and for the other create a room script that will
 give the player a quest when walking into the room.
 
@@ -13,52 +13,52 @@ it. That's up to you. To accomplish this all active quests receive all the same 
 example, if a player picks up an item the `get` event will fire on the player. Any active quests will hear about this
 `get` event at the same time and do as they please with that information.
 
-## Creating the new Quest type
+## Creating the new Quest Goal
 
-To have a quest that actually _does something_ you will first need to create a class which extends the core `Quest`
-class. Once you've created your custom quest type you can have as many quests as you like which are of this type, you
-don't need to create a custom type for each individual quest. But you will need one for each different type of quest,
-e.g., a type for kill quests, a type for fetch quests, etc.
+To have a quest that actually _does something_ you will first need to create a class which extends the core `QuestGoal`
+class. Once you've created your custom goal type you can have as many quests as you like which use that goal, you
+don't need to create a custom goal for each individual quest. But you will need one for each different type of quest,
+e.g., a goal for kill quests, a goal for fetch quests, etc.
 
-A fetch quest, we'll say, is as a quest that
+A fetch goal, we'll say, is one that
 
 * requires the player to pick up a certain number of a certain item
-* can optionally complete automatically when the player picks up the required items or
-  the player has to turn in the quest in at the NPC they received the quest from
 * optionally removes the items from the players inventory on completion
-* Rewards the player with some configurable amount of experience on completion
 
 First we will create a new bundle called `ranvier-quests`, we'll use this bundle as a library for all of our quest types.
-And we'll create a file under this bundle in `lib/FetchQuest.js`. So you should have a directory structure that looks
+And we'll create a file under this bundle in `lib/FetchGoal.js`. So you should have a directory structure that looks
 like this:
 
 ```
 bundles/
   ranvier-quests/
     lib/
-      FetchQuest.js
+      FetchGoal.js
 ```
 
 ```javascript
 'use strict';
 
-// Import core Quest class
-const Quest = require('../../../src/Quest');
+// Import core QuestGoal class
+const QuestGoal = require('../../../src/QuestGoal');
 
-class FetchQuest extends Quest {
-  // Quest type constructor takes the qid (Quest id), a configuration of this
-  // particular quest, and the player the quest is active on
-  constructor(qid, config, player) {
-    // Here we'll add our custom configuration: autoComplete, removeItem, and the
-    // experience reward amount
+/**
+ * A quest goal requiring the player picks up a certain number of a particular item
+ */
+class FetchGoal extends QuestGoal {
+  // Quest goal constructor takes the quest it's attached to, a configuration of
+  // this particular goal, and the player the quest is active on
+  constructor(quest, config, player) {
+    // Here we'll add our custom configuration: removeItem, target item and count
     config = Object.assign({
-      autoComplete: false,
+      title: 'Retrieve Item',
       removeItem: false,
-      reward: _ => 0, // dummy function to reward 0 experience
+      count: 1,
+      item: null
     }, config);
 
-    // call the parent constructor
-    super(qid, config, player);
+    // call parent constructor
+    super(quest, config, player);
 
     /*
     All quests have a "state"; this is the part that contains any data that is relevant
@@ -69,68 +69,16 @@ class FetchQuest extends Quest {
       count: 0
     };
 
-    // As described above, active quests receive all the events the player receives so
-    // here is where we want to subscribe to the events we care about
+    // Setup listeners for the events we want to update this quest's progress
     this.on('get', this._getItem);
     this.on('drop', this._dropItem);
-  }
-
-  /*
-  What should happen when the player picked up any item
-  */
-  _getItem(item) {
-    // Make sure the item they picked up is the item the quest wants
-    if (item.entityReference !== this.config.targetItem) {
-      return;
-    }
-
-    // update our state to say they progressed towards the goal
-    this.state.count = (this.state.count || 0) + 1;
-
-    // don't notify the player of further progress if it's already ready to turn in
-    if (this.state.count > this.config.targetCount) {
-      return;
-    }
-
-    // notify the player of their updated progress
-    this.emit('progress', this.getProgress());
-
-    // player has picked up all the items they need to
-    if (this.state.count >= this.config.targetCount) {
-      // here we implement our custom autoComplete configuration
-      if (this.config.autoComplete) {
-        this.complete();
-      } else {
-        // otherwise notify the player that the quest is ready to turn in
-        this.emit('turn-in-ready');
-      }
-    }
-  }
-
-  /*
-  If the player drops one of the requested items make sure to subtract that from their
-  current progress
-  */
-  _dropItem(item) {
-    if (!this.state.count || item.entityReference !== this.config.targetItem) {
-      return;
-    }
-
-    this.state.count--;
-
-    // Again, don't notify the player of change in progress unless they can no longer
-    // turn in the quest
-    if (this.state.count >= this.config.targetCount) {
-      return;
-    }
-
-    this.emit('progress', this.getProgress());
+    this.on('decay', this._dropItem);
   }
 
   /*
   Because Quest has no opinions and makes no assumptions it requires you to tell it how to
-  get the current progress of this type of quest based on its state and configuration. In
-  our FetchQuest progress is defined as how many items have they picked up out of how many
+  get the current progress of this type of goal based on its state and configuration. In
+  our FetchGoal, progress is defined as how many items have they picked up out of how many
   they need to pick up in total.
 
   getProgress() should return an object like so:
@@ -140,8 +88,8 @@ class FetchQuest extends Quest {
   }
   */
   getProgress() {
-    const percent = (this.state.count / this.config.targetCount) * 100;
-    const display = `${this.config.title}: [${this.state.count}/${this.config.targetCount}]`;
+    const percent = (this.state.count / this.config.count) * 100;
+    const display = `${this.config.title}: [${this.state.count}/${this.config.count}]`;
     return { percent, display };
   }
 
@@ -151,31 +99,70 @@ class FetchQuest extends Quest {
   */
   complete() {
     // sanity check to make sure it doesn't actually complete before it's supposed to
-    if (this.state.count < this.config.targetCount) {
+    if (this.state.count < this.config.count) {
       return;
     }
 
-    // Here we implement our removeItem configuration which optionally removes the
-    // goal items from the player's inventory on completion
+    const player = this.quest.player;
+
+    // Here we implement our removeItem config
     if (this.config.removeItem) {
-      for (let i = 0; i < this.config.targetCount; i++) {
-        for (const [, item] of this.player.inventory) {
-          if (item.entityReference === this.config.targetItem) {
-            this.player.removeItem(item);
+      for (let i = 0; i < this.config.count; i++) {
+        for (const [, item] of player.inventory) {
+          if (item.entityReference === this.config.item) {
+            // use the ItemManager to completely remove the item from the game
+            this.quest.GameState.ItemManager.remove(item);
           }
         }
       }
     }
 
-    // call parent class complete which notifies the user of completion
     super.complete();
+  }
 
-    // dole out our reward
-    this.player.emit('experience', this.config.reward(this, this.player));
+  /*
+  What should happen when the player picked up any item
+  */
+  _getItem(item) {
+    // Make sure the item they picked up is the item the quest wants
+    if (item.entityReference !== this.config.item) {
+      return;
+    }
+
+    // update our state to say they progressed towards the goal
+    this.state.count = (this.state.count || 0) + 1;
+
+    // don't notify the player of further progress if it's already ready to turn in
+    if (this.state.count > this.config.count) {
+      return;
+    }
+
+    // notify the player of their updated progress
+    this.emit('progress', this.getProgress());
+  }
+
+  /*
+  If the player drops one of the requested items make sure to subtract that from their
+  current progress
+  */
+  _dropItem(item) {
+    if (!this.state.count || item.entityReference !== this.config.item) {
+      return;
+    }
+
+    this.state.count--;
+
+    // Again, don't notify the player of change in progress unless they can no longer
+    // turn in the quest
+    if (this.state.count >= this.config.count) {
+      return;
+    }
+
+    this.emit('progress', this.getProgress());
   }
 }
 
-module.exports = FetchQuest;
+module.exports = FetchGoal;
 ```
 
 ## Creating Quests
@@ -193,7 +180,7 @@ in bundles.
 'use strict';
 
 // Import our quest type
-const FetchQuest = require('../../../ranvier-quests/lib/FetchQuest');
+const FetchGoal = require('../../../ranvier-quests/lib/FetchGoal');
 
 /*
 The bundle loader expects the quests.js file to return a function which accepts the
@@ -208,40 +195,59 @@ module.exports = (srcPath) => {
     // Each quest is defined as an object keyed by its unique qid (Quest id)
     // this qid will be used as part of the EntityReference we'll see later
     1: {
-      // Here we specify the Quest type we created. Note this is _not_ a string, it's the
-      // actual class object
-      type: FetchQuest,
       // our quest's config
       config: {
         // The title and description are required and are shown to the player often.
         title: "Find A Weapon",
         desc: "You're defenseless! Pick up the shiv from the chest by typing 'get shiv chest'",
-        // this quest only requires the player pick up one of the target items
-        targetCount: 1,
-        // which in this case is a shiv
-        targetItem: "limbo:1",
-        // as soon as the player picks up the weapon it will complete the quest
+
+        // as soon as all goals are at 100% progress complete this quest. Defaults to false
         autoComplete: true,
-        // then reward them with the equivalent experience of 5 kills of an equal level mob
-        reward: (quest, player) => LevelUtil.mobExp(player.level) * 5
-      }
+
+        // This reward function is called once the quest is completed. You can basically
+        // do anything you want to reward the player, this example shows giving them some
+        // experience
+        reward: (quest, player) => {
+          player.emit('experience', LevelUtil.mobExp(player.level) * 5);
+        }
+      },
+
+      // setup the goals that the player has to complete for this quest
+      goals: [
+        {
+          // Each goal has a `type` such as one we built above
+          type: FetchGoal,
+          // and a config, this is specific to each goal type
+          config: {
+            title: 'Retrieved a Sword',
+            // this quest only requires the player pick up one of the target items
+            count: 1,
+            // which in this case is a sword
+            item: "limbo:1",
+          }
+      ]
     },
 
     2: {
-      type: FetchQuest,
+      // this quest is very similar except it's repeatable and once the player completes
+      // the quest the cheese will be removed from their inventory
       config: {
         title: "One Cheese Please",
         desc: "A rat has tasked you with finding it some cheese, better get to it.",
-        targetCount: 1,
-        targetItem: "limbo:2",
-        // this quest is very similar except it's repeatable and once the player completes
-        // the quest the cheese will be removed from their inventory
-        removeItem: true,
-        // repeatable is an inherent property of quests, you'll note that it wasn't part
-        // of the config in our FetchQuest class
         repeatable: true,
         reward: (quest, player) => LevelUtil.mobExp(player.level) * 3
-      }
+      },
+      goals: [
+        {
+          type: FetchGoal,
+          config: {
+            title: 'Found Cheese',
+            count: 1,
+            item: "limbo:2",
+            removeItem: true,
+          }
+        }
+      ]
     }
   };
 };
