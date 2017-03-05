@@ -10,7 +10,10 @@ In Ranvier all rooms for an area are defined in a single file within the area fo
   title: "Test Room 1"
   description: "A featureless white room. A pitch black void in the shape of archway can be seen on the east side of the room."
   npcs: ["limbo:1"]
-  items: ["limbo:3"]
+  items:
+    - id: "limbo:3"
+      replaceOnRespawn: true
+      respawnChance: 30
   script: "1-test"
   exits:
     - roomId: "limbo:2"
@@ -48,10 +51,10 @@ In Ranvier all rooms for an area are defined in a single file within the area fo
 :    ***required*** Long description of the room shown under the title on look
 
 `npcs` _`Array<EntityReference>`_
-:    List of NPCs to place in this room on initial load. You can customize the number of max instances of the NPC per room and the respawn chance by making the `npcs` entry an object as described above in the "Test Room 2" entry
+:    List of NPCs to place in this room on initial load. You can customize the number of max instances of the NPC per room and the respawn chance by making the `npcs` entry an object as described above in the "Test Room 2" entry.
 
 `items` _`Array<EntityReference>`_
-:    List of items to place in this room on initial load
+:    List of items to place in this room on initial load. As with rooms you can customize the respawn chance for the item. For containers there's also `replaceOnRespawn` which when the item is due to respawn will replace an empty instance will a full one
 
 `script` _`string`_
 :    Name of custom script to attach to this room (See [Scripting](scripting.md))

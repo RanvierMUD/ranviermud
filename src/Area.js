@@ -49,6 +49,7 @@ class Area extends EventEmitter {
   removeNpc(npc) {
     if (npc.room) {
       npc.room.removeNpc(npc);
+      npc.sourceRoom.removeSpawnedNpc(npc);
     }
 
     this.npcs.delete(npc);
