@@ -118,6 +118,7 @@
   "metadata": {
     "class": "warrior"
   },
+  "role": 2,
   "equipment": {
     "wield": {
       "entityReference": "limbo:1",
