@@ -6,6 +6,7 @@ const uuid = require('node-uuid');
 const ItemType = require('./ItemType');
 const Inventory = require('./Inventory');
 const Logger = require('./Logger');
+const Player = require('./Player');
 
 /**
  * @property {Area}    area        Area the item belongs to (warning: this is not the area is currently in but the
@@ -117,6 +118,22 @@ class Item extends EventEmitter {
     const open = '<' + colors.join('><') + '>';
     const close = '</' + colors.reverse().join('></') + '>';
     return open + string + close;
+  }
+
+  /**
+   * For finding the player who has the item in their possession.
+   * @return {Player|null} owner
+   */
+  findOwner() {
+    let owner = this.belongsTo;
+    while (owner) {
+      if (owner instanceof Player) {
+        break;
+      } else {
+        owner = owner.belongsTo;
+      }
+    }
+    return owner;
   }
 
   hydrate(state) {

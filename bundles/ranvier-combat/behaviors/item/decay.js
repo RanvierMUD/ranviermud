@@ -37,8 +37,11 @@ module.exports = srcPath => {
         }
 
         if (belongsTo) {
+          const owner = this.findOwner();
+          if (owner) {
+            Broadcast.sayAt(owner, `Your ${this.name} has rotted away!`);
+          }
           belongsTo.removeItem(this);
-          checkForOwner(belongsTo, this);
         }
       }
     }
@@ -58,14 +61,4 @@ module.exports = srcPath => {
     }
   }
 
-  function checkForOwner(owner, item) {
-    while (owner) {
-      if (owner instanceof Player) {
-        Broadcast.sayAt(owner, `Your ${item.name} has rotted away!`);
-        break;
-      } else {
-        owner = owner.belongsTo;
-      }
-    }
-  }
 };
