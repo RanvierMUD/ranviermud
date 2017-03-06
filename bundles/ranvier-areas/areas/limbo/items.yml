@@ -5,6 +5,13 @@
   description: "An arm's-length, jagged metal sword discolored with red corrosion. The worn leather grip barely held on by fraying thread."
   script: "1-sword"
   slot: 'wield'
+  level: 1
+  itemLevel: 1
+  quality: common
+  properties:
+    minDamage: 7
+    maxDamage: 15
+    speed: 2.8
 - id: 2
   name: "Slice of Cheese"
   roomDesc: "A moldy slice of cheese"
@@ -19,8 +26,8 @@
   roomDesc: "A wooden chest rests open in the corner, its hinges badly rusted."
   keywords: [ "wooden", "chest" ]
   description: "Time has not been kind to this chest. It seems to be held together solely by the dirt and rust."
-  items: [ "limbo:1" ]
-  attributes:
+  items: [ "limbo:1", "limbo:6" ]
+  properties:
     noPickup: true
     maxItems: 2
 - id: 4
@@ -29,3 +36,31 @@
   roomDesc: "Scraps from a Training Dummy"
   keywords: [ "dummy", "scraps" ]
   description: "Splintered, shattered, and generally destroyed remains of a training dummy"
+- id: 5
+  name: "Training Sword"
+  roomDesc: "Training Sword"
+  keywords: ["sword", "training", "iron"]
+  description: "A hefty iron blade. Not the sharpest sword in the world but it will get the job done."
+  slot: "wield"
+  quality: rare
+  itemLevel: 10
+  level: 5
+  properties:
+    minDamage: 11
+    maxDamage: 20
+    speed: 2.8
+    stats:
+      strength: 2
+      stamina: 2
+- id: 6
+  name: "Leather Vest"
+  roomDesc: "Leather Vest"
+  keywords: ["leather", "vest"]
+  description: "A plain leather vest. Better than nothing."
+  slot: "chest"
+  quality: common
+  level: 5
+  itemLevel: 5
+  properties:
+    stats:
+      armor: 20

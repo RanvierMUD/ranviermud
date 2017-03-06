@@ -169,7 +169,7 @@ function init(restartServer) {
       GameState.PlayerManager.emit('updateTick');
       GameState.AreaManager.tickAll(GameState);
       GameState.ItemManager.tickAll();
-    }, 500);
+    }, 100);
 
     // TODO: RESPAWN
   }

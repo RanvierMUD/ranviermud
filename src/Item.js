@@ -11,7 +11,7 @@ const Player = require('./Player');
 /**
  * @property {Area}    area        Area the item belongs to (warning: this is not the area is currently in but the
  *                                 area it belongs to on a fresh load)
- * @property {object}  attributes  Essentially a blob of whatever attrs the item designer wanted to add
+ * @property {object}  properties  Essentially a blob of whatever attrs the item designer wanted to add
  * @property {array|string}  behaviors Single or list of behaviors this object uses
  * @property {string}  description Long description seen when looking at it
  * @property {number}  id          vnum
@@ -36,7 +36,7 @@ class Item extends EventEmitter {
     }
 
     this.area = area;
-    this.attributes  = item.attributes || {};
+    this.properties  = item.properties || {};
     this.behaviors = new Map(Object.entries(item.behaviors || {}));
     this.defaultItems = item.items || [];
     this.description = item.description || 'Nothing special.';
@@ -45,6 +45,8 @@ class Item extends EventEmitter {
     this.inventory   = item.inventory ? new Inventory(item.inventory) : null;
     this.isEquipped  = item.isEquipped || false;
     this.keywords    = item.keywords;
+    this.level       = item.level || 1;
+    this.itemLevel   = item.itemLevel || this.level;
     this.name        = item.name;
     this.quality     = item.quality || 'common';
     this.room        = item.room || null;
@@ -53,15 +55,6 @@ class Item extends EventEmitter {
     this.slot        = item.slot || null;
     this.type        = typeof item.type === 'string' ? ItemType[item.type] : (item.type || ItemType.OBJECT);
     this.uuid        = item.uuid || uuid.v4();
-  }
-
-  // TODO: Implement Attributes/Attribute classes for items?
-  getAttribute(attr) {
-    return this.attributes[attr];
-  }
-
-  setAttribute(attr, val) {
-    this.attributes[attr] = val;
   }
 
   hasKeyword(keyword) {

@@ -8,6 +8,7 @@ const Data = require('./Data');
 const QuestTracker = require('./QuestTracker');
 const Room = require('./Room');
 const Logger = require('./Logger');
+const PlayerRoles = require('./PlayerRoles');
 
 /**
  * @property {Account} account
@@ -24,7 +25,6 @@ class Player extends Character {
     super(data);
 
     this.account = data.account || null;
-    this.attributes = new Attributes(data.attributes || Config.get('defaultAttributes'));
     this.experience = data.experience || 0;
     this.extraPrompts = new Map();
     this.password  = data.password;
@@ -38,6 +38,7 @@ class Player extends Character {
 
     this.questTracker = new QuestTracker(this, questData.active, questData.completed);
     this.commandQueue = new CommandQueue();
+    this.role = data.role || PlayerRoles.PLAYER;
 
     // Arbitrary data bundles are free to shove whatever they want in
     // WARNING: values must be JSON.stringify-able
@@ -231,7 +232,8 @@ class Player extends Character {
       inventory: this.inventory && this.inventory.serialize(),
       password: this.password,
       quests: this.questTracker.serialize(),
-      metadata: this.metadata
+      metadata: this.metadata,
+      role: this.role
     });
 
     if (this.equipment) {

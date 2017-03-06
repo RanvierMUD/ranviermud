@@ -159,14 +159,14 @@ class CommandParser {
       }
 
       // prioritize keywords over item/player names
-      if (entry.keywords && (entry.keywords.indexOf(keyword) !== -1 || entry.uuid === keyword)) {
+      if (entry.keywords && (entry.keywords.includes(keyword) || entry.uuid === keyword)) {
         encountered++;
         if (encountered === findNth) {
           return returnKey ? [key, entry] : entry;
         }
       }
 
-      if (entry.name && entry.name.toLowerCase().indexOf(keyword) !== -1) {
+      if (entry.name && entry.name.toLowerCase().includes(keyword)) {
         encountered++;
         if (encountered === findNth) {
           return returnKey ? [key, entry] : entry;
@@ -180,4 +180,6 @@ class CommandParser {
 exports.CommandParser = CommandParser;
 
 class InvalidCommandError extends Error {}
+class RestrictedCommandError extends Error {}
 exports.InvalidCommandError = InvalidCommandError;
+exports.RestrictedCommandError = RestrictedCommandError;

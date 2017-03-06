@@ -145,6 +145,26 @@ module.exports = srcPath => {
         }
       }
     },
+    /*
+    Alternatively, if the attribute you're modifying is dynamic you can use
+    this pattern which is used when you want a base effect that could apply
+    to multiple attributes.  See the `equip.js` effect for an example
+
+    state: {
+      stat: 'strength',
+      bonus: 5
+    },
+
+    modifiers: {
+      attributes: function (attribute, current) {
+        if (attribute !== this.state.stat) {
+          return current;
+        }
+
+        return current + this.state.bonus;
+      }
+    },
+    */
 
     /*
     Similar to quests, effects receive all the events the player receives in

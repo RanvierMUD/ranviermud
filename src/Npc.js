@@ -33,7 +33,6 @@ class Npc extends Character {
     this.quests = data.quests || [];
     this.damage = data.damage;
     this.entityReference = data.entityReference; 
-    this.attributes = new Attributes(Object.assign(Config.get('defaultAttributes'), data.attributes));
   }
 
 

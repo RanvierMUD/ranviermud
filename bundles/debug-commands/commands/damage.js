@@ -2,9 +2,11 @@
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
+  const PlayerRoles = require(srcPath + 'PlayerRoles');
 
   return {
-    command : (state) => (args, player) => {
+    requiredRole: PlayerRoles.ADMIN,
+    command: (state) => (args, player) => {
       args = args.trim();
 
       if (!args.length) {

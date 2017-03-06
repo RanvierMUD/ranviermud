@@ -41,3 +41,7 @@
   description: >-
     This dummy is significantly larger than the others. Bright red with a monstrous figure it lumbers around the area
     with a great echoing stomp. Where the other target dummies have a bullseye this dummy has a yellow exclamation mark.
+  behaviors:
+    lootable:
+      pools:
+        - "limbo:5": 100

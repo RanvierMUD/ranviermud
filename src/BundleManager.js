@@ -274,7 +274,7 @@ class BundleManager {
 
     for (const id in quests) {
       Logger.verbose(`\t\t\tLoading Quest [${area.name}:${id}]`);
-      this.state.QuestFactory.add(area.name, id, quests[id].type, quests[id].config);
+      this.state.QuestFactory.add(area.name, id, quests[id].config, quests[id].goals);
     }
 
     Logger.verbose(`\t\tENDLOAD: Quests...`);

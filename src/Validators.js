@@ -52,16 +52,6 @@ module.exports = {
     allowMultiplay: joi.boolean().required(),
     startingRoom: joi.string().required(),
     moveCommand: joi.string().required(),
-    defaultAttributes: joi.object({
-      health: joi.number().integer().required(),
-      mana: joi.number().integer().required(),
-      energy: joi.number().integer().required(),
-      strength: joi.number().integer().required(),
-      intelligence: joi.number().integer().required(),
-      wisdom: joi.number().integer().required(),
-      dexterity: joi.number().integer().required(),
-      constitution: joi.number().integer().required(),
-    }),
     skillLag: joi.number().integer().required()
   })
 };

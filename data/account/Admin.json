@@ -1,1 +1,7 @@
-{"username":"Admin","characters":["Admin"],"password":"$2a$10$shhsX.1JgvpVLO7TebU9LeGudxLl1khJ.E21fVlIodati26gw.MwC"}
+{
+  "username": "Admin",
+  "characters": [
+    "Admin"
+  ],
+  "password": "$2a$10$7MZUNyykAel6mnF/3mmBV.QBqeVmYNXLRVY.Nr.N0HRiAxR4Iks.y"
+}
