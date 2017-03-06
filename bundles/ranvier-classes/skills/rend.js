@@ -13,9 +13,10 @@ module.exports = (srcPath) => {
   const cost = 50;
   const duration = 15 * 1000;
   const tickInterval = 3;
+  const damagePercent = 400;
 
   const totalDamage = player => {
-    return player.getAttribute(attribute) * 4;
+    return player.calculateWeaponDamage() * (damagePercent / 100);
   };
 
   return {
@@ -50,7 +51,7 @@ module.exports = (srcPath) => {
     },
 
     info: (player) => {
-      return `Tear a deep wound in your target's flesh dealing <bold>${totalDamage(player)}</bold> physical damage over <bold>${duration / 1000}</bold> seconds.`;
+      return `Tear a deep wound in your target's flesh dealing <bold>${damagePercent}%</bold> weapon damage over <bold>${duration / 1000}</bold> seconds.`;
     }
   };
 };

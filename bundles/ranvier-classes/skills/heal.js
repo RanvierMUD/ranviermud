@@ -12,7 +12,7 @@ module.exports = (srcPath) => {
   const energyCost = 40;
 
   function getHeal(player) {
-    return player.getAttribute('intelligence') * (healPercent / 100);
+    return player.getAttribute('intellect') * (healPercent / 100);
   }
 
   return {
@@ -40,7 +40,7 @@ module.exports = (srcPath) => {
     },
 
     info: (player) => {
-      return `Call upon the light to heal your target's wounds for ${healPercent}% of your Intelligence.`;
+      return `Call upon the light to heal your target's wounds for ${healPercent}% of your Intellect.`;
     }
   };
 };

@@ -1,14 +1,21 @@
 'use strict';
 
 const Attributes = require('./Attributes');
+const AttributeUtil = require('./AttributeUtil');
 const EffectList = require('./EffectList');
 const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
 const EventEmitter = require('events');
 const Inventory = require('./Inventory');
 const Parser = require('./CommandParser').CommandParser;
+const RandomUtil = require('./RandomUtil');
 
 
 /**
+ * The Character class acts as the base for both NPCs and Players. It is _opinionated_
+ * about how stats are calculated (see getMaxAttribute), if you want to change what
+ * stats a player has and how they are calculated it should be changed here and in
+ * `Attributes.js`
+ *
  * @property {string}    name       Name shown on look/who/login
  * @property {Map}       inventory
  * @property {Set}       combatants Enemies this character is currently in combat with
@@ -30,7 +37,7 @@ class Character extends EventEmitter
     this.combatData = {};
     this.level = data.level || 1;
     this.room = data.room || null;
-    this.attributes = new Attributes([]);
+    this.attributes = new Attributes(data.attributes || null);
     this.followers = new Set();
     this.following = null;
 
@@ -60,6 +67,26 @@ class Character extends EventEmitter
    */
   getMaxAttribute(attr) {
     const attribute = this.attributes.get(attr);
+
+    // health and attackpower are calculated based off other stats
+    // NOTE: This is an _example_ implementation based off WoW formulas
+    switch (attribute.name) {
+      case 'health':
+        attribute.setBase(
+          this.getMaxAttribute('stamina') * AttributeUtil.healthPerStamina(this.level)
+        );
+        break;
+      case 'attackpower':
+        attribute.setBase(this.getMaxAttribute('strength'));
+        break;
+      case 'energy':
+      case 'armor':
+        break;
+      default:
+        attribute.setBase(AttributeUtil.baseAttributeByLevel(attribute.name, this.level));
+        break;
+    }
+
     return this.effects.evaluateAttribute(attribute);
   }
 
@@ -215,7 +242,16 @@ class Character extends EventEmitter
    * @return {number}
    */
   evaluateIncomingDamage(damage) {
-    return this.effects.evaluateIncomingDamage(damage);
+    let amount = this.effects.evaluateIncomingDamage(damage);
+
+    // let armor reduce incoming physical damage
+    const attackerLevel = (damage.attacker && damage.attacker.level) || 1;
+    const armor = this.getAttribute('armor');
+    if (damage.type === 'physical' && armor > 0) {
+      amount *= 1 - armor / (armor * AttributeUtil.getArmorReductionConstant(attackerLevel));
+    }
+
+    return Math.floor(amount);
   }
 
   /**
@@ -228,7 +264,9 @@ class Character extends EventEmitter
   }
 
   equip(item) {
-    this.removeItem(item);
+    if (this.inventory) {
+      this.removeItem(item);
+    }
     if (this.equipment.has(item.slot)) {
       throw new EquipSlotTakenError();
     }
@@ -261,6 +299,31 @@ class Character extends EventEmitter
       this.inventory = null;
     }
     item.belongsTo = null;
+  }
+
+  /**
+   * Generate an amount of weapon damage
+   * @return {number}
+   */
+  calculateWeaponDamage() {
+    let amount = 0;
+    let speed = this.getWeaponSpeed();
+    const weapon = this.equipment.get('wield');
+    if (!this.isNpc && weapon) {
+      amount = RandomUtil.inRange(weapon.properties.minDamage, weapon.properties.maxDamage);
+    }
+
+    return Math.round(amount + this.getAttribute('strength') / 3.5 * speed);
+  }
+
+  getWeaponSpeed() {
+    let speed = 2.0;
+    const weapon = this.equipment.get('wield');
+    if (!this.isNpc && weapon) {
+      speed = weapon.properties.speed;
+    }
+
+    return speed;
   }
 
   follow(target) {

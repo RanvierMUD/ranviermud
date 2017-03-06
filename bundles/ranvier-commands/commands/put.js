@@ -39,7 +39,7 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, `${toContainer.name} isn't a container.`);
       }
 
-      if (toContainer.attributes.maxItems && toContainer.inventory && toContainer.inventory.size >= toContainer.attributes.maxItems) {
+      if (toContainer.properties.maxItems && toContainer.inventory && toContainer.inventory.size >= toContainer.properties.maxItems) {
         return Broadcast.sayAt(player, `${toContainer.name} can't hold any more.`);
       }
 

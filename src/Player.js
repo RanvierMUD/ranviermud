@@ -25,7 +25,6 @@ class Player extends Character {
     super(data);
 
     this.account = data.account || null;
-    this.attributes = new Attributes(data.attributes || Config.get('defaultAttributes'));
     this.experience = data.experience || 0;
     this.extraPrompts = new Map();
     this.password  = data.password;

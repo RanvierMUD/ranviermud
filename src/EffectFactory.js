@@ -25,7 +25,7 @@ class EffectFactory {
 
     let definition = Object.assign({}, config);
     delete definition.listeners;
-    const listeners = config.listeners;
+    const listeners = config.listeners || {};
 
     const eventManager = new EventManager();
     for (const event in listeners) {

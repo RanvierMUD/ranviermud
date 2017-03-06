@@ -12,7 +12,7 @@ module.exports = (srcPath) => {
   const energyCost = 20;
 
   function getDamage(player) {
-    return player.getAttribute('intelligence') * (damagePercent / 100);
+    return player.getAttribute('intellect') * (damagePercent / 100);
   }
 
   return {
@@ -40,7 +40,7 @@ module.exports = (srcPath) => {
     },
 
     info: (player) => {
-      return `Hurl a magical fireball at your target dealing ${damagePercent}% of your Intelligence as Fire damage.`;
+      return `Hurl a magical fireball at your target dealing ${damagePercent}% of your Intellect as Fire damage.`;
     }
   };
 };

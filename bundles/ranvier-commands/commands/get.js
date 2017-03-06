@@ -45,7 +45,7 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, "You don't see anything like that here.");
       }
 
-      if (item.attributes.noPickup) {
+      if (item.properties.noPickup) {
         return Broadcast.sayAt(player, `${item.display} can't be picked up.`);
       }
 
