@@ -8,6 +8,10 @@ module.exports = (srcPath) => {
     command : state => (args, player) => {
       const say = (message, wrapWidth) => B.sayAt(player, message, wrapWidth);
 
+      if (!args.length) {
+        return say("What skill or spell do you want to look up? Use 'skills' to view all skills/spells.");
+      }
+
       let skill = state.SkillManager.find(args, true);
       if (!skill) {
         skill = state.SpellManager.find(args, true);
