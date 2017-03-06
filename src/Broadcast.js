@@ -14,8 +14,6 @@ class Broadcast {
       throw new Error(`Tried to broadcast message not non-broadcastable object: MESSAGE [${message}]`);
     }
 
-    message = wrapWidth ? Broadcast.wrap(message, wrapWidth) : message;
-
     const targets = source.getBroadcastTargets();
     targets.forEach(target => {
       if (target.socket && target.socket.writable) {
@@ -23,7 +21,9 @@ class Broadcast {
           target.socket.write('\r\n');
           target.socket._prompted = false;
         }
-        target.socket.write(ansi.parse(formatter(target, message)));
+        let targetMessage = ansi.parse(formatter(target, message));
+        targetMessage = wrapWidth ? Broadcast.wrap(targetMessage, wrapWidth) : targetMessage;
+        target.socket.write(targetMessage);
       }
     });
   }
