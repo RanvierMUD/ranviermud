@@ -1,29 +1,31 @@
 'use strict';
 
 module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
+  const B = require(srcPath + 'Broadcast');
 
   return {
     aliases: [ "spell" ],
     command : state => (args, player) => {
-      let skill = state.SkillManager.get(args);
+      const say = (message, wrapWidth) => B.sayAt(player, message, wrapWidth);
+
+      let skill = state.SkillManager.find(args, true);
       if (!skill) {
-        skill = state.SpellManager.get(args);
+        skill = state.SpellManager.find(args, true);
       }
 
       if (!skill) {
-        return Broadcast.sayAt(player, "No such skill.");
+        return say("No such skill.");
       }
 
-      Broadcast.sayAt(player, `<bold>${skill.name}</bold>`);
+      say(`<bold>${skill.name}</bold>`);
       if (skill.resource.cost) {
-        Broadcast.sayAt(player, `<bold>Resource</bold>: ${skill.resource.attribute}, Cost: <bold>${skill.resource.cost}</bold>`);
+        say(`<bold>Resource</bold>: ${skill.resource.attribute}, Cost: <bold>${skill.resource.cost}</bold>`);
       }
       if (skill.cooldownLength) {
-        Broadcast.sayAt(player, `Cooldown: <bold>${skill.cooldownLength}</bold> seconds`);
+        say(`Cooldown: <bold>${skill.cooldownLength}</bold> seconds`);
       }
-      Broadcast.sayAt(player, (new Array(80)).join('-'));
-      Broadcast.sayAt(player, skill.info(player));
+      say(B.line(80));
+      say(skill.info(player), 80);
     }
   };
 };

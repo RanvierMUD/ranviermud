@@ -1,6 +1,6 @@
 'use strict';
 
-const Broadcast = require('./Broadcast');
+const B = require('./Broadcast');
 const Quest = require('./Quest');
 
 /**
@@ -45,24 +45,24 @@ class QuestFactory {
 
     // Can't think of a better place to put this stuff yet
     instance.on('start', () => {
-      Broadcast.sayAt(player, `\r\n<bold><yellow>Quest Started: ${instance.config.title}!</yellow></bold>`);
+      B.sayAt(player, `\r\n<bold><yellow>Quest Started: ${instance.config.title}!</yellow></bold>`);
       if (instance.config.desc) {
-        Broadcast.sayAt(player, (new Array(80)).join('-'));
-        Broadcast.sayAt(player, `<bold><yellow>${instance.config.desc}</yellow></bold>`, 100);
+        B.sayAt(player, B.line(80));
+        B.sayAt(player, `<bold><yellow>${instance.config.desc}</yellow></bold>`, 80);
       }
     });
 
     instance.on('progress', (progress) => {
-      Broadcast.sayAt(player, `\r\n<bold><yellow>${progress.display}</yellow></bold>`);
+      B.sayAt(player, `\r\n<bold><yellow>${progress.display}</yellow></bold>`);
       player.save();
     });
 
     instance.on('turn-in-ready', () => {
-      Broadcast.sayAt(player, `<bold><yellow>${instance.config.title} ready to turn in!</yellow></bold>`);
+      B.sayAt(player, `<bold><yellow>${instance.config.title} ready to turn in!</yellow></bold>`);
     });
 
     instance.on('complete', () => {
-      Broadcast.sayAt(player, `<bold><yellow>Quest Complete: ${instance.config.title}!</yellow></bold>`);
+      B.sayAt(player, `<bold><yellow>Quest Complete: ${instance.config.title}!</yellow></bold>`);
       player.questTracker.complete(instance.id);
       player.save();
     });

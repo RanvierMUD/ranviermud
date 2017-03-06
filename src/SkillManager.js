@@ -21,12 +21,13 @@ class SkillManager {
 
   /**
    * Find executable skills
-   * @param {string} search
+   * @param {string}  search
+   * @param {boolean} includePassive
    * @return {Skill}
    */
-  find(search) {
+  find(search, includePassive = false) {
     for (const [ id, skill ] of this.skills) {
-      if (skill.flags.includes(SkillFlag.PASSIVE)) {
+      if (!includePassive && skill.flags.includes(SkillFlag.PASSIVE)) {
         continue;
       }
 

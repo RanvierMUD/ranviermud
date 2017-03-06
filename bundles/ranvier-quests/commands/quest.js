@@ -98,7 +98,7 @@ module.exports = (srcPath) => {
           const npc = state.MobFactory.getDefinition(quest.config.npc);
           say(player, `Questor: ${npc.name}`);
         }
-        say(player, `${quest.config.desc}`, 100);
+        say(player, `${quest.config.desc}`, 80);
         say(player, '----');
       }
     }
