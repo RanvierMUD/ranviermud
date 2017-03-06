@@ -78,6 +78,10 @@ module.exports = (srcPath) => {
       player.questTracker.start(targetQuest);
     }
 
+    static accept(...args) {
+      QuestCommand.start(...args);
+    }
+
     static log(state, player, options) {
       const active = [...player.questTracker.activeQuests];
       if (!active.length) {
