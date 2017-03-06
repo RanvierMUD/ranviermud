@@ -305,15 +305,30 @@ class Character extends EventEmitter
    * Generate an amount of weapon damage
    * @return {number}
    */
-  calculateWeaponDamage() {
+  calculateWeaponDamage(average = false) {
+    let weaponDamage = this.getWeaponDamage();
     let amount = 0;
-    let speed = this.getWeaponSpeed();
-    const weapon = this.equipment.get('wield');
-    if (!this.isNpc && weapon) {
-      amount = RandomUtil.inRange(weapon.properties.minDamage, weapon.properties.maxDamage);
+    if (average) {
+      amount = (weaponDamage.min + weaponDamage.max) / 2;
+    } else {
+      amount = RandomUtil.inRange(weaponDamage.min, weaponDamage.max);
     }
 
-    return Math.round(amount + this.getAttribute('strength') / 3.5 * speed);
+    return this.normalizeWeaponDamage(amount);
+  }
+
+  getWeaponDamage() {
+    const weapon = this.equipment.get('wield');
+    let min = 0, max = 0;
+    if (weapon) {
+      min = weapon.properties.minDamage;
+      max = weapon.properties.maxDamage;
+    }
+
+    return {
+      max,
+      min
+    };
   }
 
   getWeaponSpeed() {
@@ -324,6 +339,16 @@ class Character extends EventEmitter
     }
 
     return speed;
+  }
+
+  /**
+   * Get a damage amount adjusted by attack power/weapon speed
+   * @param {number} amount
+   * @return {number}
+   */
+  normalizeWeaponDamage(amount) {
+    let speed = this.getWeaponSpeed();
+    return Math.round(amount + this.getAttribute('strength') / 3.5 * speed);
   }
 
   follow(target) {
