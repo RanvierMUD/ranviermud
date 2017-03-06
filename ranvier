@@ -19,9 +19,6 @@ const net = require('net');
 const commander = require('commander');
 const wrap = require('wrap-ansi');
 const argv = require('optimist').argv;
-const longjohn = require('longjohn');
-const pe = require('pretty-error').start();
-pe.skipNodeFiles(); // Ignore native node files in stacktrace.
 
 // Package.json for versioning
 const pkg = require('./package.json');
@@ -56,6 +53,7 @@ commander
   .option('-r, --respawn [time]', 'Number of minutes between respawn ticks [120]', 120)
   .option('-p, --port [portNumber]', 'Port to host telnet server [23]', Config.get('port', 23))
   .option('-v, --verbose', 'Verbose console logging.', true)
+  .option('-e, --prettyErrors', 'Pretty-print formatting for error stack traces.', false)
   .parse(process.argv);
 
 // Set debug variable and encoding.
@@ -67,6 +65,10 @@ const Logger = require('./src/Logger');
 const logfile = Config.get('logfile');
 if (logfile) {
   Logger.setFileLogging(logfile);
+}
+
+if (commander.prettyErrors) {
+  Logger.enablePrettyErrors();
 }
 
 // Set logging level based on CLI option or environment variable.
