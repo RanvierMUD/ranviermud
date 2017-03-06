@@ -3,14 +3,15 @@
 const sprintf = require('sprintf-js').sprintf;
 
 module.exports = srcPath => {
-  const Broadcast = require(srcPath + 'Broadcast');
+  const B = require(srcPath + 'Broadcast');
   const Logger = require(srcPath + 'Logger');
 
   return {
     aliases: ['abilities', 'spells'],
     command: state => (args, player) => {
-      Broadcast.sayAt(player, "<bold><green>                    Abilities</green></bold>");
-      Broadcast.sayAt(player, "<bold><green>" + (new Array(50)).join('=') + "</green></bold>");
+      const say = message => B.sayAt(player, message);
+      say("<b>" + B.center(80, 'Abilities', 'green'));
+      say("<b>" + B.line(80, '=', 'green'));
 
       for (const [ level, abilities ] of Object.entries(player.playerClass.abilityTable)) {
         abilities.skills = abilities.skills || [];
@@ -20,12 +21,12 @@ module.exports = srcPath => {
           continue;
         }
 
-        Broadcast.sayAt(player, `\r\n<bold>Level ${level}</bold>`);
-        Broadcast.sayAt(player, (new Array(50)).join('-'));
+        say(`\r\n<bold>Level ${level}</bold>`);
+        say(B.line(50));
 
         let i = 0;
         if (abilities.skills.length) {
-          Broadcast.sayAt(player, '\r\n<bold>Skills</bold>');
+          say('\r\n<bold>Skills</bold>');
         }
 
         for (let skillId of abilities.skills) {
@@ -40,15 +41,15 @@ module.exports = srcPath => {
           if (player.level >= level) {
             name = `<green>${name}</green>`;
           }
-          Broadcast.at(player, name);
+          B.at(player, name);
 
           if (++i % 3 === 0) {
-            Broadcast.sayAt(player);
+            say();
           }
         }
 
         if (abilities.spells.length) {
-          Broadcast.sayAt(player, '\r\n<bold>Spells</bold>');
+          say('\r\n<bold>Spells</bold>');
         }
 
         for (let spellId of abilities.spells) {
@@ -63,15 +64,15 @@ module.exports = srcPath => {
           if (player.level >= level) {
             name = `<green>${name}</green>`;
           }
-          Broadcast.at(player, name);
+          B.at(player, name);
 
           if (++i % 3 === 0) {
-            Broadcast.sayAt(player);
+            say();
           }
         }
 
         // end with a line break
-        Broadcast.sayAt(player);
+        say();
       }
     }
   };

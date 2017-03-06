@@ -1,6 +1,6 @@
 'use strict';
 
-const Broadcast = require('./Broadcast');
+const B = require('./Broadcast');
 
 class Helpfile {
   constructor(bundle, name, options) {
@@ -22,14 +22,10 @@ class Helpfile {
     let body = this.body;
     const name = this.name;
 
-    const bar = "<yellow>---------------------------------------------------------------------------------</yellow>\r\n";
     const width = 80;
-    const centerPadding = len => ' '.repeat(width / 2 - Math.ceil(len / 2));
+    const bar = B.line(width, '-', 'yellow') + '\r\n';
 
-    let header = bar;
-    header += centerPadding(name.length); // Center name.
-    header += `<bold><white>${name}</white></bold>\r\n`;
-    header += bar;
+    let header = bar + B.center(width, name, 'white') + '\r\n' + bar;
 
     const formatHeaderItem = (item, value) => `${item}: ${value}\r\n\r\n`;
     if (this.command) {
@@ -46,14 +42,13 @@ class Helpfile {
 
     let footer = bar;
     if (this.related.length) {
-      footer = "<yellow>------------------------------------RELATED--------------------------------------</yellow>\r\n";
+      footer = B.center(width, 'RELATED', 'yellow', '-') + '\r\n';
       const related = this.related.join(', ');
-      footer += centerPadding(related.length); // Center the related topics.
-      footer += related + '\r\n';
+      footer += B.center(width, related) + '\r\n';
       footer += bar;
     }
 
-    return header + Broadcast.wrap(this.body, 80) + footer;
+    return header + B.wrap(this.body, 80) + footer;
   }
 }
 

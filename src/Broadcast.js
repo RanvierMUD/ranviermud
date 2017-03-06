@@ -123,15 +123,58 @@ class Broadcast {
     const openColor = `<${color}>`;
     const closeColor = `</${color}>`;
     let buf = openColor + leftDelim + "<bold>";
-    const widthPercent = (percent / 100) * width;
-    buf += new Array(Math.round(widthPercent)).join(barChar) + (percent === 100 ? '' : ')');
-    buf += new Array(width - Math.round(widthPercent)).join(fillChar);
+    const widthPercent = Math.round((percent / 100) * width);
+    buf += Broadcast.line(widthPercent, barChar) + (percent === 100 ? '' : ')');
+    buf += Broadcast.line(width - widthPercent, fillChar);
     buf += "</bold>" + rightDelim + closeColor;
     return buf;
   }
 
-  static wrap(message, width) {
-    let out = wrap(message, 80);
+  /**
+   * Center a string in the middle of a given width
+   * @param {number} width
+   * @param {string} message
+   * @param {string} color
+   * @param {?string} fillChar Character to pad with, defaults to ' '
+   * @return {string}
+   */
+  static center(width, message, color, fillChar = " ") {
+    const padWidth = Math.round(width / 2 - message.length / 2);
+    let openColor = '';
+    let closeColor = '';
+    if (color) {
+      openColor = `<${color}>`;
+      closeColor = `</${color}>`;
+    }
+
+    return (
+      openColor +
+      Broadcast.line(padWidth, fillChar) +
+      message +
+      Broadcast.line(padWidth, fillChar) +
+      closeColor
+    );
+  }
+
+  /**
+   * Render a line of a specific width/color
+   * @param {number} width
+   * @param {string} fillChar
+   * @param {?string} color
+   * @return {string}
+   */
+  static line(width, fillChar = "-", color = null) {
+    let openColor = '';
+    let closeColor = '';
+    if (color) {
+      openColor = `<${color}>`;
+      closeColor = `</${color}>`;
+    }
+    return openColor + (new Array(width)).join(fillChar) + closeColor;
+  }
+
+  static wrap(message, width = 80) {
+    let out = wrap(message, width);
     // Fix \n not in a \r\n pair to prevent bad rendering on windows
     out = out.replace(/\r\n/, '<NEWLINE>').split('\n');
     out = out.join('\r\n').replace('<NEWLINE>', '\r\n');
