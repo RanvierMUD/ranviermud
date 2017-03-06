@@ -17,16 +17,16 @@ module.exports = (srcPath) => {
 
     new Channel({
       name: 'say',
-      color: ['cyan'],
+      color: ['yellow'],
       description: 'Send a message to all players in your room',
       audience: new AudienceRoom(),
       formatter: {
         sender: function (sender, target, message, colorify) {
-          return colorify(`You say, '${message}'`);
+          return colorify(`You say: '${message}'`);
         },
 
         target: function (sender, target, message, colorify) {
-          return colorify(`${sender.name} says, '${message}'`);
+          return colorify(`${sender.name} says: '${message}'`);
         }
       }
     }),
