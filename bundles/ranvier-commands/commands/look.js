@@ -136,6 +136,7 @@ module.exports = (srcPath) => {
     if (entity instanceof player.constructor) {
       // TODO: Show player equipment
       Broadcast.sayAt(player, `You see fellow player ${entity.name}.`);
+      Broadcast.sayAt(entity, `${player.name} looks at you.`);
       return;
     }
 
