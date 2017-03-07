@@ -1,6 +1,7 @@
 'use strict';
 
 const ansi = require('sty');
+ansi.enable(); // force ansi on even when there isn't a tty for the server
 const wrap = require('wrap-ansi');
 const TypeUtil = require('./TypeUtil');
 const Broadcastable = require('./Broadcastable');
