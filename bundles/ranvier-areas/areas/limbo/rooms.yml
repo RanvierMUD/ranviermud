@@ -17,6 +17,7 @@
     A completely black room. Somehow all of the light that should be coming from the room to the west does not pass
     through the archway. A single lightbulb hangs from the ceiling illuminating a small area. To the east you see a
     large white dome. There is a sign above the entrance to the dome: "Training Area"
+  script: "2-look"
   items:
     - id: "limbo:2"
       respawnChance: 10
