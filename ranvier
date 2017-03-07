@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+
 /**
  * Main file, use this to run the server:
  * node ranvier [options]
@@ -182,35 +183,4 @@ function init(restartServer) {
 
 // START IT UP!
 init();
-
-/**
- * Commands that the server executable itself accepts
- */
-const server_commands = {
-  save,
-};
-
-/**
- * Save all connected players
- */
-function save(callback) {
-  GameState.PlayerManager.saveAll();
-  if (callback) { callback(); }
-}
-
-process.stdin.resume();
-
-process.stdin.on('data', data => {
-  data = data.trim();
-  const command = data.split(' ')[0];
-
-  if (!(command in server_commands)) {
-    console.log("That's not a real command...");
-    return;
-  }
-
-  const args = data.split(' ').slice(1).join(' ');
-
-  server_commands[command](args);
-});
 // vim: set syn=javascript :
