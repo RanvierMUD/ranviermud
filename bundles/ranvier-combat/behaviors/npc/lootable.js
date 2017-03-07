@@ -48,7 +48,7 @@ module.exports = srcPath => {
           if (currencies) {
             currencies.forEach(currency => {
               const friendlyName = currency.name.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-              B.sayAt(killer, `<green>You currency: <b><white>[${friendlyName}]</white></b> x${currency.amount}.`);
+              B.sayAt(killer, `<green>You receive currency: <b><white>[${friendlyName}]</white></b> x${currency.amount}.`);
               if (!killer.getMeta('currencies')) {
                 killer.setMeta('currencies', {});
               }
