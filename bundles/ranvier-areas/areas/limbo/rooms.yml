@@ -30,6 +30,7 @@
 - &trainingroom
   id: 3
   title: "Training Room"
+  script: "combat-training"
   description: >-
     The entire area is covered by a large dome with a hexagonal grid surface. A beautiful blue sky reaches from horizon
     to horizon, punctuated by the lines of the grid. The dome shimmers as virtual birds fly into and out of its surface.

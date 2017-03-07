@@ -2,6 +2,7 @@
 
 const FetchGoal = require('../../../ranvier-quests/lib/FetchGoal');
 const EquipGoal = require('../../../ranvier-quests/lib/EquipGoal');
+const KillGoal = require('../../../ranvier-quests/lib/KillGoal');
 
 module.exports = (srcPath) => {
   const LevelUtil = require(srcPath + 'LevelUtil');
@@ -69,6 +70,28 @@ Once you find some bring it back to the rat use '<white>quest log</white>' to fi
             item: "limbo:2",
             removeItem: true,
           }
+        }
+      ]
+    },
+
+    3: {
+      config: {
+        title: "Self Defense 101",
+        requires: [ "limbo:1" ],
+        autoComplete: true,
+        desc: `A voice whispers to you: It would be wise to practice protecting yourself. There are a number of training dummies in the areas that, while not pacifists, will not be too difficult.
+- Use '<white>attack dummy</white>' to start combat against the training dummy
+- Once it's dead any loot it drops will be in its corpse on the ground. You can use '<white>look in corpse</white>' to check again or '<white>get all corpse</white>' to retrieve your loot.`,
+        reward: (quest, player) => {
+          player.emit('experience', LevelUtil.mobExp(player.level) * 5);
+
+          say(player, `<b><cyan>Hint: You can get the loot from enemies with '<white>get <item> corpse</white>' but be quick about it, the corpse will decay after some time.</cyan>`, 80);
+        }
+      },
+      goals: [
+        {
+          type: KillGoal,
+          config: { title: "Kill a Training Dummy", npc: "limbo:4", count: 1 }
         }
       ]
     }
