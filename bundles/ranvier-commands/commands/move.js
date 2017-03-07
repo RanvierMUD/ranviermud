@@ -51,13 +51,15 @@ module.exports = (srcPath) => {
 
       for (const follower of player.followers) {
         if (follower instanceof Player) {
-          Broadcast.sayAt(follower, `\r\nYou follow ${player.name}.`);
+          Broadcast.sayAt(follower, `\r\nYou follow ${player.name} to ${nextRoom.name}.`);
           state.CommandManager.get('move').execute(exitName, follower);
         } else {
           follower.room.removeNpc(follower);
           nextRoom.addNpc(follower);
         }
       }
+
+      Broadcast.sayAt(room, `${player.name} leaves.`);
 
       return true;
     }
