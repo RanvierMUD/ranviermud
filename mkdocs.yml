@@ -38,3 +38,4 @@ pages:
     - Events: 'extending/events.md'
     - Helpfiles: 'extending/help.md'
     - Skills: 'extending/skills.md'
+- Contributing: contributing.md

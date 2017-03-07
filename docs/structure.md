@@ -3,12 +3,14 @@
   bundles/         - Contains available bundles, see the <a href="/extending/bundles/">Bundles</a> section
   data/
     account/       - Account files
-    player/        - Pfiles
+    player/        - Player files
     motd           - MOTD (screen shown at login)
   docs/            - This documentation
   resources/       - Logos and other external resources related to the Ranvier project but not the MUD itself
-  src/             - Core engine code, see <a href="/core/">Core</a> for details
+  src/             - Core engine code
   test/            - Unit tests for core code
+  .vscode/         - Visual Studio Code project settings
+  .github/         - Github templates
   gulpfile.js      - <a href="http://gulpjs.com/">Gulpfile</a>
   .istanbul.yml    - <a href="https://istanbul.js.org/">Instanbul</a> test coverage config
   LICENSE.txt      - Copy of Ranvier's MIT license
