@@ -3,6 +3,8 @@ In this guide we will implement a new quest goal type called FetchGoal (player n
 couple fetch quests, create a quest giver for one of the quests, and for the other create a room script that will
 give the player a quest when walking into the room.
 
+> <i class="material-icons md-36">info</i> Ranvier's _[ranvier-quests](https://github.com/shawncplus/ranviermud/tree/staging/bundles/ranvier-quests/lib)_ bundle already includes goals for fetching/equipping items, and killing npcs
+
 [TOC]
 
 ## What is a Quest, exactly?
@@ -280,7 +282,7 @@ player sees the NPC in the room. For example:
 
 To make an NPC a questor simply add a `quests` array to their definition in `npcs.yml` like so:
 
-```
+```yaml
 - id: 1
   keywords: ['rat']
   name: 'Rat'
@@ -308,7 +310,7 @@ from above) when they enter a room.
 Here we have the definition of room Test Room 1 from `rooms.yml` and we'll attach the
 script`1-test` to the room.
 
-```
+```yaml
 - id: 1
   title: "Test Room 1"
   script: "1-test"

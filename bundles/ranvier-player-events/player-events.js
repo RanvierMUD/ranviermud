@@ -50,9 +50,6 @@ module.exports = (srcPath) => {
         this.experience += amount;
 
         this.save();
-
-        // show tnl bar
-        state.CommandManager.get('tnl').execute('', this);
       }
     }
   };

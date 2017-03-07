@@ -76,6 +76,7 @@ module.exports = (srcPath) => {
       }
 
       player.questTracker.start(targetQuest);
+      player.save();
     }
 
     static accept(...args) {
@@ -91,15 +92,25 @@ module.exports = (srcPath) => {
       for (let i in active) {
         const [, quest] = active[i];
         const progress = quest.getProgress();
+
         Broadcast.at(player, '<b><yellow>' + (parseInt(i, 10) + 1) + '</yellow></b>: ');
-        say(player, Broadcast.progress(60, progress.percent, 'yellow'));
-        say(player, '<b><yellow>' + quest.getProgress().display + '</yellow></b>');
+        say(player, Broadcast.progress(60, progress.percent, 'yellow') + ` ${progress.percent}%`);
+        say(player, Broadcast.indent('<b><yellow>' + quest.getProgress().display + '</yellow></b>', 2));
+
         if (quest.config.npc) {
           const npc = state.MobFactory.getDefinition(quest.config.npc);
-          say(player, `Questor: ${npc.name}`);
+          say(player, `  <b><yellow>Questor: ${npc.name}</yellow></b>`);
         }
-        say(player, `${quest.config.desc}`, 80);
-        say(player, '----');
+
+        say(player, '  ' + Broadcast.line(78));
+        say(
+          player,
+          Broadcast.indent(
+            Broadcast.wrap(`<b><yellow>${quest.config.desc}</yellow></b>`, 78),
+            2
+          )
+        );
+        say(player, '  ' + Broadcast.line(78));
       }
     }
 
@@ -125,6 +136,7 @@ module.exports = (srcPath) => {
       }
 
       quest.complete();
+      player.save();
     }
   }
 

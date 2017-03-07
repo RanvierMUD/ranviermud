@@ -85,10 +85,10 @@ class Item extends EventEmitter {
   get qualityColors() {
     return ({
       poor: ['bold', 'black'],
-      common: ['white'],
+      common: ['bold', 'white'],
       uncommon: ['bold', 'green'],
       rare: ['bold', 'blue'],
-      epic: ['magenta'],
+      epic: ['bold', 'magenta'],
       legendary: ['bold', 'red'],
       artifact: ['yellow'],
     })[this.quality];

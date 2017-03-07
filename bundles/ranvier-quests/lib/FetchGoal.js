@@ -26,8 +26,9 @@ class FetchGoal extends QuestGoal {
   }
 
   getProgress() {
-    const percent = (this.state.count / this.config.count) * 100;
-    const display = `${this.config.title}: [${this.state.count}/${this.config.count}]`;
+    const amount = Math.min(this.config.count, this.state.count);
+    const percent = (amount / this.config.count) * 100;
+    const display = `${this.config.title}: [${amount}/${this.config.count}]`;
     return { percent, display };
   }
 

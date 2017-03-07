@@ -22,17 +22,18 @@ class Npc extends Character {
       }
     }
 
-    this.defaultItems = data.items || [];
-    this.defaultEquipment = data.equipment || [];
-    this.behaviors = new Map(Object.entries(data.behaviors || {}));
     this.area = data.area;
-    this.keywords = data.keywords;
-    this.description = data.description;
-    this.id = data.id;
-    this.uuid = data.uuid || uuid.v4();
-    this.quests = data.quests || [];
+    this.behaviors = new Map(Object.entries(data.behaviors || {}));
     this.damage = data.damage;
+    this.defaultEquipment = data.equipment || [];
+    this.defaultItems = data.items || [];
+    this.description = data.description;
     this.entityReference = data.entityReference; 
+    this.id = data.id;
+    this.keywords = data.keywords;
+    this.pacifist = data.pacifist || false;
+    this.quests = data.quests || [];
+    this.uuid = data.uuid || uuid.v4();
   }
 
 
