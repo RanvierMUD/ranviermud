@@ -170,7 +170,7 @@ class Broadcast {
       openColor = `<${color}>`;
       closeColor = `</${color}>`;
     }
-    return openColor + (new Array(width)).join(fillChar) + closeColor;
+    return openColor + (new Array(width + 1)).join(fillChar) + closeColor;
   }
 
   static wrap(message, width = 80) {

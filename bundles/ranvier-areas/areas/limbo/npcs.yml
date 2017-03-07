@@ -27,6 +27,16 @@
   name: "Training Dummy"
   behaviors:
     lootable:
+      # currencies is a list of currencies this npc can possibly drop and the amount range
+      # the currency key is arbitrary so if you want a new currency just add a new key
+      # the key must be formatted_like_this though, for rendering/saving purposes
+      currencies:
+        gold:
+          min: 10
+          max: 20
+      # pools is a list of either a `"itemEntityReference": dropChance` or a name of a loot pool entry
+      # defined in the loot-pools.yml. This lets you do things like having a 'global' loot pool that every
+      # npc in the area can drop
       pools:
         - "limbo:junk"
         - "limbo:2": 25
@@ -43,5 +53,9 @@
     with a great echoing stomp. Where the other target dummies have a bullseye this dummy has a yellow exclamation mark.
   behaviors:
     lootable:
+      currencies:
+        gold:
+          min: 50
+          max: 100
       pools:
         - "limbo:5": 100

@@ -45,9 +45,9 @@ class PlayerClass {
    */
   getAbilitiesForPlayer(player) {
     let totalAbilities = [];
-    Object.entries(this.abilityTable).every(([level, abilities]) => {
+    Object.entries(this.abilityTable).forEach(([level, abilities]) => {
       if (level > player.level) {
-        return false;
+        return;
       }
       totalAbilities = totalAbilities.concat(abilities.skills || []).concat(abilities.spells || []);
     });

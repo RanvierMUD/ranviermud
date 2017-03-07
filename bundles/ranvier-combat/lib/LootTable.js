@@ -17,6 +17,7 @@ class LootTable {
    */
   constructor(state, config) {
     this.pools = config.pools || [];
+    this.currencyRanges = config.currencies || null;
 
     this.options = Object.assign({
       maxItems: 5
@@ -51,6 +52,30 @@ class LootTable {
     }
 
     return items;
+  }
+
+  /**
+   * Find out how much of the different currencies this NPC will drop
+   * @return {Array<{{name: string, amount: number}}>}
+   */
+  currencies() {
+    if (!this.currencyRanges) {
+      return null;
+    }
+
+    let result = [];
+    for (const currency in this.currencyRanges) {
+      const entry = this.currencyRanges[currency];
+      const amount = Random.inRange(entry.min, entry.max);
+      if (amount) {
+        result.push({
+          name: currency,
+          amount
+        });
+      }
+    }
+
+    return result;
   }
 
   resolvePool(state, pool) {
