@@ -282,7 +282,7 @@ player sees the NPC in the room. For example:
 
 To make an NPC a questor simply add a `quests` array to their definition in `npcs.yml` like so:
 
-```
+```yaml
 - id: 1
   keywords: ['rat']
   name: 'Rat'
@@ -310,7 +310,7 @@ from above) when they enter a room.
 Here we have the definition of room Test Room 1 from `rooms.yml` and we'll attach the
 script`1-test` to the room.
 
-```
+```yaml
 - id: 1
   title: "Test Room 1"
   script: "1-test"

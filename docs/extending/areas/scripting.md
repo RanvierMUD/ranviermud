@@ -57,13 +57,11 @@ This is a list of events that are emitted by default in Ranvier.
 
 ***Engine*** - Events that come from the engine itself (from `src/`) and will _always_ be available.
 
-***Core Bundles*** - Events that come from one of the `ranvier-*` example bundles and may not be available if you have
-disabled the core bundles.
+***Default Bundles*** - Events that come from one of the `ranvier-*` bundles and may not be available if you have disabled them.
 
 Events are shown as:
 `eventName` _`(arguments)`_
 :    Details of event
-
 
 ### NPCs
 
@@ -93,8 +91,8 @@ for details of information available from `damage` argument.
 :    NPC is initially created, fires immediately after NPC is placed in its target room.
 
 `updateTick`
-:    This event is special in that it automatically fires every half second on Rooms, NPCs, and Players. This event
-should be used for any event that is based on time, i.e., NPC should wander around every N seconds or something.
+:    This event is special in that it automatically fires every tenth of a second on Rooms, Items, NPCs, and Players.
+This event should be used for any event that is based on time, e.g., NPC should wander around every N seconds.
 
 #### Core Bundles
 
@@ -117,7 +115,8 @@ should be used for any event that is based on time, i.e., NPC should wander arou
 
 #### Engine
 
-There are no events emitted by the engine for items
+`updateTick`
+:    See `updateTick` for NPCs
 
 #### Core Bundles
 
@@ -138,8 +137,7 @@ There are no events emitted by the engine for items
 #### Engine
 
 `updateTick`
-:    This event is special in that it automatically fires every half second on Rooms, NPCs, and Players. This event
-should be used for any event that is based on time, i.e., NPC should wander around every N seconds or something.
+:    See `updateTick` for NPCs
 
 #### Core Bundles
 
