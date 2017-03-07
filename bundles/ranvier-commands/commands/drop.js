@@ -34,7 +34,6 @@ module.exports = (srcPath) => {
 
       const formatDropMessage = (name, item) => `<green>${name} dropped: </green>${item.display}<green>.</green>`;
       Broadcast.sayAt(player, formatDropMessage('You', item));
-      Broadcast.sayAt(room, formatDropMessage(player.name, item));
     }
   };
 };
