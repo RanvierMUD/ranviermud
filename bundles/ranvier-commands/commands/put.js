@@ -47,6 +47,7 @@ module.exports = (srcPath) => {
       toContainer.addItem(item);
 
       Broadcast.sayAt(player, `<green>You put </green>${item.display}<gree> into </green>${toContainer.display}<green>.</green>`);
+      Broadcast.sayAt(room, `<green>${player.name} puts </green>${item.display}<gree> into </green>${toContainer.display}<green>.</green>`);
 
       item.emit('put', player, toContainer);
       player.emit('put', item, toContainer);
