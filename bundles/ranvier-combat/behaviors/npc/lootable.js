@@ -48,7 +48,7 @@ module.exports = srcPath => {
           if (currencies) {
             currencies.forEach(currency => {
               const friendlyName = currency.name.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-              B.sayAt(killer, `<green>You loot: </green><white>${currency.amount} [${friendlyName}]</white><green>.</green>`);
+              B.sayAt(killer, `<green>You currency: <b><white>[${friendlyName}]</white></b> x${currency.amount}.`);
               if (!killer.getMeta('currencies')) {
                 killer.setMeta('currencies', {});
               }
@@ -56,6 +56,7 @@ module.exports = srcPath => {
               const key = `currencies.${currency.name}`;
               killer.setMeta(key, (killer.getMeta(key) || 0) + currency.amount);
             });
+            killer.save();
           }
 
           state.CommandManager.get('look').execute(corpse.uuid, killer);

@@ -53,14 +53,16 @@ class Quest extends EventEmitter {
   onProgressUpdated() {
     const progress = this.getProgress();
 
-    this.emit('progress', progress)
     if (progress.percent >= 100) {
       if (this.config.autoComplete) {
         this.complete();
       } else {
         this.emit('turn-in-ready');
       }
+      return;
     }
+
+    this.emit('progress', progress)
   }
 
   /**

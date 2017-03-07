@@ -14,6 +14,8 @@ class Broadcast {
       throw new Error(`Tried to broadcast message not non-broadcastable object: MESSAGE [${message}]`);
     }
 
+    message = Broadcast._fixNewlines(message);
+
     const targets = source.getBroadcastTargets();
     targets.forEach(target => {
       if (target.socket && target.socket.writable) {
@@ -21,8 +23,8 @@ class Broadcast {
           target.socket.write('\r\n');
           target.socket._prompted = false;
         }
-        let targetMessage = ansi.parse(formatter(target, message));
-        targetMessage = wrapWidth ? Broadcast.wrap(targetMessage, wrapWidth) : targetMessage;
+        let targetMessage = formatter(target, message);
+        targetMessage = wrapWidth ? Broadcast.wrap(targetMessage, wrapWidth) : ansi.parse(targetMessage);
         target.socket.write(targetMessage);
       }
     });
@@ -173,12 +175,37 @@ class Broadcast {
     return openColor + (new Array(width + 1)).join(fillChar) + closeColor;
   }
 
+  /**
+   * Wrap a message to a given width. Note: Evaluates color tags
+   * @param {string}  message
+   * @param {?number} width   Defaults to 80
+   * @return {string}
+   */
   static wrap(message, width = 80) {
-    let out = wrap(message, width);
+    return wrap(ansi.parse(Broadcast._fixNewlines(message)), width);
+  }
+
+  /**
+   * Indent all lines of a given string by a given amount
+   * @param {string} message
+   * @param {number} indent
+   * @return {string}
+   */
+  static indent(message, indent) {
+    message = Broadcast._fixNewlines(message);
+    const padding = Broadcast.line(indent, ' ');
+    return padding + message.replace(/\r\n/g, '\r\n' + padding);
+  }
+
+  /**
+   * Fix LF unpaired with CR for windows output
+   * @param {string} message
+   * @return {string}
+   */
+  static _fixNewlines(message) {
     // Fix \n not in a \r\n pair to prevent bad rendering on windows
-    out = out.replace(/\r\n/, '<NEWLINE>').split('\n');
-    out = out.join('\r\n').replace('<NEWLINE>', '\r\n');
-    return out;
+    message = message.replace(/\r\n/g, '<NEWLINE>').split('\n');
+    return message.join('\r\n').replace(/<NEWLINE>/g, '\r\n');
   }
 }
 

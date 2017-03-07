@@ -11,13 +11,6 @@ module.exports = (srcPath) => {
         Logger.log(`Spawned rat into Room [${this.room.title}]`);
       },
 
-      playerEnter: state => function (player) {
-        Broadcast.sayAt(player, 'A rat hisses as you enter the room.');
-      },
-
-      combatStart: state => function () {
-      },
-
       /**
        * Rat tries to use Rend every time it's available
        */

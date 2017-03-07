@@ -27,12 +27,13 @@ module.exports = (srcPath) => {
       });
 
       state.CommandManager.get('look').execute(null, player);
-      Broadcast.prompt(player);
 
       player.room.emit('playerEnter', player);
       for (const npc of player.room.npcs) {
         npc.emit('playerEnter', player);
       }
+
+      Broadcast.prompt(player);
 
       // All that shit done, let them play!
       player.socket.emit('commands', player);

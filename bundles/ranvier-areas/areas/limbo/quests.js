@@ -12,38 +12,39 @@ module.exports = (srcPath) => {
     1: {
       config: {
         title: "A Journey Begins",
-        desc: `A voice whispers to you: Welcome to the world, young one. This is a dangerous and deadly place, you should arm yourself. Take the sword from the chest.
- - Use '<white>get sword chest</white>' to take the sword from the chest.
- - Equip it using '<white>wield sword</white>'
-`,
+        desc: `A voice whispers to you: Welcome to the world, young one. This is a dangerous and deadly place, you should arm yourself.
+ - Use '<white>get sword chest</white>' and '<white>get vest chest</white>' to get some gear.
+ - Equip it using '<white>wield sword</white>' and '<white>wear vest</white>'`,
         autoComplete: true,
         reward: (quest, player) => {
           player.emit('experience', LevelUtil.mobExp(player.level) * 5);
+          say(player, `<b><cyan>Hint: You can use the '<white>tnl</white>' or '<white>level</white>' commands to see how much experience you need to level.</cyan>`);
 
           say(player);
-          say(player, `<b><cyan>Info: NPCs with quests available have <white>[</white><yellow>!</yellow><white>]</white><cyan> in front of their name.</cyan>`);
           say(
             player,
             `<b><yellow>The rat looks like it is hungry, use '<white>quest list rat</white>' to see what aid you can offer. Use '<white>quest start rat 1</white>' to accept their task.</yellow></b>`,
             100
           );
+          say(player, `<b><cyan>Hint: NPCs with quests available have <white>[</white><yellow>!</yellow><white>]</white><cyan> in front of their name.</cyan>`);
         }
       },
       goals: [
         {
           type: FetchGoal,
-          config: {
-            title: 'Retrieved a Sword',
-            count: 1,
-            item: "limbo:1"
-          }
+          config: { title: 'Find A Weapon', count: 1, item: "limbo:1" }
+        },
+        {
+          type: FetchGoal,
+          config: { title: 'Find Some Armor', count: 1, item: "limbo:6" }
         },
         {
           type: EquipGoal,
-          config: {
-            title: 'Equipped a Sword',
-            slot: 'wield'
-          }
+          config: { title: 'Wield A Weapon', slot: 'wield' }
+        },
+        {
+          type: EquipGoal,
+          config: { title: 'Equip Some Armor', slot: 'chest' }
         }
       ]
     },

@@ -59,8 +59,8 @@
   description: "A plain leather vest. Better than nothing."
   slot: "chest"
   quality: common
-  level: 5
-  itemLevel: 5
+  level: 1
+  itemLevel: 1
   properties:
     stats:
       armor: 20

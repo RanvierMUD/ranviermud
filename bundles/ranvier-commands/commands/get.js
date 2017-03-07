@@ -7,6 +7,7 @@ module.exports = (srcPath) => {
 
   return {
     usage: 'get <item> [container]',
+    aliases: [ 'take', 'grab', 'pick' ],
     command : (state) => (args, player) => {
       args = args.trim();
 
@@ -19,7 +20,12 @@ module.exports = (srcPath) => {
       }
 
       // get 3.foo from bar -> get 3.foo bar
-      const parts = args.split(' ').filter(arg => !arg.match(/from/));
+      let parts = args.split(' ').filter(arg => !arg.match(/from/));
+
+      // pick up <item>
+      if (parts.length > 1 && parts[0] === 'up') {
+        parts = parts.slice(1);
+      }
 
       let source = null, search = null, container = null;
       if (parts.length === 1) {
