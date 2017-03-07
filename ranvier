@@ -164,7 +164,9 @@ function init(restartServer) {
     // Save every 10 minutes by default.
     Logger.log(`Setting autosave to ${commander.save} seconds.`);
     clearInterval(saveInterval);
-    saveInterval = setInterval(save, commander.save * 1000);
+    saveInterval = setInterval(() => {
+      GameState.PlayerManager.saveAll();
+    }, commander.save * 1000);
 
     // Ticks for effect processing and combat happen every half second
     clearInterval(tickInterval);
@@ -179,7 +181,6 @@ function init(restartServer) {
   Logger.log(`Server started on port: ${commander.port}...`);
   server.emit('startup');
 };
-
 
 // START IT UP!
 init();
