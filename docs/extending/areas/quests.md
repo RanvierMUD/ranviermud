@@ -3,6 +3,8 @@ In this guide we will implement a new quest goal type called FetchGoal (player n
 couple fetch quests, create a quest giver for one of the quests, and for the other create a room script that will
 give the player a quest when walking into the room.
 
+> <i class="material-icons md-36">info</i> Ranvier's _[ranvier-quests](https://github.com/shawncplus/ranviermud/tree/staging/bundles/ranvier-quests/lib)_ bundle already includes goals for fetching/equipping items, and killing npcs
+
 [TOC]
 
 ## What is a Quest, exactly?
