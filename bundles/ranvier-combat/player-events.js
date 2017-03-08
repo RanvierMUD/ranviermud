@@ -207,11 +207,23 @@ module.exports = (srcPath) => {
        * Player killed a target
        * @param {Character} target
        */
-      deathblow: state => function (target) {
+      deathblow: state => function (target, skipParty) {
         if (target && !this.isNpc) {
           Broadcast.sayAt(this, `<bold><red>You killed ${target.name}!`);
         }
-        this.emit('experience', LevelUtil.mobExp(target.level));
+
+        const xp = LevelUtil.mobExp(target.level);
+        if (this.party && !skipParty) {
+          // if they're in a party proxy the deathblow to all members of the party in the same room.
+          // this will make sure party members get quest credit trigger anything else listening for deathblow
+          for (const member of this.party) {
+            if (member.room === this.room) {
+              member.emit('deathblow', target, true);
+            }
+          }
+        } else {
+          this.emit('experience', xp);
+        }
       }
     }
   };

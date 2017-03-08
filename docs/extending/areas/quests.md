@@ -203,6 +203,9 @@ module.exports = (srcPath) => {
         title: "Find A Weapon",
         desc: "You're defenseless! Pick up the shiv from the chest by typing 'get shiv chest'",
 
+        // The level isn't _required_ but you may want it so you know how much of a reward to give
+        level: 1,
+
         // as soon as all goals are at 100% progress complete this quest. Defaults to false
         autoComplete: true,
 
@@ -210,7 +213,7 @@ module.exports = (srcPath) => {
         // do anything you want to reward the player, this example shows giving them some
         // experience
         reward: (quest, player) => {
-          player.emit('experience', LevelUtil.mobExp(player.level) * 5);
+          player.emit('experience', LevelUtil.mobExp(quest.level) * 5);
         }
       },
 
@@ -236,8 +239,9 @@ module.exports = (srcPath) => {
       config: {
         title: "One Cheese Please",
         desc: "A rat has tasked you with finding it some cheese, better get to it.",
+        level: 1,
         repeatable: true,
-        reward: (quest, player) => LevelUtil.mobExp(player.level) * 3
+        reward: (quest, player) => LevelUtil.mobExp(quest.level) * 3
       },
       goals: [
         {
