@@ -7,7 +7,7 @@ module.exports = (srcPath) => {
 
   return {
     usage: 'get <item> [container]',
-    aliases: [ 'take', 'grab', 'pick' ],
+    aliases: [ 'take', 'pick' ],
     command : (state) => (args, player) => {
       args = args.trim();
 

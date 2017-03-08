@@ -38,8 +38,10 @@ class Character extends EventEmitter
     this.level = data.level || 1;
     this.room = data.room || null;
     this.attributes = new Attributes(data.attributes || null);
+
     this.followers = new Set();
     this.following = null;
+    this.party = null;
 
     this.effects = new EffectList(this, data.effects);
     this.skills = new Map();
