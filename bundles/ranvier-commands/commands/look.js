@@ -77,10 +77,10 @@ module.exports = (srcPath) => {
       let combatantsListString = '';
       if (otherPlayer.isInCombat()) {
         const combatantsList = [...otherPlayer.combatants.values()].map(combatant => combatant.name);
-        combatantsListString += ` <red>Fighting:</red>`
+        combatantsListString += `, <red>fighting:</red>`
         combatantsListString += (combatantsList.length > 1 ?
            `<bold>[ </bold>${combatantsList.join(", ")}<bold> ]</bold>` :
-           `${combatantsList[0]}`;
+           `${combatantsList[0]}`);
       }
       Broadcast.sayAt(player, '[Player] ' + otherPlayer.name + combatantsList);
     });
@@ -111,7 +111,17 @@ module.exports = (srcPath) => {
           Broadcast.at(player, questString + ' ');
         }
       }
-      Broadcast.sayAt(player, '[NPC] ' + npc.name);
+
+      let combatantsListString = '';
+      if (npc.isInCombat()) {
+        const combatantsList = [...npc.combatants.values()].map(combatant => combatant.name);
+        combatantsListString += `, <red>fighting:</red>`
+        combatantsListString += (combatantsList.length > 1 ?
+           `<bold>[ </bold>${combatantsList.join(", ")}<bold> ]</bold>` :
+           `${combatantsList[0]}`);
+      }
+
+      Broadcast.sayAt(player, '[NPC] ' + npc.name + combatantsListString);
     });
 
     Broadcast.at(player, '[<yellow><bold>Exits</yellow></bold>: ');
