@@ -74,15 +74,15 @@ module.exports = (srcPath) => {
       if (otherPlayer === player) {
         return;
       }
-      let combatantsListString = '';
+      let combatantsDisplay = '';
       if (otherPlayer.isInCombat()) {
         const combatantsList = [...otherPlayer.combatants.values()].map(combatant => combatant.name);
-        combatantsListString += `, <red>fighting:</red>`
-        combatantsListString += (combatantsList.length > 1 ?
+        combatantsDisplay += `, <red>fighting: </red>`
+        combatantsDisplay += (combatantsList.length > 1 ?
            `<bold>[ </bold>${combatantsList.join(", ")}<bold> ]</bold>` :
            `${combatantsList[0]}`);
       }
-      Broadcast.sayAt(player, '[Player] ' + otherPlayer.name + combatantsList);
+      Broadcast.sayAt(player, '[Player] ' + otherPlayer.name + combatantsDisplay);
     });
 
     // show all the items in the rom
@@ -112,16 +112,16 @@ module.exports = (srcPath) => {
         }
       }
 
-      let combatantsListString = '';
+      let combatantsDisplay = '';
       if (npc.isInCombat()) {
         const combatantsList = [...npc.combatants.values()].map(combatant => combatant.name);
-        combatantsListString += `, <red>fighting:</red>`
-        combatantsListString += (combatantsList.length > 1 ?
+        combatantsDisplay += `, <red>fighting: </red>`
+        combatantsDisplay += (combatantsList.length > 1 ?
            `<bold>[ </bold>${combatantsList.join(", ")}<bold> ]</bold>` :
            `${combatantsList[0]}`);
       }
 
-      Broadcast.sayAt(player, '[NPC] ' + npc.name + combatantsListString);
+      Broadcast.sayAt(player, '[NPC] ' + npc.name + combatantsDisplay);
     });
 
     Broadcast.at(player, '[<yellow><bold>Exits</yellow></bold>: ');

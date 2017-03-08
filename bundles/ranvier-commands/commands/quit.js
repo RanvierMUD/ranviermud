@@ -12,7 +12,7 @@ module.exports = (srcPath) => {
 
       player.save(() => {
         Broadcast.sayAt(player, "Goodbye!");
-        Broadcast.sayAt(room, `${player.name} disappears.`);
+        Broadcast.sayAt(player.room, `${player.name} disappears.`);
         player.socket.emit('close');
       });
     }
