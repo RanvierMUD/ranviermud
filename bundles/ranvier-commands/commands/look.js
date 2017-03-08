@@ -74,8 +74,15 @@ module.exports = (srcPath) => {
       if (otherPlayer === player) {
         return;
       }
-
-      Broadcast.sayAt(player, '[Player] ' + otherPlayer.name);
+      let combatantsListString = '';
+      if (otherPlayer.isInCombat()) {
+        const combatantsList = [...otherPlayer.combatants.values()].map(combatant => combatant.name);
+        combatantsListString += ` <red>Fighting:</red>`
+        combatantsListString += (combatantsList.length > 1 ?
+           `<bold>[ </bold>${combatantsList.join(", ")}<bold> ]</bold>` :
+           `${combatantsList[0]}`;
+      }
+      Broadcast.sayAt(player, '[Player] ' + otherPlayer.name + combatantsList);
     });
 
     // show all the items in the rom
