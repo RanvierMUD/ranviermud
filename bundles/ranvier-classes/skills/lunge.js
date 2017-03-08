@@ -36,7 +36,7 @@ module.exports = (srcPath) => {
       });
 
       Broadcast.sayAt(player, '<red>You shift your feet and let loose a mighty attack!</red>');
-      Broadcast.sayAtExcept(room, `<red>${player.name} lets loose a lunging attack on ${target.name}!</red>`, target);
+      Broadcast.sayAtExcept(room, `<red>${player.name} lets loose a lunging attack on ${target.name}!</red>`, [player, target]);
       if (target instanceof player.constructor) {
         Broadcast.sayAt(target, `<red>${player.name} lunges at you with a fierce attack!</red>`);
       }
