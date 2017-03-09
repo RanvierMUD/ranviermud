@@ -34,7 +34,7 @@ We have a slack channel you can use to ask questions, suggest features, or just 
 
 ### Built-in Bundles
 
-The default bundles come together to make a basic Diku style MUDs with the following features:
+The default bundles come together to make a basic Diku style MUD with the following features:
 
 * Leveling, passive/active skills, effects.
 * Flexible channel system.
