@@ -36,14 +36,17 @@ We have a slack channel you can use to ask questions, suggest features, or just 
 
 The default bundles come together to make a basic Diku style MUD with the following features:
 
-* Leveling, passive/active skills, effects.
+* Classes
+* Leveling
+* Passive/active skills
+* Spell effects
 * Flexible channel system.
 * Incredibly simple-to-add commands.
-* Quest system allowing for starting/progress/completion from any event in the game
-* Simple Diku-style combat system
-* Grouping
-* Loot tables allowing for meta pools for things like world or area drops in addition to NPC specific loot
-* Currency system allowing NPCs to be configured to drop different amounts of multiple currencies instead of just gold
+* Quest system allowing for starting/progress/completion from any event in the game.
+* Simple Diku-style combat system.
+* Grouping/following.
+* Loot tables allowing for meta pools for things like world or area drops in addition to NPC specific loot.
+* Currency system allowing NPCs to be configured to drop different amounts of multiple currencies instead of just gold.
 
 You can build your MUD on top of these bundles or disable them and build yours completely fresh while still taking
 advantage of all of the core code.
