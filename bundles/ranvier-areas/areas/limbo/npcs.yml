@@ -59,3 +59,20 @@
           max: 100
       pools:
         - "limbo:5": 100
+- id: 6
+  keywords: ["vendor", "armor"]
+  name: "Moe's Shop"
+  description: >-
+    Moe's Shop has the best wares in town! Armor, weapons and potions, you name and we ... might have it!
+  level: 99
+  pacifist: true
+  behaviors:
+    vendor:
+      items:
+        - "limbo:5": 3
+        - "limbo:6": 3
+      enterMessage: >-
+        Step right up! Get your wares at Moe's Shop!
+      leaveMessage: >-
+        Come back soon!
+
