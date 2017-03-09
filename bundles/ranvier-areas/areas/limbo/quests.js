@@ -13,13 +13,14 @@ module.exports = (srcPath) => {
     1: {
       config: {
         title: "A Journey Begins",
+        level: 1,
         desc: `A voice whispers to you: Welcome to the world, young one. This is a dangerous and deadly place, you should arm yourself.
 
  - Use '<white>get sword chest</white>' and '<white>get vest chest</white>' to get some gear.
  - Equip it using '<white>wield sword</white>' and '<white>wear vest</white>'`,
         autoComplete: true,
         reward: (quest, player) => {
-          player.emit('experience', LevelUtil.mobExp(player.level) * 5);
+          player.emit('experience', LevelUtil.mobExp(quest.level) * 5);
           say(player, `<b><cyan>Hint: You can use the '<white>tnl</white>' or '<white>level</white>' commands to see how much experience you need to level.</cyan>`, 80);
 
           say(player);
@@ -55,12 +56,13 @@ module.exports = (srcPath) => {
     2: {
       config: {
         title: "One Cheese Please",
+        level: 1,
         desc: `A rat's squeaks seem to indicate it wants some cheese. You check around the area, maybe someone has left some lying around.
 
 Once you find some bring it back to the rat, use '<white>quest log</white>' to find the quest number, then complete the quest with '<white>quest complete #</white>'`,
         repeatable: true,
         reward: (quest, player) => {
-          player.emit('experience', LevelUtil.mobExp(player.level) * 3);
+          player.emit('experience', LevelUtil.mobExp(quest.level) * 3);
           say(player);
           say(player, `<b><cyan>Hint: NPCs with quests available have <white>[</white><yellow>!</yellow><white>]</white> in front of their name, <white>[</white><yellow>?</yellow><white>]</white> means you have a quest ready to turn in, and <white>[</white><yellow>%</yellow><white>]</white> means you have a quest in progress.</cyan>`, 80);
         }
@@ -81,6 +83,7 @@ Once you find some bring it back to the rat, use '<white>quest log</white>' to f
     3: {
       config: {
         title: "Self Defense 101",
+        level: 2,
         requires: [ "limbo:1" ],
         autoComplete: true,
         desc: `A voice whispers to you: It would be wise to practice protecting yourself. There are a number of training dummies in this area that, while not pushovers, will not be too difficult.
@@ -88,7 +91,7 @@ Once you find some bring it back to the rat, use '<white>quest log</white>' to f
 - Use '<white>attack dummy</white>' to start combat against the training dummy
 - Once it's dead any loot it drops will be in its corpse on the ground. You can use '<white>look in corpse</white>' to check again or '<white>get all corpse</white>' to retrieve your loot.`,
         reward: (quest, player) => {
-          player.emit('experience', LevelUtil.mobExp(player.level) * 5);
+          player.emit('experience', LevelUtil.mobExp(quest.level) * 5);
 
           say(player, `<b><cyan>Hint: You can get the loot from enemies with '<white>get <item> corpse</white>' but be quick about it, the corpse will decay after some time.</cyan>`, 80);
         }

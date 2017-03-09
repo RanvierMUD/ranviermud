@@ -12,6 +12,7 @@ module.exports = (srcPath) => {
     event: state => (socket, args) => {
       let player = args.player;
       player.hydrate(state);
+      player.save();
 
       player.socket.on('close', () => {
         Logger.log(player.name + ' has gone linkdead.');

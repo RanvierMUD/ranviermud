@@ -37,6 +37,7 @@ const HelpManager = require('./src/HelpManager');
 const ItemFactory = require('./src/ItemFactory');
 const ItemManager = require('./src/ItemManager');
 const MobFactory = require('./src/MobFactory');
+const PartyManager = require('./src/PartyManager');
 const PlayerManager = require('./src/PlayerManager');
 const QuestFactory = require('./src/QuestFactory');
 const RoomManager = require('./src/RoomManager');
@@ -59,7 +60,7 @@ commander
 
 // Set debug variable and encoding.
 // 'net' by default to help find possible server errors.
-process.env['NODE_DEBUG'] = 'net';
+process.env.NODE_DEBUG = 'net';
 process.stdin.setEncoding('utf8');
 
 const Logger = require('./src/Logger');
@@ -75,7 +76,7 @@ if (commander.prettyErrors) {
 // Set logging level based on CLI option or environment variable.
 const logLevel = commander.verbose ?
   'verbose' :
-  process.env['LOG_LEVEL'] || Config.get('logLevel') || 'debug';
+  process.env.LOG_LEVEL || Config.get('logLevel') || 'debug';
 
 Logger.setLevel(logLevel);
 
@@ -107,6 +108,7 @@ function init(restartServer) {
     ItemManager: new ItemManager(),
     MobBehaviorManager: new BehaviorManager(),
     MobFactory: new MobFactory(),
+    PartyManager: new PartyManager(),
     PlayerManager: new PlayerManager(),
     QuestFactory: new QuestFactory(),
     RoomBehaviorManager: new BehaviorManager(),

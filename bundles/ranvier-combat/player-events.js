@@ -37,7 +37,7 @@ module.exports = (srcPath) => {
           // player actions
           if (target.getAttribute('health') <= 0) {
 
-            Broadcast.sayAt(this, `<bold>${target.name} is <red>Dead</red>!</bold>`);
+            Broadcast.sayAt(this, `<b>${target.name} is <red>Dead</red>!</b>`);
 
             handleDeath(state, target, this);
             if (target.isNpc) {
@@ -95,7 +95,7 @@ module.exports = (srcPath) => {
               // Set up helper functions for health-bar-building.
               const getHealthPercentage = entity => Math.floor((entity.getAttribute('health') / entity.getMaxAttribute('health')) * 100);
               const formatProgressBar = (name, progress, entity) =>
-                `<bold>${leftPad(name, nameWidth)}</bold>: ${progress} <bold>${entity.getAttribute('health')}/${entity.getMaxAttribute('health')}</bold>`;
+                `<b>${leftPad(name, nameWidth)}</b>: ${progress} <b>${entity.getAttribute('health')}/${entity.getMaxAttribute('health')}</b>`;
 
               // Build player health bar.
               let currentPerc = getHealthPercentage(promptee);
@@ -140,13 +140,34 @@ module.exports = (srcPath) => {
 
         let buf = '';
         if (damage.source) {
-          buf = `Your <bold>${damage.source.name}</bold> hit`;
+          buf = `Your <b>${damage.source.name}</b> hit`;
         } else {
           buf = "You hit";
         }
 
-        buf += ` <bold>${target.name}</bold> for <bold>${damage.finalAmount}</bold> damage.`;
+        buf += ` <b>${target.name}</b> for <b>${damage.finalAmount}</b> damage.`;
         Broadcast.sayAt(this, buf);
+
+        // show damage to party members
+        if (!this.party) {
+          return;
+        }
+
+        for (const member of this.party) {
+          if (member === this || member.room !== this.room) {
+            continue;
+          }
+
+          let buf = '';
+          if (damage.source) {
+            buf = `${this.name} <b>${damage.source.name}</b> hit`;
+          } else {
+            buf = `${this.name} hit`;
+          }
+
+          buf += ` <b>${target.name}</b> for <b>${damage.finalAmount}</b> damage.`;
+          Broadcast.sayAt(member, buf);
+        }
       },
 
       /**
@@ -160,14 +181,36 @@ module.exports = (srcPath) => {
 
         let buf = '';
         if (heal.source) {
-          buf = `Your <bold>${heal.source.name}</bold> healed`;
+          buf = `Your <b>${heal.source.name}</b> healed`;
         } else {
           buf = "You heal";
         }
 
-        buf += '<bold> ' + (target === this ? 'Yourself' : `${target.name}`) + '</bold>';
-        buf += ` for <bold><green>${heal.finalAmount}</green></bold> ${heal.attribute}.`;
+        buf += '<b> ' + (target === this ? 'Yourself' : `${target.name}`) + '</b>';
+        buf += ` for <b><green>${heal.finalAmount}</green></b> ${heal.attribute}.`;
         Broadcast.sayAt(this, buf);
+
+        // show heals to party members
+        if (!this.party) {
+          return;
+        }
+
+        for (const member of this.party) {
+          if (member === this || member.room !== this.room) {
+            continue;
+          }
+
+          let buf = '';
+          if (damage.source) {
+            buf = `${this.name} <b>${damage.source.name}</b> healed`;
+          } else {
+            buf = `${this.name} healed`;
+          }
+
+          buf += ` <b>${target.name}</b>`;
+          buf += ` for <b><green>${heal.finalAmount}</green></b> ${heal.attribute}.`;
+          Broadcast.sayAt(member, buf);
+        }
       },
 
       damaged: state => function (damage) {
@@ -177,17 +220,42 @@ module.exports = (srcPath) => {
 
         let buf = '';
         if (damage.attacker) {
-          buf = `<bold>${damage.attacker.name}</bold>`;
+          buf = `<b>${damage.attacker.name}</b>`;
         }
 
         if (damage.source) {
-          buf += (damage.attacker ? "'s " : "") + `<bold>${damage.source.name}</bold>`;
+          buf += (damage.attacker ? "'s " : " ") + `<b>${damage.source.name}</b>`;
         } else if (!damage.attacker) {
           buf += "Something";
         }
 
-        buf += ` hit <bold>You</bold> for <bold><red>${damage.finalAmount}</red></bold> damage`;
+        buf += ` hit <b>You</b> for <b><red>${damage.finalAmount}</red></b> damage`;
         Broadcast.sayAt(this, buf);
+
+        // show damage to party members
+        if (!this.party) {
+          return;
+        }
+
+        for (const member of this.party) {
+          if (member === this || member.room !== this.room) {
+            continue;
+          }
+
+          let buf = '';
+          if (damage.attacker) {
+            buf = `<b>${damage.attacker.name}</b>`;
+          }
+
+          if (damage.source) {
+            buf += (damage.attacker ? "'s " : ' ') + `<b>${damage.source.name}</b>`;
+          } else if (!damage.attacker) {
+            buf += "Something";
+          }
+
+          buf += ` hit <b>${this.name}</b> for <b><red>${damage.finalAmount}</red></b> damage`;
+          Broadcast.sayAt(member, buf);
+        }
       },
 
       /**
@@ -198,6 +266,11 @@ module.exports = (srcPath) => {
         if (killer !== this) {
           Broadcast.sayAt(this, `You were killed by ${killer.name}.`);
         }
+
+        if (this.party) {
+          Broadcast.sayAt(this.party, `<b><green>${this.name} was killed!</green></b>`);
+        }
+
         this.setAttributeToMax('health');
         Broadcast.sayAt(this, "Whoops, that sucked!");
         Broadcast.prompt(this);
@@ -207,11 +280,24 @@ module.exports = (srcPath) => {
        * Player killed a target
        * @param {Character} target
        */
-      deathblow: state => function (target) {
-        if (target && !this.isNpc) {
-          Broadcast.sayAt(this, `<bold><red>You killed ${target.name}!`);
+      deathblow: state => function (target, skipParty) {
+        const xp = LevelUtil.mobExp(target.level);
+        if (this.party && !skipParty) {
+          // if they're in a party proxy the deathblow to all members of the party in the same room.
+          // this will make sure party members get quest credit trigger anything else listening for deathblow
+          for (const member of this.party) {
+            if (member.room === this.room) {
+              member.emit('deathblow', target, true);
+            }
+          }
+          return;
         }
-        this.emit('experience', LevelUtil.mobExp(target.level));
+
+        if (target && !this.isNpc) {
+          Broadcast.sayAt(this, `<b><red>You killed ${target.name}!`);
+        }
+
+        this.emit('experience', xp);
       }
     }
   };
@@ -233,7 +319,6 @@ module.exports = (srcPath) => {
   }
 
   function handleDeath(state, deadEntity, killer) {
-
     deadEntity.combatants.forEach(combatant => {
       deadEntity.removeCombatant(combatant);
       combatant.removeCombatant(deadEntity);
@@ -254,8 +339,8 @@ module.exports = (srcPath) => {
     }
 
     const othersDeathMessage = killer ?
-      `<bold><red>${deadEntity.name} collapses to the ground, dead at the hands of ${killer.name}.</bold></red>` :
-      `<bold><red>${deadEntity.name} collapses to the ground, dead</bold></red>`;
+      `<b><red>${deadEntity.name} collapses to the ground, dead at the hands of ${killer.name}.</b></red>` :
+      `<b><red>${deadEntity.name} collapses to the ground, dead</b></red>`;
 
     Broadcast.sayAtExcept(
       deadEntity.room,
@@ -263,8 +348,15 @@ module.exports = (srcPath) => {
       (killer ? [killer, deadEntity] : deadEntity));
 
     deadEntity.emit('killed', killer || deadEntity);
+
     if (!killer.isNpc) {
-      Broadcast.prompt(killer);
+      if (killer.party) {
+        for (const member of killer.party) {
+          Broadcast.prompt(member);
+        }
+      } else {
+        Broadcast.prompt(killer);
+      }
     }
   }
 

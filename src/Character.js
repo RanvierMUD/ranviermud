@@ -38,8 +38,10 @@ class Character extends EventEmitter
     this.level = data.level || 1;
     this.room = data.room || null;
     this.attributes = new Attributes(data.attributes || null);
+
     this.followers = new Set();
     this.following = null;
+    this.party = null;
 
     this.effects = new EffectList(this, data.effects);
     this.skills = new Map();
@@ -214,15 +216,19 @@ class Character extends EventEmitter
       return null;
     }
 
-    let possibleTargets = this.room.npcs;
+    let possibleTargets = [...this.room.npcs];
     if (this.getMeta('pvp')) {
-      possibleTargets = possibleTargets.concat(this.room.players);
+      possibleTargets = [...possibleTargets, ...this.room.players];
     }
 
     const target = Parser.parseDot(search, possibleTargets);
 
     if (!target) {
       return null;
+    }
+
+    if (target === this) {
+      throw new Error('You slap yourself in the face. Ouch!');
     }
 
     if (!target.isNpc && !target.getMeta('pvp')) {

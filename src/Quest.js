@@ -16,6 +16,7 @@ class Quest extends EventEmitter {
       title: 'Missing Quest Title',
       desc: 'Missing Quest Description',
       requires: [],
+      level: 1,
       autoComplete: false,
       repeatable: false,
       reward: _ => {}

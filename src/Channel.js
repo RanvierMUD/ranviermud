@@ -3,6 +3,7 @@
 const Broadcast = require('./Broadcast');
 const ChannelAudienceWorld = require('./ChannelAudience/World');
 const ChannelAudiencePrivate = require('./ChannelAudience/Private');
+const ChannelAudienceParty = require('./ChannelAudience/Party');
 
 /**
  * @property {ChannelAudience} audience People who receive messages from this channel
@@ -46,6 +47,10 @@ class Channel {
 
     this.audience.configure({ state, sender, message });
     const targets = this.audience.getBroadcastTargets();
+
+    if (this.audience instanceof ChannelAudienceParty && !targets.length) {
+      return Broadcast.sayAt(sender, "You aren't in a group.");
+    }
 
     // Allow audience to change message e.g., strip target name.
     message = this.audience.alterMessage(message);
