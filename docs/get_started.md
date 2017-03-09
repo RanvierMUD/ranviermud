@@ -21,15 +21,12 @@ After installation type `yo ranvier` to see the usage.
 
 ## Running the server
 
-    sudo ./ranvier
-
-If you do not have sudo privileges or do not wish to run as sudo you should configure Ranvier to run on a port > 1024.
-See [Server Config](server_config.md)
+    ./ranvier
 
 ## Connecting
 
-In another terminal execute `telnet localhost 23` or use your favorite MUD client with hostname `localhost` and port 23.
-(If you have customized the port, replace 23 with whatever port you have configured Ranvier to use)
+In another terminal execute `telnet localhost 4000` or use your favorite MUD client with hostname `localhost` and port 4000.
+(If you have customized the port, replace 4000 with whatever port you have configured Ranvier to use)
 
 By default Ranvier ships with an admin account with the username `admin` and password `tester`
 

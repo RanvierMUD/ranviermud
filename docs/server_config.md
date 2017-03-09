@@ -6,8 +6,8 @@ Ranvier configuration is stored in the `ranvier.json` file in the root of the pr
 
 ----
 
-`port` _`number`_ `(23)`
-:    Port that the game runs on
+`port` _`number`_ `(4000)`
+:    Port that the game runs on. Note, port < 1024 may require that you run the ./ranvier executable with sudo.
 
 `webPort` _`number`_ `(9001)`
 :    Port the web API runs on

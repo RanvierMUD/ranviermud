@@ -1,5 +1,5 @@
 {
-  "port": 23,
+  "port": 4000,
   "webPort": 9001,
   "webWhitelist": [
     "localhost",
