@@ -23,14 +23,14 @@ We have a slack channel you can use to ask questions, suggest features, or just 
 ## Features
 
 * Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy
-  packaging and sharing of commands/areas/items/npcs/channels/behaviors.
+  packaging and sharing of commands/areas/items/npcs/channels/behaviors
 * Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.
 * Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the
-  event is emitted. Adding new events is easy as `npc.emit('eventName')` See documentation on Node.js event emitters for more.
-* Pfile saving in JSON, easy to parse for external usage.
+  event is emitted. Adding new events is easy as `npc.emit('eventName')` See documentation on Node.js event emitters for more
+* Pfile saving in JSON, easy to parse for external usage
 * Rooms, items, and NPCs are easily described in YAML. No weird bullshit ~~~~ and byte-specific parsing that requires a
   GUI editor to build (though we do have a GUI editor in the works!)
-* Did I mention it's in blasting javascript? No compiling, no C, no cygwin, no 15 year old spaghetti code.
+* Did I mention it's in blasting javascript? No compiling, no C, no cygwin, no 15 year old spaghetti code
 
 ### Built-in Bundles
 
@@ -40,13 +40,13 @@ The default bundles come together to make a basic Diku style MUD with the follow
 * Leveling
 * Passive/active skills
 * Spell effects
-* Flexible channel system.
-* Incredibly simple-to-add commands.
-* Quest system allowing for starting/progress/completion from any event in the game.
-* Simple Diku-style combat system.
-* Grouping/following.
-* Loot tables allowing for meta pools for things like world or area drops in addition to NPC specific loot.
-* Currency system allowing NPCs to be configured to drop different amounts of multiple currencies instead of just gold.
+* Flexible channel system
+* Incredibly simple-to-add commands
+* Quest system allowing for starting/progress/completion from any event in the game
+* Simple Diku-style combat system
+* Grouping/following
+* Loot tables allowing for meta pools for things like world or area drops in addition to NPC specific loot
+* Currency system allowing NPCs to be configured to drop different amounts of multiple currencies instead of just gold
 
 You can build your MUD on top of these bundles or disable them and build yours completely fresh while still taking
 advantage of all of the core code.
