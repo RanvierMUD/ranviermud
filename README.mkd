@@ -1,67 +1,62 @@
 <p align="center"><img class="readme-logo" src="https://raw.githubusercontent.com/shawncplus/ranviermud/staging/resources/logo.png"></p>
 
 # ranvier
-NodeJS based MUD engine
+
+Node.js based MUD engine
 
 See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features.
 
-Ranvier is _not_ a websocket MUD. It does not have a web client. It is a plain ol' fashioned telnet MUD. Any client you use to connect to the MUD you played 15 years ago will work with Ranvier.
+Ranvier is _not_ a websocket MUD. It does not have a web client. It is a plain ol' fashioned telnet MUD. Any client you
+use to connect to the MUD you played 15 years ago will work with Ranvier.
 
 ## Documentation
 
-Docs can be found on our website [ranviermud.com](http://www.ranviermud.com)
+Ranvier prides itself on having thorough documentation which is available on our website: [ranviermud.com](http://www.ranviermud.com)
+(You can also view them locally; see the Documentation section of our [Contributing](http://www.ranviermud.com/contributing/#documentation) guide.)
 
 ## Slack
 
-We have a slack channel you can use to ask questions, suggest features, or just keep up to date with the project. [https://ranviermud.slack.com](https://ranviermud.slack.com)
+We have a slack channel you can use to ask questions, suggest features, or just keep up to date with the project: [https://ranviermud.slack.com](https://ranviermud.slack.com)
 
 [Get an invite](https://ranviermud.signup.team/)
 
 ## Features
-* Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy packaging and sharing of commands/areas/items/npcs/channels/behaviors.
+
+* Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy
+  packaging and sharing of commands/areas/items/npcs/channels/behaviors.
 * Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.
-* Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the event is emitted. Adding new events is easy as npc.emit('eventName'); See documentation on node event emitters for more.
+* Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the
+  event is emitted. Adding new events is easy as `npc.emit('eventName')` See documentation on Node.js event emitters for more.
 * Pfile saving in JSON, easy to parse for external usage.
-* Rooms, items, and npcs are easily described in yaml. No weird bullshit ~~~~ and byte-specific parsing that requires a GUI editor to build.
-* Did I mention it's in blasting Javascript? No compiling, no C, no cygwin, no 15 year old spaghetti code.
+* Rooms, items, and NPCs are easily described in YAML. No weird bullshit ~~~~ and byte-specific parsing that requires a
+  GUI editor to build (though we do have a GUI editor in the works!)
+* Did I mention it's in blasting javascript? No compiling, no C, no cygwin, no 15 year old spaghetti code.
+
+### Built-in Bundles
+
+The default bundles come together to make a basic Diku style MUDs with the following features:
+
 * Leveling, passive/active skills, effects.
 * Flexible channel system.
 * Incredibly simple-to-add commands.
 * Quest system allowing for starting/progress/completion from any event in the game
 * Simple Diku-style combat system
+* Grouping
+* Loot tables allowing for meta pools for things like world or area drops in addition to NPC specific loot
+* Currency system allowing NPCs to be configured to drop different amounts of multiple currencies instead of just gold
+
+You can build your MUD on top of these bundles or disable them and build yours completely fresh while still taking
+advantage of all of the core code.
 
 ## Requirements
 
-* NodeJS >= v7.1.0
+* Node.js >= v7.1.0
 
-## Up and running
+## "I just want to check it out quickly"
 
     git clone git://github.com/shawncplus/ranviermud
     cd ranviermud
     npm install
-    sudo ./ranvier -v --save=10 --respawn=10
+    sudo ./ranvier
 
 Connect to the server using `telnet localhost 23`
-
-## Web API 
-
-There is an in-progress Web interface for viewing information about the MUD and building areas in real time.
-Currently, the following routes are supported:
-
-```
-GET: 
-  /api/items
-  /api/npcs
-  /api/players
-  /api/rooms
-  /api/help
-```
-
-Right now, you can whitelist IPs by adding them to a key called `webWhitelist` in ranvier.json.
-By default only the local host IP is whitelisted.
-
-## Common Issues
-
-### Debugging in Visual Studio Code
-
-Visual Studio Code's built-in terminal will incorrectly render Ranvier output unless you set the console to "externalTerminal" or "internalTerminal", "internalConsole" will *not* work. View the relevant Visual Studio Code documentation here: https://code.visualstudio.com/docs/editor/node-debugging#_launch-configuration-attributes

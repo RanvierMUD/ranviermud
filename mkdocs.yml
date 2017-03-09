@@ -39,3 +39,5 @@ pages:
     - Helpfiles: 'extending/help.md'
     - Skills: 'extending/skills.md'
 - Contributing: contributing.md
+- Web API: api.md
+- Common Issues: common_issues.md
