@@ -22,8 +22,6 @@ module.exports = (srcPath) => {
   return {
     usage: 'shop <list/buy/sell> [item # / name]',
     command : (state) => (args, player) => {
-      args = args.trim();
-
       if (!args.length) {
         return say(player, "Missing command. See 'help quest'");
       }
