@@ -26,7 +26,7 @@ We have a slack channel you can use to ask questions, suggest features, or just 
   packaging and sharing of commands/areas/items/npcs/channels/behaviors
 * Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.
 * Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the
-  event is emitted. Adding new events is easy as `npc.emit('eventName')` See documentation on Node.js event emitters for more
+  event is emitted. Adding new events is easy as `npc.emit('eventName')` See documentation on Node.js event emitters for more detail
 * Pfile saving in JSON, easy to parse for external usage
 * Rooms, items, and NPCs are easily described in YAML. No weird bullshit ~~~~ and byte-specific parsing that requires a
   GUI editor to build (though we do have a GUI editor in the works!)
