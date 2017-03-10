@@ -120,6 +120,9 @@ class Broadcast {
   static progress(width, percent, color, barChar = "#", fillChar = " ", delimiters = "()") {
     percent = Math.max(0, percent);
     width -= 3; // account for delimiters and tip of bar
+    if (percent === 100) {
+        width++; // 100% bar doesn't have a second right delimiter
+    }
     barChar = barChar[0];
     fillChar = fillChar[0];
     const [ leftDelim, rightDelim ] = delimiters;
@@ -127,7 +130,7 @@ class Broadcast {
     const closeColor = `</${color}>`;
     let buf = openColor + leftDelim + "<bold>";
     const widthPercent = Math.round((percent / 100) * width);
-    buf += Broadcast.line(widthPercent, barChar) + (percent === 100 ? '' : ')');
+    buf += Broadcast.line(widthPercent, barChar) + (percent === 100 ? '' : rightDelim);
     buf += Broadcast.line(width - widthPercent, fillChar);
     buf += "</bold>" + rightDelim + closeColor;
     return buf;
