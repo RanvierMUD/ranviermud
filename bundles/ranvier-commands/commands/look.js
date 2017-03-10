@@ -112,7 +112,7 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, ']');
   }
 
-  function lookEntity(player, args) {
+  function lookEntity(state, player, args) {
     const room = player.room;
 
     args = args.split(' ');
@@ -145,6 +145,25 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, `You estimate that ${entity.name} will rot away in ${humanize(entity.timeUntilDecay)}.`);
     }
 
+    const usable = entity.getBehavior('usable');
+    if (usable) {
+      if (usable.spell) {
+        const useSpell = state.SpellManager.get(usable.spell);
+        if (useSpell) {
+          useSpell.options = usable.options;
+          Broadcast.sayAt(player, useSpell.info(player));
+        }
+      }
+
+      if (usable.effect && usable.config.description) {
+        Broadcast.sayAt(player, usable.config.description);
+      }
+
+      if (usable.charges) {
+        Broadcast.sayAt(player, `There are ${usable.charges} charges remaining.`);
+      }
+    }
+
     if (entity instanceof Item && entity.type === ItemType.CONTAINER) {
       if (!entity.inventory || !entity.inventory.size) {
         return Broadcast.sayAt(player, `${entity.name} is empty.`);
@@ -167,7 +186,7 @@ module.exports = (srcPath) => {
       }
 
       if (args) {
-        return lookEntity(player, args);
+        return lookEntity(state, player, args);
       }
 
       lookRoom(state, player);

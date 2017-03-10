@@ -164,6 +164,9 @@ class CommandParser {
         if (encountered === findNth) {
           return returnKey ? [key, entry] : entry;
         }
+        // if the keyword matched skip to next loop so we don't double increment
+        // the encountered counter
+        continue;
       }
 
       if (entry.name && entry.name.toLowerCase().includes(keyword)) {

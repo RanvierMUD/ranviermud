@@ -26,7 +26,7 @@
   roomDesc: "A wooden chest rests open in the corner, its hinges badly rusted."
   keywords: [ "wooden", "chest" ]
   description: "Time has not been kind to this chest. It seems to be held together solely by the dirt and rust."
-  items: [ "limbo:1", "limbo:6" ]
+  items: [ "limbo:1", "limbo:6", "limbo:7", "limbo:8" ]
   properties:
     noPickup: true
     maxItems: 2
@@ -64,3 +64,42 @@
   properties:
     stats:
       armor: 20
+- id: 7
+  name: "Potion of Health I"
+  roomDesc: "Potion of Health I"
+  keywords: [ "potion", "health" ]
+  level: 1
+  behaviors:
+    # usable has two variants: spell, and effect
+    usable:
+      # this is the spell variant, you specify a skill of type SPELL
+      spell: "potion"
+      # charges/destroyOnDepleted lets you create consumable items
+      # without specifying charges the item can be used forever
+      charges: 5
+      destroyOnDepleted: true
+      # cooldown before item can be used again
+      cooldown: 30
+      # spell configuration, spell can access it via this.options
+      options:
+        restores: 30
+        stat: "health"
+- id: 8
+  name: "Potion of Strength I"
+  roomDesc: "Potion of Strength I"
+  keywords: [ "potion", "strength" ]
+  level: 1
+  behaviors:
+    usable:
+      # this is the effect variant, you specify an effect name instead of a spell
+      effect: "potion.buff"
+      charges: 2
+      destroyOnDepleted: true
+      # effect config, see Effect docs. `name` is auto-populated with the item name
+      config:
+        description: "Increases strength by <b>10</b> for <b>15</b> seconds"
+        duration: 15000
+      # effect state, see Effect docs
+      state:
+        magnitude: 10
+        stat: "strength"

@@ -1,8 +1,6 @@
 ---
-testa:
-  "limbo:1": 2
-testb:
-  "limbo:2": 5
+potions:
+  - "limbo:7": 10
+  - "limbo:8": 5
 junk:
-  - "limbo:testb"
   - "limbo:4": 50

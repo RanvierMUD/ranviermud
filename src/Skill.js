@@ -38,6 +38,7 @@ class Skill {
       run = _ => {},
       targetSelf = false,
       type = SkillType.SKILL,
+      options = {}
     } = config;
 
     this.configureEffect = configureEffect;
@@ -48,6 +49,7 @@ class Skill {
     this.info = info.bind(this);
     this.initiatesCombat = initiatesCombat;
     this.name = name;
+    this.options = options;
     this.requiresTarget = requiresTarget;
     this.resource = resource;
     this.run = run.bind(this);
@@ -68,7 +70,8 @@ class Skill {
 
     const cdEffect = this.onCooldown(player);
     if (this.cooldownLength && cdEffect) {
-      return Broadcast.sayAt(player, `${this.name} is on cooldown. ${humanize(cdEffect.remaining)} remaining.`);
+      Broadcast.sayAt(player, `${this.name} is on cooldown. ${humanize(cdEffect.remaining)} remaining.`);
+      return false;
     }
 
     if (this.requiresTarget && !target) {
@@ -84,19 +87,21 @@ class Skill {
         try {
           target = player.findCombatant(args);
         } catch (e) {
-          return Broadcast.sayAt(player, e.message);
+          Broadcast.sayAt(player, e.message);
+          return false;
         }
       }
 
       if (!target) {
-        return Broadcast.sayAt(player, `Use ${this.name} on whom?`);
+        Broadcast.sayAt(player, `Use ${this.name} on whom?`);
+        return false;
       }
     }
 
     if (this.resource.cost) {
       const paid = this.payResourceCost(player);
       if (!paid) {
-        return;
+        return false;
       }
     }
 
@@ -106,6 +111,7 @@ class Skill {
 
     this.run(args, player, target);
     this.cooldown(player);
+    return true;
   }
 
   /** Finds implicit targets.

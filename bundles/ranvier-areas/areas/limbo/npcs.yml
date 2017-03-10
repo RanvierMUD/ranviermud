@@ -39,6 +39,7 @@
       # npc in the area can drop
       pools:
         - "limbo:junk"
+        - "limbo:potions"
         - "limbo:2": 25
   description: >-
     The training dummy is almost human shaped although slightly out of proportion. The material it's made of is hard to
@@ -58,4 +59,5 @@
           min: 50
           max: 100
       pools:
+        - "limbo:potions"
         - "limbo:5": 100
