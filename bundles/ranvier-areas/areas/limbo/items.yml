@@ -52,6 +52,9 @@
     stats:
       strength: 2
       stamina: 2
+  behaviors: 
+    sellable:
+      value: 3
 - id: 6
   name: "Leather Vest"
   roomDesc: "Leather Vest"
@@ -64,3 +67,6 @@
   properties:
     stats:
       armor: 20
+  behaviors: 
+    sellable:
+      value: 4
