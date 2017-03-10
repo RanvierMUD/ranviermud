@@ -32,8 +32,7 @@ module.exports = (srcPath) => {
         npc.emit('playerDropItem', player, item);
       }
 
-      const formatDropMessage = (name, item) => `<green>${name} dropped: </green>${item.display}<green>.</green>`;
-      Broadcast.sayAt(player, formatDropMessage('You', item));
+      Broadcast.sayAt(player, `<green>You dropped: </green>${item.display}<green>.</green>`);
     }
   };
 };

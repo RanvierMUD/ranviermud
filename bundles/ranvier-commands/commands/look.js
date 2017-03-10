@@ -76,11 +76,7 @@ module.exports = (srcPath) => {
       }
       let combatantsDisplay = '';
       if (otherPlayer.isInCombat()) {
-        const combatantsList = [...otherPlayer.combatants.values()].map(combatant => combatant.name);
-        combatantsDisplay += `, <red>fighting: </red>`
-        combatantsDisplay += (combatantsList.length > 1 ?
-           `<bold>[ </bold>${combatantsList.join(", ")}<bold> ]</bold>` :
-           `${combatantsList[0]}`);
+        combatantsDisplay = getCombatantsDisplay(otherPlayer);
       }
       Broadcast.sayAt(player, '[Player] ' + otherPlayer.name + combatantsDisplay);
     });
@@ -114,13 +110,8 @@ module.exports = (srcPath) => {
 
       let combatantsDisplay = '';
       if (npc.isInCombat()) {
-        const combatantsList = [...npc.combatants.values()].map(combatant => combatant.name);
-        combatantsDisplay += `, <red>fighting: </red>`
-        combatantsDisplay += (combatantsList.length > 1 ?
-           `<bold>[ </bold>${combatantsList.join(", ")}<bold> ]</bold>` :
-           `${combatantsList[0]}`);
+        combatantsDisplay = getCombatantsDisplay(npc);
       }
-
       Broadcast.sayAt(player, '[NPC] ' + npc.name + combatantsDisplay);
     });
 
@@ -190,4 +181,15 @@ module.exports = (srcPath) => {
       lookRoom(state, player);
     }
   };
+
+  function getCombatantsDisplay(entity) {
+    const combatantsList = [...entity.combatants.values()].map(combatant => combatant.name);
+    return `, <red>fighting: </red>` +
+      (combatantsList.length > 1 ?
+        `<bold>${combatantsList.join(", ")}</bold>` :
+        `${combatantsList[0]}`
+      );
+  }
+
+
 };
