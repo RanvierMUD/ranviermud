@@ -29,12 +29,8 @@ module.exports = srcPath => {
         return say("You can't use that.");
       }
 
-      if (usable.charges) {
-        item.charges = !Reflect.has(item, 'charges') ? usable.charges : item.charges;
-
-        if (item.charges <= 0) {
-          return say(`You've used up all the magic in ${item.display}.`);
-        }
+      if ('charges' in usable && usable.charges <= 0) {
+        return say(`You've used up all the magic in ${item.display}.`);
       }
 
       if (usable.spell) {
@@ -73,13 +69,13 @@ module.exports = srcPath => {
         }
       }
 
-      if (!usable.charges) {
+      if (!('charges' in usable)) {
         return;
       }
 
-      item.charges--;
+      usable.charges--;
 
-      if (usable.destroyOnDepleted && item.charges <= 0) {
+      if (usable.destroyOnDepleted && usable.charges <= 0) {
         say(`You used up all the magic in ${item.display} and it disappears in a puff of smoke.`);
         state.ItemManager.remove(item);
       }

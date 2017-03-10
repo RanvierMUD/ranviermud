@@ -160,8 +160,7 @@ module.exports = (srcPath) => {
       }
 
       if (usable.charges) {
-        const charges = Reflect.has(entity, 'charges') ? entity.charges : usable.charges;
-        Broadcast.sayAt(player, `There are ${charges} charges remaining.`);
+        Broadcast.sayAt(player, `There are ${usable.charges} charges remaining.`);
       }
     }
 
