@@ -28,7 +28,7 @@ class Room extends EventEmitter {
     this.area = area;
     this.defaultItems = def.items || [];
     this.defaultNpcs  = def.npcs || [];
-    this.behaviors  = def.behaviors || [];
+    this.behaviors = new Map(Object.entries(def.behaviors || {}));
     this.description = def.description;
     this.entityReference = this.area.name + ':' + def.id;
     this.exits = def.exits;
@@ -48,6 +48,22 @@ class Room extends EventEmitter {
     this.spawnedNpcs = new Set();
 
     this.on('respawnTick', this.respawnTick);
+  }
+
+  /**
+   * @param {string} name
+   * @return {boolean}
+   */
+  hasBehavior(name) {
+    return this.behaviors.has(name);
+  }
+
+  /**
+   * @param {string} name
+   * @return {*}
+   */
+  getBehavior(name) {
+    return this.behaviors.get(name);
   }
 
   addPlayer(player) {
@@ -182,15 +198,15 @@ class Room extends EventEmitter {
       this.spawnNpc(state, defaultNpc.id);
     });
 
-    if (this.behaviors) {
-      this.behaviors.forEach(behaviorName => {
-        let behavior = state.RoomBehaviorManager.get(behaviorName);
-        if (!behavior) {
-          return;
-        }
+    for (let [behaviorName, config] of this.behaviors) {
+      let behavior = state.ItemBehaviorManager.get(behaviorName);
+      if (!behavior) {
+        return;
+      }
 
-        behavior.attach(this);
-      });
+      // behavior may be a boolean in which case it will be `behaviorName: true`
+      config = config === true ? {} : config;
+      behavior.attach(this, config);
     }
   }
 

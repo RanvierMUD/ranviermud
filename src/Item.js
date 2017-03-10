@@ -61,6 +61,22 @@ class Item extends EventEmitter {
     return this.keywords.indexOf(keyword) !== -1;
   }
 
+  /**
+   * @param {string} name
+   * @return {boolean}
+   */
+  hasBehavior(name) {
+    return this.behaviors.has(name);
+  }
+
+  /**
+   * @param {string} name
+   * @return {*}
+   */
+  getBehavior(name) {
+    return this.behaviors.get(name);
+  }
+
   addItem(item) {
     if (!this.inventory) {
       this.inventory = new Inventory([]);

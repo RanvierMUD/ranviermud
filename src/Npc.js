@@ -38,11 +38,19 @@ class Npc extends Character {
 
 
   /**
-   * @param {string} behavior
+   * @param {string} name
    * @return {boolean}
    */
-  hasBehavior(behavior) {
-    return this.behaviors.has(behavior);
+  hasBehavior(name) {
+    return this.behaviors.has(name);
+  }
+
+  /**
+   * @param {string} name
+   * @return {*}
+   */
+  getBehavior(name) {
+    return this.behaviors.get(name);
   }
 
   serialize() {
