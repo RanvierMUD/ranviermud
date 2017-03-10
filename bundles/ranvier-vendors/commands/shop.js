@@ -1,38 +1,67 @@
 'use strict';
 
-module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
+module.exports = srcPath => {
+  const B = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
-  const say = Broadcast.sayAt;
+  const say = B.sayAt;
 
-  class ShopCommand {
-    static list(state, player, options) {
-      say(player, 'LIST: TODO');
-    }
+  const ShopCommands = (config, state, player) => {
+    return [
+      {
+        name: 'buy',
+        run(args) {
+          say(player, 'TODO: BUY');
+        }
+      },
 
-    static buy(state, player, options) {
-      say(player, 'BUY: TODO');
-    }
-
-    static sell(state, player, options) {
-      say(player, 'SELL: TODO');
-    }
-  }
+      {
+        name: 'sell',
+        run(args) {
+          say(player, 'TODO: SELL');
+        }
+      },
+      {
+        name: 'list',
+        run(args) {
+          const [vendor, item] = args;
+          say(player, 'TODO: LIST');
+        }
+      }
+    ];
+  };
 
   return {
-    usage: 'shop <list/buy/sell> [item # / name]',
-    command : (state) => (args, player) => {
-      if (!args.length) {
-        return say(player, "Missing command. See 'help quest'");
+    aliases: [ 'vendor' ],
+    command: state => (args, player) => {
+
+      if (!args || !args.length) {
+        args = 'list';
       }
 
-      const [command, ...options] = args.split(' ');
+      //For now we are handling 1 cause my brain hurts
+      const vendor = Array.from(player.room.npcs).find(npc => npc.hasBehavior('vendor'));
 
-      if (Reflect.has(ShopCommand, command)) {
-        return ShopCommand[command](state, player, options);
+      if (!vendor) {
+        return B.sayAt(player, "Vendor not found, are you ok?");
       }
 
-      say(player, "Invalid command. See 'help shop'");
+      const parts = args.split(' ');
+      const commandName = parts[0];
+      args = parts.slice(1).join(' ');
+
+      let command = null;
+      for (const shopCommand of ShopCommands(vendor.getBehavior('vendor'), state, player)) {
+        if (shopCommand.name.includes(commandName)) {
+          command = shopCommand;
+          break;
+        }
+      }
+
+      if (!command) {
+        return say(player, "Not a valid shop command.");
+      }
+
+      command.run(args);
     }
   };
 };

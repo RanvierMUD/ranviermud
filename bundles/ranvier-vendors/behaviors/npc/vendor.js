@@ -8,13 +8,14 @@ module.exports = (srcPath) => {
     listeners: {
       playerEnter: state => function (config, player) {
         if (config.enterMessage) {
-          B.sayAt(player, config.enterMessage);
+          B.sayAt(player, '');
+          state.ChannelManager.get('say').send(state, this, config.enterMessage);
         }
       },
 
       playerLeave: state => function (config, player) {
         if (config.leaveMessage) {
-          B.sayAt(player, config.leaveMessage);
+          state.ChannelManager.get('say').send(state, this, config.leaveMessage);
         }
       },
 
