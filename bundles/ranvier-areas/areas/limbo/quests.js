@@ -20,7 +20,7 @@ module.exports = (srcPath) => {
  - Equip it using '<white>wield sword</white>' and '<white>wear vest</white>'`,
         autoComplete: true,
         reward: (quest, player) => {
-          player.emit('experience', LevelUtil.mobExp(quest.level) * 5);
+          player.emit('experience', LevelUtil.mobExp(quest.config.level) * 5);
           say(player, `<b><cyan>Hint: You can use the '<white>tnl</white>' or '<white>level</white>' commands to see how much experience you need to level.</cyan>`, 80);
 
           say(player);
@@ -62,7 +62,7 @@ module.exports = (srcPath) => {
 Once you find some bring it back to the rat, use '<white>quest log</white>' to find the quest number, then complete the quest with '<white>quest complete #</white>'`,
         repeatable: true,
         reward: (quest, player) => {
-          player.emit('experience', LevelUtil.mobExp(quest.level) * 3);
+          player.emit('experience', LevelUtil.mobExp(quest.config.level) * 3);
           say(player);
           say(player, `<b><cyan>Hint: NPCs with quests available have <white>[</white><yellow>!</yellow><white>]</white> in front of their name, <white>[</white><yellow>?</yellow><white>]</white> means you have a quest ready to turn in, and <white>[</white><yellow>%</yellow><white>]</white> means you have a quest in progress.</cyan>`, 80);
         }
@@ -91,7 +91,7 @@ Once you find some bring it back to the rat, use '<white>quest log</white>' to f
 - Use '<white>attack dummy</white>' to start combat against the training dummy
 - Once it's dead any loot it drops will be in its corpse on the ground. You can use '<white>look in corpse</white>' to check again or '<white>get all corpse</white>' to retrieve your loot.`,
         reward: (quest, player) => {
-          player.emit('experience', LevelUtil.mobExp(quest.level) * 5);
+          player.emit('experience', LevelUtil.mobExp(quest.config.level) * 5);
 
           say(player, `<b><cyan>Hint: You can get the loot from enemies with '<white>get <item> corpse</white>' but be quick about it, the corpse will decay after some time.</cyan>`, 80);
         }
