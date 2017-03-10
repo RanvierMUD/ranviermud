@@ -1,5 +1,7 @@
 'use strict';
 
+const ItemType = require('./ItemType');
+
 class ItemManager {
   constructor() {
     this.items = new Set();
@@ -16,6 +18,10 @@ class ItemManager {
 
     if (item.belongsTo) {
       item.belongsTo.removeItem(item);
+    }
+
+    if (item.type === ItemType.CONTAINER && item.inventory) {
+      item.inventory.forEach(childItem => this.remove(childItem));
     }
 
     this.items.delete(item);

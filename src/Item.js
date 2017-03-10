@@ -134,15 +134,18 @@ class Item extends EventEmitter {
    * @return {Player|null} owner
    */
   findOwner() {
+    let found = null;
     let owner = this.belongsTo;
     while (owner) {
       if (owner instanceof Player) {
+        found = owner;
         break;
-      } else {
-        owner = owner.belongsTo;
       }
+
+      owner = owner.belongsTo;
     }
-    return owner;
+
+    return found;
   }
 
   hydrate(state) {
