@@ -53,7 +53,7 @@ module.exports = srcPath => {
               // distribute currency among group members in the same room
               const recipients = (killer.party ? [...killer.party] : [killer]).filter(recipient => {
                 return recipient.room === killer.room;
-              });;
+              });
 
               let remaining = currency.amount;
               for (const recipient of recipients) {

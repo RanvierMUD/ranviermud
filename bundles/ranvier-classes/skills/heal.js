@@ -38,9 +38,9 @@ module.exports = (srcPath) => {
       if (target !== player) {
         Broadcast.sayAt(player, `bold>You call upon to the light to heal ${target.name}'s wounds.</bold>`);
         Broadcast.sayAtExcept(player.room, `bold>${player.name} calls upon to the light to heal ${target.name}'s wounds.</bold>`, [target, player]);
-        Broadcast.sayAt(target, `bold>${player.name} calls upon to the light to heal your wounds.</bold>`)
+        Broadcast.sayAt(target, `bold>${player.name} calls upon to the light to heal your wounds.</bold>`);
       } else {
-        Broadcast.sayAt(player, "<bold>You call upon to the light to heal your wounds.</bold>")
+        Broadcast.sayAt(player, "<bold>You call upon to the light to heal your wounds.</bold>");
         Broadcast.sayAtExcept(player.room, `bold>${player.name} calls upon to the light to heal their wounds.</bold>`, [player, target]);
       }
 

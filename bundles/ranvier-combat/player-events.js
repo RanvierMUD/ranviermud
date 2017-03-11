@@ -208,8 +208,8 @@ module.exports = (srcPath) => {
           }
 
           let buf = '';
-          if (damage.source) {
-            buf = `${this.name} <b>${damage.source.name}</b> healed`;
+          if (heal.source) {
+            buf = `${this.name} <b>${heal.source.name}</b> healed`;
           } else {
             buf = `${this.name} healed`;
           }

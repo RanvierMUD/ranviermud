@@ -166,4 +166,4 @@ const ARReductionTable = [
 
 exports.getArmorReductionConstant = (level) => {
     return ARReductionTable[level] || 0;
-}
+};

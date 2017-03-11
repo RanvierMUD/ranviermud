@@ -63,7 +63,7 @@ class Quest extends EventEmitter {
       return;
     }
 
-    this.emit('progress', progress)
+    this.emit('progress', progress);
   }
 
   /**
