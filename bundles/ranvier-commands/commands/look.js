@@ -74,8 +74,11 @@ module.exports = (srcPath) => {
       if (otherPlayer === player) {
         return;
       }
-
-      Broadcast.sayAt(player, '[Player] ' + otherPlayer.name);
+      let combatantsDisplay = '';
+      if (otherPlayer.isInCombat()) {
+        combatantsDisplay = getCombatantsDisplay(otherPlayer);
+      }
+      Broadcast.sayAt(player, '[Player] ' + otherPlayer.name + combatantsDisplay);
     });
 
     // show all the items in the rom
@@ -104,7 +107,12 @@ module.exports = (srcPath) => {
           Broadcast.at(player, questString + ' ');
         }
       }
-      Broadcast.sayAt(player, '[NPC] ' + npc.name);
+
+      let combatantsDisplay = '';
+      if (npc.isInCombat()) {
+        combatantsDisplay = getCombatantsDisplay(npc);
+      }
+      Broadcast.sayAt(player, '[NPC] ' + npc.name + combatantsDisplay);
     });
 
     Broadcast.at(player, '[<yellow><bold>Exits</yellow></bold>: ');
@@ -192,4 +200,11 @@ module.exports = (srcPath) => {
       lookRoom(state, player);
     }
   };
+
+  function getCombatantsDisplay(entity) {
+    const combatantsList = [...entity.combatants.values()].map(combatant => combatant.name);
+    return `, <red>fighting: </red><bold>${combatantsList.join(", ")}</bold>`;
+  }
+
+
 };

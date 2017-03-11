@@ -46,7 +46,7 @@ module.exports = (srcPath) => {
       player.removeItem(item);
       toContainer.addItem(item);
 
-      Broadcast.sayAt(player, `<green>You put </green>${item.display}<gree> into </green>${toContainer.display}<green>.</green>`);
+      Broadcast.sayAt(player, `<green>You put </green>${item.display}<green> into </green>${toContainer.display}<green>.</green>`);
 
       item.emit('put', player, toContainer);
       player.emit('put', item, toContainer);

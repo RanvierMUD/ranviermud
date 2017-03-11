@@ -63,6 +63,7 @@ module.exports = (srcPath) => {
       player.addItem(item);
 
       Broadcast.sayAt(player, `<green>You receive loot: </green>${item.display}<green>.</green>`);
+
       item.emit('get', player);
       player.emit('get', item);
     }
