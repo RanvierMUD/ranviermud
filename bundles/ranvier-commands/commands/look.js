@@ -104,6 +104,7 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, `[${item.qualityColorize('Item')}] <magenta>${item.roomDesc}</magenta>`);
     });
 
+    // show all npcs
     room.npcs.forEach(npc => {
       // show quest state as [!], [%], [?] for available, in progress, ready to complete respectively
       let hasNewQuest, hasActiveQuest, hasReadyQuest;
@@ -130,7 +131,27 @@ module.exports = (srcPath) => {
       if (npc.isInCombat()) {
         combatantsDisplay = getCombatantsDisplay(npc);
       }
-      Broadcast.sayAt(player, '[NPC] ' + npc.name + combatantsDisplay);
+
+      // color NPC label by difficulty
+      let npcLabel = 'NPC';
+      switch (true) {
+        case (player.level  - npc.level > 4):
+          npcLabel = '<cyan>NPC</cyan>';
+          break;
+        case (npc.level - player.level > 9):
+          npcLabel = '<b><black>NPC</black></b>';
+          break;
+        case (npc.level - player.level > 5):
+          npcLabel = '<red>NPC</red>';
+          break;
+        case (npc.level - player.level > 3):
+          npcLabel = '<yellow>NPC</red>';
+          break;
+        default:
+          npcLabel = '<green>NPC</green>';
+          break;
+      }
+      Broadcast.sayAt(player, `[${npcLabel}] ` + npc.name + combatantsDisplay);
     });
 
     Broadcast.at(player, '[<yellow><bold>Exits</yellow></bold>: ');
