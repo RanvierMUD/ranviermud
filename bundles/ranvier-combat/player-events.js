@@ -148,6 +148,10 @@ module.exports = (srcPath) => {
         buf += ` <b>${target.name}</b> for <b>${damage.finalAmount}</b> damage.`;
         Broadcast.sayAt(this, buf);
 
+        if (this.equipment.has('wield')) {
+          this.equipment.get('wield').emit('hit', damage, target);
+        }
+
         // show damage to party members
         if (!this.party) {
           return;
@@ -180,13 +184,16 @@ module.exports = (srcPath) => {
         }
 
         let buf = '';
+        let targetName = target.name;
         if (heal.source) {
           buf = `Your <b>${heal.source.name}</b> healed`;
+          targetName = target === this ? 'You' : targetName;
         } else {
           buf = "You heal";
+          targetName = target === this ? 'Yourself' : targetName;
         }
 
-        buf += '<b> ' + (target === this ? 'Yourself' : `${target.name}`) + '</b>';
+        buf += `<b> ${targetName}</b>`;
         buf += ` for <b><green>${heal.finalAmount}</green></b> ${heal.attribute}.`;
         Broadcast.sayAt(this, buf);
 

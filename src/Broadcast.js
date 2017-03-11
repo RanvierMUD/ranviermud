@@ -186,7 +186,7 @@ class Broadcast {
    * @return {string}
    */
   static wrap(message, width = 80) {
-    return wrap(ansi.parse(Broadcast._fixNewlines(message)), width);
+    return Broadcast._fixNewlines(wrap(ansi.parse(message), width));
   }
 
   /**
@@ -209,7 +209,9 @@ class Broadcast {
   static _fixNewlines(message) {
     // Fix \n not in a \r\n pair to prevent bad rendering on windows
     message = message.replace(/\r\n/g, '<NEWLINE>').split('\n');
-    return message.join('\r\n').replace(/<NEWLINE>/g, '\r\n');
+    message = message.join('\r\n').replace(/<NEWLINE>/g, '\r\n');
+    // fix sty's incredibly stupid default of always appending ^[[0m
+    return message.replace(/\x1B\[0m$/, '');
   }
 }
 

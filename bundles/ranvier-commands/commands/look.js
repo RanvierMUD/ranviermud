@@ -2,6 +2,7 @@
 
 const leftPad = require('left-pad');
 const humanize = (sec) => { return require('humanize-duration')(sec, { round: true }); };
+const sprintf = require('sprintf-js').sprintf;
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
@@ -9,6 +10,23 @@ module.exports = (srcPath) => {
   const Item = require(srcPath + 'Item');
   const ItemType = require(srcPath + 'ItemType');
   const Logger = require(srcPath + 'Logger');
+  const Player = require(srcPath + 'Player');
+
+  return {
+    usage: "look [thing]",
+    command: state => (args, player) => {
+      if (!player.room) {
+        Logger.error(player.getName() + ' is in limbo.');
+        return Broadcast.sayAt(player, 'You are in a deep, dark void.');
+      }
+
+      if (args) {
+        return lookEntity(state, player, args);
+      }
+
+      lookRoom(state, player);
+    }
+  };
 
   function getCompass(player) {
     const room = player.room;
@@ -141,13 +159,13 @@ module.exports = (srcPath) => {
       return Broadcast.sayAt(player, "You don't see anything like that here.");
     }
 
-    if (entity instanceof player.constructor) {
-      // TODO: Show player equipment
+    if (entity instanceof Player) {
+      // TODO: Show player equipment?
       Broadcast.sayAt(player, `You see fellow player ${entity.name}.`);
       return;
     }
 
-    Broadcast.sayAt(player, entity.description);
+    Broadcast.sayAt(player, entity.description, 80);
 
     if (entity.timeUntilDecay) {
       Broadcast.sayAt(player, `You estimate that ${entity.name} will rot away in ${humanize(entity.timeUntilDecay)}.`);
@@ -172,39 +190,81 @@ module.exports = (srcPath) => {
       }
     }
 
-    if (entity instanceof Item && entity.type === ItemType.CONTAINER) {
-      if (!entity.inventory || !entity.inventory.size) {
-        return Broadcast.sayAt(player, `${entity.name} is empty.`);
-      }
+    if (entity instanceof Item) {
+      switch (entity.type) {
+        case ItemType.WEAPON:
+        case ItemType.ARMOR:
+          return Broadcast.sayAt(player, renderEquipment(entity, player));
+        case ItemType.CONTAINER: {
+          if (!entity.inventory || !entity.inventory.size) {
+            return Broadcast.sayAt(player, `${entity.name} is empty.`);
+          }
 
-      Broadcast.sayAt(player, "Contents:");
+          Broadcast.sayAt(player, "Contents:");
 
-      for (const [, item ] of entity.inventory) {
-        Broadcast.sayAt(player, "  " + item.display);
+          for (const [, item ] of entity.inventory) {
+            Broadcast.sayAt(player, "  " + item.display);
+          }
+          break;
+        }
       }
     }
   }
 
-  return {
-    usage: "look [thing]",
-    command: state => (args, player) => {
-      if (!player.room) {
-        Logger.error(player.getName() + ' is in limbo.');
-        return Broadcast.sayAt(player, 'You are in a deep, dark void.');
-      }
-
-      if (args) {
-        return lookEntity(state, player, args);
-      }
-
-      lookRoom(state, player);
-    }
-  };
 
   function getCombatantsDisplay(entity) {
     const combatantsList = [...entity.combatants.values()].map(combatant => combatant.name);
     return `, <red>fighting: </red><bold>${combatantsList.join(", ")}</bold>`;
   }
 
+  function renderEquipment(item, player) {
+    let buf = item.qualityColorize(Broadcast.line(40)) + '\r\n';
+    buf += '| ' + item.qualityColorize(sprintf('%-36s', item.name)) + ' |\r\n';
 
+    const props = item.properties;
+
+    buf += sprintf('| %-36s |\r\n', item.type === ItemType.ARMOR ? 'Armor' : 'Weapon');
+
+    if (item.type === ItemType.WEAPON) {
+      buf += sprintf('| %-18s%18s |\r\n', `${props.minDamage} - ${props.maxDamage} Damage`, `Speed ${props.speed}`);
+      const dps = ((props.minDamage + props.maxDamage) / 2) / props.speed;
+      buf += sprintf('| %-36s |\r\n', `(${dps.toPrecision(2)} damage per second)`);
+    } else if (item.type === ItemType.ARMOR) {
+      buf += sprintf('| %-36s |\r\n', item.slot[0].toUpperCase() + item.slot.slice(1));
+    }
+
+    // copy stats to make sure we don't accidentally modify it
+    const stats = Object.assign({}, props.stats);
+
+    // always show armor first
+    if (stats.armor) {
+      buf += sprintf('| %-36s |\r\n', `${stats.armor} Armor`);
+      delete stats.armor;
+    }
+
+    for (const stat in stats) {
+      const value = stats[stat];
+      buf += sprintf(
+        '| %-36s |\r\n',
+        (value > 0 ? '+' : '') + value + ' ' + stat[0].toUpperCase() + stat.slice(1)
+      );
+    }
+
+    if (props.specialEffects) {
+      props.specialEffects.forEach(effectText => {
+        const text = Broadcast.wrap(effectText, 36).split(/\r\n/g);
+        text.forEach(textLine => {
+          buf += sprintf('| <b><green>%-36s</green></b> |\r\n', textLine);
+        });
+      });
+    }
+
+    const cantUse = item.level > player.level ? '<red>%-36s</red>' : '%-36s';
+    buf += sprintf(`| ${cantUse} |\r\n`, 'Requires Level ' + item.level);
+    buf += item.qualityColorize(Broadcast.line(40));
+
+    // colorize border according to item quality
+    buf = buf.replace(/\|/g, item.qualityColorize('|'));
+    return buf;
+  }
 };

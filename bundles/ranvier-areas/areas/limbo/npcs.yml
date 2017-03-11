@@ -61,3 +61,4 @@
       pools:
         - "limbo:potions"
         - "limbo:5": 100
+        - "limbo:9": 5
