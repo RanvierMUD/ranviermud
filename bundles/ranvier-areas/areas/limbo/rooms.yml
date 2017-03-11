@@ -77,7 +77,7 @@
     beneath your feet has the word "Danger" in bright red letters tiled across the area.
   npcs:
     - id: "limbo:5"
-      respawnChance: 10
+      respawnChance: 50
   exits:
     - roomId: "limbo:5"
       direction: south

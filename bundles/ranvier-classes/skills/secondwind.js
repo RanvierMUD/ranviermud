@@ -17,11 +17,11 @@ module.exports = (srcPath) => {
     type: SkillType.SKILL,
     flags: [SkillFlag.PASSIVE],
     effect: "skill.secondwind",
+    cooldown: interval,
 
     configureEffect: effect => {
       effect.state = Object.assign(effect.state, {
         threshold: threshold,
-        interval: interval,
         restorePercent: restorePercent,
       });
 

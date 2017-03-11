@@ -13,6 +13,7 @@ module.exports = srcPath => {
       if (time === 'now') {
         Broadcast.sayAt(state.PlayerManager, '<b><yellow>Game is shutting down now!</yellow></b>');
         state.PlayerManager.saveAll();
+        process.exit();
         return;
       }
 
