@@ -11,6 +11,8 @@
     - roomId: "limbo:2"
       direction: east
       leaveMessage: " steps into the void and disappears."
+    - roomId: "limbo:8"
+      direction: north
 - id: 2
   title: "Test Room 2"
   description: >-
@@ -80,4 +82,16 @@
       respawnChance: 50
   exits:
     - roomId: "limbo:5"
+      direction: south
+- id: 8
+  title: "Ancient Wayshrine"
+  description: >
+    A runed black obelisk towers in the center of this clearing, surrounded by a faerie ring. The runes pulse and glow with
+    a soft blue light. The grass immediately around the obelisk is immaculate in stark contrast to the dying former meadow
+    that makes up the clearing. The obelisk looks like it can be used as a <b><cyan>waypoint</cyan></b>.
+  script: '8-waypoint'
+  behaviors:
+    waypoint: true
+  exits:
+    - roomId: "limbo:1"
       direction: south
