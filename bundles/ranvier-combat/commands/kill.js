@@ -13,10 +13,6 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, 'Kill whom?');
       }
 
-      if (player.isInCombat()) {
-        return Broadcast.sayAt(player, "You're too busy fighting!");
-      }
-
       let target = null;
       try {
         target = player.findCombatant(args);
