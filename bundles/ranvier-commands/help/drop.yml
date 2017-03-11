@@ -6,3 +6,13 @@ related:
   - inventory
   - remove
   - get
+related:
+- get
+- give
+- inventory
+- put
+- remove
+- wear
+- wield
+keywords:
+- loot
