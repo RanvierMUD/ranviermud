@@ -14,8 +14,8 @@ module.exports = (srcPath) => {
     aliases: [ "go", "walk" ],
     usage: 'move [direction]',
     command: (state) => (exitName, player) => {
-      const room = player.room;
-      if (!room) {
+      const oldRoom = player.room;
+      if (!oldRoom) {
         return false;
       }
 
@@ -23,7 +23,7 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, 'You are in the middle of a fight!');
       }
 
-      const exit = state.RoomManager.findExit(room, exitName);
+      const exit = state.RoomManager.findExit(oldRoom, exitName);
 
       if (!exit) {
         return Broadcast.sayAt(player, "You can't go that way.");
@@ -31,25 +31,17 @@ module.exports = (srcPath) => {
 
       const nextRoom = state.RoomManager.getRoom(exit.roomId);
 
-      player.room.emit('playerLeave', player, nextRoom);
-      for (const npc of player.room.npcs) {
-        npc.emit('playerLeave', player, nextRoom);
-      }
-      player.room.removePlayer(player);
+      player.moveTo(nextRoom, _ => {
+        state.CommandManager.get('look').execute('', player);
+      });
 
-      player.room = nextRoom;
-      nextRoom.addPlayer(player);
-
-      state.CommandManager.get('look').execute('', player);
-
-      // Emit events after the look command so that any messages
-      // sent by events appear after the room desc/prompt
-      for (const npc of nextRoom.npcs) {
-        npc.emit('playerEnter', player);
-      }
-      nextRoom.emit('playerEnter', player);
+      Broadcast.sayAt(oldRoom, `${player.name} leaves.`);
 
       for (const follower of player.followers) {
+        if (follower.room !== oldRoom) {
+          continue;
+        }
+
         if (follower instanceof Player) {
           Broadcast.sayAt(follower, `\r\nYou follow ${player.name} to ${nextRoom.name}.`);
           state.CommandManager.get('move').execute(exitName, follower);
@@ -58,8 +50,6 @@ module.exports = (srcPath) => {
           nextRoom.addNpc(follower);
         }
       }
-
-      Broadcast.sayAt(room, `${player.name} leaves.`);
 
       return true;
     }

@@ -146,6 +146,31 @@ class Player extends Character {
   }
 
   /**
+   * Move the player to the given room, emitting events appropriately
+   * @param {Room} nextRoom
+   * @param {function} onMoved Function to run after the player is moved to the next room but before enter events are fired
+   */
+  moveTo(nextRoom, onMoved = _ => _) {
+    if (this.room) {
+      this.room.emit('playerLeave', this, nextRoom);
+      for (const npc of this.room.npcs) {
+        npc.emit('playerLeave', this, nextRoom);
+      }
+      this.room.removePlayer(this);
+    }
+
+    this.room = nextRoom;
+    nextRoom.addPlayer(this);
+
+    onMoved();
+
+    for (const npc of nextRoom.npcs) {
+      npc.emit('playerEnter', this);
+    }
+    nextRoom.emit('playerEnter', this);
+  }
+
+  /**
    * Determine if a player can leave the current room to a given direction
    * TODO: This shouldn't be here but there's not better place at the moment
    * @param {string} direction

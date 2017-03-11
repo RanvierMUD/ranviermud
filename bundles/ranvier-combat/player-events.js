@@ -270,17 +270,32 @@ module.exports = (srcPath) => {
        * @param {Character} killer
        */
       killed: state => function (killer) {
-        if (killer !== this) {
-          Broadcast.sayAt(this, `You were killed by ${killer.name}.`);
-        }
-
         if (this.party) {
           Broadcast.sayAt(this.party, `<b><green>${this.name} was killed!</green></b>`);
         }
 
         this.setAttributeToMax('health');
-        Broadcast.sayAt(this, "Whoops, that sucked!");
-        Broadcast.prompt(this);
+
+        let home = state.RoomManager.getRoom(this.getMeta('waypoint.home'));
+        if (!home) {
+          home = state.RoomManager.startingRoom;
+        }
+
+        this.moveTo(home, _ => {
+          state.CommandManager.get('look').execute(null, this);
+
+          Broadcast.sayAt(this, '<b><red>Whoops, that sucked!</red></b>');
+          if (killer !== this) {
+            Broadcast.sayAt(this, `You were killed by ${killer.name}.`);
+          }
+          // player loses 20% exp gained this level on death
+          const lostExp = Math.floor(this.experience * 0.2);
+          this.experience -= lostExp;
+          this.save();
+          Broadcast.sayAt(this, `<red>You lose <b>${lostExp}</b> experience!</red>`);
+
+          Broadcast.prompt(this);
+        });
       },
 
       /**
