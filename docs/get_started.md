@@ -28,7 +28,7 @@ After installation type `yo ranvier` to see the usage.
 In another terminal execute `telnet localhost 4000` or use your favorite MUD client with hostname `localhost` and port 4000.
 (If you have customized the port, replace 4000 with whatever port you have configured Ranvier to use)
 
-By default Ranvier ships with an admin account with the username `admin` and password `tester`
+By default Ranvier ships with an admin account with the username `admin` and password `ranviermud`
 
 ## Adding Content
 

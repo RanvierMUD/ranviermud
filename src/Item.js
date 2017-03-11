@@ -4,7 +4,7 @@ const EventEmitter = require('events');
 const uuid = require('node-uuid');
 
 const ItemType = require('./ItemType');
-const Inventory = require('./Inventory');
+const { Inventory, InventoryFullError } = require('./Inventory');
 const Logger = require('./Logger');
 const Player = require('./Player');
 
@@ -42,7 +42,13 @@ class Item extends EventEmitter {
     this.description = item.description || 'Nothing special.';
     this.entityReference = item.entityReference; // EntityFactory key
     this.id          = item.id;
+
+    this.maxItems    = item.maxItems || Infinity;
     this.inventory   = item.inventory ? new Inventory(item.inventory) : null;
+    if (this.inventory) {
+      this.inventory.setMax(this.maxItems);
+    }
+
     this.isEquipped  = item.isEquipped || false;
     this.keywords    = item.keywords;
     this.level       = item.level || 1;
@@ -78,9 +84,7 @@ class Item extends EventEmitter {
   }
 
   addItem(item) {
-    if (!this.inventory) {
-      this.inventory = new Inventory([]);
-    }
+    this._setupInventory();
     this.inventory.addItem(item);
     item.belongsTo = this;
   }
@@ -96,6 +100,20 @@ class Item extends EventEmitter {
       this.inventory = null;
     }
     item.belongsTo = null;
+  }
+
+  isInventoryFull() {
+    this._setupInventory();
+    return this.inventory.isFull;
+  }
+
+  _setupInventory() {
+    if (!this.inventory) {
+      this.inventory = new Inventory({
+        items: [],
+        max: this.maxItems
+      });
+    }
   }
 
   get qualityColors() {

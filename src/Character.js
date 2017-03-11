@@ -2,10 +2,11 @@
 
 const Attributes = require('./Attributes');
 const AttributeUtil = require('./AttributeUtil');
+const Config = require('./Config');
 const EffectList = require('./EffectList');
 const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
 const EventEmitter = require('events');
-const Inventory = require('./Inventory');
+const { Inventory, InventoryFullError } = require('./Inventory');
 const Parser = require('./CommandParser').CommandParser;
 const RandomUtil = require('./RandomUtil');
 
@@ -31,7 +32,7 @@ class Character extends EventEmitter
     super();
 
     this.name = data.name;
-    this.inventory = new Inventory(data.inventory || []);
+    this.inventory = new Inventory(data.inventory || {});
     this.equipment = data.equipment || new Map();
     this.combatants = new Set();
     this.combatData = {};
@@ -273,6 +274,7 @@ class Character extends EventEmitter
     if (this.inventory) {
       this.removeItem(item);
     }
+
     if (this.equipment.has(item.slot)) {
       throw new EquipSlotTakenError();
     }
@@ -282,6 +284,10 @@ class Character extends EventEmitter
   }
 
   unequip(slot) {
+    if (this.isInventoryFull()) {
+      throw new InventoryFullError();
+    }
+
     const item = this.equipment.get(slot);
     item.isEquipped = false;
     this.equipment.delete(slot);
@@ -289,7 +295,7 @@ class Character extends EventEmitter
   }
 
   addItem(item) {
-    this.inventory = this.inventory || new Inventory([]);
+    this._setupInventory();
     this.inventory.addItem(item);
     item.belongsTo = this;
   }
@@ -305,6 +311,19 @@ class Character extends EventEmitter
       this.inventory = null;
     }
     item.belongsTo = null;
+  }
+
+  isInventoryFull() {
+    this._setupInventory();
+    return this.inventory.isFull;
+  }
+
+  _setupInventory() {
+    this.inventory = this.inventory || new Inventory();
+    // Default max inventory size config
+    if (!this.isNpc && !isFinite(this.inventory.getMax())) {
+      this.inventory.setMax(Config.get('defaultMaxPlayerInventory') || 20);
+    }
   }
 
   /**

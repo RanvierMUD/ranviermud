@@ -28,5 +28,6 @@
   "allowMultiplay": false,
   "startingRoom": "limbo:1",
   "moveCommand": "move",
-  "skillLag": 2000
+  "skillLag": 2000,
+  "defaultMaxPlayerInventory": 16
 }

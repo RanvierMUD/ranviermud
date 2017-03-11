@@ -3,12 +3,12 @@ command: get
 body: |
   Get an item from the room or a container
 related:
-- drop
-- give
-- inventory
-- put
-- wear
-- wield
+  - drop
+  - give
+  - inventory
+  - put
+  - wear
+  - wield
 keywords:
-- items
-- inventory
+  - items
+  - inventory

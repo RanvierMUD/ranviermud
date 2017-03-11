@@ -13,7 +13,6 @@ module.exports = srcPath => {
       }
 
       let [ targetItem, to, targetRecip ] = args.split(' ');
-      console.log({ targetItem, to, targetRecip });
       // give foo to bar
       if (to !== 'to' || !targetRecip) {
         targetRecip = to;
@@ -48,6 +47,10 @@ module.exports = srcPath => {
 
       if (target === player) {
         return B.sayAt(player, `<green>You move ${targetItem.display} from one hand to the other. That was productive.</green>`);
+      }
+
+      if (target.isInventoryFull()) {
+        return B.sayAt(player, 'They can\'t carry any more.');
       }
 
       player.removeItem(targetItem);

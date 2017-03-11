@@ -28,9 +28,9 @@
   keywords: [ "wooden", "chest" ]
   description: "Time has not been kind to this chest. It seems to be held together solely by the dirt and rust."
   items: [ "limbo:1", "limbo:6", "limbo:7", "limbo:8" ]
+  maxItems: 5
   properties:
     noPickup: true
-    maxItems: 2
 - id: 4
   name: "Scraps"
   quality: poor

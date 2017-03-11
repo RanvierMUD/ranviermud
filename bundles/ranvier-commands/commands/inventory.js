@@ -10,7 +10,11 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, "You aren't carrying anything.");
       }
 
-      Broadcast.sayAt(player, "You are carrying:");
+      Broadcast.at(player, "You are carrying");
+      if (player.inventory.getMax() < Infinity) {
+        Broadcast.at(player, ` ${player.inventory.size}/${player.inventory.getMax()}`);
+      }
+      Broadcast.sayAt(player, ':');
 
       // TODO: Implement grouping
       for (const [, item ] of player.inventory) {

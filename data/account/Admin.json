@@ -3,5 +3,6 @@
   "characters": [
     "Admin"
   ],
-  "password": "$2a$10$7MZUNyykAel6mnF/3mmBV.QBqeVmYNXLRVY.Nr.N0HRiAxR4Iks.y"
+  "password": "$2a$10$2c91FWD1S0jkyyaLBPY8juTh0rUTpXQyhNDd1lVCNjLROH47gmMim",
+  "banned": false
 }

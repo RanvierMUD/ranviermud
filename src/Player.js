@@ -44,6 +44,11 @@ class Player extends Character {
     // WARNING: values must be JSON.stringify-able
     this.metadata = data.metadata || {};
     this.playerClass = null;
+
+    // Default max inventory size config
+    if (!isFinite(this.inventory.getMax())) {
+      this.inventory.setMax(Config.get('defaultMaxPlayerInventory') || 20);
+    }
   }
 
   /**

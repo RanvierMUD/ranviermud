@@ -55,6 +55,10 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, `${item.display} can't be picked up.`);
       }
 
+      if (player.isInventoryFull()) {
+        return Broadcast.sayAt(player, "You can't hold any more items.");
+      }
+
       if (container) {
         container.removeItem(item);
       } else {

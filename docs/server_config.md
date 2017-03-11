@@ -36,3 +36,6 @@ Ranvier configuration is stored in the `ranvier.json` file in the root of the pr
 
 `logfile` _`string`_
 :    Filename to be used for logging. Optional; by default Ranvier will only log to the console. Logs will be in the `/log/` directory and will always end in `.log`.
+
+`defaultMaxPlayerInventory` _`number`_ `(16)`
+:    Default maximum number of items players can carry. NPCs default to Infinity.

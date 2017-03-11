@@ -3,12 +3,12 @@ command: put
 body: |
   Put an item in a container
 related:
-- drop
-- get
-- give
-- inventory
-- wear
-- wield
+  - drop
+  - get
+  - give
+  - inventory
+  - wear
+  - wield
 keywords:
-- items
-- inventory
+  - items
+  - inventory

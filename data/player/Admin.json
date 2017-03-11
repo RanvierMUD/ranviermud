@@ -18,7 +18,7 @@
     },
     "health": {
       "delta": 0,
-      "base": 182
+      "base": 154
     },
     "energy": {
       "delta": 0,
@@ -35,7 +35,10 @@
   "effects": [],
   "playerClass": "warrior",
   "experience": 0,
-  "inventory": [],
+  "inventory": {
+    "items": [],
+    "max": 16
+  },
   "quests": {
     "completed": [],
     "active": []
