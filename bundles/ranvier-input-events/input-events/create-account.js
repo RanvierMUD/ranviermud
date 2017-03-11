@@ -25,7 +25,10 @@ module.exports = (srcPath) => {
             username: name
           });
 
-          return socket.emit('new-account-password', socket, { account: newAccount });
+          return socket.emit('change-password', socket, {
+            account: newAccount,
+            nextStage: 'create-player'
+          });
         } else if (data && data === 'n' || data === 'no') {
           say("Let's try again!");
 

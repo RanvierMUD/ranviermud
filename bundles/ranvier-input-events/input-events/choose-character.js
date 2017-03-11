@@ -37,6 +37,12 @@ module.exports = (srcPath) => {
       // Configure account options menu
       if (canAddCharacter) {
         options.push({
+          display: 'Change Password',
+          onSelect: () => {
+            socket.emit('change-password', socket, { account, nextStage: 'choose-character' });
+          },
+        });
+        options.push({
           display: 'Create New Character',
           onSelect: () => {
             handleMultiplaying();

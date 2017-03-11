@@ -21,11 +21,11 @@ module.exports = (srcPath) => {
 
         if (!args.account.checkPassword(pass.toString().trim())) {
           say("<red>Passwords do not match.</red>");
-          return socket.emit('new-account-password', socket, args);
+          return socket.emit('change-password', socket, args);
         }
 
         say(''); // echo was disabled, the user's Enter didn't make a newline
-        return socket.emit('create-player', socket, { account: args.account });
+        return socket.emit(args.nextStage, socket, args);
       });
     }
   };

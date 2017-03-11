@@ -11,26 +11,24 @@ module.exports = (srcPath) => {
       const say = EventUtil.genSay(socket);
       const write = EventUtil.genWrite(socket);
 
-      say("Your password must be between 6 and 30 characters.");
+      say("Your password must be at least 8 characters.");
       write('<cyan>Enter your account password:</cyan> ');
 
       socket.toggleEcho();
       socket.once('data', pass => {
         socket.toggleEcho();
         say('');
+
         pass = pass.toString().trim();
 
         if (!pass) {
           say('You must use a password.');
-          return socket.emit('new-account-password', socket, args);
+          return socket.emit('change-password', socket, args);
         }
-        if (pass.length <= 5) {
+
+        if (pass.length < 8) {
           say('Your password is not long enough.');
-          return socket.emit('new-account-password', socket, args);
-        }
-        if (pass.length > 30) {
-          say('Your password is too long.');
-          return socket.emit('new-account-password', socket, args);
+          return socket.emit('change-password', socket, args);
         }
 
         // setPassword handles hashing
@@ -38,7 +36,7 @@ module.exports = (srcPath) => {
         state.AccountManager.addAccount(args.account);
         args.account.save();
 
-        socket.emit('confirm-new-password', socket, args);
+        socket.emit('confirm-password', socket, args);
       });
     }
   };

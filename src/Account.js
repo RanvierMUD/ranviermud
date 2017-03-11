@@ -9,6 +9,7 @@ class Account {
     this.username   = data.username;
     this.characters = data.characters || [];
     this.password   = data.password;
+    this.banned = data.banned || false;
   }
 
   getUsername() {
@@ -25,11 +26,7 @@ class Account {
 
   setPassword(pass) {
     this.password = this._hashPassword(pass);
-  }
-
-  _hashPassword(pass) {
-    const salt = bcrypt.genSaltSync(10);
-    return bcrypt.hashSync(pass, salt);
+    this.save();
   }
 
   checkPassword(pass) {
@@ -38,6 +35,18 @@ class Account {
 
   save(callback) {
     Data.save('account', this.username, this, callback);
+  }
+
+  ban() {
+    this.banned = true;
+    this.save();
+
+    // There is no unban because this can just be done by manually editing the account file
+  }
+
+  _hashPassword(pass) {
+    const salt = bcrypt.genSaltSync(10);
+    return bcrypt.hashSync(pass, salt);
   }
 
   static validateName(name) {

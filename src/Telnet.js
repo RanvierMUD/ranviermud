@@ -25,7 +25,7 @@ const OPT_EOR = 25;
  */
 class TelnetStream extends EventEmitter
 {
-  constructor (opts) {
+  constructor(opts) {
     super();
     this.isTTY = true;
     this.env = {};
@@ -35,19 +35,23 @@ class TelnetStream extends EventEmitter
     this.gaMode = null;
   }
 
-  get readable () {
+  get readable() {
     return this.stream.readable;
   }
 
-  get writable () {
+  get writable() {
     return this.stream.writable;
   }
 
-  end (string, enc) {
+  address() {
+    return this.stream && this.stream.address();
+  }
+
+  end(string, enc) {
     this.stream.end(string, enc);
   }
 
-  write (data, encoding) {
+  write(data, encoding) {
     if (!Buffer.isBuffer(data)) {
       data = new Buffer(data, encoding);
     }
@@ -79,19 +83,19 @@ class TelnetStream extends EventEmitter
     }
   }
 
-  setEncoding (encoding) {
+  setEncoding(encoding) {
     this.stream.setEncoding(encoding);
   }
 
-  pause () {
+  pause() {
     this.stream.pause();
   }
 
-  resume () {
+  resume() {
     this.stream.resume();
   }
 
-  destroy () {
+  destroy() {
     this.stream.destroy();
   }
 
@@ -100,7 +104,7 @@ class TelnetStream extends EventEmitter
    * @param {number}       willingness DO/DONT/WILL/WONT
    * @param {number|Array} command     Option to do/don't do or subsequence as array
    */
-  telnetCommand (willingness, command) {
+  telnetCommand(willingness, command) {
     let seq = [IAC, willingness];
     if (Array.isArray(command)) {
       seq.push.apply(seq, command);
@@ -111,7 +115,7 @@ class TelnetStream extends EventEmitter
     this.stream.write(new Buffer(seq));
   }
 
-  toggleEcho () {
+  toggleEcho() {
     this.echoing = !this.echoing;
     this.telnetCommand(this.echoing ? WONT : WILL, OPT_ECHO);
   }
@@ -124,7 +128,7 @@ class TelnetStream extends EventEmitter
     this.stream.write(new Buffer([IAC, this.gaMode]));
   }
 
-  attach (connection) {
+  attach(connection) {
     this.stream = connection;
     let inputbuf = new Buffer(this.maxInputLength);
     let inputlen = 0;
@@ -180,7 +184,7 @@ class TelnetStream extends EventEmitter
    *
    * @param {Buffer} inputbuf
    */
-  input (inputbuf) {
+  input(inputbuf) {
     // strip any negotiations
     let cleanbuf = Buffer.alloc(inputbuf.length);
     let i = 0;
@@ -247,7 +251,7 @@ class TelnetServer
    * @param {object}   streamOpts options for the stream @see TelnetStream
    * @param {function} listener   connected callback
    */
-  constructor (streamOpts, listener) {
+  constructor(streamOpts, listener) {
     this.netServer = net.createServer({}, (connection) => {
       connection.fresh = true;
       var stream = new TelnetStream(streamOpts);

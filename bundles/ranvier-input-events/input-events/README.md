@@ -4,16 +4,16 @@ Login event flow
                         |
       (new account) __login__  (existing account)
                    /         \
-     create-account           password
+     create-account           password----------------------
+        |                            |                     |
+  change-password              choose-character      change-password
         |                            |
-    new-account-password        choose-character
+  create-player                      |
         |                            |
-    create-player                    |
+  player-name-check                  |
         |                            |
-    player-name-check                |
-        |                            |
-    finish-player                    |
-        |_________________________-done (add player to game world)
+  finish-player                      |
+        |__________________________done (add player to game world)
                                      |
                                    commands
              (command prompt, all player input after login goes through this event)

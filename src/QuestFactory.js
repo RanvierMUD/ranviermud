@@ -44,17 +44,19 @@ class QuestFactory {
     });
 
     // Can't think of a better place to put this stuff yet
+    instance.on('progress', (progress) => {
+      B.sayAt(player, `\r\n<bold><yellow>${progress.display}</yellow></bold>`);
+      player.save();
+    });
+
     instance.on('start', () => {
       B.sayAt(player, `\r\n<bold><yellow>Quest Started: ${instance.config.title}!</yellow></bold>`);
       if (instance.config.desc) {
         B.sayAt(player, B.line(80));
         B.sayAt(player, `<bold><yellow>${instance.config.desc}</yellow></bold>`, 80);
       }
-    });
 
-    instance.on('progress', (progress) => {
-      B.sayAt(player, `\r\n<bold><yellow>${progress.display}</yellow></bold>`);
-      player.save();
+      instance.emit('progress', instance.getProgress());
     });
 
     instance.on('turn-in-ready', () => {

@@ -44,6 +44,7 @@ const RoomManager = require('./src/RoomManager');
 const SkillManager = require('./src/SkillManager');
 
 const Telnet = require('./src/Telnet');
+const Data = require('./src/Data');
 
 // Wrapper for ranvier.json
 const Config = require('./src/Config');
@@ -132,6 +133,11 @@ function init(restartServer) {
     * Effectively the 'main' game loop but not really because it's a REPL
     */
     server = new Telnet.TelnetServer({}, socket => {
+      const banned = Data.parseFile(__dirname + '/data/banned.json');
+      if (banned.includes(socket.address().address)) {
+        return socket.destroy();
+      }
+
       socket.on('interrupt', () => {
         socket.write("\n*interrupt*\n");
       });

@@ -8,7 +8,7 @@ module.exports = (srcPath) => {
   return {
     event: state => (socket, args) => {
       if (!args || !args.dontwelcome) {
-        socket.write("Welcome, what is your name? ");
+        socket.write('Welcome, what is your name? ');
       }
 
       socket.once('data', name => {
@@ -16,7 +16,7 @@ module.exports = (srcPath) => {
 
         const invalid = Account.validateName(name);
         if (invalid) {
-          socket.write(invalid + "\r\n");
+          socket.write(invalid + '\r\n');
           return socket.emit('login', socket);
         }
 
@@ -31,6 +31,13 @@ module.exports = (srcPath) => {
         }
 
         account = state.AccountManager.loadAccount(name);
+
+        if (account.banned) {
+          socket.write('This account has been banned.\r\n');
+          socket.destroy();
+          return;
+        }
+
         return socket.emit('password', socket, { dontwelcome: false, account });
       });
     }
