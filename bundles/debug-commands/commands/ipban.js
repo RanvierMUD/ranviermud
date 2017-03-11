@@ -6,9 +6,11 @@
 module.exports = srcPath => {
   const B = require(srcPath + 'Broadcast');
   const Data = require(srcPath + 'Data');
+  const PlayerRoles = require(srcPath + 'PlayerRoles');
 
   return {
     usage: 'ipban <player> sure',
+    requiredRole: PlayerRoles.ADMIN,
     command: state => (args, player) => {
       const say = message => B.sayAt(player, message);
 

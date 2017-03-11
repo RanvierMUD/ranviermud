@@ -15,9 +15,8 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, "<bold><white>===============================================</bold></white>");
 
       let i = 0;
-      for (let [ name ] of state.CommandManager.commands) {
-        // hide "private" commands
-        if (name[0] === '_') {
+      for (let [ name, command ] of state.CommandManager.commands) {
+        if (player.role < command.requiredRole) {
           continue;
         }
 
@@ -38,11 +37,6 @@ module.exports = (srcPath) => {
 
       i = 0;
       for (let [ name ] of state.ChannelManager.channels) {
-        // hide "private" commands
-        if (name[0] === '_') {
-          continue;
-        }
-
         Broadcast.at(player, sprintf("%-20s", name));
         if (++i % 3 === 0) {
           Broadcast.sayAt(player, '');
