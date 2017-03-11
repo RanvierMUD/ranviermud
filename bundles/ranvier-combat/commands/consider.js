@@ -36,7 +36,7 @@ module.exports = srcPath => {
           description = 'They are a bit stronger than you. You may survive but it would be hard won.';
           break;
         default:
-          description = 'You are nearly evenly matched. You should be wary fighting more than at a time.';
+          description = 'You are nearly evenly matched. You should be wary fighting more than one at a time.';
           break;
       }
 
