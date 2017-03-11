@@ -2,11 +2,14 @@
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
   const say = Broadcast.sayAt;
+  const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const CommandManager = require(srcPath + 'CommandManager');
 
-  class QuestCommand {
-    static list(state, player, options) {
+  const subcommands = new CommandManager();
+  subcommands.add({
+    name: 'list',
+    command: state => (options, player) => {
       if (!options.length) {
         return say(player, "List quests from whom? quest list <npc>");
       }
@@ -42,8 +45,12 @@ module.exports = (srcPath) => {
         }
       }
     }
+  });
 
-    static start(state, player, options) {
+  subcommands.add({
+    name: 'start',
+    aliases: [ 'accept' ],
+    command: state => (options, player) => {
       if (options.length < 2) {
         return say(player, "Start which quest from whom? 'quest start <npc> <number>'");
       }
@@ -78,12 +85,11 @@ module.exports = (srcPath) => {
       player.questTracker.start(targetQuest);
       player.save();
     }
+  });
 
-    static accept(...args) {
-      QuestCommand.start(...args);
-    }
-
-    static log(state, player, options) {
+  subcommands.add({
+    name: 'log',
+    command: state => (options, player) => {
       const active = [...player.questTracker.activeQuests];
       if (!active.length) {
         return say(player, "You have no active quests.");
@@ -113,8 +119,11 @@ module.exports = (srcPath) => {
         say(player, '  ' + Broadcast.line(78));
       }
     }
+  });
 
-    static complete(state, player, options)  {
+  subcommands.add({
+    name: 'complete',
+    command: (state) => (options, player) => {
       const active = [...player.questTracker.activeQuests];
       let targetQuest = parseInt(options[0], 10);
       targetQuest = isNaN(targetQuest) ? -1 : targetQuest - 1;
@@ -138,24 +147,23 @@ module.exports = (srcPath) => {
       quest.complete();
       player.save();
     }
-  }
+  });
 
   return {
     usage: 'quest <log/list/complete/start> [npc] [number]',
     command : (state) => (args, player) => {
-      args = args.trim();
-
       if (!args.length) {
         return say(player, "Missing command. See 'help quest'");
       }
 
-      const [command, ...options] = args.split(' ');
+      const [ command, ...options ] = args.split(' ');
 
-      if (Reflect.has(QuestCommand, command)) {
-        return QuestCommand[command](state, player, options);
+      const subcommand = subcommands.find(command);
+      if (!subcommand) {
+        return say(player, "Invalid command. See 'help quest'");
       }
 
-      say(player, "Invalid command. See 'help quest'");
+      subcommand.command(state)(options, player);
     }
   };
 };
