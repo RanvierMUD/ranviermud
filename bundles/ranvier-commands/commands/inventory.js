@@ -11,8 +11,8 @@ module.exports = (srcPath) => {
       }
 
       Broadcast.at(player, "You are carrying");
-      if (player.inventory.getMax() < Infinity) {
-        Broadcast.at(player, ` ${player.inventory.size}/${player.inventory.getMax()}`);
+      if (isFinite(player.inventory.getMax())) {
+        Broadcast.at(player, ` (${player.inventory.size}/${player.inventory.getMax()})`);
       }
       Broadcast.sayAt(player, ':');
 

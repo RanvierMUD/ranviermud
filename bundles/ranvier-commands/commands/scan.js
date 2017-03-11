@@ -11,7 +11,12 @@ module.exports = srcPath => {
     command: state => (args, player) => {
       for (const exit of player.room.exits) {
         const room = state.RoomManager.getRoom(exit.roomId);
-        B.sayAt(player, `(${exit.direction}) ${room.title}:`);
+
+        B.at(player, `(${exit.direction}) ${room.title}`);
+        if (room.npcs.size || room.players.size) {
+          B.sayAt(player, ':');
+        }
+
         for (const npc of room.npcs) {
           B.sayAt(player, `  [NPC] ${npc.name}`);
         }

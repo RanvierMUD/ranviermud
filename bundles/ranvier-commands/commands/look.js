@@ -5,7 +5,7 @@ const humanize = (sec) => { return require('humanize-duration')(sec, { round: tr
 const sprintf = require('sprintf-js').sprintf;
 
 module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
+  const B = require(srcPath + 'Broadcast');
   const CommandParser = require(srcPath + 'CommandParser').CommandParser;
   const Item = require(srcPath + 'Item');
   const ItemType = require(srcPath + 'ItemType');
@@ -17,7 +17,7 @@ module.exports = (srcPath) => {
     command: state => (args, player) => {
       if (!player.room) {
         Logger.error(player.getName() + ' is in limbo.');
-        return Broadcast.sayAt(player, 'You are in a deep, dark void.');
+        return B.sayAt(player, 'You are in a deep, dark void.');
       }
 
       if (args) {
@@ -77,15 +77,15 @@ module.exports = (srcPath) => {
 
     //The top line has 99 characters of ANSI coloring (114(COLORS) - 2(NW) - 1(N) - 2(NE) - 5(SPACING) - 5(SPACING))
     //The 164 accounts for this
-    Broadcast.sayAt(player, `<yellow><bold>${room.title}</bold></yellow>` + leftPad(line1, 164 - room.title.length));
-    Broadcast.sayAt(player, '--------------------------------------------' + leftPad(line2, 90));
-    Broadcast.sayAt(player, leftPad(line3, 166));
+    B.sayAt(player, `<yellow><bold>${room.title}</bold></yellow>` + leftPad(line1, 164 - room.title.length));
+    B.sayAt(player, '--------------------------------------------' + leftPad(line2, 90));
+    B.sayAt(player, leftPad(line3, 166));
 
     if (!player.getMeta('config.brief')) {
-      Broadcast.sayAt(player, room.description, 80);
+      B.sayAt(player, room.description, 80);
     }
 
-    Broadcast.sayAt(player, '');
+    B.sayAt(player, '');
 
     // show all players
     room.players.forEach(otherPlayer => {
@@ -96,12 +96,12 @@ module.exports = (srcPath) => {
       if (otherPlayer.isInCombat()) {
         combatantsDisplay = getCombatantsDisplay(otherPlayer);
       }
-      Broadcast.sayAt(player, '[Player] ' + otherPlayer.name + combatantsDisplay);
+      B.sayAt(player, '[Player] ' + otherPlayer.name + combatantsDisplay);
     });
 
     // show all the items in the rom
     room.items.forEach(item => {
-      Broadcast.sayAt(player, `[${item.qualityColorize('Item')}] <magenta>${item.roomDesc}</magenta>`);
+      B.sayAt(player, `[${item.qualityColorize('Item')}] <magenta>${item.roomDesc}</magenta>`);
     });
 
     // show all npcs
@@ -123,7 +123,7 @@ module.exports = (srcPath) => {
           questString += hasNewQuest ? '[<bold><yellow>!</yellow></bold>]' : '';
           questString += hasActiveQuest ? '[<bold><yellow>%</yellow></bold>]' : '';
           questString += hasReadyQuest ? '[<bold><yellow>?</yellow></bold>]' : '';
-          Broadcast.at(player, questString + ' ');
+          B.at(player, questString + ' ');
         }
       }
 
@@ -151,12 +151,12 @@ module.exports = (srcPath) => {
           npcLabel = '<green>NPC</green>';
           break;
       }
-      Broadcast.sayAt(player, `[${npcLabel}] ` + npc.name + combatantsDisplay);
+      B.sayAt(player, `[${npcLabel}] ` + npc.name + combatantsDisplay);
     });
 
-    Broadcast.at(player, '[<yellow><bold>Exits</yellow></bold>: ');
-      Broadcast.at(player, Array.from(room.exits).map(ex => ex.direction).join(' '));
-      Broadcast.sayAt(player, ']');
+    B.at(player, '[<yellow><bold>Exits</yellow></bold>: ');
+      B.at(player, Array.from(room.exits).map(ex => ex.direction).join(' '));
+      B.sayAt(player, ']');
   }
 
   function lookEntity(state, player, args) {
@@ -177,19 +177,19 @@ module.exports = (srcPath) => {
     entity = entity || CommandParser.parseDot(search, player.inventory);
 
     if (!entity) {
-      return Broadcast.sayAt(player, "You don't see anything like that here.");
+      return B.sayAt(player, "You don't see anything like that here.");
     }
 
     if (entity instanceof Player) {
       // TODO: Show player equipment?
-      Broadcast.sayAt(player, `You see fellow player ${entity.name}.`);
+      B.sayAt(player, `You see fellow player ${entity.name}.`);
       return;
     }
 
-    Broadcast.sayAt(player, entity.description, 80);
+    B.sayAt(player, entity.description, 80);
 
     if (entity.timeUntilDecay) {
-      Broadcast.sayAt(player, `You estimate that ${entity.name} will rot away in ${humanize(entity.timeUntilDecay)}.`);
+      B.sayAt(player, `You estimate that ${entity.name} will rot away in ${humanize(entity.timeUntilDecay)}.`);
     }
 
     const usable = entity.getBehavior('usable');
@@ -198,16 +198,16 @@ module.exports = (srcPath) => {
         const useSpell = state.SpellManager.get(usable.spell);
         if (useSpell) {
           useSpell.options = usable.options;
-          Broadcast.sayAt(player, useSpell.info(player));
+          B.sayAt(player, useSpell.info(player));
         }
       }
 
       if (usable.effect && usable.config.description) {
-        Broadcast.sayAt(player, usable.config.description);
+        B.sayAt(player, usable.config.description);
       }
 
       if (usable.charges) {
-        Broadcast.sayAt(player, `There are ${usable.charges} charges remaining.`);
+        B.sayAt(player, `There are ${usable.charges} charges remaining.`);
       }
     }
 
@@ -215,16 +215,20 @@ module.exports = (srcPath) => {
       switch (entity.type) {
         case ItemType.WEAPON:
         case ItemType.ARMOR:
-          return Broadcast.sayAt(player, renderEquipment(entity, player));
+          return B.sayAt(player, renderEquipment(entity, player));
         case ItemType.CONTAINER: {
           if (!entity.inventory || !entity.inventory.size) {
-            return Broadcast.sayAt(player, `${entity.name} is empty.`);
+            return B.sayAt(player, `${entity.name} is empty.`);
           }
 
-          Broadcast.sayAt(player, "Contents:");
+          B.at(player, 'Contents');
+          if (isFinite(entity.inventory.getMax())) {
+            B.at(player, ` (${entity.inventory.size}/${entity.inventory.getMax()})`);
+          }
+          B.sayAt(player, ':');
 
           for (const [, item ] of entity.inventory) {
-            Broadcast.sayAt(player, "  " + item.display);
+            B.sayAt(player, '  ' + item.display);
           }
           break;
         }
@@ -239,7 +243,7 @@ module.exports = (srcPath) => {
   }
 
   function renderEquipment(item, player) {
-    let buf = item.qualityColorize('.' + Broadcast.line(38) + '.') + '\r\n';
+    let buf = item.qualityColorize('.' + B.line(38) + '.') + '\r\n';
     buf += '| ' + item.qualityColorize(sprintf('%-36s', item.name)) + ' |\r\n';
 
     const props = item.properties;
@@ -273,7 +277,7 @@ module.exports = (srcPath) => {
 
     if (props.specialEffects) {
       props.specialEffects.forEach(effectText => {
-        const text = Broadcast.wrap(effectText, 36).split(/\r\n/g);
+        const text = B.wrap(effectText, 36).split(/\r\n/g);
         text.forEach(textLine => {
           buf += sprintf('| <b><green>%-36s</green></b> |\r\n', textLine);
         });
@@ -282,7 +286,7 @@ module.exports = (srcPath) => {
 
     const cantUse = item.level > player.level ? '<red>%-36s</red>' : '%-36s';
     buf += sprintf(`| ${cantUse} |\r\n`, 'Requires Level ' + item.level);
-    buf += item.qualityColorize("'" + Broadcast.line(38) + "'") + '\r\n';
+    buf += item.qualityColorize("'" + B.line(38) + "'") + '\r\n';
 
     // colorize border according to item quality
     buf = buf.replace(/\|/g, item.qualityColorize('|'));
