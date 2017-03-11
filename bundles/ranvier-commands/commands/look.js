@@ -218,7 +218,7 @@ module.exports = (srcPath) => {
   }
 
   function renderEquipment(item, player) {
-    let buf = item.qualityColorize(Broadcast.line(40)) + '\r\n';
+    let buf = item.qualityColorize('.' + Broadcast.line(38) + '.') + '\r\n';
     buf += '| ' + item.qualityColorize(sprintf('%-36s', item.name)) + ' |\r\n';
 
     const props = item.properties;
@@ -261,7 +261,7 @@ module.exports = (srcPath) => {
 
     const cantUse = item.level > player.level ? '<red>%-36s</red>' : '%-36s';
     buf += sprintf(`| ${cantUse} |\r\n`, 'Requires Level ' + item.level);
-    buf += item.qualityColorize(Broadcast.line(40));
+    buf += item.qualityColorize("'" + Broadcast.line(38) + "'") + '\r\n';
 
     // colorize border according to item quality
     buf = buf.replace(/\|/g, item.qualityColorize('|'));

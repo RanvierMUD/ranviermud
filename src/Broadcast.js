@@ -145,7 +145,7 @@ class Broadcast {
    * @return {string}
    */
   static center(width, message, color, fillChar = " ") {
-    const padWidth = Math.round(width / 2 - message.length / 2);
+    const padWidth = width / 2 - message.length / 2;
     let openColor = '';
     let closeColor = '';
     if (color) {
@@ -155,9 +155,9 @@ class Broadcast {
 
     return (
       openColor +
-      Broadcast.line(padWidth, fillChar) +
+      Broadcast.line(Math.floor(padWidth), fillChar) +
       message +
-      Broadcast.line(padWidth, fillChar) +
+      Broadcast.line(Math.ceil(padWidth), fillChar) +
       closeColor
     );
   }

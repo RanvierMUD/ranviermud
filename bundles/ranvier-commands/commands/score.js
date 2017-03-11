@@ -45,7 +45,7 @@ module.exports = (srcPath) => {
       const max = p.normalizeWeaponDamage(weaponDamage.max);
       say(sprintf(' %6s:<b>%5s</b> - <b>%-5s</b> |', 'Damage', min, max));
       B.at(p, sprintf('%37s', '|'));
-      say(sprintf(' %6s:<b>%12s</b> |', 'Speed', B.center(12, p.getWeaponSpeed() + ' sec')));
+      say(sprintf(' %6s: <b>%12s</b> |', 'Speed', B.center(12, p.getWeaponSpeed() + ' sec')));
 
       say(sprintf('%60s', "'" + B.line(22) + "'"));
 
