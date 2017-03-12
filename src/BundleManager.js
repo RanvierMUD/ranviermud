@@ -292,7 +292,7 @@ class BundleManager {
 
       const commandName = path.basename(commandFile, path.extname(commandFile));
       const loader = require(commandPath);
-      let cmdImport = loader(srcPath);
+      let cmdImport = loader(srcPath, bundlesPath);
       cmdImport.command = cmdImport.command(this.state);
 
 

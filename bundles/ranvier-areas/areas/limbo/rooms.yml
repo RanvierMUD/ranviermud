@@ -1,7 +1,7 @@
 - id: 1
   title: Test Room 1
   description: "A featureless white room. A pitch black void in the shape of archway can be seen on the east side of the room."
-  npcs: ["limbo:1"]
+  npcs: ["limbo:1" ]
   items:
     - id: "limbo:3"
       respawnChance: 20
@@ -13,6 +13,8 @@
       leaveMessage: " steps into the void and disappears."
     - roomId: "limbo:8"
       direction: north
+    - roomId: "limbo:9"
+      direction: west
 - id: 2
   title: "Test Room 2"
   description: >-
@@ -84,7 +86,7 @@
     - roomId: "limbo:5"
       direction: south
 - id: 8
-  title: "Ancient Wayshrine"
+  title: "Ancient Wayshrine (Waypoint)"
   description: >
     A runed black obelisk towers in the center of this clearing, surrounded by a faerie ring. The runes pulse and glow with
     a soft blue light. The grass immediately around the obelisk is immaculate in stark contrast to the dying former meadow
@@ -95,3 +97,16 @@
   exits:
     - roomId: "limbo:1"
       direction: south
+- id: 9
+  title: "Wally's Wonderful Wares (Shop)"
+  description: >- 
+    A very brightly colored shop stall stands in the middle of an otherwise desolate clearing. The stall is covered in
+    colorful cloth, shining gems, and battle gear of all varieties. A large sign sits next to the products:
+    "<b><yellow>Wally's Wonderful Wares</yellow></b> has the best products in town! Armor, weapons and potions, you name
+    and we... might have it!"
+  npcs:
+    - id: "limbo:6"
+      respawnChance: 0
+  exits:
+    - roomId: "limbo:1"
+      direction: east

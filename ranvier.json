@@ -18,6 +18,7 @@
     "ranvier-combat",
     "ranvier-classes",
     "ranvier-quests",
+    "ranvier-vendors",
     "debug-commands"
   ],
   "maxAccountNameLength": 20,

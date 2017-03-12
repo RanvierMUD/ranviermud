@@ -62,3 +62,27 @@
         - "limbo:potions"
         - "limbo:5": 100
         - "limbo:9": 5
+- id: 6
+  keywords: ["wally", "wonderful", "shop", "vendor"]
+  name: "Wally the Wonderful"
+  description: >-
+    Moe's Shop has the best wares in town! Armor, weapons and potions, you name and we ... might have it!
+  level: 99
+  pacifist: true
+  behaviors:
+    vendor:
+      items:
+        "limbo:5":
+          cost: 30
+          currency: gold
+        "limbo:6":
+          cost: 30
+          currency: gold
+        "limbo:7":
+          cost: 100
+          currency: gold
+        "limbo:8":
+          cost: 150
+          currency: gold
+      enterMessage: "Step right up! Get your wares at Moe's Shop!"
+      leaveMessage: "Come back soon!"

@@ -64,7 +64,10 @@ class CommandParser {
       return {
         type: CommandType.COMMAND,
         command: state.CommandManager.get(moveCommand),
-        args: direction
+        args: direction,
+        // Send the equivalent of bash $0 so the command, when executed,
+        // can tell which of its aliases was used
+        originalCommand: direction
       };
     }
 
@@ -73,7 +76,8 @@ class CommandParser {
       return {
         type: CommandType.COMMAND,
         command: state.CommandManager.get(moveCommand),
-        args: command
+        args: command,
+        originalCommand: command
       };
     }
 
@@ -82,17 +86,19 @@ class CommandParser {
       return {
         type: CommandType.COMMAND,
         command: state.CommandManager.get(command),
-        args
+        args,
+        originalCommand: command
       };
     }
 
     // see if they typed at least the beginning of a command and try to match
-    let found = state.CommandManager.find(command);
+    let found = state.CommandManager.find(command, /* returnAlias: */ true);
     if (found) {
       return {
         type: CommandType.COMMAND,
-        command: found,
-        args
+        command: found.command,
+        args,
+        originalCommand: found.alias
       };
     }
 

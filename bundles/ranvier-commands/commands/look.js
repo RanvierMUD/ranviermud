@@ -4,13 +4,14 @@ const leftPad = require('left-pad');
 const humanize = (sec) => { return require('humanize-duration')(sec, { round: true }); };
 const sprintf = require('sprintf-js').sprintf;
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
   const CommandParser = require(srcPath + 'CommandParser').CommandParser;
   const Item = require(srcPath + 'Item');
   const ItemType = require(srcPath + 'ItemType');
   const Logger = require(srcPath + 'Logger');
   const Player = require(srcPath + 'Player');
+  const { renderItem } = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: "look [thing]",
@@ -215,7 +216,7 @@ module.exports = (srcPath) => {
       switch (entity.type) {
         case ItemType.WEAPON:
         case ItemType.ARMOR:
-          return B.sayAt(player, renderEquipment(entity, player));
+          return B.sayAt(player, renderItem(state, entity, player));
         case ItemType.CONTAINER: {
           if (!entity.inventory || !entity.inventory.size) {
             return B.sayAt(player, `${entity.name} is empty.`);
@@ -240,56 +241,5 @@ module.exports = (srcPath) => {
   function getCombatantsDisplay(entity) {
     const combatantsList = [...entity.combatants.values()].map(combatant => combatant.name);
     return `, <red>fighting: </red><bold>${combatantsList.join(", ")}</bold>`;
-  }
-
-  function renderEquipment(item, player) {
-    let buf = item.qualityColorize('.' + B.line(38) + '.') + '\r\n';
-    buf += '| ' + item.qualityColorize(sprintf('%-36s', item.name)) + ' |\r\n';
-
-    const props = item.properties;
-
-    buf += sprintf('| %-36s |\r\n', item.type === ItemType.ARMOR ? 'Armor' : 'Weapon');
-
-    if (item.type === ItemType.WEAPON) {
-      buf += sprintf('| %-18s%18s |\r\n', `${props.minDamage} - ${props.maxDamage} Damage`, `Speed ${props.speed}`);
-      const dps = ((props.minDamage + props.maxDamage) / 2) / props.speed;
-      buf += sprintf('| %-36s |\r\n', `(${dps.toPrecision(2)} damage per second)`);
-    } else if (item.type === ItemType.ARMOR) {
-      buf += sprintf('| %-36s |\r\n', item.slot[0].toUpperCase() + item.slot.slice(1));
-    }
-
-    // copy stats to make sure we don't accidentally modify it
-    const stats = Object.assign({}, props.stats);
-
-    // always show armor first
-    if (stats.armor) {
-      buf += sprintf('| %-36s |\r\n', `${stats.armor} Armor`);
-      delete stats.armor;
-    }
-
-    for (const stat in stats) {
-      const value = stats[stat];
-      buf += sprintf(
-        '| %-36s |\r\n',
-        (value > 0 ? '+' : '') + value + ' ' + stat[0].toUpperCase() + stat.slice(1)
-      );
-    }
-
-    if (props.specialEffects) {
-      props.specialEffects.forEach(effectText => {
-        const text = B.wrap(effectText, 36).split(/\r\n/g);
-        text.forEach(textLine => {
-          buf += sprintf('| <b><green>%-36s</green></b> |\r\n', textLine);
-        });
-      });
-    }
-
-    const cantUse = item.level > player.level ? '<red>%-36s</red>' : '%-36s';
-    buf += sprintf(`| ${cantUse} |\r\n`, 'Requires Level ' + item.level);
-    buf += item.qualityColorize("'" + B.line(38) + "'") + '\r\n';
-
-    // colorize border according to item quality
-    buf = buf.replace(/\|/g, item.qualityColorize('|'));
-    return buf;
   }
 };

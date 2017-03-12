@@ -37,6 +37,10 @@
   roomDesc: "Scraps from a Training Dummy"
   keywords: [ "dummy", "scraps" ]
   description: "Splintered, shattered, and generally destroyed remains of a training dummy"
+  behaviors:
+    sellable:
+      value: 5
+      currency: gold
 - id: 5
   name: "Training Sword"
   type: WEAPON
@@ -54,6 +58,10 @@
     stats:
       strength: 2
       stamina: 2
+  behaviors: 
+    sellable:
+      value: 30
+      currency: gold
 - id: 6
   name: "Leather Vest"
   type: ARMOR
@@ -67,10 +75,15 @@
   properties:
     stats:
       armor: 20
+  behaviors: 
+    sellable:
+      value: 30
+      currency: gold
 - id: 7
   name: "Potion of Health I"
   roomDesc: "Potion of Health I"
   keywords: [ "potion", "health" ]
+  type: POTION
   level: 1
   behaviors:
     # usable has two variants: spell, and effect
@@ -91,6 +104,7 @@
   name: "Potion of Strength I"
   roomDesc: "Potion of Strength I"
   keywords: [ "potion", "strength" ]
+  type: POTION
   level: 1
   behaviors:
     usable:

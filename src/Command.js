@@ -21,13 +21,13 @@ class Command {
   }
 
   /**
-   * @param {String} args A string representing anything after the command
-   *  itself from what the user typed
+   * @param {string} args   A string representing anything after the command itself from what the user typed
    * @param {Player} player Player that executed the command
+   * @param {string} arg0   The actual command the user typed, useful when checking which alias was used for a command
    * @return {*}
    */
-  execute(args, player) {
-    return this.func(args, player);
+  execute(args, player, arg0) {
+    return this.func(args, player, arg0);
   }
 
 }

@@ -35,7 +35,7 @@ module.exports = (src) => {
                 throw new RestrictedCommandError();
               }
               // commands have no lag and are not queued, just immediately execute them
-              result.command.execute(result.args, player);
+              result.command.execute(result.args, player, result.originalCommand);
               break;
             }
             case CommandTypes.CHANNEL: {

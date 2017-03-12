@@ -22,12 +22,13 @@ class CommandManager {
 
   /**
    * @param {string} search
+   * @param {boolean} returnAlias true to also return which alias of the command was used
    * @return {Command}
    */
-  find(search) {
+  find(search, returnAlias) {
     for (const [ name, command ] of this.commands.entries()) {
       if (name.indexOf(search) === 0) {
-        return command;
+        return returnAlias ? { command, alias: name } : command;
       }
     }
   }
