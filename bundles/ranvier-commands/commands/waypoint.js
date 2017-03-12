@@ -38,6 +38,10 @@ module.exports = srcPath => {
         home: null
       };
 
+      if (waypoints.saved.includes(player.room.entityReference)) {
+        return B.sayAt(player, 'You already saved this waypoint.');
+      }
+
       waypoints.saved.push(player.room.entityReference);
       player.setMeta('waypoints', waypoints);
       B.sayAt(player, `${player.room.title} saved to your waypoints. Use '<b>waypoint home</b>' to set as your home waypoint.`);
