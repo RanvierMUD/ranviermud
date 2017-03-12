@@ -28,14 +28,19 @@ command file:
 ```javascript
 'use strict';
 
-module.exports = (srcPath) => {
+// Commands also accept the bundlePath in addition to the srcPath. This is useful
+// for importing libs from other bundles: `require(bundlePath + 'some-bundle/lib/foo.js');`
+module.exports = (srcPath, bundlePath) => {
   return {
     /*
     `command` is a closure which takes in the GameState in `state` and returns a
     function which takes the arguments to the command and the player that executed
-    the command.
-     */
-    command: state => (args, player) => {
+    the command. The 3rd parameter, `arg0`, is like argv[0] in many programming
+    languages; it will be the full name of the alias the player used to execute
+    the command. Example: Command 'shop' has an alias 'list', player types 'lis'
+    argv0 will be equal to 'list'.
+    */
+    command: state => (args, player, arg0) => {
     }
   };
 };
