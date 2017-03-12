@@ -18,17 +18,20 @@ with no harm whatsoever.
 * `ranvier-combat` - Basic diku style real-time auto combat
 * `ranvier-commands` - Set of basic diku style commands: movement, look, get, drop, wear, who, etc.
 * `ranvier-effects` - Set of example spell effects
+* `ranvier-groups` - Example implementation of player groups
 * `ranvier-input-events` - Diku-style implementation of login flow with accounts
   and Diku-style command interpretation
     * **Warning:** Disabling this bundle is ill-advised unless you have studied
       well the [Events](events.md) documentation
+* `ranvier-lib` - Not actually loaded into the game, just a place to put common ranvier bundle functionality
 * `ranvier-player-events` - Example implementation of experience/leveling for the player
-* `debug-commands` - Commands useful while debugging (`givexp` for example)
-    * **Warning:** It is highly recommend that you disable this module for your
-      live server as it would otherwise effectively give players access to cheatcodes
+* `ranvier-quests` - Example implementation of quest commands
+* `ranvier-vendors` - Example implementation of in game shops
+* `debug-commands` - Commands useful while debugging (`givexp` for example), commands only usable by ADMIN role players
 
-If you would like to modify one of the core bundles it's recommended that you disable the bundle you wish to modify,
-copy it to your own bundle and modify that. This way you can safely pull in updates without worrying about conflicts.
+> Note: If you want to modify one of the Ranvier bundles it's recommended that you disable the bundle you wish to
+> modify, copy it to your own bundle, rename it, and modify that. This way you can safely pull in updates without
+> worrying about conflicts.
 
 ## Enabling &amp; Disabling Bundles
 
