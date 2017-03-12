@@ -47,6 +47,8 @@ The default bundles come together to make a basic Diku style MUD with the follow
 * Grouping/following
 * Loot tables allowing for meta pools for things like world or area drops in addition to NPC specific loot
 * Currency system allowing NPCs to be configured to drop different amounts of multiple currencies instead of just gold
+* A fast travel wayshrine system
+* Vendors with the ability to list items of multiple currencies
 
 You can build your MUD on top of these bundles or disable them and build yours completely fresh while still taking
 advantage of all of the core code.
