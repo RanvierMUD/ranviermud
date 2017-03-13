@@ -22,7 +22,7 @@ with no harm whatsoever.
 * `ranvier-input-events` - Diku-style implementation of login flow with accounts
   and Diku-style command interpretation
     * **Warning:** Disabling this bundle is ill-advised unless you have studied
-      well the [Events](events.md) documentation
+      well the [Input Events](input_events.md) documentation
 * `ranvier-lib` - Not actually loaded into the game, just a place to put common ranvier bundle functionality
 * `ranvier-player-events` - Example implementation of experience/leveling for the player
 * `ranvier-quests` - Example implementation of quest commands
