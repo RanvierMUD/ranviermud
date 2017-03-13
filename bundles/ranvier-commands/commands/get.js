@@ -53,7 +53,7 @@ module.exports = (srcPath) => {
       }
 
       if (search === 'all') {
-        if (![...source].length) {
+        if (!source || ![...source].length) {
           return Broadcast.sayAt(player, "There isn't anything to take.");
         }
 
