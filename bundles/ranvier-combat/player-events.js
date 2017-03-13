@@ -5,7 +5,7 @@ const leftPad = require('left-pad');
  * Auto combat module
  */
 module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
+  const B = require(srcPath + 'Broadcast');
   const LevelUtil = require(srcPath + 'LevelUtil');
   const Damage = require(srcPath + 'Damage');
   const Logger = require(srcPath + 'Logger');
@@ -37,7 +37,7 @@ module.exports = (srcPath) => {
           // player actions
           if (target.getAttribute('health') <= 0) {
 
-            Broadcast.sayAt(this, `<b>${target.name} is <red>Dead</red>!</b>`);
+            B.sayAt(this, `<b>${target.name} is <red>Dead</red>!</b>`);
 
             handleDeath(state, target, this);
             if (target.isNpc) {
@@ -90,22 +90,24 @@ module.exports = (srcPath) => {
               const playerName = "You";
               const targetNameLengths = [...promptee.combatants].map(t => t.name.length);
               const nameWidth = Math.max(playerName.length, ...targetNameLengths);
-              const progWidth = 60 - nameWidth;
+              const progWidth = 60 - (nameWidth + ':  ').length;
 
               // Set up helper functions for health-bar-building.
               const getHealthPercentage = entity => Math.floor((entity.getAttribute('health') / entity.getMaxAttribute('health')) * 100);
-              const formatProgressBar = (name, progress, entity) =>
-                `<b>${leftPad(name, nameWidth)}</b>: ${progress} <b>${entity.getAttribute('health')}/${entity.getMaxAttribute('health')}</b>`;
+              const formatProgressBar = (name, progress, entity) => {
+                const pad = B.line(nameWidth - name.length, ' ');
+                return `<b>${name}${pad}</b>: ${progress} <b>${entity.getAttribute('health')}/${entity.getMaxAttribute('health')}</b>`;
+              }
 
               // Build player health bar.
               let currentPerc = getHealthPercentage(promptee);
-              let progress = Broadcast.progress(progWidth, currentPerc, "green");
+              let progress = B.progress(progWidth, currentPerc, "green");
               let buf = formatProgressBar(playerName, progress, promptee);
 
               // Build and add target health bars.
               for (const target of promptee.combatants) {
                 let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
-                let progress = Broadcast.progress(progWidth, currentPerc, "red");
+                let progress = B.progress(progWidth, currentPerc, "red");
                 buf += `\r\n${formatProgressBar(target.name, progress, target)}`;
               }
 
@@ -116,14 +118,14 @@ module.exports = (srcPath) => {
             for (const target of this.combatants) {
               if (!target.isNpc && target.isInCombat()) {
                 target.addPrompt('combat', () => combatPromptBuilder(target));
-                Broadcast.sayAt(target, '');
-                Broadcast.prompt(target);
+                B.sayAt(target, '');
+                B.prompt(target);
               }
             }
           }
 
-          Broadcast.sayAt(this, '');
-          Broadcast.prompt(this);
+          B.sayAt(this, '');
+          B.prompt(this);
         }
 
       },
@@ -146,7 +148,7 @@ module.exports = (srcPath) => {
         }
 
         buf += ` <b>${target.name}</b> for <b>${damage.finalAmount}</b> damage.`;
-        Broadcast.sayAt(this, buf);
+        B.sayAt(this, buf);
 
         if (this.equipment.has('wield')) {
           this.equipment.get('wield').emit('hit', damage, target);
@@ -170,7 +172,7 @@ module.exports = (srcPath) => {
           }
 
           buf += ` <b>${target.name}</b> for <b>${damage.finalAmount}</b> damage.`;
-          Broadcast.sayAt(member, buf);
+          B.sayAt(member, buf);
         }
       },
 
@@ -195,7 +197,7 @@ module.exports = (srcPath) => {
 
         buf += `<b> ${targetName}</b>`;
         buf += ` for <b><green>${heal.finalAmount}</green></b> ${heal.attribute}.`;
-        Broadcast.sayAt(this, buf);
+        B.sayAt(this, buf);
 
         // show heals to party members
         if (!this.party) {
@@ -216,7 +218,7 @@ module.exports = (srcPath) => {
 
           buf += ` <b>${target.name}</b>`;
           buf += ` for <b><green>${heal.finalAmount}</green></b> ${heal.attribute}.`;
-          Broadcast.sayAt(member, buf);
+          B.sayAt(member, buf);
         }
       },
 
@@ -237,7 +239,7 @@ module.exports = (srcPath) => {
         }
 
         buf += ` hit <b>You</b> for <b><red>${damage.finalAmount}</red></b> damage`;
-        Broadcast.sayAt(this, buf);
+        B.sayAt(this, buf);
 
         // show damage to party members
         if (!this.party) {
@@ -261,7 +263,7 @@ module.exports = (srcPath) => {
           }
 
           buf += ` hit <b>${this.name}</b> for <b><red>${damage.finalAmount}</red></b> damage`;
-          Broadcast.sayAt(member, buf);
+          B.sayAt(member, buf);
         }
       },
 
@@ -271,7 +273,7 @@ module.exports = (srcPath) => {
        */
       killed: state => function (killer) {
         if (this.party) {
-          Broadcast.sayAt(this.party, `<b><green>${this.name} was killed!</green></b>`);
+          B.sayAt(this.party, `<b><green>${this.name} was killed!</green></b>`);
         }
 
         this.setAttributeToMax('health');
@@ -284,17 +286,17 @@ module.exports = (srcPath) => {
         this.moveTo(home, _ => {
           state.CommandManager.get('look').execute(null, this);
 
-          Broadcast.sayAt(this, '<b><red>Whoops, that sucked!</red></b>');
+          B.sayAt(this, '<b><red>Whoops, that sucked!</red></b>');
           if (killer !== this) {
-            Broadcast.sayAt(this, `You were killed by ${killer.name}.`);
+            B.sayAt(this, `You were killed by ${killer.name}.`);
           }
           // player loses 20% exp gained this level on death
           const lostExp = Math.floor(this.experience * 0.2);
           this.experience -= lostExp;
           this.save();
-          Broadcast.sayAt(this, `<red>You lose <b>${lostExp}</b> experience!</red>`);
+          B.sayAt(this, `<red>You lose <b>${lostExp}</b> experience!</red>`);
 
-          Broadcast.prompt(this);
+          B.prompt(this);
         });
       },
 
@@ -316,7 +318,7 @@ module.exports = (srcPath) => {
         }
 
         if (target && !this.isNpc) {
-          Broadcast.sayAt(this, `<b><red>You killed ${target.name}!`);
+          B.sayAt(this, `<b><red>You killed ${target.name}!`);
         }
 
         this.emit('experience', xp);
@@ -364,7 +366,7 @@ module.exports = (srcPath) => {
       `<b><red>${deadEntity.name} collapses to the ground, dead at the hands of ${killer.name}.</b></red>` :
       `<b><red>${deadEntity.name} collapses to the ground, dead</b></red>`;
 
-    Broadcast.sayAtExcept(
+    B.sayAtExcept(
       deadEntity.room,
       othersDeathMessage,
       (killer ? [killer, deadEntity] : deadEntity));
@@ -374,10 +376,10 @@ module.exports = (srcPath) => {
     if (!killer.isNpc) {
       if (killer.party) {
         for (const member of killer.party) {
-          Broadcast.prompt(member);
+          B.prompt(member);
         }
       } else {
-        Broadcast.prompt(killer);
+        B.prompt(killer);
       }
     }
   }

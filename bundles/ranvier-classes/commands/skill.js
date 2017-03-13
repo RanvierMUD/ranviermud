@@ -21,15 +21,15 @@ module.exports = (srcPath) => {
         return say("No such skill.");
       }
 
-      say(`<bold>${skill.name}</bold>`);
+      say(`<b>` + B.center(80, skill.name, 'white', '-') + '</b>');
       if (skill.resource.cost) {
-        say(`<bold>Resource</bold>: ${skill.resource.attribute}, Cost: <bold>${skill.resource.cost}</bold>`);
+        say(`<b>Cost</b>: <b>${skill.resource.cost}</b> ${skill.resource.attribute}`);
       }
       if (skill.cooldownLength) {
-        say(`Cooldown: <bold>${skill.cooldownLength}</bold> seconds`);
+        say(`<b>Cooldown</b>: <b>${skill.cooldownLength}</b> seconds`);
       }
-      say(B.line(80));
       say(skill.info(player), 80);
+      say('<b>' + B.line(80) + '</b>');
     }
   };
 };

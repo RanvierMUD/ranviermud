@@ -12,11 +12,9 @@ module.exports = srcPath => {
     name: 'Warrior',
     description: 'Warriors relish being face-to-face with their enemy. Whether it be wielding axes, maces, swords, or a nearby log, Warriors focus on dealing strong physical damage to their opponent. What they lack in the raw magical damage of a Mage, or the healing prowess of a Cleric, Warriors make up for in their tenacity. Those choosing the more defensive path of the shield can outlast otherwise deadly attacks.',
     abilityTable: {
-      3: {
-        skills: ['rend'],
-        spells: ['heal'],
-      },
+      3: { skills: ['rend'] },
       5: { skills: ['lunge'] },
+      7: { skills: ['shieldblock'] },
      10: { skills: ['secondwind'] },
     }
   };

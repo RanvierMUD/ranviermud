@@ -78,6 +78,9 @@
         "limbo:6":
           cost: 30
           currency: gold
+        "limbo:10":
+          cost: 30
+          currency: gold
         "limbo:7":
           cost: 100
           currency: gold

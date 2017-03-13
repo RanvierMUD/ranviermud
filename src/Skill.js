@@ -109,8 +109,10 @@ class Skill {
       player.initiateCombat(target);
     }
 
-    this.run(args, player, target);
-    this.cooldown(player);
+    // allow skills to not incur the cooldown if they return false in run
+    if (this.run(args, player, target) !== false) {
+      this.cooldown(player);
+    }
     return true;
   }
 

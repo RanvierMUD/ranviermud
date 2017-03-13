@@ -15,6 +15,8 @@ module.exports = srcPath => {
         B.at(player, `(${exit.direction}) ${room.title}`);
         if (room.npcs.size || room.players.size) {
           B.sayAt(player, ':');
+        } else {
+          B.sayAt(player);
         }
 
         for (const npc of room.npcs) {

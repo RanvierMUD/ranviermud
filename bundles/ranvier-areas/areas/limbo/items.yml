@@ -140,3 +140,20 @@
     stats:
       strength: 2
       stamina: 2
+- id: 10
+  name: "Wooden Shield"
+  type: ARMOR
+  roomDesc: "Wooden Shield"
+  keywords: ["shield", "wooden"]
+  description: "A rather uninteresting looking wooden shield. A rusted metal band barely hold its together and the leather arm band is nearly torn."
+  slot: "shield"
+  quality: common
+  level: 1
+  itemLevel: 1
+  properties:
+    stats:
+      armor: 10
+  behaviors: 
+    sellable:
+      value: 30
+      currency: gold

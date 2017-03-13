@@ -190,7 +190,7 @@ module.exports = (srcPath, bundlePath) => {
     usage: 'list [search], buy <item>, sell <item>, appraise <item>',
     command: state => (args, player, arg0) => {
       // if list/buy aliases were used then prepend that to the args
-      args = (!['vendor', 'list'].includes(arg0) ? arg0 + ' ' : '') + args;
+      args = (!['vendor', 'shop'].includes(arg0) ? arg0 + ' ' : '') + args;
 
       const vendor = Array.from(player.room.npcs).find(npc => npc.hasBehavior('vendor'));
 

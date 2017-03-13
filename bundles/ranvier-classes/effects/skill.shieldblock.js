@@ -8,14 +8,13 @@ module.exports = srcPath => {
 
   return {
     config: {
-      name: 'Damage Shield',
-      description: "You are temporarily protected from damage!",
-      type: 'shield',
+      name: 'Shield Block',
+      description: "You are blocking incoming physical attacks!",
+      type: 'skill:shieldblock',
     },
     flags: [Flag.BUFF],
     state: {
-      magnitude: 50,
-      remaining: 50,
+      magnitude: 1,
       type: "physical"
     },
     modifiers: {
@@ -26,10 +25,11 @@ module.exports = srcPath => {
         }
 
         const absorbed = Math.min(this.state.remaining, currentAmount);
+        const partial = this.state.remaining < currentAmount ? ' partially' : '';
         this.state.remaining -= absorbed;
         currentAmount -= absorbed;
 
-        Broadcast.sayAt(this.target, `Your damage shield absorbs <bold>${absorbed}</bold> damage!`);
+        Broadcast.sayAt(this.target, `You${partial} block the attack, preventing <bold>${absorbed}</bold> damage!`);
         if (!this.state.remaining) {
           this.remove();
         }
@@ -39,21 +39,21 @@ module.exports = srcPath => {
     },
     listeners: {
       effectActivated: function () {
-        Broadcast.sayAt(this.target, `A shield of energy shield envelops you, protecting you from harm!`);
+        this.state.remaining = this.state.magnitude;
 
         if (this.target instanceof Player) {
-          this.target.addPrompt("damageshield", () => {
-            const width = 60 - "Shield".length;
-            const remaining = `<bold>${this.state.remaining}/${this.state.magnitude}</bold>`;
-            return "<bold>Shield:</bold> " + Broadcast.progress(width, (this.state.remaining / this.state.magnitude) * 100, "cyan") + ` ${remaining}`;
+          this.target.addPrompt('shieldblock', () => {
+            const width = 60 - "Shield ".length;
+            const remaining = `<b>${this.state.remaining}/${this.state.magnitude}</b>`;
+            return "<b>Shield</b> " + Broadcast.progress(width, (this.state.remaining / this.state.magnitude) * 100, "white") + ` ${remaining}`;
           });
         }
       },
 
       effectDeactivated: function () {
-        Broadcast.sayAt(this.target, "The shield of energy around you dissipates.");
+        Broadcast.sayAt(this.target, 'You lower your shield, unable to block any more attacks.');
         if (this.target instanceof Player) {
-          this.target.removePrompt("damageshield");
+          this.target.removePrompt('shieldblock');
         }
       }
     }
