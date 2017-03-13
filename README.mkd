@@ -63,5 +63,12 @@ advantage of all of the core code.
     cd ranviermud
     npm install
     sudo ./ranvier
+    telnet localhost 4000
 
-Connect to the server using `telnet localhost 23`
+The default admin user/pass is `admin`/`ranviermud`
+
+## Play it
+
+To try out what Ranvier looks like out of the box as a player telnet or point your favorite client to
+mud.ranviermud.com on port 4000. The server is updated from the github `staging` branch, reset, and restarted every
+hour.
