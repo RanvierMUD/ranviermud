@@ -109,7 +109,7 @@ module.exports = (srcPath, bundlePath) => {
         return tell(`You can't afford that, it costs ${vendorItem.cost} ${friendlyCurrencyName(vendorItem.currency)}.`);
       }
 
-      if (player.inventory.isFull) {
+      if (player.isInventoryFull()) {
         return tell("I don't think you can carry any more.");
       }
 

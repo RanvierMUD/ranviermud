@@ -89,7 +89,7 @@ Once you find some bring it back to the rat, use '<white>quest log</white>' to f
         desc: `A voice whispers to you: It would be wise to practice protecting yourself. There are a number of training dummies in this area that, while not pushovers, will not be too difficult.
 
 - Use '<white>attack dummy</white>' to start combat against the training dummy
-- Once it's dead any loot it drops will be in its corpse on the ground. You can use '<white>look in corpse</white>' to check again or '<white>get all corpse</white>' to retrieve your loot.`,
+- Once it's dead any loot it drops will be in its corpse on the ground. You can use '<white>look in corpse</white>' to check again or '<white>loot corpse</white>' to retrieve all your loot.`,
         reward: (quest, player) => {
           player.emit('experience', LevelUtil.mobExp(quest.config.level) * 5);
 
