@@ -62,7 +62,7 @@ advantage of all of the core code.
     git clone git://github.com/shawncplus/ranviermud
     cd ranviermud
     npm install
-    sudo ./ranvier
+    ./ranvier
     telnet localhost 4000
 
 The default admin user/pass is `admin`/`ranviermud`
