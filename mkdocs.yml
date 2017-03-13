@@ -35,7 +35,6 @@ pages:
     - Channels: 'extending/channels.md'
     - Commands: 'extending/commands.md'
     - Effects: 'extending/effects.md'
-    - Events: 'extending/events.md'
     - Helpfiles: 'extending/help.md'
     - Skills: 'extending/skills.md'
 - Contributing: contributing.md

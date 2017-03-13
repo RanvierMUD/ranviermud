@@ -51,6 +51,68 @@ Again, see the relevant entity's guide section on how to add behaviors to the en
 > actually create a combat.js behavior file, `npc.hasBehavior('combat')` will still return true. This is used, as an
 > example, in the `kill` command in `ranvier-combat` to differentiate pacifist NPCs from NPCs that can enter combat
 
+## File Structure
+
+Single-entity scripts and Behavior script files follow the same file structure outlined below.
+
+```javascript
+'use strict';
+
+module.exports = srcPath => {
+  return {
+    /*
+    The familiar bundle script file format we've seen in commands and quests returns here.
+    To listen for an event simply add a new key which is the event name to 'listeners'
+    and whose value is a closure accepting GameState (state) and returning a function
+    whose arguments are dependant on the event. See the Default Events section below for
+    to see some examples of arguments to the listeners.
+    */
+    listeners: {
+      someEvent: state => (/* event args */) => {
+        // do stuff here
+      }
+    }
+  };
+};
+```
+
+**NOTE**: Behaviors are slightly different because the first argument to their listener is
+_always_ `config`, an object that will be equal to the behavior config as defined in that
+entity's yml file. As an example, the following is what an item with a 'test' behavior
+that listens for the 'foo' event would look like:
+
+In items.yml:
+```yaml
+- id: 9
+  name: 'My Item'
+  behaviors:
+    test:
+      hello: "World"
+```
+
+When event is fired:
+```javascript
+// the config is automatically prepended to the arguments, you DO NOT have to manually
+// send it in when emitting events
+myItem.emit('foo', player, 'baz');
+```
+
+In your behavior listeners:
+```javascript
+listeners: {
+  foo: state => (config, player, thing) => {
+    console.log(config);
+    /*
+    This will output as per the 'test' behaviors config in items.yml
+    {
+      hello: "World"
+    }
+    */
+    console.log(player, thing); /* Player, 'baz' */
+  }
+}
+```
+
 ## Default events
 
 This is a list of events that are emitted by default in Ranvier.
