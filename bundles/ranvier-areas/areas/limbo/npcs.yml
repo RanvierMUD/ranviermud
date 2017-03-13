@@ -87,5 +87,8 @@
         "limbo:8":
           cost: 150
           currency: gold
+        "limbo:9":
+          cost: 99999
+          currency: gold
       enterMessage: "Step right up! Get your wares at Moe's Shop!"
       leaveMessage: "Come back soon!"
