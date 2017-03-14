@@ -37,6 +37,8 @@ module.exports = (srcPath, bundlePath) => {
     exitMap.set('west', 'W');
     exitMap.set('south', 'S');
     exitMap.set('north', 'N');
+    exitMap.set('up', 'U');
+    exitMap.set('down', 'D');
     exitMap.set('southwest', 'SW');
     exitMap.set('southeast', 'SE');
     exitMap.set('northwest', 'NW');
@@ -60,11 +62,13 @@ module.exports = (srcPath, bundlePath) => {
       return '-';
     });
 
-    const [E, W, S, N, SW, SE, NW, NE] = exits;
+    let [E, W, S, N, U, D, SW, SE, NW, NE] = exits;
+    U = U === 'U' ? '<yellow><b>U</yellow></b>' : U;
+    D = D === 'D' ? '<yellow><b>D</yellow></b>' : D;
 
-    const line1 = `<yellow><bold>${NW}</bold></yellow>     <yellow><bold>${N}</bold></yellow>     <yellow><bold>${NE}</bold></yellow>`;
-    const line2 = `<yellow><bold>${W}</bold></yellow> <---(M)---> <yellow><bold>${E}</bold></yellow>`;
-    const line3 = `<yellow><bold>${SW}</bold></yellow>     <yellow><bold>${S}</bold></yellow>     <yellow><bold>${SE}</bold></yellow>\r\n`;
+    const line1 = `${NW}     ${N}     ${NE}`;
+    const line2 = `<yellow><b>${W}</b></yellow> <-${U}-(@)-${D}-> <yellow><b>${E}</b></yellow>`;
+    const line3 = `${SW}     ${S}     ${SE}\r\n`;
 
     return [line1, line2, line3];
   }
@@ -74,13 +78,10 @@ module.exports = (srcPath, bundlePath) => {
 
     const [ line1, line2, line3 ] = getCompass(player);
 
-    // Render the room
-
-    //The top line has 99 characters of ANSI coloring (114(COLORS) - 2(NW) - 1(N) - 2(NE) - 5(SPACING) - 5(SPACING))
-    //The 164 accounts for this
-    B.sayAt(player, `<yellow><bold>${room.title}</bold></yellow>` + leftPad(line1, 164 - room.title.length));
-    B.sayAt(player, '--------------------------------------------' + leftPad(line2, 90));
-    B.sayAt(player, leftPad(line3, 166));
+    // map is 15 characters wide, room is formatted to 80 character width
+    B.sayAt(player, '<yellow><b>' + sprintf('%-65s', room.title) + line1 + '</b></yellow>');
+    B.sayAt(player, B.line(60) + B.line(5, ' ') + line2);
+    B.sayAt(player, B.line(65, ' ') + '<yellow><b>' + line3 + '</b></yellow>');
 
     if (!player.getMeta('config.brief')) {
       B.sayAt(player, room.description, 80);
@@ -121,9 +122,9 @@ module.exports = (srcPath, bundlePath) => {
 
         let questString = '';
         if (hasNewQuest || hasActiveQuest || hasReadyQuest) {
-          questString += hasNewQuest ? '[<bold><yellow>!</yellow></bold>]' : '';
-          questString += hasActiveQuest ? '[<bold><yellow>%</yellow></bold>]' : '';
-          questString += hasReadyQuest ? '[<bold><yellow>?</yellow></bold>]' : '';
+          questString += hasNewQuest ? '[<b><yellow>!</yellow></b>]' : '';
+          questString += hasActiveQuest ? '[<b><yellow>%</yellow></b>]' : '';
+          questString += hasReadyQuest ? '[<b><yellow>?</yellow></b>]' : '';
           B.at(player, questString + ' ');
         }
       }
@@ -155,7 +156,7 @@ module.exports = (srcPath, bundlePath) => {
       B.sayAt(player, `[${npcLabel}] ` + npc.name + combatantsDisplay);
     });
 
-    B.at(player, '[<yellow><bold>Exits</yellow></bold>: ');
+    B.at(player, '[<yellow><b>Exits</yellow></b>: ');
       B.at(player, Array.from(room.exits).map(ex => ex.direction).join(' '));
       B.sayAt(player, ']');
   }
@@ -240,6 +241,6 @@ module.exports = (srcPath, bundlePath) => {
 
   function getCombatantsDisplay(entity) {
     const combatantsList = [...entity.combatants.values()].map(combatant => combatant.name);
-    return `, <red>fighting: </red><bold>${combatantsList.join(", ")}</bold>`;
+    return `, <red>fighting: </red><b>${combatantsList.join(", ")}</b>`;
   }
 };

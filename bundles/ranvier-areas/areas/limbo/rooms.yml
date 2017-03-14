@@ -12,7 +12,7 @@
       direction: east
       leaveMessage: " steps into the void and disappears."
     - roomId: "limbo:8"
-      direction: north
+      direction: down
     - roomId: "limbo:9"
       direction: west
 - id: 2
@@ -96,7 +96,7 @@
     waypoint: true
   exits:
     - roomId: "limbo:1"
-      direction: south
+      direction: up
 - id: 9
   title: "Wally's Wonderful Wares (Shop)"
   description: >- 
