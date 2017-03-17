@@ -271,12 +271,12 @@ class Character extends EventEmitter
   }
 
   equip(item) {
-    if (this.inventory) {
-      this.removeItem(item);
-    }
-
     if (this.equipment.has(item.slot)) {
       throw new EquipSlotTakenError();
+    }
+
+    if (this.inventory) {
+      this.removeItem(item);
     }
 
     this.equipment.set(item.slot, item);
