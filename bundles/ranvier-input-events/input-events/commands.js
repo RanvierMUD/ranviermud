@@ -60,10 +60,12 @@ module.exports = (src) => {
             case error instanceof InvalidCommandError:
               // check to see if room has a matching context-specific command
               const roomCommands = player.room.getBehavior('commands');
-              if (roomCommands && roomCommands.includes(data)) {
-                player.room.emit('command', player, data);
+              const [commandName, ...args] = data.split(' ');
+              if (roomCommands && roomCommands.includes(commandName)) {
+                player.room.emit('command', player, commandName, args.join(' '));
               } else {
                 Broadcast.sayAt(player, "Huh?");
+                Logger.warn(`WARNING: Player tried non-existent command '${data}'`);
               }
               break;
             case error instanceof RestrictedCommandError:
@@ -72,8 +74,6 @@ module.exports = (src) => {
             default:
               Logger.error(error);
           }
-
-          Logger.warn(`WARNING: Player tried non-existent command '${data}'`);
         }
 
         Broadcast.prompt(player);
