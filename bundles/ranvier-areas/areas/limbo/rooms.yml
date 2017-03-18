@@ -97,6 +97,8 @@
   exits:
     - roomId: "limbo:1"
       direction: up
+    - roomId: "limbo:10"
+      direction: down
 - id: 9
   title: "Wally's Wonderful Wares (Shop)"
   description: >- 
@@ -110,3 +112,13 @@
   exits:
     - roomId: "limbo:1"
       direction: east
+- id: 10
+  title: "Room Context Commands Test"
+  script: '10-context'
+  description: >-
+    This room shows off commands that are only active in a particular room. Try out the <b><cyan>roomtest</cyan></b> command.
+  behaviors:
+    commands: [ 'roomtest' ]
+  exits:
+    - roomId: "limbo:8"
+      direction: up

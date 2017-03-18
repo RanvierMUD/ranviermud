@@ -58,7 +58,13 @@ module.exports = (src) => {
         } catch (error) {
           switch(true) {
             case error instanceof InvalidCommandError:
-              Broadcast.sayAt(player, "Huh?");
+              // check to see if room has a matching context-specific command
+              const roomCommands = player.room.getBehavior('commands');
+              if (roomCommands && roomCommands.includes(data)) {
+                player.room.emit('command', player, data);
+              } else {
+                Broadcast.sayAt(player, "Huh?");
+              }
               break;
             case error instanceof RestrictedCommandError:
               Broadcast.sayAt(player, "You can't do that.");
