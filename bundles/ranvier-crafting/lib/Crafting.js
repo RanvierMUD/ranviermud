@@ -7,6 +7,7 @@ const Item = require(srcPath + 'Item');
 
 const dataPath = __dirname + '/../data/';
 const _loadedResources = Data.parseFile(dataPath + 'resources.yml');
+const _loadedRecipes = Data.parseFile(dataPath + 'recipes.yml');
 
 class Crafting {
   static getResource(resourceKey) {
@@ -22,6 +23,10 @@ class Crafting {
       keywords: resourceKey,
       id: 1
     });
+  }
+
+  static getRecipes() {
+    return _loadedRecipes;
   }
 }
 
