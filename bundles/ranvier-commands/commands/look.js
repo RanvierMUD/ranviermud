@@ -103,7 +103,11 @@ module.exports = (srcPath, bundlePath) => {
 
     // show all the items in the rom
     room.items.forEach(item => {
-      B.sayAt(player, `[${item.qualityColorize('Item')}] <magenta>${item.roomDesc}</magenta>`);
+      if (item.hasBehavior('resource')) {
+        B.sayAt(player, `[Resource] <magenta>${item.roomDesc}</magenta>`);
+      } else {
+        B.sayAt(player, `[${item.qualityColorize('Item')}] <magenta>${item.roomDesc}</magenta>`);
+      }
     });
 
     // show all npcs
