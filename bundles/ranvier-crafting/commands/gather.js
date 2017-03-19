@@ -3,11 +3,9 @@
 module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
   const { CommandParser } = require(srcPath + 'CommandParser');
-  const Data =require(srcPath + 'Data');
   const Random = require(srcPath + 'RandomUtil');
-  const Item = require(srcPath + 'Item');
+  const Crafting = require(bundlePath + 'ranvier-crafting/lib/Crafting');
 
-  const dataPath = bundlePath + 'ranvier-crafting/data/';
 
   return {
     command: state => (args, player) => {
@@ -26,8 +24,6 @@ module.exports = (srcPath, bundlePath) => {
         return B.sayAt(player, "You can't gather anything from that.");
       }
 
-      const resources = Data.parseFile(dataPath + 'resources.yml');
-
       if (!player.getMeta('resources')) {
         player.setMeta('resources', {});
       }
@@ -35,17 +31,9 @@ module.exports = (srcPath, bundlePath) => {
       let result = [];
       for (const material in resource.materials) {
         const entry = resource.materials[material];
-        const resourceDef = resources[material];
         const amount = Random.inRange(entry.min, entry.max);
         if (amount) {
-          // create a temporary fake item for the resource for rendering purposes
-          const resItem = new Item(null, {
-            name: resourceDef.title,
-            quality: resourceDef.quality,
-            keywords: material,
-            id: 1
-          });
-
+          const resItem = Crafting.getResourceItem(material);
           const metaKey = `resources.${material}`;
           player.setMeta(metaKey, (player.getMeta(metaKey) || 0) + amount);
           B.sayAt(player, `<green>You gather: ${resItem.display} x${amount}.`);
