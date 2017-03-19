@@ -63,6 +63,9 @@
       direction: east
 - <<: *trainingroom
   id: 5
+  items:
+    - id: "craft:2"
+      respawnChance: 15
   exits:
     - roomId: "limbo:4"
       direction: west
