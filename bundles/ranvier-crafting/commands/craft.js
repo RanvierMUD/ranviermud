@@ -11,6 +11,8 @@ module.exports = (srcPath, bundlePath) => {
   const { renderItem } = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   const subcommands = new CommandManager();
+
+  /** LIST **/
   subcommands.add({
     name: 'list',
     command: state => (args, player) => {
@@ -69,10 +71,55 @@ module.exports = (srcPath, bundlePath) => {
     }
   });
 
+  /** CREATE **/
   subcommands.add({
     name: 'create',
     command: state => (args, player) => {
-      say(player, "Create stuff!");
+      if (!args || !args.length) {
+        return say(player, "Create what? 'craft create 1 1' for example.");
+      }
+
+      const craftingCategories = getCraftingCategories(state);
+
+      let [itemCategory, itemNumber] = args.split(' ');
+
+      itemCategory = parseInt(itemCategory, 10) - 1;
+      if (isNaN(itemCategory) || itemCategory < 0 || itemCategory > craftingCategories.length) {
+        return say(player, "Invalid category.");
+      }
+
+      const category = craftingCategories[itemCategory];
+
+      itemNumber = parseInt(itemNumber, 10) - 1;
+      if (isNaN(itemNumber) || itemNumber < 0 || itemNumber > category.items.length) {
+        return say(player, "Invalid item.");
+      }
+
+      const item = category.items[itemNumber];
+      // check to see if player has resources available
+      for (const resource in item.recipe) {
+        const playerResource = player.getMeta(`resources.${resource}`) || 0;
+        if (playerResource < item.recipe[resource]) {
+          return say(player, `You don't have enough resources. 'craft list ${args}' to see recipe.`);
+        }
+      }
+
+      if (player.isInventoryFull()) {
+        return say(player, "You can't hold any more items.");
+      }
+
+      // deduct resources
+      for (const resource in item.recipe) {
+        const amount = item.recipe[resource];
+        player.setMeta(`resources.${resource}`, player.getMeta(`resources.${resource}`) - amount);
+        const resItem = Crafting.getResourceItem(resource);
+        say(player, `<green>You spend ${amount} x ${resItem.display}.</green>`);
+      }
+
+      state.ItemManager.add(item.item);
+      player.addItem(item.item);
+      say(player, `<b><green>You create: ${item.item.display}.</green></b>`);
+      player.save();
     }
   });
 
