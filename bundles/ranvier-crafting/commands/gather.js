@@ -28,8 +28,8 @@ module.exports = (srcPath, bundlePath) => {
 
       const resources = Data.parseFile(dataPath + 'resources.yml');
 
-      if (!player.getMeta('materials')) {
-        player.setMeta('materials', {});
+      if (!player.getMeta('resources')) {
+        player.setMeta('resources', {});
       }
 
       let result = [];
@@ -46,7 +46,7 @@ module.exports = (srcPath, bundlePath) => {
             id: 1
           });
 
-          const metaKey = `materials.${material}`;
+          const metaKey = `resources.${material}`;
           player.setMeta(metaKey, (player.getMeta(metaKey) || 0) + amount);
           B.sayAt(player, `<green>You gather: ${resItem.display} x${amount}.`);
         }
