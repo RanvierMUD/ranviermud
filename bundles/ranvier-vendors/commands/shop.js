@@ -63,7 +63,7 @@ module.exports = (srcPath, bundlePath) => {
 
       for (const [, itemCategory] of Object.entries(ItemType)) {
         const category = itemCategories[itemCategory];
-        if (!category.items.length) {
+        if (!category || !category.items.length) {
           continue;
         }
 
