@@ -24,7 +24,7 @@ module.exports = (srcPath, bundlePath) => {
         say(player, B.line(40));
 
         for (const index in craftingCategories) {
-          say(player, sprintf('%4d) %s', parseInt(index, 10) + 1, craftingCategories[index].title));
+          say(player, sprintf('%2d) %s', parseInt(index, 10) + 1, craftingCategories[index].title));
         }
 
         return;
@@ -33,11 +33,10 @@ module.exports = (srcPath, bundlePath) => {
       let [itemCategory, itemNumber] = args.split(' ');
 
       itemCategory = parseInt(itemCategory, 10) - 1;
-      if (itemCategory < 0 || itemCategory > craftingCategories.length) {
+      const category = craftingCategories[itemCategory];
+      if (!category) {
         return say(player, "Invalid category.");
       }
-
-      const category = craftingCategories[itemCategory];
 
       // list items within a category
       if (!itemNumber) {
@@ -50,18 +49,18 @@ module.exports = (srcPath, bundlePath) => {
 
         for (const index in category.items) {
           const item = category.items[index].item;
-          say(player, sprintf('%4d) ', index + 1) + item.display);
+          say(player, sprintf('%2d) ', index + 1) + item.display);
         }
 
         return;
       }
 
       itemNumber = parseInt(itemNumber, 10) - 1;
-      if (itemNumber < 0 || itemNumber > category.items.length) {
+      const item = category.items[itemNumber];
+      if (!item) {
         return say(player, "Invalid item.");
       }
 
-      const item = category.items[itemNumber];
       say(player, renderItem(state, item.item, player));
       say(player, '<b>Recipe:</b>');
       for (const resource in item.recipe) {
