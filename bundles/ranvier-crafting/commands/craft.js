@@ -61,6 +61,7 @@ module.exports = (srcPath, bundlePath) => {
         return say(player, "Invalid item.");
       }
 
+      item.item.hydrate(state);
       say(player, renderItem(state, item.item, player));
       say(player, '<b>Recipe:</b>');
       for (const resource in item.recipe) {

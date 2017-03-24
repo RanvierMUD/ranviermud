@@ -26,6 +26,7 @@ module.exports = (srcPath, bundlePath) => {
           return tell("I don't carry that item and no, I won't check in back.");
         }
 
+        item.hydrate(state);
         const vendorItem = vendorConfig.items[item.entityReference];
 
         B.sayAt(player, renderItem(state, item, player));
