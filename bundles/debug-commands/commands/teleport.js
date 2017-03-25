@@ -3,7 +3,6 @@
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const PlayerRoles = require(srcPath + 'PlayerRoles');
-  const Player = require(srcPath + 'Player');
 
   return {
     aliases: ['tp'],
@@ -48,7 +47,7 @@ module.exports = (srcPath) => {
 
       player.followers.forEach(follower => {
         follower.unfollow();
-        if (follower instanceof Player) {
+        if (!follower.isNpc) {
           Broadcast.sayAt(follower, `You stop following ${player.name}.`)
         }
       });
