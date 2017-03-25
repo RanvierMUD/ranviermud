@@ -170,7 +170,7 @@ module.exports = srcPath => {
         return say(player, "Not a valid party command.");
       }
 
-      subcommand.command(state)(commandArgs, player);
+      subcommand.command(state)(commandArgs.join(' '), player);
     }
   };
 };
