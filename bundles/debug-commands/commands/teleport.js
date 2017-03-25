@@ -35,6 +35,17 @@ module.exports = (srcPath) => {
         targetRoom = targetPlayer.room;
       }
 
+      player.followers.forEach(follower => {
+        follower.unfollow();
+        if (!follower.isNpc) {
+          Broadcast.sayAt(follower, `You stop following ${player.name}.`);
+        }
+      });
+
+      if (player.isInCombat()) {
+        player.removeFromCombat();
+      }
+
       const oldRoom = player.room;
 
       player.moveTo(targetRoom, () => {
@@ -44,17 +55,6 @@ module.exports = (srcPath) => {
 
       Broadcast.sayAt(oldRoom, `${player.name} teleported away.`);
       Broadcast.sayAtExcept(targetRoom, `${player.name} teleported here.`, player);
-
-      player.followers.forEach(follower => {
-        follower.unfollow();
-        if (!follower.isNpc) {
-          Broadcast.sayAt(follower, `You stop following ${player.name}.`)
-        }
-      });
-
-      if (player.isInCombat()) {
-        player.removeFromCombat();
-      }
     }
   }
 };
