@@ -34,16 +34,14 @@ module.exports = srcPath => {
             }
           },
         });
-
-        const behavior = state.ItemBehaviorManager.get('decay');
-        behavior.attach(corpse, { duration: 180 });
+        corpse.hydrate(state);
 
         Logger.log(`Generated corpse: ${corpse.uuid}`);
 
         items.forEach(item => corpse.addItem(item));
-
         this.room.addItem(corpse);
         state.ItemManager.add(corpse);
+
         if (killer && killer instanceof Player) {
           if (currencies) {
             currencies.forEach(currency => {

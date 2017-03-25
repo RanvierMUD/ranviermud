@@ -82,15 +82,22 @@ class Character extends EventEmitter
       case 'attackpower':
         attribute.setBase(this.getMaxAttribute('strength'));
         break;
-      case 'energy':
-      case 'armor':
+      case 'strength':
+      case 'agility':
+      case 'intellect':
+      case 'stamina':
+        attribute.setBase(AttributeUtil.baseAttributeByLevel(attribute.name, this.level));
         break;
       default:
-        attribute.setBase(AttributeUtil.baseAttributeByLevel(attribute.name, this.level));
+        // don't modify any other attributes
         break;
     }
 
     return this.effects.evaluateAttribute(attribute);
+  }
+
+  addAttribute(name, base) {
+    this.attributes.add(name, base);
   }
 
   /* Get value of attribute including changes to the attribute.

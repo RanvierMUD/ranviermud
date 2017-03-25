@@ -36,7 +36,16 @@ module.exports = (srcPath) => {
         '%36s',
         'Weapon '
       ));
-      B.at(p, sprintf(' %-9s: %12s', 'Energy', `${stats.energy.current}/${stats.energy.max}`));
+
+      // class resource
+      switch (p.playerClass.id) {
+        case 'warrior':
+          B.at(p, sprintf(' %-9s: %12s', 'Energy', `${stats.energy.current}/${stats.energy.max}`));
+          break;
+        default:
+          B.at(p, B.line(24, ' '));
+          break;
+      }
       say(sprintf('%35s', '.' + B.line(22)) + '.');
 
       B.at(p, sprintf('%37s', '|'));

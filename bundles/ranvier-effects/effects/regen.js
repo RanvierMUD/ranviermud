@@ -25,6 +25,10 @@ module.exports = srcPath => {
         ];
 
         for (const regen of regens) {
+          if (!this.target.hasAttribute(regen.pool)) {
+            return;
+          }
+
           let heal = new Heal({
             attribute: regen.pool,
             amount: Math.round(this.state.magnitude * regen.modifier),

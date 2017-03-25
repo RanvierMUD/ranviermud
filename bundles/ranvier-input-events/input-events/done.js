@@ -12,6 +12,10 @@ module.exports = (srcPath) => {
     event: state => (socket, args) => {
       let player = args.player;
       player.hydrate(state);
+
+      // Allow the player class to modify the player (adding attributes, changing default prompt, etc)
+      player.playerClass.setupPlayer(player);
+
       player.save();
 
       player.socket.on('close', () => {
