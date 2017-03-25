@@ -38,7 +38,10 @@ module.exports = srcPath => {
 
         Logger.log(`Generated corpse: ${corpse.uuid}`);
 
-        items.forEach(item => corpse.addItem(item));
+        items.forEach(item => {
+          item.hydrate(state);
+          corpse.addItem(item)
+        });
         this.room.addItem(corpse);
         state.ItemManager.add(corpse);
 
