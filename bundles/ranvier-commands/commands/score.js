@@ -19,7 +19,6 @@ module.exports = (srcPath) => {
         intellect: 0,
         stamina: 0,
         armor: 0,
-        energy: 0,
         health: 0
       };
 
@@ -40,7 +39,18 @@ module.exports = (srcPath) => {
       // class resource
       switch (p.playerClass.id) {
         case 'warrior':
-          B.at(p, sprintf(' %-9s: %12s', 'Energy', `${stats.energy.current}/${stats.energy.max}`));
+          const energy = {
+            current: p.getAttribute('energy'),
+            max: p.getMaxAttribute('energy')
+          };
+          B.at(p, sprintf(' %-9s: %12s', 'Energy', `${energy.current}/${energy.max}`));
+          break;
+        case 'mage':
+          const mana = {
+            current: p.getAttribute('mana'),
+            max: p.getMaxAttribute('mana')
+          };
+          B.at(p, sprintf(' %-9s: %12s', 'Mana', `${mana.current}/${mana.max}`));
           break;
         default:
           B.at(p, B.line(24, ' '));
