@@ -38,13 +38,19 @@ module.exports = (srcPath) => {
       const oldRoom = player.room;
 
       player.moveTo(targetRoom, () => {
-        Broadcast.sayAt(player, '<b><green>You snap your finger and instantly appear in a new room.</green></b>');
-        Broadcast.sayAt(player, '');
+        Broadcast.sayAt(player, '<b><green>You snap your finger and instantly appear in a new room.</green></b>\r\n');
         state.CommandManager.get('look').execute('', player);
       });
 
-      Broadcast.sayAt(oldRoom, `${player.name} teleports away.`);
-      Broadcast.sayAtExcept(targetRoom, `${player.name} teleports here.`, player);
+      Broadcast.sayAt(oldRoom, `${player.name} teleported away.`);
+      Broadcast.sayAtExcept(targetRoom, `${player.name} teleported here.`, player);
+
+      player.followers.forEach(follower => {
+        follower.unfollow();
+        if (follower instanceof Player) {
+          Broadcast.sayAt(follower, `You stop following ${player.name}.`)
+        }
+      });
     }
   }
 };
