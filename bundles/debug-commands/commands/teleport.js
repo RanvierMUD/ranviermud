@@ -14,10 +14,17 @@ module.exports = (srcPath) => {
       }
 
       const target = args;
-      const isPlayer = target.indexOf(':') === -1 ? true : false;
+      const isRoom = target.includes(':');
       let targetRoom = null;
 
-      if (isPlayer) {
+      if (isRoom) {
+        targetRoom = state.RoomManager.getRoom(target);
+        if (!targetRoom) {
+          return Broadcast.sayAt(player, 'No such room entity reference exists.');
+        } else if (targetRoom === player.room) {
+          return Broadcast.sayAt(player, 'You try really hard to teleport before realizing you\'re already at your destination.');
+        }
+      } else {
         const targetPlayer = state.PlayerManager.getPlayer(target);
         if (!targetPlayer) {
           return Broadcast.sayAt(player, 'No such player online.');
@@ -26,13 +33,6 @@ module.exports = (srcPath) => {
         }
 
         targetRoom = targetPlayer.room;
-      } else {
-        targetRoom = state.RoomManager.getRoom(target);
-        if (!targetRoom) {
-          return Broadcast.sayAt(player, 'No such room entity reference exists.');
-        } else if (targetRoom === player.room) {
-          return Broadcast.sayAt(player, 'You try really hard to teleport before realizing you\'re already at your destination.');
-        }
       }
 
       const oldRoom = player.room;
