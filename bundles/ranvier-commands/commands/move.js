@@ -36,6 +36,7 @@ module.exports = (srcPath) => {
       });
 
       Broadcast.sayAt(oldRoom, `${player.name} leaves.`);
+      Broadcast.sayAtExcept(nextRoom, `${player.name} enters.`, player);
 
       for (const follower of player.followers) {
         if (follower.room !== oldRoom) {
