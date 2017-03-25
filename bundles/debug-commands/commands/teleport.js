@@ -4,7 +4,7 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const PlayerRoles = require(srcPath + 'PlayerRoles');
   const Player = require(srcPath + 'Player');
-  
+
   return {
     aliases: ['tp'],
     usage: 'teleport <player/room>',
@@ -52,6 +52,10 @@ module.exports = (srcPath) => {
           Broadcast.sayAt(follower, `You stop following ${player.name}.`)
         }
       });
+
+      if (player.isInCombat()) {
+        player.removeFromCombat();
+      }
     }
   }
 };
