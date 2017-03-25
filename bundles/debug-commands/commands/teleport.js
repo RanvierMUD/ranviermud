@@ -3,7 +3,8 @@
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const PlayerRoles = require(srcPath + 'PlayerRoles');
-
+  const Player = require(srcPath + 'Player');
+  
   return {
     aliases: ['tp'],
     usage: 'teleport <player/room>',
