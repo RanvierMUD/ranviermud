@@ -29,7 +29,7 @@ class Player extends Character {
     this.extraPrompts = new Map();
     this.password  = data.password;
     this.playerClass = null;
-    this.prompt = ({healthStr, energyStr, }) => `[ ${healthStr} <bold>hp</bold> -- ${energyStr} <bold>energy</bold> ]`;
+    this.prompt = data.prompt || '[ %health.current%/%health.max% <bold>hp</bold> ]';
     this.socket = data.socket || null;
     const questData = Object.assign({
       completed: [],
@@ -78,19 +78,8 @@ class Player extends Character {
    * @return {*}
    */
   getMeta(key) {
-    let parts = key.split('.');
-    const property = parts.pop();
     let base = this.metadata;
-
-    while (parts.length) {
-      let part = parts.pop();
-      if (!(part in base)) {
-        return undefined;
-      }
-      base = base[part];
-    }
-
-    return base[property];
+    return key.split('.').reduce((obj, index) => obj && obj[index], base);
   }
 
   /**
@@ -114,22 +103,28 @@ class Player extends Character {
 
   /**
    * Convert prompt tokens into actual data
-   * @param {function} promptBuilder (data) => prompt template
-   * @param {object} extraData (key is used by promptBuilder)
+   * @param {string} promptStr
+   * @param {object} extraData Any extra data to give the prompt access to
    */
-  interpolatePrompt(promptBuilder, extraData = {}) {
-    const buildAttributeStr = attr => `${this.getAttribute(attr)}/${this.getMaxAttribute(attr)}`;
-    const healthStr = buildAttributeStr('health');
-    const energyStr = buildAttributeStr('energy');
+  interpolatePrompt(promptStr, extraData = {}) {
+    let attributeData = {};
+    for (const [attr, value] of this.attributes) {
+      attributeData[attr] = {
+        current: this.getAttribute(attr),
+        max: this.getMaxAttribute(attr),
+        base: this.getBaseAttribute(attr),
+      };
+    }
+    const promptData = Object.assign(attributeData, extraData);
 
-    // TODO: The attr strings could likely be built in a more programmatic fashion.
-    // How could this be redone to allow for customization of the prompt without major
-    // edits to the Player class?
-    const promptData = Object.assign({}, extraData, {
-      healthStr, energyStr
-    });
+    let matches = null;
+    while (matches = promptStr.match(/%([a-z\.]+)%/)) {
+      const token = matches[1];
+      var promptValue = token.split('.').reduce((obj, index) => obj && obj[index], promptData) || 'invalid_token';
+      promptStr = promptStr.replace(matches[0], promptValue);
+    }
 
-    return promptBuilder(promptData);
+    return promptStr;
   }
 
   /**
@@ -256,14 +251,15 @@ class Player extends Character {
 
   serialize() {
     let data = Object.assign(super.serialize(), {
-      playerClass: this.playerClass && this.playerClass.id,
       account: this.account.name,
       experience: this.experience,
       inventory: this.inventory && this.inventory.serialize(),
-      password: this.password,
-      quests: this.questTracker.serialize(),
       metadata: this.metadata,
-      role: this.role
+      password: this.password,
+      playerClass: this.playerClass && this.playerClass.id,
+      prompt: this.prompt,
+      quests: this.questTracker.serialize(),
+      role: this.role,
     });
 
     if (this.equipment) {
