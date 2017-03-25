@@ -52,6 +52,13 @@ module.exports = (srcPath) => {
           };
           B.at(p, sprintf(' %-9s: %12s', 'Mana', `${mana.current}/${mana.max}`));
           break;
+        case 'paladin':
+          const favor = {
+            current: p.getAttribute('favor'),
+            max: p.getMaxAttribute('favor')
+          };
+          B.at(p, sprintf(' %-9s: %12s', 'Favor', `${favor.current}/${favor.max}`));
+          break;
         default:
           B.at(p, B.line(24, ' '));
           break;

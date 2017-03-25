@@ -36,12 +36,12 @@ module.exports = (srcPath) => {
       });
 
       if (target !== player) {
-        Broadcast.sayAt(player, `bold>You call upon to the light to heal ${target.name}'s wounds.</bold>`);
-        Broadcast.sayAtExcept(player.room, `bold>${player.name} calls upon to the light to heal ${target.name}'s wounds.</bold>`, [target, player]);
-        Broadcast.sayAt(target, `bold>${player.name} calls upon to the light to heal your wounds.</bold>`);
+        Broadcast.sayAt(player, `<b>You call upon to the light to heal ${target.name}'s wounds.</b>`);
+        Broadcast.sayAtExcept(player.room, `<b>${player.name} calls upon to the light to heal ${target.name}'s wounds.</b>`, [target, player]);
+        Broadcast.sayAt(target, `<b>${player.name} calls upon to the light to heal your wounds.</b>`);
       } else {
-        Broadcast.sayAt(player, "<bold>You call upon to the light to heal your wounds.</bold>");
-        Broadcast.sayAtExcept(player.room, `bold>${player.name} calls upon to the light to heal their wounds.</bold>`, [player, target]);
+        Broadcast.sayAt(player, "<b>You call upon to the light to heal your wounds.</b>");
+        Broadcast.sayAtExcept(player.room, `<b>${player.name} calls upon to the light to heal their wounds.</b>`, [player, target]);
       }
 
       heal.commit(target);

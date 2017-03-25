@@ -185,19 +185,17 @@ module.exports = (srcPath) => {
           return;
         }
 
-        let buf = '';
-        let targetName = target.name;
-        if (heal.source) {
-          buf = `Your <b>${heal.source.name}</b> healed`;
-          targetName = target === this ? 'You' : targetName;
-        } else {
-          buf = "You heal";
-          targetName = target === this ? 'Yourself' : targetName;
-        }
+        if (target !== this) {
+          let buf = '';
+          if (heal.source) {
+            buf = `Your <b>${heal.source.name}</b> healed`;
+          } else {
+            buf = "You heal";
+          }
 
-        buf += `<b> ${targetName}</b>`;
-        buf += ` for <b><green>${heal.finalAmount}</green></b> ${heal.attribute}.`;
-        B.sayAt(this, buf);
+          buf += `<b> ${target.name}</b> for <b><green>${heal.finalAmount}</green></b> ${heal.attribute}.`;
+          B.sayAt(this, buf);
+        }
 
         // show heals to party members
         if (!this.party) {
@@ -263,6 +261,48 @@ module.exports = (srcPath) => {
           }
 
           buf += ` hit <b>${this.name}</b> for <b><red>${damage.finalAmount}</red></b> damage`;
+          B.sayAt(member, buf);
+        }
+      },
+
+      healed: state => function (heal) {
+        if (heal.hidden) {
+          return;
+        }
+
+        let buf = '';
+        let attacker = '';
+        let source = '';
+
+        if (heal.attacker && heal.attacker !== this) {
+          attacker = `<b>${heal.attacker.name}</b> `;
+        }
+
+        if (heal.source) {
+          attacker = attacker ? attacker + "'s " : '';
+          source = `<b>${heal.source.name}</b>`;
+        } else if (!heal.attacker) {
+          source = "Something";
+        }
+
+        if (heal.attribute === 'health') {
+          buf = `${attacker}${source} heals you for <b><red>${heal.finalAmount}</red></b>.`;
+        } else {
+          buf = `${attacker}${source} restores <b>${heal.finalAmount}</b> ${heal.attribute}.`;
+        }
+        B.sayAt(this, buf);
+
+        // show heal to party members only if it's to health and not restoring a different pool
+        if (!this.party || heal.attribute !== 'health') {
+          return;
+        }
+
+        for (const member of this.party) {
+          if (member === this || member.room !== this.room) {
+            continue;
+          }
+
+          let buf = `${attacker}${source} heals ${this.name} for <b><red>${heal.finalamount}</red></b>.`;
           B.sayAt(member, buf);
         }
       },
