@@ -18,7 +18,7 @@ module.exports = srcPath => {
       type: "physical"
     },
     modifiers: {
-      outgoingDamage: damage => damage.finalAmount,
+      outgoingDamage: (damage, current) => current,
       incomingDamage: function (damage, currentAmount) {
         if (damage instanceof Heal || damage.attribute !== 'health') {
           return currentAmount;

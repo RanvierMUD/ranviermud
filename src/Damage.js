@@ -48,11 +48,10 @@ class Damage {
   evaluate(target) {
     let amount = this.amount;
     if (this.attacker) {
-      amount = this.attacker.evaluateOutgoingDamage(this);
+      amount = this.attacker.evaluateOutgoingDamage(this, amount);
     }
 
-    amount = target.evaluateIncomingDamage(this);
-    return amount;
+    return target.evaluateIncomingDamage(this, amount);
   }
 
   /**
