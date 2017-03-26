@@ -11,6 +11,7 @@ class QuestGoal extends EventEmitter {
     }, config);
     this.quest = quest;
     this.state = {};
+    this.player = player;
   }
 
   getProgress() {
