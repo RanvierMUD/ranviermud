@@ -127,7 +127,7 @@ module.exports = (srcPath) => {
       const active = [...player.questTracker.activeQuests];
       let targetQuest = parseInt(options[0], 10);
       targetQuest = isNaN(targetQuest) ? -1 : targetQuest - 1;
-      if (targetQuest < 0 || targetQuest > active.length) {
+      if (!active[targetQuest]) {
         return say(player, "Invalid quest, use 'quest log' to see your active quests.");
       }
 
