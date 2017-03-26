@@ -36,7 +36,7 @@ class EffectList {
 
   getByType(type) {
     return [...this.effects].find(effect => {
-      return effect.type === type;
+      return effect.config.type === type;
     });
   }
 
@@ -168,7 +168,16 @@ class EffectList {
 
   serialize() {
     this.validateEffects();
-    return [...this.effects].map(effect => effect.serialize());
+    let serialized = [];
+    for (const effect of this.effects) {
+      if (!effect.config.persists) {
+        continue;
+      }
+
+      serialized.push(effect.serialize());
+    }
+
+    return serialized;
   }
 
   hydrate(state) {

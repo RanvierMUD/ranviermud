@@ -134,6 +134,10 @@ class Character extends EventEmitter
     this.attributes.get(attr).lower(amount);
   }
 
+  hasEffectType(type) {
+    return this.effects.hasEffectType(type);
+  }
+
   addEffect(effect) {
     return this.effects.add(effect);
   }
