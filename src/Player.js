@@ -120,7 +120,10 @@ class Player extends Character {
     let matches = null;
     while (matches = promptStr.match(/%([a-z\.]+)%/)) {
       const token = matches[1];
-      var promptValue = token.split('.').reduce((obj, index) => obj && obj[index], promptData) || 'invalid_token';
+      var promptValue = token.split('.').reduce((obj, index) => obj && obj[index], promptData);
+      if (promptValue === null || promptValue === undefined) {
+        promptValue = 'invalid-token';
+      }
       promptStr = promptStr.replace(matches[0], promptValue);
     }
 

@@ -6,6 +6,7 @@ const Config = require('./Config');
 const EffectList = require('./EffectList');
 const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
 const EventEmitter = require('events');
+const Heal = require('./Heal');
 const { Inventory, InventoryFullError } = require('./Inventory');
 const Parser = require('./CommandParser').CommandParser;
 const RandomUtil = require('./RandomUtil');
@@ -96,8 +97,8 @@ class Character extends EventEmitter
     return this.effects.evaluateAttribute(attribute);
   }
 
-  addAttribute(name, base) {
-    this.attributes.add(name, base);
+  addAttribute(name, base, delta = 0) {
+    this.attributes.add(name, base, delta);
   }
 
   /* Get value of attribute including changes to the attribute.
@@ -258,11 +259,13 @@ class Character extends EventEmitter
   evaluateIncomingDamage(damage, currentAmount) {
     let amount = this.effects.evaluateIncomingDamage(damage, currentAmount);
 
-    // let armor reduce incoming physical damage
-    const attackerLevel = (damage.attacker && damage.attacker.level) || 1;
-    const armor = this.getAttribute('armor');
-    if (damage.type === 'physical' && armor > 0) {
-      amount *= 1 - armor / (armor * AttributeUtil.getArmorReductionConstant(attackerLevel));
+    // let armor reduce incoming physical damage. There is probably a better place for this...
+    if (!(damage instanceof Heal) && damage.attacker && damage.attribute === 'health') {
+      const attackerLevel = damage.attacker.level;
+      const armor = this.getAttribute('armor');
+      if (damage.type === 'physical' && armor > 0) {
+        amount *= 1 - armor / (armor * AttributeUtil.getArmorReductionConstant(attackerLevel));
+      }
     }
 
     return Math.floor(amount);
