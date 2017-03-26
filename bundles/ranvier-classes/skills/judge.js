@@ -8,7 +8,7 @@ module.exports = (srcPath) => {
 
   // config placed here just for easy copy/paste of this skill later on
   const cooldown = 4;
-  const damagePercent = 200;
+  const damagePercent = 150;
   const favorAmount = 3;
   const reductionPercent = 30;
 
