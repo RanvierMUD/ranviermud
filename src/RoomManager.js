@@ -1,6 +1,7 @@
 'use strict';
 
 const Room = require('./Room');
+const Config = require('./Config');
 
 class RoomManager {
   constructor() {
@@ -38,6 +39,10 @@ class RoomManager {
     }
 
     return exits.pop();
+  }
+
+  getStartingRoom() {
+    return Config.get('startingRoom');
   }
 }
 
