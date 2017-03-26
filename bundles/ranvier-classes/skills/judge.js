@@ -3,17 +3,14 @@
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const SkillType = require(srcPath + 'SkillType');
+  const Damage = require(srcPath + 'Damage');
   const Heal = require(srcPath + 'Heal');
 
   // config placed here just for easy copy/paste of this skill later on
-  const cooldown = 8;
+  const cooldown = 4;
   const damagePercent = 200;
-  const favorAmount = 5;
+  const favorAmount = 3;
   const reductionPercent = 30;
-
-  const totalDamage = player => {
-    return player.calculateWeaponDamage() * (damagePercent / 100);
-  };
 
   return {
     name: 'Judge',
@@ -27,16 +24,25 @@ module.exports = (srcPath) => {
       effect.skill = this;
       effect.attacker = player;
 
-      Broadcast.sayAt(player, `<b><yellow>Concentrated holy energy slams into ${target.name}!</yellow></b>`);
-      Broadcast.sayAtExcept(player.room, `<b><yellow>${player.name} conjures concentrated holy energy and slams it into ${target.name}!</yellow></b>`, [target, player]);
-      Broadcast.sayAt(target, `<b><yellow>${player.name} conjures concentrated holy energy and slams it into you!</yellow></b>`);
+      const damage = new Damage({
+        attribute: 'health',
+        amount: player.calculateWeaponDamage() * (damagePercent / 100),
+        attacker: player,
+        type: 'holy',
+        source: this
+      });
 
       const favorRestore = new Heal({
         attribute: 'favor',
         amount: favorAmount,
-        attacker: player,
         source: this
       });
+
+      Broadcast.sayAt(player, `<b><yellow>Concentrated holy energy slams into ${target.name}!</yellow></b>`);
+      Broadcast.sayAtExcept(player.room, `<b><yellow>${player.name} conjures concentrated holy energy and slams it into ${target.name}!</yellow></b>`, [target, player]);
+      Broadcast.sayAt(target, `<b><yellow>${player.name} conjures concentrated holy energy and slams it into you!</yellow></b>`);
+
+      damage.commit(target);
       target.addEffect(effect);
       favorRestore.commit(player);
     },
