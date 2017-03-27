@@ -98,21 +98,22 @@ class Skill {
       }
     }
 
-    if (this.resource.cost) {
-      const paid = this.payResourceCost(player);
-      if (!paid) {
-        return false;
-      }
-    }
-
     if (this.initiatesCombat) {
       player.initiateCombat(target);
     }
 
     // allow skills to not incur the cooldown if they return false in run
     if (this.run(args, player, target) !== false) {
+      if (this.resource.cost) {
+        const paid = this.payResourceCost(player);
+        if (!paid) {
+          return false;
+        }
+      }
+
       this.cooldown(player);
     }
+
     return true;
   }
 
