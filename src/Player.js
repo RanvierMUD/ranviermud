@@ -210,7 +210,7 @@ class Player extends Character {
       let room = state.RoomManager.getRoom(this.room);
       if (!room) {
         Logger.warn(`WARNING: Player ${this.name} was saved to invalid room ${this.room}.`);
-        room = state.RoomManager.getStartingRoom();
+        room = state.RoomManager.startingRoom;
       }
 
       this.room = room;
