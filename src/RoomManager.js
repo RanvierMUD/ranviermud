@@ -40,10 +40,6 @@ class RoomManager {
 
     return exits.pop();
   }
-
-  getStartingRoom() {
-    return Config.get('startingRoom');
-  }
 }
 
 module.exports = RoomManager;
