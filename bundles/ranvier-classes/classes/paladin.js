@@ -8,6 +8,7 @@ module.exports = srcPath => {
     abilityTable: {
       3: { skills: ['judge'] },
       5: { skills: ['plea'] },
+      7: { skills: ['smite'] },
     },
 
     setupPlayer: player => {
