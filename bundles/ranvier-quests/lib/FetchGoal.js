@@ -46,6 +46,7 @@ class FetchGoal extends QuestGoal {
         for (const [, item] of player.inventory) {
           if (item.entityReference === this.config.item) {
             this.quest.GameState.ItemManager.remove(item);
+            break;
           }
         }
       }
