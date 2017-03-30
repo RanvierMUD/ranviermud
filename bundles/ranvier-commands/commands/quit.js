@@ -7,7 +7,7 @@ module.exports = (srcPath) => {
     usage: 'quit',
     command: (state) => (args, player) => {
       if (player.isInCombat()) {
-        Broadcast.sayAt(player, "You're too busy fighting for your life!");
+        return Broadcast.sayAt(player, "You're too busy fighting for your life!");
       }
 
       player.save(() => {
