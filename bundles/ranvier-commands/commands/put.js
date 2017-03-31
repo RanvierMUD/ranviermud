@@ -25,7 +25,9 @@ module.exports = (srcPath) => {
       const fromArg = parts[0];
       const toArg = parts[1];
       const item = Parser.parseDot(fromArg, fromList);
-      const toContainer = Parser.parseDot(toArg, player.room.items);
+      const toContainer = Parser.parseDot(toArg, player.room.items) ||
+                          Parser.parseDot(toArg, player.inventory) ||
+                          Parser.parseDot(toArg, player.equipment);
 
       if (!item) {
         return Broadcast.sayAt(player, "You don't have that item.");
