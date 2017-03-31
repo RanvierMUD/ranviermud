@@ -179,9 +179,13 @@ class Item extends EventEmitter {
 
     // if the item was saved with a custom inventory hydrate it
     if (this.inventory) {
+      // handle equipped containers.
+      if (!(this.inventory instanceof Inventory)) {
+        this.inventory = new Inventory(this.inventory)
+      }
       this.inventory.hydrate(state);
     } else {
-    // otherwise load its default inv
+    // otherwise load its default inventory
       this.defaultItems.forEach(defaultItemId => {
         Logger.verbose(`\tDIST: Adding item [${defaultItemId}] to item [${this.name}]`);
         const newItem = state.ItemFactory.create(this.area, defaultItemId);
