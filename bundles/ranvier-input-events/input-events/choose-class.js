@@ -10,9 +10,8 @@ module.exports = (srcPath) => {
 
   return {
     event: state => (socket, args) => {
-      const player = args.player;
-      const say = str => Broadcast.sayAt(player, str);
-      const at = str => Broadcast.at(player, str);
+      const say = EventUtil.genSay(socket);
+      const write  = EventUtil.genWrite(socket);
 
       /*
       Player selection menu:
@@ -25,10 +24,10 @@ module.exports = (srcPath) => {
         return [id, instance.config];
       });
       for (const [ id, config ] of classes) {
-        say(`  [<bold>${id}</bold>] - <bold>${config.name}</bold>`);
-        Broadcast.sayAt(player, `      ${config.description}\r\n`, 80);
+        say(`[<bold>${id}</bold>] - <bold>${config.name}</bold>`);
+        say(Broadcast.wrap(`      ${config.description}\r\n`, 80));
       }
-      at('> ');
+      write('> ');
 
       socket.once('data', choice => {
         choice = choice.toString().trim();
@@ -40,8 +39,8 @@ module.exports = (srcPath) => {
           return socket.emit('choose-class', socket, args);
         }
 
-        player.setMeta('class', choice[0]);
-        socket.emit('done', socket, { player });
+        args.playerClass = choice[0];
+        socket.emit('finish-player', socket, args);
       });
     }
   };
