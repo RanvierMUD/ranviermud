@@ -18,6 +18,8 @@ module.exports = (srcPath) => {
       args.account.addCharacter(args.name);
       args.account.save();
 
+      player.setMeta('class', args.playerClass);
+
       const room = state.RoomManager.startingRoom;
       player.room = room;
       player.save();
@@ -26,7 +28,7 @@ module.exports = (srcPath) => {
       player = state.PlayerManager.loadPlayer(state, player.account, player.name);
       player.socket = socket;
 
-      socket.emit('choose-class', socket, { player });
+      socket.emit('done', socket, { player });
     }
   };
 };
