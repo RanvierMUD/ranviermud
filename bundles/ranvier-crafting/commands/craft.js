@@ -61,7 +61,6 @@ module.exports = (srcPath, bundlePath) => {
         return say(player, "Invalid item.");
       }
 
-      item.item.hydrate(state);
       say(player, renderItem(state, item.item, player));
       say(player, '<b>Recipe:</b>');
       for (const resource in item.recipe) {
@@ -157,6 +156,7 @@ module.exports = (srcPath, bundlePath) => {
         continue;
       }
 
+    recipeItem.hydrate(state);
       craftingCategories[catIndex].items.push({
         item: recipeItem,
         recipe: recipe.recipe
