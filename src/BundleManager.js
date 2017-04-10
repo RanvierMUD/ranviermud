@@ -339,11 +339,17 @@ class BundleManager {
       const helpName = path.basename(helpFile, path.extname(helpFile));
       const def = Data.parseFile(helpPath);
 
-      const hfile = new Helpfile(
-        bundle,
-        helpName,
-        def
-      );
+      let hfile = null;
+      try {
+        hfile = new Helpfile(
+          bundle,
+          helpName,
+          def
+        );
+      } catch (e) {
+        Logger.warn(`\t\t${e.message}`);
+	continue;
+      }
 
       this.state.HelpManager.add(hfile);
     }

@@ -12,7 +12,7 @@ module.exports = {
       throw new Error(`File [${filepath}] does not exist!`);
     }
 
-    const contents = fs.readFileSync(filepath).toString('utf8');
+    const contents = fs.readFileSync(fs.realpathSync(filepath)).toString('utf8');
     const parsers = {
       '.yml': yaml.load,
       '.yaml': yaml.load,
