@@ -1,0 +1,5 @@
+*.log
+npm-debug.log*
+
+# Project build destinations
+node_modules
