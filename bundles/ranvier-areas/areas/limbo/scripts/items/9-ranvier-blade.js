@@ -21,9 +21,13 @@ module.exports = (srcPath) => {
         // its script
 
         if (Random.probability(50)) {
+          const amount = damage.critical ?
+            damage.attacker.getMaxAttribute('health') :
+            Math.floor(damage.finalAmount / 4);
+
           const heal = new Heal({
             attribute: 'health',
-            amount: Math.floor(damage.finalAmount / 4),
+            amount,
             source: this,
             attacker: damage.attacker
           });

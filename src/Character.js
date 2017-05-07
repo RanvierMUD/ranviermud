@@ -270,6 +270,10 @@ class Character extends EventEmitter
     return this.effects.evaluateOutgoingDamage(damage);
   }
 
+  evaluateCriticalChance(damage) {
+    return this.effects.evaluateCriticalChance(damage);
+  }
+
   equip(item) {
     if (this.inventory) {
       this.removeItem(item);

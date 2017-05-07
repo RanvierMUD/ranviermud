@@ -23,7 +23,9 @@ class Damage {
       attacker = null,
       type = "physical",
       source = null,
-      hidden = false
+      hidden = false,
+      critical = false,
+      glancing = false
     } = config;
 
     if (amount === null) {
@@ -47,7 +49,9 @@ class Damage {
    */
   evaluate(target) {
     let amount = this.amount;
+
     if (this.attacker) {
+      this.critical = this.attacker.evaluateCriticalChance(this);
       amount = this.attacker.evaluateOutgoingDamage(this);
     }
 

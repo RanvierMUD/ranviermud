@@ -153,7 +153,7 @@
   properties:
     stats:
       armor: 10
-  behaviors: 
+  behaviors:
     sellable:
       value: 30
       currency: gold

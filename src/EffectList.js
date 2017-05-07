@@ -168,6 +168,25 @@ class EffectList {
     return Math.max(amount, 0) || 0;
   }
 
+  evaluateCriticalChance(damage) {
+    this.validateEffects();
+
+    let critical = damage.critical;
+
+    if (critical) {
+      return critical;
+    }
+
+    for (const effect of this.effects) {
+      critical = effect.evaluateCriticalChance(damage);
+      if (critical) {
+        break;
+      }
+    }
+
+    return !!critical;
+  }
+
   serialize() {
     this.validateEffects();
     return [...this.effects].map(effect => effect.serialize());
