@@ -6,26 +6,36 @@ class Attributes extends Map
   constructor(data) {
     super();
 
-    data = data || {};
-
     const baseStats = {
-      strength: 20,
-      agility: 20,
-      intellect: 20,
-      stamina: 20,
-      health: 100,
-      energy: 100,
-      armor: 0
+      strength: { base: 20 },
+      agility: { base: 20 },
+      intellect: { base: 20 },
+      stamina: { base: 20 },
+      health: { base: 100 },
+      armor: { base: 0 },
     };
 
-    for (const stat in baseStats) {
-      const statData = {
-        base: (data[stat] && data[stat].base) || baseStats[stat],
-        delta: (data[stat] && data[stat].delta) || 0,
-      };
-      const attribute = new Attribute(stat, statData.base, statData.delta);
-      this.set(stat, attribute);
+    // use base stats or use loaded stats but make sure it still has base stats
+    if (!data) {
+      data = baseStats;
+    } else {
+      for (const stat in baseStats) {
+        if (!(stat in data)) {
+          data[stat] = baseStats[stat];
+        }
+      }
     }
+
+    for (let [statName, values] of Object.entries(data)) {
+      if (typeof values !== 'object') {
+        values = { base: values };
+      }
+      this.add(statName, values.base, values.delta || 0);
+    }
+  }
+
+  add(name, base, delta = 0) {
+    this.set(name, new Attribute(name, base, delta));
   }
 
   getAttributes() {

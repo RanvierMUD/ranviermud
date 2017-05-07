@@ -26,6 +26,7 @@ module.exports = (srcPath, bundlePath) => {
           return tell("I don't carry that item and no, I won't check in back.");
         }
 
+        item.hydrate(state);
         const vendorItem = vendorConfig.items[item.entityReference];
 
         B.sayAt(player, renderItem(state, item, player));
@@ -63,7 +64,7 @@ module.exports = (srcPath, bundlePath) => {
 
       for (const [, itemCategory] of Object.entries(ItemType)) {
         const category = itemCategories[itemCategory];
-        if (!category.items.length) {
+        if (!category || !category.items.length) {
           continue;
         }
 

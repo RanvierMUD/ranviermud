@@ -12,16 +12,15 @@ module.exports = (srcPath) => {
         return Broadcast.sayAt(player, 'Remove what?');
       }
 
-      const [slot, item] = Parser.parseDot(arg, player.equipment, true);
-
-      if (!item) {
+      const result =  Parser.parseDot(arg, player.equipment, true);
+      if (!result) {
         return Broadcast.sayAt(player, "You aren't wearing anything like that.");
       }
 
+      const [slot, item] = result;
       player.unequip(slot);
 
       Broadcast.sayAt(player, `<green>You un-equip: </green>${item.display}<green>.</green>`);
-
       item.emit('unequip', player);
       player.emit('unequip', slot, item);
     }

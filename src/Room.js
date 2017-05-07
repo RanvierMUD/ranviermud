@@ -199,7 +199,7 @@ class Room extends EventEmitter {
     });
 
     for (let [behaviorName, config] of this.behaviors) {
-      let behavior = state.ItemBehaviorManager.get(behaviorName);
+      let behavior = state.RoomBehaviorManager.get(behaviorName);
       if (!behavior) {
         return;
       }

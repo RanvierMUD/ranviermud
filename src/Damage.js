@@ -52,11 +52,10 @@ class Damage {
 
     if (this.attacker) {
       this.critical = this.attacker.evaluateCriticalChance(this);
-      amount = this.attacker.evaluateOutgoingDamage(this);
+      amount = this.attacker.evaluateOutgoingDamage(this, amount);
     }
 
-    amount = target.evaluateIncomingDamage(this);
-    return amount;
+    return target.evaluateIncomingDamage(this, amount);
   }
 
   /**

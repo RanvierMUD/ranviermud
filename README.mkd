@@ -49,6 +49,7 @@ The default bundles come together to make a basic Diku style MUD with the follow
 * Currency system allowing NPCs to be configured to drop different amounts of multiple currencies instead of just gold
 * A fast travel wayshrine system
 * Vendors with the ability to list items of multiple currencies
+* Crafting/resource gathering
 
 You can build your MUD on top of these bundles or disable them and build yours completely fresh while still taking
 advantage of all of the core code.

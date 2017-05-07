@@ -98,12 +98,12 @@ class Skill {
       }
     }
 
-    if (this.resource.cost) {
-      const paid = this.payResourceCost(player);
-      if (!paid) {
-        return false;
+      if (this.resource.cost) {
+        if (!this.hasEnoughResource(player)) {
+          Broadcast.sayAt(player, `You do not have enough ${this.resource.attribute}.`);
+          return false;
+        }
       }
-    }
 
     if (this.initiatesCombat) {
       player.initiateCombat(target);
@@ -112,7 +112,11 @@ class Skill {
     // allow skills to not incur the cooldown if they return false in run
     if (this.run(args, player, target) !== false) {
       this.cooldown(player);
+      if (this.resource.cost) {
+        this.payResourceCost(player);
+      }
     }
+
     return true;
   }
 
@@ -141,11 +145,6 @@ class Skill {
    * @return {boolean} If the player has paid the resource cost.
    */
   payResourceCost(player) {
-    if (!this.hasEnoughResource(player)) {
-      Broadcast.sayAt(player, `You do not have enough ${this.resource.attribute}.`);
-      return false;
-    }
-
     // resource cost is calculated as damage so effects could potentially reduce resource costs
     const damage = new Damage({
       attribute: this.resource.attribute,
@@ -156,7 +155,6 @@ class Skill {
     });
 
     damage.commit(player);
-    return true;
   }
 
 

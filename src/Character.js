@@ -6,6 +6,7 @@ const Config = require('./Config');
 const EffectList = require('./EffectList');
 const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
 const EventEmitter = require('events');
+const Heal = require('./Heal');
 const { Inventory, InventoryFullError } = require('./Inventory');
 const Parser = require('./CommandParser').CommandParser;
 const RandomUtil = require('./RandomUtil');
@@ -82,15 +83,22 @@ class Character extends EventEmitter
       case 'attackpower':
         attribute.setBase(this.getMaxAttribute('strength'));
         break;
-      case 'energy':
-      case 'armor':
+      case 'strength':
+      case 'agility':
+      case 'intellect':
+      case 'stamina':
+        attribute.setBase(AttributeUtil.baseAttributeByLevel(attribute.name, this.level));
         break;
       default:
-        attribute.setBase(AttributeUtil.baseAttributeByLevel(attribute.name, this.level));
+        // don't modify any other attributes
         break;
     }
 
     return this.effects.evaluateAttribute(attribute);
+  }
+
+  addAttribute(name, base, delta = 0) {
+    this.attributes.add(name, base, delta);
   }
 
   /* Get value of attribute including changes to the attribute.
@@ -124,6 +132,10 @@ class Character extends EventEmitter
 
   lowerAttribute(attr, amount) {
     this.attributes.get(attr).lower(amount);
+  }
+
+  hasEffectType(type) {
+    return this.effects.hasEffectType(type);
   }
 
   addEffect(effect) {
@@ -248,14 +260,16 @@ class Character extends EventEmitter
    * @param {Damage} damage
    * @return {number}
    */
-  evaluateIncomingDamage(damage) {
-    let amount = this.effects.evaluateIncomingDamage(damage);
+  evaluateIncomingDamage(damage, currentAmount) {
+    let amount = this.effects.evaluateIncomingDamage(damage, currentAmount);
 
-    // let armor reduce incoming physical damage
-    const attackerLevel = (damage.attacker && damage.attacker.level) || 1;
-    const armor = this.getAttribute('armor');
-    if (damage.type === 'physical' && armor > 0) {
-      amount *= 1 - armor / (armor * AttributeUtil.getArmorReductionConstant(attackerLevel));
+    // let armor reduce incoming physical damage. There is probably a better place for this...
+    if (!(damage instanceof Heal) && damage.attacker && damage.attribute === 'health') {
+      const attackerLevel = damage.attacker.level;
+      const armor = this.getAttribute('armor');
+      if (damage.type === 'physical' && armor > 0) {
+        amount *= 1 - armor / (armor * AttributeUtil.getArmorReductionConstant(attackerLevel));
+      }
     }
 
     return Math.floor(amount);
@@ -264,10 +278,11 @@ class Character extends EventEmitter
   /**
    * @see EffectList.evaluateOutgoingDamage
    * @param {Damage} damage
+   * @param {number} currentAmount
    * @return {number}
    */
-  evaluateOutgoingDamage(damage) {
-    return this.effects.evaluateOutgoingDamage(damage);
+  evaluateOutgoingDamage(damage, currentAmount) {
+    return this.effects.evaluateOutgoingDamage(damage, currentAmount);
   }
 
   evaluateCriticalChance(damage) {
@@ -275,12 +290,12 @@ class Character extends EventEmitter
   }
 
   equip(item) {
-    if (this.inventory) {
-      this.removeItem(item);
-    }
-
     if (this.equipment.has(item.slot)) {
       throw new EquipSlotTakenError();
+    }
+
+    if (this.inventory) {
+      this.removeItem(item);
     }
 
     this.equipment.set(item.slot, item);

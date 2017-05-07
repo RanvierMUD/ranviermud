@@ -20,31 +20,32 @@
       "delta": 0,
       "base": 154
     },
-    "energy": {
-      "delta": 0,
-      "base": 100
-    },
     "armor": {
       "delta": 0,
       "base": 0
+    },
+    "energy": {
+      "delta": 0,
+      "base": 100
     }
   },
   "level": 1,
   "name": "Admin",
   "room": "limbo:1",
   "effects": [],
-  "playerClass": "warrior",
   "experience": 0,
   "inventory": {
     "items": [],
     "max": 16
   },
+  "metadata": {
+    "class": "warrior"
+  },
+  "playerClass": "warrior",
+  "prompt": "[ %health.current%/%health.max% <b>hp</b> %energy.current%/%energy.max% <b>energy</b> ]",
   "quests": {
     "completed": [],
     "active": []
-  },
-  "metadata": {
-    "class": "warrior"
   },
   "role": 2,
   "equipment": {}

@@ -10,6 +10,7 @@
   keywords: ["wise", "old", "man"]
   name: "Wise Old Man"
   level: 99
+  script: '2-old-man'
   pacifist: true
   description: "A wise looking old man sits on the ground with legs crossed."
   attributes:

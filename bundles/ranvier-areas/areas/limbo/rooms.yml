@@ -53,6 +53,9 @@
       direction: east
 - <<: *trainingroom
   id: 4
+  items:
+    - id: "craft:1"
+      respawnChance: 30
   exits:
     - roomId: "limbo:3"
       direction: south
@@ -60,6 +63,9 @@
       direction: east
 - <<: *trainingroom
   id: 5
+  items:
+    - id: "craft:2"
+      respawnChance: 15
   exits:
     - roomId: "limbo:4"
       direction: west
@@ -97,6 +103,8 @@
   exits:
     - roomId: "limbo:1"
       direction: up
+    - roomId: "limbo:10"
+      direction: down
 - id: 9
   title: "Wally's Wonderful Wares (Shop)"
   description: >- 
@@ -110,3 +118,13 @@
   exits:
     - roomId: "limbo:1"
       direction: east
+- id: 10
+  title: "Room Context Commands Test"
+  script: '10-context'
+  description: >-
+    This room shows off commands that are only active in a particular room. Try out the <b><cyan>roomtest</cyan></b> command.
+  behaviors:
+    commands: [ 'roomtest' ]
+  exits:
+    - roomId: "limbo:8"
+      direction: up

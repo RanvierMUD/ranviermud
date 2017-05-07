@@ -37,7 +37,7 @@ class Item extends EventEmitter {
 
     this.area = area;
     this.properties  = item.properties || {};
-    this.behaviors = new Map(Object.entries(item.behaviors || {}));
+    this.behaviors = item.behaviors || {};
     this.defaultItems = item.items || [];
     this.description = item.description || 'Nothing special.';
     this.entityReference = item.entityReference; // EntityFactory key
@@ -72,6 +72,9 @@ class Item extends EventEmitter {
    * @return {boolean}
    */
   hasBehavior(name) {
+    if (!(this.behaviors instanceof Map)) {
+        throw new Error("Item has not been hydrated. Cannot access behaviors.");
+    }
     return this.behaviors.has(name);
   }
 
@@ -80,6 +83,9 @@ class Item extends EventEmitter {
    * @return {*}
    */
   getBehavior(name) {
+    if (!(this.behaviors instanceof Map)) {
+        throw new Error("Item has not been hydrated. Cannot access behaviors.");
+    }
     return this.behaviors.get(name);
   }
 
@@ -166,7 +172,7 @@ class Item extends EventEmitter {
     return found;
   }
 
-  hydrate(state) {
+  hydrate(state, serialized = {}) {
     if (typeof this.area === 'string') {
       this.area = state.AreaManager.getArea(this.area);
     }
@@ -184,6 +190,11 @@ class Item extends EventEmitter {
         this.addItem(newItem);
       });
     }
+
+    // perform deep copy if behaviors is set to prevent sharing of the object between
+    // item instances
+    const behaviors = JSON.parse(JSON.stringify(serialized.behaviors || this.behaviors));
+    this.behaviors = new Map(Object.entries(behaviors));
 
     for (let [behaviorName, config] of this.behaviors) {
       let behavior = state.ItemBehaviorManager.get(behaviorName);

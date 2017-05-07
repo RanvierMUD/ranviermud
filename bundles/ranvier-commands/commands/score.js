@@ -19,7 +19,6 @@ module.exports = (srcPath) => {
         intellect: 0,
         stamina: 0,
         armor: 0,
-        energy: 0,
         health: 0
       };
 
@@ -36,7 +35,34 @@ module.exports = (srcPath) => {
         '%36s',
         'Weapon '
       ));
-      B.at(p, sprintf(' %-9s: %12s', 'Energy', `${stats.energy.current}/${stats.energy.max}`));
+
+      // class resource
+      switch (p.playerClass.id) {
+        case 'warrior':
+          const energy = {
+            current: p.getAttribute('energy'),
+            max: p.getMaxAttribute('energy')
+          };
+          B.at(p, sprintf(' %-9s: %12s', 'Energy', `${energy.current}/${energy.max}`));
+          break;
+        case 'mage':
+          const mana = {
+            current: p.getAttribute('mana'),
+            max: p.getMaxAttribute('mana')
+          };
+          B.at(p, sprintf(' %-9s: %12s', 'Mana', `${mana.current}/${mana.max}`));
+          break;
+        case 'paladin':
+          const favor = {
+            current: p.getAttribute('favor'),
+            max: p.getMaxAttribute('favor')
+          };
+          B.at(p, sprintf(' %-9s: %12s', 'Favor', `${favor.current}/${favor.max}`));
+          break;
+        default:
+          B.at(p, B.line(24, ' '));
+          break;
+      }
       say(sprintf('%35s', '.' + B.line(22)) + '.');
 
       B.at(p, sprintf('%37s', '|'));

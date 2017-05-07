@@ -12,6 +12,7 @@ var EffectModifiers;
  * @property {boolean} config.unique       If multiple effects with the same `config.type` can be applied at once
  * @property {number}  config.maxStacks    When adding an effect of the same type it adds a stack to the current
  *     effect up to maxStacks instead of adding the effect. Implies `config.unique`
+ * @property {boolean} config.persists     If false the effect will not save to the player
  * @property {string}  config.type         The effect category, mainly used when disallowing stacking
  * @property {boolean|number} config.tickInterval Number of seconds between calls to the `updateTick` listener
  * @property {string}    description
@@ -36,11 +37,12 @@ class Effect extends EventEmitter {
       description: '',
       duration: Infinity,
       hidden: false,
-      name: 'Unnamed Effect',
       maxStacks: 0,
-      unique: true,
-      type: 'undef',
+      name: 'Unnamed Effect',
+      persists: true,
       tickInterval: false,
+      type: 'undef',
+      unique: true,
     }, def.config);
 
     this.target = target;

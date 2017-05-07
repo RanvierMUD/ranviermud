@@ -19,6 +19,17 @@ class PlayerClass {
   }
 
   /**
+   * Override this method in your class to do initial setup of the player. This
+   * includes things like adding the resource attribute to the player or anything
+   * else that should be done when the player is initially given this class
+   */
+  setupPlayer(player) {
+    if (typeof this.config.setupPlayer === 'function') {
+      this.config.setupPlayer(player);
+    }
+  }
+
+  /**
    * Table of level: abilities learned.
    * Example:
    *     {

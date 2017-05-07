@@ -23,6 +23,7 @@ class FetchGoal extends QuestGoal {
     this.on('get', this._getItem);
     this.on('drop', this._dropItem);
     this.on('decay', this._dropItem);
+    this.on('start', this._checkInventory);
   }
 
   getProgress() {
@@ -45,6 +46,7 @@ class FetchGoal extends QuestGoal {
         for (const [, item] of player.inventory) {
           if (item.entityReference === this.config.item) {
             this.quest.GameState.ItemManager.remove(item);
+            break;
           }
         }
       }
@@ -79,6 +81,17 @@ class FetchGoal extends QuestGoal {
     }
 
     this.emit('progress', this.getProgress());
+  }
+
+  _checkInventory() {
+    // when the quest is first started check the player's inventory for items they need
+    if (!this.player.inventory) {
+      return;
+    }
+
+    for (const [uuid, item] of this.player.inventory) {
+      this._getItem(item);
+    }
   }
 }
 

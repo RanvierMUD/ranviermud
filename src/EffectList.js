@@ -36,7 +36,7 @@ class EffectList {
 
   getByType(type) {
     return [...this.effects].find(effect => {
-      return effect.type === type;
+      return effect.config.type === type;
     });
   }
 
@@ -138,34 +138,32 @@ class EffectList {
 
   /**
    * @param {Damage} damage
+   * @param {number} currentAmount
    * @return {number}
    */
-  evaluateIncomingDamage(damage) {
+  evaluateIncomingDamage(damage, currentAmount) {
     this.validateEffects();
 
-    let amount = damage.finalAmount;
-
     for (const effect of this.effects) {
-      amount = effect.modifyIncomingDamage(damage, amount);
+      currentAmount = effect.modifyIncomingDamage(damage, currentAmount);
     }
 
-    return Math.max(amount, 0) || 0;
+    return Math.max(currentAmount, 0) || 0;
   }
 
   /**
    * @param {Damage} damage
+   * @param {number} currentAmount
    * @return {number}
    */
-  evaluateOutgoingDamage(damage) {
+  evaluateOutgoingDamage(damage, currentAmount) {
     this.validateEffects();
 
-    let amount = damage.finalAmount;
-
     for (const effect of this.effects) {
-      amount = effect.modifyOutgoingDamage(damage, amount);
+      currentAmount = effect.modifyOutgoingDamage(damage, currentAmount);
     }
 
-    return Math.max(amount, 0) || 0;
+    return Math.max(currentAmount, 0) || 0;
   }
 
   evaluateCriticalChance(damage) {
@@ -189,7 +187,16 @@ class EffectList {
 
   serialize() {
     this.validateEffects();
-    return [...this.effects].map(effect => effect.serialize());
+    let serialized = [];
+    for (const effect of this.effects) {
+      if (!effect.config.persists) {
+        continue;
+      }
+
+      serialized.push(effect.serialize());
+    }
+
+    return serialized;
   }
 
   hydrate(state) {
