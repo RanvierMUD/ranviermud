@@ -52,6 +52,7 @@ class Effect extends EventEmitter {
       attributes: {},
       incomingDamage: (damage, current) => current,
       outgoingDamage: (damage, current) => current,
+      criticalChance: damage => damage.critical,
     }, def.modifiers);
 
     // internal state saved across player load e.g., stacks, amount of damage shield remaining, whatever
@@ -176,6 +177,11 @@ class Effect extends EventEmitter {
   modifyOutgoingDamage(damage, currentAmount) {
     const modifier = this.modifiers.outgoingDamage.bind(this);
     return modifier(damage, currentAmount);
+  }
+
+  evaluateCriticalChance(damage) {
+    const modifier = this.modifiers.criticalChance.bind(this);
+    return damage.critical || modifier(damage);
   }
 
   serialize() {

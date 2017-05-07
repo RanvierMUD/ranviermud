@@ -6,13 +6,13 @@
 module.exports = srcPath => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Flag = require(srcPath + 'EffectFlag');
-  const Random = require(srcPath + 'Random');
+  const Random = require(srcPath + 'RandomUtil');
 
   return {
     config: {
       name: 'Critical',
       description: '',
-      type: 'critical',
+      type: 'crit',
       hidden: true,
       unique: false
     },
@@ -22,10 +22,10 @@ module.exports = srcPath => {
       multiplier: 1.5
     },
     modifiers: {
-      evaluateCriticalChance(damage) {
+      criticalChance(damage) {
         return damage.critical || Random.probability(this.state.chance);
       },
-      evaluateOutgoingDamage(damage, current) {
+      outgoingDamage(damage, current) {
         if (!damage.critical) {
           return current;
         }

@@ -140,6 +140,10 @@ module.exports = (srcPath) => {
           return;
         }
 
+        if (damage.critical) {
+          B.sayAt(this, '<red>*** <bold>Critical Strike!</bold> ***</red>');
+        }
+
         let buf = '';
         if (damage.source) {
           buf = `Your <b>${damage.source.name}</b> hit`;

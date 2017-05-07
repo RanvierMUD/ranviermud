@@ -11,7 +11,7 @@ module.exports = (srcPath) => {
     listeners: {
       equip: state => function (config = {}, wielder) {
         const stateConfig = Object.assign({}, config, { slot: this.slot });
-        const critEffect = state.EffectFactory.create('critical', wielder, {}, stateConfig);
+        const critEffect = state.EffectFactory.create('crit', wielder, {}, stateConfig);
         wielder.addEffect(critEffect);
       }
     }

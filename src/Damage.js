@@ -42,6 +42,8 @@ class Damage {
     this.source = source;
     this.attacker = attacker;
     this.hidden = hidden;
+    this.critical = critical;
+    this.glancing = glancing;
   }
 
   /**

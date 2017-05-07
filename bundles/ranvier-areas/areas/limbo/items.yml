@@ -54,8 +54,6 @@
   quality: rare
   itemLevel: 10
   level: 5
-  behaviors:
-    crit: {}
   properties:
     minDamage: 11
     maxDamage: 20
@@ -64,6 +62,7 @@
       strength: 2
       stamina: 2
   behaviors:
+    crit: {}
     sellable:
       value: 30
       currency: gold
