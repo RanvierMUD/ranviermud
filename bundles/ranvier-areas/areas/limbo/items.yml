@@ -9,6 +9,9 @@
   level: 1
   itemLevel: 1
   quality: common
+  behaviors:
+    crit:
+      multiplier: 1.25
   properties:
     minDamage: 7
     maxDamage: 15
@@ -51,6 +54,8 @@
   quality: rare
   itemLevel: 10
   level: 5
+  behaviors:
+    crit: {}
   properties:
     minDamage: 11
     maxDamage: 20
@@ -58,7 +63,7 @@
     stats:
       strength: 2
       stamina: 2
-  behaviors: 
+  behaviors:
     sellable:
       value: 30
       currency: gold
@@ -75,7 +80,7 @@
   properties:
     stats:
       armor: 20
-  behaviors: 
+  behaviors:
     sellable:
       value: 30
       currency: gold
@@ -131,6 +136,10 @@
   script: "9-ranvier-blade"
   itemLevel: 15
   level: 10
+  behaviors:
+    crit:
+      chance: 5
+      multiplier: 2
   properties:
     minDamage: 13
     maxDamage: 26

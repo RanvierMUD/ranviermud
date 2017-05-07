@@ -14,6 +14,7 @@ module.exports = srcPath => {
       description: '',
       type: 'critical',
       hidden: true,
+      unique: false
     },
     flags: [Flag.BUFF],
     state: {
@@ -21,10 +22,10 @@ module.exports = srcPath => {
       multiplier: 1.5
     },
     modifiers: {
-      evaluateCriticalChance: function (damage) {
+      evaluateCriticalChance(damage) {
         return damage.critical || Random.probability(this.state.chance);
       },
-      evaluateOutgoingDamage: function (damage, current) {
+      evaluateOutgoingDamage(damage, current) {
         if (!damage.critical) {
           return current;
         }
@@ -33,7 +34,7 @@ module.exports = srcPath => {
       }
     },
     listeners: {
-      unequip: function (slot, item) {
+      unequip(slot, item) {
         if (slot === this.state.slot) {
           this.remove();
         }
