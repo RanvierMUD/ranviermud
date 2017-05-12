@@ -14,7 +14,7 @@
     maxDamage: 15
     speed: 2.8
     stats:
-      critical: 100
+      critical: 1
 - id: 2
   name: "Slice of Cheese"
   roomDesc: "A moldy slice of cheese"
