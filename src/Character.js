@@ -287,10 +287,6 @@ class Character extends EventEmitter
     return this.effects.evaluateOutgoingDamage(damage, currentAmount);
   }
 
-  evaluateCriticalChance(damage) {
-    return this.effects.evaluateCriticalChance(damage);
-  }
-
   equip(item) {
     if (this.equipment.has(item.slot)) {
       throw new EquipSlotTakenError();
