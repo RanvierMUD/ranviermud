@@ -9,13 +9,12 @@
   level: 1
   itemLevel: 1
   quality: common
-  behaviors:
-    crit:
-      multiplier: 1.25
   properties:
     minDamage: 7
     maxDamage: 15
     speed: 2.8
+    stats:
+      critical: 100
 - id: 2
   name: "Slice of Cheese"
   roomDesc: "A moldy slice of cheese"
@@ -61,8 +60,8 @@
     stats:
       strength: 2
       stamina: 2
+      critical: -1
   behaviors:
-    crit: {}
     sellable:
       value: 30
       currency: gold
@@ -135,10 +134,6 @@
   script: "9-ranvier-blade"
   itemLevel: 15
   level: 10
-  behaviors:
-    crit:
-      chance: 5
-      multiplier: 2
   properties:
     minDamage: 13
     maxDamage: 26
@@ -148,6 +143,7 @@
     stats:
       strength: 2
       stamina: 2
+      critical: 3
 - id: 10
   name: "Wooden Shield"
   type: ARMOR
