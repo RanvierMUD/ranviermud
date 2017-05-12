@@ -1,5 +1,7 @@
 'use strict';
 
+const Random = require('./RandomUtil');
+
 /**
  * @property {string} attribute Attribute the damage is going to apply to
  * @property {number} amount Initial amount of damage to be done
@@ -53,7 +55,7 @@ class Damage {
     let amount = this.amount;
 
     if (this.attacker) {
-      this.critical = this.attacker.evaluateCriticalChance(this);
+      this.critical = Random.probability(this.attacker.getMaxAttribute('critical') || 0);
       amount = this.attacker.evaluateOutgoingDamage(this, amount);
     }
 

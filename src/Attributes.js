@@ -13,6 +13,7 @@ class Attributes extends Map
       stamina: { base: 20 },
       health: { base: 100 },
       armor: { base: 0 },
+      critical: { base: 1 }
     };
 
     // use base stats or use loaded stats but make sure it still has base stats
