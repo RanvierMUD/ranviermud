@@ -89,6 +89,8 @@ class Character extends EventEmitter
       case 'stamina':
         attribute.setBase(AttributeUtil.baseAttributeByLevel(attribute.name, this.level));
         break;
+      case 'critical':
+        attribute.setBase(Math.ceil(this.level / 5));
       default:
         // don't modify any other attributes
         break;
