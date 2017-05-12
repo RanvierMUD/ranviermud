@@ -56,7 +56,9 @@ class Damage {
 
     if (this.attacker) {
       this.critical = Random.probability(this.attacker.getMaxAttribute('critical') || 0);
-      amount = Math.ceil(amount * 1.5);
+      if (this.critical) {
+        amount = Math.ceil(amount * 1.);
+      }
       amount = this.attacker.evaluateOutgoingDamage(this, amount);
     }
 
