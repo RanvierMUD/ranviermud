@@ -25,7 +25,7 @@ ranvier-areas/
 
 ## The Manifest
 
-The manifest right now is incredibly simple and only requires one setting: `title`
+The manifest right now is incredibly simple and only requires one setting: `title`.
 
 Example Manifest
 
@@ -37,11 +37,11 @@ info:
 ```
 
 `respawnInterval` _`number`_
-:    Number of seconds between respawn ticks. See the [Room](rooms.md) section for respawn details
+:    Number of seconds between respawn ticks. See the [Room](rooms.md) section for details on handling respawn. Defaults to 60.
 
 ## Entity References
 
-Very often you'll see strings like `limbo:1`. These are entity references and can refer to Items, NPCs, Rooms, and Quests. The type of entity the reference points to is inferred from its usage (e.g., `foobar:1` in an `items` list would point to an Item.) Let's take a look at an example NPC definition
+You'll often see strings like `limbo:1`. These are entity references and can refer to Items, NPCs, Rooms, and Quests. The type of entity the reference points to is inferred from its context (e.g., `foobar:1` in an `items` list would point to an Item.) Let's take a look at an example NPC definition:
 
 Assuming both of these definitions live in `bundles/awesome-bundle/areas/foobar/`
 
@@ -58,6 +58,6 @@ and an accompanying item definition
   name: "Sword of Awesomeness"
 ```
 
-In the definition of Joe Schmoe `foobar:1` in the `items` property says "Find item with the ID `1` in the area `foobar`". Entity ids are only unique within the same entity type of the same area. So Joe Schmoe's entity reference would _also_ be `foobar:1`
+In the definition of Joe Schmoe, the value`foobar:1` in the `items` property's array means "Find item with the ID `1` in the area `foobar`". Entity ids are only unique within the same entity type of the same area. So Joe Schmoe's entity reference would _also_ be `foobar:1`, but would refer to an NPC.
 
-This type will be described in the subsequent docs as `EntityReference`
+This string will be described in the subsequent docs as `EntityReference`.
