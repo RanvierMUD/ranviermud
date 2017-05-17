@@ -1,4 +1,4 @@
-Ranvier's quest system is left intentionally generic. However, this makes it incredibly powerful and extensible. 
+Ranvier's quest system is left intentionally generic. However, this makes it incredibly powerful and extensible.
 In this guide we will implement a new quest goal type called FetchGoal (player needs to retrieve an item), create a
 couple fetch quests, create a quest giver for one of the quests, and for the other create a room script that will
 give the player a quest when walking into the room.
@@ -22,7 +22,7 @@ class. Once you've created your custom goal type you can have as many quests as 
 don't need to create a custom goal for each individual quest. But you will need one for each different type of quest,
 e.g., a goal for kill quests, a goal for fetch quests, etc.
 
-A fetch goal, we'll say, is one that
+We'll define a fetch goal as one that
 
 * requires the player to pick up a certain number of a certain item
 * optionally removes the items from the players inventory on completion
@@ -51,7 +51,7 @@ class FetchGoal extends QuestGoal {
   // Quest goal constructor takes the quest it's attached to, a configuration of
   // this particular goal, and the player the quest is active on
   constructor(quest, config, player) {
-    // Here we'll add our custom configuration: removeItem, target item and count
+    // Here we'll have our custom config extend some default properties: removeItem, target item and count
     config = Object.assign({
       title: 'Retrieve Item',
       removeItem: false,
@@ -59,13 +59,13 @@ class FetchGoal extends QuestGoal {
       item: null
     }, config);
 
-    // call parent constructor
+    // Call parent QuestGoal constructor
     super(quest, config, player);
 
     /*
     All quests have a "state"; this is the part that contains any data that is relevant
     to the current progress of the quest. So in the constructor we will set the initial
-    progress of this to simply be that the player hasn't picked up any of target item yet
+    progress of this to indicate that the player hasn't picked up any of the target item yet
     */
     this.state = {
       count: 0
@@ -78,7 +78,7 @@ class FetchGoal extends QuestGoal {
   }
 
   /*
-  Because Quest has no opinions and makes no assumptions it requires you to tell it how to
+  Because Quest has no opinions and makes no assumptions, it requires you to tell it how to
   get the current progress of this type of goal based on its state and configuration. In
   our FetchGoal, progress is defined as how many items have they picked up out of how many
   they need to pick up in total.
@@ -100,19 +100,21 @@ class FetchGoal extends QuestGoal {
   for the player automatically)
   */
   complete() {
-    // sanity check to make sure it doesn't actually complete before it's supposed to
+    // Sanity check to make sure it doesn't actually complete before it's supposed to
     if (this.state.count < this.config.count) {
       return;
     }
 
     const player = this.quest.player;
 
-    // Here we implement our removeItem config
+    // Here, we implement our removeItem config.
+    // If removeItem is true, we remove all copies of the item from the player's inventory
+    // once the quest is complete.
     if (this.config.removeItem) {
       for (let i = 0; i < this.config.count; i++) {
         for (const [, item] of player.inventory) {
           if (item.entityReference === this.config.item) {
-            // use the ItemManager to completely remove the item from the game
+            // Use the ItemManager to completely remove the item from the game
             this.quest.GameState.ItemManager.remove(item);
           }
         }
@@ -203,14 +205,14 @@ module.exports = (srcPath) => {
         title: "Find A Weapon",
         desc: "You're defenseless! Pick up the shiv from the chest by typing 'get shiv chest'",
 
-        // The level isn't _required_ but you may want it so you know how much of a reward to give
+        // The level isn't _required_ but you may want it so you know how much of a reward to give.
         level: 1,
 
-        // as soon as all goals are at 100% progress complete this quest. Defaults to false
+        // As soon as all goals are at 100% progress, complete this quest. Defaults to false.
         autoComplete: true,
 
         // This reward function is called once the quest is completed. You can basically
-        // do anything you want to reward the player, this example shows giving them some
+        // do anything you want to reward the player, this example shows us giving them some
         // experience
         reward: (quest, player) => {
           player.emit('experience', LevelUtil.mobExp(quest.level) * 5);
@@ -220,12 +222,12 @@ module.exports = (srcPath) => {
       // setup the goals that the player has to complete for this quest
       goals: [
         {
-          // Each goal has a `type` such as one we built above
+          // Each goal has a `type` such as one we built above...
           type: FetchGoal,
-          // and a config, this is specific to each goal type
+          // and a config, specific to each goal type, which is passed to the type's constructor.
           config: {
             title: 'Retrieved a Sword',
-            // this quest only requires the player pick up one of the target items
+            // This quest only requires the player pick up one of the target items...
             count: 1,
             // which in this case is a sword
             item: "limbo:1",
@@ -234,8 +236,8 @@ module.exports = (srcPath) => {
     },
 
     2: {
-      // this quest is very similar except it's repeatable and once the player completes
-      // the quest the cheese will be removed from their inventory
+      // This quest is very similar, except that it is repeatable, and once the player completes
+      // the quest the cheese will be removed from their inventory.
       config: {
         title: "One Cheese Please",
         desc: "A rat has tasked you with finding it some cheese, better get to it.",
@@ -259,9 +261,9 @@ module.exports = (srcPath) => {
 };
 ```
 
-In addition to the above Quest definitions can also include `requires` which is a list
-of quest EntityReferences (`"limbo:1"`) which the player must complete before they can
-start that quest.
+In addition to the above, Quest definitions can also include a `requires` property, which is a list
+of quest EntityReferences (`"limbo:1"`) which the player must complete as prerequisites before they can
+start that quest. This allows you to create an entire questline or branching multi-part quests.
 
 ## Giving the player a quest
 
@@ -272,7 +274,7 @@ go over two examples of how you may want to do it.
 
 The easiest approach is to make an NPC a quest giver (questor). This functionality is not
 a feature of the core engine itself but rather of the `quest` command in the `ranvier-quests`
-bundle. If you would like to modify the base functionality of how questors work see that bundle.
+bundle. If you would like to modify the base functionality of how questors work, see the commands directory of that bundle.
 
 The base functionality of questors also includes updates to the `look` command in
 `ranvier-commands` which places small progress indicators next to the NPC's name when the
@@ -302,17 +304,17 @@ quests with `quest list rat`
 
 ### Scripts
 
-While NPC quest givers are the easiest approach they are not the most flexible. Take for
-example if you wanted to give a player a quest upon logging into the game, or when they
-entered a certain room, or picked up a certain item. For this you will need to harness the
+While NPC quest givers are the easiest approach, they are not the most flexible. Take, for
+example, if you wanted to give a player a quest upon logging into the game, or when they
+entered a certain room, or picked up a certain item. For this, you will need to harness the
 power of entity scripting. You can see more detailed documentation on scripting in
 [Scripting](scripting.md).
 
-In this example we will implement giving the player a quest (The "Find a Weapon!" quest
+In this example, we will implement giving the player a quest (The "Find a Weapon!" quest
 from above) when they enter a room.
 
 Here we have the definition of room Test Room 1 from `rooms.yml` and we'll attach the
-script`1-test` to the room.
+script `1-test` to the room.
 
 ```yaml
 - id: 1
@@ -321,7 +323,7 @@ script`1-test` to the room.
   ...
 ```
 
-Now we need to create the scripts file `1-test.js` in the room folder of scripts. So your
+Now we need to create the scripts file, `1-test.js`, in the room folder of scripts. So your
 bundles folder should now look like this:
 
 ```
@@ -339,8 +341,8 @@ my-bundle/
       rooms.yml
 ```
 
-Now to create the `1-test` script, again more detail about the structure and
-implementation of scripts can be found in the [Scripting](scripting.md) section.
+Now, to create the `1-test` script (again, more detail about the structure and
+implementation of scripts can be found in the [Scripting](scripting.md) section):
 
 ```javascript
 'use strict';
@@ -357,12 +359,12 @@ module.exports = (srcPath) => {
           player.questTracker.start(quest);
         }
 
-        // it's as simple as that: get the quest, check if the player can start it, start it
+        // It's as simple as that: get the quest, check if the player can start it, start it
       }
     }
   };
 };
 ```
 
-Now when the player enters `Test Room 1` they will be given the quest `Find a Weapon` (if
-they don't already have it active or have already completed it)
+Now, when the player enters `Test Room 1` they will be given the quest `Find a Weapon` (assuming
+they don't already have the quest activated or completed).
