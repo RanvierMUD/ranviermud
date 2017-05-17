@@ -1,4 +1,4 @@
-Commands are the most simple functionality you can add to Ranvier and accordingly they're very simple to create. Each
+Commands are the most essential player-facing functionality you can add to Ranvier and they can consist of a single function as a bare minimum. Each
 command gets its own file within the `commands/` folder of the bundle. This guide will go over a couple examples of
 commands that should give a decent overview of how you can access the game's state to do what you want inside your command.
 
@@ -6,7 +6,7 @@ commands that should give a decent overview of how you can access the game's sta
 
 ## Creating a New Command
 
-Commands in a bundle all go under the `commands/` folder in your bundle directory. So in our case we're creating two
+Commands in a bundle all go under the `commands/` folder in your bundle's directory. So in our case we're creating two
 commands: `inventory`, and `remove` so our bundle will look like this:
 
 ```
@@ -17,7 +17,7 @@ bundles/my-commands/
 ```
 
 The name of the file minus `.js` will be the command the user types so take that into consideration when naming the
-file. Commands can have multiple aliases as we will see so you don't have to create multiple files for the same command.
+file. Commands can have multiple aliases, as we will see, so you don't have to create multiple files for the same command.
 
 ## Command Structure
 
@@ -37,8 +37,9 @@ module.exports = (srcPath, bundlePath) => {
     function which takes the arguments to the command and the player that executed
     the command. The 3rd parameter, `arg0`, is like argv[0] in many programming
     languages; it will be the full name of the alias the player used to execute
-    the command. Example: Command 'shop' has an alias 'list', player types 'lis'
-    argv0 will be equal to 'list'.
+    the command. Example: Command 'shop' has an alias 'list'. If the player types 'lis',
+    argv0 will be equal to 'list' so that the 'shop' command can check for it and
+    react accordingly.
     */
     command: state => (args, player, arg0) => {
     }
@@ -67,11 +68,12 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
 
   return {
-    // `usage` is shown when viewing the help a command, see the Helpfiles section for more detail
+    // `usage` is shown when viewing the helpfile for a command, see the Helpfiles section for more detail
     usage: 'inventory',
     command : state => (args, player) => {
       if (!player.inventory || !player.inventory.size) {
         /*
+        A note on using Broadcast:
         `sayAt` sends a message to the player with a newline afterwards. If you need to
         concatenate multiple strings together before breaking to the next line you can
         simply use `at()` as long as you remember to end the line with a newline using
@@ -114,11 +116,13 @@ module.exports = (srcPath) => {
       }
 
       /*
-      `parseDot` from the CommandParser lib tags in a search string like "3.bracer" and
-      a list of items to search through. In that example "3.bracer" would find the 3rd
-      item that matches the keyword "bracer".  The `true` argument here just tells
+      A note on the Parser:
+      The method `parseDot` from the CommandParser lib takes a search string like "3.bracer"
+      and a list of items to search through. In that example "3.bracer" would find the
+      3rd item that matches the keyword "bracer".  The `true` argument here just tells
       `parseDot` to also return the key of the item it found within the list as
-      Character equipment is keyed by the slot the item is worn (head, wrist, etc.)
+      Character equipment is keyed by the slot the item is worn (head, wrist, etc.),
+      so we would end up with ['wrist', Bracer{}] as our results, if it were found.
       */
       const [slot, item] = Parser.parseDot(arg, player.equipment, true);
 
@@ -132,9 +136,9 @@ module.exports = (srcPath) => {
 
       /*
       This is a perfect example of emitting events that your custom item scripts will
-      listen for as described in the Scripting section of the Areas documentation. In
-      this instance if the item's script is listening for the `unequip` event it will be
-      notified that the player just unequipped the item
+      listen for, as described in the Scripting section of the Areas documentation. In
+      this instance, if the item's custom script is listening for the `unequip` event, it will be
+      notified that the player just unequipped the item.
       */
       item.emit('unequip', player);
     }
