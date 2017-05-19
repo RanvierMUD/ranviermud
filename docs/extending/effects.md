@@ -6,9 +6,9 @@ characters.
 
 ## What Can Effects Do?
 
-The most simple example of effects would be attribute changes like healing health over time, or increasing their
+The most simple example of effects would be attribute changes, like healing health over time, or increasing a character's
 strength. However, effects in Ranvier are not simple buffs and debuffs; they receive all of the events the target
-receives in addition to a special event called `updateTick` which we'll go into detail with later.
+receives in addition to a special event called `updateTick`, which we'll go into detail about later.
 
 Some examples of how effects can be combined with other aspects of the Ranvier engine with interesting results:
 
@@ -26,22 +26,22 @@ above, you have access to all player commands and events via the effects system.
 
 ## What is an Effect, exactly?
 
-In Ranvier an `Effect` is an object tied to a `Character` (a player or NPC) by way of the Character's `EffectList` which:
+In Ranvier an `Effect` is an object tied to a `Character` (a player or NPC) by way of the Character's `EffectList`. An Effect:
 
-* Has a duration (can potentially be `Infinity` to be permanent)
-* persists across log in/out
+* has a duration (can potentially be permanent)
+* can persist across log in/out
 * Optionally runs some code when first activated
 * Optionally runs some code when deactivated
-* Optionally runs some code every "tick" (we'll describe tick later)
+* Optionally runs some code every "tick" (we'll describe `updateTick` later)
 * Optionally modifies incoming and outgoing damage
 
-The configuration for this functionality we'll cover as we implement some demonstrative effects.
+We'll cover the configuration of functionality as we implement some demonstrative effects.
 
 ## Creating an Effect
 
 Effects, similar to commands, are each stored in their own `.js` file. In the case of effects it is in the `effects/`
 folder underneath your bundle directory. In our example we'll be implementing `buff`, `damageshield`, and `regen`
-effects so our bundle folder would look like so:
+effects, so our bundle folder would look like so:
 
 ```
 bundles/my-effects/
@@ -54,7 +54,7 @@ bundles/my-effects/
 ### File Structure
 
 Similar to all bundle-loaded `.js` files the effect file will export a lambda accepting the path to the `src/` directory
-for ease of importing core libraries and returning an object representing the definition of the effect. We'll go over
+(for ease of importing core libraries), and returning an object representing the definition of the effect. We'll go over
 the definition of the effect in detail as we work through example effects. Below is the _bare minimum_ you need for an
 effect:
 
@@ -86,9 +86,9 @@ bundles/my-effects/effects/buff.js
 'use strict';
 
 module.exports = srcPath => {
-  // Import the broadcast lib to output to the user
+  // Import the broadcast lib to output to the player
   const Broadcast = require(srcPath + 'Broadcast');
-  // flags described below
+  // Effect flags, described below
   const Flag = require(srcPath + 'EffectFlag');
 
   return {
