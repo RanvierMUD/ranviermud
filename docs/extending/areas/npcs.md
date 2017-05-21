@@ -34,7 +34,7 @@ In Ranvier all NPCs for an area are defined in a single file within the area fol
         "limbo:4": 50
 ```
 
-Here we have two NPC. The rat can enter combat, has a custom script, a default inventory, hands out a quest and has
+Here we have two NPCs. The rat can enter combat, has a custom script, a default inventory, hands out a quest and has
 some extra attributes. The old man is the most basic NPC you can have.
 
 ## Definition Fields
