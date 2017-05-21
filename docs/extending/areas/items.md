@@ -4,7 +4,7 @@ In Ranvier all items for an area are defined in a single file within the area fo
 
 ## Example File
 
-`bundles/ranvier-areas/areas/limbo/npcs.yml`
+`bundles/ranvier-areas/areas/limbo/items.yml`
 ``` yaml
 - id: 1
   name: "Rusty Shiv"
@@ -43,17 +43,17 @@ In Ranvier all items for an area are defined in a single file within the area fo
 :    ***required*** Item id unique among the items of the current area
 
 `type` _`ItemType`_ `(OBJECT)`
-:    See `src/ItemType.js`. Natively doesn't not change _functionality_, simply a helper for you to use in scripts to
+:    See `src/ItemType.js`. Natively, does not change _functionality_, simply a helpful flag for you to use in scripts to
 detect the item type
 
 `name` _`string`_
-:    ***required*** String seen in the player's inventory, equipment list
+:    ***required*** String seen while in the player's inventory or equipment list, or in a container
 
 `roomDesc` _`string`_
 :    ***required*** String displayed when the item is seen on the ground in a room
 
 `keywords` _`string`_
-:    ***required*** Keywords that the player can use to target this item, does not need to be unique
+:    ***required*** Keywords that the player can use to target this item; keywords do not need to be unique on a per-item basis
 
 `description` _`string`_
 :    String displayed when the player looks directly at the item
@@ -62,16 +62,16 @@ detect the item type
 :    Name of custom script to attach to this item (See [Scripting](scripting.md))
 
 `behaviors` _`Object<string,Object>`_
-:    List of behaviors to attach to this item. Key is the behavior name, the value is the configuration for that
-behavior. For boolean (on/off) behaviors, `true` suffices for the config. (See [Scripting](scripting.md) for creating behaviors)
+:    List of behaviors to attach to this item. The key is the behavior name, the value is the configuration object for that
+behavior. For boolean (on/off) behaviors, `true` suffices for the config. (See [Scripting](scripting.md) for more on creating behaviors)
 
 `slot` _`string`_
-:    If the item can be equipped `slot` identifies the wear location of the item. This can be an arbitrary string but
-you probably want to limit to a standard list of locations
+:    If the item can be equipped, `slot` identifies the `wear` location of the item. This can be an arbitrary string but
+you probably want to limit equipment to a standard list of locations
 
 `attributes` _`object`_
 :    Arbitrary list of attributes to attach to this object. There are no constraints on this so you are free to assign
-basically anything here that you want to look for inside commands/scripts/etc.
+basically anything here that you want to look for inside commands/scripts/etc. Accessible in scripts via the `item.attributes` property
 
 `items` _`array<EntityReference>`_
-:    List of Entity References identifying which items should be loaded into this item's inventory
+:    For containers. A list of Entity References identifying which items should be loaded into this item's inventory

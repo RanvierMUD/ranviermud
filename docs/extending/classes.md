@@ -2,10 +2,10 @@
 
 ## Player Classes
 
-Player classes in Ranvier is an intentionally loose concept. They are basically just a javascript file which returns
-a config that gets set on the Player. Any functionality of what classes do or how they modify player's interactions
+Player Classes in Ranvier is an intentionally loose concept. Classes are basically just a JavaScript file which returns
+a class configuration object that gets set on the Player. Any functionality of what classes do or how they modify player's interactions
 is completely ignored by the engine. The default bundles do have an _example_ implementation that you can use to go
-off of but it's entirely up to you if you want to use classes at all. With that said let's take a quick look at how
+off of but it's entirely up to you if you want to use player classes at all. With that said let's take a quick look at how
 the default bundle `ranvier-classes` implements a player class.
 
 ```
@@ -19,11 +19,11 @@ bundles/ranvier-classes/
 
 module.exports = srcPath => {
   return {
-    // display name for the class
+    // Display name for the class, used by the default `score` command.
     name: 'Warrior',
-    // description of the class rendered on the character creation screen
+    // Description of the class rendered on the character creation screen (see default input events)
     description: 'Warriors relish being face-to-face with their enemy. Whether it be wielding axes, maces, swords, or a nearby log, Warriors focus on dealing strong physical damage to their opponent. What they lack in the raw magical damage of a Mage, or the healing prowess of a Cleric, Warriors make up for in their tenacity. Those choosing the more defensive path of the shield can outlast otherwise deadly attacks.',
-    // this "abilityTable" is used in `ranvier-classes/` to assign skills on levelup and when a skill is used to check
+    // This "abilityTable" is used in `ranvier-classes/` to assign skills on levelup and when a skill is used to check
     // if the player actually has access to it
     abilityTable: {
       3: { skills: ['rend'] },
@@ -35,12 +35,12 @@ module.exports = srcPath => {
 };
 ```
 
-That's it, not much to classes by default. Do what you want with them, get creative. Make a classless MUD or make
+That's it, by default there is not much to making a class. Do what you want with them, get creative. Make a classless MUD or make
 sub-classes, it's all up to you.
 
 ## Skills/Spells
 
-Skills and Spells both are defined as skills. Spells are just skills with a different `type`. In this guide
+Skills and Spells both are defined as Skills (see `src/Skill.js`). Spells are just skills with a different `type`. In this guide
 we'll implement 1 active skill and 1 passive skill to see a demo. You can see more complex examples abilities including
 heals, DoTs (damage over time), and defensive abilities in the `ranvier-classes` bundle.
 
@@ -70,27 +70,27 @@ module.exports = (srcPath) => {
   const SkillType = require(srcPath + 'SkillType');
 
   // It's handy to define the different "tuning knobs" of skills right near the top all in one place so you can easily
-  // change them if you need to
+  // change them if you need to.
   const damagePercent = 250;
   const energyCost = 20;
 
   return {
-    // friendly name of the skill shown to the player on the skill list
+    // Friendly name of the skill, shown to the player on the skill list command.
     name: 'Lunge',
-    // the type defines which of the ability managers you can find it.
-    // either in state.SkillManager, or state.SpellManager respectively
+    // The type defines which of the ability managers you can find it in.
+    // Either in state.SkillManager or state.SpellManager, respectively.
     type: SkillType.SKILL,
 
-    // if requiresTarget true the skill usage will fail if the player doesn't target it
-    // unless you also add the `targetSelf: true` option in which case if the player
-    // doesn't specify a target it will target themselves
+    // If requiresTarget is true, the skill usage will fail if the player doesn't specify a target,
+    // unless you also add the `targetSelf: true` option, in which case if the player
+    // doesn't specify a target it will target themselves (for example, a healing spell).
     requiresTarget: true,
 
-    // if initiatesCombat is true using the skill against a target will make the player
-    // enter combat against them
+    // If initiatesCombat is true, using the skill against a target will make the player
+    // enter combat against them.
     initiatesCombat: true,
 
-    // the resource config defines the cost of the skill on use and is optional
+    // The resource config defines the resource cost of the skill on use and is optional.
     resource: {
       // attribute to deduct the cost from
       attribute: 'energy',
@@ -98,11 +98,11 @@ module.exports = (srcPath) => {
       cost: energyCost,
     },
 
-    // cooldown is the number of seconds the player must wait before using this skill again
+    // Cooldown is the number of seconds the player must wait before using this skill again
     cooldown: 6,
 
     /*
-    run is where all the magic of skills happen and has a very similar layout to a
+    The run method is where all the magic of skills happen and has a very similar layout to a
     command. A closure accepting GameState in 'state' and returning a function which,
     in this case takes the arguments to the skill, the player that executed the skill
     and the target of the skill
