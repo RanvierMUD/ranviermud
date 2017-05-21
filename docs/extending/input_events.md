@@ -1,6 +1,6 @@
 ## Player Events
 
-Player events scripts are identical to scripts you create for an NPC, Room, or Item except that they listen for events
+Player events scripts are identical to scripts you would create for an NPC, Room, or Item except that they listen for events
 emitted on the player. You can have one Player Events script per bundle:
 
 ```
@@ -13,7 +13,7 @@ The structure of the file is identical to entity scripts, see the documentation 
 
 ## Input Events
 
-Input events are a bit more complex and arguably the most crucial scriptable in Ranvier, they are events that fire on
+Input events are a bit more complex and arguably the most crucial scriptable part of Ranvier, they are events that fire on
 the _socket_ of the player, not the Player instance.  This covers things like the user connecting to the game, logging
 in, typing commands, anything that deals with _input_ itself before it gets to an actual command.
 
@@ -27,7 +27,7 @@ bundles/my-bundle/
 
 ## File Structure
 
-In this example we'll implement the first event that ever gets fired in Ranvier: 'intro'. This is the first input event
+In this example we'll implement the first event that ever gets fired once a player connects to Ranvier: 'intro'. This is the first input event
 and the only one that _must_ be implemented if you choose to disable the default `ranvier-input-events` bundle.
 
 ```javascript
@@ -35,9 +35,9 @@ and the only one that _must_ be implemented if you choose to disable the default
 
 // Very similar structure to all of our bundle loaded javascript files.
 module.exports = (srcPath) => {
-  // Import the Data helper
+  // Import the Data helper to help load static files
   const Data = require(srcPath + 'Data');
-  // EventUtil has some helpers for outputing to the socket before the player
+  // EventUtil has some helpers for outputing text to the socket before the player
   // object is available
   const EventUtil = require(srcPath + 'EventUtil');
 
