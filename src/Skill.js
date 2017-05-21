@@ -98,8 +98,8 @@ class Skill {
       }
     }
 
-      if (this.resource.cost) {
-        if (!this.hasEnoughResource(player)) {
+      if (this.resource) {
+        if (!this.hasEnoughResources(player)) {
           Broadcast.sayAt(player, `You do not have enough ${this.resource.attribute}.`);
           return false;
         }
@@ -112,8 +112,8 @@ class Skill {
     // allow skills to not incur the cooldown if they return false in run
     if (this.run(args, player, target) !== false) {
       this.cooldown(player);
-      if (this.resource.cost) {
-        this.payResourceCost(player);
+      if (this.resource) {
+        this.payResourceCosts(player);
       }
     }
 
@@ -142,13 +142,27 @@ class Skill {
 
   /**
    * @param {Player} player
-   * @return {boolean} If the player has paid the resource cost.
+   * @return {boolean} If the player has paid the resource cost(s).
    */
-  payResourceCost(player) {
-    // resource cost is calculated as damage so effects could potentially reduce resource costs
+  payResourceCosts(player) {
+    const hasMultipleResourceCosts = Array.isArray(this.resource);
+    if (hasMultipleResourceCosts) {
+      for (const resourceCost of this.resource) {
+        this.payResourceCost(player, resourceCost);
+      }
+      return true;
+    }
+
+    return this.payResourceCost(player, this.resource);
+  }
+
+  // Helper to pay a single resource cost.
+  payResourceCost(player, resource) {
+
+    // Resource cost is calculated as damage so effects could potentially reduce resource costs
     const damage = new Damage({
-      attribute: this.resource.attribute,
-      amount: this.resource.cost,
+      attribute: resource.attribute,
+      amount: resource.cost,
       attacker: null,
       hidden: true,
       source: this
@@ -214,10 +228,17 @@ class Skill {
     return "skill:" + this.id;
   }
 
-  hasEnoughResource(character) {
-    return !this.resource.cost || (
-      character.hasAttribute(this.resource.attribute) &&
-      character.getAttribute(this.resource.attribute) >= this.resource.cost
+  hasEnoughResources(character) {
+    if (Array.isArray(this.resource)) {
+      return this.resource.every((resource) => this.hasEnoughResource(character, resource));
+    }
+    return this.hasEnoughResource(character, this.resource);
+  }
+
+  hasEnoughResource(character, resource) {
+    return !resource.cost || (
+      character.hasAttribute(resource.attribute) &&
+      character.getAttribute(resource.attribute) >= resource.cost
     );
   }
 }
