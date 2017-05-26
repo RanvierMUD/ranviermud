@@ -1,5 +1,5 @@
-Item, NPC, and Room scripting comes in the form of event scripting, see the [Event](../events/) section for a general overview
-of how that works before reading on.
+Item, NPC, and Room scripting comes in the form of event-based scripting. See the [Event](../events/) section for a general overview
+of how Ranvier eventing works before reading on.
 
 [TOC]
 
@@ -26,15 +26,15 @@ See the relevant entity's guide section on how to add the script to the entity.
 
 ## Behaviors
 
-Behaviors are scripts that you can reuse for the same entity types across multiple areas/bundles. For example maybe you
-want to have many different NPCs wander around or immediately attack players upon entering the room (aggro mobs) you can
-use behaviors for that.
+Behaviors are scripts that you can reuse for the same entity types across multiple areas/bundles. For example, maybe you
+want to have many different NPCs wander around at random, or immediately attack players upon entering the room; you can
+use behaviors to re-use the same script.
 
-Behaviors are defined  exactly the same as normal scripts but are created inside the `behaviors/` directory inside your
-bundle but _outside_ of your area definition.
+Behaviors are defined similarly to normal scripts, and also rely on events, but are created inside the `behaviors/` directory inside your
+bundle, which is _outside_ of your `areas/` directory. Another key difference is that they are configurable in the entity's .yaml definition (see each entity type's documentation for some examples, and below for details on configuration).
 
 ```
-bundles/my-area/
+bundles/my-bundle/
   areas/
     limbo/
     ...
@@ -45,15 +45,15 @@ bundles/my-area/
     rooms/
 ```
 
-Again, see the relevant entity's guide section on how to add behaviors to the entity.
+Again, see the relevant entity type's scripting guide section below for more on how to add behaviors to that entity.
 
-> Tip: Behaviors can be used as flags. For example, if you say `behaviors: ['combat']` on an NPC you don't need to
+> Tip: Behaviors can be used as flags. For example, if you say `behaviors: ['combat']` on an NPC, you don't need to
 > actually create a combat.js behavior file, `npc.hasBehavior('combat')` will still return true. This is used, as an
-> example, in the `kill` command in `ranvier-combat` to differentiate pacifist NPCs from NPCs that can enter combat
+> example, in the `kill` command in `ranvier-combat` to differentiate pacifist NPCs from NPCs that can enter combat.
 
 ## File Structure
 
-Single-entity scripts and Behavior script files follow the same file structure outlined below.
+Entity-specific scripts and Behavior script files follow the same file structure outlined here:
 
 ```javascript
 'use strict';
@@ -62,10 +62,9 @@ module.exports = srcPath => {
   return {
     /*
     The familiar bundle script file format we've seen in commands and quests returns here.
-    To listen for an event simply add a new key which is the event name to 'listeners'
-    and whose value is a closure accepting GameState (state) and returning a function
-    whose arguments are dependant on the event. See the Default Events section below for
-    to see some examples of arguments to the listeners.
+    To listen for an event, simply add a new key (which is the event name) to 'listeners'. The value for each listener is a closure accepting GameState (seen here as state, see the Ranvier server executable for more) and returning a function
+    whose arguments are dependent on the event. See the Default Events section below for
+    to see some examples of arguments being passed to the listeners.
     */
     listeners: {
       someEvent: state => (/* event args */) => {
@@ -76,7 +75,7 @@ module.exports = srcPath => {
 };
 ```
 
-**NOTE**: Behaviors are slightly different because the first argument to their listener is
+**NOTE**: Behaviors are written differently because the first argument to their listener is
 _always_ `config`, an object that will be equal to the behavior config as defined in that
 entity's yml file. As an example, the following is what an item with a 'test' behavior
 that listens for the 'foo' event would look like:
@@ -115,14 +114,14 @@ listeners: {
 
 ## Default events
 
-This is a list of events that are emitted by default in Ranvier.
+This is a list of events that are emitted by default in Ranvier, from one of two sources:
 
 ***Engine*** - Events that come from the engine itself (from `src/`) and will _always_ be available.
 
 ***Default Bundles*** - Events that come from one of the `ranvier-*` bundles and may not be available if you have disabled them.
 
 Events are shown as:
-`eventName` _`(arguments)`_
+`eventName` _`(ArgumentType arguments)`_
 :    Details of event
 
 ### NPCs
@@ -130,27 +129,27 @@ Events are shown as:
 #### Engine
 
 `combatEnd`
-:    Combat has ended, specifically NPC's list of combatants is now empty
+:    Combat has ended, emitted when an NPC's list of combatants becomes empty
 
 `combatStart` _`(Character target)`_
-:    Combat has started against `target`, specifically NPC was not in combat and now is. Event is _not_ fired if the NPC
+:    Combat has started against `target`, emitted when NPC was not in combat and now is. Event is _not_ fired if the NPC
 was already in combat when new combatants are added
 
 `damaged` _`(Damage damage)`_
-:    Something has decreased one of the NPC's attributes, not just health, applies to any attribute. See `src/Damage.js`
+:    Something has decreased one of the NPC's attributes. This emits when any attribute is damaged, not just health. See `src/Damage.js`
 for details of information available from `damage` argument.
 
-`heal` _`(Heal heal, Character target)`_
-:    Same as `hit` but increased instead of decreased
-
 `healed` _`(Heal heal)`_
-:    Same as `damaged` but increased instead of decreased
+:    Same as `damaged` but increased attribute instead of decreased.
 
 `hit` _`(Damage damage, Character target)`_
 :    This NPC caused damage to the target. Target may be itself.
 
+`heal` _`(Heal heal, Character target)`_
+:    Same as `hit` but increased attribute instead of decreased.
+
 `spawn`
-:    NPC is initially created, fires immediately after NPC is placed in its target room.
+:    NPC is initially created; this event emits immediately after NPC is placed in its target room.
 
 `updateTick`
 :    This event is special in that it automatically fires every tenth of a second on Rooms, Items, NPCs, and Players.
@@ -159,16 +158,16 @@ This event should be used for any event that is based on time, e.g., NPC should 
 #### Core Bundles
 
 `deathblow` _`(Character target)`_
-:    NPC just killed `target`
+:    NPC just killed `target`.
 
 `killed`
-:    NPC died
+:    NPC died.
 
 `playerDropItem` _`(Player player, Item item)`_
-:    `player` just dropped `item` in the room with the NPC
+:    `player` just dropped `item` in the room with the NPC.
 
 `playerEnter` _`(Player player)`_
-:    `player` just entered the room with the NPC
+:    `player` just entered the room with the NPC.
 
 `playerLeave`_`(Player player)`_
 :    `player` just left the room. **NOTE**: `playerLeave` is actually fired _before_ the player is removed from the room.
@@ -178,33 +177,33 @@ This event should be used for any event that is based on time, e.g., NPC should 
 #### Engine
 
 `updateTick`
-:    See `updateTick` for NPCs
+:    See `updateTick` under NPCs.
 
 #### Core Bundles
 
 `drop` _`(Player player)`_
-:    `player` just dropped this item
+:    `player` just dropped this item.
 
 `equip` _`(Player player)`_
-:    `player` just equipped this item
+:    `player` just equipped this item.
 
 `get` _`(Player player)`_
-:    `player` just picked up this item
+:    `player` just picked up this item.
 
 `put` _`(Player player, Item container)`_
-:    `player` just put this item into `container`
+:    `player` just put this item into `container`.
 
 ### Rooms
 
 #### Engine
 
 `updateTick`
-:    See `updateTick` for NPCs
+:    See `updateTick` for NPCs.
 
 #### Core Bundles
 
 `playerEnter` _`(Player player)`_
-:    `player` just entered this room
+:    `player` just entered this room.
 
 `playerLeave`_`(Player player)`_
 :    `player` just left this room. **NOTE**: `playerLeave` is actually fired _before_ the player is removed from the room.

@@ -2,12 +2,12 @@
 
 # ranvier
 
-Node.js based MUD engine
+## Node.js-based MUD engine
 
 See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features.
 
-Ranvier is _not_ a websocket MUD. It does not have a web client. It is a plain ol' fashioned telnet MUD. Any client you
-use to connect to the MUD you played 15 years ago will work with Ranvier.
+Ranvier is _not_ a WebSocket MUD. It does not have a web client. It is a plain ol' fashioned telnet MUD. Any client you
+can use to connect to the MUD you played 15 years ago will work with Ranvier.
 
 ## Documentation
 
@@ -16,7 +16,7 @@ Ranvier prides itself on having thorough documentation which is available on our
 
 ## Slack
 
-We have a slack channel you can use to ask questions, suggest features, or just keep up to date with the project: [https://ranviermud.slack.com](https://ranviermud.slack.com)
+We have a Slack channel you can use to ask questions, suggest features, or just keep up to date with the project: [https://ranviermud.slack.com](https://ranviermud.slack.com)
 
 [Get an invite](https://ranviermud.signup.team/)
 
@@ -24,17 +24,17 @@ We have a slack channel you can use to ask questions, suggest features, or just 
 
 * Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy
   packaging and sharing of commands/areas/items/npcs/channels/behaviors
-* Scripting support: It's in Javascript! No need for a shitty DSL. The codebase is javascript, the scripting is javascript.
+* Scripting support: It's in JavaScript! No need for a shitty DSL. The codebase is JavaScript, the scripting is JavaScript.
 * Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the
   event is emitted. Adding new events is easy as `npc.emit('eventName')` See documentation on Node.js event emitters for more detail
 * Pfile saving in JSON, easy to parse for external usage
 * Rooms, items, and NPCs are easily described in YAML. No weird bullshit ~~~~ and byte-specific parsing that requires a
   GUI editor to build (though we do have a GUI editor in the works!)
-* Did I mention it's in blasting javascript? No compiling, no C, no cygwin, no 15 year old spaghetti code
+* Did I mention it's in blasting JavaScript? No compiling, no C, no cygwin, no 15 year old spaghetti code
 
 ### Built-in Bundles
 
-The default bundles come together to make a basic Diku style MUD with the following features:
+The default bundles come together to make a basic Diku-style MUD with the following features:
 
 * Classes
 * Leveling
@@ -70,6 +70,6 @@ The default admin user/pass is `admin`/`ranviermud`
 
 ## Play it
 
-To try out what Ranvier looks like out of the box as a player telnet or point your favorite client to
-mud.ranviermud.com on port 4000. The server is updated from the github `staging` branch, reset, and restarted every
+To try out what Ranvier looks like out of the box, as a player, `telnet` or point your favorite client to
+mud.ranviermud.com on port 4000. The server is updated from the Github `staging` branch, reset, and restarted every
 hour.

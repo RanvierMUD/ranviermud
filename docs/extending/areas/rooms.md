@@ -1,4 +1,4 @@
-In Ranvier all rooms for an area are defined in a single file within the area folder: `rooms.yml`
+In Ranvier, all rooms for an area are defined in a single file within the area folder: `rooms.yml`
 
 [TOC]
 
@@ -42,19 +42,19 @@ In Ranvier all rooms for an area are defined in a single file within the area fo
 ----
 
 `id` _`number`_
-:    ***required*** Room id unique among the rooms of the current area
+:    ***required*** Room id, unique among the rooms of the current area
 
 `title` _`string`_
-:    ***required*** Title of the room shown on `look`
+:    ***required*** Title of the room, shown on `look` or `scan`
 
 `description` _`string`_
-:    ***required*** Long description of the room shown under the title on look
+:    ***required*** Long description of the room, shown under the title on `look`
 
 `npcs` _`Array<EntityReference>`_
-:    List of NPCs to place in this room on initial load. You can customize the number of max instances of the NPC per room and the respawn chance by making the `npcs` entry an object as described above in the "Test Room 2" entry.
+:    List of NPCs to place in this room on initial load. You can customize the number of max instances of the NPC per room and the respawn chance by making the `npcs` entry an object as described above in the "Test Room 2" example.
 
 `items` _`Array<EntityReference>`_
-:    List of items to place in this room on initial load. As with rooms you can customize the respawn chance for the item. For containers there's also `replaceOnRespawn` which when the item is due to respawn will replace an empty instance will a full one
+:    List of items to place in this room on initial load. As with NPCs, you can customize the respawn chance for the item. For containers there's also `replaceOnRespawn` which when the item is due to respawn will replace an empty instance will a full one
 
 `script` _`string`_
 :    Name of custom script to attach to this room (See [Scripting](scripting.md))
@@ -63,13 +63,13 @@ In Ranvier all rooms for an area are defined in a single file within the area fo
 :    List of behaviors to attach to this room (See [Scripting](scripting.md))
 
 `exits` _`Array`_
-:    Rooms the player can get to from here, each `exits` entry has the following fields:
+:    Rooms the player can get to from here; each `exits` entry has the following fields:
 
 > `direction` _`string`_
-> :    ***required*** Movement command the player will use to leave the room (Standard compass directions are suggested)
-> 
+> :    ***required*** Movement command the player will use to leave the room (Standard compass directions are recommended)
+>
 > `roomId` _`EntityReference`_
 > :    ***required*** Room the player will end up in when they go this direction
-> 
+>
 > `leaveMessage` _`string`_
-> :    Message shown to the room when the player leaves the room in this direction. in the Room 1 example above players in the same room will see "Shawn steps into the void and disappears." when Shawn leaves to the east.
+> :    Message shown to the room when the player leaves the room in this direction. In the Room 1 example above, players in the same room will see "Shawn steps into the void and disappears." when Shawn leaves to the east.
