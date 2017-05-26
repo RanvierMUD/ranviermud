@@ -98,6 +98,10 @@ module.exports = (srcPath) => {
       cost: energyCost,
     },
 
+    /* Note on Resource Costs:
+      Ranvier also supports multiple resource costs. In this case, the value of resource would be an array of objects with the 'attribute' and 'cost' properties, as seen above.
+    */
+
     // Cooldown is the number of seconds the player must wait before using this skill again
     cooldown: 6,
 
