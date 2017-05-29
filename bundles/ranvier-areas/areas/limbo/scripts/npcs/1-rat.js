@@ -24,7 +24,7 @@ module.exports = (srcPath) => {
         const rend = state.SkillManager.get('rend');
         // skills do both of these checks internally but I only want to send
         // this message when execute would definitely succeed
-        if (!rend.onCooldown(this) && rend.hasEnoughResource(this)) {
+        if (!rend.onCooldown(this) && rend.hasEnoughResources(this)) {
           Broadcast.sayAt(target, "The rat bears its fangs and leaps at your throat!");
           rend.execute(null, this, target);
         }
