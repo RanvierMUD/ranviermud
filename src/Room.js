@@ -51,6 +51,28 @@ class Room extends EventEmitter {
   }
 
   /**
+   * Emits event on self and proxies certain events to other entities in the room.
+   * @param {string} eventName
+   * @param {...*} args
+   * @return {void}
+   */
+  emit(eventName, ...args) {
+    super.emit(eventName, ...args);
+
+    const proxiedEvents = [
+      'playerEnter',
+      'playerLeave'
+    ];
+
+    if (proxiedEvents.includes(eventName)) {
+      const entities = [...this.npcs, ...this.players, ...this.items];
+      for (const entity of entities) {
+        entity.emit(eventName, ...args);
+      }
+    }
+  }
+
+  /**
    * @param {string} name
    * @return {boolean}
    */
