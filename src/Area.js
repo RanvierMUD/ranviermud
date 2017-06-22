@@ -68,7 +68,7 @@ class Area extends EventEmitter {
     const sinceLastTick = Date.now() - this.lastRespawnTick;
     if (sinceLastTick >= this.info.respawnInterval * 1000) {
       this.lastRespawnTick = Date.now();
-      for(const [id, room] of this.rooms) {
+      for (const [id, room] of this.rooms) {
         room.emit('respawnTick', state);
       }
     }
