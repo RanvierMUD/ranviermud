@@ -79,7 +79,7 @@ class Quest extends EventEmitter {
     });
 
     return {
-      percent: overallPercent / this.goals.length,
+      percent: Math.round(overallPercent / this.goals.length),
       display: overallDisplay.join('\r\n'),
     };
   }
