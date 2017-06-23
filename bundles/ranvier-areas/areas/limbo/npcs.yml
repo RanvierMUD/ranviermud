@@ -6,6 +6,8 @@
   script: '1-rat'
   items: ['limbo:2']
   quests: ['limbo:2']
+  attributes:
+    energy: 100
 - id: 2
   keywords: ["wise", "old", "man"]
   name: "Wise Old Man"
