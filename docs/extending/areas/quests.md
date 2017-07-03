@@ -368,3 +368,65 @@ module.exports = (srcPath) => {
 
 Now, when the player enters `Test Room 1` they will be given the quest `Find a Weapon` (assuming
 they don't already have the quest activated or completed).
+
+## Displaying progress/completion
+
+Quests expose four player events that you can listen for to show a player's progress.
+The `ranvier-quests` bundle registers some basic handlers by default to show WoW-like progress
+notifications.
+
+```
+bundles/
+  ranvier-quests/
+    player-events.js
+```
+
+```javascript
+'use strict';
+
+module.exports = (srcPath) => {
+  const B = require(srcPath + 'Broadcast');
+
+  return  {
+    listeners: {
+      /**
+       * When the player begins a quest
+       * @param {Quest} quest
+       */
+      questStart: state => function (quest) {
+        B.sayAt(this, `\r\n<bold><yellow>Quest Started: ${quest.config.title}!</yellow></bold>`);
+        if (quest.config.desc) {
+          B.sayAt(this, B.line(80));
+          B.sayAt(this, `<bold><yellow>${quest.config.desc}</yellow></bold>`, 80);
+        }
+      },
+
+      /**
+       * When any quest updates its progress
+       * @param {Quest} quest
+       * @param {object} progress See QuestGoal.getProgress for object format
+       */
+      questProgress: state => function (quest, progress) {
+        B.sayAt(this, `\r\n<bold><yellow>${progress.display}</yellow></bold>`);
+      },
+
+      /**
+       * When a non-autoComplete quest has 100% progress across all of its goals
+       * @param {Quest} quest
+       */
+      questTurnInReady: state => function (quest) {
+        B.sayAt(this, `<bold><yellow>${quest.config.title} ready to turn in!</yellow></bold>`);
+      },
+
+      /**
+       * Fired when a quest is completed, automatically or explicitly by a player command
+       * @param {Quest} quest
+       */
+      questComplete: state => function (quest) {
+        B.sayAt(this, `<bold><yellow>Quest Complete: ${quest.config.title}!</yellow></bold>`);
+      }
+    }
+  };
+};
+
+```

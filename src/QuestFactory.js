@@ -43,28 +43,22 @@ class QuestFactory {
       instance.addGoal(new goal.type(instance, goal.config, player));
     });
 
-    // Can't think of a better place to put this stuff yet
     instance.on('progress', (progress) => {
-      B.sayAt(player, `\r\n<bold><yellow>${progress.display}</yellow></bold>`);
+      player.emit('questProgress', instance, progress);
       player.save();
     });
 
     instance.on('start', () => {
-      B.sayAt(player, `\r\n<bold><yellow>Quest Started: ${instance.config.title}!</yellow></bold>`);
-      if (instance.config.desc) {
-        B.sayAt(player, B.line(80));
-        B.sayAt(player, `<bold><yellow>${instance.config.desc}</yellow></bold>`, 80);
-      }
-
+      player.emit('questStart', instance);
       instance.emit('progress', instance.getProgress());
     });
 
     instance.on('turn-in-ready', () => {
-      B.sayAt(player, `<bold><yellow>${instance.config.title} ready to turn in!</yellow></bold>`);
+      player.emit('questTurnInReady', instance);
     });
 
     instance.on('complete', () => {
-      B.sayAt(player, `<bold><yellow>Quest Complete: ${instance.config.title}!</yellow></bold>`);
+      player.emit('questComplete', instance);
       player.questTracker.complete(instance.id);
       player.save();
     });
