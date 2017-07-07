@@ -54,7 +54,7 @@ possible. Click on any of the items below to see an in-depth tutorial.
 <pre>
 <a href="../areas/">areas/</a>
   Areas contain items, rooms, NPCs, and quests.
-<a href="../behaviors/">behaviors/</a>
+<a href="../areas/scripting#behaviors">behaviors/</a>
   Behaviors are scripts that are shared between entities of the same type (rooms, items, NPCs)
 <a href="../classes/">classes/</a>
   Player classes
@@ -68,7 +68,7 @@ possible. Click on any of the items below to see an in-depth tutorial.
   Input events are events that happen on the socket, this involves login and command interpreting.
   <strong>Warning:</strong> Because of input events' important role it is generally not advised to load more than one
   bundle with input events
-<a href="../skills/">skills/</a>
+<a href="../classes#skillsspells">skills/</a>
   Player skills (Spells are just skills with the SPELL type)
 <a href="../channels/">channels.js</a>
   Communication channels

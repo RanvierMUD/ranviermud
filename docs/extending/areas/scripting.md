@@ -1,4 +1,4 @@
-Item, NPC, and Room scripting comes in the form of event-based scripting. See the [Event](../events/) section for a general overview
+Item, NPC, and Room scripting comes in the form of event-based scripting. See the [Event](../input_events/) section for a general overview
 of how Ranvier eventing works before reading on.
 
 [TOC]

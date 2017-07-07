@@ -214,7 +214,7 @@ module.exports = (srcPath) => {
 
 #### Effect file
 
-This will be a brief refresher on effects. See the [Effect](extending/effects.md) for more detail.
+This will be a brief refresher on effects. See the [Effect](effects.md) for more detail.
 
 ```javascript
 'use strict';
