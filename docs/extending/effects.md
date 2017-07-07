@@ -346,7 +346,7 @@ Above we've implemented new effect types, now we'll actually use those effects d
 gameplay.
 
 For our buff effect we're going to create a simple skill called "enrage" that uses our
-effect. More details on creating skills can be found in the [Skills](skills.md) section of
+effect. More details on creating skills can be found in the [Skills](classes.md#skillsspells) section of
 the guide.
 
 ```javascript
