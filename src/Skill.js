@@ -34,7 +34,7 @@ class Skill {
       initiatesCombat = false,
       name,
       requiresTarget = true,
-      resource = { attribute: 'energy', cost: 0 },
+      resource = null, /* format [{ attribute: 'someattribute', cost: 10}] */
       run = _ => {},
       targetSelf = false,
       type = SkillType.SKILL,
