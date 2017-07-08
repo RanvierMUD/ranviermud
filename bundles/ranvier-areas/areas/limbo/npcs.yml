@@ -6,6 +6,8 @@
   script: '1-rat'
   items: ['limbo:2']
   quests: ['limbo:2']
+  behaviors:
+    combat: true
   attributes:
     energy: 100
 - id: 2
@@ -29,6 +31,7 @@
   level: 2
   name: "Training Dummy"
   behaviors:
+    combat: true
     lootable:
       # currencies is a list of currencies this npc can possibly drop and the amount range
       # the currency key is arbitrary so if you want a new currency just add a new key
@@ -56,6 +59,7 @@
     This dummy is significantly larger than the others. Bright red with a monstrous figure it lumbers around the area
     with a great echoing stomp. Where the other target dummies have a bullseye this dummy has a yellow exclamation mark.
   behaviors:
+    combat: true
     lootable:
       currencies:
         gold:

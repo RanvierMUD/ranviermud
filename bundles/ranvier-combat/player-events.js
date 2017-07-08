@@ -1,133 +1,31 @@
 'use strict';
 const leftPad = require('left-pad');
 
+const Combat = require('./lib/Combat');
+
 /**
  * Auto combat module
  */
 module.exports = (srcPath) => {
   const B = require(srcPath + 'Broadcast');
   const LevelUtil = require(srcPath + 'LevelUtil');
-  const Damage = require(srcPath + 'Damage');
-  const Logger = require(srcPath + 'Logger');
 
   return  {
     listeners: {
       updateTick: state => function () {
-        startRegeneration(state, this);
+        Combat.startRegeneration(state, this);
 
-        // Check to see if the player has died since the last combat tick. If
-        // we only did the check right when the player was damaged then you
-        // could potentially wind up in a situation where the player performed
-        // a mid-round attack that killed the target, then the next round the
-        // target kills the player. So let's not let that happen.
-        if (this.getAttribute('health') <= 0) {
-          return handleDeath(state, this);
-        }
-
-        if (!this.isInCombat()) {
+        const hadActions = Combat.updateRound(state, this);
+        if (!hadActions) {
           return;
         }
 
-        this.combatData.speed = this.getWeaponSpeed();
-
-        let hadActions = false;
-        for (const target of this.combatants) {
-          target.combatData.speed = target.getWeaponSpeed();
-
-          // player actions
-          if (target.getAttribute('health') <= 0) {
-
-            B.sayAt(this, `<b>${target.name} is <red>Dead</red>!</b>`);
-
-            handleDeath(state, target, this);
-            if (target.isNpc) {
-              target.room.area.removeNpc(target);
-            }
-            continue;
-          }
-
-          if (this.combatData.lag <= 0) {
-            hadActions = true;
-            makeAttack(this, target);
-          } else {
-            const elapsed = Date.now() - this.combatData.roundStarted;
-            this.combatData.lag -= elapsed;
-          }
-
-          this.combatData.roundStarted = Date.now();
-
-          // target actions
-          if (target.combatData.lag <= 0) {
-            if (this.getAttribute('health') <= 0) {
-              this.combatData.killedBy = target;
-              break;
-            }
-
-            hadActions = true;
-            makeAttack(target, this);
-          } else {
-            const elapsed = Date.now() - target.combatData.roundStarted;
-            target.combatData.lag -= elapsed;
-          }
-          target.combatData.roundStarted = Date.now();
+        if (!this.hasPrompt('combat')) {
+          this.addPrompt('combat', _ => promptBuilder(this));
         }
 
-        if (!this.isInCombat()) {
-          // reset combat data to remove any lag
-          this.combatData = {};
-          this.removePrompt('combat');
-        }
-
-        // Show combat prompt and health bars.
-        if (hadActions) {
-          if (this.isInCombat()) {
-            const combatPromptBuilder = promptee => {
-              if (!promptee.isInCombat()) {
-                return '';
-              }
-
-              // Set up some constants for formatting the health bars
-              const playerName = "You";
-              const targetNameLengths = [...promptee.combatants].map(t => t.name.length);
-              const nameWidth = Math.max(playerName.length, ...targetNameLengths);
-              const progWidth = 60 - (nameWidth + ':  ').length;
-
-              // Set up helper functions for health-bar-building.
-              const getHealthPercentage = entity => Math.floor((entity.getAttribute('health') / entity.getMaxAttribute('health')) * 100);
-              const formatProgressBar = (name, progress, entity) => {
-                const pad = B.line(nameWidth - name.length, ' ');
-                return `<b>${name}${pad}</b>: ${progress} <b>${entity.getAttribute('health')}/${entity.getMaxAttribute('health')}</b>`;
-              }
-
-              // Build player health bar.
-              let currentPerc = getHealthPercentage(promptee);
-              let progress = B.progress(progWidth, currentPerc, "green");
-              let buf = formatProgressBar(playerName, progress, promptee);
-
-              // Build and add target health bars.
-              for (const target of promptee.combatants) {
-                let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
-                let progress = B.progress(progWidth, currentPerc, "red");
-                buf += `\r\n${formatProgressBar(target.name, progress, target)}`;
-              }
-
-              return buf;
-            };
-
-            this.addPrompt('combat', () => combatPromptBuilder(this));
-            for (const target of this.combatants) {
-              if (!target.isNpc && target.isInCombat()) {
-                target.addPrompt('combat', () => combatPromptBuilder(target));
-                B.sayAt(target, '');
-                B.prompt(target);
-              }
-            }
-          }
-
-          B.sayAt(this, '');
-          B.prompt(this);
-        }
-
+        B.sayAt(this, '');
+        B.prompt(this);
       },
 
       /**
@@ -312,6 +210,14 @@ module.exports = (srcPath) => {
        * @param {Character} killer
        */
       killed: state => function (killer) {
+        this.removePrompt('combat');
+
+        const othersDeathMessage = killer ?
+          `<b><red>${this.name} collapses to the ground, dead at the hands of ${killer.name}.</b></red>` :
+          `<b><red>${this.name} collapses to the ground, dead</b></red>`;
+
+        B.sayAtExcept(this.room, othersDeathMessage, (killer ? [killer, this] : this));
+
         if (this.party) {
           B.sayAt(this.party, `<b><green>${this.name} was killed!</green></b>`);
         }
@@ -358,7 +264,7 @@ module.exports = (srcPath) => {
         }
 
         if (target && !this.isNpc) {
-          B.sayAt(this, `<b><red>You killed ${target.name}!`);
+          B.sayAt(this, `<b><red>You killed ${target.name}!</red></b>`);
         }
 
         this.emit('experience', xp);
@@ -366,69 +272,36 @@ module.exports = (srcPath) => {
     }
   };
 
-  function makeAttack(attacker, defender) {
-    const amount = attacker.calculateWeaponDamage();
-
-    const damage = new Damage({
-      attribute: "health",
-      amount,
-      attacker
-    });
-    damage.commit(defender);
-    if (defender.getAttribute('health') <= 0) {
-      defender.combatData.killedBy = attacker;
+  function promptBuilder(promptee) {
+    if (!promptee.isInCombat()) {
+      return '';
     }
 
-    attacker.combatData.lag = attacker.combatData.speed * 1000;
-  }
+    // Set up some constants for formatting the health bars
+    const playerName = "You";
+    const targetNameLengths = [...promptee.combatants].map(t => t.name.length);
+    const nameWidth = Math.max(playerName.length, ...targetNameLengths);
+    const progWidth = 60 - (nameWidth + ':  ').length;
 
-  function handleDeath(state, deadEntity, killer) {
-    deadEntity.combatants.forEach(combatant => {
-      deadEntity.removeCombatant(combatant);
-      combatant.removeCombatant(deadEntity);
-    });
-
-    if (!deadEntity.isNpc) {
-      deadEntity.removePrompt('combat');
+    // Set up helper functions for health-bar-building.
+    const getHealthPercentage = entity => Math.floor((entity.getAttribute('health') / entity.getMaxAttribute('health')) * 100);
+    const formatProgressBar = (name, progress, entity) => {
+      const pad = B.line(nameWidth - name.length, ' ');
+      return `<b>${name}${pad}</b>: ${progress} <b>${entity.getAttribute('health')}/${entity.getMaxAttribute('health')}</b>`;
     }
 
-    killer = killer || deadEntity.combatData.killedBy;
-    Logger.log(`${killer ? killer.name : 'Something'} killed ${deadEntity.name}.`);
+    // Build player health bar.
+    let currentPerc = getHealthPercentage(promptee);
+    let progress = B.progress(progWidth, currentPerc, "green");
+    let buf = formatProgressBar(playerName, progress, promptee);
 
-    if (killer) {
-      killer.emit('deathblow', deadEntity);
-      if (!killer.isInCombat()) {
-        startRegeneration(state, killer);
-      }
+    // Build and add target health bars.
+    for (const target of promptee.combatants) {
+      let currentPerc = Math.floor((target.getAttribute('health') / target.getMaxAttribute('health')) * 100);
+      let progress = B.progress(progWidth, currentPerc, "red");
+      buf += `\r\n${formatProgressBar(target.name, progress, target)}`;
     }
 
-    const othersDeathMessage = killer ?
-      `<b><red>${deadEntity.name} collapses to the ground, dead at the hands of ${killer.name}.</b></red>` :
-      `<b><red>${deadEntity.name} collapses to the ground, dead</b></red>`;
-
-    B.sayAtExcept(
-      deadEntity.room,
-      othersDeathMessage,
-      (killer ? [killer, deadEntity] : deadEntity));
-
-    deadEntity.emit('killed', killer || deadEntity);
-
-    if (!killer.isNpc) {
-      if (killer.party) {
-        for (const member of killer.party) {
-          B.prompt(member);
-        }
-      } else {
-        B.prompt(killer);
-      }
-    }
-  }
-
-  // Make characters regenerate health while out of combat
-  function startRegeneration(state, entity) {
-    let regenEffect = state.EffectFactory.create('regen', entity, { hidden: true }, { magnitude: 15 });
-    if (entity.addEffect(regenEffect)) {
-      regenEffect.activate();
-    }
+    return buf;
   }
 };

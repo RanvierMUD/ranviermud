@@ -245,6 +245,6 @@ module.exports = (srcPath, bundlePath) => {
 
   function getCombatantsDisplay(entity) {
     const combatantsList = [...entity.combatants.values()].map(combatant => combatant.name);
-    return `, <red>fighting: </red><b>${combatantsList.join(", ")}</b>`;
+    return `, <red>fighting </red>${combatantsList.join("<red>,</red> ")}`;
   }
 };

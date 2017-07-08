@@ -149,6 +149,14 @@ class Player extends Character {
   }
 
   /**
+   * @param {string} id
+   * @return {boolean}
+   */
+  hasPrompt(id) {
+    return this.extraPrompts.has(id);
+  }
+
+  /**
    * Move the player to the given room, emitting events appropriately
    * @param {Room} nextRoom
    * @param {function} onMoved Function to run after the player is moved to the next room but before enter events are fired
