@@ -31,7 +31,7 @@ class Room extends EventEmitter {
     this.behaviors = new Map(Object.entries(def.behaviors || {}));
     this.description = def.description;
     this.entityReference = this.area.name + ':' + def.id;
-    this.exits = def.exits;
+    this.exits = def.exits || [];
     this.id = def.id;
     this.script = def.script;
     this.title = def.title;

@@ -8,6 +8,9 @@
   quests: ['limbo:2']
   behaviors:
     combat: true
+    ranvier-wander:
+      interval: 20
+      restrictTo: ['limbo:1', 'limbo:2', 'limbo:3']
   attributes:
     energy: 100
 - id: 2

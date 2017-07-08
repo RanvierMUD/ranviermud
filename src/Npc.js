@@ -53,6 +53,26 @@ class Npc extends Character {
     return this.behaviors.get(name);
   }
 
+  /**
+   * Move the npc to the given room, emitting events appropriately
+   * @param {Room} nextRoom
+   * @param {function} onMoved Function to run after the npc is moved to the next room but before enter events are fired
+   */
+  moveTo(nextRoom, onMoved = _ => _) {
+    if (this.room) {
+      this.room.emit('npcLeave', this, nextRoom);
+      this.room.removeNpc(this);
+    }
+
+    this.room = nextRoom;
+    nextRoom.addNpc(this);
+
+    onMoved();
+
+    nextRoom.emit('npcEnter', this);
+    this.emit('enterRoom', nextRoom);
+  }
+
   serialize() {
     return Object.assign(super.serialize(), { damage: this.damage });
   }

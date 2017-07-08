@@ -20,6 +20,7 @@
     "ranvier-crafting",
     "ranvier-quests",
     "ranvier-vendors",
+    "ranvier-npc-behaviors",
     "debug-commands"
   ],
   "maxAccountNameLength": 20,

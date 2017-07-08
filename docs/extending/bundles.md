@@ -27,6 +27,7 @@ with no harm whatsoever.
 * `ranvier-player-events` - Example implementation of experience/leveling for the player
 * `ranvier-quests` - Example implementation of quest commands
 * `ranvier-vendors` - Example implementation of in game shops
+* `ranvier-npc-behaviors` - Ready-to-use standalone behaviors for NPCs: wandering, aggro, etc.
 * `debug-commands` - Commands useful while debugging (`givexp` for example), commands only usable by ADMIN role players
 
 > Note: If you want to modify one of the Ranvier bundles it's recommended that you disable the bundle you wish to
