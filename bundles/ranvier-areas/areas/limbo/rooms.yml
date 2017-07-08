@@ -56,6 +56,13 @@
   items:
     - id: "craft:1"
       respawnChance: 30
+  npcs:
+    - id: "limbo:4"
+      respawnChance: 25
+      maxLoad: 3
+    - id: "limbo:aggro-player-test"
+      respawnChance: 25
+      maxLoad: 1
   exits:
     - roomId: "limbo:3"
       direction: south
@@ -75,6 +82,13 @@
       direction: north
 - <<: *trainingroom
   id: 6
+  npcs:
+    - id: "limbo:4"
+      respawnChance: 25
+      maxLoad: 3
+    - id: "limbo:aggro-npc-test"
+      respawnChance: 50
+      maxLoad: 2
   exits:
     - roomId: "limbo:3"
       direction: west

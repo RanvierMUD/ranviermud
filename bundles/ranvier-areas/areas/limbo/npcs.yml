@@ -102,3 +102,26 @@
           currency: gold
       enterMessage: "Step right up! Get your wares at Moe's Shop!"
       leaveMessage: "Come back soon!"
+- id: aggro-player-test
+  keywords: ["test", "aggro", "dummy"]
+  level: 2
+  name: "Player-aggressive Training Dummy"
+  description: >-
+    This NPC is aggressive towards players but not other NPCs. Be careful.
+  behaviors:
+    combat: true
+    ranvier-aggro:
+      delay: 5
+- id: aggro-npc-test
+  keywords: ["test", "aggro", "dummy"]
+  level: 2
+  name: "Self-hating Training Dummy"
+  description: >-
+    This NPC is aggressive towards other NPCs but not to the player.
+  behaviors:
+    combat: true
+    ranvier-aggro:
+      delay: 5
+      towards:
+        players: false
+        npcs: ["limbo:aggro-npc-test"]
