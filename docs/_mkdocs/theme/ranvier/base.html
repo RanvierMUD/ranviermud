@@ -8,8 +8,8 @@
       {% if config.site_description %}
         <meta name="description" content="{{ config.site_description }}">
       {% endif %}
-      {% if page and page.canonical_url %}
-        <link rel="canonical" href="{{ page.canonical_url }}">
+      {% if current_page and current_page.canonical_url %}
+        <link rel="canonical" href="{{ current_page.canonical_url }}">
       {% endif %}
       {% if config.site_author %}
         <meta name="author" content="{{ config.site_author }}">
@@ -23,8 +23,8 @@
       <meta name="generator" content="mkdocs+mkdocs-material#1.0.3">
     {% endblock %}
     {% block htmltitle %}
-      {% if page and page.title %}
-        <title>{{ page.title }} - {{ config.site_name }}</title>
+      {% if current_page and current_page.title %}
+        <title>{{ current_page.title }} - {{ config.site_name }}</title>
       {% elif config.site_description %}
         <title>{{ config.site_name }} - {{ config.site_description }}</title>
       {% else %}
@@ -88,10 +88,10 @@
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               {% block content %}
-                {% if not "\x3ch1 id=" in page.content %}
-                  <h1>{{ page.title | default(config.site_name, true)}}</h1>
+                {% if not "\x3ch1 id=" in content %}
+                  <h1>{{ current_page.title | default(config.site_name, true)}}</h1>
                 {% endif %}
-                {{ page.content }}
+                {{ content }}
               {% endblock %}
             </article>
           </div>
