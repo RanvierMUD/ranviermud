@@ -123,6 +123,10 @@ module.exports = (srcPath) => {
           return;
         }
 
+        if (this.getAttribute('health') <= 0 && damage.attacker) {
+          this.combatData.killedBy = damage.attacker;
+        }
+
         let buf = '';
         if (damage.attacker) {
           buf = `<b>${damage.attacker.name}</b>`;
@@ -233,7 +237,7 @@ module.exports = (srcPath) => {
           state.CommandManager.get('look').execute(null, this);
 
           B.sayAt(this, '<b><red>Whoops, that sucked!</red></b>');
-          if (killer !== this) {
+          if (killer && killer !== this) {
             B.sayAt(this, `You were killed by ${killer.name}.`);
           }
           // player loses 20% exp gained this level on death

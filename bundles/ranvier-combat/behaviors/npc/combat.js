@@ -34,6 +34,12 @@ module.exports = (srcPath) => {
       hit: state => function (config, damage, target) {
       },
 
+      damaged: state => function (config, damage) {
+        if (this.getAttribute('health') <= 0 && damage.attacker) {
+          this.combatData.killedBy = damage.attacker;
+        }
+      },
+
       /**
        * NPC killed a target
        * @param {*} config Behavior config

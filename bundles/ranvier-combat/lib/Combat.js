@@ -16,7 +16,7 @@ class Combat {
    */
   static updateRound(state, attacker) {
     if (attacker.getAttribute('health') <= 0) {
-      Combat.handleDeath(state, attacker);
+      Combat.handleDeath(attacker);
       return false;
     }
 
@@ -90,20 +90,19 @@ class Combat {
 
   /**
    * Any cleanup that has to be done if the character is killed
-   * @param {GameState} state
    * @param {Character} deadEntity
    * @param {?Character} killer Optionally the character that killed the dead entity
    */
-  static handleDeath(state, deadEntity, killer) {
+  static handleDeath(deadEntity, killer) {
     deadEntity.removeFromCombat();
 
     killer = killer || deadEntity.combatData.killedBy;
     Logger.log(`${killer ? killer.name : 'Something'} killed ${deadEntity.name}.`);
 
+
     if (killer) {
       killer.emit('deathblow', deadEntity);
     }
-
     deadEntity.emit('killed', killer);
 
     if (deadEntity.isNpc) {
