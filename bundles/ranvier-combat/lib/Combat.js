@@ -21,6 +21,9 @@ class Combat {
     }
 
     if (!attacker.isInCombat()) {
+      if (!attacker.isNpc) {
+        attacker.removePrompt('combat');
+      }
       return false;
     }
 
@@ -43,7 +46,6 @@ class Combat {
       attacker.removeFromCombat();
       // reset combat data to remove any lag
       attacker.combatData = {};
-      attacker.removePrompt('combat');
       return false;
     }
 
