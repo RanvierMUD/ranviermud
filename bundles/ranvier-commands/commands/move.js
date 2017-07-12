@@ -44,7 +44,7 @@ module.exports = (srcPath) => {
         }
 
         if (follower instanceof Player) {
-          Broadcast.sayAt(follower, `\r\nYou follow ${player.name} to ${nextRoom.name}.`);
+          Broadcast.sayAt(follower, `\r\nYou follow ${player.name} to ${nextRoom.title}.`);
           state.CommandManager.get('move').execute(exitName, follower);
         } else {
           follower.room.removeNpc(follower);
