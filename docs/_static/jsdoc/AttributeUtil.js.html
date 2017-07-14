@@ -1,0 +1,251 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Source: AttributeUtil.js | Ranvier</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+        
+            <link type="text/css" rel="stylesheet" href="../../assets/stylesheets/srcdocs.css">
+        
+            <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|PT+Mono|Material+Icons|Fugaz+One">
+        
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 120px; height: 120px">
+        <img src="../images/logo.png" width="100%" height="100%">
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">Ranvier</a></h1>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="BehaviorManager.html">BehaviorManager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="BehaviorManager_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="BehaviorManager.html#addListener">addListener</a></li><li><a href="BehaviorManager.html#get">get</a></li><li><a href="BehaviorManager.html#has">has</a></li></ul></div></li><li><a href="Channel.html">Channel</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Channel_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Channel.html#formatToReceipient">formatToReceipient</a></li><li><a href="Channel.html#formatToSender">formatToSender</a></li><li><a href="Channel.html#send">send</a></li></ul></div></li><li><a href="Character.html">Character</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Character_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Character.html#addCombatant">addCombatant</a></li><li><a href="Character.html#calculateWeaponDamage">calculateWeaponDamage</a></li><li><a href="Character.html#emit">emit</a></li><li><a href="Character.html#evaluateIncomingDamage">evaluateIncomingDamage</a></li><li><a href="Character.html#evaluateOutgoingDamage">evaluateOutgoingDamage</a></li><li><a href="Character.html#findCombatant">findCombatant</a></li><li><a href="Character.html#getMaxAttribute">getMaxAttribute</a></li><li><a href="Character.html#initiateCombat">initiateCombat</a></li><li><a href="Character.html#isInCombat">isInCombat</a></li><li><a href="Character.html#normalizeWeaponDamage">normalizeWeaponDamage</a></li><li><a href="Character.html#removeCombatant">removeCombatant</a></li><li><a href="Character.html#removeFromCombat">removeFromCombat</a></li><li><a href="Character.html#serialize">serialize</a></li></ul></div></li><li><a href="ClassManager.html">ClassManager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ClassManager_sub"></div></li><li><a href="Command.html">Command</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Command_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Command.html#execute">execute</a></li></ul></div></li><li><a href="CommandParser.html">CommandParser</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="CommandParser_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="CommandParser.html#.parse">parse</a></li><li><a href="CommandParser.html#.parseDot">parseDot</a></li></ul></div></li><li><a href="Damage.html">Damage</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Damage_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Damage.html#commit">commit</a></li><li><a href="Damage.html#evaluate">evaluate</a></li></ul></div></li><li><a href="Effect.html">Effect</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Effect_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Effect.html#elapsed">elapsed</a></li><li><a href="Effect.html#remaining">remaining</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Effect.html#modifyAttribute">modifyAttribute</a></li><li><a href="Effect.html#modifyIncomingDamage">modifyIncomingDamage</a></li><li><a href="Effect.html#modifyOutgoingDamage">modifyOutgoingDamage</a></li><li><a href="Effect.html#remove">remove</a></li></ul></div></li><li><a href="EffectFactory.html">EffectFactory</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="EffectFactory_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="EffectFactory.html#add">add</a></li><li><a href="EffectFactory.html#create">create</a></li><li><a href="EffectFactory.html#get">get</a></li></ul></div></li><li><a href="EffectList.html">EffectList</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="EffectList_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="EffectList.html#add">add</a></li><li><a href="EffectList.html#emit">emit</a></li><li><a href="EffectList.html#entries">entries</a></li><li><a href="EffectList.html#evaluateAttribute">evaluateAttribute</a></li><li><a href="EffectList.html#evaluateIncomingDamage">evaluateIncomingDamage</a></li><li><a href="EffectList.html#evaluateOutgoingDamage">evaluateOutgoingDamage</a></li><li><a href="EffectList.html#remove">remove</a></li><li><a href="EffectList.html#validateEffects">validateEffects</a></li></ul></div></li><li><a href="EntityFactory.html">EntityFactory</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="EntityFactory_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="EntityFactory.html#addScriptListener">addScriptListener</a></li><li><a href="EntityFactory.html#clone">clone</a></li><li><a href="EntityFactory.html#createByType">createByType</a></li><li><a href="EntityFactory.html#createEntityRef">createEntityRef</a></li><li><a href="EntityFactory.html#getDefinition">getDefinition</a></li><li><a href="EntityFactory.html#setDefinition">setDefinition</a></li></ul></div></li><li><a href="EventManager.html">EventManager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="EventManager_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="EventManager.html#add">add</a></li><li><a href="EventManager.html#attach">attach</a></li><li><a href="EventManager.html#detach">detach</a></li><li><a href="EventManager.html#get">get</a></li></ul></div></li><li><a href="Item.html">Item</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Item_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Item.html#display">display</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Item.html#findOwner">findOwner</a></li><li><a href="Item.html#getBehavior">getBehavior</a></li><li><a href="Item.html#hasBehavior">hasBehavior</a></li><li><a href="Item.html#qualityColorize">qualityColorize</a></li></ul></div></li><li><a href="ItemFactory.html">ItemFactory</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="ItemFactory_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="ItemFactory.html#create">create</a></li></ul></div></li><li><a href="MobFactory.html">MobFactory</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="MobFactory_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="MobFactory.html#create">create</a></li></ul></div></li><li><a href="Npc.html">Npc</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Npc_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Npc.html#getBehavior">getBehavior</a></li><li><a href="Npc.html#hasBehavior">hasBehavior</a></li><li><a href="Npc.html#moveTo">moveTo</a></li></ul></div></li><li><a href="Party.html">Party</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Party_sub"></div></li><li><a href="Player.html">Player</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Player_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Player.html#addPrompt">addPrompt</a></li><li><a href="Player.html#canGo">canGo</a></li><li><a href="Player.html#emit">emit</a></li><li><a href="Player.html#getBroadcastTargets">getBroadcastTargets</a></li><li><a href="Player.html#getMeta">getMeta</a></li><li><a href="Player.html#hasPrompt">hasPrompt</a></li><li><a href="Player.html#interpolatePrompt">interpolatePrompt</a></li><li><a href="Player.html#moveTo">moveTo</a></li><li><a href="Player.html#queueCommand">queueCommand</a></li><li><a href="Player.html#removePrompt">removePrompt</a></li><li><a href="Player.html#setMeta">setMeta</a></li></ul></div></li><li><a href="PlayerClass.html">PlayerClass</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="PlayerClass_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="PlayerClass.html#abilityTable">abilityTable</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="PlayerClass.html#canUseAbility">canUseAbility</a></li><li><a href="PlayerClass.html#getAbilitiesForPlayer">getAbilitiesForPlayer</a></li><li><a href="PlayerClass.html#setupPlayer">setupPlayer</a></li></ul></div></li><li><a href="Quest.html">Quest</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Quest_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Quest.html#emit">emit</a></li><li><a href="Quest.html#getProgress">getProgress</a></li></ul></div></li><li><a href="QuestFactory.html">QuestFactory</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="QuestFactory_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="QuestFactory.html#_makeQuestKey">_makeQuestKey</a></li><li><a href="QuestFactory.html#create">create</a></li><li><a href="QuestFactory.html#get">get</a></li></ul></div></li><li><a href="QuestTracker.html">QuestTracker</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="QuestTracker_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="QuestTracker.html#canStart">canStart</a></li><li><a href="QuestTracker.html#complete">complete</a></li><li><a href="QuestTracker.html#emit">emit</a></li><li><a href="QuestTracker.html#hydrate">hydrate</a></li><li><a href="QuestTracker.html#isActive">isActive</a></li><li><a href="QuestTracker.html#isComplete">isComplete</a></li><li><a href="QuestTracker.html#serialize">serialize</a></li><li><a href="QuestTracker.html#start">start</a></li></ul></div></li><li><a href="Room.html">Room</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Room_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Room.html#spawnedNpcs">spawnedNpcs</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Room.html#emit">emit</a></li><li><a href="Room.html#getBehavior">getBehavior</a></li><li><a href="Room.html#getBroadcastTargets">getBroadcastTargets</a></li><li><a href="Room.html#hasBehavior">hasBehavior</a></li></ul></div></li><li><a href="Skill.html">Skill</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Skill_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="Skill.html#cooldown">cooldown</a></li><li><a href="Skill.html#execute">execute</a></li><li><a href="Skill.html#onCooldown">onCooldown</a></li><li><a href="Skill.html#payResourceCosts">payResourceCosts</a></li><li><a href="Skill.html#searchForTargets">searchForTargets</a></li></ul></div></li><li><a href="TelnetServer.html">TelnetServer</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="TelnetServer_sub"></div></li><li><a href="TelnetStream.html">TelnetStream</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="TelnetStream_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="TelnetStream.html#input">input</a></li><li><a href="TelnetStream.html#telnetCommand">telnetCommand</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#baseAttributeByLevel">baseAttributeByLevel</a></li><li><a href="global.html#diff">diff</a></li><li><a href="global.html#EffectConfig">EffectConfig</a></li><li class="hidden"><a href="global.html#EffectModifiers">EffectModifiers</a></li><li><a href="global.html#expToLevel">expToLevel</a></li><li><a href="global.html#genWrite">genWrite</a></li><li><a href="global.html#HealthPerStaminaTable">HealthPerStaminaTable</a></li><li><a href="global.html#mobExp">mobExp</a></li><li><a href="global.html#reduction">reduction</a></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+/**
+ * Similar to `LevelUtil` just a concise place to pull all the different formulae
+ * for stats
+ */
+
+const HealthPerStaminaTable = [
+  0, 14, 14, 15, 16, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19,
+  19, 20, 20, 20, 20, 22, 22, 22, 22, 24, 24, 24, 24, 25, 25, 26, 26, 26, 26,
+  28, 28, 28, 28, 29, 29, 30, 30, 31, 31, 32, 32, 33, 33, 33, 34, 34, 34, 35,
+  35, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 37, 37, 37, 37, 37, 37, 38, 39,
+  40, 42, 42, 43, 43, 43, 44, 46, 47, 48, 48, 48, 49, 49, 49, 53, 55, 58, 60,
+  60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60
+];
+
+exports.healthPerStamina = (level) => {
+  level = parseInt(level, 10);
+  return level in HealthPerStaminaTable ? HealthPerStaminaTable[level] : 1;
+};
+
+const AttributeTable = {
+  0: [ 0, 0, 0, 0 ],
+  1: [ 17, 10, 11, 8 ],
+  2: [ 19, 12, 12, 9 ],
+  3: [ 20, 12, 12, 10 ],
+  4: [ 21, 13, 13, 10 ],
+  5: [ 21, 13, 13, 10 ],
+  6: [ 21, 13, 13, 10 ],
+  7: [ 23, 14, 14, 11 ],
+  8: [ 24, 15, 15, 12 ],
+  9: [ 26, 16, 16, 12 ],
+  10: [ 27, 17, 17, 13 ],
+  11: [ 30, 18, 18, 14 ],
+  12: [ 33, 20, 20, 16 ],
+  13: [ 35, 21, 22, 17 ],
+  14: [ 38, 24, 24, 18 ],
+  15: [ 41, 25, 25, 20 ],
+  16: [ 44, 27, 27, 21 ],
+  17: [ 47, 28, 29, 23 ],
+  18: [ 51, 31, 31, 25 ],
+  19: [ 54, 33, 33, 26 ],
+  20: [ 56, 35, 35, 27 ],
+  21: [ 59, 36, 36, 29 ],
+  22: [ 63, 39, 39, 31 ],
+  23: [ 66, 40, 41, 32 ],
+  24: [ 70, 43, 43, 34 ],
+  25: [ 73, 45, 45, 35 ],
+  26: [ 76, 46, 47, 37 ],
+  27: [ 79, 48, 48, 38 ],
+  28: [ 83, 51, 51, 40 ],
+  29: [ 86, 53, 53, 42 ],
+  30: [ 88, 54, 54, 43 ],
+  31: [ 91, 56, 56, 44 ],
+  32: [ 94, 57, 58, 46 ],
+  33: [ 97, 60, 59, 47 ],
+  34: [ 102, 62, 63, 50 ],
+  35: [ 105, 64, 64, 51 ],
+  36: [ 108, 66, 66, 53 ],
+  37: [ 111, 68, 68, 54 ],
+  38: [ 114, 69, 70, 55 ],
+  39: [ 116, 71, 71, 57 ],
+  40: [ 121, 73, 74, 59 ],
+  41: [ 123, 75, 76, 60 ],
+  42: [ 126, 77, 77, 61 ],
+  43: [ 129, 79, 79, 63 ],
+  44: [ 132, 80, 81, 64 ],
+  45: [ 136, 83, 83, 66 ],
+  46: [ 140, 86, 86, 68 ],
+  47: [ 143, 87, 88, 70 ],
+  48: [ 146, 89, 89, 71 ],
+  49: [ 148, 91, 91, 72 ],
+  50: [ 151, 93, 93, 74 ],
+  51: [ 154, 94, 94, 75 ],
+  52: [ 158, 97, 97, 77 ],
+  53: [ 161, 98, 99, 78 ],
+  54: [ 164, 100, 100, 80 ],
+  55: [ 167, 102, 102, 81 ],
+  56: [ 171, 105, 105, 83 ],
+  57: [ 174, 106, 106, 85 ],
+  58: [ 176, 108, 108, 86 ],
+  59: [ 179, 109, 110, 87 ],
+  60: [ 183, 112, 112, 89 ],
+  61: [ 196, 120, 120, 96 ],
+  62: [ 208, 127, 128, 102 ],
+  63: [ 221, 135, 135, 108 ],
+  64: [ 224, 137, 137, 109 ],
+  65: [ 228, 139, 140, 111 ],
+  66: [ 231, 141, 141, 113 ],
+  67: [ 234, 143, 143, 114 ],
+  68: [ 236, 145, 145, 115 ],
+  69: [ 239, 146, 146, 117 ],
+  70: [ 252, 154, 154, 123 ],
+  71: [ 259, 158, 158, 126 ],
+  72: [ 271, 166, 166, 132 ],
+  73: [ 284, 174, 174, 139 ],
+  74: [ 287, 175, 175, 140 ],
+  75: [ 289, 177, 177, 141 ],
+  76: [ 292, 179, 179, 143 ],
+  77: [ 296, 181, 181, 145 ],
+  78: [ 299, 183, 183, 146 ],
+  79: [ 303, 186, 186, 148 ],
+  80: [ 309, 189, 189, 151 ],
+  81: [ 322, 197, 197, 157 ],
+  82: [ 334, 204, 204, 163 ],
+  83: [ 341, 208, 209, 167 ],
+  84: [ 344, 211, 210, 168 ],
+  85: [ 347, 212, 212, 169 ],
+  86: [ 359, 220, 220, 175 ],
+  87: [ 372, 227, 227, 182 ],
+  88: [ 384, 235, 235, 188 ],
+  89: [ 397, 242, 243, 194 ],
+  90: [ 409, 250, 250, 200 ],
+  91: [ 560, 343, 343, 274 ],
+  92: [ 662, 405, 405, 324 ],
+  93: [ 775, 474, 474, 379 ],
+  94: [ 908, 555, 555, 444 ],
+  95: [ 1066, 652, 652, 521 ],
+  96: [ 1254, 767, 767, 613 ],
+  97: [ 1304, 797, 797, 638 ],
+  98: [ 1355, 828, 828, 662 ],
+  99: [ 1405, 859, 859, 687 ],
+  100: [ 1455, 889, 890, 711 ],
+  101: [ 3971, 2426, 2429, 1941 ],
+  102: [ 4547, 2778, 2781, 2222 ],
+  103: [ 5201, 3178, 3182, 2542 ],
+  104: [ 5895, 3602, 3606, 2881 ],
+  105: [ 6478, 3958, 3962, 3165 ],
+  106: [ 7105, 4341, 4346, 3472 ],
+  107: [ 7740, 4729, 4734, 3782 ],
+  108: [ 8491, 5188, 5194, 4149 ],
+  109: [ 9323, 5697, 5703, 4556 ],
+  110: [ 10232, 6252, 6259, 5000 ]
+};
+
+/**
+ * Get base stats for a given level
+ * @param {string} name stat name
+ * @param {number} level
+ * @return {number}
+ */
+exports.baseAttributeByLevel = (name, level) => {
+  const index = ({
+    strength: 0,
+    agility: 1,
+    stamina: 2,
+    intellect: 3,
+  })[name];
+
+  if (!(level in AttributeTable)) {
+    level = 1;
+  }
+
+  return AttributeTable[level][index];
+};
+
+const ARReductionTable = [
+  0, 157, 167, 177, 187, 197, 207, 217, 227, 237, 247, 257, 267, 277, 287, 297, 307, 317,
+  327, 337, 347, 357, 367, 377, 387, 397, 407, 417, 427, 437, 447, 457, 467, 477, 487,
+  497, 507, 517, 527, 537, 547, 557, 567, 577, 587, 597, 607, 617, 627, 637, 647, 657,
+  667, 677, 687, 697, 707, 717, 727, 737, 747, 757, 767, 777, 787, 797, 807, 817, 827,
+  837, 847, 857, 867, 877, 887, 897, 907, 917, 927, 937, 947, 957, 967, 977, 987, 997,
+  1007, 1017, 1027, 1037, 1047, 1185, 1342, 1518, 1718, 1945, 2201, 2491, 2819, 3190,
+  3610, 5435, 5613, 5799, 5994, 6199, 6415, 6642, 6880, 7132, 7390, 7648, 7906, 8164
+];
+
+exports.getArmorReductionConstant = (level) => {
+    return ARReductionTable[level] || 0;
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="../images/logo.png" style="width: 120px; height: 120px">
+    <div class="footer-text">Copyright © 2017, Shawn Biddle</div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

@@ -9,7 +9,8 @@
   "scripts": {
     "start": "gulp && sudo ./ranvier -v --save=10 --respawn=10",
     "test": "gulp && npm run-script test:coverage",
-    "test:coverage": "istanbul --include-all-sources cover _mocha -- -R dot --recursive ./test/**/*.spec.js"
+    "test:coverage": "istanbul --include-all-sources cover _mocha -- -R dot --recursive ./test/**/*.spec.js",
+    "build-docs": "jsdoc -c jsdoc.conf"
   },
   "dependencies": {
     "bcryptjs": "^2.4.0",
@@ -44,9 +45,11 @@
     "gulp-eslint": "^2.0.0",
     "gulp-todo": "^4.1.0",
     "istanbul": "^0.4.4",
+    "jsdoc": "^3.5.3",
     "jsonwebtoken": "^7.2.1",
     "mocha": "^2.5.3",
     "mocha-istanbul": "^0.3.0",
-    "sinon": "^1.17.5"
+    "sinon": "^1.17.5",
+    "tui-jsdoc-template": "^1.1.0"
   }
 }

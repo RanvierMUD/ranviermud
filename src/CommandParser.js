@@ -9,7 +9,7 @@ class CommandParser {
   /**
    * Parse a given string to find the resulting command/arguments
    * @param {String} data
-   * @return {command: Command, args: String}
+   * @return {{command: Command, args: String}}
    */
   static parse(state, data, player) {
     data = data.trim();
