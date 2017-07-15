@@ -5,6 +5,7 @@ const EntityFactory = require('./EntityFactory');
 
 /**
  * Stores definitions of npcs to allow for easy creation/cloning
+ * @extends EntityFactory
  */
 class MobFactory extends EntityFactory {
   /**

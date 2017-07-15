@@ -1,7 +1,7 @@
 body {
     background-color: #FFF8E1;
     font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
+    font-size: 16px;
 }
 a {
     color: #689F63;
@@ -17,6 +17,13 @@ code, kbd, pre {
 .main section article table td
 {
     font-family: 'Open Sans', sans-serif;
+}
+.main section article table td code {
+  border-radius: 0;
+  background-color: transparent;
+}
+.main section article table tr:nth-child(even) {
+  background-color: #F3ECD5;
 }
 #resizer {
     background-color: #689F63;
@@ -60,33 +67,89 @@ footer .logo {
 }
 
 /* content styles */
+.main section header h2 {
+  font-size: 2.5rem;
+  text-align: center;
+  font-family: "PT Mono","Courier New",Courier,monospace;
+  border-left: 0;
+}
+.main section article .container-properties h5,
+.main section article .container-returns h5,
+.main section article .container-params h5,
+.main section article table th,
+.main section article table td.type,
+.main section article table td.attributes
+{
+  font-family: "PT Mono","Courier New",Courier,monospace;
+}
+.main .class-description {
+  font-size: 2rem;
+  padding: 24px;
+}
+.main section article dl dt .name {
+  margin-top: 48px;
+}
+.main section article dl dt:first-child .name {
+  margin-top: 12px;
+}
+.main section article .container-overview h2,
 .main section article h3.subsection-title {
     font-family: 'Fugaz One', sans-serif;
     color: #689F63;
 }
 .main section article dl h4,
+.main section article dt h4,
 .main section article dl h4 .signature,
 .main section article dl h4 .type-signature
 {
     font-size: 1.6rem;
+    font-family: "PT Mono","Courier New",Courier,monospace;
 }
-.main section article dl h4 .type-signature,
 .main section article dl h4 .type-signature a
 {
     font-size: 1.6rem;
     color: #689F63;
 }
+span.param-type {
+  color: #424242;
+  font-family: "PT Mono","Courier New",Courier,monospace;
+
+}
+.main section article .container-returns h5 {
+  display: inline;
+}
 .main section article .container-source {
     font-size: 1.6rem;
 }
+.main section article .container-overview {
+  border: none;
+  padding: 0;
+}
+.main section article h3.subsection-title {
+  padding-top: 24px;
+}
+.main section article table.props {
+  margin-left: 12px;
+}
 .main section article .container-source a {
     color: #212121;
+}
+.main section article table.params tr {
+  border-bottom: 1px solid #ccc;
 }
 .main section article table td.name,
 .main section article table td.type,
 .main section article table td.attributes,
 .main section article table td.default
 {
-    max-width: 200px;
+    max-width: 400px;
     min-width: 180px;
+    word-break: initial;
+}
+.main section article .container-returns span,
+.main section article .container-params table
+{
+  border-left: none;
+  margin-left: 0;
+  padding-left: 0;
 }

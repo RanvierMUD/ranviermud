@@ -2,7 +2,20 @@
 
 const B = require('./Broadcast');
 
+/**
+ * Representation of an in game helpfile
+ */
 class Helpfile {
+  /**
+   * @param {string} bundle Bundle the helpfile comes from
+   * @param {string} name
+   * @param {object} options
+   * @param {Array<string>} [options.keywords]
+   * @param {string} [options.command]
+   * @param {string} [options.channel]
+   * @param {Array<string>} [options.related]
+   * @param {string} options.body
+   */
   constructor(bundle, name, options) {
     this.bundle = bundle;
     this.name = name;
@@ -18,6 +31,11 @@ class Helpfile {
     this.body = options.body;
   }
 
+  /**
+   * TODO: Not sure this should be so opinionated, don't know where to move it yet
+   * @param {GameState} state
+   * @return {string}
+   */
   render(state) {
     let body = this.body;
     const name = this.name;

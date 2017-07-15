@@ -8,8 +8,17 @@ const CommandType = require('./CommandType');
 class CommandParser {
   /**
    * Parse a given string to find the resulting command/arguments
-   * @param {String} data
-   * @return {{command: Command, args: String}}
+   * @param {GameState} state
+   * @param {string} data
+   * @param {Player} player
+   * @return {{
+   *   type: CommandType,
+   *   command: Command,
+   *   skill: Skill,
+   *   channel: Channel,
+   *   args: string,
+   *   originalCommand: string
+   * }}
    */
   static parse(state, data, player) {
     data = data.trim();
@@ -188,7 +197,15 @@ class CommandParser {
 }
 exports.CommandParser = CommandParser;
 
+/**
+ * Used when the player enters a bad command
+ * @extends Error
+ */
 class InvalidCommandError extends Error {}
+/**
+ * Used when the player tries a command they don't have access to
+ * @extends Error
+ */
 class RestrictedCommandError extends Error {}
 exports.InvalidCommandError = InvalidCommandError;
 exports.RestrictedCommandError = RestrictedCommandError;

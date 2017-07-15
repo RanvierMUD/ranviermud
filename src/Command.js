@@ -3,12 +3,26 @@
 const CommandType = require('./CommandType');
 const PlayerRoles = require('./PlayerRoles');
 
+/**
+ * In game command. See the {@link http://ranviermud.com/extending/commands/|Command guide}
+ * @property {string} bundle Bundle this command came from
+ * @property {CommandType} type
+ * @property {string} name
+ * @property {function} func Actual function that gets run when the command is executed
+ * @property {Array<string>} aliases
+ * @property {string} usage
+ * @property {PlayerRoles} requiredRole
+ */
 class Command {
   /**
-   * @param {CommandType} type One of the CommandTypes
-   * @param {string}   name   Name of the command
-   * @param {string}   bundle Bundle the command came from
-   * @param {Function} func   Actual function to run when command is executed
+   * @param {string} bundle Bundle the command came from
+   * @param {string} name   Name of the command
+   * @param {object} def
+   * @param {CommandType} def.type=CommandType.COMMAND
+   * @param {function} def.command
+   * @param {Array<string>} def.aliases
+   * @param {string} def.usage=this.name
+   * @param {PlayerRoles} requiredRole=PlayerRoles.PLAYER
    */
   constructor(bundle, name, def) {
     this.bundle = bundle;
@@ -29,7 +43,6 @@ class Command {
   execute(args, player, arg0) {
     return this.func(args, player, arg0);
   }
-
 }
 
 module.exports = Command;

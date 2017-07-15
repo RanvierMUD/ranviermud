@@ -5,6 +5,9 @@
  * for stats
  */
 
+/**
+ * @private
+ */
 const HealthPerStaminaTable = [
   0, 14, 14, 15, 16, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19,
   19, 20, 20, 20, 20, 22, 22, 22, 22, 24, 24, 24, 24, 25, 25, 26, 26, 26, 26,
@@ -138,6 +141,7 @@ const AttributeTable = {
  * @param {string} name stat name
  * @param {number} level
  * @return {number}
+ * @private
  */
 exports.baseAttributeByLevel = (name, level) => {
   const index = ({

@@ -8,6 +8,7 @@
 /**
  * Extra difficulty factor to level
  * @param {number} level
+ * @private
  */
 const reduction = level => {
   let val;
@@ -28,9 +29,10 @@ const reduction = level => {
 };
 
 /**
-* Difficulty modifier starting around level 30
-* @param int level
-* @return int
+ * Difficulty modifier starting around level 30
+ * @param int level
+ * @return int
+ * @private
 */
 const diff = level => {
   switch (true) {
@@ -49,22 +51,23 @@ const diff = level => {
 };
 
 /**
-* Get the exp that a mob gives
-* @param int level
-* @return int
-*/
-const mobExp = level => 45 + (5 * level);
-
-
+ * @namespace
+ */
+const LevelUtil = {
 /**
-* Helper to get the amount of experience a player needs to level
-* @param int level Target level
-* @return int
-*/
-const expToLevel = level => Math.floor(((4 * level) + diff(level)) * mobExp(level) * reduction(level));
+ * Get the exp that a mob gives
+ * @param int level
+ * @return int
+ */
+  mobExp: level => 45 + (5 * level),
 
-
-module.exports = {
-  expToLevel,
-  mobExp,
+  /**
+   * Helper to get the amount of experience a player needs to level
+   * @param int level Target level
+   * @return int
+   * @memberof! LevelUtil
+   */
+  expToLevel: level => Math.floor(((4 * level) + diff(level)) * mobExp(level) * reduction(level)),
 };
+
+module.exports = LevelUtil;

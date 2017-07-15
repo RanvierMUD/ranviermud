@@ -6,8 +6,16 @@ const yaml = require('js-yaml');
 
 const dataPath = __dirname + '/../data/';
 
-module.exports = {
-  parseFile: function (filepath) {
+/**
+ * Class for loading/parsing data files from disk
+ */
+class Data {
+  /**
+   * Read in and parse a file. Current supports yaml and json
+   * @param {string} filepath
+   * @return {*} parsed contents of file
+   */
+  static parseFile(filepath) {
     if (!fs.existsSync(filepath)) {
       throw new Error(`File [${filepath}] does not exist!`);
     }
@@ -25,9 +33,15 @@ module.exports = {
     }
 
     return parsers[ext](contents);
-  },
+  }
 
-  saveFile: function(filepath, data, callback) {
+  /**
+   * Write data to a file
+   * @param {string} filepath
+   * @param {*} data
+   * @param {function} callback
+   */
+  static saveFile(filepath, data, callback) {
     if (!fs.existsSync(filepath)) {
       throw new Error(`File [${filepath}] does not exist!`);
     }
@@ -53,25 +67,49 @@ module.exports = {
     if (callback) {
       callback();
     }
+  }
 
-  },
-
-  load: function (type, id) {
+  /**
+   * load/parse a data file (player/account)
+   * @param {string} type
+   * @param {string} id
+   * @return {*}
+   */
+  static load(type, id) {
     return this.parseFile(this.getDataFilePath(type, id));
-  },
+  }
 
-  save: function (type, id, data, callback) {
+  /**
+   * Save data file (player/account) data to disk
+   * @param {string} type
+   * @param {string} id
+   * @param {*} data
+   * @param {function} callback
+   */
+  static save(type, id, data, callback) {
     fs.writeFileSync(this.getDataFilePath(type, id), JSON.stringify(data, null, 2), 'utf8');
     if (callback) {
       callback();
     }
-  },
+  }
 
-  exists: function (type, id) {
+  /**
+   * Check if a data file exists
+   * @param {string} type
+   * @param {string} id
+   * @return {boolean}
+   */
+  static exists(type, id) {
     return fs.existsSync(this.getDataFilePath(type, id));
-  },
+  }
 
-  getDataFilePath: function (type, id) {
+  /**
+   * get the file path for a given data file by type (player/account)
+   * @param {string} type
+   * @param {string} id
+   * @return {string}
+   */
+  static getDataFilePath(type, id) {
     switch (type) {
       case 'player': {
         return dataPath + `/player/${id}.json`;
@@ -80,14 +118,16 @@ module.exports = {
         return dataPath + `/account/${id}.json`;
       }
     }
-  },
+  }
 
   /**
    * load the MOTD for the intro screen
    * @return string
    */
-  loadMotd: () => {
+  static loadMotd() {
     var motd = fs.readFileSync(dataPath + 'motd').toString('utf8');
     return motd;
   }
-};
+}
+
+module.exports = Data;

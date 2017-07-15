@@ -6,6 +6,7 @@ const EventEmitter = require('events');
  * @property {object} config Default config for this quest, see individual quest types for details
  * @property {Player} player
  * @property {object} state  Current completion state
+ * @extends EventEmitter
  */
 class Quest extends EventEmitter {
   constructor(GameState, qid, config, player) {
@@ -51,6 +52,10 @@ class Quest extends EventEmitter {
     goal.on('progress', () => this.onProgressUpdated());
   }
 
+  /**
+   * @fires Quest#turn-in-ready
+   * @fires Quest#progress
+   */
   onProgressUpdated() {
     const progress = this.getProgress();
 
@@ -58,11 +63,18 @@ class Quest extends EventEmitter {
       if (this.config.autoComplete) {
         this.complete();
       } else {
+        /**
+         * @event Quest#turn-in-ready
+         */
         this.emit('turn-in-ready');
       }
       return;
     }
 
+    /**
+     * @event Quest#progress
+     * @param {object} progress
+     */
     this.emit('progress', progress);
   }
 
@@ -94,7 +106,13 @@ class Quest extends EventEmitter {
     });
   }
 
+  /**
+   * @fires Quest#complete
+   */
   complete() {
+    /**
+     * @event Quest#complete
+     */
     this.emit('complete');
     this.goals.forEach(goal => {
       goal.complete();

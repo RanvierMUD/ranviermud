@@ -1,14 +1,23 @@
 'use strict';
 
+/**
+ * Contain/look up helpfiles
+ */
 class HelpManager {
   constructor() {
     this.helps = new Map();
   }
 
+  /**
+   * @param {string} help Helpfile name
+   */
   get(help) {
     return this.helps.get(help);
   }
 
+  /**
+   * @param {Helpfile} help
+   */
   add(help) {
     this.helps.set(help.name, help);
   }
@@ -33,4 +42,3 @@ class HelpManager {
 }
 
 module.exports = HelpManager;
-

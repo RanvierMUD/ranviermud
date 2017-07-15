@@ -1,6 +1,9 @@
 'use strict';
 
-module.exports = {
+/**
+ * @enum {Symbol}
+ */
+const ItemType = {
   ARMOR: Symbol("ARMOR"),
   CONTAINER: Symbol("CONTAINER"),
   OBJECT: Symbol("OBJECT"),
@@ -8,3 +11,5 @@ module.exports = {
   WEAPON: Symbol("WEAPON"),
   RESOURCE: Symbol("RESOURCE"),
 };
+
+module.exports = ItemType;

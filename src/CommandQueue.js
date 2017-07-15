@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * Keeps track of the queue off commands to execute for a player
+ */
 class CommandQueue {
   constructor() {
     this.commands = [];
@@ -20,6 +23,10 @@ class CommandQueue {
     return this.commands.length > 0;
   }
 
+  /**
+   * Execute the currently pending command if it's ready
+   * @return {boolean} whether the command was executed
+   */
   execute() {
     if (!this.commands.length || Date.now() - this.lastRun < this.lag) {
       return false;
@@ -33,10 +40,16 @@ class CommandQueue {
     return true;
   }
 
+  /**
+   * @type {Array<Object>}
+   */
   get queue() {
     return this.commands;
   }
 
+  /**
+   * Flush all pending commands
+   */
   flush() {
     this.commands = [];
     this.lag = 0;
@@ -46,7 +59,7 @@ class CommandQueue {
 
   /**
    * In seconds get how long until the next command will run, rounded to nearest tenth of a second
-   * @return {number}
+   * @type {number}
    */
   get lagRemaining() {
     return this.commands.length ? this.getTimeTilRun(0) : 0;

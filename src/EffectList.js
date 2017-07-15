@@ -16,6 +16,9 @@ class EffectList {
     this.target = target;
   }
 
+  /**
+   * @type {number}
+   */
   get size() {
     this.validateEffects();
     return this.effects.size;
@@ -30,10 +33,18 @@ class EffectList {
     return [...this.effects];
   }
 
+  /**
+   * @param {string} type
+   * @return {boolean}
+   */
   hasEffectType(type) {
     return !!this.getByType(type);
   }
 
+  /**
+   * @param {string} type
+   * @return {Effect}
+   */
   getByType(type) {
     return [...this.effects].find(effect => {
       return effect.config.type === type;
@@ -66,6 +77,7 @@ class EffectList {
 
   /**
    * @param {Effect} effect
+   * @fires Effect#effectAdded
    */
   add(effect) {
     for (const activeEffect of this.effects) {
@@ -84,6 +96,10 @@ class EffectList {
     }
 
     this.effects.add(effect);
+
+    /**
+     * @event Effect#effectAdded
+     */
     effect.emit('effectAdded');
     effect.on('remove', () => this.remove(effect));
     return true;

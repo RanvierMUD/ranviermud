@@ -14,6 +14,8 @@ const Logger = require('./Logger');
  * @property {Set}           players      Players currently in the room
  * @property {string}        script       Name of custom script attached to this room
  * @property {string}        title        Title shown on look/scan
+ * @extends EventEmitter
+ * @listens Room#updateTick
  */
 class Room extends EventEmitter {
   constructor(area, def) {
@@ -88,36 +90,60 @@ class Room extends EventEmitter {
     return this.behaviors.get(name);
   }
 
+  /**
+   * @param {Player} player
+   */
   addPlayer(player) {
     this.players.add(player);
   }
 
+  /**
+   * @param {Player} player
+   */
   removePlayer(player) {
     this.players.delete(player);
   }
 
+  /**
+   * @param {Npc} npc
+   */
   addNpc(npc) {
     this.npcs.add(npc);
     npc.room = this;
     this.area.addNpc(npc);
   }
 
+  /**
+   * @param {Npc} npc
+   */
   removeNpc(npc) {
     this.npcs.delete(npc);
+    // NOTE: It is _very_ important that the NPC's room is set to null before the Area.removeNpc call
+    // otherwise the area will also remove it from its originating room spawn list and will try
+    // to respawn it. Not good
     npc.room = null;
     this.area.removeNpc(npc);
   }
 
+  /**
+   * @param {Item} item
+   */
   addItem(item) {
     this.items.add(item);
     item.room = this;
   }
 
+  /**
+   * @param {Item} item
+   */
   removeItem(item) {
     this.items.delete(item);
     item.room = null;
   }
 
+  /**
+   * @param {GameState} state
+   */
   respawnTick(state) {
     this.defaultNpcs.forEach(defaultNpc => {
       if (typeof defaultNpc === 'string') {
@@ -173,6 +199,10 @@ class Room extends EventEmitter {
     });
   }
 
+  /**
+   * @param {GameState} state
+   * @param {string} entityRef
+   */
   spawnItem(state, entityRef) {
     Logger.verbose(`\tSPAWN: Adding item [${entityRef}] to room [${this.title}]`);
     const newItem = state.ItemFactory.create(this.area, entityRef);
@@ -182,6 +212,11 @@ class Room extends EventEmitter {
     this.addItem(newItem);
   }
 
+  /**
+   * @param {GameState} state
+   * @param {string} entityRef
+   * @fires Npc#spawn
+   */
   spawnNpc(state, entityRef) {
     Logger.verbose(`\tSPAWN: Adding npc [${entityRef}] to room [${this.title}]`);
     const newNpc = state.MobFactory.create(this.area, entityRef);
@@ -190,9 +225,15 @@ class Room extends EventEmitter {
     this.area.addNpc(newNpc);
     this.addNpc(newNpc);
     this.spawnedNpcs.add(newNpc);
+    /**
+     * @event Npc#spawn
+     */
     newNpc.emit('spawn');
   }
 
+  /**
+   * @param {Npc} npc
+   */
   removeSpawnedNpc(npc) {
     this.spawnedNpcs.delete(npc);
   }

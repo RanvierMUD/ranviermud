@@ -9,7 +9,8 @@ const Logger = require('./Logger');
 /**
  * @property {number} id   Area-relative id (vnum)
  * @property {Area}   area Area npc belongs to (not necessarily the area they're currently in)
- * @property {
+ * @property {Map} behaviors
+ * @extends Character
  */
 class Npc extends Character {
   constructor(area, data) {

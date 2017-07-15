@@ -89,12 +89,20 @@ class Item extends EventEmitter {
     return this.behaviors.get(name);
   }
 
+  /**
+   * Add an item to this item's inventory
+   * @param {Item} item
+   */
   addItem(item) {
     this._setupInventory();
     this.inventory.addItem(item);
     item.belongsTo = this;
   }
 
+  /**
+   * Remove an item from this item's inventory
+   * @param {Item} item
+   */
   removeItem(item) {
     this.inventory.removeItem(item);
 
@@ -108,6 +116,9 @@ class Item extends EventEmitter {
     item.belongsTo = null;
   }
 
+  /**
+   * @return {boolean}
+   */
   isInventoryFull() {
     this._setupInventory();
     return this.inventory.isFull;

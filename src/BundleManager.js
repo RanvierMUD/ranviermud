@@ -20,7 +20,13 @@ const fs = require('fs'),
 const srcPath = __dirname + '/';
 const bundlesPath = srcPath + '../bundles/';
 
+/**
+ * Handles loading/parsing/initializing all bundles. AKA where the magic happens
+ */
 class BundleManager {
+  /**
+   * @param {GameState} state
+   */
   constructor(state) {
     this.state = state;
   }
@@ -55,6 +61,10 @@ class BundleManager {
     Logger.verbose(`CONFIG: Starting Room [${this.state.RoomManager.startingRoom.entityReference}]`);
   }
 
+  /**
+   * @param {string} bundle Bundle name
+   * @param {string} bundlePath Path to bundle directory
+   */
   loadBundle(bundle, bundlePath) {
     const features = [
       { path: 'areas/', fn: 'loadAreas' },
@@ -80,6 +90,11 @@ class BundleManager {
     Logger.verbose(`ENDLOAD: BUNDLE [\x1B[1;32m${bundle}\x1B[0m]`);
   }
 
+  /**
+   * Load/initialize player. See the {@link http://ranviermud.com/extending/input_events/|Player Event guide}
+   * @param {string} bundle
+   * @param {string} eventsFile event js file to load
+   */
   loadPlayerEvents(bundle, eventsFile) {
     Logger.verbose(`\tLOAD: Player Events...`);
 
@@ -97,6 +112,10 @@ class BundleManager {
     Logger.verbose(`\tENDLOAD: Player Events...`);
   }
 
+  /**
+  * @param {string} bundle
+  * @param {string} areasDir
+  */
   loadAreas(bundle, areasDir) {
     Logger.verbose(`\tLOAD: Areas...`);
 
@@ -116,6 +135,11 @@ class BundleManager {
     Logger.verbose(`\tENDLOAD: Areas`);
   }
 
+  /**
+   * @param {string} bundle
+   * @param {string} areaName
+   * @param {string} areaPath
+   */
   loadArea(bundle, areaName, areaPath) {
     var paths = {
       manifest: areaPath + '/manifest.yml',
@@ -153,6 +177,11 @@ class BundleManager {
     return area;
   }
 
+  /**
+   * Load all items from a given area.
+   * @param {Area} area
+   * @param {string} itemsFile File containing items to load
+   */
   loadItems(area, itemsFile) {
     Logger.verbose(`\t\tLOAD: Items...`);
 
@@ -179,6 +208,11 @@ class BundleManager {
     return items;
   }
 
+  /**
+   * Load all npcs from a given area.
+   * @param {Area} area
+   * @param {string} npcsFile File containing npcs to load
+   */
   loadNpcs(area, npcsFile) {
     Logger.verbose(`\t\tLOAD: Npcs...`);
 
@@ -215,6 +249,11 @@ class BundleManager {
     return npcs;
   }
 
+  /**
+   * @param {EntityFactory} factory Instance of EntityFactory that the item/npc will be loaded into
+   * @param {EntityReference} entityRef
+   * @param {string} scriptPath
+   */
   loadEntityScript(factory, entityRef, scriptPath) {
     const scriptListeners = require(scriptPath)(srcPath).listeners;
 
@@ -228,6 +267,10 @@ class BundleManager {
     }
   }
 
+  /**
+   * @param {Area} area
+   * @param {string} roomsFile
+   */
   loadRooms(area, roomsFile) {
     Logger.verbose(`\t\tLOAD: Rooms...`);
 
@@ -266,6 +309,10 @@ class BundleManager {
     return rooms;
   }
 
+  /**
+   * @param {Area} area
+   * @param {string} questsFile
+   */
   loadQuests(area, questsFile) {
     Logger.verbose(`\t\tLOAD: Quests...`);
 
@@ -280,6 +327,10 @@ class BundleManager {
     Logger.verbose(`\t\tENDLOAD: Quests...`);
   }
 
+  /**
+   * @param {string} bundle
+   * @param {string} commandsDir
+   */
   loadCommands(bundle, commandsDir) {
     Logger.verbose(`\tLOAD: Commands...`);
     const files = fs.readdirSync(commandsDir);
@@ -308,6 +359,10 @@ class BundleManager {
     Logger.verbose(`\tENDLOAD: Commands...`);
   }
 
+  /**
+   * @param {string} bundle
+   * @param {string} channelsFile
+   */
   loadChannels(bundle, channelsFile) {
     Logger.verbose(`\tLOAD: Channels...`);
 
@@ -326,6 +381,10 @@ class BundleManager {
     Logger.verbose(`\tENDLOAD: Channels...`);
   }
 
+  /**
+   * @param {string} bundle
+   * @param {string} helpDir
+   */
   loadHelp(bundle, helpDir) {
     Logger.verbose(`\tLOAD: Help...`);
     const files = fs.readdirSync(helpDir);
@@ -348,7 +407,7 @@ class BundleManager {
         );
       } catch (e) {
         Logger.warn(`\t\t${e.message}`);
-	continue;
+        continue;
       }
 
       this.state.HelpManager.add(hfile);
@@ -357,6 +416,10 @@ class BundleManager {
     Logger.verbose(`\tENDLOAD: Help...`);
   }
 
+  /**
+   * @param {string} bundle
+   * @param {string} inputEventsDir
+   */
   loadInputEvents(bundle, inputEventsDir) {
     Logger.verbose(`\tLOAD: Events...`);
     const files = fs.readdirSync(inputEventsDir);
@@ -376,6 +439,10 @@ class BundleManager {
     Logger.verbose(`\tENDLOAD: Events...`);
   }
 
+  /**
+   * @param {string} bundle
+   * @param {string} behaviorsDir
+   */
   loadBehaviors(bundle, behaviorsDir) {
     Logger.verbose(`\tLOAD: Behaviors...`);
 
@@ -416,6 +483,10 @@ class BundleManager {
     Logger.verbose(`\tENDLOAD: Behaviors...`);
   }
 
+  /**
+   * @param {string} bundle
+   * @param {string} effectsDir
+   */
   loadEffects(bundle, effectsDir) {
     Logger.verbose(`\tLOAD: Effects...`);
     const files = fs.readdirSync(effectsDir);
@@ -436,6 +507,10 @@ class BundleManager {
     Logger.verbose(`\tENDLOAD: Effects...`);
   }
 
+  /**
+   * @param {string} bundle
+   * @param {string} skillsDir
+   */
   loadSkills(bundle, skillsDir) {
     Logger.verbose(`\tLOAD: Skills...`);
     const files = fs.readdirSync(skillsDir);
@@ -466,6 +541,10 @@ class BundleManager {
     Logger.verbose(`\tENDLOAD: Skills...`);
   }
 
+  /**
+   * @param {string} bundle
+   * @param {string} classesDir
+   */
   loadClasses(bundle, classesDir) {
     Logger.verbose(`\tLOAD: Classes...`);
     const files = fs.readdirSync(classesDir);

@@ -3,7 +3,7 @@
 const EventManager = require('./EventManager');
 const Effect = require('./Effect');
 
-/** typedef {{config: Object<string,*>, listeners: Object<String,function (...*)>}} */
+/** @typedef {{config: Object<string,*>, listeners: Object<String,function (...*)>}} */
 var EffectConfig;
 
 /**
@@ -65,4 +65,3 @@ class EffectFactory {
 }
 
 module.exports = EffectFactory;
-

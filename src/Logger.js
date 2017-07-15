@@ -11,6 +11,9 @@ winston.add(winston.transports.Console, {
 const logDir = __dirname + '/../log/';
 const logExt = '.log';
 
+/**
+ * Wrapper around Winston
+ */
 class Logger {
 
   static getLevel() {
