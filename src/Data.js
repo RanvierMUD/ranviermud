@@ -120,7 +120,14 @@ class Data {
     }
   }
 
+  /**
+   * Determine whether or not a path leads to a legitimate JS file or not.
+   * @param {string} path
+   * @param {string} [file]
+   * @return {boolean}
+   */
   static isScriptFile(path, file) {
+    file = file || path;
     return fs.statSync(path).isFile() && file.match(/js$/);
   }
 
