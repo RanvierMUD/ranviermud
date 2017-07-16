@@ -101,6 +101,10 @@ class Area extends EventEmitter {
       room.emit('updateTick');
     }
 
+    for (const npc of this.npcs) {
+      npc.emit('updateTick');
+    }
+
     // handle respawn
     const sinceLastTick = Date.now() - this.lastRespawnTick;
     if (sinceLastTick >= this.info.respawnInterval * 1000) {
