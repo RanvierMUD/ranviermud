@@ -120,6 +120,10 @@ class Data {
     }
   }
 
+  static isScriptFile(path, file) {
+    return fs.statSync(path).isFile() && file.match(/js$/);
+  }
+
   /**
    * load the MOTD for the intro screen
    * @return string
