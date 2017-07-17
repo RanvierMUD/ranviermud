@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: EquipErrors.js | Ranvier</title>
+    <title>Source: SkillErrors.js | Ranvier</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -53,10 +53,35 @@
             <pre class="prettyprint source linenums"><code>'use strict';
 
 /**
+ * Error used when trying to execute a skill and the player doesn't have enough resources
  * @extends Error
  */
-class EquipSlotTakenError extends Error {}
-exports.EquipSlotTakenError = EquipSlotTakenError;
+class NotEnoughResourcesError extends Error {}
+exports.NotEnoughResourcesError = NotEnoughResourcesError;
+
+/**
+ * Error used when trying to execute a passive skill
+ * @extends Error
+ */
+class PassiveError extends Error {}
+exports.PassiveError = PassiveError;
+
+/**
+ * Error used when trying to execute a skill on cooldown
+ * @property {Effect} effect
+ * @extends Error
+ */
+class CooldownError extends Error {
+  /**
+   * @param {Effect} effect Cooldown effect that triggered this error
+   */
+  constructor(effect) {
+    super();
+
+    this.effect = effect;
+  }
+}
+exports.CooldownError = CooldownError;
 </code></pre>
         </article>
     </section>

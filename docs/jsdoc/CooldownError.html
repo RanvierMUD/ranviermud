@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: EquipErrors.js | Ranvier</title>
+    <title>Class: CooldownError | Ranvier</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -47,19 +45,245 @@
 
 
 
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
 
-/**
- * @extends Error
- */
-class EquipSlotTakenError extends Error {}
-exports.EquipSlotTakenError = EquipSlotTakenError;
-</code></pre>
-        </article>
-    </section>
+<section>
+
+<header>
+    
+        <h2>CooldownError</h2>
+        
+            <div class="class-description"><p>Error used when trying to execute a skill on cooldown</p></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+<dt>
+
+    
+        
+        <h2>Constructor</h2>
+        
+
+        <h4 class="name" id="CooldownError">
+            <span class="type-signature"></span>new CooldownError<span class="signature">(effect)</span><span class="type-signature"></span>
+            
+            <div class="container-source members">
+                <code><a href="SkillErrors.js.html">SkillErrors.js</a></code>,
+                <code><a href="SkillErrors.js.html#line22">line 22</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>effect</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Effect.html">Effect</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Cooldown effect that triggered this error</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>effect</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Effect.html">Effect</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li>Error</li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -76,7 +300,7 @@ exports.EquipSlotTakenError = EquipSlotTakenError;
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
+        var id = 'CooldownError_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 
