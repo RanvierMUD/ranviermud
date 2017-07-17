@@ -103,13 +103,9 @@ class BundleManager {
 
     const playerListeners = require(eventsFile)(srcPath).listeners;
 
-    for (const eventName in playerListeners) {
-      if (!playerListeners.hasOwnProperty(eventName)) {
-        continue;
-      }
-
+    for (const [eventName, listener] of Object.entries(playerListeners)) {
       Logger.verbose(`\t\tEvent: ${eventName}`);
-      this.state.PlayerManager.addListener(eventName, playerListeners[eventName](this.state));
+      this.state.PlayerManager.addListener(eventName, listener(this.state));
     }
 
     Logger.verbose(`\tENDLOAD: Player Events...`);
@@ -260,13 +256,9 @@ class BundleManager {
   loadEntityScript(factory, entityRef, scriptPath) {
     const scriptListeners = require(scriptPath)(srcPath).listeners;
 
-    for (const eventName in scriptListeners) {
-      if (!scriptListeners.hasOwnProperty(eventName)) {
-        continue;
-      }
-
+    for (const [eventName, listener] of Object.entries(scriptListeners)) {
       Logger.verbose(`\t\t\t\tEvent: ${eventName}`);
-      factory.addScriptListener(entityRef, eventName, scriptListeners[eventName](this.state));
+      factory.addScriptListener(entityRef, eventName, listener(this.state));
     }
   }
 
@@ -296,13 +288,9 @@ class BundleManager {
         // given that rooms are created only once so we can just attach the listeners
         // immediately
         const scriptListeners = require(scriptPath)(srcPath).listeners;
-        for (const eventName in scriptListeners) {
-          if (!scriptListeners.hasOwnProperty(eventName)) {
-            continue;
-          }
-
+        for (const [eventName, listener] of Object.entries(scriptListeners)) {
           Logger.verbose(`\t\t\t\tEvent: ${eventName}`);
-          room.on(eventName, scriptListeners[eventName](this.state));
+          room.on(eventName, listener(this.state));
         }
       }
     });
@@ -322,9 +310,9 @@ class BundleManager {
     const loader = require(questsFile);
     let quests = loader(srcPath);
 
-    for (const id in quests) {
+    for (const [id, questData] of Object.entries(quests)) {
       Logger.verbose(`\t\t\tLoading Quest [${area.name}:${id}]`);
-      this.state.QuestFactory.add(area.name, id, quests[id].config, quests[id].goals);
+      this.state.QuestFactory.add(area.name, id, questData.config, questData.goals);
     }
 
     Logger.verbose(`\t\tENDLOAD: Quests...`);
@@ -469,12 +457,8 @@ class BundleManager {
         Logger.verbose(`\t\t\tLOAD: BEHAVIORS [${type}] ${behaviorName}...`);
         const behaviorListeners = require(behaviorPath)(srcPath).listeners;
 
-        for (const eventName in behaviorListeners) {
-          if (!behaviorListeners.hasOwnProperty(eventName)) {
-            continue;
-          }
-
-          manager.addListener(behaviorName, eventName, behaviorListeners[eventName](state));
+        for (const [eventName, listener] of Object.entries(behaviorListeners)) {
+          manager.addListener(behaviorName, eventName, listener(state));
         }
       }
     }
