@@ -1,6 +1,5 @@
 'use strict';
 
-const B = require('./Broadcast');
 const Quest = require('./Quest');
 
 /**

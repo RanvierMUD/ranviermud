@@ -59,6 +59,7 @@ class Channel {
     const targets = this.audience.getBroadcastTargets();
 
     if (this.audience instanceof PartyAudience && !targets.length) {
+      // TODO: create ChannelError.NoPartyError
       return Broadcast.sayAt(sender, "You aren't in a group.");
     }
 
@@ -68,6 +69,7 @@ class Channel {
     // Private channels also send the target player to the formatter
     if (this.audience instanceof PrivateAudience) {
       if (!targets.length) {
+        // TODO: create ChannelError.NoRecipientError
         return Broadcast.sayAt(sender, "With no one to hear your message it disappears in the wind.");
       }
       Broadcast.sayAt(sender, this.formatter.sender(sender, targets[0], message, this.colorify.bind(this)));
