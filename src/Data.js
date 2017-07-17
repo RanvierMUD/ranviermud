@@ -60,8 +60,7 @@ class Data {
       throw new Error(`File [${filepath}] does not have a valid serializer!`);
     }
 
-    var dataToWrite = serializers[ext](data);
-
+    const dataToWrite = serializers[ext](data);
     fs.writeFileSync(filepath, dataToWrite, 'utf8');
 
     if (callback) {
@@ -136,7 +135,7 @@ class Data {
    * @return string
    */
   static loadMotd() {
-    var motd = fs.readFileSync(dataPath + 'motd').toString('utf8');
+    const motd = fs.readFileSync(dataPath + 'motd').toString('utf8');
     return motd;
   }
 }

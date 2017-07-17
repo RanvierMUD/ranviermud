@@ -1,6 +1,6 @@
 'use strict';
 
-var EventEmitter = require('events'),
+const EventEmitter = require('events'),
     net = require('net');
 
 // see: arpa/telnet.h
@@ -254,7 +254,7 @@ class TelnetServer
   constructor(streamOpts, listener) {
     this.netServer = net.createServer({}, (connection) => {
       connection.fresh = true;
-      var stream = new TelnetStream(streamOpts);
+      let stream = new TelnetStream(streamOpts);
       stream.attach(connection);
       stream.telnetCommand(WILL, OPT_EOR);
       this.netServer.emit('connected', stream);
