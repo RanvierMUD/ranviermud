@@ -20,7 +20,7 @@ const Logger = require('./Logger');
 class Room extends EventEmitter {
   constructor(area, def) {
     super();
-    var required = ['title', 'description', 'id'];
+    const required = ['title', 'description', 'id'];
     for (const prop of required) {
       if (!(prop in def)) {
         throw new Error(`ERROR: AREA[${area.name}] Room does not have required property ${prop}`);
