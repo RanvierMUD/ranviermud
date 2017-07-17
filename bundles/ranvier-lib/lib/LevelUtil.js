@@ -67,7 +67,7 @@ const LevelUtil = {
    * @return int
    * @memberof! LevelUtil
    */
-  expToLevel: level => Math.floor(((4 * level) + diff(level)) * mobExp(level) * reduction(level)),
+  expToLevel: level => Math.floor(((4 * level) + diff(level)) * LevelUtil.mobExp(level) * reduction(level)),
 };
 
 module.exports = LevelUtil;

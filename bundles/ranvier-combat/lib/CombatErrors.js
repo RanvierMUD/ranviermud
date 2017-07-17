@@ -8,13 +8,19 @@ class CombatSelfError extends Error {}
 exports.CombatSelfError = CombatSelfError;
 
 /**
+ * Error used when a combat target is invalid for some reason (doesn't have a health attribute/whatever)
+ */
+class CombatInvalidTargetError extends Error {}
+exports.CombatInvalidTargetError = CombatInvalidTargetError;
+
+/**
  * Error used when trying to attack a pacifist flagged NPC
  * @property {Npc} target
  * @extends Error
  */
 class CombatPacifistError extends Error {
-  constructor(target) {
-    super();
+  constructor(message, target) {
+    super(message);
 
     this.target = target;
   }
@@ -27,7 +33,7 @@ exports.CombatPacifistError = CombatPacifistError;
  * @extends Error
  */
 class CombatNonPvpError extends Error {
-  constructor(target) {
+  constructor(message, target) {
     super();
 
     this.target = target;

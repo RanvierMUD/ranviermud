@@ -2,10 +2,8 @@
 
 const SkillFlag = require('./SkillFlag');
 const SkillType = require('./SkillType');
-const Broadcast = require('./Broadcast');
-const Parser = require('./CommandParser').CommandParser;
+const SkillErrors = require('./SkillErrors');
 const Damage = require('./Damage');
-const humanize = (sec) => { return require('humanize-duration')(sec, { round: true }); };
 
 /**
  * @property {function (Effect)} configureEffect modify the skill's effect before adding to player
@@ -62,50 +60,25 @@ class Skill {
    * perform an active skill
    * @param {string} args
    * @param {Player} player
+   * @param {Character} target
    */
   execute(args, player, target) {
     if (this.flags.includes(SkillFlag.PASSIVE)) {
-      throw new Error('Trying to execute passive skill');
+      throw new SkillErrors.PassiveError();
     }
 
     const cdEffect = this.onCooldown(player);
     if (this.cooldownLength && cdEffect) {
-      Broadcast.sayAt(player, `${this.name} is on cooldown. ${humanize(cdEffect.remaining)} remaining.`);
-      return false;
+      throw new SkillErrors.CooldownError(cdEffect);
     }
 
-    if (this.requiresTarget && !target) {
-      if (!args || !args.length) {
-        if (this.targetSelf) {
-          target = player;
-        } else if (player.isInCombat()) {
-          target = [...player.combatants][0];
-        } else {
-          target = null;
-        }
-      } else {
-        try {
-          target = player.findCombatant(args);
-        } catch (e) {
-          Broadcast.sayAt(player, e.message);
-          return false;
-        }
-      }
-
-      if (!target) {
-        Broadcast.sayAt(player, `Use ${this.name} on whom?`);
-        return false;
+    if (this.resource) {
+      if (!this.hasEnoughResources(player)) {
+        throw new SkillErrors.NotEnoughResourcesError();
       }
     }
 
-      if (this.resource) {
-        if (!this.hasEnoughResources(player)) {
-          Broadcast.sayAt(player, `You do not have enough ${this.resource.attribute}.`);
-          return false;
-        }
-      }
-
-    if (this.initiatesCombat) {
+    if (target !== player && this.initiatesCombat) {
       player.initiateCombat(target);
     }
 
@@ -118,26 +91,6 @@ class Skill {
     }
 
     return true;
-  }
-
-  /** Finds implicit targets.
-   * @param {string} args
-   * @param {Player} player
-   * @return {Entity|null} Found entity... or not.
-   */
-  searchForTargets(args, player) {
-    if (!args.length) {
-      if (this.targetSelf) {
-        return player;
-      } else if (player.isInCombat()) {
-        return [...player.combatants][0];
-      } else {
-        Broadcast.sayAt(player, `Use ${this.name} on whom?`);
-        return null;
-      }
-    } else {
-      return Parser.parseDot(args, player.room.npcs);
-    }
   }
 
   /**

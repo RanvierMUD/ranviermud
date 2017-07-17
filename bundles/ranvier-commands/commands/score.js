@@ -1,6 +1,7 @@
 'use strict';
 
 const sprintf = require('sprintf-js').sprintf;
+const Combat = require('../../ranvier-combat/lib/Combat');
 
 module.exports = (srcPath) => {
   const B = require(srcPath + 'Broadcast');
@@ -66,12 +67,12 @@ module.exports = (srcPath) => {
       say(sprintf('%35s', '.' + B.line(22)) + '.');
 
       B.at(p, sprintf('%37s', '|'));
-      const weaponDamage = p.getWeaponDamage();
-      const min = p.normalizeWeaponDamage(weaponDamage.min);
-      const max = p.normalizeWeaponDamage(weaponDamage.max);
+      const weaponDamage = Combat.getWeaponDamage(p);
+      const min = Combat.normalizeWeaponDamage(p, weaponDamage.min);
+      const max = Combat.normalizeWeaponDamage(p, weaponDamage.max);
       say(sprintf(' %6s:<b>%5s</b> - <b>%-5s</b> |', 'Damage', min, max));
       B.at(p, sprintf('%37s', '|'));
-      say(sprintf(' %6s: <b>%12s</b> |', 'Speed', B.center(12, p.getWeaponSpeed() + ' sec')));
+      say(sprintf(' %6s: <b>%12s</b> |', 'Speed', B.center(12, Combat.getWeaponSpeed(p) + ' sec')));
 
       say(sprintf('%60s', "'" + B.line(22) + "'"));
 

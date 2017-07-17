@@ -12,6 +12,7 @@
       interval: 20
       restrictTo: ['limbo:1', 'limbo:2', 'limbo:3']
   attributes:
+    health: 100
     energy: 100
 - id: 2
   keywords: ["wise", "old", "man"]
@@ -20,8 +21,6 @@
   script: '2-old-man'
   pacifist: true
   description: "A wise looking old man sits on the ground with legs crossed."
-  attributes:
-    health: 100
 - id: 3
   keywords: ["puppy", "dog", "loyal", "wide", "eyed", "wide-eyed"]
   name: A Puppy
@@ -33,6 +32,9 @@
   keywords: ["dummy", "target", "practice"]
   level: 2
   name: "Training Dummy"
+  attributes:
+    health: 100
+    strength: 10
   behaviors:
     combat: true
     lootable:
@@ -61,6 +63,9 @@
   description: >-
     This dummy is significantly larger than the others. Bright red with a monstrous figure it lumbers around the area
     with a great echoing stomp. Where the other target dummies have a bullseye this dummy has a yellow exclamation mark.
+  attributes:
+    health: 200
+    strength: 15
   behaviors:
     combat: true
     lootable:
@@ -108,6 +113,9 @@
   name: "Player-aggressive Training Dummy"
   description: >-
     This NPC is aggressive towards players but not other NPCs. Be careful.
+  attributes:
+    health: 120
+    strength: 12
   behaviors:
     combat: true
     ranvier-aggro:
@@ -118,6 +126,9 @@
   name: "Self-hating Training Dummy"
   description: >-
     This NPC is aggressive towards other NPCs but not to the player.
+  attributes:
+    health: 100
+    strength: 15
   behaviors:
     combat: true
     ranvier-aggro:

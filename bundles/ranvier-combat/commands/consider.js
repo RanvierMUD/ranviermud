@@ -1,5 +1,8 @@
 'use strict';
 
+const Combat = require('../lib/Combat');
+const CombatErrors = require('../lib/CombatErrors');
+
 module.exports = srcPath => {
   const B = require(srcPath + 'Broadcast');
 
@@ -14,7 +17,16 @@ module.exports = srcPath => {
       try {
         target = player.findCombatant(args);
       } catch (e) {
-        return B.sayAt(player, e.message);
+        if (
+          e instanceof CombatErrors.CombatSelfError ||
+          e instanceof CombatErrors.CombatNonPvpError ||
+          e instanceof CombatErrors.CombatInvalidTargetError ||
+          e instanceof CombatErrors.CombatPacifistError
+        ) {
+          return B.sayAt(player, e.message);
+        }
+
+        Logger.error(e.message);
       }
 
       if (!target) {

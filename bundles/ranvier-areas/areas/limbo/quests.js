@@ -3,9 +3,9 @@
 const FetchGoal = require('../../../ranvier-quests/lib/FetchGoal');
 const EquipGoal = require('../../../ranvier-quests/lib/EquipGoal');
 const KillGoal = require('../../../ranvier-quests/lib/KillGoal');
+const LevelUtil = require('../../../ranvier-lib/lib/LevelUtil');
 
 module.exports = (srcPath) => {
-  const LevelUtil = require(srcPath + 'LevelUtil');
   const Broadcast = require(srcPath + 'Broadcast');
   const say = Broadcast.sayAt;
 

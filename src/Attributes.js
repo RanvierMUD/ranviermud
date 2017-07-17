@@ -12,35 +12,45 @@ const Attribute = require('./Attribute');
 class Attributes extends Map
 {
   /**
-   * @param {Object} data Override for default attribute set
+   * `baseStats` argument should adhere to the following format:
+   *
+   *     {
+   *       statName: 10, // where 10 is your preferred base value
+   *       ...
+   *     }
+   *
+   * When stats are loaded from disk, however, they will follow this format:
+   *
+   *     {
+   *       statName: {
+   *         base: 10,
+   *         delta: 0
+   *       }
+   *     }
+   *
+   * So technically either format is valid but the former is easier when setting initial defaults
+   *
+   * @param {Object} baseStats Override for default attribute set
    */
-  constructor(data) {
+  constructor(baseStats) {
     super();
 
-    const baseStats = {
-      strength: { base: 20 },
-      agility: { base: 20 },
-      intellect: { base: 20 },
-      stamina: { base: 20 },
+    baseStats = baseStats || {
       health: { base: 100 },
-      armor: { base: 0 },
     };
 
-    // use base stats or use loaded stats but make sure it still has base stats
-    if (!data) {
-      data = baseStats;
-    } else {
-      for (const stat in baseStats) {
-        if (!(stat in data)) {
-          data[stat] = baseStats[stat];
-        }
+    for (const attr in baseStats) {
+      const attrConfig = baseStats[attr];
+      if (typeof attrConfig === 'number') {
+        baseStats[attr] = { base: attrConfig };
+      }
+
+      if (typeof baseStats[attr] !== 'object' || !('base' in baseStats[attr])) {
+        throw new Error('Invalid base value given to attributes.\n' + JSON.stringify(baseStats, null, 2));
       }
     }
 
-    for (let [statName, values] of Object.entries(data)) {
-      if (typeof values !== 'object') {
-        values = { base: values };
-      }
+    for (let [statName, values] of Object.entries(baseStats)) {
       this.add(statName, values.base, values.delta || 0);
     }
   }
