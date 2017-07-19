@@ -21,6 +21,8 @@
   script: '2-old-man'
   pacifist: true
   description: "A wise looking old man sits on the ground with legs crossed."
+  behaviors:
+    ranvier-sentient: true
 - id: 3
   keywords: ["puppy", "dog", "loyal", "wide", "eyed", "wide-eyed"]
   name: A Puppy
@@ -85,6 +87,7 @@
   level: 99
   pacifist: true
   behaviors:
+    ranvier-sentient: true
     vendor:
       items:
         "limbo:5":
