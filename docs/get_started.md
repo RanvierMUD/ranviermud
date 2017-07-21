@@ -5,6 +5,7 @@
     git clone git://github.com/shawncplus/ranviermud
     cd ranviermud
     npm install
+    npm run bundle-install
 
 If you would like to use the latest, but perhaps not stable, features: before `npm install` execute `git checkout
 staging`
