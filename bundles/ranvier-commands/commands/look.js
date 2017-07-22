@@ -164,7 +164,7 @@ module.exports = (srcPath, bundlePath) => {
       B.at(player, Array.from(room.exits).map(ex => {
         let exitText = ex.direction;
         const exitRoom = state.RoomManager.getRoom(ex.roomId);
-        const door = exitRoom.getDoor(room);
+        const door = room.getDoor(exitRoom) || exitRoom.getDoor(room);
         if (door && (door.locked || door.closed)) {
           return '(' + exitText + ')';
         }

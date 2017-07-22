@@ -23,7 +23,14 @@ module.exports = srcPath => {
       }
 
       const nextRoom = state.RoomManager.getRoom(exit.roomId);
-      const door = nextRoom.getDoor(player.room);
+      let doorRoom = player.room;
+      let targetRoom = nextRoom;
+      let door = doorRoom.getDoor(targetRoom);
+      if (!door) {
+        doorRoom = nextRoom;
+        targetRoom = player.room;
+        door = doorRoom.getDoor(targetRoom);
+      }
 
       if (!door) {
         return B.sayAt(player, "That exit doesn't have a door.");
@@ -33,8 +40,8 @@ module.exports = srcPath => {
         if (door.lockedBy) {
           const playerKey = player.hasItem(door.lockedBy);
           if (playerKey) {
-            nextRoom.unlockDoor(player.room);
-            nextRoom.openDoor(player.room);
+            doorRoom.unlockDoor(targetRoom);
+            doorRoom.openDoor(targetRoom);
             return B.sayAt(player, `*click* You unlock the door with ${playerKey.name} and open it.`);
           }
         }
@@ -46,7 +53,7 @@ module.exports = srcPath => {
         return B.sayAt(player, "The door isn't closed...");
       }
 
-      nextRoom.openDoor(player.room);
+      doorRoom.openDoor(targetRoom);
       return B.sayAt(player, "The door swings open.");
     }
   };

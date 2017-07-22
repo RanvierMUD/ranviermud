@@ -23,7 +23,14 @@ module.exports = srcPath => {
       }
 
       const nextRoom = state.RoomManager.getRoom(exit.roomId);
-      const door = nextRoom.getDoor(player.room);
+      let doorRoom = player.room;
+      let targetRoom = nextRoom;
+      let door = doorRoom.getDoor(targetRoom);
+      if (!door) {
+        doorRoom = nextRoom;
+        targetRoom = player.room;
+        door = doorRoom.getDoor(targetRoom);
+      }
 
       if (!door) {
         return B.sayAt(player, "That exit doesn't have a door.");
@@ -46,7 +53,7 @@ module.exports = srcPath => {
         return B.sayAt(player, `The door can only be locked with ${keyItem.name}.`);
       }
 
-      nextRoom.lockDoor(player.room);
+      doorRoom.lockDoor(targetRoom);
       return B.sayAt(player, '*click* The door locks.');
     }
   };

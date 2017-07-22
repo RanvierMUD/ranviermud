@@ -31,7 +31,8 @@ module.exports = (srcPath) => {
 
       const nextRoom = state.RoomManager.getRoom(exit.roomId);
 
-      const door = nextRoom.getDoor(oldRoom);
+      // check to see if this room has a door leading to the target room or vice versa
+      const door = oldRoom.getDoor(nextRoom) || nextRoom.getDoor(oldRoom);
       if (door) {
         if (door.locked) {
           return B.sayAt(player, "The door is locked.");
@@ -41,6 +42,7 @@ module.exports = (srcPath) => {
           return B.sayAt(player, "The door is closed.");
         }
       }
+
 
       player.moveTo(nextRoom, _ => {
         state.CommandManager.get('look').execute('', player);
