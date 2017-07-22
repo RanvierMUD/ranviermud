@@ -45,6 +45,7 @@ The default bundles come together to make a basic Diku-style MUD with the follow
 * Quest system allowing for starting/progress/completion from any event in the game
 * Simple Diku-style combat system
 * Grouping/following
+* Rooms with closeable/lockable doors, and items that can be closed/locked
 * Loot tables allowing for meta pools for things like world or area drops in addition to NPC specific loot
 * Currency system allowing NPCs to be configured to drop different amounts of multiple currencies instead of just gold
 * A fast travel wayshrine system
