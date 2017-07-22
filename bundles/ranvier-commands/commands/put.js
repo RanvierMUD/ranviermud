@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
+  const B = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
   const ItemType = require(srcPath + 'ItemType');
 
@@ -11,14 +11,14 @@ module.exports = (srcPath) => {
       args = args.trim();
 
       if (!args.length) {
-        return Broadcast.sayAt(player, 'Put what where?');
+        return B.sayAt(player, 'Put what where?');
       }
 
       // put 3.foo in bar -> put 3.foo bar -> put 3.foo into bar
       const parts = args.split(' ').filter(arg => !arg.match(/in/) && !arg.match(/into/));
 
       if (parts.length === 1) {
-        return Broadcast.sayAt(player, "Where do you want to put it?");
+        return B.sayAt(player, "Where do you want to put it?");
       }
 
       const fromList = player.inventory;
@@ -30,25 +30,29 @@ module.exports = (srcPath) => {
                           Parser.parseDot(toArg, player.equipment);
 
       if (!item) {
-        return Broadcast.sayAt(player, "You don't have that item.");
+        return B.sayAt(player, "You don't have that item.");
       }
 
       if (!toContainer) {
-        return Broadcast.sayAt(player, "You don't see anything like that here.");
+        return B.sayAt(player, "You don't see anything like that here.");
       }
 
       if (toContainer.type !== ItemType.CONTAINER) {
-        return Broadcast.sayAt(player, `${toContainer.name} isn't a container.`);
+        return B.sayAt(player, `${toContainer.display} isn't a container.`);
       }
 
       if (toContainer.isInventoryFull()) {
-        return Broadcast.sayAt(player, `${toContainer.name} can't hold any more.`);
+        return B.sayAt(player, `${toContainer.display} can't hold any more.`);
+      }
+
+      if (toContainer.closed) {
+        return B.sayAt(player, `${toContainer.display} is closed.`);
       }
 
       player.removeItem(item);
       toContainer.addItem(item);
 
-      Broadcast.sayAt(player, `<green>You put </green>${item.display}<green> into </green>${toContainer.display}<green>.</green>`);
+      B.sayAt(player, `<green>You put </green>${item.display}<green> into </green>${toContainer.display}<green>.</green>`);
 
       item.emit('put', player, toContainer);
       player.emit('put', item, toContainer);

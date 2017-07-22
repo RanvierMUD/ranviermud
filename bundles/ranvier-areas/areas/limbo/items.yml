@@ -24,10 +24,11 @@
 - id: 3
   type: CONTAINER
   name: "Wooden Chest"
-  roomDesc: "A wooden chest rests open in the corner, its hinges badly rusted."
+  roomDesc: "A wooden chest rests in the corner, its hinges badly rusted."
   keywords: [ "wooden", "chest" ]
   description: "Time has not been kind to this chest. It seems to be held together solely by the dirt and rust."
   items: [ "limbo:1", "limbo:6", "limbo:7", "limbo:8" ]
+  closed: true
   maxItems: 5
   properties:
     noPickup: true
@@ -163,3 +164,15 @@
   roomDesc: "A strange looking key"
   description: "This key seems overly complex with numerous grooves."
   quality: common
+- id: locked_chest
+  type: CONTAINER
+  name: "Locked Chest"
+  roomDesc: "A wooden chest rests open in the corner, its hinges badly rusted."
+  keywords: [ "locked", "wooden", "chest" ]
+  items: [ "limbo:1" ]
+  closed: true
+  locked: true
+  lockedBy: "limbo:test_key"
+  maxItems: 5
+  properties:
+    noPickup: true

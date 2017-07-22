@@ -236,6 +236,10 @@ module.exports = (srcPath, bundlePath) => {
             return B.sayAt(player, `${entity.name} is empty.`);
           }
 
+          if (entity.closed) {
+            return B.sayAt(player, `It is closed.`);
+          }
+
           B.at(player, 'Contents');
           if (isFinite(entity.inventory.getMax())) {
             B.at(player, ` (${entity.inventory.size}/${entity.inventory.getMax()})`);

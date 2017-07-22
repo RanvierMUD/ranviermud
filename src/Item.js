@@ -23,6 +23,7 @@ const Player = require('./Player');
  * @property {string}  script      A custom script for this item
  * @property {ItemType|string} type
  * @property {string}  uuid        UUID differentiating all instances of this item
+ * @property {boolean} closeable   Whether this item can be closed (Default: false, true if closed or locked is true)
  * @property {boolean} closed      Whether this item is closed
  * @property {boolean} locked      Whether this item is locked
  * @property {entityReference} lockedBy Item that locks/unlocks this item
@@ -64,9 +65,10 @@ class Item extends EventEmitter {
     this.slot        = item.slot || null;
     this.type        = typeof item.type === 'string' ? ItemType[item.type] : (item.type || ItemType.OBJECT);
     this.uuid        = item.uuid || uuid.v4();
-    this.closed      = def.closed || false;
-    this.locked      = def.locked || false;
-    this.lockedBy    = def.lockedBy || null;
+    this.closeable   = item.closeable || item.closed || item.locked || false;
+    this.closed      = item.closed || false;
+    this.locked      = item.locked || false;
+    this.lockedBy    = item.lockedBy || null;
   }
 
   hasKeyword(keyword) {
@@ -214,7 +216,7 @@ class Item extends EventEmitter {
    * @fires Item#closed
    */
   close() {
-    if (this.closed) {
+    if (this.closed || !this.closeable) {
       return;
     }
 
@@ -229,7 +231,7 @@ class Item extends EventEmitter {
    * @fires Item#locked
    */
   lock() {
-    if (this.locked) {
+    if (this.locked || !this.closeable) {
       return;
     }
 
