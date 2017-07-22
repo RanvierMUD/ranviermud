@@ -180,7 +180,7 @@ class Room extends EventEmitter {
 
   /**
    * @param {Room} fromRoom
-   * @throws DoorLockedError
+   * @fires Room#doorOpened
    */
   openDoor(fromRoom) {
     const door = this.getDoor(fromRoom);
@@ -188,12 +188,19 @@ class Room extends EventEmitter {
       return;
     }
 
+    /**
+     * @event Room#doorOpened
+     * @param {Room} fromRoom
+     * @param {object} door
+     */
+    this.emit('doorOpened', fromRoom, door);
     door.closed = false;
   }
 
   /**
    * @param {Room} fromRoom
    * @throws DoorLockedError
+   * @fires Room#doorClosed
    */
   closeDoor(fromRoom) {
     const door = this.getDoor(fromRoom);
@@ -201,11 +208,18 @@ class Room extends EventEmitter {
       return;
     }
 
+    /**
+     * @event Room#doorClosed
+     * @param {Room} fromRoom
+     * @param {object} door
+     */
+    this.emit('doorClosed', fromRoom, door);
     door.closed = true;
   }
 
   /**
    * @param {Room} fromRoom
+   * @fires Room#doorUnlocked
    */
   unlockDoor(fromRoom) {
     const door = this.getDoor(fromRoom);
@@ -213,11 +227,18 @@ class Room extends EventEmitter {
       return;
     }
 
+    /**
+     * @event Room#doorUnlocked
+     * @param {Room} fromRoom
+     * @param {object} door
+     */
+    this.emit('doorUnlocked', fromRoom, door);
     door.locked = false;
   }
 
   /**
    * @param {Room} fromRoom
+   * @fires Room#doorUnlocked
    */
   lockDoor(fromRoom) {
     const door = this.getDoor(fromRoom);
@@ -226,6 +247,12 @@ class Room extends EventEmitter {
     }
 
     this.closeDoor(fromRoom);
+    /**
+     * @event Room#doorUnlocked
+     * @param {Room} fromRoom
+     * @param {object} door
+     */
+    this.emit('doorLocked', fromRoom, door);
     door.locked = true;
   }
 
