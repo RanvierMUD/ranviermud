@@ -1,7 +1,9 @@
 'use strict';
+
 const EventEmitter = require('events');
 const RandomUtil = require('./RandomUtil');
 const Logger = require('./Logger');
+
 /**
  * @property {Area}          area         Area room is in
  * @property {Array<number>} defaultItems Default list of item ids that should load in this room
@@ -14,6 +16,7 @@ const Logger = require('./Logger');
  * @property {Set}           players      Players currently in the room
  * @property {string}        script       Name of custom script attached to this room
  * @property {string}        title        Title shown on look/scan
+ * @property {object}        doors        Doors restricting access to this room. See documentation for format
  * @extends EventEmitter
  * @listens Room#updateTick
  */
@@ -37,6 +40,9 @@ class Room extends EventEmitter {
     this.id = def.id;
     this.script = def.script;
     this.title = def.title;
+    // create by-val copies of the doors config so the lock/unlock don't accidentally modify the original definition
+    this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(def.doors || {}))));
+    this.defaultDoors = def.doors;
 
     this.items = new Set();
     this.npcs = new Set();
@@ -142,9 +148,95 @@ class Room extends EventEmitter {
   }
 
   /**
+   * Check to see if this room has a door preventing movement from `fromRoom` to here
+   * @param {Room} fromRoom
+   * @return {boolean}
+   */
+  hasDoor(fromRoom) {
+    return this.doors.has(fromRoom.entityReference);
+  }
+
+  /**
+   * @param {Room} fromRoom
+   * @return {{lockedBy: EntityReference, locked: boolean, closed: boolean}}
+   */
+  getDoor(fromRoom) {
+    return this.doors.get(fromRoom.entityReference);
+  }
+
+  /**
+   * Check to see of the door for `fromRoom` is locked
+   * @param {Room} fromRoom
+   * @return {boolean}
+   */
+  isDoorLocked(fromRoom) {
+    const door = this.getDoor(fromRoom);
+    if (!door) {
+      return false;
+    }
+
+    return door.locked;
+  }
+
+  /**
+   * @param {Room} fromRoom
+   * @throws DoorLockedError
+   */
+  openDoor(fromRoom) {
+    const door = this.getDoor(fromRoom);
+    if (!door) {
+      return;
+    }
+
+    door.closed = false;
+  }
+
+  /**
+   * @param {Room} fromRoom
+   * @throws DoorLockedError
+   */
+  closeDoor(fromRoom) {
+    const door = this.getDoor(fromRoom);
+    if (!door) {
+      return;
+    }
+
+    door.closed = true;
+  }
+
+  /**
+   * @param {Room} fromRoom
+   */
+  unlockDoor(fromRoom) {
+    const door = this.getDoor(fromRoom);
+    if (!door) {
+      return;
+    }
+
+    door.locked = false;
+  }
+
+  /**
+   * @param {Room} fromRoom
+   */
+  lockDoor(fromRoom) {
+    const door = this.getDoor(fromRoom);
+    if (!door) {
+      return;
+    }
+
+    this.closeDoor(fromRoom);
+    door.locked = true;
+  }
+
+  /**
    * @param {GameState} state
    */
   respawnTick(state) {
+    // relock/close doors
+    this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(this.defaultDoors || {}))));
+    console.log('Relocking/closing doors ' + this.title);
+
     this.defaultNpcs.forEach(defaultNpc => {
       if (typeof defaultNpc === 'string') {
         defaultNpc = { id: defaultNpc };

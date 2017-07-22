@@ -323,6 +323,21 @@ class Character extends EventEmitter
   }
 
   /**
+   * Check to see if this character has a particular item by EntityReference
+   * @param {EntityReference} itemReference
+   * @return {Item|boolean}
+   */
+  hasItem(itemReference) {
+    for (const [ uuid, item ] of this.inventory) {
+      if (item.entityReference === itemReference) {
+        return item;
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * @return {boolean}
    */
   isInventoryFull() {

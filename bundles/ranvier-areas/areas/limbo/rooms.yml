@@ -139,6 +139,25 @@
     This room shows off commands that are only active in a particular room. Try out the <b><cyan>roomtest</cyan></b> command.
   behaviors:
     commands: [ 'roomtest' ]
+  items:
+    - id: "limbo:test_key"
   exits:
     - roomId: "limbo:8"
       direction: up
+    - roomId: "limbo:11"
+      direction: east
+  doors:
+    "limbo:8":
+      lockedWith: false
+      closed: true
+- id: 11
+  title: "Locked room with key"
+  description: This room requires a key to get into
+  exits:
+    - roomId: "limbo:10"
+      direction: west
+  doors:
+    "limbo:10":
+      lockedBy: "limbo:test_key"
+      locked: true
+      closed: true

@@ -161,7 +161,16 @@ module.exports = (srcPath, bundlePath) => {
     });
 
     B.at(player, '[<yellow><b>Exits</yellow></b>: ');
-      B.at(player, Array.from(room.exits).map(ex => ex.direction).join(' '));
+      B.at(player, Array.from(room.exits).map(ex => {
+        let exitText = ex.direction;
+        const exitRoom = state.RoomManager.getRoom(ex.roomId);
+        const door = exitRoom.getDoor(room);
+        if (door && (door.locked || door.closed)) {
+          return '(' + exitText + ')';
+        }
+
+        return exitText;
+      }).join(' '));
       B.sayAt(player, ']');
   }
 

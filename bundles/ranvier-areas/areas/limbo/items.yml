@@ -157,3 +157,9 @@
     sellable:
       value: 30
       currency: gold
+- id: test_key
+  name: "Oddly-shaped Key"
+  keywords: ["key", "odd", "oddly", "shaped"]
+  roomDesc: "A strange looking key"
+  description: "This key seems overly complex with numerous grooves."
+  quality: common
