@@ -262,7 +262,6 @@ class Room extends EventEmitter {
   respawnTick(state) {
     // relock/close doors
     this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(this.defaultDoors || {}))));
-    console.log('Relocking/closing doors ' + this.title);
 
     this.defaultNpcs.forEach(defaultNpc => {
       if (typeof defaultNpc === 'string') {
