@@ -198,3 +198,10 @@ module.exports = (srcPath) => {
   };
 };
 ```
+
+## Testing Your Commands
+
+To test your command make sure the bundle the command is in is enabled in `ranvier.json`. The first time you add a new
+command you'll have to restart the server. If you have the `debug-commands` bundle enabled then you can use the `hotfix`
+command to reload the command from disk without having to restart the server, e.g., `hotfix mycommand` will load the new
+code for `mycommand` into the game without you needing to restart.
