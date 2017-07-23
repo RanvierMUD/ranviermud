@@ -23,8 +23,9 @@ class Command {
    * @param {Array<string>} def.aliases
    * @param {string} def.usage=this.name
    * @param {PlayerRoles} requiredRole=PlayerRoles.PLAYER
+   * @param {string} file File the command comes from
    */
-  constructor(bundle, name, def) {
+  constructor(bundle, name, def, file) {
     this.bundle = bundle;
     this.type = def.type || CommandType.COMMAND;
     this.name = name;
@@ -32,6 +33,7 @@ class Command {
     this.aliases = def.aliases;
     this.usage = def.usage || this.name;
     this.requiredRole = def.requiredRole || PlayerRoles.PLAYER;
+    this.file = file;
   }
 
   /**

@@ -333,21 +333,31 @@ class BundleManager {
       }
 
       const commandName = path.basename(commandFile, path.extname(commandFile));
-      const loader = require(commandPath);
-      let cmdImport = loader(srcPath, bundlesPath);
-      cmdImport.command = cmdImport.command(this.state);
-
-
-      const command = new Command(
-        bundle,
-        commandName,
-        cmdImport
-      );
-
+      const command = this.createCommand(commandPath, commandName, bundle);
       this.state.CommandManager.add(command);
     }
 
     Logger.verbose(`\tENDLOAD: Commands...`);
+  }
+
+  /**
+   * @param {string} commandPath
+   * @param {string} commandName
+   * @param {string} bundle
+   * @return {Command}
+   */
+  createCommand(commandPath, commandName, bundle) {
+    const loader = require(commandPath);
+    let cmdImport = loader(srcPath, bundlesPath);
+    cmdImport.command = cmdImport.command(this.state);
+
+
+    return new Command(
+      bundle,
+      commandName,
+      cmdImport,
+      commandPath
+    );
   }
 
   /**
