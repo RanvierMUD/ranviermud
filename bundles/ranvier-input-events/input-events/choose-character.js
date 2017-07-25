@@ -26,7 +26,6 @@ module.exports = (srcPath) => {
 
       // This just gets their names.
       const characters = account.characters;
-
       const maxCharacters   = Config.get("maxCharacters");
       const canAddCharacter = characters.length < maxCharacters;
       const canMultiplay    = Config.get("allowMultiplay");
@@ -57,16 +56,21 @@ module.exports = (srcPath) => {
           options.push({
             display: char,
             onSelect: () => {
-              handleMultiplaying(char); 
-              const player = state.PlayerManager.loadPlayer(state, account, char);
-              player.socket = socket;
-              socket.emit('done', socket, { player });
+              handleMultiplaying(char);
+              const delay = (time) => (new Promise(resolve => {
+                setTimeout(resolve, time);
+              }));
+              delay(250).then(() => {
+                const player = state.PlayerManager.loadPlayer(state, account, char);
+                player.socket = socket;
+                socket.emit('done', socket, { player });
+              });
             },
           });
         });
       }
 
-      /* 
+      /*
       If multiplaying is not allowed:
       * Check all PCs on this person's account
       * Kick any that are currently logged-in.
@@ -75,7 +79,7 @@ module.exports = (srcPath) => {
       */
       function handleMultiplaying(selectedChar) {
         if (!canMultiplay) {
-          for (const character of account.characters) {
+          for (const character of characters) {
             kickIfAccountLoggedIn(character);
           }
         } else if (selectedChar) {
@@ -104,7 +108,8 @@ module.exports = (srcPath) => {
           Broadcast.sayAt(player, reason);
           player.socket.emit('close');
         });
-        state.PlayerManager.removePlayer(player);
+        const closeSocket = true;
+        state.PlayerManager.removePlayer(player, closeSocket);
       }
 
       options.push({ display: "" });
