@@ -81,7 +81,7 @@ module.exports = (srcPath) => {
       async function handleMultiplaying(selectedChar) {
         if (!canMultiplay) {
           for (const character of characters) {
-            return await kickIfAccountLoggedIn(character);
+            await kickIfAccountLoggedIn(character);
           }
         } else if (selectedChar) {
           Logger.log("Multiplaying is allowed...");
