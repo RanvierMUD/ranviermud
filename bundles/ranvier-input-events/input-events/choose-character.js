@@ -59,12 +59,17 @@ module.exports = (srcPath) => {
           options.push({
             display: char,
             onSelect: () => {
-              handleMultiplaying(char);
-              delay().then(() => {
-                const player = state.PlayerManager.loadPlayer(state, account, char);
-                player.socket = socket;
-                socket.emit('done', socket, { player });
-              });
+              handleMultiplaying(char)
+                .then(() => {
+                  const player = state.PlayerManager.loadPlayer(state, account, char);
+                  player.socket = socket;
+                  socket.emit('done', socket, { player });
+                })
+                .catch(err => {
+                  Logger.warn(err);
+                  say('Failed to log in to your character. Please contact an administrator.');
+                  socket.emit('close');
+                });
             },
           });
         });
@@ -77,39 +82,47 @@ module.exports = (srcPath) => {
       * Otherwise, have them take over the session
       * if they are logging into a PC that is already on.
       */
-      function handleMultiplaying(selectedChar) {
+      async function handleMultiplaying(selectedChar) {
         if (!canMultiplay) {
           for (const character of characters) {
-            kickIfAccountLoggedIn(character);
+            return await kickIfAccountLoggedIn(character);
           }
         } else if (selectedChar) {
           Logger.log("Multiplaying is allowed...");
-          replaceIfCharLoggedIn(selectedChar);
+          return await replaceIfCharLoggedIn(selectedChar);
         }
       }
 
-      function kickIfAccountLoggedIn(character) {
+      async function kickIfAccountLoggedIn(character) {
         const otherPlayer = state.PlayerManager.getPlayer(character);
         if (otherPlayer) {
-          bootPlayer(otherPlayer, "Replaced. No multiplaying allowed.");
+          return await bootPlayer(otherPlayer, "Replaced. No multiplaying allowed.");
         }
+        return Promise.resolve();
       }
 
-      function replaceIfCharLoggedIn(selectedChar) {
+      async function replaceIfCharLoggedIn(selectedChar) {
         const player = state.PlayerManager.getPlayer(selectedChar);
         if (player) {
-          bootPlayer(player, "Replaced by a new session.");
+          return await bootPlayer(player, "Replaced by a new session.");
         }
+        return Promise.resolve();
       }
 
       function bootPlayer(player, reason) {
-        player.save(() => {
-          Logger.warn(`Booting ${player.name}: ${reason}`);
-          Broadcast.sayAt(player, reason);
-          player.socket.emit('close');
+        return new Promise((resolve, reject) => {
+          try {
+            player.save(() => {
+              Broadcast.sayAt(player, reason);
+              player.socket.on('close', () => resolve())
+              const closeSocket = true;
+              state.PlayerManager.removePlayer(player, closeSocket);
+              Logger.warn(`Booted ${player.name}: ${reason}`);
+            });
+          } catch (err) {
+            return reject('Failed to save and close player.');
+          }
         });
-        const closeSocket = true;
-        state.PlayerManager.removePlayer(player, closeSocket);
       }
 
       options.push({ display: "" });
