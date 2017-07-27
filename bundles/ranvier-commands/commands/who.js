@@ -10,13 +10,19 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, "<bold><red>===============================================</bold></red>");
       Broadcast.sayAt(player, '');
 
-      let numPlayers = 0;
       state.PlayerManager.players.forEach((otherPlayer) => {
-        numPlayers++;
-        Broadcast.sayAt(player, ' * ' + otherPlayer.name);
+        Broadcast.sayAt(player, ` *  ${otherPlayer.name} ${getRoleString(otherPlayer.role)}`);
       });
 
-      Broadcast.sayAt(player, numPlayers + ' total');
+      Broadcast.sayAt(player, state.PlayerManager.players.size + ' total');
+
+      function getRoleString(role = 0) {
+        return [
+          '',
+          '<white>[Builder]</white>',
+          '<b><white>[Admin]</white></b>'
+        ][role] || '';
+      }
     }
   };
 };
