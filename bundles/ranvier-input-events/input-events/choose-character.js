@@ -15,10 +15,6 @@ module.exports = (srcPath) => {
 
       const say = EventUtil.genSay(socket);
 
-      const delay = (time = 0) => (new Promise(resolve => {
-        setTimeout(resolve, time);
-      }));
-
       /*
       Player selection menu:
       * Can select existing player
