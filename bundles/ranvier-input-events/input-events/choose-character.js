@@ -110,7 +110,7 @@ module.exports = (srcPath) => {
           try {
             player.save(() => {
               Broadcast.sayAt(player, reason);
-              player.socket.on('close', () => resolve())
+              player.socket.on('close', resolve)
               const closeSocket = true;
               state.PlayerManager.removePlayer(player, closeSocket);
               Logger.warn(`Booted ${player.name}: ${reason}`);
