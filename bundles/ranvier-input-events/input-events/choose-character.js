@@ -15,6 +15,10 @@ module.exports = (srcPath) => {
 
       const say = EventUtil.genSay(socket);
 
+      const delay = (time = 0) => (new Promise(resolve => {
+        setTimeout(resolve, time);
+      }));
+
       /*
       Player selection menu:
       * Can select existing player
@@ -29,7 +33,6 @@ module.exports = (srcPath) => {
       const maxCharacters   = Config.get("maxCharacters");
       const canAddCharacter = characters.length < maxCharacters;
       const canMultiplay    = Config.get("allowMultiplay");
-
 
       let options = [];
 
@@ -57,10 +60,7 @@ module.exports = (srcPath) => {
             display: char,
             onSelect: () => {
               handleMultiplaying(char);
-              const delay = (time) => (new Promise(resolve => {
-                setTimeout(resolve, time);
-              }));
-              delay(250).then(() => {
+              delay().then(() => {
                 const player = state.PlayerManager.loadPlayer(state, account, char);
                 player.socket = socket;
                 socket.emit('done', socket, { player });
