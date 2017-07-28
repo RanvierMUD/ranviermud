@@ -8,7 +8,7 @@ class RoleAudience extends ChannelAudience {
   }
 
   getBroadcastTargets() {
-    return this.state.PlayerManager.players.filter(player => player.role >= this.minRole);
+    return [...this.state.PlayerManager.players].filter(player => player.role >= this.minRole);
   }
 }
 
