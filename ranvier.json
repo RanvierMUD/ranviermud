@@ -21,6 +21,7 @@
     "ranvier-quests",
     "ranvier-vendors",
     "ranvier-npc-behaviors",
+    "ranvier-bug-report",
     "debug-commands"
   ],
   "maxAccountNameLength": 20,
@@ -29,6 +30,7 @@
   "minPlayerNameLength": 3,
   "maxCharacters": 3,
   "allowMultiplay": false,
+  "reportToAdmins": false,
   "startingRoom": "limbo:1",
   "moveCommand": "move",
   "skillLag": 2000,
