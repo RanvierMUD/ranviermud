@@ -78,29 +78,28 @@ module.exports = (srcPath) => {
       * Otherwise, have them take over the session
       * if they are logging into a PC that is already on.
       */
-      async function handleMultiplaying(selectedChar) {
+      function handleMultiplaying(selectedChar) {
         if (!canMultiplay) {
-          for (const character of characters) {
-            await kickIfAccountLoggedIn(character);
-          }
+          const checkAllCharacters = [...characters].map(kickIfAccountLoggedIn)
+          return Promise.all(checkAllCharacters);
         } else if (selectedChar) {
           Logger.log("Multiplaying is allowed...");
-          return await replaceIfCharLoggedIn(selectedChar);
+          return replaceIfCharLoggedIn(selectedChar);
         }
       }
 
-      async function kickIfAccountLoggedIn(character) {
+      function kickIfAccountLoggedIn(character) {
         const otherPlayer = state.PlayerManager.getPlayer(character);
         if (otherPlayer) {
-          return await bootPlayer(otherPlayer, "Replaced. No multiplaying allowed.");
+          return bootPlayer(otherPlayer, "Replaced. No multiplaying allowed.");
         }
         return Promise.resolve();
       }
 
-      async function replaceIfCharLoggedIn(selectedChar) {
+      function replaceIfCharLoggedIn(selectedChar) {
         const player = state.PlayerManager.getPlayer(selectedChar);
         if (player) {
-          return await bootPlayer(player, "Replaced by a new session.");
+          return bootPlayer(player, "Replaced by a new session.");
         }
         return Promise.resolve();
       }
