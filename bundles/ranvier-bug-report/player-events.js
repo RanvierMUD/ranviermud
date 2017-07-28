@@ -5,6 +5,7 @@ module.exports = (srcPath) => {
   const Logger = require(srcPath + 'Logger');
   const Config = require(srcPath + 'Config');
   const PlayerRoles = require(srcPath + 'PlayerRoles');
+  const RoleAudience = require(srcPath + 'ChannelAudience/RoleAudience');
 
   function getReportMethod(type) {
     switch (type) {
@@ -57,11 +58,11 @@ module.exports = (srcPath) => {
 
         reportMethod(formattedReport);
         if (Config.get('reportToAdmins')) {
-          for (const player of state.PlayerManager.players) {
-            if (player.role === PlayerRoles.ADMIN || type !== 'bug' && player.role >= PlayerRoles.BUILDER) {
-              Broadcast.sayAt(player, `Report from ${this.name}: ${description}. See the server logs for more details.`);
-            }
-          }
+          const message = `Report from ${this.name}: ${description}. See the server logs for more details.`;
+          const minRole = type === 'bug'
+            ? PlayerRoles.ADMIN
+            : PlayerRoles.BUILDER;
+          Broadcast.sayAt(new RoleAudience({ minRole }), message);
         }
       }
     }
