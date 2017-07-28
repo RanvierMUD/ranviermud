@@ -17,22 +17,29 @@ module.exports = (srcPath) => {
   }
 
   function getFormattedReport(type, description) {
-    return `Type: ${type} Reported By: ${this.name} Room: ${this.room.title} Time: ${Date.now()} Description: ${description}`.concat(getSpecializedReport.call(this, type, description));
+    const header = getReportHeader.call(this, type, description);
+    const specialized = getSpecializedReport.call(this, type, description);
+    return `${header}${specialized}`;
+  }
+
+  function getReportHeader(type, description) {
+    const now = (new Date()).toISOString();
+    return `REPORT\nType: ${type}\nReported By: ${this.name}\nRoom: ${this.room.title}\nTime: ${now}\nDescription: ${description}\n`;
   }
 
   function getSpecializedReport(type, description) {
     const room = this.room;
-    const serializeRoom = room => ({
+    const serializeRoom = room => JSON.stringify({
       name: room.name,
       desc: room.description,
-      entities: [...room.items, ...room.players, ...room.npcs].map(ent => ({name: ent.name, id: ent.id }))
+      entities: [...room.items, ...room.players, ...room.npcs].map(ent => ({name: ent.name, id: ent.id, desc: ent.description || '' }))
     });
 
     switch (type) {
       case 'bug':
-        return `PlayerData: ${this.serialize()} RoomData: ${serializeRoom(room)}`;
+        return `PlayerData: ${JSON.stringify(this.serialize())} RoomData: ${serializeRoom(room)}`;
       case 'typo':
-        return `PlayerInv: ${this.inventory.serialize()} RoomData: ${serializeRoom(room)}`;
+        return `PlayerInv: ${JSON.stringify(this.inventory.serialize())} RoomData: ${serializeRoom(room)}`;
       case 'suggestion':
       default:
         return '';
