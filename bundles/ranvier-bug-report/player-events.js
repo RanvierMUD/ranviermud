@@ -3,6 +3,8 @@
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Logger = require(srcPath + 'Logger');
+  const Config = require(srcPath + 'Config');
+  const PlayerRoles = require(srcPath + 'PlayerRoles');
 
   function getReportMethod(type) {
     switch (type) {
@@ -54,6 +56,13 @@ module.exports = (srcPath) => {
         const formattedReport = getFormattedReport.call(this, type, description);
 
         reportMethod(formattedReport);
+        if (Config.get('reportToAdmins')) {
+          for (const player of state.PlayerManager.players) {
+            if (player.role === PlayerRoles.ADMIN || type === 'suggestion' && player.role >= PlayerRoles.BUILDER) {
+              Broadcast.sayAt(player, `Report from ${this.name}: ${description}. See the server logs for more details.`);
+            }
+          }
+        }
       }
     }
   };
