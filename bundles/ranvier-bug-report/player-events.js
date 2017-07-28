@@ -58,7 +58,7 @@ module.exports = (srcPath) => {
         reportMethod(formattedReport);
         if (Config.get('reportToAdmins')) {
           for (const player of state.PlayerManager.players) {
-            if (player.role === PlayerRoles.ADMIN || type === 'suggestion' && player.role >= PlayerRoles.BUILDER) {
+            if (player.role === PlayerRoles.ADMIN || type !== 'bug' && player.role >= PlayerRoles.BUILDER) {
               Broadcast.sayAt(player, `Report from ${this.name}: ${description}. See the server logs for more details.`);
             }
           }
