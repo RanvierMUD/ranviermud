@@ -26,7 +26,7 @@ class Npc extends Character {
     this.area = data.area;
     this.behaviors = new Map(Object.entries(data.behaviors || {}));
     this.damage = data.damage;
-    this.defaultEquipment = data.equipment || [];
+    this.defaultEquipment = data.equipment || new Map();
     this.defaultItems = data.items || [];
     this.description = data.description;
     this.entityReference = data.entityReference; 
@@ -99,6 +99,21 @@ class Npc extends Character {
       state.ItemManager.add(newItem);
       this.addItem(newItem);
     });
+
+    if (this.equipment && !(this.equipment instanceof Map)) {
+      const eqDefs = new Map(Object.entries(this.equipment));
+      this.equipment = new Map();
+      for (const [slot, itemDef] of eqDefs) {
+        Logger.verbose(`\tDIST: Equipping item [${itemDef.entityReference}] to npc [${this.name}]`);
+        let newItem = state.ItemFactory.create(state.AreaManager.getArea(itemDef.area), itemDef.entityReference);
+        newItem.inventory = itemDef.inventory;
+        newItem.slot = slot; // let file override default
+        newItem.hydrate(state);
+        state.ItemManager.add(newItem);
+        this.equip(newItem);
+      }
+    }
+    this.defaultEquipment = this.equipment;
 
     for (const [behaviorName, config] of this.behaviors) {
       let behavior = state.MobBehaviorManager.get(behaviorName);
