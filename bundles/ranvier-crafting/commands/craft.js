@@ -23,11 +23,9 @@ module.exports = (srcPath, bundlePath) => {
         say(player, '<b>Crafting Categories</b>');
         say(player, B.line(40));
 
-        for (const index in craftingCategories) {
+        return craftingCategories.forEach((category, index) => {
           say(player, sprintf('%2d) %s', parseInt(index, 10) + 1, craftingCategories[index].title));
-        }
-
-        return;
+        });
       }
 
       let [itemCategory, itemNumber] = args.split(' ');
@@ -47,12 +45,9 @@ module.exports = (srcPath, bundlePath) => {
           return say(player, B.center(40, "No recipes."));
         }
 
-        for (const index in category.items) {
-          const item = category.items[index].item;
+        return category.items.forEach((item, index) => {
           say(player, sprintf('%2d) ', index + 1) + item.display);
-        }
-
-        return;
+        });
       }
 
       itemNumber = parseInt(itemNumber, 10) - 1;
@@ -63,9 +58,9 @@ module.exports = (srcPath, bundlePath) => {
 
       say(player, renderItem(state, item.item, player));
       say(player, '<b>Recipe:</b>');
-      for (const resource in item.recipe) {
-        const resItem = Crafting.getResourceItem(resource);
-        say(player, `  ${resItem.display} x ${item.recipe[resource]}`);
+      for (const [resource, amount] of Object.entries(item.recipe)) {
+        const ingredient = Crafting.getResourceItem(resource);
+        say(player, `  ${ingredient.display} x ${amount}`);
       }
     }
   });
@@ -78,28 +73,32 @@ module.exports = (srcPath, bundlePath) => {
         return say(player, "Create what? 'craft create 1 1' for example.");
       }
 
+      const isInvalidSelection = categoryList => category =>
+        isNaN(category) || category < 0 || category > categoryList.length;
+
       const craftingCategories = getCraftingCategories(state);
+      const isInvalidCraftingCategory = isInvalidSelection(craftingCategories);
 
       let [itemCategory, itemNumber] = args.split(' ');
 
       itemCategory = parseInt(itemCategory, 10) - 1;
-      if (isNaN(itemCategory) || itemCategory < 0 || itemCategory > craftingCategories.length) {
+      if (isInvalidCraftingCategory(itemCategory)) {
         return say(player, "Invalid category.");
       }
 
       const category = craftingCategories[itemCategory];
-
+      const isInvalidCraftableItem = isInvalidSelection(category.items);
       itemNumber = parseInt(itemNumber, 10) - 1;
-      if (isNaN(itemNumber) || itemNumber < 0 || itemNumber > category.items.length) {
+      if (isInvalidCrafitableItem(itemNumber)) {
         return say(player, "Invalid item.");
       }
 
       const item = category.items[itemNumber];
       // check to see if player has resources available
-      for (const resource in item.recipe) {
+      for (const [resource, recipeRequirement] of Object.entries(item.recipe)) {
         const playerResource = player.getMeta(`resources.${resource}`) || 0;
-        if (playerResource < item.recipe[resource]) {
-          return say(player, `You don't have enough resources. 'craft list ${args}' to see recipe.`);
+        if (playerResource < recipeRequirement) {
+          return say(player, `You don't have enough resources. 'craft list ${args}' to see recipe. You need ${recipeRequirement - playerResource} more ${resource}.`);
         }
       }
 
@@ -108,8 +107,7 @@ module.exports = (srcPath, bundlePath) => {
       }
 
       // deduct resources
-      for (const resource in item.recipe) {
-        const amount = item.recipe[resource];
+      for (const [resource, amount] of Object.entries(item.recipe)) {
         player.setMeta(`resources.${resource}`, player.getMeta(`resources.${resource}`) - amount);
         const resItem = Crafting.getResourceItem(resource);
         say(player, `<green>You spend ${amount} x ${resItem.display}.</green>`);
@@ -167,6 +165,7 @@ module.exports = (srcPath, bundlePath) => {
   }
 
   return {
+    usage: 'craft <list/create> [category #] [item #]',
     command: state => (args, player) => {
       if (!args.length) {
         return say(player, "Missing craft command. See 'help craft'");
