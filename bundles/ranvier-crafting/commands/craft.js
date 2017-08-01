@@ -23,11 +23,9 @@ module.exports = (srcPath, bundlePath) => {
         say(player, '<b>Crafting Categories</b>');
         say(player, B.line(40));
 
-        for (const index in craftingCategories) {
+        return craftingCategories.forEach((category, index) => {
           say(player, sprintf('%2d) %s', parseInt(index, 10) + 1, craftingCategories[index].title));
-        }
-
-        return;
+        });
       }
 
       let [itemCategory, itemNumber] = args.split(' ');
@@ -47,12 +45,9 @@ module.exports = (srcPath, bundlePath) => {
           return say(player, B.center(40, "No recipes."));
         }
 
-        for (const index in category.items) {
-          const item = category.items[index].item;
+        return category.items.forEach((item, index) => {
           say(player, sprintf('%2d) ', index + 1) + item.display);
-        }
-
-        return;
+        });
       }
 
       itemNumber = parseInt(itemNumber, 10) - 1;
