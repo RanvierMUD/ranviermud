@@ -1,5 +1,5 @@
 ---
-command: craft
+command: craft <list/create> [category #] [item #]
 body: |
   craft list                  View crafting recipe categories
   craft list <category #>     List recipes for a given category
