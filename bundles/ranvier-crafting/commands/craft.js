@@ -58,9 +58,9 @@ module.exports = (srcPath, bundlePath) => {
 
       say(player, renderItem(state, item.item, player));
       say(player, '<b>Recipe:</b>');
-      for (const [resource, ingredient] of Object.entries(item.recipe)) {
+      for (const [resource, amount] of Object.entries(item.recipe)) {
         const ingredient = Crafting.getResourceItem(resource);
-        say(player, `  ${ingredient.display} x ${resource}`);
+        say(player, `  ${ingredient.display} x ${amount}`);
       }
     }
   });
