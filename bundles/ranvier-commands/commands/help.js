@@ -24,8 +24,13 @@ module.exports = (srcPath) => {
         Logger.error(`MISSING-HELP: [${args}]`);
         return B.sayAt(player, "Sorry, I couldn't find an entry for that topic.");
       }
-
-      B.sayAt(player, render(state, hfile));
+      try {
+        B.sayAt(player, render(state, hfile));
+      } catch (e) {
+        Logger.warn(`UNRENDERABLE-HELP: [${args}]`);
+        Logger.warn(e);
+        B.sayAt(player, `Invalid help file for ${args}.`);
+      }
     }
   };
 
@@ -40,7 +45,7 @@ module.exports = (srcPath) => {
 
     const formatHeaderItem = (item, value) => `${item}: ${value}\r\n\r\n`;
     if (hfile.command) {
-      let actualCommand = state.CommandManager.get(hfile.command);
+      let actualCommand = state.CommandManager.get(hfile.command) || state.CommandManager.get(hfile.command.split(' ')[0]);
 
       header += formatHeaderItem('Syntax', actualCommand.usage);
 
