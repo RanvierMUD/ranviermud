@@ -166,11 +166,11 @@ class Combat {
     }
 
     if (!target.isNpc && !target.getMeta('pvp')) {
-      throw new CombatErrors.CombatNonPvpError(`${e.target.name} has not opted into PvP.`, target);
+      throw new CombatErrors.CombatNonPvpError(`${target.name} has not opted into PvP.`, target);
     }
 
     if (target.pacifist) {
-      throw new CombatErrors.CombatPacifistError(`${e.target.name} is a pacifist and will not fight you.`, target);
+      throw new CombatErrors.CombatPacifistError(`${target.name} is a pacifist and will not fight you.`, target);
     }
 
     return target;
