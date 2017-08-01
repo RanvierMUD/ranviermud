@@ -45,7 +45,7 @@ module.exports = (srcPath) => {
 
     const formatHeaderItem = (item, value) => `${item}: ${value}\r\n\r\n`;
     if (hfile.command) {
-      let actualCommand = state.CommandManager.get(hfile.command) || state.CommandManager.get(hfile.command.split(' ')[0]);
+      let actualCommand = state.CommandManager.get(hfile.command);
 
       header += formatHeaderItem('Syntax', actualCommand.usage);
 
