@@ -165,6 +165,7 @@ module.exports = (srcPath, bundlePath) => {
   }
 
   return {
+    usage: 'craft <list/create> [category #] [item #]',
     command: state => (args, player) => {
       if (!args.length) {
         return say(player, "Missing craft command. See 'help craft'");
