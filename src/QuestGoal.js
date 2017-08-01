@@ -2,7 +2,18 @@
 
 const EventEmitter = require('events');
 
+/**
+ * Representation of a goal of a quest.
+ * The {@link http://ranviermud.com/extending/areas/quests/|Quest guide} has instructions on to
+ * create new quest goals for quests
+ * @extends EventEmitter
+ */
 class QuestGoal extends EventEmitter {
+  /**
+   * @param {Quest} quest Quest this goal is for
+   * @param {object} config
+   * @param {Player} player
+   */
   constructor(quest, config, player) {
     super();
 
@@ -14,6 +25,9 @@ class QuestGoal extends EventEmitter {
     this.player = player;
   }
 
+  /**
+   * @return {{ percent: number, display: string}}
+   */
   getProgress() {
     return {
       percent: 0,
@@ -21,6 +35,9 @@ class QuestGoal extends EventEmitter {
     };
   }
 
+  /**
+   * Put any cleanup activities after the quest is finished here
+   */
   complete() {
   }
 

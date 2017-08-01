@@ -12,11 +12,13 @@ const Random = require('./RandomUtil');
  */
 class Damage {
   /**
-   * @param {string} attribute Attribute the damage is going to apply to
-   * @param {number} amount
-   * @param {?Character} attacker Character causing the damage
-   * @param {?string} type Damage type e.g., physical, fire, etc.
-   * @param {?string} source A damage source identifier. e.g., "skill:kick", "weapon", etc.
+   * @param {Object} config
+   * @param {string} config.attribute Attribute the damage is going to apply to
+   * @param {number} [config.amount=null]
+   * @param {Character} [config.attacker=null] Character causing the damage
+   * @param {string} [config.type="physical"] Damage type e.g., physical, fire, etc.
+   * @param {string} [config.source=null] A damage source identifier. e.g., "skill:kick", "weapon", etc.
+   * @param {boolean} [config.hidden=false]
    */
   constructor(config) {
     const {
@@ -49,7 +51,9 @@ class Damage {
   }
 
   /**
+   * Evaluate actual damage taking attacker/target's effects into account
    * @param {Character} target
+   * @return {number} Final damage amount
    */
   evaluate(target) {
     let amount = this.amount;
@@ -66,14 +70,26 @@ class Damage {
   }
 
   /**
+   * Actually lower the attribute
    * @param {Character} target
+   * @fires Character#hit
+   * @fires Character#damaged
    */
   commit(target) {
     this.finalAmount = this.evaluate(target);
     target.lowerAttribute(this.attribute, this.finalAmount);
     if (this.attacker) {
+      /**
+       * @event Character#hit
+       * @param {Damage} damage
+       * @param {Character} target
+       */
       this.attacker.emit('hit', this, target);
     }
+      /**
+       * @event Character#damaged
+       * @param {Damage} damage
+       */
     target.emit('damaged', this);
   }
 }

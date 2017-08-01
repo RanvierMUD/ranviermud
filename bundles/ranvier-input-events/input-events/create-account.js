@@ -16,7 +16,7 @@ module.exports = (srcPath) => {
       write(`<bold>Do you want your account's username to be ${name}?</bold> <cyan>[y/n]</cyan> `);
 
       socket.once('data', data => {
-        data = data.toString('').trim();
+        data = data.toString('utf8').trim();
 
         data = data.toLowerCase();
         if (data === 'y' || data === 'yes') {

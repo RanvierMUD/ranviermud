@@ -1,5 +1,7 @@
 'use strict';
 
+const Combat = require('../../ranvier-combat/lib/Combat');
+
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const SkillType = require(srcPath + 'SkillType');
@@ -28,7 +30,7 @@ module.exports = (srcPath) => {
 
       const damage = new Damage({
         attribute: 'health',
-        amount: player.calculateWeaponDamage() * (damagePercent / 100),
+        amount: Combat.calculateWeaponDamage(player) * (damagePercent / 100),
         attacker: player,
         type: 'holy',
         source: this

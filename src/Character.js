@@ -1,7 +1,6 @@
 'use strict';
 
 const Attributes = require('./Attributes');
-const AttributeUtil = require('./AttributeUtil');
 const Config = require('./Config');
 const EffectList = require('./EffectList');
 const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
@@ -9,7 +8,6 @@ const EventEmitter = require('events');
 const Heal = require('./Heal');
 const { Inventory, InventoryFullError } = require('./Inventory');
 const Parser = require('./CommandParser').CommandParser;
-const RandomUtil = require('./RandomUtil');
 
 
 /**
@@ -26,6 +24,8 @@ const RandomUtil = require('./RandomUtil');
  * @property {EffectList} effects    List of current effects applied to the character
  * @property {Map}       skills     List of all character's skills
  * @property {Room}      room       Room the character is currently in
+ * @implements {Broadcastable}
+ * @extends EventEmitter
  */
 class Character extends EventEmitter
 {
@@ -60,6 +60,10 @@ class Character extends EventEmitter
     this.effects.emit(event, ...args);
   }
 
+  /**
+   * @param {string} attr Attribute name
+   * @return {boolean}
+   */
   hasAttribute(attr) {
     return this.attributes.has(attr);
   }
@@ -71,39 +75,18 @@ class Character extends EventEmitter
    */
   getMaxAttribute(attr) {
     const attribute = this.attributes.get(attr);
-
-    // health and attackpower are calculated based off other stats
-    // NOTE: This is an _example_ implementation based off WoW formulas
-    switch (attribute.name) {
-      case 'health':
-        attribute.setBase(
-          this.getMaxAttribute('stamina') * AttributeUtil.healthPerStamina(this.level)
-        );
-        break;
-      case 'attackpower':
-        attribute.setBase(this.getMaxAttribute('strength'));
-        break;
-      case 'strength':
-      case 'agility':
-      case 'intellect':
-      case 'stamina':
-        attribute.setBase(AttributeUtil.baseAttributeByLevel(attribute.name, this.level));
-        break;
-      case 'critical':
-        attribute.setBase(Math.ceil(this.level / 5));
-      default:
-        // don't modify any other attributes
-        break;
-    }
-
     return this.effects.evaluateAttribute(attribute);
   }
 
+  /**
+   * @see {@link Attributes#add}
+   */
   addAttribute(name, base, delta = 0) {
     this.attributes.add(name, base, delta);
   }
 
-  /* Get value of attribute including changes to the attribute.
+  /**
+   * Get the current value of an attribute (base modified by delta)
    * @param {string} attr
    * @return {number}
   */
@@ -111,39 +94,80 @@ class Character extends EventEmitter
     return this.getMaxAttribute(attr) + this.attributes.get(attr).delta;
   }
 
+  /**
+   * Get the base value for a given attribute
+   * @param {string} attr Attribute name
+   * @return {number}
+   */
   getBaseAttribute(attr) {
     return this.attributes.get(attr).base;
   }
 
-  /* Clears any changes to the attribute, setting it to its base value.
+  /**
+   * Clears any changes to the attribute, setting it to its base value.
    * @param {string} attr
-   * @return void
   */
   setAttributeToMax(attr) {
     this.attributes.get(attr).setDelta(0);
   }
 
-  /* Adds to the delta of the attribute
+  /**
+   * Raise an attribute by name
    * @param {string} attr
    * @param {number} amount
-   * @return void
+   * @see {@link Attributes#raise}
   */
   raiseAttribute(attr, amount) {
     this.attributes.get(attr).raise(amount);
   }
 
+  /**
+   * Lower an attribute by name
+   * @param {string} attr
+   * @param {number} amount
+   * @see {@link Attributes#lower}
+  */
   lowerAttribute(attr, amount) {
     this.attributes.get(attr).lower(amount);
   }
 
+  /**
+   * Update an attribute's base value. 
+   *
+   * NOTE: You _probably_ don't want to use this the way you think you do. You should not use this
+   * for any temporary modifications to an attribute, instead you should use an Effect modifier.
+   *
+   * This will _permanently_ update the base value for an attribute to be used for things like a
+   * player purchasing a permanent upgrade or increasing a stat on level up
+   *
+   * @param {string} attr Attribute name
+   * @param {number} newBase New base value
+   */
+  setAttributeBase(attr, newBase) {
+    this.attributes.get(attr).setBase(newBase);
+  }
+
+  /**
+   * @param {string} type
+   * @return {boolean}
+   * @see {@link Effect}
+   */
   hasEffectType(type) {
     return this.effects.hasEffectType(type);
   }
 
+  /**
+   * @param {Effect} effect
+   * @return {boolean}
+   */
   addEffect(effect) {
     return this.effects.add(effect);
   }
 
+  /**
+   * @param {Effect} effect
+   * @see {@link Effect#remove}
+   */
   removeEffect(effect) {
     this.effects.remove(effect);
   }
@@ -222,58 +246,12 @@ class Character extends EventEmitter
   }
 
   /**
-   * @param {string} args
-   * @param {Player} player
-   * @return {Entity|null} Found entity... or not.
-   */
-  findCombatant(search) {
-    if (!search.length) {
-      return null;
-    }
-
-    let possibleTargets = [...this.room.npcs];
-    if (this.getMeta('pvp')) {
-      possibleTargets = [...possibleTargets, ...this.room.players];
-    }
-
-    const target = Parser.parseDot(search, possibleTargets);
-
-    if (!target) {
-      return null;
-    }
-
-    if (target === this) {
-      throw new Error('You slap yourself in the face. Ouch!');
-    }
-
-    if (!target.isNpc && !target.getMeta('pvp')) {
-      throw new Error(`${target.name} has not opted into PvP.`);
-    }
-
-    if (target.pacifist) {
-      throw new Error(`${target.name} is a pacifist and will not fight.`);
-    }
-
-    return target;
-  }
-
-  /**
    * @see EffectList.evaluateIncomingDamage
    * @param {Damage} damage
    * @return {number}
    */
   evaluateIncomingDamage(damage, currentAmount) {
     let amount = this.effects.evaluateIncomingDamage(damage, currentAmount);
-
-    // let armor reduce incoming physical damage. There is probably a better place for this...
-    if (!(damage instanceof Heal) && damage.attacker && damage.attribute === 'health') {
-      const attackerLevel = damage.attacker.level;
-      const armor = this.getAttribute('armor');
-      if (damage.type === 'physical' && armor > 0) {
-        amount *= 1 - armor / (armor * AttributeUtil.getArmorReductionConstant(attackerLevel));
-      }
-    }
-
     return Math.floor(amount);
   }
 
@@ -300,6 +278,10 @@ class Character extends EventEmitter
     item.isEquipped = true;
   }
 
+  /**
+   * Remove equipment in a given slot and move it to the character's inventory
+   * @param {string} slot
+   */
   unequip(slot) {
     if (this.isInventoryFull()) {
       throw new InventoryFullError();
@@ -311,12 +293,22 @@ class Character extends EventEmitter
     this.addItem(item);
   }
 
+  /**
+   * Move an item to the character's inventory
+   * @param {Item} item
+   */
   addItem(item) {
     this._setupInventory();
     this.inventory.addItem(item);
     item.belongsTo = this;
   }
 
+  /**
+   * Remove an item from the character's inventory. Warning: This does not automatically place the
+   * item in any particular place. You will need to manually add it to the room or another
+   * character's inventory
+   * @param {Item} item
+   */
   removeItem(item) {
     this.inventory.removeItem(item);
 
@@ -330,11 +322,32 @@ class Character extends EventEmitter
     item.belongsTo = null;
   }
 
+  /**
+   * Check to see if this character has a particular item by EntityReference
+   * @param {EntityReference} itemReference
+   * @return {Item|boolean}
+   */
+  hasItem(itemReference) {
+    for (const [ uuid, item ] of this.inventory) {
+      if (item.entityReference === itemReference) {
+        return item;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * @return {boolean}
+   */
   isInventoryFull() {
     this._setupInventory();
     return this.inventory.isFull;
   }
 
+  /**
+   * @private
+   */
   _setupInventory() {
     this.inventory = this.inventory || new Inventory();
     // Default max inventory size config
@@ -344,58 +357,12 @@ class Character extends EventEmitter
   }
 
   /**
-   * Generate an amount of weapon damage
-   * @return {number}
+   * Begin following another character. If the character follows itself they stop following.
+   * @param {Character} target
    */
-  calculateWeaponDamage(average = false) {
-    let weaponDamage = this.getWeaponDamage();
-    let amount = 0;
-    if (average) {
-      amount = (weaponDamage.min + weaponDamage.max) / 2;
-    } else {
-      amount = RandomUtil.inRange(weaponDamage.min, weaponDamage.max);
-    }
-
-    return this.normalizeWeaponDamage(amount);
-  }
-
-  getWeaponDamage() {
-    const weapon = this.equipment.get('wield');
-    let min = 0, max = 0;
-    if (weapon) {
-      min = weapon.properties.minDamage;
-      max = weapon.properties.maxDamage;
-    }
-
-    return {
-      max,
-      min
-    };
-  }
-
-  getWeaponSpeed() {
-    let speed = 2.0;
-    const weapon = this.equipment.get('wield');
-    if (!this.isNpc && weapon) {
-      speed = weapon.properties.speed;
-    }
-
-    return speed;
-  }
-
-  /**
-   * Get a damage amount adjusted by attack power/weapon speed
-   * @param {number} amount
-   * @return {number}
-   */
-  normalizeWeaponDamage(amount) {
-    let speed = this.getWeaponSpeed();
-    return Math.round(amount + this.getAttribute('strength') / 3.5 * speed);
-  }
-
   follow(target) {
     if (target === this) {
-      this.following = null;
+      this.unfollow();
       return;
     }
 
@@ -403,29 +370,50 @@ class Character extends EventEmitter
     target.addFollower(this);
   }
 
+  /**
+   * Stop following whoever the character was following
+   */
   unfollow() {
     this.following.removeFollower(this);
     this.following = null;
   }
 
+  /**
+   * @param {Character} follower
+   */
   addFollower(follower) {
     this.followers.add(follower);
     follower.following = this;
   }
 
+  /**
+   * @param {Character} target
+   */
   removeFollower(target) {
     this.followers.delete(target);
     target.following = null;
   }
 
+  /**
+   * @param {Character} target
+   * @return {boolean}
+   */
   isFollowing(target) {
     return this.following === target;
   }
 
+  /**
+   * @param {Character} target
+   * @return {boolean}
+   */
   hasFollower(target) {
     return this.followers.has(target);
   }
 
+  /**
+   * Initialize the character from storage
+   * @param {GameState} state
+   */
   hydrate(state) {
     this.effects.hydrate(state);
 
@@ -433,6 +421,7 @@ class Character extends EventEmitter
   }
 
   /**
+   * Gather data to be persisted
    * @return {Object}
    */
   serialize() {
@@ -445,10 +434,17 @@ class Character extends EventEmitter
     };
   }
 
+  /**
+   * @see {@link Broadcastable}
+   * @see {@link Broadcast}
+   */
   getBroadcastTargets() {
     return [];
   }
 
+  /**
+   * @return {boolean}
+   */
   get isNpc() {
     return false;
   }

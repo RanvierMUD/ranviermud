@@ -161,7 +161,16 @@ module.exports = (srcPath, bundlePath) => {
     });
 
     B.at(player, '[<yellow><b>Exits</yellow></b>: ');
-      B.at(player, Array.from(room.exits).map(ex => ex.direction).join(' '));
+      B.at(player, Array.from(room.exits).map(ex => {
+        let exitText = ex.direction;
+        const exitRoom = state.RoomManager.getRoom(ex.roomId);
+        const door = room.getDoor(exitRoom) || exitRoom.getDoor(room);
+        if (door && (door.locked || door.closed)) {
+          return '(' + exitText + ')';
+        }
+
+        return exitText;
+      }).join(' '));
       B.sayAt(player, ']');
   }
 
@@ -227,6 +236,10 @@ module.exports = (srcPath, bundlePath) => {
             return B.sayAt(player, `${entity.name} is empty.`);
           }
 
+          if (entity.closed) {
+            return B.sayAt(player, `It is closed.`);
+          }
+
           B.at(player, 'Contents');
           if (isFinite(entity.inventory.getMax())) {
             B.at(player, ` (${entity.inventory.size}/${entity.inventory.getMax()})`);
@@ -245,6 +258,6 @@ module.exports = (srcPath, bundlePath) => {
 
   function getCombatantsDisplay(entity) {
     const combatantsList = [...entity.combatants.values()].map(combatant => combatant.name);
-    return `, <red>fighting: </red><b>${combatantsList.join(", ")}</b>`;
+    return `, <red>fighting </red>${combatantsList.join("<red>,</red> ")}`;
   }
 };

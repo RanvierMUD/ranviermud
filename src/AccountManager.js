@@ -3,19 +3,34 @@
 const Data = require('./Data');
 const Account = require('./Account');
 
+/**
+ * Creates/loads {@linkplain Account|Accounts}
+ * @property {Map<string,Account>} accounts
+ */
 class AccountManager {
   constructor() {
     this.accounts = new Map();
   }
 
+  /**
+   * @param {Account} acc
+   */
   addAccount(acc) {
     this.accounts.set(acc.username, acc);
   }
 
+  /**
+   * @param {string} username
+   * @return {Account|undefined}
+   */
   getAccount(username) {
     return this.accounts.get(username);
   }
 
+  /**
+   * @param {string} username
+   * @param {boolean} force Force reload data from disk
+   */
   loadAccount(username, force) {
     if (this.accounts.has(username) && !force) {
       return this.getAccount(username);
@@ -29,16 +44,9 @@ class AccountManager {
 
     let account = new Account(data);
     this.addAccount(account);
-    
+
     return account;
   }
-
-  findByName(name) {
-    return Array.from(this.accounts.values()).find(
-      acc => acc.getUsername().toLowerCase() === name.toLowerCase()
-    );
-  }
-
 }
 
 module.exports = AccountManager;

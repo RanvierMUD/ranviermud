@@ -22,6 +22,7 @@ class PlayerClass {
    * Override this method in your class to do initial setup of the player. This
    * includes things like adding the resource attribute to the player or anything
    * else that should be done when the player is initially given this class
+   * @param {Player} player
    */
   setupPlayer(player) {
     if (typeof this.config.setupPlayer === 'function') {
@@ -37,7 +38,7 @@ class PlayerClass {
    *       2: { skills: ['bash'], spells: ['fireball']},
    *       5: { skills: ['rend', 'secondwind'] },
    *     }
-   * @return {Object<number, Array<string>>}
+   * @type {Object<number, Array<string>>}
    */
   get abilityTable() {
     return this.config.abilityTable;
@@ -65,6 +66,11 @@ class PlayerClass {
     return totalAbilities;
   }
 
+  /**
+   * Check to see if this class has a given ability
+   * @param {string} id
+   * @return {boolean}
+   */
   hasAbility(id) {
     return this.abilityList.includes(id);
   }

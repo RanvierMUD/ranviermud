@@ -120,6 +120,7 @@ function init(restartServer) {
 
   // Setup bundlemanager
   const BundleManager = new (require('./src/BundleManager'))(GameState);
+  GameState.BundleManager = BundleManager;
   BundleManager.loadBundles();
 
   // Set up web API

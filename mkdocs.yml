@@ -8,6 +8,9 @@ theme: null
 theme_dir: docs/_mkdocs/theme/ranvier
 extra:
     logo: '_static/images/logo.png'
+extra_css: 
+    - _mkdocs/theme/ranvier/assets/stylesheets/application.css
+    - _mkdocs/theme/ranvier/assets/stylesheets/application.palette.css
 markdown_extensions:
     - def_list
     - codehilite

@@ -1,18 +1,33 @@
 'use strict';
 
+/**
+ * Contains registered channels
+ *
+ * TODO: should probably refactor this to just extend `Map`
+ */
 class ChannelManager {
   constructor() {
     this.channels = new Map();
   }
 
-  get(channel) {
-    return this.channels.get(channel);
+  /**
+   * @param {string} name Channel name
+   * @return {Channel}
+   */
+  get(name) {
+    return this.channels.get(name);
   }
 
+  /**
+   * @param {Channel} channel
+   */
   add(channel) {
     this.channels.set(channel.name, channel);
   }
 
+  /**
+   * @param {Channel} channel
+   */
   remove(channel) {
     this.channels.delete(channel.name);
   }

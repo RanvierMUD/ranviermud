@@ -19,6 +19,7 @@ const PlayerRoles = require('./PlayerRoles');
  * @property {QuestTracker} questTracker
  * @property {Map<string,function ()>} extraPrompts Extra prompts to render after the default prompt
  * @property {{completed: Array, active: Array}} questData
+ * @extends Character
  */
 class Player extends Character {
   constructor(data) {
@@ -120,7 +121,7 @@ class Player extends Character {
     let matches = null;
     while (matches = promptStr.match(/%([a-z\.]+)%/)) {
       const token = matches[1];
-      var promptValue = token.split('.').reduce((obj, index) => obj && obj[index], promptData);
+      let promptValue = token.split('.').reduce((obj, index) => obj && obj[index], promptData);
       if (promptValue === null || promptValue === undefined) {
         promptValue = 'invalid-token';
       }
@@ -149,6 +150,14 @@ class Player extends Character {
   }
 
   /**
+   * @param {string} id
+   * @return {boolean}
+   */
+  hasPrompt(id) {
+    return this.extraPrompts.has(id);
+  }
+
+  /**
    * Move the player to the given room, emitting events appropriately
    * @param {Room} nextRoom
    * @param {function} onMoved Function to run after the player is moved to the next room but before enter events are fired
@@ -156,9 +165,6 @@ class Player extends Character {
   moveTo(nextRoom, onMoved = _ => _) {
     if (this.room) {
       this.room.emit('playerLeave', this, nextRoom);
-      for (const npc of this.room.npcs) {
-        npc.emit('playerLeave', this, nextRoom);
-      }
       this.room.removePlayer(this);
     }
 
@@ -167,10 +173,8 @@ class Player extends Character {
 
     onMoved();
 
-    for (const npc of nextRoom.npcs) {
-      npc.emit('playerEnter', this);
-    }
     nextRoom.emit('playerEnter', this);
+    this.emit('enterRoom', nextRoom);
   }
 
   /**

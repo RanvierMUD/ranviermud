@@ -9,7 +9,8 @@ const Logger = require('./Logger');
 /**
  * @property {number} id   Area-relative id (vnum)
  * @property {Area}   area Area npc belongs to (not necessarily the area they're currently in)
- * @property {
+ * @property {Map} behaviors
+ * @extends Character
  */
 class Npc extends Character {
   constructor(area, data) {
@@ -51,6 +52,26 @@ class Npc extends Character {
    */
   getBehavior(name) {
     return this.behaviors.get(name);
+  }
+
+  /**
+   * Move the npc to the given room, emitting events appropriately
+   * @param {Room} nextRoom
+   * @param {function} onMoved Function to run after the npc is moved to the next room but before enter events are fired
+   */
+  moveTo(nextRoom, onMoved = _ => _) {
+    if (this.room) {
+      this.room.emit('npcLeave', this, nextRoom);
+      this.room.removeNpc(this);
+    }
+
+    this.room = nextRoom;
+    nextRoom.addNpc(this);
+
+    onMoved();
+
+    nextRoom.emit('npcEnter', this);
+    this.emit('enterRoom', nextRoom);
   }
 
   serialize() {

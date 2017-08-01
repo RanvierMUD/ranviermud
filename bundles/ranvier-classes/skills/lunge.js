@@ -1,5 +1,7 @@
 'use strict';
 
+const Combat = require('../../ranvier-combat/lib/Combat');
+
 /**
  * Basic warrior attack
  */
@@ -12,7 +14,7 @@ module.exports = (srcPath) => {
   const energyCost = 20;
 
   function getDamage(player) {
-    return player.calculateWeaponDamage() * (damagePercent / 100);
+    return Combat.calculateWeaponDamage(player) * (damagePercent / 100);
   }
 
   return {

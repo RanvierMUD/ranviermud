@@ -27,6 +27,7 @@ with no harm whatsoever.
 * `ranvier-player-events` - Example implementation of experience/leveling for the player
 * `ranvier-quests` - Example implementation of quest commands
 * `ranvier-vendors` - Example implementation of in game shops
+* `ranvier-npc-behaviors` - Ready-to-use standalone behaviors for NPCs: wandering, aggro, etc.
 * `debug-commands` - Commands useful while debugging (`givexp` for example), commands only usable by ADMIN role players
 
 > Note: If you want to modify one of the Ranvier bundles it's recommended that you disable the bundle you wish to
@@ -54,7 +55,7 @@ possible. Click on any of the items below to see an in-depth tutorial.
 <pre>
 <a href="../areas/">areas/</a>
   Areas contain items, rooms, NPCs, and quests.
-<a href="../behaviors/">behaviors/</a>
+<a href="../areas/scripting#behaviors">behaviors/</a>
   Behaviors are scripts that are shared between entities of the same type (rooms, items, NPCs)
 <a href="../classes/">classes/</a>
   Player classes
@@ -68,7 +69,7 @@ possible. Click on any of the items below to see an in-depth tutorial.
   Input events are events that happen on the socket, this involves login and command interpreting.
   <strong>Warning:</strong> Because of input events' important role it is generally not advised to load more than one
   bundle with input events
-<a href="../skills/">skills/</a>
+<a href="../classes#skillsspells">skills/</a>
   Player skills (Spells are just skills with the SPELL type)
 <a href="../channels/">channels.js</a>
   Communication channels

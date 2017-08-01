@@ -5,6 +5,7 @@
     git clone git://github.com/shawncplus/ranviermud
     cd ranviermud
     npm install
+    npm run bundle-install
 
 If you would like to use the latest, but perhaps not stable, features: before `npm install` execute `git checkout
 staging`
@@ -36,10 +37,11 @@ that after logging in you use the Change Password menu option to change the defa
 To begin adding content you should first have an understanding of the [Project Structure](structure.md). After that all
 of the details of adding content can be seen in the [Bundles](extending/bundles.md) section.
 
-## Hotbooting
+## Testing your changes
 
-In general we, the developers of Ranvier, consider hotbooting to be a bad practice as it literally encourages working
-"on live". To this end we encourage the following workflow for making changes to your game once it goes live:
+In general we, the developers of Ranvier, consider hotbooting to be a bad practice (with one exception listed below)  as
+it literally encourages working "on live". To this end we encourage the following workflow for making changes to your
+game once it goes live:
 
 * Create two checkouts of `ranviermud`: one you will use for development, and one you use for live.
 * In your development repo create a `dev` branch
@@ -57,3 +59,9 @@ When you want to deploy your changes to your live server:
 In the future we might add functionality to make the development process easier with a `hotboot` command that is only
 active when in a certain 'environment' but for now the above workflow is what we recommend for the best player
 experience.
+
+### Hotfixing commands
+
+While we do not support "hotbooting" the entire game without restarting the server it is possible to reload your
+commands from disk without restarting the server, if you have the `debug-commands` bundle enabled, with the `hotfix`
+admin command. See the [Commands](extending/commands.md) documentation for more details.

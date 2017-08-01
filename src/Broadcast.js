@@ -6,7 +6,19 @@ const wrap = require('wrap-ansi');
 const TypeUtil = require('./TypeUtil');
 const Broadcastable = require('./Broadcastable');
 
+/**
+ * Class used for sending text to the player. All output to the player should happen through this
+ * class.
+ */
 class Broadcast {
+  /**
+   * @param {Broadcastable} source Target to send the broadcast to
+   * @param {string} message
+   * @param {number|boolean} wrapWidth=false width to wrap the message to or don't wrap at all
+   * @param {boolean} useColor Whether to parse color tags in the message
+   * @param {?function(target, message): string} formatter=null Function to call to format the
+   *   message to each target
+   */
   static at(source, message = '', wrapWidth = false, useColor = true, formatter = null) {
     useColor = typeof useColor === 'boolean' ? useColor : true;
     formatter = formatter || ((target, message) => message);
@@ -31,6 +43,16 @@ class Broadcast {
     });
   }
 
+  /**
+   * Broadcast.at for all except given list of players
+   * @see {@link Broadcast#at}
+   * @param {Broadcastable} source
+   * @param {string} message
+   * @param {Array<Player>} excludes
+   * @param {number|boolean} wrapWidth
+   * @param {boolean} useColor
+   * @param {function} formatter
+   */
   static atExcept(source, message, excludes, wrapWidth, useColor, formatter) {
 
     if (!TypeUtil.is(source, Broadcastable)) {
@@ -48,31 +70,47 @@ class Broadcast {
     };
 
     Broadcast.at(newSource, message, wrapWidth, useColor, formatter);
-
   }
 
+  /**
+   * Helper wrapper around Broadcast.at to be used when you're using a formatter
+  * @see {@link Broadcast#at}
+  * @param {Broadcastable} source
+  * @param {string} message
+  * @param {function} formatter
+  * @param {number|boolean} wrapWidth
+  * @param {boolean} useColor
+  */
   static atFormatted(source, message, formatter, wrapWidth, useColor) {
     Broadcast.at(source, message, wrapWidth, useColor, formatter);
   }
 
+  /**
+   * `Broadcast.at` with a newline
+   * @see {@link Broadcast#at}
+   */
   static sayAt(source, message, wrapWidth, useColor, formatter) {
     Broadcast.at(source, message, wrapWidth, useColor, (target, message) => {
       return (formatter ? formatter(target, message) : message ) + '\r\n';
     });
   }
 
+  /**
+   * `Broadcast.atExcept` with a newline
+   * @see {@link Broadcast#atExcept}
+   */
   static sayAtExcept(source, message, excludes, wrapWidth, useColor, formatter) {
     Broadcast.atExcept(source, message, excludes, wrapWidth, useColor, (target, message) => {
       return (formatter ? formatter(target, message) : message ) + '\r\n';
     });
   }
 
+  /**
+   * `Broadcast.atFormatted` with a newline
+   * @see {@link Broadcast#atFormatted}
+   */
   static sayAtFormatted(source, message, formatter, wrapWidth, useColor) {
     Broadcast.sayAt(source, message, wrapWidth, useColor, formatter);
-  }
-
-  static isBroadcastable(obj) {
-    return Reflect.has(obj, 'getBroadcastTargets');
   }
 
   /**
@@ -205,6 +243,7 @@ class Broadcast {
    * Fix LF unpaired with CR for windows output
    * @param {string} message
    * @return {string}
+   * @private
    */
   static _fixNewlines(message) {
     // Fix \n not in a \r\n pair to prevent bad rendering on windows

@@ -26,11 +26,9 @@ module.exports = (srcPath) => {
 
       // This just gets their names.
       const characters = account.characters;
-
       const maxCharacters   = Config.get("maxCharacters");
       const canAddCharacter = characters.length < maxCharacters;
       const canMultiplay    = Config.get("allowMultiplay");
-
 
       let options = [];
 
@@ -57,16 +55,23 @@ module.exports = (srcPath) => {
           options.push({
             display: char,
             onSelect: () => {
-              handleMultiplaying(char); 
-              const player = state.PlayerManager.loadPlayer(state, account, char);
-              player.socket = socket;
-              socket.emit('done', socket, { player });
+              handleMultiplaying(char)
+                .then(() => {
+                  const player = state.PlayerManager.loadPlayer(state, account, char);
+                  player.socket = socket;
+                  socket.emit('done', socket, { player });
+                })
+                .catch(err => {
+                  Logger.warn(err);
+                  say('Failed to log in to your character. Please contact an administrator.');
+                  socket.emit('close');
+                });
             },
           });
         });
       }
 
-      /* 
+      /*
       If multiplaying is not allowed:
       * Check all PCs on this person's account
       * Kick any that are currently logged-in.
@@ -75,36 +80,44 @@ module.exports = (srcPath) => {
       */
       function handleMultiplaying(selectedChar) {
         if (!canMultiplay) {
-          for (const character of account.characters) {
-            kickIfAccountLoggedIn(character);
-          }
+          const checkAllCharacters = [...characters].map(kickIfAccountLoggedIn)
+          return Promise.all(checkAllCharacters);
         } else if (selectedChar) {
           Logger.log("Multiplaying is allowed...");
-          replaceIfCharLoggedIn(selectedChar);
+          return replaceIfCharLoggedIn(selectedChar);
         }
       }
 
       function kickIfAccountLoggedIn(character) {
         const otherPlayer = state.PlayerManager.getPlayer(character);
         if (otherPlayer) {
-          bootPlayer(otherPlayer, "Replaced. No multiplaying allowed.");
+          return bootPlayer(otherPlayer, "Replaced. No multiplaying allowed.");
         }
+        return Promise.resolve();
       }
 
       function replaceIfCharLoggedIn(selectedChar) {
         const player = state.PlayerManager.getPlayer(selectedChar);
         if (player) {
-          bootPlayer(player, "Replaced by a new session.");
+          return bootPlayer(player, "Replaced by a new session.");
         }
+        return Promise.resolve();
       }
 
       function bootPlayer(player, reason) {
-        player.save(() => {
-          Logger.warn(`Booting ${player.name}: ${reason}`);
-          Broadcast.sayAt(player, reason);
-          player.socket.emit('close');
+        return new Promise((resolve, reject) => {
+          try {
+            player.save(() => {
+              Broadcast.sayAt(player, reason);
+              player.socket.on('close', resolve)
+              const closeSocket = true;
+              state.PlayerManager.removePlayer(player, closeSocket);
+              Logger.warn(`Booted ${player.name}: ${reason}`);
+            });
+          } catch (err) {
+            return reject('Failed to save and close player.');
+          }
         });
-        state.PlayerManager.removePlayer(player);
       }
 
       options.push({ display: "" });

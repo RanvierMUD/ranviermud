@@ -3,9 +3,9 @@
 const FetchGoal = require('../../../ranvier-quests/lib/FetchGoal');
 const EquipGoal = require('../../../ranvier-quests/lib/EquipGoal');
 const KillGoal = require('../../../ranvier-quests/lib/KillGoal');
+const LevelUtil = require('../../../ranvier-lib/lib/LevelUtil');
 
 module.exports = (srcPath) => {
-  const LevelUtil = require(srcPath + 'LevelUtil');
   const Broadcast = require(srcPath + 'Broadcast');
   const say = Broadcast.sayAt;
 
@@ -16,6 +16,7 @@ module.exports = (srcPath) => {
         level: 1,
         desc: `A voice whispers to you: Welcome to the world, young one. This is a dangerous and deadly place, you should arm yourself.
 
+ - Open the chest with '<white>open chest</white>'
  - Use '<white>get sword chest</white>' and '<white>get vest chest</white>' to get some gear.
  - Equip it using '<white>wield sword</white>' and '<white>wear vest</white>'`,
         autoComplete: true,

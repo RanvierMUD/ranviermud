@@ -1,7 +1,9 @@
 'use strict';
+
 const EventEmitter = require('events');
 const RandomUtil = require('./RandomUtil');
 const Logger = require('./Logger');
+
 /**
  * @property {Area}          area         Area room is in
  * @property {Array<number>} defaultItems Default list of item ids that should load in this room
@@ -14,11 +16,14 @@ const Logger = require('./Logger');
  * @property {Set}           players      Players currently in the room
  * @property {string}        script       Name of custom script attached to this room
  * @property {string}        title        Title shown on look/scan
+ * @property {object}        doors        Doors restricting access to this room. See documentation for format
+ * @extends EventEmitter
+ * @listens Room#updateTick
  */
 class Room extends EventEmitter {
   constructor(area, def) {
     super();
-    var required = ['title', 'description', 'id'];
+    const required = ['title', 'description', 'id'];
     for (const prop of required) {
       if (!(prop in def)) {
         throw new Error(`ERROR: AREA[${area.name}] Room does not have required property ${prop}`);
@@ -31,10 +36,13 @@ class Room extends EventEmitter {
     this.behaviors = new Map(Object.entries(def.behaviors || {}));
     this.description = def.description;
     this.entityReference = this.area.name + ':' + def.id;
-    this.exits = def.exits;
+    this.exits = def.exits || [];
     this.id = def.id;
     this.script = def.script;
     this.title = def.title;
+    // create by-val copies of the doors config so the lock/unlock don't accidentally modify the original definition
+    this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(def.doors || {}))));
+    this.defaultDoors = def.doors;
 
     this.items = new Set();
     this.npcs = new Set();
@@ -48,6 +56,28 @@ class Room extends EventEmitter {
     this.spawnedNpcs = new Set();
 
     this.on('respawnTick', this.respawnTick);
+  }
+
+  /**
+   * Emits event on self and proxies certain events to other entities in the room.
+   * @param {string} eventName
+   * @param {...*} args
+   * @return {void}
+   */
+  emit(eventName, ...args) {
+    super.emit(eventName, ...args);
+
+    const proxiedEvents = [
+      'playerEnter',
+      'playerLeave'
+    ];
+
+    if (proxiedEvents.includes(eventName)) {
+      const entities = [...this.npcs, ...this.players, ...this.items];
+      for (const entity of entities) {
+        entity.emit(eventName, ...args);
+      }
+    }
   }
 
   /**
@@ -66,37 +96,173 @@ class Room extends EventEmitter {
     return this.behaviors.get(name);
   }
 
+  /**
+   * @param {Player} player
+   */
   addPlayer(player) {
     this.players.add(player);
   }
 
+  /**
+   * @param {Player} player
+   */
   removePlayer(player) {
     this.players.delete(player);
   }
 
+  /**
+   * @param {Npc} npc
+   */
   addNpc(npc) {
     this.npcs.add(npc);
     npc.room = this;
     this.area.addNpc(npc);
   }
 
+  /**
+   * @param {Npc} npc
+   */
   removeNpc(npc) {
     this.npcs.delete(npc);
+    // NOTE: It is _very_ important that the NPC's room is set to null before the Area.removeNpc call
+    // otherwise the area will also remove it from its originating room spawn list and will try
+    // to respawn it. Not good
     npc.room = null;
     this.area.removeNpc(npc);
   }
 
+  /**
+   * @param {Item} item
+   */
   addItem(item) {
     this.items.add(item);
     item.room = this;
   }
 
+  /**
+   * @param {Item} item
+   */
   removeItem(item) {
     this.items.delete(item);
     item.room = null;
   }
 
+  /**
+   * Check to see if this room has a door preventing movement from `fromRoom` to here
+   * @param {Room} fromRoom
+   * @return {boolean}
+   */
+  hasDoor(fromRoom) {
+    return this.doors.has(fromRoom.entityReference);
+  }
+
+  /**
+   * @param {Room} fromRoom
+   * @return {{lockedBy: EntityReference, locked: boolean, closed: boolean}}
+   */
+  getDoor(fromRoom) {
+    return this.doors.get(fromRoom.entityReference);
+  }
+
+  /**
+   * Check to see of the door for `fromRoom` is locked
+   * @param {Room} fromRoom
+   * @return {boolean}
+   */
+  isDoorLocked(fromRoom) {
+    const door = this.getDoor(fromRoom);
+    if (!door) {
+      return false;
+    }
+
+    return door.locked;
+  }
+
+  /**
+   * @param {Room} fromRoom
+   * @fires Room#doorOpened
+   */
+  openDoor(fromRoom) {
+    const door = this.getDoor(fromRoom);
+    if (!door) {
+      return;
+    }
+
+    /**
+     * @event Room#doorOpened
+     * @param {Room} fromRoom
+     * @param {object} door
+     */
+    this.emit('doorOpened', fromRoom, door);
+    door.closed = false;
+  }
+
+  /**
+   * @param {Room} fromRoom
+   * @throws DoorLockedError
+   * @fires Room#doorClosed
+   */
+  closeDoor(fromRoom) {
+    const door = this.getDoor(fromRoom);
+    if (!door) {
+      return;
+    }
+
+    /**
+     * @event Room#doorClosed
+     * @param {Room} fromRoom
+     * @param {object} door
+     */
+    this.emit('doorClosed', fromRoom, door);
+    door.closed = true;
+  }
+
+  /**
+   * @param {Room} fromRoom
+   * @fires Room#doorUnlocked
+   */
+  unlockDoor(fromRoom) {
+    const door = this.getDoor(fromRoom);
+    if (!door) {
+      return;
+    }
+
+    /**
+     * @event Room#doorUnlocked
+     * @param {Room} fromRoom
+     * @param {object} door
+     */
+    this.emit('doorUnlocked', fromRoom, door);
+    door.locked = false;
+  }
+
+  /**
+   * @param {Room} fromRoom
+   * @fires Room#doorUnlocked
+   */
+  lockDoor(fromRoom) {
+    const door = this.getDoor(fromRoom);
+    if (!door) {
+      return;
+    }
+
+    this.closeDoor(fromRoom);
+    /**
+     * @event Room#doorUnlocked
+     * @param {Room} fromRoom
+     * @param {object} door
+     */
+    this.emit('doorLocked', fromRoom, door);
+    door.locked = true;
+  }
+
+  /**
+   * @param {GameState} state
+   */
   respawnTick(state) {
+    // relock/close doors
+    this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(this.defaultDoors || {}))));
+
     this.defaultNpcs.forEach(defaultNpc => {
       if (typeof defaultNpc === 'string') {
         defaultNpc = { id: defaultNpc };
@@ -151,6 +317,10 @@ class Room extends EventEmitter {
     });
   }
 
+  /**
+   * @param {GameState} state
+   * @param {string} entityRef
+   */
   spawnItem(state, entityRef) {
     Logger.verbose(`\tSPAWN: Adding item [${entityRef}] to room [${this.title}]`);
     const newItem = state.ItemFactory.create(this.area, entityRef);
@@ -160,6 +330,11 @@ class Room extends EventEmitter {
     this.addItem(newItem);
   }
 
+  /**
+   * @param {GameState} state
+   * @param {string} entityRef
+   * @fires Npc#spawn
+   */
   spawnNpc(state, entityRef) {
     Logger.verbose(`\tSPAWN: Adding npc [${entityRef}] to room [${this.title}]`);
     const newNpc = state.MobFactory.create(this.area, entityRef);
@@ -168,9 +343,15 @@ class Room extends EventEmitter {
     this.area.addNpc(newNpc);
     this.addNpc(newNpc);
     this.spawnedNpcs.add(newNpc);
+    /**
+     * @event Npc#spawn
+     */
     newNpc.emit('spawn');
   }
 
+  /**
+   * @param {Npc} npc
+   */
   removeSpawnedNpc(npc) {
     this.spawnedNpcs.delete(npc);
   }

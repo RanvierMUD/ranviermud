@@ -1,7 +1,11 @@
 'use strict';
 
+const Combat = require('../lib/Combat');
+const CombatErrors = require('../lib/CombatErrors');
+
 module.exports = srcPath => {
   const B = require(srcPath + 'Broadcast');
+  const Logger = require(srcPath + 'Logger');
 
   return {
     usage: 'consider <target>',
@@ -12,9 +16,18 @@ module.exports = srcPath => {
 
       let target = null;
       try {
-        target = player.findCombatant(args);
+        target = Combat.findCombatant(player, args);
       } catch (e) {
-        return B.sayAt(player, e.message);
+        if (
+          e instanceof CombatErrors.CombatSelfError ||
+          e instanceof CombatErrors.CombatNonPvpError ||
+          e instanceof CombatErrors.CombatInvalidTargetError ||
+          e instanceof CombatErrors.CombatPacifistError
+        ) {
+          return B.sayAt(player, e.message);
+        }
+
+        Logger.error(e.message);
       }
 
       if (!target) {

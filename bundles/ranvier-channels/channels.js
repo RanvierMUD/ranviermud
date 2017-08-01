@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = (srcPath) => {
-  const AudienceWorld = require(srcPath + 'ChannelAudience/World');
-  const AudienceArea = require(srcPath + 'ChannelAudience/Area');
-  const AudienceRoom = require(srcPath + 'ChannelAudience/Room');
-  const AudiencePrivate = require(srcPath + 'ChannelAudience/Private');
-  const AudienceParty = require(srcPath + 'ChannelAudience/Party');
+  const WorldAudience = require(srcPath + 'ChannelAudience/WorldAudience');
+  const AreaAudience = require(srcPath + 'ChannelAudience/AreaAudience');
+  const RoomAudience = require(srcPath + 'ChannelAudience/RoomAudience');
+  const PrivateAudience = require(srcPath + 'ChannelAudience/PrivateAudience');
+  const PartyAudience = require(srcPath + 'ChannelAudience/PartyAudience');
   const Channel = require(srcPath + 'Channel');
 
   return [
@@ -13,14 +13,14 @@ module.exports = (srcPath) => {
       name: 'chat',
       color: ['bold', 'green'],
       description: 'Chat with everyone on the game',
-      audience: new AudienceWorld()
+      audience: new WorldAudience()
     }),
 
     new Channel({
       name: 'say',
       color: ['yellow'],
       description: 'Send a message to all players in your room',
-      audience: new AudienceRoom(),
+      audience: new RoomAudience(),
       formatter: {
         sender: function (sender, target, message, colorify) {
           return colorify(`You say: '${message}'`);
@@ -36,7 +36,7 @@ module.exports = (srcPath) => {
       name: 'tell',
       color: ['bold', 'cyan'],
       description: 'Send a private message to another player',
-      audience: new AudiencePrivate(),
+      audience: new PrivateAudience(),
       formatter: {
         sender: function (sender, target, message, colorify) {
           return colorify(`You tell ${target.name}, '${message}'`);
@@ -52,7 +52,7 @@ module.exports = (srcPath) => {
       name: 'yell',
       color: ['bold', 'red'],
       description: 'Send a message to everyone in your area',
-      audience: new AudienceArea(),
+      audience: new AreaAudience(),
       formatter: {
         sender: function (sender, target, message, colorify) {
           return colorify(`You yell, '${message}'`);
@@ -68,7 +68,7 @@ module.exports = (srcPath) => {
       name: 'gtell',
       color: ['bold', 'green'],
       description: 'Send a message to everyone in your group, anywhere in the game',
-      audience: new AudienceParty(),
+      audience: new PartyAudience(),
       formatter: {
         sender: function (sender, target, message, colorify) {
           return colorify(`You tell the group, '${message}'`);

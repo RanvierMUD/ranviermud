@@ -89,6 +89,9 @@ module.exports = (srcPath) => {
     }
 
     if (container) {
+      if (container.closed) {
+        return Broadcast.sayAt(player, `${container.display} is closed.`);
+      }
       container.removeItem(item);
     } else {
       player.room.removeItem(item);

@@ -1,8 +1,12 @@
 'use strict';
 
+const Combat = require('../lib/Combat');
+const CombatErrors = require('../lib/CombatErrors');
+
 module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
+  const B = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const Logger = require(srcPath + 'Logger');
 
   return {
     aliases: ['attack', 'slay'],
@@ -10,26 +14,35 @@ module.exports = (srcPath) => {
       args = args.trim();
 
       if (!args.length) {
-        return Broadcast.sayAt(player, 'Kill whom?');
+        return B.sayAt(player, 'Kill whom?');
       }
 
       let target = null;
       try {
-        target = player.findCombatant(args);
+        target = Combat.findCombatant(player, args);
       } catch (e) {
-        return Broadcast.sayAt(player, e.message);
+        if (
+          e instanceof CombatErrors.CombatSelfError ||
+          e instanceof CombatErrors.CombatNonPvpError ||
+          e instanceof CombatErrors.CombatInvalidTargetError ||
+          e instanceof CombatErrors.CombatPacifistError
+        ) {
+          return B.sayAt(player, e.message);
+        }
+
+        Logger.error(e.message);
       }
 
       if (!target) {
-        return Broadcast.sayAt(player, "They aren't here.");
+        return B.sayAt(player, "They aren't here.");
       }
 
-      Broadcast.sayAt(player, `You attack ${target.name}.`);
+      B.sayAt(player, `You attack ${target.name}.`);
 
       player.initiateCombat(target);
-      Broadcast.sayAtExcept(player.room, `${player.name} attacks ${target.name}!`, [player, target]);
+      B.sayAtExcept(player.room, `${player.name} attacks ${target.name}!`, [player, target]);
       if (!target.isNpc) {
-        Broadcast.sayAt(target, `${player.name} attacks you!`);
+        B.sayAt(target, `${player.name} attacks you!`);
       }
     }
   };

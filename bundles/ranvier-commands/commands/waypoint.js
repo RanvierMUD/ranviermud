@@ -17,8 +17,8 @@ module.exports = srcPath => {
       }
 
       B.sayAt(player, 'Waypoints:');
-      for (var i = 0; i < waypoints.saved.length; i++) {
-        const room = state.RoomManager.getRoom(waypoints.saved[i]);
+      for (const [i, savedWaypoint] of Object.entries(waypoints.saved)) {
+        const room = state.RoomManager.getRoom(savedWaypoint);
         B.sayAt(player, sprintf('%2s) %s%s', i + 1, waypoints.home === room.entityReference ? '(H) ' : '', room.title));
       }
     }

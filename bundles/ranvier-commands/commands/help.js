@@ -2,7 +2,7 @@
 
 
 module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
+  const B = require(srcPath + 'Broadcast');
   const Logger = require(srcPath + 'Logger');
 
   return {
@@ -22,12 +22,45 @@ module.exports = (srcPath) => {
 
       if (!hfile) {
         Logger.error(`MISSING-HELP: [${args}]`);
-        return Broadcast.sayAt(player, "Sorry, I couldn't find an entry for that topic.");
+        return B.sayAt(player, "Sorry, I couldn't find an entry for that topic.");
       }
 
-      Broadcast.sayAt(player, hfile.render(state));
+      B.sayAt(player, render(state, hfile));
     }
   };
+
+  function render(state, hfile) {
+    let body = hfile.body;
+    const name = hfile.name;
+
+    const width = 80;
+    const bar = B.line(width, '-', 'yellow') + '\r\n';
+
+    let header = bar + B.center(width, name, 'white') + '\r\n' + bar;
+
+    const formatHeaderItem = (item, value) => `${item}: ${value}\r\n\r\n`;
+    if (hfile.command) {
+      let actualCommand = state.CommandManager.get(hfile.command);
+
+      header += formatHeaderItem('Syntax', actualCommand.usage);
+
+      if (actualCommand.aliases && actualCommand.aliases.length > 0){
+        header += formatHeaderItem('Aliases', actualCommand.aliases.join(', '));
+      }
+    } else if (hfile.channel) {
+      header += formatHeaderItem('Syntax', state.ChannelManager.get(hfile.channel).getUsage());
+    }
+
+    let footer = bar;
+    if (hfile.related.length) {
+      footer = B.center(width, 'RELATED', 'yellow', '-') + '\r\n';
+      const related = hfile.related.join(', ');
+      footer += B.center(width, related) + '\r\n';
+      footer += bar;
+    }
+
+    return header + B.wrap(hfile.body, 80) + footer;
+  }
 
   function searchHelpfiles(args, player, state) {
     args = args.split(' ').slice(1).join(' ');
@@ -38,18 +71,18 @@ module.exports = (srcPath) => {
 
     const results = state.HelpManager.find(args);
     if (!results.size) {
-      return Broadcast.sayAt(player, "Sorry, no results were found for your search.");
+      return B.sayAt(player, "Sorry, no results were found for your search.");
     }
     if (results.size === 1) {
       const [ _, hfile ] = [...results][0];
-      return Broadcast.sayAt(player, hfile.render(state));
+      return B.sayAt(player, render(state, hfile));
     }
-    Broadcast.sayAt(player, "<yellow>---------------------------------------------------------------------------------</yellow>");
-    Broadcast.sayAt(player, "<white>Search Results:</white>");
-    Broadcast.sayAt(player, "<yellow>---------------------------------------------------------------------------------</yellow>");
+    B.sayAt(player, "<yellow>---------------------------------------------------------------------------------</yellow>");
+    B.sayAt(player, "<white>Search Results:</white>");
+    B.sayAt(player, "<yellow>---------------------------------------------------------------------------------</yellow>");
 
     for (const [name, help] of results) {
-      Broadcast.sayAt(player, `<cyan>${name}</cyan>`);
+      B.sayAt(player, `<cyan>${name}</cyan>`);
     }
   }
 

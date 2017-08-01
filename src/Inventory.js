@@ -1,6 +1,15 @@
 'use strict';
 
+/**
+ * Representation of a `Character` or container `Item` inventory
+ * @extends Map
+ */
 class Inventory extends Map {
+  /**
+   * @param {object} init
+   * @param {Array<Item>} init.items
+   * @param {number} init.max Max number of items this inventory can hold
+   */
   constructor(init) {
     init = Object.assign({
       items: [],
@@ -11,14 +20,23 @@ class Inventory extends Map {
     this.maxSize = init.max;
   }
 
+  /**
+   * @param {number} size
+   */
   setMax(size) {
     this.maxSize = size;
   }
 
+  /**
+   * @return {number}
+   */
   getMax() {
     return this.maxSize;
   }
 
+  /**
+   * @return {boolean}
+   */
   get isFull() {
     return this.size >= this.maxSize;
   }
@@ -63,7 +81,7 @@ class Inventory extends Map {
 
   /**
    * @param {GameState} state
-   * @param {Npc|Player|Item} belongsTo
+   * @param {Character|Item} belongsTo
    */
   hydrate(state, belongsTo) {
     // Item is imported here to prevent circular dependency with Item having an Inventory
@@ -90,6 +108,9 @@ class Inventory extends Map {
   }
 }
 
+/**
+ * @extends Error
+ */
 class InventoryFullError extends Error {}
 
 module.exports = { Inventory, InventoryFullError };

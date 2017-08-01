@@ -7,11 +7,6 @@ const chokidar = require('chokidar');
 
 const BundleData = require('./BundleData');
 
-/**
- * Bundle Data Manager
- *
- * @class BundleDataManager
- */
 class BundleDataManager {
 
   constructor(state) {

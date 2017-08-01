@@ -23,6 +23,10 @@ const Player = require('./Player');
  * @property {string}  script      A custom script for this item
  * @property {ItemType|string} type
  * @property {string}  uuid        UUID differentiating all instances of this item
+ * @property {boolean} closeable   Whether this item can be closed (Default: false, true if closed or locked is true)
+ * @property {boolean} closed      Whether this item is closed
+ * @property {boolean} locked      Whether this item is locked
+ * @property {entityReference} lockedBy Item that locks/unlocks this item
  */
 class Item extends EventEmitter {
   constructor (area, item) {
@@ -61,6 +65,10 @@ class Item extends EventEmitter {
     this.slot        = item.slot || null;
     this.type        = typeof item.type === 'string' ? ItemType[item.type] : (item.type || ItemType.OBJECT);
     this.uuid        = item.uuid || uuid.v4();
+    this.closeable   = item.closeable || item.closed || item.locked || false;
+    this.closed      = item.closed || false;
+    this.locked      = item.locked || false;
+    this.lockedBy    = item.lockedBy || null;
   }
 
   hasKeyword(keyword) {
@@ -89,12 +97,20 @@ class Item extends EventEmitter {
     return this.behaviors.get(name);
   }
 
+  /**
+   * Add an item to this item's inventory
+   * @param {Item} item
+   */
   addItem(item) {
     this._setupInventory();
     this.inventory.addItem(item);
     item.belongsTo = this;
   }
 
+  /**
+   * Remove an item from this item's inventory
+   * @param {Item} item
+   */
   removeItem(item) {
     this.inventory.removeItem(item);
 
@@ -108,6 +124,9 @@ class Item extends EventEmitter {
     item.belongsTo = null;
   }
 
+  /**
+   * @return {boolean}
+   */
   isInventoryFull() {
     this._setupInventory();
     return this.inventory.isFull;
@@ -122,6 +141,9 @@ class Item extends EventEmitter {
     }
   }
 
+  /**
+   * TODO: move to bundles
+   */
   get qualityColors() {
     return ({
       poor: ['bold', 'black'],
@@ -143,6 +165,7 @@ class Item extends EventEmitter {
 
   /**
    * Colorize the given string according to this item's quality
+   * TODO: move to bundles
    * @param {string} string
    * @return string
    */
@@ -170,6 +193,69 @@ class Item extends EventEmitter {
     }
 
     return found;
+  }
+
+  /**
+   * Open a container-like object
+   *
+   * @fires Item#opened
+   */
+  open() {
+    if (!this.closed) {
+      return;
+    }
+
+    /**
+     * @event Item#opened
+     */
+    this.emit('opened');
+    this.closed = false;
+  }
+
+  /**
+   * @fires Item#closed
+   */
+  close() {
+    if (this.closed || !this.closeable) {
+      return;
+    }
+
+    /**
+     * @event Item#closed
+     */
+    this.emit('closed');
+    this.closed = true;
+  }
+
+  /**
+   * @fires Item#locked
+   */
+  lock() {
+    if (this.locked || !this.closeable) {
+      return;
+    }
+
+    this.close();
+    /**
+     * @event Item#locked
+     */
+    this.emit('locked');
+    this.locked = true;
+  }
+
+  /**
+   * @fires Item#unlocked
+   */
+  unlock() {
+    if (!this.locked) {
+      return;
+    }
+
+    /**
+     * @event Item#unlocked
+     */
+    this.emit('unlocked');
+    this.locked = false;
   }
 
   hydrate(state, serialized = {}) {

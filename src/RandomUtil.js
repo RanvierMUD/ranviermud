@@ -1,10 +1,10 @@
 'use strict';
 
-/*
-  A wrapper for Math.random
-  See https://github.com/seanohue/rando for documentation.
-*/
 const { Random } = require('rando-js');
+/**
+ * A wrapper around rando-js
+ * See {@link https://github.com/seanohue/rando} for documentation.
+ */
 class RandomUtil extends Random {
   /**
    * Check to see if a given percent chance occurs
@@ -17,4 +17,5 @@ class RandomUtil extends Random {
     return target >= rand;
   }
 }
+
 module.exports = RandomUtil;

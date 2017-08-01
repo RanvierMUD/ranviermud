@@ -1,10 +1,10 @@
 'use strict';
 
 const sprintf = require('sprintf-js').sprintf;
+const LevelUtil = require('../ranvier-lib/lib/LevelUtil');
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const LevelUtil = require(srcPath + 'LevelUtil');
 
   return  {
     listeners: {

@@ -1,5 +1,7 @@
 'use strict';
 
+const Combat = require('../../ranvier-combat/lib/Combat');
+
 /**
  * DoT (Damage over time) skill
  */
@@ -16,7 +18,7 @@ module.exports = (srcPath) => {
   const damagePercent = 400;
 
   const totalDamage = player => {
-    return player.calculateWeaponDamage() * (damagePercent / 100);
+    return Combat.calculateWeaponDamage(player) * (damagePercent / 100);
   };
 
   return {
