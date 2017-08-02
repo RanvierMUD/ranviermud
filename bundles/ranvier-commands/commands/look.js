@@ -83,8 +83,14 @@ module.exports = (srcPath, bundlePath) => {
     B.sayAt(player, B.line(60) + B.line(5, ' ') + line2);
     B.sayAt(player, B.line(65, ' ') + '<yellow><b>' + line3 + '</b></yellow>');
 
+    let taggedDesc = room.description
+
+    room.exdescs.forEach(exdesc => {
+      taggedDesc = taggedDesc.replace(exdesc.id, `<cyan>${exdesc.id}</cyan>`);
+    });
+
     if (!player.getMeta('config.brief')) {
-      B.sayAt(player, room.description, 80);
+      B.sayAt(player, taggedDesc, 80);
     }
 
     B.sayAt(player, '');
@@ -190,6 +196,7 @@ module.exports = (srcPath, bundlePath) => {
     entity = entity || CommandParser.parseDot(search, room.players);
     entity = entity || CommandParser.parseDot(search, room.npcs);
     entity = entity || CommandParser.parseDot(search, player.inventory);
+    entity = entity || state.RoomManager.findExDesc(room, search);
 
     if (!entity) {
       return B.sayAt(player, "You don't see anything like that here.");
@@ -207,7 +214,7 @@ module.exports = (srcPath, bundlePath) => {
       B.sayAt(player, `You estimate that ${entity.name} will rot away in ${humanize(entity.timeUntilDecay)}.`);
     }
 
-    const usable = entity.getBehavior('usable');
+    const usable = typeof entity.getBehavior === 'function' ? entity.getBehavior('usable') : false;
     if (usable) {
       if (usable.spell) {
         const useSpell = state.SpellManager.get(usable.spell);
