@@ -1,7 +1,5 @@
 'use strict';
 
-const Combat = require('../../ranvier-combat/lib/Combat');
-
 /**
  * Damage mitigation skill
  */
@@ -16,10 +14,7 @@ module.exports = (srcPath) => {
   const healthPercent = 15;
   const duration = 20 * 1000;
 
-  const totalDamage = player => {
-    return Combat.calculateWeaponDamage(player) * (damagePercent / 100);
-  };
-
+  
   return {
     name: 'Shield Block',
     type: SkillType.SKILL,

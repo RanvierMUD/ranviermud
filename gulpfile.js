@@ -9,11 +9,8 @@ var paths = {
     './*.js',
     './src/*.js',
     './src/**/*.js',
-    './scripts/**/*.js',
-    './scripts/**/**/*.js',
-    './commands/*.js',
-    './src/!3rdparty/*.js'
-  ],
+    './bundles/**/*.js',
+    '!./**/node_modules/**'],
 };
 
 const report = {
@@ -44,6 +41,7 @@ var options = {
       'use-isnan':         report.error,
       'valid-typeof':      report.error,
       'no-unreachable':    report.error,
+      'no-undef':  report.error,
 
     },
     parserOptions: {
