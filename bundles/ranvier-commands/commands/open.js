@@ -12,7 +12,7 @@ module.exports = srcPath => {
       }
 
       if (!player.room) {
-        return Broadcast.sayAt(player, 'You are floating in the nether.');
+        return B.sayAt(player, 'You are floating in the nether.');
       }
 
       const parts = args.split(' ');

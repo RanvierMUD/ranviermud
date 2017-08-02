@@ -34,7 +34,7 @@ exports.CombatPacifistError = CombatPacifistError;
  */
 class CombatNonPvpError extends Error {
   constructor(message, target) {
-    super();
+    super(message);
 
     this.target = target;
   }
