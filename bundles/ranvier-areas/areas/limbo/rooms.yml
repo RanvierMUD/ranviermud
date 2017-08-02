@@ -32,7 +32,7 @@
       leaveMessage: " steps into the light and disappears."
     - roomId: "limbo:3"
       direction: east
-  exdescs:
+  detailDescs:
     - id: "sign"
       description: "The sign reads: Training Dome."
 - &trainingroom

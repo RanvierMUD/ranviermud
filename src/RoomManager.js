@@ -51,26 +51,6 @@ class RoomManager {
 
     return exits.pop();
   }
-
-/**
-  * Get the extra descriptions contained in a room by id
-  * @param {Room}   room
-  * @param {string} id extra description id
-  * @return {false|Object}
-  */
-  findExDesc(room, exDescId) {
-    const exdescs = Array.from(room.exdescs).filter(exd => exd.id.indexOf(exDescId) === 0);
-
-    if (!exdescs.length) {
-      return false;
-    }
-
-    if (exdescs.length > 1) {
-      return false;
-    }
-
-    return exdescs.pop();
-  }
 }
 
 module.exports = RoomManager;

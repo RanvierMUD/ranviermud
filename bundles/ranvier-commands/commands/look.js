@@ -85,8 +85,8 @@ module.exports = (srcPath, bundlePath) => {
 
     let taggedDesc = room.description
 
-    room.exdescs.forEach(exdesc => {
-      taggedDesc = taggedDesc.replace(exdesc.id, `<cyan>${exdesc.id}</cyan>`);
+    room.detailDescs.forEach(detailDesc => {
+      taggedDesc = taggedDesc.replace(detailDesc.id, `<cyan>${detailDesc.id}</cyan>`);
     });
 
     if (!player.getMeta('config.brief')) {
@@ -196,7 +196,7 @@ module.exports = (srcPath, bundlePath) => {
     entity = entity || CommandParser.parseDot(search, room.players);
     entity = entity || CommandParser.parseDot(search, room.npcs);
     entity = entity || CommandParser.parseDot(search, player.inventory);
-    entity = entity || state.RoomManager.findExDesc(room, search);
+    entity = entity || room.findDetailDesc(search);
 
     if (!entity) {
       return B.sayAt(player, "You don't see anything like that here.");
