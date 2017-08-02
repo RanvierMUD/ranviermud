@@ -80,26 +80,19 @@ module.exports = (srcPath) => {
       */
       function handleMultiplaying(selectedChar) {
         if (!canMultiplay) {
-          const checkAllCharacters = [...characters].map(kickIfAccountLoggedIn)
+          const kickIfMultiplaying = kickIfLoggedIn.bind(null, 'Replaced. No multiplaying allowed.');
+          const checkAllCharacters = [...characters].map(kickIfMultiplaying);
           return Promise.all(checkAllCharacters);
         } else if (selectedChar) {
           Logger.log("Multiplaying is allowed...");
-          return replaceIfCharLoggedIn(selectedChar);
+          return kickIfLoggedIn("Replaced by a new session.", selectedChar);
         }
       }
 
-      function kickIfAccountLoggedIn(character) {
+      function kickIfLoggedIn(message, character) {
         const otherPlayer = state.PlayerManager.getPlayer(character);
         if (otherPlayer) {
-          return bootPlayer(otherPlayer, "Replaced. No multiplaying allowed.");
-        }
-        return Promise.resolve();
-      }
-
-      function replaceIfCharLoggedIn(selectedChar) {
-        const player = state.PlayerManager.getPlayer(selectedChar);
-        if (player) {
-          return bootPlayer(player, "Replaced by a new session.");
+          return bootPlayer(otherPlayer, message);
         }
         return Promise.resolve();
       }
