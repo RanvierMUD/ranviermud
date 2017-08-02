@@ -89,7 +89,7 @@ module.exports = (srcPath, bundlePath) => {
       const category = craftingCategories[itemCategory];
       const isInvalidCraftableItem = isInvalidSelection(category.items);
       itemNumber = parseInt(itemNumber, 10) - 1;
-      if (isInvalidCrafitableItem(itemNumber)) {
+      if (isInvalidCraftableItem(itemNumber)) {
         return say(player, "Invalid item.");
       }
 
