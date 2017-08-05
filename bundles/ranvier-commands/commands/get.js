@@ -45,8 +45,12 @@ module.exports = (srcPath) => {
         }
 
         if (container.type !== ItemType.CONTAINER) {
-          return Broadcast.sayAt(player, `${container.name} isn't a container.`);
+          return Broadcast.sayAt(player, `${container.display} isn't a container.`);
         }
+
+        if (container.closed) {
+          return Broadcast.sayAt(player, `${container.display} is closed.`);
+      }
 
         search = parts[0];
         source = container.inventory;
@@ -89,9 +93,6 @@ module.exports = (srcPath) => {
     }
 
     if (container) {
-      if (container.closed) {
-        return Broadcast.sayAt(player, `${container.display} is closed.`);
-      }
       container.removeItem(item);
     } else {
       player.room.removeItem(item);
