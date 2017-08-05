@@ -45,8 +45,8 @@ module.exports = (srcPath, bundlePath) => {
           return say(player, B.center(40, "No recipes."));
         }
 
-        return category.items.forEach((item, index) => {
-          say(player, sprintf('%2d) ', index + 1) + item.display);
+        return category.items.forEach((items, index) => {
+          say(player, sprintf('%2d) ', index + 1) + items.item.display);
         });
       }
 
