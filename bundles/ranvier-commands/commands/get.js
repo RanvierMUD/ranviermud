@@ -39,13 +39,19 @@ module.exports = (srcPath) => {
         search = parts[0];
         source = player.room.items;
       } else {
-        container = Parser.parseDot(parts[1], player.room.items);
+      //Newest containers should go first, so that if you type get all corpse you get from the 
+      // most recent corpse. See issue #247.
+        container = Parser.parseDot(parts[1], [...player.room.items].reverse());
         if (!container) {
           return Broadcast.sayAt(player, "You don't see anything like that here.");
         }
 
         if (container.type !== ItemType.CONTAINER) {
-          return Broadcast.sayAt(player, `${container.name} isn't a container.`);
+          return Broadcast.sayAt(player, `${container.display} isn't a container.`);
+        }
+
+        if (container.closed) {
+          return Broadcast.sayAt(player, `${container.display} is closed.`);
         }
 
         search = parts[0];
@@ -89,9 +95,6 @@ module.exports = (srcPath) => {
     }
 
     if (container) {
-      if (container.closed) {
-        return Broadcast.sayAt(player, `${container.display} is closed.`);
-      }
       container.removeItem(item);
     } else {
       player.room.removeItem(item);
