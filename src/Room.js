@@ -17,6 +17,7 @@ const Logger = require('./Logger');
  * @property {string}        script       Name of custom script attached to this room
  * @property {string}        title        Title shown on look/scan
  * @property {object}        doors        Doors restricting access to this room. See documentation for format
+ * @property {Array<object>} detailDescs  Detail descriptions in the room { id: string, desc: string }
  * @extends EventEmitter
  * @listens Room#updateTick
  */
@@ -43,6 +44,7 @@ class Room extends EventEmitter {
     // create by-val copies of the doors config so the lock/unlock don't accidentally modify the original definition
     this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(def.doors || {}))));
     this.defaultDoors = def.doors;
+    this.detailDescs = def.detailDescs || [];
 
     this.items = new Set();
     this.npcs = new Set();
@@ -254,6 +256,25 @@ class Room extends EventEmitter {
      */
     this.emit('doorLocked', fromRoom, door);
     door.locked = true;
+  }
+
+/**
+  * Get the detail descriptions contained in a room by id
+  * @param {string} id    detail description id
+  * @return {false|Object}
+  */
+  findDetailDesc(detailDescId) {
+    const detailDescs = Array.from(this.detailDescs).filter(dd => dd.id.indexOf(detailDescId) === 0);
+
+    if (!detailDescs.length) {
+      return false;
+    }
+
+    if (detailDescs.length > 1) {
+      return false;
+    }
+
+    return detailDescs.pop();
   }
 
   /**
