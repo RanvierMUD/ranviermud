@@ -27,7 +27,7 @@
   roomDesc: "A wooden chest rests in the corner, its hinges badly rusted."
   keywords: [ "wooden", "chest" ]
   description: "Time has not been kind to this chest. It seems to be held together solely by the dirt and rust."
-  items: [ "limbo:1", "limbo:6", "limbo:7", "limbo:8" ]
+  items: [ "limbo:1", "limbo:6", "limbo:7", "limbo:8", "limbo:leather_gauntlet" ]
   closed: true
   maxItems: 5
   properties:
@@ -176,3 +176,20 @@
   maxItems: 5
   properties:
     noPickup: true
+- id: leather_gauntlet
+  name: "Leather Gauntlet"
+  keywords: ["leather", "gauntlet", "glove"]
+  roomDesc: "Leather Gauntlet"
+  type: ARMOR
+  slot: ['right hand', 'left hand']
+  description: 'This gauntlet is made of overlapping leather bands that provide protection for ones hands and forearms. Looks pretty stylish, too.'
+  quality: common
+  level: 1
+  itemLevel: 1
+  properties:
+    stats:
+      armor: 8
+  behaviors:
+    sellable:
+      value: 25
+      currency: gold
