@@ -35,9 +35,9 @@ module.exports = (srcPath) => {
         player.equip(item);
       } catch (err) {
         if (err instanceof EquipSlotTakenError) {
-          const conflict = item.slots.every(slot => player.equipment.has(slot));
-          const firstItem = player.equipment.get(item.slots[0]);
-          return say(player, `You will have to remove ${firstItem.display} first.`);
+          const conflicts = item.slots.filter(slot => player.equipment.has(slot));
+          const conflictingItems = conflicts.map(slot => player.equipment.get(slot).display).join(', or ');
+          return say(player, `You will have to remove ${conflictingItems} first.`);
         }
 
         return Logger.error(err);
