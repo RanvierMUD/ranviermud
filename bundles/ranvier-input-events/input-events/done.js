@@ -18,13 +18,15 @@ module.exports = (srcPath) => {
 
       player.save();
 
+      player.setMeta('lastCommandTime', Date.now());
+
       player.socket.on('close', () => {
         Logger.log(player.name + ' has gone linkdead.');
         // TODO: try to fetch the person the player is fighting and dereference the player
         //if (player.inCombat.inCombat) {
         //  player.inCombat.inCombat = null;
         //}
-
+        player.setMeta('lastCommandTime', null);
         player.save(() => {
           player.room.removePlayer(player);
           state.PlayerManager.removePlayer(player, true);
@@ -34,7 +36,6 @@ module.exports = (srcPath) => {
       state.CommandManager.get('look').execute(null, player);
 
       player.room.emit('playerEnter', player);
-
       Broadcast.prompt(player);
 
       // All that shit done, let them play!
