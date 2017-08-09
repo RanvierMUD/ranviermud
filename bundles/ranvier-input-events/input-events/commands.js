@@ -23,6 +23,8 @@ module.exports = (src) => {
           return loop();
         }
 
+        player.setMeta('lastCommandTime', Date.now());
+
         try {
           const result = CommandParser.parse(state, data, player);
           if (!result) {

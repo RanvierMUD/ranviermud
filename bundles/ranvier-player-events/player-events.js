@@ -20,6 +20,16 @@ module.exports = (srcPath) => {
           this.commandQueue.execute();
           Broadcast.prompt(this);
         }
+        const lastCommandTime = this.getMeta('lastCommandTime') || Infinity;
+        const timeSinceLastCommand = Date.now() - lastCommandTime;
+        const maximumIdleTime = (Config.get('maximumIdleTime') * 60000) || Infinity;
+        if (timeSinceLastCommand > maximumIdleTime) {
+          this.save(() => {
+            Broadcast.sayAt(this, `You were kicked for being idle for more than ${maximumIdleTime} minutes!`);
+            Broadcast.sayAtExcept(this.room, `${this.name} disappears.`, this);
+            this.socket.emit('close');
+          });
+        }
       },
 
       /**
