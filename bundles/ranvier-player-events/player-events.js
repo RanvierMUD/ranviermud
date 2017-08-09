@@ -22,7 +22,7 @@ module.exports = (srcPath) => {
         }
         const lastCommandTime = this.getMeta('lastCommandTime') || Infinity;
         const timeSinceLastCommand = Date.now() - lastCommandTime;
-        const maximumIdleTime = (Config.get('maximumIdleTime') * 60000) || Infinity;
+        const maximumIdleTime = (Math.abs(Config.get('maximumIdleTime')) * 60000) || Infinity;
         if (timeSinceLastCommand > maximumIdleTime) {
           this.save(() => {
             Broadcast.sayAt(this, `You were kicked for being idle for more than ${maximumIdleTime} minutes!`);
