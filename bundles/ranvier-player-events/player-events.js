@@ -5,6 +5,7 @@ const LevelUtil = require('../ranvier-lib/lib/LevelUtil');
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
+  const Logger = require(srcPath + 'Logger');
   const Config = require(srcPath + 'Config');
 
   return  {
@@ -23,11 +24,13 @@ module.exports = (srcPath) => {
         }
         const lastCommandTime = this.getMeta('lastCommandTime') || Infinity;
         const timeSinceLastCommand = Date.now() - lastCommandTime;
-        const maximumIdleTime = (Math.abs(Config.get('maximumIdleTime')) * 60000) || Infinity;
-        if (timeSinceLastCommand > maximumIdleTime) {
+        const maxIdleTime = (Math.abs(Config.get('maxIdleTime')) * 60000) || Infinity;
+
+        if (timeSinceLastCommand > maxIdleTime) {
           this.save(() => {
-            Broadcast.sayAt(this, `You were kicked for being idle for more than ${maximumIdleTime} minutes!`);
+            Broadcast.sayAt(this, `You were kicked for being idle for more than ${maxIdleTime / 60000} minutes!`);
             Broadcast.sayAtExcept(this.room, `${this.name} disappears.`, this);
+            Logger.log(`Kicked ${this.name} for being idle.`);
             this.socket.emit('close');
           });
         }
