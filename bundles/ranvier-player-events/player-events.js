@@ -5,6 +5,7 @@ const LevelUtil = require('../ranvier-lib/lib/LevelUtil');
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
+  const Config = require(srcPath + 'Config');
 
   return  {
     listeners: {
