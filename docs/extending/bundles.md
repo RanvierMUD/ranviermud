@@ -85,7 +85,7 @@ not present the `package.json` that comes with Ranvier the suggested approach is
 
 1. Create your bundle folder: `mkdir my-bundle` and move into it: `cd my-bundle`
 2. Run `npm init` and fill out the appropriate fields
-3. Now you can safely run `npm require --save some-3rd-party-package` and that dependency will be specific to your
+3. Now you can safely run `npm install --save some-3rd-party-package` and that dependency will be specific to your
    bundle.
 
 Ranvier has a helper command to run `npm install` in all bundles by running `npm run bundle-install` from the root of
