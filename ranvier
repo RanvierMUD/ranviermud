@@ -133,7 +133,6 @@ function init(restartServer) {
 
   if (restartServer) {
     Logger.log("START - Starting server");
-    debugger;
     GameState.GameServer.startup(commander);
 
     // Save every 10 minutes by default.
@@ -150,8 +149,6 @@ function init(restartServer) {
       GameState.AreaManager.tickAll(GameState);
       GameState.ItemManager.tickAll();
     }, 100);
-
-    // TODO: RESPAWN
   }
   Logger.log(`Server started on port: ${commander.port}...`);
 };

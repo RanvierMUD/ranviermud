@@ -2,6 +2,7 @@
 
 const EventEmitter = require('events'),
     net = require('net');
+const TransportStream = require('./TransportStream');
 
 // see: arpa/telnet.h
 const IAC     = 255;
@@ -23,7 +24,7 @@ const OPT_EOR = 25;
  * only purpose is to know how to parse negotiations and swallow
  * them. It can, however, issue commands such as toggling echo
  */
-class TelnetStream extends EventEmitter
+class TelnetStream extends TransportStream
 {
   constructor(opts) {
     super();
