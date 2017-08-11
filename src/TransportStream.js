@@ -60,8 +60,16 @@ class TransportStream extends EventEmitter
     /* noop */
   }
 
-  attach() {
-    /* noop */
+  /**
+   * Attach a socket to this stream
+   * @param {*} socket
+   */
+  attach(socket) {
+    this.socket = socket;
+
+    this.socket.on('close', _ => {
+      this.emit('close');
+    });
   }
 }
 

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Ranvier</title>
+    <style>
+    #output {
+      font-family: monospace;
+      white-space: pre-wrap;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 32px;
+      border: 2px solid #e0e0e0;
+      background-color: #000;
+      color: #e0e0e0;
+      padding: 8px;
+      overflow-y: auto;
+    }
+    #input {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      font-size: 16px;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="output"></div>
+    <input id="input" type="text"></input>
+
+    <script src="ansi_up.js"></script>
+    <script language="javascript" type="text/javascript">
+    var wsUri = 'ws://localhost:4000/';
+    var output;
+    var websocket;
+    var ansi_up = new AnsiUp;
+
+    function init()
+    {
+      output = document.getElementById('output');
+      var input = document.getElementById('input');
+      input.focus();
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          var message = input.value.trim();
+          writeToScreen('SENT: ' + message);
+          websocket.send(message);
+          input.value = '';
+        }
+      });
+      createWebsocket();
+    }
+
+    function createWebsocket()
+    {
+      websocket = new WebSocket(wsUri);
+      websocket.onopen = function(evt) { onOpen(evt) };
+      websocket.onclose = function(evt) { onClose(evt) };
+      websocket.onmessage = function(evt) { onMessage(evt) };
+      websocket.onerror = function(evt) { onError(evt) };
+    }
+
+    function onOpen(evt)
+    {
+      writeToScreen('CONNECTED');
+    }
+
+    function onClose(evt)
+    {
+      writeToScreen('DISCONNECTED');
+    }
+
+    function onMessage(evt)
+    {
+      writeToScreen(evt.data);
+    }
+
+    function onError(evt)
+    {
+      writeToScreen('ERROR: ' + evt.data);
+    }
+
+    function writeToScreen(message)
+    {
+      var span = document.createElement('span');
+      span.innerHTML = ansi_up.ansi_to_html(message);
+      output.appendChild(span);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    window.addEventListener('DOMContentLoaded', init, false);
+    window.addEventListener('beforeunload', function () {
+      websocket.close();
+    });
+    </script>
+  </body>
+</html>

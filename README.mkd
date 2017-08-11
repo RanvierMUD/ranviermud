@@ -6,8 +6,9 @@
 
 See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features.
 
-Ranvier is _not_ a WebSocket MUD. It does not have a web client. It is a plain ol' fashioned telnet MUD. Any client you
-can use to connect to the MUD you played 15 years ago will work with Ranvier.
+Ranvier is a [MUD](https://en.wikipedia.org/wiki/MUD) game engine. Out of the box Ranvier uses a telnet server and will
+work with any MUD client you've used to connect to other MUDs. Ranvier does, however, also ship with a websocket network
+layer you can optionally enable along with a simple websocket MUD client (see the `ranvier-websocket` bundle.)
 
 ## Documentation
 
@@ -24,6 +25,8 @@ We have a Slack channel you can use to ask questions, suggest features, or just 
 
 * Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy
   packaging and sharing of commands/areas/items/npcs/channels/behaviors
+* Unopinionated network layer: easily swap out telnet for websockets or any network layer you like. No need to gut the
+  whole codebase just to support a different transport type, just drop in a file.
 * Scripting support: It's in JavaScript! No need for a shitty DSL. The codebase is JavaScript, the scripting is JavaScript.
 * Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the
   event is emitted. Adding new events is easy as `npc.emit('eventName')` See documentation on Node.js event emitters for more detail
@@ -36,6 +39,7 @@ We have a Slack channel you can use to ask questions, suggest features, or just 
 
 The default bundles come together to make a basic Diku-style MUD with the following features:
 
+* Telnet connections
 * Classes
 * Leveling
 * Passive/active skills

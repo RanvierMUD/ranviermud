@@ -118,7 +118,7 @@ class TelnetStream extends TransportStream
     this.stream.write(new Buffer(seq));
   }
 
-  toggleEcho() {
+  executeToggleEcho() {
     this.echoing = !this.echoing;
     this.telnetCommand(this.echoing ? WONT : WILL, OPT_ECHO);
   }

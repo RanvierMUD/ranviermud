@@ -77,3 +77,16 @@ possible. Click on any of the items below to see an in-depth tutorial.
   Basically everything the player does triggers an event on them that can be attached to and perform
   functionality such as experience, leveling, combat, and time based calculations
 </pre>
+
+### 3rd party node libraries in bundles
+
+Bundles are meant to be self-contained, shareable folders. With that in mind if your bundle relies on a node module
+not present the `package.json` that comes with Ranvier the suggested approach is the following:
+
+1. Create your bundle folder: `mkdir my-bundle` and move into it: `cd my-bundle`
+2. Run `npm init` and fill out the appropriate fields
+3. Now you can safely run `npm require --save some-3rd-party-package` and that dependency will be specific to your
+   bundle.
+
+Ranvier has a helper command to run `npm install` in all bundles by running `npm run bundle-install` from the root of
+the project.
