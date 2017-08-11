@@ -150,7 +150,6 @@ function init(restartServer) {
       GameState.ItemManager.tickAll();
     }, 100);
   }
-  Logger.log(`Server started on port: ${commander.port}...`);
 };
 
 // START IT UP!
