@@ -33,6 +33,7 @@ const ClassManager = require('./src/ClassManager');
 const CommandManager = require('./src/CommandManager');
 const EffectFactory = require('./src/EffectFactory');
 const EventManager = require('./src/EventManager');
+const GameServer = require('./src/GameServer');
 const HelpManager = require('./src/HelpManager');
 const ItemFactory = require('./src/ItemFactory');
 const ItemManager = require('./src/ItemManager');
@@ -115,13 +116,16 @@ function init(restartServer) {
     RoomBehaviorManager: new BehaviorManager(),
     RoomManager: new RoomManager(),
     SkillManager: new SkillManager(),
-    SpellManager: new SkillManager()
+    SpellManager: new SkillManager(),
+    ServerEventManager: new EventManager(),
+    GameServer: new GameServer(),
   };
 
   // Setup bundlemanager
   const BundleManager = new (require('./src/BundleManager'))(GameState);
   GameState.BundleManager = BundleManager;
   BundleManager.loadBundles();
+  GameState.ServerEventManager.attach(GameState.GameServer);
 
   // Set up web API
   const WebInterface = new (require('./src/Api/WebInterface'))(GameState);
@@ -129,46 +133,8 @@ function init(restartServer) {
 
   if (restartServer) {
     Logger.log("START - Starting server");
-
-    /**
-    * Effectively the 'main' game loop but not really because it's a REPL
-    */
-    server = new Telnet.TelnetServer({}, socket => {
-      const banned = Data.parseFile(__dirname + '/data/banned.json');
-      if (banned.includes(socket.address().address)) {
-        return socket.destroy();
-      }
-
-      socket.on('interrupt', () => {
-        socket.write("\n*interrupt*\n");
-      });
-
-      socket.on('error', Logger.error);
-
-      // Register all of the input events (login, etc.)
-      GameState.InputEventManager.attach(socket);
-
-      socket.write("Connecting...\n");
-      Logger.log("User connected...");
-
-      // @see: bundles/ranvier-events/events/login.js
-      socket.emit('intro', socket);
-    }).netServer;
-
-    // Start the server and setup error handlers.
-    server.listen(commander.port).on('error', err => {
-      if (err.code === 'EADDRINUSE') {
-        Logger.error(`Cannot start server on port ${commander.port}, address is already in use.`);
-        Logger.error("Do you have a MUD server already running?");
-      } else if (err.code === 'EACCES') {
-        Logger.error(`Cannot start server on port ${commander.port}: permission denied.`);
-        Logger.error("Are you trying to start it on a priviledged port without being root?");
-      } else {
-        Logger.error("Failed to start MUD server:");
-        Logger.error(err);
-      }
-      process.exit(1);
-    });
+    debugger;
+    GameState.GameServer.startup(commander);
 
     // Save every 10 minutes by default.
     Logger.log(`Setting autosave to ${commander.save} seconds.`);
@@ -188,7 +154,6 @@ function init(restartServer) {
     // TODO: RESPAWN
   }
   Logger.log(`Server started on port: ${commander.port}...`);
-  server.emit('startup');
 };
 
 // START IT UP!

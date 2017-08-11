@@ -78,6 +78,7 @@ class BundleManager {
       { path: 'effects/', fn: 'loadEffects' },
       { path: 'help/', fn: 'loadHelp' },
       { path: 'input-events/', fn: 'loadInputEvents' },
+      { path: 'server-events/', fn: 'loadServerEvents' },
       { path: 'player-events.js', fn: 'loadPlayerEvents' },
       { path: 'skills/', fn: 'loadSkills' },
     ];
@@ -561,6 +562,32 @@ class BundleManager {
     }
 
     Logger.verbose(`\tENDLOAD: Classes...`);
+  }
+
+  /**
+   * @param {string} bundle
+   * @param {string} serverEventsDir
+   */
+  loadServerEvents(bundle, serverEventsDir) {
+    Logger.verbose(`\tLOAD: Server Events...`);
+    const files = fs.readdirSync(serverEventsDir);
+
+    for (const eventsFile of files) {
+      const eventsPath = serverEventsDir + eventsFile;
+      if (!Data.isScriptFile(eventsPath, eventsFile)) {
+        continue;
+      }
+
+      const eventsName = path.basename(eventsFile, path.extname(eventsFile));
+      Logger.verbose(`\t\t\tLOAD: SERVER-EVENTS ${eventsName}...`);
+      const eventsListeners = require(eventsPath)(srcPath).listeners;
+
+      for (const [eventName, listener] of Object.entries(eventsListeners)) {
+        this.state.ServerEventManager.add(eventName, listener(this.state));
+      }
+    }
+
+    Logger.verbose(`\tENDLOAD: Server Events...`);
   }
 }
 
