@@ -13,8 +13,6 @@
  *   --respawn Minutes between respawn
  */
 
-//TODO: Refactor
-
 /* NPM Modules */
 const net = require('net');
 const commander = require('commander');
@@ -44,9 +42,6 @@ const QuestFactory = require('./src/QuestFactory');
 const RoomManager = require('./src/RoomManager');
 const SkillManager = require('./src/SkillManager');
 
-const Telnet = require('./src/Telnet');
-const Data = require('./src/Data');
-
 // Wrapper for ranvier.json
 const Config = require('./src/Config');
 
@@ -55,7 +50,7 @@ commander
   .version(pkg.version)
   .option('-s, --save [time]', 'Number of seconds between auto-save ticks [10]', 10)
   .option('-r, --respawn [time]', 'Number of minutes between respawn ticks [120]', 120)
-  .option('-p, --port [portNumber]', 'Port to host telnet server [23]', Config.get('port', 23))
+  .option('-p, --port [portNumber]', 'Port to host the server [23]', Config.get('port', 23))
   .option('-v, --verbose', 'Verbose console logging.', true)
   .option('-e, --prettyErrors', 'Pretty-print formatting for error stack traces.', false)
   .parse(process.argv);
@@ -79,14 +74,12 @@ if (commander.prettyErrors) {
 const logLevel = commander.verbose ?
   'verbose' :
   process.env.LOG_LEVEL || Config.get('logLevel') || 'debug';
-
 Logger.setLevel(logLevel);
 
 
 // Global state object, server instance and configurable intervals.
 let GameState = {};
 let saveInterval, tickInterval;
-let server;
 
 /**
  * Do the dirty work
@@ -128,6 +121,7 @@ function init(restartServer) {
   GameState.ServerEventManager.attach(GameState.GameServer);
 
   // Set up web API
+  // TODO: move into a server-events bundle
   const WebInterface = new (require('./src/Api/WebInterface'))(GameState);
   WebInterface.init();
 
