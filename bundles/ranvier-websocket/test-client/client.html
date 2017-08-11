@@ -4,18 +4,40 @@
     <meta charset="utf-8" />
     <title>Ranvier</title>
     <style>
+    * {
+        box-sizing: border-box;
+    }
     body {
       font-family: sans-serif;
+    }
+    #info {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 32px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        background-color: #444;
+        color: #fff;
+        border-bottom: 2px solid #666;
+    }
+    #info > * {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     #output {
       font-family: monospace;
       white-space: pre-wrap;
       position: absolute;
-      top: 0;
+      top: 32px;
       left: 0;
       right: 0;
       bottom: 64px;
-      border: 2px solid #e0e0e0;
       background-color: #000;
       color: #e0e0e0;
       padding: 8px;
@@ -27,7 +49,8 @@
       bottom: 32px;
       left: 0;
       right: 0;
-      height: 24px;
+      height: 32px;
+      padding: 4px;
       font-size: 16px;
     }
     #healthbar {
@@ -45,21 +68,28 @@
     }
     #currentHp {
       height: 100%;
+      transition: all 300ms ease;
       background-color: #f00;
     }
     #healthText {
-      position: absolute;
+      align-items: center;
+      color: #fff;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      font-weight: bold;
+      height: 32px;
       justify-content: center;
-      height: 24px;
-      color: #fff;
+      position: absolute;
       width: 100%;
     }
     </style>
   </head>
   <body>
+    <div id="info">
+        <div id="playerName"></div>
+        <div id="playerLevel"></div>
+        <div id="currentArea"></div>
+    </div>
     <div id="output"></div>
     <input id="input" type="text"></input>
     <div id="healthbar">
@@ -138,8 +168,16 @@
     {
       var current = document.getElementById('currentHp');
       var text = document.getElementById('healthText');
-      current.style.width = ((data.health / data.maxHealth) * 100) + '%';
-      text.innerHTML = data.health + '/' + data.maxHealth + ' HP';
+      var healthAttr = data.attributes.health;
+      current.style.width = ((healthAttr.current / healthAttr.max) * 100) + '%';
+      text.innerHTML = healthAttr.current + '/' + healthAttr.max + ' HP';
+
+      var name = document.getElementById('playerName');
+      name.innerHTML = 'Character: ' + data.name;
+      var playerLevel = document.getElementById('playerLevel');
+      playerLevel.innerHTML = 'Level: ' + data.level;
+      var area = document.getElementById('currentArea');
+      currentArea.innerHTML = 'Area: ' + data.area;
     }
 
     window.addEventListener('DOMContentLoaded', init, false);
