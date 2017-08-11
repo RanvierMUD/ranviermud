@@ -12,7 +12,7 @@
   .vscode/         - Visual Studio Code project settings
   .github/         - Github templates
   gulpfile.js      - <a href="http://gulpjs.com/">Gulpfile</a>
-  .istanbul.yml    - <a href="https://istanbul.js.org/">Instanbul</a> test coverage config
+  .istanbul.yml    - <a href="https://istanbul.js.org/">Istanbul</a> test coverage config
   LICENSE.txt      - Copy of Ranvier's MIT license
   mkdocs.yml       - <a href="http://www.mkdocs.org/">Mkdocs</a> config file used to generate these docs
   .nvmrc           - <a href="https://github.com/creationix/nvm">NVM</a> config
