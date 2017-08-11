@@ -79,7 +79,7 @@ Logger.setLevel(logLevel);
 
 // Global state object, server instance and configurable intervals.
 let GameState = {};
-let saveInterval, tickInterval;
+let saveInterval, tickInterval, playerTickInterval;
 
 /**
  * Do the dirty work
@@ -139,12 +139,16 @@ function init(restartServer) {
     // Ticks for effect processing and combat happen every half second
     clearInterval(tickInterval);
     tickInterval = setInterval(() => {
-      GameState.PlayerManager.emit('updateTick');
       GameState.AreaManager.tickAll(GameState);
       GameState.ItemManager.tickAll();
-    }, 100);
+    }, Config.get('entityTickFrequency', 100));
+
+    clearInterval(playerTickInterval);
+    playerTickInterval = setInterval(() => {
+      GameState.PlayerManager.emit('updateTick');
+    }, Config.get('playerTickFrequency', 100));
   }
-};
+}
 
 // START IT UP!
 init();
