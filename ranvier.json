@@ -7,7 +7,7 @@
     "::1"
   ],
   "bundles": [
-    "ranvier-connections",
+    "ranvier-telnet",
     "ranvier-areas",
     "ranvier-channels",
     "ranvier-commands",
