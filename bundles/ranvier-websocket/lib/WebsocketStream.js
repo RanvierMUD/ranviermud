@@ -20,13 +20,16 @@ class WebsocketStream extends TransportStream
     return this.socket.readyState === 1;
   }
 
-  write(...args) {
+  write(message) {
     if (!this.writable) {
       return;
     }
 
     // this.socket will be set when we do `ourWebsocketStream.attach(websocket)`
-    this.socket.send(...args);
+    this.socket.send(JSON.stringify({
+      type: 'message',
+      message,
+    }));
   }
 
   pause() {
@@ -40,6 +43,17 @@ class WebsocketStream extends TransportStream
   end() {
     // 1000 = normal close, no error
     this.socket.close(1000);
+  }
+
+  executeSendData(data) {
+    if (!this.writable) {
+      return;
+    }
+
+    this.socket.send(JSON.stringify({
+      type: 'data',
+      data
+    }));
   }
 }
 

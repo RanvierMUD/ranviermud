@@ -20,6 +20,12 @@ module.exports = (srcPath) => {
           this.commandQueue.execute();
           Broadcast.prompt(this);
         }
+
+        // example of sending player data to a websocket client. This data is not sent to the default telnet socket
+        this.socket.command('sendData', {
+          health: this.getAttribute('health'),
+          maxHealth: this.getMaxAttribute('health'),
+        });
       },
 
       /**
