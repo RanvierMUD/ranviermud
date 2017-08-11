@@ -4,6 +4,8 @@ const EventEmitter = require('events'),
     net = require('net');
 const TransportStream = require('./TransportStream');
 
+// @TODO: Refactor this to be its one node module
+
 // see: arpa/telnet.h
 const IAC     = 255;
 const DONT    = 254;
@@ -121,7 +123,7 @@ class TelnetStream extends TransportStream
     this.telnetCommand(this.echoing ? WONT : WILL, OPT_ECHO);
   }
 
-  goAhead() {
+  executeGoAhead() {
     if (!this.gaMode) {
       return;
     }
