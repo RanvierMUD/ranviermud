@@ -26,7 +26,9 @@ with no harm whatsoever.
 * `ranvier-lib` - Not actually loaded into the game, just a place to put common ranvier bundle functionality
 * `ranvier-player-events` - Example implementation of experience/leveling for the player
 * `ranvier-quests` - Example implementation of quest commands
+* `ranvier-telnet` - Makes Ranvier use a telnet server for player connections (enabled by default)
 * `ranvier-vendors` - Example implementation of in game shops
+* `ranvier-websocket` - WebSocket server to be used instead of/along side telnet (off by default)
 * `ranvier-npc-behaviors` - Ready-to-use standalone behaviors for NPCs: wandering, aggro, etc.
 * `debug-commands` - Commands useful while debugging (`givexp` for example), commands only usable by ADMIN role players
 
