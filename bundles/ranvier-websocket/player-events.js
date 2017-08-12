@@ -18,7 +18,15 @@ module.exports = (srcPath) => {
           level: this.level,
           name: this.name,
           area: this.room && this.room.area.title,
+          targets: [...this.combatants].map(target => ({
+              name: target.name,
+              health: {
+                current: target.getAttribute('health'),
+                max: target.getMaxAttribute('health'),
+              },
+          }))
         };
+
         this.socket.command('sendData', data);
       },
     }

@@ -31,12 +31,16 @@ module.exports = (srcPath) => {
           return;
         }
 
-        if (!this.hasPrompt('combat')) {
+        const usingWebsockets = state.Config.get('bundles').includes('ranvier-websocket');
+        // don't show the combat prompt to a websockets server
+        if (!this.hasPrompt('combat') && !usingWebsockets) {
           this.addPrompt('combat', _ => promptBuilder(this));
         }
 
         B.sayAt(this, '');
-        B.prompt(this);
+        if (!usingWebsockets) {
+          B.prompt(this);
+        }
       },
 
       /**
