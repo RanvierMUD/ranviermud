@@ -237,11 +237,12 @@ class Effect extends EventEmitter {
     }
 
     return {
-      id: this.id,
+      config,
       elapsed: this.elapsed,
+      id: this.id,
+      remaining: this.remaining,
       skill: this.skill && this.skill.id,
       state,
-      config,
     };
   }
 

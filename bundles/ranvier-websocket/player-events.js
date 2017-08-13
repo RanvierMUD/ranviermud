@@ -24,7 +24,8 @@ module.exports = (srcPath) => {
                 current: target.getAttribute('health'),
                 max: target.getMaxAttribute('health'),
               },
-          }))
+          })),
+          effects: this.effects.entries().filter(effect => !effect.config.hidden).map(effect => effect.serialize()),
         };
 
         this.socket.command('sendData', data);
