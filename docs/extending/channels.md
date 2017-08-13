@@ -38,6 +38,7 @@ This `chat` channel is an example of a game-wide communication channel. All play
 module.exports = (srcPath) => {
   const Channel = require(srcPath + 'Channel');
   const AudienceWorld = require(srcPath + 'ChannelAudience/World');
+  const PlayerRoles = require(srcPath + 'PlayerRoles');
 
   return [
     new Channel({
@@ -58,7 +59,15 @@ module.exports = (srcPath) => {
       `audience` defines who will receive the message from this channel.
       Available audiences can be seen in: `src/ChannelAudience/`
       */
-      audience: new AudienceWorld()
+      audience: new AudienceWorld(),
+
+      /*
+      Optionally you can specify a minimum player role required to use the channel
+      Note: This property is not used by the core to perform any restrictions, it is simply added as a
+      public property to allow bundles to access it and do their own restriction.
+
+      minRequiredRole: PlayerRoles.ADMIN,
+      */
     }),
   ];
 };

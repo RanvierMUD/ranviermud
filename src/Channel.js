@@ -9,6 +9,7 @@ const PartyAudience = require('./ChannelAudience/PartyAudience');
  * @property {ChannelAudience} audience People who receive messages from this channel
  * @property {string} name  Actual name of the channel the user will type
  * @property {string} color Default color. This is purely a helper if you're using default format methods
+ * @property {PlayerRoles} minRequiredRole If set only players with the given role or greater can use the channel
  * @property {string} description
  * @property {{sender: function, target: function}} [formatter]
  */
@@ -18,6 +19,7 @@ class Channel {
    * @param {string} config.name Name of the channel
    * @param {ChannelAudience} config.audience
    * @param {string} [config.description]
+   * @param {PlayerRoles} [config.minRequiredRole]
    * @param {string} [config.color]
    * @param {{sender: function, target: function}} [config.formatter]
    */
@@ -29,6 +31,7 @@ class Channel {
       throw new Error(`Channel ${config.name} is missing a valid audience.`);
     }
     this.name = config.name;
+    this.minRequiredRole = config.minRequiredRole || null;
     this.description = config.description;
     this.bundle = config.bundle || null; // for debugging purposes, which bundle it came from
     this.audience = config.audience || (new WorldAudience());
