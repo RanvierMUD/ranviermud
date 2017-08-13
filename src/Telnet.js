@@ -2,6 +2,9 @@
 
 const EventEmitter = require('events'),
     net = require('net');
+const TransportStream = require('./TransportStream');
+
+// @TODO: Refactor this to be its one node module
 
 // see: arpa/telnet.h
 const IAC     = 255;
@@ -23,7 +26,7 @@ const OPT_EOR = 25;
  * only purpose is to know how to parse negotiations and swallow
  * them. It can, however, issue commands such as toggling echo
  */
-class TelnetStream extends EventEmitter
+class TelnetStream extends TransportStream
 {
   constructor(opts) {
     super();
@@ -115,12 +118,12 @@ class TelnetStream extends EventEmitter
     this.stream.write(new Buffer(seq));
   }
 
-  toggleEcho() {
+  executeToggleEcho() {
     this.echoing = !this.echoing;
     this.telnetCommand(this.echoing ? WONT : WILL, OPT_ECHO);
   }
 
-  goAhead() {
+  executeGoAhead() {
     if (!this.gaMode) {
       return;
     }

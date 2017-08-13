@@ -141,7 +141,7 @@ class Broadcast {
 
     player.socket._prompted = true;
     if (player.socket.writable) {
-      player.socket.goAhead();
+      player.socket.command('goAhead');
     }
   }
 

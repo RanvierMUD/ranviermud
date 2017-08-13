@@ -14,9 +14,9 @@ module.exports = (srcPath) => {
       say("Your password must be at least 8 characters.");
       write('<cyan>Enter your account password:</cyan> ');
 
-      socket.toggleEcho();
+      socket.command('toggleEcho');
       socket.once('data', pass => {
-        socket.toggleEcho();
+        socket.command('toggleEcho');
         say('');
 
         pass = pass.toString().trim();

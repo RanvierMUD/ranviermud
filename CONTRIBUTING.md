@@ -12,6 +12,13 @@ If you find an issue click the _Issues_ tab on the github page, there will be a 
 you should include in your report. We also suggest you hop in the above slack channel and let us know, we may be able to
 resolve your issue right then and there!
 
+## What to work on
+
+If you are new to the open source world or even a veteran who just wants an easy introduction to the Ranvier codebase
+check the issue list for issues with the [New Contributor](https://github.com/shawncplus/ranviermud/labels/New%20Contributor) label.
+ _New Contributor_ issues are non-critical bugs or features that are particularly easy or provide a good introduction to
+a certain Ranvier subsystem.
+
 ## Documentation
 
 If you're not sure where to get started contributing to Ranvier the best place to start is documentation. Read over the

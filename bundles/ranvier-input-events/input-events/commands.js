@@ -41,6 +41,9 @@ module.exports = (src) => {
               break;
             }
             case CommandTypes.CHANNEL: {
+              if (result.channel.minRequiredRole !== null && result.channel.minRequiredRole > player.role) {
+                throw new RestrictedCommandError();
+              }
               // same with channels
               result.channel.send(state, player, result.args);
               break;

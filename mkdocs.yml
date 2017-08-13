@@ -28,6 +28,7 @@ pages:
 - Project Structure: structure.md
 - Extending:
     - Bundles: 'extending/bundles.md'
+    - Server: 'extending/server.md'
     - Areas:
         - Creating an Area: 'extending/areas/index.md'
         - Items: 'extending/areas/items.md'
