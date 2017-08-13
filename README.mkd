@@ -13,7 +13,7 @@ Ranvier does, however, also ship with a websocket network layer you can optional
 websocket client specifically built for this bundle which can be found in the Neuro repo: [github.com/shawncplus/neuro](https://github.com/shawncplus/neuro)
 
 <p align="center">
-  <img width="640" src="https://raw.githubusercontent.com/shawncplus/neuro/master/assets/screenshot.png" />
+  <img width="640" src="https://raw.githubusercontent.com/shawncplus/neuro/master/assets/demo.gif" />
 </p>
 <div style="text-align: center"><em>Ranvier with websockets and the Neuro client</em></div>
 
