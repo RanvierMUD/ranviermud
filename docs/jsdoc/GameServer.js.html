@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: RoomManager.js | Ranvier</title>
+    <title>Source: GameServer.js | Ranvier</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -52,62 +52,34 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const Room = require('./Room');
+const EventEmitter = require('events');
 
-/**
- * Keeps track of all the individual rooms in the game
- * @property {string} startingRoom EntityReference of the room players should spawn in when created
- */
-class RoomManager {
-  constructor() {
-    this.rooms = new Map();
-    this.startingRoom = null;
+class GameServer extends EventEmitter
+{
+  /**
+   * @param {commander} commander
+   * @fires GameServer#startup
+   */
+  startup(commander) {
+    /**
+     * @event GameServer#startup
+     * @param {commander} commander
+     */
+    this.emit('startup', commander);
   }
 
   /**
-   * @param {string} entityRef
-   * @return {Room}
+   * @fires GameServer#shutdown
    */
-  getRoom(entityRef) {
-    return this.rooms.get(entityRef);
-  }
-
-  /**
-   * @param {Room} room
-   */
-  addRoom(room) {
-    this.rooms.set(room.entityReference, room);
-  }
-
-  /**
-   * @param {Room} room
-   */
-  removeRoom(room) {
-    this.rooms.delete(room.entityReference);
-  }
-
-  /**
-   * Get the exit definition of a room's exit by searching the exit name
-   * @param {Room}   room
-   * @param {string} exitName exit name search
-   * @return {false|Object}
-   */
-  findExit(room, exitName) {
-    const exits = Array.from(room.exits).filter(e => e.direction.indexOf(exitName) === 0);
-
-    if (!exits.length) {
-      return false;
-    }
-
-    if (exits.length > 1) {
-      return false;
-    }
-
-    return exits.pop();
+  shutdown() {
+    /**
+     * @event GameServer#shutdown
+     */
+    this.emit('shutdown');
   }
 }
 
-module.exports = RoomManager;
+module.exports = GameServer;
 </code></pre>
         </article>
     </section>

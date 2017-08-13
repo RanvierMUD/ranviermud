@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: RoomManager.js | Ranvier</title>
+    <title>Source: TransportStream.js | Ranvier</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -52,62 +52,80 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const Room = require('./Room');
+const EventEmitter = require('events');
 
 /**
- * Keeps track of all the individual rooms in the game
- * @property {string} startingRoom EntityReference of the room players should spawn in when created
+ * Base class for anything that should be sending or receiving data from the player
  */
-class RoomManager {
-  constructor() {
-    this.rooms = new Map();
-    this.startingRoom = null;
+class TransportStream extends EventEmitter
+{
+  get readable() {
+    return true;
+  }
+
+  get writable() {
+    return true;
+  }
+
+  write() {
+    /* noop */
   }
 
   /**
-   * @param {string} entityRef
-   * @return {Room}
+   * A subtype-safe way to execute commands on a specific type of stream that invalid types will ignore. For given input
+   * for command (example, `"someCommand"` ill look for a method called `executeSomeCommand` on the `TransportStream`
+   * @param {string} command
+   * @param {...*} args
+   * @return {*}
    */
-  getRoom(entityRef) {
-    return this.rooms.get(entityRef);
-  }
-
-  /**
-   * @param {Room} room
-   */
-  addRoom(room) {
-    this.rooms.set(room.entityReference, room);
-  }
-
-  /**
-   * @param {Room} room
-   */
-  removeRoom(room) {
-    this.rooms.delete(room.entityReference);
-  }
-
-  /**
-   * Get the exit definition of a room's exit by searching the exit name
-   * @param {Room}   room
-   * @param {string} exitName exit name search
-   * @return {false|Object}
-   */
-  findExit(room, exitName) {
-    const exits = Array.from(room.exits).filter(e => e.direction.indexOf(exitName) === 0);
-
-    if (!exits.length) {
-      return false;
+  command(command, ...args) {
+    if (!command || !command.length) {
+      throw new RangeError("Must specify a command to the stream");
     }
-
-    if (exits.length > 1) {
-      return false;
+    command = 'execute' + command[0].toUpperCase() + command.substr(1);
+    if (typeof this[command] === 'function') {
+      return this[command](...args);
     }
+  }
 
-    return exits.pop();
+  address() {
+    return null;
+  }
+
+  end() {
+    /* noop */
+  }
+
+  setEncoding() {
+    /* noop */
+  }
+
+  pause() {
+    /* noop */
+  }
+
+  resume() {
+    /* noop */
+  }
+
+  destroy() {
+    /* noop */
+  }
+
+  /**
+   * Attach a socket to this stream
+   * @param {*} socket
+   */
+  attach(socket) {
+    this.socket = socket;
+
+    this.socket.on('close', _ => {
+      this.emit('close');
+    });
   }
 }
 
-module.exports = RoomManager;
+module.exports = TransportStream;
 </code></pre>
         </article>
     </section>

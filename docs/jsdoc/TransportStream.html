@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: RoomManager.js | Ranvier</title>
+    <title>Class: TransportStream | Ranvier</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -47,70 +45,481 @@
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
+        <h2>TransportStream</h2>
+        
+            <div class="class-description"><p>Base class for anything that should be sending or receiving data from the player</p></div>
+        
+    
+</header>
 
-const Room = require('./Room');
+<article>
+    <div class="container-overview">
+    
+        
 
-/**
- * Keeps track of all the individual rooms in the game
- * @property {string} startingRoom EntityReference of the room players should spawn in when created
- */
-class RoomManager {
-  constructor() {
-    this.rooms = new Map();
-    this.startingRoom = null;
-  }
+<dt>
 
-  /**
-   * @param {string} entityRef
-   * @return {Room}
-   */
-  getRoom(entityRef) {
-    return this.rooms.get(entityRef);
-  }
+    
+        
+        <h2>Constructor</h2>
+        
 
-  /**
-   * @param {Room} room
-   */
-  addRoom(room) {
-    this.rooms.set(room.entityReference, room);
-  }
+        <h4 class="name" id="TransportStream">
+            <span class="type-signature"></span>new TransportStream<span class="signature">()</span><span class="type-signature"></span>
+            
+            <div class="container-source members">
+                <code><a href="TransportStream.js.html">TransportStream.js</a></code>,
+                <code><a href="TransportStream.js.html#line8">line 8</a></code>
+            </div>
+            
+        </h4>
 
-  /**
-   * @param {Room} room
-   */
-  removeRoom(room) {
-    this.rooms.delete(room.entityReference);
-  }
+        
+    
 
-  /**
-   * Get the exit definition of a room's exit by searching the exit name
-   * @param {Room}   room
-   * @param {string} exitName exit name search
-   * @return {false|Object}
-   */
-  findExit(room, exitName) {
-    const exits = Array.from(room.exits).filter(e => e.direction.indexOf(exitName) === 0);
+</dt>
+<dd>
 
-    if (!exits.length) {
-      return false;
-    }
+    
 
-    if (exits.length > 1) {
-      return false;
-    }
+    
 
-    return exits.pop();
-  }
-}
+    
 
-module.exports = RoomManager;
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+                
+
+<dt>
+
+    
+        
+
+        <h4 class="name" id="attach">
+            <span class="type-signature"></span>attach<span class="signature">(socket)</span><span class="type-signature"></span>
+            
+            <div class="container-source members">
+                <code><a href="TransportStream.js.html">TransportStream.js</a></code>,
+                <code><a href="TransportStream.js.html#line67">line 67</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Attach a socket to this stream</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>socket</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+
+    
+        
+
+        <h4 class="name" id="command">
+            <span class="type-signature"></span>command<span class="signature">(command, &hellip;args)</span><span class="type-signature"> &rarr; {*}</span>
+            
+            <div class="container-source members">
+                <code><a href="TransportStream.js.html">TransportStream.js</a></code>,
+                <code><a href="TransportStream.js.html#line29">line 29</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>A subtype-safe way to execute commands on a specific type of stream that invalid types will ignore. For given input
+for command (example, <code>&quot;someCommand&quot;</code> ill look for a method called <code>executeSomeCommand</code> on the <code>TransportStream</code></p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>command</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">*</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -127,7 +536,7 @@ module.exports = RoomManager;
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
+        var id = 'TransportStream_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 
