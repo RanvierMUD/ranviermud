@@ -6,11 +6,12 @@
 
 See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features.
 
-Ranvier is a [MUD](https://en.wikipedia.org/wiki/MUD) game engine. Out of the box Ranvier uses a telnet server and will
-work with any MUD client you've used to connect to other MUDs.
+Ranvier is a [MUD](https://en.wikipedia.org/wiki/MUD) game engine. Out of the box Ranvier is configured to use a telnet
+server and will work with any MUD client you've used to connect to other MUDs. However, Ranvier supports any transport
+server you want to use; changing the entire networking layer is as easy as adding a command.
 
-Ranvier does, however, also ship with a websocket network layer you can optionally enable. There is also an accompanying
-websocket client specifically built for this bundle which can be found in the Neuro repo: [github.com/shawncplus/neuro](https://github.com/shawncplus/neuro)
+Ranvier also ships with a websocket networking bundle you can optionally enable. There is an accompanying
+client specifically built for this bundle which can be found in the Neuro repo: [github.com/shawncplus/neuro](https://github.com/shawncplus/neuro)
 
 <p align="center">
   <img width="640" src="https://raw.githubusercontent.com/shawncplus/neuro/master/assets/demo.gif" />
@@ -33,8 +34,8 @@ We have a Slack channel you can use to ask questions, suggest features, or just 
 
 * Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy
   packaging and sharing of commands/areas/items/npcs/channels/behaviors
-* Unopinionated network layer: easily swap out telnet for websockets or any network layer you like. No need to gut the
-  whole codebase just to support a different transport type, just drop in a file.
+* Unopinionated network layer: easily swap out telnet for any network layer you like. No need to gut the whole codebase
+  just to support a different transport type, just drop in a file.
 * Scripting support: It's in JavaScript! No need for a shitty DSL. The codebase is JavaScript, the scripting is JavaScript.
 * Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the
   event is emitted. Adding new events is easy as `npc.emit('eventName')` See documentation on Node.js event emitters for more detail
@@ -43,9 +44,11 @@ We have a Slack channel you can use to ask questions, suggest features, or just 
   GUI editor to build (though we do have a GUI editor in the works!)
 * Did I mention it's in blasting JavaScript? No compiling, no C, no cygwin, no 15 year old spaghetti code
 
-### Built-in Bundles
+### Example Bundles
 
-The default bundles come together to make a basic Diku-style MUD with the following features:
+Ranvier is built on the concept of bundles: self-contained packages that are combined to create the game you want
+without having to modify the core engine. The example bundles combine to make a basic Diku-style MUD with the following
+features:
 
 * Telnet connections
 * Classes
@@ -68,7 +71,7 @@ The default bundles come together to make a basic Diku-style MUD with the follow
   * Wandering NPCs (optionally restricted to certain paths or areas)
   * Conversational NPCs controlled via an integration with [API.AI](https://api.ai)
 
-You can build your MUD on top of these bundles or disable them and build yours completely fresh while still taking
+You can build your game using these bundles or disable them and build yours completely fresh while still taking
 advantage of all of the core code.
 
 ## Requirements
