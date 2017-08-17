@@ -4,7 +4,7 @@
 
 ## Node.js-based MUD engine
 
-See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features.
+See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features. Current version: 2.0
 
 Ranvier is a [MUD](https://en.wikipedia.org/wiki/MUD) game engine. Out of the box Ranvier is configured to use a telnet
 server and will work with any MUD client you've used to connect to other MUDs. However, Ranvier supports any transport
