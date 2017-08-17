@@ -14,7 +14,7 @@ module.exports = (srcPath) => {
     requiresTarget: true,
     targetSelf: true,
 
-    run: state => function (args, player, target) {
+    run: state => function (args, player) {
       const restorePercent = this.options.restore || 0;
       const stat = this.options.stat || 'health';
       const heal = new Heal({
@@ -25,7 +25,7 @@ module.exports = (srcPath) => {
       });
 
       Broadcast.sayAt(player, `<bold>You drink the potion and a warm feeling fills your body.</bold>`);
-      heal.commit(target);
+      heal.commit(player);
     },
 
     info: function (player) {

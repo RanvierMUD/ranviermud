@@ -26,6 +26,7 @@ module.exports = (srcPath) => {
               },
           })),
           effects: this.effects.entries().filter(effect => !effect.config.hidden).map(effect => effect.serialize()),
+          quests: this.questTracker.serialize().active,
         };
 
         this.socket.command('sendData', data);
