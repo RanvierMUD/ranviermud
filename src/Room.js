@@ -43,10 +43,15 @@ class Room extends EventEmitter {
     // create by-val copies of the doors config so the lock/unlock don't accidentally modify the original definition
     this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(def.doors || {}))));
     this.defaultDoors = def.doors;
+    this.meta = def.meta || {};
 
     this.items = new Set();
     this.npcs = new Set();
     this.players = new Set();
+
+    // Arbitrary data bundles are free to shove whatever they want in
+    // WARNING: values must be JSON.stringify-able
+    this.metadata = def.metadata || {};
 
     /**
      * spawnedNpcs keeps track of NPCs even when they leave the room for the purposes of respawn. So if we spawn NPC A
@@ -78,6 +83,37 @@ class Room extends EventEmitter {
         entity.emit(eventName, ...args);
       }
     }
+  }
+
+  /**
+   * Set a metadata value. Does _not_ autovivify, you will need to create the parent objects if they don't exist
+   * @param {string} key   Key to set. Supports dot notation e.g., `"foo.bar"`
+   * @param {*}      value Value must be JSON.stringify-able
+   */
+  setMeta(key, value) {
+    let parts = key.split('.');
+    const property = parts.pop();
+    let base = this.metadata;
+
+    while (parts.length) {
+      let part = parts.pop();
+      if (!(part in base)) {
+        throw new RangeError(`Metadata path invalid: ${key}`);
+      }
+      base = base[part];
+    }
+
+    base[property] = value;
+  }
+
+  /**
+   * Get metadata about a player
+   * @param {string} key Key to fetch. Supports dot notation e.g., `"foo.bar"`
+   * @return {*}
+   */
+  getMeta(key) {
+    let base = this.metadata;
+    return key.split('.').reduce((obj, index) => obj && obj[index], base);
   }
 
   /**

@@ -47,6 +47,10 @@ class Character extends EventEmitter
 
     this.effects = new EffectList(this, data.effects);
     this.skills = new Map();
+
+    // Arbitrary data bundles are free to shove whatever they want in
+    // WARNING: values must be JSON.stringify-able
+    this.metadata = data.metadata || {};
   }
 
   /**
@@ -58,6 +62,37 @@ class Character extends EventEmitter
     super.emit(event, ...args);
 
     this.effects.emit(event, ...args);
+  }
+
+  /**
+   * Set a metadata value. Does _not_ autovivify, you will need to create the parent objects if they don't exist
+   * @param {string} key   Key to set. Supports dot notation e.g., `"foo.bar"`
+   * @param {*}      value Value must be JSON.stringify-able
+   */
+  setMeta(key, value) {
+    let parts = key.split('.');
+    const property = parts.pop();
+    let base = this.metadata;
+
+    while (parts.length) {
+      let part = parts.pop();
+      if (!(part in base)) {
+        throw new RangeError(`Metadata path invalid: ${key}`);
+      }
+      base = base[part];
+    }
+
+    base[property] = value;
+  }
+
+  /**
+   * Get metadata about a player
+   * @param {string} key Key to fetch. Supports dot notation e.g., `"foo.bar"`
+   * @return {*}
+   */
+  getMeta(key) {
+    let base = this.metadata;
+    return key.split('.').reduce((obj, index) => obj && obj[index], base);
   }
 
   /**

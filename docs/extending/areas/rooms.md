@@ -28,11 +28,12 @@ In Ranvier, all rooms for an area are defined in a single file within the area f
     - id: "limbo:2"
       respawnChance: 20
       maxLoad: 5
+  metadata:
+    fooType: 'bar'
   exits:
     - roomId: "limbo:1"
       direction: "west"
       leaveMessage: " steps into the light and disappears."
-
   doors:
     "limbo:1": # The player encounters a door when trying to move between "limbo:1" and this room
       lockedBy: "limbo:test_key" # this room can only be locked/unlocked with this item
@@ -76,6 +77,9 @@ in the `ranvier-commands` bundle for an demonstration of how access is blocked o
 `behaviors` _`array<string>`_
 :    List of behaviors to attach to this room (See [Scripting](scripting.md))
 
+`metadata` _`object`_
+:    A place to put other data you want to access inside scripts/behaviors/commands/etc. that doesn't fit into one of the existing properties. See `Room.getMeta` and `Room.setMeta`. Note: changes to metadata while the server is running will be lost when the server is shut down.
+
 `exits` _`Array`_
 :    Rooms the player can get to from here; each `exits` entry has the following fields:
 
@@ -87,3 +91,15 @@ in the `ranvier-commands` bundle for an demonstration of how access is blocked o
 >
 > `leaveMessage` _`string`_
 > :    Message shown to the room when the player leaves the room in this direction. In the Room 1 example above, players in the same room will see "Shawn steps into the void and disappears." when Shawn leaves to the east.
+
+`doors` _`object`_
+:    Doors blocking access to this room. The key for each door is the room you want to block access _from_. So if you want to block access to players coming _from_ `limbo:5` into the room the key would be `"limbo:5"`
+
+> `lockedBy` _`EntityReference`_
+> :    Optional item EntityReference of the item that will be the key that locks/unlocks the door
+>
+> `locked` _`boolean`_ `(false)`
+> :    Whether the door starts locked
+>
+> `closed` _`boolean`_ `(false)`
+> :    Whether the door starts closed
