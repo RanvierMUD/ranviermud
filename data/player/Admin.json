@@ -1,1 +1,52 @@
-{"attributes":[["health",{"delta":0,"base":100}],["mana",{"delta":0,"base":200}],["energy",{"delta":0,"base":200}],["strength",{"delta":0,"base":20}],["intelligence",{"delta":0,"base":20}],["wisdom",{"delta":0,"base":20}],["dexterity",{"delta":0,"base":20}],["constitution",{"delta":0,"base":20}]],"level":1,"name":"Admin","room":"limbo:1","effects":[],"playerClass":"warrior","experience":0,"inventory":[],"quests":{"completed":[],"active":[["limbo:1",{"state":{"count":0}}]]},"metadata":{"class":"warrior"},"equipment":{}}
+{
+  "attributes": {
+    "strength": {
+      "delta": 0,
+      "base": 17
+    },
+    "agility": {
+      "delta": 0,
+      "base": 10
+    },
+    "intellect": {
+      "delta": 0,
+      "base": 8
+    },
+    "stamina": {
+      "delta": 0,
+      "base": 11
+    },
+    "health": {
+      "delta": 0,
+      "base": 154
+    },
+    "armor": {
+      "delta": 0,
+      "base": 0
+    },
+    "energy": {
+      "delta": 0,
+      "base": 100
+    }
+  },
+  "level": 1,
+  "name": "Admin",
+  "room": "limbo:1",
+  "effects": [],
+  "experience": 0,
+  "inventory": {
+    "items": [],
+    "max": 16
+  },
+  "metadata": {
+    "class": "warrior"
+  },
+  "playerClass": "warrior",
+  "prompt": "[ %health.current%/%health.max% <b>hp</b> %energy.current%/%energy.max% <b>energy</b> ]",
+  "quests": {
+    "completed": [],
+    "active": []
+  },
+  "role": 2,
+  "equipment": {}
+}

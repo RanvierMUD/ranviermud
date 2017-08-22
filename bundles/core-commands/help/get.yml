@@ -1,9 +1,0 @@
----
-command: get
-body: |
-  Get an item from the room or a container
-related:
-- inventory
-- put
-keywords:
-- loot

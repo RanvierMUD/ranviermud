@@ -11,7 +11,7 @@ scripts, and quests.
 Click on any of the items to see more in-depth tutorials on their contents.
 
 <pre>
-core-areas/
+ranvier-areas/
   areas/
     limbo/ - Actual area folder, name will be used as key for `area:id`
              pairs which you'll see for items/npcs
@@ -25,22 +25,23 @@ core-areas/
 
 ## The Manifest
 
-The manifest right now is incredibly simple and only requires one setting: `title`
+The manifest right now is incredibly simple and only requires one setting: `title`.
 
 Example Manifest
 
 ``` yaml
 ---
 title: "My Area Title"
+info:
+  respawnInterval: 60
 ```
 
-In the future the manifest could be used to define any type of area-wide
-property such as biome, suggested level, respawn time, weather, etc.
-
+`respawnInterval` _`number`_
+:    Number of seconds between respawn ticks. See the [Room](rooms.md) section for details on handling respawn. Defaults to 60.
 
 ## Entity References
 
-Very often you'll see strings like `limbo:1`. These are entity references and can refer to Items, NPCs, Rooms, and Quests. The type of entity the reference points to is inferred from its usage (e.g., `foobar:1` in an `items` list would point to an Item.) Let's take a look at an example NPC definition
+You'll often see strings like `limbo:1`. These are entity references and can refer to Items, NPCs, Rooms, and Quests. The type of entity the reference points to is inferred from its context (e.g., `foobar:1` in an `items` list would point to an Item.) Let's take a look at an example NPC definition:
 
 Assuming both of these definitions live in `bundles/awesome-bundle/areas/foobar/`
 
@@ -57,6 +58,6 @@ and an accompanying item definition
   name: "Sword of Awesomeness"
 ```
 
-In the definition of Joe Schmoe `foobar:1` in the `items` property says "Find item with the ID `1` in the area `foobar`". Entity ids are only unique within the same entity type of the same area. So Joe Schmoe's entity reference would _also_ be `foobar:1`
+In the definition of Joe Schmoe, the value`foobar:1` in the `items` property's array means "Find item with the ID `1` in the area `foobar`". Entity ids are only unique within the same entity type of the same area. So Joe Schmoe's entity reference would _also_ be `foobar:1`, but would refer to an NPC.
 
-This type will be described in the subsequent docs as `EntityReference`
+This string will be described in the subsequent docs as `EntityReference`.

@@ -1,17 +1,12 @@
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const yaml = require('js-yaml');
 const chokidar = require('chokidar');
 
 const BundleData = require('./BundleData');
 
-/**
- * Bundle Data Manager
- *
- * @class BundleDataManager
- */
 class BundleDataManager {
 
   constructor(state) {
@@ -20,6 +15,7 @@ class BundleDataManager {
   }
 
   loadBundles(baseDirectory) {
+    this.bundles = [];
     this.basePath = path.join(baseDirectory, "bundles");
 
     const bundles = fs.readdirSync(this.basePath);
@@ -32,12 +28,6 @@ class BundleDataManager {
 
       this.loadBundle(bundle);
     }
-
-    const watcher = chokidar.watch(this.basePath, {ignoreInitial: true});
-
-    watcher.on('addDir', newDir => {
-      this.loadBundle(path.basename(newDir));
-    });
   }
 
   loadBundle(bundleName) {
@@ -54,10 +44,10 @@ class BundleDataManager {
 
   /**
    * Get a bundle directory by name
-   * 
+   *
    * @param {any} bundleName 
    * @returns BundleFolder
-   * 
+   *
    * @memberOf BundleDataManager
    */
   getBundleDirectory (bundleName) {
@@ -81,8 +71,17 @@ class BundleDataManager {
     fs.mkdirSync(newBundleAreasPath);
 
     this.bundles[bundleName] = new BundleData(this.state, bundleName, path.join(this.basePath, bundleName)).load();
+
+    return this.bundles[bundleName];
   }
 
+  deleteBundle(bundleName) {
+    if (!this.bundleExists(bundleName)) {
+      throw new Error(`Bundle ${bundleName} does not exist!`);
+    }
+    fs.removeSync(path.join(this.basePath, bundleName));
+    this.bundles[bundleName] = null;
+  }
 }
 
 module.exports = BundleDataManager;

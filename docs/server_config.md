@@ -6,8 +6,8 @@ Ranvier configuration is stored in the `ranvier.json` file in the root of the pr
 
 ----
 
-`port` _`number`_ `(23)`
-:    Port that the game runs on
+`port` _`number`_ `(4000)`
+:    Port that the game runs on. Note, port < 1024 may require that you run the ./ranvier executable with sudo.
 
 `webPort` _`number`_ `(9001)`
 :    Port the web API runs on
@@ -31,8 +31,17 @@ Ranvier configuration is stored in the `ranvier.json` file in the root of the pr
 `moveCommand` _`string`_ `("move")`
 :    Name of the command that will handle when the character types a movement direction (See [`src/CommandParser.js`](https://github.com/shawncplus/ranviermud/blob/staging/src/CommandParser.js) for natively supported directions)
 
-`defaultAttributes` _`object`_ 
-:    See [`ranvier.json`](https://github.com/shawncplus/ranviermud/blob/staging/ranvier.json) for defaults. These are the starting attributes (health, mana, strength, etc.) that are assigned to characters upon creation
-
 `skillLag` _`number`_
-:    Defuault milleconds of lag to apply after a skill is used before they can use another skill. Can be configured per skill
+:    Default milleconds of lag to apply after a skill is used before they can use another skill. Can be configured per skill
+
+`logfile` _`string`_
+:    Filename to be used for logging. Optional; by default Ranvier will only log to the console. Logs will be in the `/log/` directory and will always end in `.log`.
+
+`defaultMaxPlayerInventory` _`number`_ `(16)`
+:    Default maximum number of items players can carry. NPCs default to Infinity.
+
+`playerTickFrequency` _`number`_ `(100)`
+:    Number of milliseconds between `updateTick` events on players. Might want this to be faster (16ms) if using websockets.
+
+`entityTickFrequency` _`number`_ `(100)`
+:    Same as `playerTickFrequency` but for game entities (areas, rooms, npcs, items)

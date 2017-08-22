@@ -1,5 +1,5 @@
 {
-  "port": 23,
+  "port": 4000,
   "webPort": 9001,
   "webWhitelist": [
     "localhost",
@@ -7,17 +7,22 @@
     "::1"
   ],
   "bundles": [
-    "core-areas",
-    "core-channels",
-    "core-commands",
-    "core-effects",
-    "core-groups",
-    "core-input-events",
-    "core-player-events",
-    "core-skills",
-    "core-combat",
-    "core-classes",
-    "core-quests",
+    "ranvier-telnet",
+    "ranvier-areas",
+    "ranvier-channels",
+    "ranvier-commands",
+    "ranvier-effects",
+    "ranvier-groups",
+    "ranvier-input-events",
+    "ranvier-player-events",
+    "ranvier-skills",
+    "ranvier-combat",
+    "ranvier-classes",
+    "ranvier-crafting",
+    "ranvier-quests",
+    "ranvier-vendors",
+    "ranvier-npc-behaviors",
+    "ranvier-bug-report",
     "debug-commands"
   ],
   "maxAccountNameLength": 20,
@@ -26,17 +31,9 @@
   "minPlayerNameLength": 3,
   "maxCharacters": 3,
   "allowMultiplay": false,
+  "reportToAdmins": false,
   "startingRoom": "limbo:1",
   "moveCommand": "move",
-  "defaultAttributes": {
-    "health": 100,
-    "mana": 200,
-    "energy": 200,
-    "strength": 20,
-    "intelligence": 20,
-    "wisdom": 20,
-    "dexterity": 20,
-    "constitution": 20
-  },
-  "skillLag": 2000
+  "skillLag": 2000,
+  "defaultMaxPlayerInventory": 16
 }

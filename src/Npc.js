@@ -1,15 +1,16 @@
 'use strict';
 
-const util = require('util');
 const uuid = require('node-uuid');
 const Attributes = require('./Attributes');
 const Character = require('./Character');
 const Config = require('./Config');
+const Logger = require('./Logger');
 
 /**
  * @property {number} id   Area-relative id (vnum)
  * @property {Area}   area Area npc belongs to (not necessarily the area they're currently in)
- * @property {
+ * @property {Map} behaviors
+ * @extends Character
  */
 class Npc extends Character {
   constructor(area, data) {
@@ -22,27 +23,55 @@ class Npc extends Character {
       }
     }
 
-    this.defaultItems = data.items || [];
-    this.defaultEquipment = data.equipment || [];
-    this.behaviors = data.behaviors || [];
     this.area = data.area;
-    this.keywords = data.keywords;
-    this.description = data.description;
-    this.id = data.id;
-    this.uuid = data.uuid || uuid.v4();
-    this.quests = data.quests || [];
+    this.behaviors = new Map(Object.entries(data.behaviors || {}));
     this.damage = data.damage;
+    this.defaultEquipment = data.equipment || [];
+    this.defaultItems = data.items || [];
+    this.description = data.description;
     this.entityReference = data.entityReference; 
-    this.attributes = new Attributes(Object.assign(Config.get('defaultAttributes'), data.attributes));
+    this.id = data.id;
+    this.keywords = data.keywords;
+    this.pacifist = data.pacifist || false;
+    this.quests = data.quests || [];
+    this.uuid = data.uuid || uuid.v4();
   }
 
 
   /**
-   * @param {string} behavior
+   * @param {string} name
    * @return {boolean}
    */
-  hasBehavior(behavior) {
-    return this.behaviors.includes(behavior);
+  hasBehavior(name) {
+    return this.behaviors.has(name);
+  }
+
+  /**
+   * @param {string} name
+   * @return {*}
+   */
+  getBehavior(name) {
+    return this.behaviors.get(name);
+  }
+
+  /**
+   * Move the npc to the given room, emitting events appropriately
+   * @param {Room} nextRoom
+   * @param {function} onMoved Function to run after the npc is moved to the next room but before enter events are fired
+   */
+  moveTo(nextRoom, onMoved = _ => _) {
+    if (this.room) {
+      this.room.emit('npcLeave', this, nextRoom);
+      this.room.removeNpc(this);
+    }
+
+    this.room = nextRoom;
+    nextRoom.addNpc(this);
+
+    onMoved();
+
+    nextRoom.emit('npcEnter', this);
+    this.emit('enterRoom', nextRoom);
   }
 
   serialize() {
@@ -64,23 +93,26 @@ class Npc extends Character {
         defaultItemId = this.area.name + ':' + defaultItemId;
       }
 
-      util.log(`\tDIST: Adding item [${defaultItemId}] to npc [${this.name}]`);
+      Logger.verbose(`\tDIST: Adding item [${defaultItemId}] to npc [${this.name}]`);
       const newItem = state.ItemFactory.create(this.area, defaultItemId);
       newItem.hydrate(state);
       state.ItemManager.add(newItem);
       this.addItem(newItem);
     });
 
-    if (this.behaviors) {
-      this.behaviors.forEach(behaviorName => {
-        let behavior = state.MobBehaviorManager.get(behaviorName);
-        if (!behavior) {
-          return;
-        }
+    for (const [behaviorName, config] of this.behaviors) {
+      let behavior = state.MobBehaviorManager.get(behaviorName);
+      if (!behavior) {
+        return;
+      }
 
-        behavior.attach(this);
-      });
+      // behavior may be a boolean in which case it will be `behaviorName: true`
+      behavior.attach(this, config === true ? {} : config);
     }
+  }
+
+  get isNpc() {
+    return true;
   }
 }
 

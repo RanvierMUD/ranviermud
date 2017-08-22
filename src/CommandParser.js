@@ -8,8 +8,17 @@ const CommandType = require('./CommandType');
 class CommandParser {
   /**
    * Parse a given string to find the resulting command/arguments
-   * @param {String} data
-   * @return {command: Command, args: String}
+   * @param {GameState} state
+   * @param {string} data
+   * @param {Player} player
+   * @return {{
+   *   type: CommandType,
+   *   command: Command,
+   *   skill: Skill,
+   *   channel: Channel,
+   *   args: string,
+   *   originalCommand: string
+   * }}
    */
   static parse(state, data, player) {
     data = data.trim();
@@ -64,7 +73,10 @@ class CommandParser {
       return {
         type: CommandType.COMMAND,
         command: state.CommandManager.get(moveCommand),
-        args: direction
+        args: direction,
+        // Send the equivalent of bash $0 so the command, when executed,
+        // can tell which of its aliases was used
+        originalCommand: direction
       };
     }
 
@@ -73,7 +85,8 @@ class CommandParser {
       return {
         type: CommandType.COMMAND,
         command: state.CommandManager.get(moveCommand),
-        args: command
+        args: command,
+        originalCommand: command
       };
     }
 
@@ -82,17 +95,19 @@ class CommandParser {
       return {
         type: CommandType.COMMAND,
         command: state.CommandManager.get(command),
-        args
+        args,
+        originalCommand: command
       };
     }
 
     // see if they typed at least the beginning of a command and try to match
-    let found = state.CommandManager.find(command);
+    let found = state.CommandManager.find(command, /* returnAlias: */ true);
     if (found) {
       return {
         type: CommandType.COMMAND,
-        command: found,
-        args
+        command: found.command,
+        args,
+        originalCommand: found.alias
       };
     }
 
@@ -139,11 +154,6 @@ class CommandParser {
     }
 
     if (parts.length === 1) {
-      if (parseInt(parts[0], 10)) {
-        // they said get 3 foo instead of get 3.foo
-        return false;
-      }
-
       keyword = parts[0];
     } else {
       findNth = parseInt(parts[0], 10);
@@ -164,14 +174,17 @@ class CommandParser {
       }
 
       // prioritize keywords over item/player names
-      if (entry.keywords && entry.keywords.indexOf(keyword) !== -1) {
+      if (entry.keywords && (entry.keywords.includes(keyword) || entry.uuid === keyword)) {
         encountered++;
         if (encountered === findNth) {
           return returnKey ? [key, entry] : entry;
         }
+        // if the keyword matched skip to next loop so we don't double increment
+        // the encountered counter
+        continue;
       }
 
-      if (entry.name && entry.name.toLowerCase().indexOf(keyword) !== -1) {
+      if (entry.name && entry.name.toLowerCase().includes(keyword)) {
         encountered++;
         if (encountered === findNth) {
           return returnKey ? [key, entry] : entry;
@@ -184,5 +197,15 @@ class CommandParser {
 }
 exports.CommandParser = CommandParser;
 
+/**
+ * Used when the player enters a bad command
+ * @extends Error
+ */
 class InvalidCommandError extends Error {}
+/**
+ * Used when the player tries a command they don't have access to
+ * @extends Error
+ */
+class RestrictedCommandError extends Error {}
 exports.InvalidCommandError = InvalidCommandError;
+exports.RestrictedCommandError = RestrictedCommandError;

@@ -1,27 +1,40 @@
 'use strict';
 
 const Broadcast = require('./Broadcast');
-const ChannelAudienceWorld = require('./ChannelAudience/World');
-const ChannelAudiencePrivate = require('./ChannelAudience/Private');
-const util = require('util');
+const WorldAudience = require('./ChannelAudience/WorldAudience');
+const PrivateAudience = require('./ChannelAudience/PrivateAudience');
+const PartyAudience = require('./ChannelAudience/PartyAudience');
 
 /**
  * @property {ChannelAudience} audience People who receive messages from this channel
- * @property {string}          name     Actual name of the channel the user will type
- * @property {string}          color    Default color. This is purely a helper if you're using default format methods
+ * @property {string} name  Actual name of the channel the user will type
+ * @property {string} color Default color. This is purely a helper if you're using default format methods
+ * @property {PlayerRoles} minRequiredRole If set only players with the given role or greater can use the channel
+ * @property {string} description
+ * @property {{sender: function, target: function}} [formatter]
  */
 class Channel {
+  /**
+   * @param {object}  config
+   * @param {string} config.name Name of the channel
+   * @param {ChannelAudience} config.audience
+   * @param {string} [config.description]
+   * @param {PlayerRoles} [config.minRequiredRole]
+   * @param {string} [config.color]
+   * @param {{sender: function, target: function}} [config.formatter]
+   */
   constructor(config) {
     if (!config.name) {
       throw new Error("Channels must have a name to be usable.");
     }
     if (!config.audience) {
-      throw new Error(`Channel ${name} is missing a valid audience.`);
+      throw new Error(`Channel ${config.name} is missing a valid audience.`);
     }
     this.name = config.name;
+    this.minRequiredRole = config.minRequiredRole || null;
     this.description = config.description;
     this.bundle = config.bundle || null; // for debugging purposes, which bundle it came from
-    this.audience = config.audience || (new ChannelAudienceWorld());
+    this.audience = config.audience || (new WorldAudience());
     this.color = config.color || null;
     this.formatter = config.formatter || {
       sender: this.formatToSender.bind(this),
@@ -42,18 +55,24 @@ class Channel {
     }
 
     if (!this.audience) {
-      throw new Error(`Channel [${this.name} has invalid audience [${this.audience}]`)
+      throw new Error(`Channel [${this.name} has invalid audience [${this.audience}]`);
     }
 
     this.audience.configure({ state, sender, message });
     const targets = this.audience.getBroadcastTargets();
 
+    if (this.audience instanceof PartyAudience && !targets.length) {
+      // TODO: create ChannelError.NoPartyError
+      return Broadcast.sayAt(sender, "You aren't in a group.");
+    }
+
     // Allow audience to change message e.g., strip target name.
     message = this.audience.alterMessage(message);
 
     // Private channels also send the target player to the formatter
-    if (this.audience instanceof ChannelAudiencePrivate) {
+    if (this.audience instanceof PrivateAudience) {
       if (!targets.length) {
+        // TODO: create ChannelError.NoRecipientError
         return Broadcast.sayAt(sender, "With no one to hear your message it disappears in the wind.");
       }
       Broadcast.sayAt(sender, this.formatter.sender(sender, targets[0], message, this.colorify.bind(this)));
@@ -76,7 +95,7 @@ class Channel {
   }
 
   getUsage() {
-    if (this.audience instanceof ChannelAudiencePrivate) {
+    if (this.audience instanceof PrivateAudience) {
       return `${this.name} <target> [message]`;
     }
 

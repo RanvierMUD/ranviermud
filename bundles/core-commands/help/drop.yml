@@ -1,8 +1,0 @@
----
-command: drop
-body: |
-  Drop an item from your inventory onto the ground
-related:
-  - inventory
-  - remove
-  - get

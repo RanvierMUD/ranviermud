@@ -6,9 +6,9 @@ characters.
 
 ## What Can Effects Do?
 
-The most simple example of effects would be attribute changes like healing health over time, or increasing their
+The most simple example of effects would be attribute changes, like healing health over time, or increasing a character's
 strength. However, effects in Ranvier are not simple buffs and debuffs; they receive all of the events the target
-receives in addition to a special event called `updateTick` which we'll go into detail with later.
+receives in addition to a special event called `updateTick`, which we'll go into detail about later.
 
 Some examples of how effects can be combined with other aspects of the Ranvier engine with interesting results:
 
@@ -26,22 +26,22 @@ above, you have access to all player commands and events via the effects system.
 
 ## What is an Effect, exactly?
 
-In Ranvier an `Effect` is an object tied to a `Character` (a player or NPC) by way of the Character's `EffectList` which:
+In Ranvier an `Effect` is an object tied to a `Character` (a player or NPC) by way of the Character's `EffectList`. An Effect:
 
-* Has a duration (can potentially be `Infinity` to be permanent)
-* persists across log in/out
+* has a duration (can potentially be permanent)
+* can persist across log in/out
 * Optionally runs some code when first activated
 * Optionally runs some code when deactivated
-* Optionally runs some code every "tick" (we'll describe tick later)
+* Optionally runs some code every "tick" (we'll describe `updateTick` later)
 * Optionally modifies incoming and outgoing damage
 
-The configuration for this functionality we'll cover as we implement some demonstrative effects.
+We'll cover the configuration of functionality as we implement some demonstrative effects.
 
 ## Creating an Effect
 
 Effects, similar to commands, are each stored in their own `.js` file. In the case of effects it is in the `effects/`
 folder underneath your bundle directory. In our example we'll be implementing `buff`, `damageshield`, and `regen`
-effects so our bundle folder would look like so:
+effects, so our bundle folder would look like so:
 
 ```
 bundles/my-effects/
@@ -54,7 +54,7 @@ bundles/my-effects/
 ### File Structure
 
 Similar to all bundle-loaded `.js` files the effect file will export a lambda accepting the path to the `src/` directory
-for ease of importing core libraries and returning an object representing the definition of the effect. We'll go over
+(for ease of importing core libraries), and returning an object representing the definition of the effect. We'll go over
 the definition of the effect in detail as we work through example effects. Below is the _bare minimum_ you need for an
 effect:
 
@@ -86,9 +86,9 @@ bundles/my-effects/effects/buff.js
 'use strict';
 
 module.exports = srcPath => {
-  // Import the broadcast lib to output to the user
+  // Import the broadcast lib to output to the player
   const Broadcast = require(srcPath + 'Broadcast');
-  // flags described below
+  // Effect flags, described below
   const Flag = require(srcPath + 'EffectFlag');
 
   return {
@@ -111,7 +111,7 @@ module.exports = srcPath => {
     /*
     Effect flags are completely optional and _arbitrary_ values that you can
     place in the `flags` array and then read later. By default flags are only
-    used by the `core-effects` bundle's `effects` command to color an active
+    used by the `ranvier-effects` bundle's `effects` command to color an active
     effect red or green. You can import flags from anywhere you want or simply
     hard code strings. The EffectFlag enum from src/ is just an _example_
     implementation.
@@ -145,6 +145,26 @@ module.exports = srcPath => {
         }
       }
     },
+    /*
+    Alternatively, if the attribute you're modifying is dynamic you can use
+    this pattern which is used when you want a base effect that could apply
+    to multiple attributes.  See the `equip.js` effect for an example
+
+    state: {
+      stat: 'strength',
+      bonus: 5
+    },
+
+    modifiers: {
+      attributes: function (attribute, current) {
+        if (attribute !== this.state.stat) {
+          return current;
+        }
+
+        return current + this.state.bonus;
+      }
+    },
+    */
 
     /*
     Similar to quests, effects receive all the events the player receives in
@@ -326,7 +346,7 @@ Above we've implemented new effect types, now we'll actually use those effects d
 gameplay.
 
 For our buff effect we're going to create a simple skill called "enrage" that uses our
-effect. More details on creating skills can be found in the [Skills](skills.md) section of
+effect. More details on creating skills can be found in the [Skills](classes.md#skillsspells) section of
 the guide.
 
 ```javascript
@@ -395,4 +415,4 @@ create a new instance of the effect with any overrides you may want then call
 ## Further Reading
 
 Effects really are where the interesting pieces of the engine come together. You can see
-some example implementation of more effects in the `core-classes` bundle.
+some example implementation of more effects in the `ranvier-classes` bundle.

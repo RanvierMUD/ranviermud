@@ -6,12 +6,14 @@ const EventEmitter = require('events');
 var EffectModifiers;
 
 /**
+ * See the {@link http://ranviermud.com/extending/effects/|Effect guide} for usage.
  * @property {object}  config Effect configuration (name/desc/duration/etc.)
  * @property {boolean} config.autoActivate If this effect immediately activates itself when added to the target
  * @property {boolean} config.hidden       If this effect is shown in the character's effect list
  * @property {boolean} config.unique       If multiple effects with the same `config.type` can be applied at once
  * @property {number}  config.maxStacks    When adding an effect of the same type it adds a stack to the current
  *     effect up to maxStacks instead of adding the effect. Implies `config.unique`
+ * @property {boolean} config.persists     If false the effect will not save to the player
  * @property {string}  config.type         The effect category, mainly used when disallowing stacking
  * @property {boolean|number} config.tickInterval Number of seconds between calls to the `updateTick` listener
  * @property {string}    description
@@ -24,6 +26,9 @@ var EffectModifiers;
  * @property {number}    startedAt Date.now() time this effect became active
  * @property {object}    state  Configuration of this _type_ of effect (magnitude, element, stat, etc.)
  * @property {Character} target Character this effect is... effecting
+ * @extends EventEmitter
+ *
+ * @listens Effect#effectAdded
  */
 class Effect extends EventEmitter {
   constructor(id, def, target) {
@@ -36,11 +41,12 @@ class Effect extends EventEmitter {
       description: '',
       duration: Infinity,
       hidden: false,
-      name: 'Unnamed Effect',
       maxStacks: 0,
-      unique: true,
-      type: 'undef',
+      name: 'Unnamed Effect',
+      persists: true,
       tickInterval: false,
+      type: 'undef',
+      unique: true,
     }, def.config);
 
     this.target = target;
@@ -67,14 +73,23 @@ class Effect extends EventEmitter {
     }
   }
 
+  /**
+   * @type {string}
+   */
   get name() {
     return this.config.name;
   }
 
+  /**
+   * @type {string}
+   */
   get description() {
     return this.config.description;
   }
 
+  /**
+   * @type {number}
+   */
   get duration() {
     return this.config.duration;
   }
@@ -84,7 +99,8 @@ class Effect extends EventEmitter {
   }
 
   /**
-   * @return {number}
+   * Elapsed time in milliseconds since event was activated
+   * @type {number}
    */
   get elapsed () {
     if (!this.startedAt) {
@@ -95,47 +111,75 @@ class Effect extends EventEmitter {
   }
 
   /**
-   * Get remaining time in seconds
-   * @return {number}
+   * Remaining time in seconds
+   * @type {number}
    */
   get remaining() {
     return this.config.duration - this.elapsed;
   }
 
+  /**
+   * Whether this effect has lapsed
+   * @return {boolean}
+   */
   isCurrent() {
     return this.elapsed < this.config.duration;
   }
 
+  /**
+   * Set this effect active
+   * @fires Effect#effectActivated
+   */
   activate() {
     if (this.active) {
       return;
     }
 
     this.startedAt = Date.now() - this.elapsed;
+    /**
+     * @event Effect#effectActivated
+     */
     this.emit('effectActivated');
     this.active = true;
   }
 
+  /**
+   * Set this effect active
+   * @fires Effect#effectDeactivated
+   */
   deactivate() {
     if (!this.active) {
       return;
     }
 
+    /**
+     * @event Effect#effectDeactivated
+     */
     this.emit('effectDeactivated');
     this.active = false;
   }
 
   /**
    * Remove this effect from its target
+   * @fires Effect#remove
    */
   remove() {
+    /**
+     * @event Effect#remove
+     */
     this.emit('remove');
   }
 
+  /**
+   * Stop this effect from having any effect temporarily
+   */
   pause() {
     this.paused = this.elapsed;
   }
 
+  /**
+   * Resume a paused effect
+   */
   resume() {
     this.startedAt = Date.now() - this.paused;
     this.paused = null;
@@ -147,12 +191,20 @@ class Effect extends EventEmitter {
    * @return {number} attribute modified by effect
    */
   modifyAttribute(attrName, currentValue) {
-    const modifier = (this.modifiers.attributes[attrName] || (_ => _)).bind(this);
-    return modifier(currentValue);
+    let modifier = _ => _;
+    if (typeof this.modifiers.attributes === 'function') {
+      modifier = (current) => {
+        return this.modifiers.attributes.bind(this)(attrName, current);
+      };
+    } else if (attrName in this.modifiers.attributes) {
+      modifier = this.modifiers.attributes[attrName];
+    }
+    return modifier.bind(this)(currentValue);
   }
 
   /**
    * @param {Damage} damage
+   * @param {number} currentAmount
    * @return {Damage}
    */
   modifyIncomingDamage(damage, currentAmount) {
@@ -162,6 +214,7 @@ class Effect extends EventEmitter {
 
   /**
    * @param {Damage} damage
+   * @param {number} currentAmount
    * @return {Damage}
    */
   modifyOutgoingDamage(damage, currentAmount) {
@@ -169,6 +222,10 @@ class Effect extends EventEmitter {
     return modifier(damage, currentAmount);
   }
 
+  /**
+   * Gather data to persist
+   * @return {Object}
+   */
   serialize() {
     let config = Object.assign({}, this.config);
     config.duration = config.duration === Infinity ? 'inf' : config.duration;
@@ -180,14 +237,20 @@ class Effect extends EventEmitter {
     }
 
     return {
-      id: this.id,
+      config,
       elapsed: this.elapsed,
+      id: this.id,
+      remaining: this.remaining,
       skill: this.skill && this.skill.id,
       state,
-      config,
     };
   }
 
+  /**
+   * Reinitialize from persisted data
+   * @param {GameState}
+   * @param {Object} data
+   */
   hydrate(state, data) {
     data.config.duration = data.config.duration === 'inf' ? Infinity : data.config.duration;
     this.config = data.config;
@@ -208,4 +271,3 @@ class Effect extends EventEmitter {
 }
 
 module.exports = Effect;
-

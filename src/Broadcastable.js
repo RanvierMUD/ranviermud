@@ -1,6 +1,10 @@
 'use strict';
 
 /**
- * Interface definition used by TypeUtil
+ * Interface for classes that can be used with {@link Broadcast}
+ * @see {@link TypeUtil#is}
+ * @interface Broadcastable
  */
-module.exports = ['getBroadcastTargets'];
+const Broadcastable = ['getBroadcastTargets']
+
+module.exports = Broadcastable;

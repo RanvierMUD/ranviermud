@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const yaml = require('js-yaml');
 const chokidar = require('chokidar');
@@ -15,12 +15,6 @@ class BundleData {
     this.bundleName = name;
     this.areas = [];
     this.state = state;
-
-    let watcher = chokidar.watch(this.baseAreasPath, {ignoreInitial: true});
-
-    watcher.on('addDir', path => {
-      this.load(true);
-    })
   }
 
   load(reset) {
@@ -80,15 +74,35 @@ class BundleData {
 
     fs.mkdirSync(path.join(this.baseAreasPath, name));
 
-    let manifest = yaml.dump({
-      title: title,
-      suggestedLevel: suggestedLevel
-    });
+    this.createBlankArea(name, title, suggestedLevel);
 
-    fs.writeFileSync(path.join(this.baseAreasPath, name, 'manifest.yml'), manifest);
-    fs.writeFileSync(path.join(this.baseAreasPath, name, 'items.yml'), '');
-    fs.writeFileSync(path.join(this.baseAreasPath, name, 'rooms.yml'), '');
-    fs.writeFileSync(path.join(this.baseAreasPath, name, 'npcs.yml'), '');
+    this.areas[name] = new AreaData(this.state, name, path.join(this.baseAreasPath, name));
+
+    return this.areas[name];
+  }
+
+  createBlankArea(name, title, suggestedLevel) {
+    this.writeNewAreaFile(name, 'items.yml');
+    this.writeNewAreaFile(name, 'rooms.yml');
+    this.writeNewAreaFile(name, 'npcs.yml');
+    this.writeNewAreaFile(name, 'manifest.yml', {name, title, suggestedLevel});
+  }
+
+  writeNewAreaFile(areaName, fileName, data = '') {
+    fs.writeFileSync(path.join(this.baseAreasPath, areaName, fileName), data);
+  }
+
+  areaExists(areaName) {
+    return fs.existsSync(path.join(this.baseAreasPath, areaName));
+  }
+
+  deleteArea(areaName) {
+    if (!this.areaExists(areaName)) {
+      throw new Error(`Area ${areaName} doesn't exist!`);
+    }
+
+    fs.removeSync(path.join(this.baseAreasPath, areaName));
+    this.areas[areaName] = null;
   }
 }
 

@@ -19,6 +19,18 @@ class PlayerClass {
   }
 
   /**
+   * Override this method in your class to do initial setup of the player. This
+   * includes things like adding the resource attribute to the player or anything
+   * else that should be done when the player is initially given this class
+   * @param {Player} player
+   */
+  setupPlayer(player) {
+    if (typeof this.config.setupPlayer === 'function') {
+      this.config.setupPlayer(player);
+    }
+  }
+
+  /**
    * Table of level: abilities learned.
    * Example:
    *     {
@@ -26,7 +38,7 @@ class PlayerClass {
    *       2: { skills: ['bash'], spells: ['fireball']},
    *       5: { skills: ['rend', 'secondwind'] },
    *     }
-   * @return {Object<number, Array<string>>}
+   * @type {Object<number, Array<string>>}
    */
   get abilityTable() {
     return this.config.abilityTable;
@@ -45,15 +57,20 @@ class PlayerClass {
    */
   getAbilitiesForPlayer(player) {
     let totalAbilities = [];
-    Object.entries(this.abilityTable).every(([level, abilities]) => {
+    Object.entries(this.abilityTable).forEach(([level, abilities]) => {
       if (level > player.level) {
-        return false;
+        return;
       }
-      return totalAbilities = totalAbilities.concat(abilities.skills || []).concat(abilities.spells || []);
+      totalAbilities = totalAbilities.concat(abilities.skills || []).concat(abilities.spells || []);
     });
     return totalAbilities;
   }
 
+  /**
+   * Check to see if this class has a given ability
+   * @param {string} id
+   * @return {boolean}
+   */
   hasAbility(id) {
     return this.abilityList.includes(id);
   }

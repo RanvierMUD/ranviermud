@@ -1,0 +1,14 @@
+---
+command: drop
+body: |
+  Drop an item from your inventory onto the ground
+related:
+  - get
+  - give
+  - inventory
+  - put
+  - remove
+  - wear
+  - wield
+keywords:
+  - loot

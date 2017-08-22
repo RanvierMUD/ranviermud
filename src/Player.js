@@ -1,6 +1,5 @@
 'use strict';
 
-const util = require('util');
 const Attributes = require('./Attributes');
 const Character = require('./Character');
 const CommandQueue = require('./CommandQueue');
@@ -8,6 +7,8 @@ const Config = require('./Config');
 const Data = require('./Data');
 const QuestTracker = require('./QuestTracker');
 const Room = require('./Room');
+const Logger = require('./Logger');
+const PlayerRoles = require('./PlayerRoles');
 
 /**
  * @property {Account} account
@@ -18,18 +19,18 @@ const Room = require('./Room');
  * @property {QuestTracker} questTracker
  * @property {Map<string,function ()>} extraPrompts Extra prompts to render after the default prompt
  * @property {{completed: Array, active: Array}} questData
+ * @extends Character
  */
 class Player extends Character {
   constructor(data) {
     super(data);
 
     this.account = data.account || null;
-    this.attributes = new Attributes(data.attributes || Config.get('defaultAttributes'));
     this.experience = data.experience || 0;
     this.extraPrompts = new Map();
     this.password  = data.password;
     this.playerClass = null;
-    this.prompt = ({healthStr, energyStr, }) => `[ ${healthStr} <bold>hp</bold> -- ${energyStr} <bold>energy</bold> ]`;
+    this.prompt = data.prompt || '[ %health.current%/%health.max% <bold>hp</bold> ]';
     this.socket = data.socket || null;
     const questData = Object.assign({
       completed: [],
@@ -38,53 +39,14 @@ class Player extends Character {
 
     this.questTracker = new QuestTracker(this, questData.active, questData.completed);
     this.commandQueue = new CommandQueue();
+    this.role = data.role || PlayerRoles.PLAYER;
 
-    // Arbitrary data bundles are free to shove whatever they want in
-    // WARNING: values must be JSON.stringify-able
-    this.metadata = data.metadata || {};
     this.playerClass = null;
-  }
 
-  /**
-   * Set a metadata value. Does _not_ autovivify, you will need to create the parent objects if they don't exist
-   * @param {string} key   Key to set. Supports dot notation e.g., `"foo.bar"`
-   * @param {*}      value Value must be JSON.stringify-able
-   */
-  setMeta(key, value) {
-    let parts = key.split('.');
-    const property = parts.pop();
-    let base = this.metadata;
-
-    while (parts.length) {
-      let part = parts.pop();
-      if (!(part in base)) {
-        throw new RangeError(`Metadata path invalid: ${key}`);
-      }
-      base = base[parts.pop()];
+    // Default max inventory size config
+    if (!isFinite(this.inventory.getMax())) {
+      this.inventory.setMax(Config.get('defaultMaxPlayerInventory') || 20);
     }
-
-    base[property] = value;
-  }
-
-  /**
-   * Get metadata about a player
-   * @param {string} key Key to fetch. Supports dot notation e.g., `"foo.bar"`
-   * @return {*}
-   */
-  getMeta(key) {
-    let parts = key.split('.');
-    const property = parts.pop();
-    let base = this.metadata;
-
-    while (parts.length) {
-      let part = parts.pop();
-      if (!(part in base)) {
-        return undefined;
-      }
-      base = base[part];
-    }
-
-    return base[property];
   }
 
   /**
@@ -108,22 +70,31 @@ class Player extends Character {
 
   /**
    * Convert prompt tokens into actual data
-   * @param {function} promptBuilder (data) => prompt template
-   * @param {object} extraData (key is used by promptBuilder)
+   * @param {string} promptStr
+   * @param {object} extraData Any extra data to give the prompt access to
    */
-  interpolatePrompt(promptBuilder, extraData = {}) {
-    const buildAttributeStr = attr => `${this.getAttribute(attr)}/${this.getMaxAttribute(attr)}`;
-    const healthStr = buildAttributeStr('health');
-    const energyStr = buildAttributeStr('energy');
+  interpolatePrompt(promptStr, extraData = {}) {
+    let attributeData = {};
+    for (const [attr, value] of this.attributes) {
+      attributeData[attr] = {
+        current: this.getAttribute(attr),
+        max: this.getMaxAttribute(attr),
+        base: this.getBaseAttribute(attr),
+      };
+    }
+    const promptData = Object.assign(attributeData, extraData);
 
-    // TODO: The attr strings could likely be built in a more programmatic fashion.
-    // How could this be redone to allow for customization of the prompt without major
-    // edits to the Player class?
-    const promptData = Object.assign({}, extraData, {
-      healthStr, energyStr
-    });
+    let matches = null;
+    while (matches = promptStr.match(/%([a-z\.]+)%/)) {
+      const token = matches[1];
+      let promptValue = token.split('.').reduce((obj, index) => obj && obj[index], promptData);
+      if (promptValue === null || promptValue === undefined) {
+        promptValue = 'invalid-token';
+      }
+      promptStr = promptStr.replace(matches[0], promptValue);
+    }
 
-    return promptBuilder(promptData);
+    return promptStr;
   }
 
   /**
@@ -142,6 +113,34 @@ class Player extends Character {
    */
   removePrompt(id) {
     this.extraPrompts.delete(id);
+  }
+
+  /**
+   * @param {string} id
+   * @return {boolean}
+   */
+  hasPrompt(id) {
+    return this.extraPrompts.has(id);
+  }
+
+  /**
+   * Move the player to the given room, emitting events appropriately
+   * @param {Room} nextRoom
+   * @param {function} onMoved Function to run after the player is moved to the next room but before enter events are fired
+   */
+  moveTo(nextRoom, onMoved = _ => _) {
+    if (this.room) {
+      this.room.emit('playerLeave', this, nextRoom);
+      this.room.removePlayer(this);
+    }
+
+    this.room = nextRoom;
+    nextRoom.addPlayer(this);
+
+    onMoved();
+
+    nextRoom.emit('playerEnter', this);
+    this.emit('enterRoom', nextRoom);
   }
 
   /**
@@ -180,8 +179,8 @@ class Player extends Character {
     if (typeof this.room === 'string') {
       let room = state.RoomManager.getRoom(this.room);
       if (!room) {
-        util.log(`WARNING: Player ${this.name} was saved to invalid room ${this.room}.`);
-        room = state.RoomManager.getStartingRoom();
+        Logger.warn(`WARNING: Player ${this.name} was saved to invalid room ${this.room}.`);
+        room = state.RoomManager.startingRoom;
       }
 
       this.room = room;
@@ -197,7 +196,7 @@ class Player extends Character {
     }
 
     // Hydrate inventory
-    this.inventory.hydrate(state);
+    this.inventory.hydrate(state, this);
 
     // Hydrate equipment
     // maybe refactor Equipment to be an object like Inventory?
@@ -225,13 +224,15 @@ class Player extends Character {
 
   serialize() {
     let data = Object.assign(super.serialize(), {
-      playerClass: this.playerClass && this.playerClass.id,
       account: this.account.name,
       experience: this.experience,
       inventory: this.inventory && this.inventory.serialize(),
-      password: this.password,
-      quests: this.questTracker.serialize(),
       metadata: this.metadata,
+      password: this.password,
+      playerClass: this.playerClass && this.playerClass.id,
+      prompt: this.prompt,
+      quests: this.questTracker.serialize(),
+      role: this.role,
     });
 
     if (this.equipment) {

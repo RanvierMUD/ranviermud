@@ -1,6 +1,6 @@
 'use strict';
 
-const Broadcast = require('./Broadcast');
+const Quest = require('./Quest');
 
 /**
  * @property {Map} quests
@@ -10,8 +10,8 @@ class QuestFactory {
     this.quests = new Map();
   }
 
-  add(areaName, id, type, config) {
-    this.quests.set(this._makeQuestKey(areaName, id), { type, config });
+  add(areaName, id, config, goals) {
+    this.quests.set(this._makeQuestKey(areaName, id), { config, goals });
   }
 
   set(qid, val) {
@@ -31,34 +31,33 @@ class QuestFactory {
    * @param {GameState} GameState
    * @param {string}    qid
    * @param {Player}    player
-   * @param {object}    state     current quest state
+   * @param {Array}     state     current quest state
    * @return {Quest}
    */
-  create(GameState, qid, player, state = {}) {
+  create(GameState, qid, player, state = []) {
     const quest = this.quests.get(qid);
-    const instance = new quest.type(qid, quest.config, player);
-    instance.state = Object.assign(instance.state, state);
-
-    // Can't think of a better place to put this stuff yet
-    instance.on('start', () => {
-      Broadcast.sayAt(player, `\r\n<bold><yellow>Quest Started: ${instance.config.title}!</yellow></bold>`);
-      if (instance.config.desc) {
-        Broadcast.sayAt(player, (new Array(80)).join('-'));
-        Broadcast.sayAt(player, `<bold><yellow>${instance.config.desc}</yellow></bold>`);
-      }
+    const instance = new Quest(GameState, qid, quest.config, player);
+    instance.state = state;
+    quest.goals.forEach(goal => {
+      instance.addGoal(new goal.type(instance, goal.config, player));
     });
 
     instance.on('progress', (progress) => {
-      Broadcast.sayAt(player, `\r\n<bold><yellow>${progress.display}</yellow></bold>`);
+      player.emit('questProgress', instance, progress);
       player.save();
     });
 
+    instance.on('start', () => {
+      player.emit('questStart', instance);
+      instance.emit('progress', instance.getProgress());
+    });
+
     instance.on('turn-in-ready', () => {
-      Broadcast.sayAt(player, `<bold><yellow>${instance.config.title} ready to turn in!</yellow></bold>`);
+      player.emit('questTurnInReady', instance);
     });
 
     instance.on('complete', () => {
-      Broadcast.sayAt(player, `<bold><yellow>Quest Complete: ${instance.config.title}!</yellow></bold>`);
+      player.emit('questComplete', instance);
       player.questTracker.complete(instance.id);
       player.save();
     });

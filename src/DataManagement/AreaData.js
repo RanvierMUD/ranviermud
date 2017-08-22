@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const yaml = require('js-yaml');
 const chokidar = require('chokidar');
@@ -16,18 +16,6 @@ class AreaData extends EventEmitter {
     this.npcs = [];
     this.rooms = [];
     this.manifest = {};
-
-    this.filesToWatch = [
-      path.join(this.basePath, 'npcs.yml'),
-      path.join(this.basePath, 'rooms.yml'), 
-      path.join(this.basePath, 'items.yml')
-    ];
-
-    let watcher = chokidar.watch(this.filesToWatch, {ignoreInitial: true});
-
-    watcher.on('change', path => {
-      this.load(true);
-    });
 
   }
 
@@ -141,6 +129,7 @@ class AreaData extends EventEmitter {
 
     fs.writeFileSync(path.join(this.basePath, 'rooms.yml'), yaml.dump(this.rooms));
   }
+
 }
 
 module.exports = AreaData;

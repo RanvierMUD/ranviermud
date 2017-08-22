@@ -2,10 +2,8 @@
 
 const SkillFlag = require('./SkillFlag');
 const SkillType = require('./SkillType');
-const Broadcast = require('./Broadcast');
-const Parser = require('./CommandParser').CommandParser;
+const SkillErrors = require('./SkillErrors');
 const Damage = require('./Damage');
-const humanize = (sec) => { return require('humanize-duration')(sec, { round: true }); };
 
 /**
  * @property {function (Effect)} configureEffect modify the skill's effect before adding to player
@@ -26,108 +24,104 @@ class Skill {
    */
   constructor(id, config, state) {
     const {
+      configureEffect = _ => _,
       cooldown = null,
-      run = _ => {},
+      effect = null,
       flags = [],
       info = _ => {},
+      initiatesCombat = false,
       name,
       requiresTarget = true,
+      resource = null, /* format [{ attribute: 'someattribute', cost: 10}] */
+      run = _ => {},
       targetSelf = false,
-      resource = { attribute: 'energy', cost: 0 },
       type = SkillType.SKILL,
-      effect = null,
-      configureEffect = _ => _,
+      options = {}
     } = config;
 
-    this.id = id;
     this.configureEffect = configureEffect;
     this.cooldownLength = cooldown;
     this.effect = effect;
     this.flags = flags;
+    this.id = id;
     this.info = info.bind(this);
+    this.initiatesCombat = initiatesCombat;
     this.name = name;
+    this.options = options;
+    this.requiresTarget = requiresTarget;
     this.resource = resource;
     this.run = run.bind(this);
     this.state = state;
-    this.type = type;
-    this.requiresTarget = requiresTarget;
     this.targetSelf = targetSelf;
+    this.type = type;
   }
 
   /**
    * perform an active skill
    * @param {string} args
    * @param {Player} player
+   * @param {Character} target
    */
   execute(args, player, target) {
     if (this.flags.includes(SkillFlag.PASSIVE)) {
-      throw new Error('Trying to execute passive skill');
+      throw new SkillErrors.PassiveError();
     }
 
     const cdEffect = this.onCooldown(player);
     if (this.cooldownLength && cdEffect) {
-      return Broadcast.sayAt(player, `${this.name} is on cooldown. ${humanize(cdEffect.remaining)} remaining.`);
+      throw new SkillErrors.CooldownError(cdEffect);
     }
 
-    if (this.requiresTarget && !target) {
-      target = this.searchForTargets(args, player)
-      if (!target) {
-        return Broadcast.sayAt(player,  `Use ${this.name} on whom?`);
+    if (this.resource) {
+      if (!this.hasEnoughResources(player)) {
+        throw new SkillErrors.NotEnoughResourcesError();
       }
     }
 
-    if (this.resource.cost) {
-      const paid = this.payResourceCost(player);
-      if (!paid) {
-        return;
+    if (target !== player && this.initiatesCombat) {
+      player.initiateCombat(target);
+    }
+
+    // allow skills to not incur the cooldown if they return false in run
+    if (this.run(args, player, target) !== false) {
+      this.cooldown(player);
+      if (this.resource) {
+        this.payResourceCosts(player);
       }
     }
 
-    this.run(args, player, target);
-    this.cooldown(player);
-  }
-
-  /** Finds implicit targets.
-   * @param {string} args
-   * @param {Player} player
-   * @return {Entity|null} Found entity... or not.
-   */
-  searchForTargets(args, player) {
-    if (!args.length) {
-      if (this.targetSelf) {
-        return player;
-      } else if (player.isInCombat()) {
-        return [...player.combatants][0];
-      } else {
-        Broadcast.sayAt(player, `Use ${this.name} on whom?`);
-        return null;
-      }
-    } else {
-      return Parser.parseDot(args, player.room.npcs);
-    }
+    return true;
   }
 
   /**
    * @param {Player} player
-   * @return {boolean} If the player has paid the resource cost.
+   * @return {boolean} If the player has paid the resource cost(s).
    */
-  payResourceCost(player) {
-    if (!this.hasEnoughResource(player)) {
-      Broadcast.sayAt(player, `You do not have enough ${this.resource.attribute}.`);
-      return false;
+  payResourceCosts(player) {
+    const hasMultipleResourceCosts = Array.isArray(this.resource);
+    if (hasMultipleResourceCosts) {
+      for (const resourceCost of this.resource) {
+        this.payResourceCost(player, resourceCost);
+      }
+      return true;
     }
 
-    // resource cost is calculated as damage so effects could potentially reduce resource costs
+    return this.payResourceCost(player, this.resource);
+  }
+
+  // Helper to pay a single resource cost.
+  payResourceCost(player, resource) {
+
+    // Resource cost is calculated as damage so effects could potentially reduce resource costs
     const damage = new Damage({
-      attribute: this.resource.attribute,
-      amount: this.resource.cost,
+      attribute: resource.attribute,
+      amount: resource.cost,
       attacker: null,
       hidden: true,
       source: this
     });
 
     damage.commit(player);
-    return true;
   }
 
 
@@ -187,10 +181,26 @@ class Skill {
     return "skill:" + this.id;
   }
 
-  hasEnoughResource(character) {
-    return !this.resource.cost || (
-      character.hasAttribute(this.resource.attribute) &&
-      character.getAttribute(this.resource.attribute) >= this.resource.cost
+  /**
+   * @param {Character} character
+   * @return {boolean}
+   */
+  hasEnoughResources(character) {
+    if (Array.isArray(this.resource)) {
+      return this.resource.every((resource) => this.hasEnoughResource(character, resource));
+    }
+    return this.hasEnoughResource(character, this.resource);
+  }
+
+  /**
+   * @param {Character} character
+   * @param {{ attribute: string, cost: number}} resource
+   * @return {boolean}
+   */
+  hasEnoughResource(character, resource) {
+    return !resource.cost || (
+      character.hasAttribute(resource.attribute) &&
+      character.getAttribute(resource.attribute) >= resource.cost
     );
   }
 }

@@ -16,6 +16,9 @@ class EffectList {
     this.target = target;
   }
 
+  /**
+   * @type {number}
+   */
   get size() {
     this.validateEffects();
     return this.effects.size;
@@ -28,6 +31,24 @@ class EffectList {
   entries() {
     this.validateEffects();
     return [...this.effects];
+  }
+
+  /**
+   * @param {string} type
+   * @return {boolean}
+   */
+  hasEffectType(type) {
+    return !!this.getByType(type);
+  }
+
+  /**
+   * @param {string} type
+   * @return {Effect}
+   */
+  getByType(type) {
+    return [...this.effects].find(effect => {
+      return effect.config.type === type;
+    });
   }
 
   /**
@@ -56,13 +77,15 @@ class EffectList {
 
   /**
    * @param {Effect} effect
+   * @fires Effect#effectAdded
    */
   add(effect) {
     for (const activeEffect of this.effects) {
       if (effect.config.type === activeEffect.config.type) {
         if (activeEffect.config.maxStacks) {
           activeEffect.state.stack = Math.min(activeEffect.state.maxStacks, activeEffect.state.stack + 1);
-          activeEffect.state.stack - activeEffect.state.stack + 1;
+          // TODO: does this even work?
+          activeEffect.state.stack = activeEffect.state.stack + 1;
           return false;
         }
 
@@ -73,8 +96,13 @@ class EffectList {
     }
 
     this.effects.add(effect);
+
+    /**
+     * @event Effect#effectAdded
+     */
     effect.emit('effectAdded');
     effect.on('remove', () => this.remove(effect));
+    return true;
   }
 
   /**
@@ -126,39 +154,46 @@ class EffectList {
 
   /**
    * @param {Damage} damage
+   * @param {number} currentAmount
    * @return {number}
    */
-  evaluateIncomingDamage(damage) {
+  evaluateIncomingDamage(damage, currentAmount) {
     this.validateEffects();
 
-    let amount = damage.finalAmount;
-
     for (const effect of this.effects) {
-      amount = effect.modifyIncomingDamage(damage, amount);
+      currentAmount = effect.modifyIncomingDamage(damage, currentAmount);
     }
 
-    return Math.max(amount, 0) || 0;
+    return Math.max(currentAmount, 0) || 0;
   }
 
   /**
    * @param {Damage} damage
+   * @param {number} currentAmount
    * @return {number}
    */
-  evaluateOutgoingDamage(damage) {
+  evaluateOutgoingDamage(damage, currentAmount) {
     this.validateEffects();
 
-    let amount = damage.finalAmount;
-
     for (const effect of this.effects) {
-      amount = effect.modifyOutgoingDamage(damage, amount);
+      currentAmount = effect.modifyOutgoingDamage(damage, currentAmount);
     }
 
-    return Math.max(amount, 0) || 0;
+    return Math.max(currentAmount, 0) || 0;
   }
 
   serialize() {
     this.validateEffects();
-    return [...this.effects].map(effect => effect.serialize());
+    let serialized = [];
+    for (const effect of this.effects) {
+      if (!effect.config.persists) {
+        continue;
+      }
+
+      serialized.push(effect.serialize());
+    }
+
+    return serialized;
   }
 
   hydrate(state) {

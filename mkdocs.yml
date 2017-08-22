@@ -8,6 +8,9 @@ theme: null
 theme_dir: docs/_mkdocs/theme/ranvier
 extra:
     logo: '_static/images/logo.png'
+extra_css: 
+    - _mkdocs/theme/ranvier/assets/stylesheets/application.css
+    - _mkdocs/theme/ranvier/assets/stylesheets/application.palette.css
 markdown_extensions:
     - def_list
     - codehilite
@@ -25,6 +28,7 @@ pages:
 - Project Structure: structure.md
 - Extending:
     - Bundles: 'extending/bundles.md'
+    - Server: 'extending/server.md'
     - Areas:
         - Creating an Area: 'extending/areas/index.md'
         - Items: 'extending/areas/items.md'
@@ -33,8 +37,12 @@ pages:
         - Quests: 'extending/areas/quests.md'
         - Scripting: 'extending/areas/scripting.md'
     - Channels: 'extending/channels.md'
+    - Classes/Abilities: 'extending/classes.md'
     - Commands: 'extending/commands.md'
     - Effects: 'extending/effects.md'
-    - Events: 'extending/events.md'
     - Helpfiles: 'extending/help.md'
-    - Skills: 'extending/skills.md'
+    - Player/Input Events: 'extending/input_events.md'
+- Contributing: contributing.md
+- Web API: api.md
+- Common Issues: common_issues.md
+- License/Credits: license.md
