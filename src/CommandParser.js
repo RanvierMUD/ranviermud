@@ -25,7 +25,7 @@ class CommandParser {
 
     const parts = data.split(' ');
 
-    const command = parts.shift().replace(/[^a-z]/i, '').toLowerCase();
+    const command = parts.shift().toLowerCase();
     if (!command.length) {
       throw new InvalidCommandError();
     }
