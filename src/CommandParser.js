@@ -150,7 +150,7 @@ class CommandParser {
     let findNth = 1;
     let keyword = null;
     if (parts.length > 2) {
-      return null;
+      return false;
     }
 
     if (parts.length === 1) {
