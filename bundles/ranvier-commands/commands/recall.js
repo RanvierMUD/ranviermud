@@ -11,13 +11,6 @@ module.exports = srcPath => {
         return B.sayAt(player, 'You do not have a home waypoint set.');
       }
 
-      if (player.getAttribute('energy') < (player.getMaxAttribute('energy') / 3)) {
-        return B.sayAt(player, 'You do not have enough energy to recall.');
-      }
-
-      const cost = Math.round(player.getMaxAttribute('energy') / 3);
-      player.lowerAttribute('energy', cost);
-
       B.sayAt(player, '<b><cyan>You pray to the gods to be returned home and are consumed by a bright blue light.</cyan></b>');
       B.sayAtExcept(player.room, `<b><cyan>${player.name} disappears in a flash of blue light.</cyan></b>`, [player]);
 

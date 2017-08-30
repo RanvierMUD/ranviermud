@@ -20,7 +20,7 @@ module.exports = (srcPath) => {
           agility: 20,
           intellect: 20,
           stamina: 20,
-          armor: 0,
+          armor: 0
         }
       });
 
