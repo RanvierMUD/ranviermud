@@ -12,6 +12,7 @@ module.exports = (srcPath) => {
   return [
     new Channel({
       name: 'chat',
+      aliases: ['.'],
       color: ['bold', 'green'],
       description: 'Chat with everyone on the game',
       audience: new WorldAudience()

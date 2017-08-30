@@ -36,6 +36,7 @@ class Channel {
     this.bundle = config.bundle || null; // for debugging purposes, which bundle it came from
     this.audience = config.audience || (new WorldAudience());
     this.color = config.color || null;
+    this.aliases = config.aliases;
     this.formatter = config.formatter || {
       sender: this.formatToSender.bind(this),
       target: this.formatToReceipient.bind(this),
