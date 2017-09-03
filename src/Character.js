@@ -311,6 +311,7 @@ class Character extends EventEmitter
 
     this.equipment.set(item.slot, item);
     item.isEquipped = true;
+    item.belongsTo = this;
   }
 
   /**
