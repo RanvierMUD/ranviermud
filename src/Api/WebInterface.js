@@ -5,9 +5,11 @@ const bcrypt = require('bcryptjs');
 const express    = require('express');
 const whitelist  = require('whitelist-ips');
 const bodyParser = require('body-parser');
+const cors       = require('cors');
 const app        = express();
 const router     = express.Router();
 const celebrate  = require('celebrate');
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

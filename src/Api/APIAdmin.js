@@ -12,12 +12,22 @@ class APIAdmin {
   }
 
   setupRoutes() {
-    const { MobFactory, PlayerManager, ItemManager, RoomManager, HelpManager } = this.state;
+    const { MobFactory, PlayerManager, ItemManager, RoomManager, HelpManager, AreaManager, QuestFactory } = this.state;
 
     router.get('/npcs', this.getResponseData(MobFactory, 'entities'));
     router.get('/players', this.getResponseData(PlayerManager, 'players'));
     router.get('/items', this.getResponseData(ItemManager, 'items'));
     router.get('/rooms', this.getResponseData(RoomManager, 'rooms'));
+    router.get('/areas', this.getResponseData(AreaManager, 'areas'));
+    router.get('/quests', this.getResponseData(QuestFactory, 'quests'));
+
+    router.get('/npcs/count', this.getCount(MobFactory, 'entities'));
+    router.get('/players/count', this.getCount(PlayerManager, 'players'));
+    router.get('/items/count', this.getCount(ItemManager, 'items'));
+    router.get('/rooms/count', this.getCount(RoomManager, 'rooms'));
+    router.get('/areas/count', this.getCount(AreaManager, 'areas'));
+    router.get('/quests/count', this.getCount(QuestFactory, 'quests'));
+
     router.get('/help', this.getResponseData(HelpManager, 'helps'));
 
     router.get('/config', this.getConfig());
@@ -45,6 +55,14 @@ class APIAdmin {
       const response = this.parseEntitiesIntoResponse(manager, name);
       return res.json({ [name]: response });
     };
+  }
+
+  getCount(manager, name) {
+    return (req, res) => {
+      const data = this.parseEntitiesIntoResponse(manager, name);
+      return res.json({count: data.length});
+    }
+    
   }
 
   parseEntitiesIntoResponse(manager, name) {
