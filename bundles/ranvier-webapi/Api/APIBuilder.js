@@ -3,10 +3,6 @@ const router = express.Router();
 const path = require('path');
 const celebrate = require('celebrate');
 
-// const Config = require('../Config');
-// const validators = require('../Validators');
-// const FileManager = require('../DataManagement/BundleDataManager');
-
 class APIBuilder {
 
   constructor(state, srcPath) {
