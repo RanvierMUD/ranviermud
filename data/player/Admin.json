@@ -36,14 +36,10 @@
   "level": 1,
   "name": "Admin",
   "room": "limbo:1",
-  "effects": [
-    
-  ],
+  "effects": [],
   "experience": 0,
   "inventory": {
-    "items": [
-      
-    ],
+    "items": [],
     "max": 16
   },
   "metadata": {
@@ -52,15 +48,9 @@
   "playerClass": "warrior",
   "prompt": "[ %health.current%/%health.max% <b>hp</b> %energy.current%/%energy.max% <b>energy</b> ]",
   "quests": {
-    "completed": [
-      
-    ],
-    "active": [
-      
-    ]
+    "completed": [],
+    "active": []
   },
   "role": 2,
-  "equipment": {
-    
-  }
+  "equipment": {}
 }
