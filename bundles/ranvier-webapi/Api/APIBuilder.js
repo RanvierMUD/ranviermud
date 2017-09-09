@@ -3,15 +3,18 @@ const router = express.Router();
 const path = require('path');
 const celebrate = require('celebrate');
 
-const Config = require('../Config');
-const validators = require('../Validators');
-const FileManager = require('../DataManagement/BundleDataManager');
+// const Config = require('../Config');
+// const validators = require('../Validators');
+// const FileManager = require('../DataManagement/BundleDataManager');
 
 class APIBuilder {
 
-  constructor(state) {
+  constructor(state, srcPath) {
+    const FileManager = require(srcPath + 'DataManagement/BundleDataManager');
     this.fileManager = new FileManager(state);
-    this.fileManager.loadBundles(path.join(__dirname, '..', '..'));
+    this.fileManager.loadBundles(path.join(srcPath, '..'));
+    this.Config = require(srcPath + 'Config');
+    this.validators = require(srcPath + 'Validators');
   }
 
   setupRoutes() {
@@ -25,11 +28,11 @@ class APIBuilder {
     router.get('/bundles/:bundleName/areas/:areaName/items', this.getItems.bind(this));
 
     router.post('/bundles', this.postBundle.bind(this));
-    router.post('/bundles/:bundleName/areas', celebrate({body: validators.area}), this.postArea.bind(this));
+    router.post('/bundles/:bundleName/areas', celebrate({body: this.validators.area}), this.postArea.bind(this));
 
-    router.put('/bundles/:bundleName/areas/:areaName/npcs', celebrate({body: validators.npc}), this.putNpc.bind(this));
-    router.put('/bundles/:bundleName/areas/:areaName/items', celebrate({body: validators.item}), this.putItem.bind(this));
-    router.put('/bundles/:bundleName/areas/:areaName/rooms', celebrate({body: validators.room}), this.putRoom.bind(this));
+    router.put('/bundles/:bundleName/areas/:areaName/npcs', celebrate({body: this.validators.npc}), this.putNpc.bind(this));
+    router.put('/bundles/:bundleName/areas/:areaName/items', celebrate({body: this.validators.item}), this.putItem.bind(this));
+    router.put('/bundles/:bundleName/areas/:areaName/rooms', celebrate({body: this.validators.room}), this.putRoom.bind(this));
 
     return router;
   }

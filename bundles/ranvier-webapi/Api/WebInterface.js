@@ -1,6 +1,3 @@
-const fs     = require('fs');
-const bcrypt = require('bcryptjs');
-
 // Set up an Express app for the Web API.
 const express    = require('express');
 const whitelist  = require('whitelist-ips');

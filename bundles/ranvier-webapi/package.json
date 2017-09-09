@@ -1,0 +1,16 @@
+{
+  "name": "ranvier-webapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Jack Williams <williams.jackj@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "celebrate": "^4.0.1",
+    "express": "^4.14.0",
+    "express-jwt": "^5.1.0",
+    "whitelist-ips": "^1.0.1",
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.4"
+  }
+}

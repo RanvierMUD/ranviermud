@@ -49,7 +49,80 @@
   "prompt": "[ %health.current%/%health.max% <b>hp</b> %energy.current%/%energy.max% <b>energy</b> ]",
   "quests": {
     "completed": [],
-    "active": []
+    "active": [
+      [
+        "limbo:1",
+        {
+          "state": [
+            {
+              "state": {
+                "count": 0
+              },
+              "progress": {
+                "percent": 0,
+                "display": "Find A Weapon: [0/1]"
+              },
+              "config": {
+                "title": "Find A Weapon",
+                "removeItem": false,
+                "count": 1,
+                "item": "limbo:1"
+              }
+            },
+            {
+              "state": {
+                "count": 0
+              },
+              "progress": {
+                "percent": 0,
+                "display": "Find Some Armor: [0/1]"
+              },
+              "config": {
+                "title": "Find Some Armor",
+                "removeItem": false,
+                "count": 1,
+                "item": "limbo:6"
+              }
+            },
+            {
+              "state": {
+                "equipped": false
+              },
+              "progress": {
+                "percent": 0,
+                "display": "Wield A Weapon: Not Equipped"
+              },
+              "config": {
+                "title": "Wield A Weapon",
+                "slot": "wield"
+              }
+            },
+            {
+              "state": {
+                "equipped": false
+              },
+              "progress": {
+                "percent": 0,
+                "display": "Equip Some Armor: Not Equipped"
+              },
+              "config": {
+                "title": "Equip Some Armor",
+                "slot": "chest"
+              }
+            }
+          ],
+          "progress": {
+            "percent": 0,
+            "display": "Find A Weapon: [0/1]\r\nFind Some Armor: [0/1]\r\nWield A Weapon: Not Equipped\r\nEquip Some Armor: Not Equipped"
+          },
+          "config": {
+            "desc": "A voice whispers to you: Welcome to the world, young one. This is a dangerous and deadly place, you should arm yourself.\n\n - Open the chest with '<white>open chest</white>'\n - Use '<white>get sword chest</white>' and '<white>get vest chest</white>' to get some gear.\n - Equip it using '<white>wield sword</white>' and '<white>wear vest</white>'",
+            "level": 1,
+            "title": "A Journey Begins"
+          }
+        }
+      ]
+    ]
   },
   "role": 2,
   "equipment": {}

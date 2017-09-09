@@ -109,14 +109,31 @@ class Data {
    * @return {string}
    */
   static getDataFilePath(type, id) {
-    switch (type) {
-      case 'player': {
-        return dataPath + `player/${id}.json`;
-      }
-      case 'account': {
-        return dataPath + `account/${id}.json`;
-      }
+    let typePath = this.getTypePath(type);
+    return `${typePath}/${id}.json`;
+  }
+
+  static getTypePath(type) {
+    const validTypes = ["player", "account"];
+
+    if (!validTypes.includes(type)) {
+      throw new Error(`Type ${type} is not a valid type!`);
     }
+
+    return dataPath + `/${type}/`;
+  }
+
+  static searchData(type, name) {
+    let typePath = this.getTypePath(type);
+    let result = [];
+    let files = fs.readdirSync(typePath).forEach(file => {
+      let filePath = `${typePath}${file}`;
+      if (!file.startsWith('.') && !fs.statSync(filePath).isDirectory() && file.toLowerCase().includes(name.toLowerCase())) {
+        result.push(this.load(type, path.parse(filePath).name));
+      }
+    });
+
+    return result;
   }
 
   /**

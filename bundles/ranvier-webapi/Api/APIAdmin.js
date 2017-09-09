@@ -1,21 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const celebrate = require('celebrate');
-const validators = require('../Validators');
-
-const Config = require('../Config');
 
 class APIAdmin {
 
-  constructor(state) {
-    this.state = state;
+  constructor(state, srcPath) {
+    this.state  = state;
+    this.Config = require(srcPath + 'Config');
+    this.Data   = require(srcPath + 'Data');
+    this.validators = require(srcPath + 'Validators');
   }
 
   setupRoutes() {
-    const { MobFactory, PlayerManager, ItemManager, RoomManager, HelpManager, AreaManager, QuestFactory } = this.state;
+    const { MobFactory, PlayerManager, ItemManager, RoomManager, HelpManager, AreaManager, QuestFactory, AccountManager } = this.state;
 
     router.get('/npcs', this.getResponseData(MobFactory, 'entities'));
-    router.get('/players', this.getResponseData(PlayerManager, 'players'));
+    // router.get('/players', this.getPlayers());
+    router.get('/data', this.getData());
     router.get('/items', this.getResponseData(ItemManager, 'items'));
     router.get('/rooms', this.getResponseData(RoomManager, 'rooms'));
     router.get('/areas', this.getResponseData(AreaManager, 'areas'));
@@ -23,6 +24,7 @@ class APIAdmin {
 
     router.get('/npcs/count', this.getCount(MobFactory, 'entities'));
     router.get('/players/count', this.getCount(PlayerManager, 'players'));
+    router.get('/data/count', this.getCount(AccountManager, 'accounts'));
     router.get('/items/count', this.getCount(ItemManager, 'items'));
     router.get('/rooms/count', this.getCount(RoomManager, 'rooms'));
     router.get('/areas/count', this.getCount(AreaManager, 'areas'));
@@ -31,7 +33,7 @@ class APIAdmin {
     router.get('/help', this.getResponseData(HelpManager, 'helps'));
 
     router.get('/config', this.getConfig());
-    router.put('/config', celebrate({body: validators.config}), this.putConfig());
+    router.put('/config', celebrate({body: this.validators.config}), this.putConfig());
 
     return router;
   }
@@ -62,7 +64,13 @@ class APIAdmin {
       const data = this.parseEntitiesIntoResponse(manager, name);
       return res.json({count: data.length});
     }
-    
+  }
+
+  getData() {
+    return (req, res) => {
+      const data = this.Data.searchData(req.query.type, req.query.name);
+      return res.json({[req.query.type]: data});
+    }
   }
 
   parseEntitiesIntoResponse(manager, name) {

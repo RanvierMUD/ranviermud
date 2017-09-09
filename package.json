@@ -15,12 +15,9 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.0",
-    "celebrate": "^4.0.1",
     "chokidar": "^1.6.1",
     "colorize": "",
     "commander": "",
-    "express": "^4.14.0",
-    "express-jwt": "^5.1.0",
     "fs-extra": "^2.0.0",
     "humanize-duration": "^3.10.0",
     "joi": "^10.2.2",
@@ -34,14 +31,11 @@
     "rando-js": "^0.1.1",
     "sprintf-js": "^1.0.3",
     "sty": "",
-    "whitelist-ips": "^1.0.1",
     "winston": "^2.3.1",
     "wrap-ansi": "^2.0.0",
-    "yaml": "",
-    "cors": "^2.8.4"
+    "yaml": ""
   },
   "devDependencies": {
-    "body-parser": "^1.15.2",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-eslint": "^2.0.0",
