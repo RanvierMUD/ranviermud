@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: Channel.js | Ranvier</title>
+    <title>Class: AreaFloor | Ranvier</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -47,159 +45,400 @@
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
+        <h2>AreaFloor</h2>
+        
+            <div class="class-description"><p>IF you absolutely need to iterate over a floor in a tight (nested) loop you
+should use the low/high properties like so.</p>
+<pre class="prettyprint source lang-javascript"><code>const floor = area.map.get(2);
+for (let x = floor.lowX; x &lt;= floor.highX; x++) {
+ for (let y = floor.lowY; y &lt;= floor.highY; y++) {
+   const room = floor.getRoom(x, y);
 
-const Broadcast = require('./Broadcast');
-const WorldAudience = require('./ChannelAudience/WorldAudience');
-const PrivateAudience = require('./ChannelAudience/PrivateAudience');
-const PartyAudience = require('./ChannelAudience/PartyAudience');
+   if (!room) {
+     continue;
+   }
+ }
+}</code></pre><p>Note the <code>&lt;=</code> to avoid fenceposting the loop</p></div>
+        
+    
+</header>
 
-/**
- * @property {ChannelAudience} audience People who receive messages from this channel
- * @property {string} name  Actual name of the channel the user will type
- * @property {string} color Default color. This is purely a helper if you're using default format methods
- * @property {PlayerRoles} minRequiredRole If set only players with the given role or greater can use the channel
- * @property {string} description
- * @property {{sender: function, target: function}} [formatter]
- */
-class Channel {
-  /**
-   * @param {object}  config
-   * @param {string} config.name Name of the channel
-   * @param {ChannelAudience} config.audience
-   * @param {string} [config.description]
-   * @param {PlayerRoles} [config.minRequiredRole]
-   * @param {string} [config.color]
-   * @param {{sender: function, target: function}} [config.formatter]
-   */
-  constructor(config) {
-    if (!config.name) {
-      throw new Error("Channels must have a name to be usable.");
-    }
-    if (!config.audience) {
-      throw new Error(`Channel ${config.name} is missing a valid audience.`);
-    }
-    this.name = config.name;
-    this.minRequiredRole = config.minRequiredRole || null;
-    this.description = config.description;
-    this.bundle = config.bundle || null; // for debugging purposes, which bundle it came from
-    this.audience = config.audience || (new WorldAudience());
-    this.color = config.color || null;
-    this.aliases = config.aliases;
-    this.formatter = config.formatter || {
-      sender: this.formatToSender.bind(this),
-      target: this.formatToReceipient.bind(this),
-    };
-  }
+<article>
+    <div class="container-overview">
+    
+        
 
-  /**
-   * @param {GameState} state
-   * @param {Player}    sender
-   * @param {string}    message
-   */
-  send(state, sender, message) {
+<dt>
 
-    // If they don't include a message, explain how to use the channel.
-    if (!message.length) {
-      return this.describeSelf(sender);
-    }
+    
+        
+        <h2>Constructor</h2>
+        
 
-    if (!this.audience) {
-      throw new Error(`Channel [${this.name} has invalid audience [${this.audience}]`);
-    }
+        <h4 class="name" id="AreaFloor">
+            <span class="type-signature"></span>new AreaFloor<span class="signature">()</span><span class="type-signature"></span>
+            
+            <div class="container-source members">
+                <code><a href="AreaFloor.js.html">AreaFloor.js</a></code>,
+                <code><a href="AreaFloor.js.html#line26">line 26</a></code>
+            </div>
+            
+        </h4>
 
-    this.audience.configure({ state, sender, message });
-    const targets = this.audience.getBroadcastTargets();
+        
+    
 
-    if (this.audience instanceof PartyAudience &amp;&amp; !targets.length) {
-      // TODO: create ChannelError.NoPartyError
-      return Broadcast.sayAt(sender, "You aren't in a group.");
-    }
+</dt>
+<dd>
 
-    // Allow audience to change message e.g., strip target name.
-    message = this.audience.alterMessage(message);
+    
 
-    // Private channels also send the target player to the formatter
-    if (this.audience instanceof PrivateAudience) {
-      if (!targets.length) {
-        // TODO: create ChannelError.NoRecipientError
-        return Broadcast.sayAt(sender, "With no one to hear your message it disappears in the wind.");
-      }
-      Broadcast.sayAt(sender, this.formatter.sender(sender, targets[0], message, this.colorify.bind(this)));
-    } else {
-      Broadcast.sayAt(sender, this.formatter.sender(sender, null, message, this.colorify.bind(this)));
-    }
+    
 
-    // send to audience targets
-    Broadcast.sayAtFormatted(this.audience, message, (target, message) => {
-      return this.formatter.target(sender, target, message, this.colorify.bind(this));
-    });
-  }
+    
 
-  describeSelf(sender) {
-    Broadcast.sayAt(sender, `\r\nChannel: ${this.name}`);
-    Broadcast.sayAt(sender, 'Syntax: ' + this.getUsage());
-    if (this.description) {
-      Broadcast.sayAt(sender, this.description);
-    }
-  }
+    
 
-  getUsage() {
-    if (this.audience instanceof PrivateAudience) {
-      return `${this.name} &lt;target> [message]`;
-    }
+    
 
-    return `${this.name} [message]`;
-  }
+    
 
-  /**
-   * How to render the message the player just sent to the channel
-   * E.g., you may want "chat" to say "You chat, 'message here'"
-   * @param {Player} sender
-   * @param {string} message
-   * @param {Function} colorify
-   * @return {string}
-   */
-  formatToSender(sender, target, message, colorify) {
-    return colorify(`[${this.name}] ${sender.name}: ${message}`);
-  }
+    
 
-  /**
-   * How to render the message to everyone else
-   * E.g., you may want "chat" to say "Playername chats, 'message here'"
-   * @param {Player} sender
-   * @param {Player} target
-   * @param {string} message
-   * @param {Function} colorify
-   * @return {string}
-   */
-  formatToReceipient(sender, target, message, colorify) {
-    return this.formatToSender(sender, target, message, colorify);
-  }
+    
 
-  colorify(message) {
-    if (!this.color) {
-      return message;
-    }
+    
 
-    const colors = Array.isArray(this.color) ? this.color : [this.color];
+    
 
-    const open = colors.map(color => `&lt;${color}>`).join('');
-    const close = colors.reverse().map(color => `&lt;/${color}>`).join('');
+    
 
-    return open + message + close;
-  }
-}
-
-module.exports = Channel;
+    
 
 
-</code></pre>
-        </article>
-    </section>
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>lowX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The lowest x value</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>highX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The highest x value</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>lowY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The lowest y value</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>highY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The highest y value</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>z</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>This floor's z index</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+                
+
+<dt>
+
+    
+        
+
+        <h4 class="name" id="getRoom">
+            <span class="type-signature"></span>getRoom<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Room.html">Room</a>|boolean}</span>
+            
+            <div class="container-source members">
+                <code><a href="AreaFloor.js.html">AreaFloor.js</a></code>,
+                <code><a href="AreaFloor.js.html#line64">line 64</a></code>
+            </div>
+            
+        </h4>
+
+        
+    
+
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type"><a href="Room.html">Room</a></span>
+|
+
+<span class="param-type">boolean</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -216,7 +455,7 @@ module.exports = Channel;
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
+        var id = 'AreaFloor_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: Channel.js | Ranvier</title>
+    <title>Source: AreaFloor.js | Ranvier</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -50,153 +50,83 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
-
-const Broadcast = require('./Broadcast');
-const WorldAudience = require('./ChannelAudience/WorldAudience');
-const PrivateAudience = require('./ChannelAudience/PrivateAudience');
-const PartyAudience = require('./ChannelAudience/PartyAudience');
-
-/**
- * @property {ChannelAudience} audience People who receive messages from this channel
- * @property {string} name  Actual name of the channel the user will type
- * @property {string} color Default color. This is purely a helper if you're using default format methods
- * @property {PlayerRoles} minRequiredRole If set only players with the given role or greater can use the channel
- * @property {string} description
- * @property {{sender: function, target: function}} [formatter]
+            <pre class="prettyprint source linenums"><code>/**
+ * IF you absolutely need to iterate over a floor in a tight (nested) loop you
+ * should use the low/high properties like so.
+ *
+ * ```javascript
+ * const floor = area.map.get(2);
+ * for (let x = floor.lowX; x &lt;= floor.highX; x++) {
+ *  for (let y = floor.lowY; y &lt;= floor.highY; y++) {
+ *    const room = floor.getRoom(x, y);
+ *
+ *    if (!room) {
+ *      continue;
+ *    }
+ *  }
+ * }
+ * ```
+ *
+ * Note the `&lt;=` to avoid fenceposting the loop
+ *
+ * @property {number} lowX The lowest x value
+ * @property {number} highX The highest x value
+ * @property {number} lowY The lowest y value
+ * @property {number} highY The highest y value
+ * @property {number} z This floor's z index
  */
-class Channel {
-  /**
-   * @param {object}  config
-   * @param {string} config.name Name of the channel
-   * @param {ChannelAudience} config.audience
-   * @param {string} [config.description]
-   * @param {PlayerRoles} [config.minRequiredRole]
-   * @param {string} [config.color]
-   * @param {{sender: function, target: function}} [config.formatter]
-   */
-  constructor(config) {
-    if (!config.name) {
-      throw new Error("Channels must have a name to be usable.");
+class AreaFloor {
+  constructor(z) {
+    this.z = z;
+    this.lowX = this.highX = this.lowY = this.highY = 0;
+    this.map = [];
+  }
+
+  addRoom(x, y, room) {
+    if (!room) {
+      throw new Error('Invalid room given to AreaFloor.addRoom');
     }
-    if (!config.audience) {
-      throw new Error(`Channel ${config.name} is missing a valid audience.`);
+
+    if (this.getRoom(x, y)) {
+      throw new Error(`AreaFloor.addRoom: trying to add room at filled coordinates: ${x}, ${y}`);
     }
-    this.name = config.name;
-    this.minRequiredRole = config.minRequiredRole || null;
-    this.description = config.description;
-    this.bundle = config.bundle || null; // for debugging purposes, which bundle it came from
-    this.audience = config.audience || (new WorldAudience());
-    this.color = config.color || null;
-    this.aliases = config.aliases;
-    this.formatter = config.formatter || {
-      sender: this.formatToSender.bind(this),
-      target: this.formatToReceipient.bind(this),
-    };
+
+    if (x &lt; this.lowX) {
+      this.lowX = x;
+    } else if (x > this.highX) {
+      this.highX = x;
+    }
+
+    if (y &lt; this.lowY) {
+      this.lowY = y;
+    } else if (y > this.highY) {
+      this.highY = y;
+    }
+
+    if (!Array.isArray(this.map[x])) {
+      this.map[x] = [];
+    }
+
+    this.map[x][y] = room;
   }
 
   /**
-   * @param {GameState} state
-   * @param {Player}    sender
-   * @param {string}    message
+   * @return {Room|boolean}
    */
-  send(state, sender, message) {
-
-    // If they don't include a message, explain how to use the channel.
-    if (!message.length) {
-      return this.describeSelf(sender);
-    }
-
-    if (!this.audience) {
-      throw new Error(`Channel [${this.name} has invalid audience [${this.audience}]`);
-    }
-
-    this.audience.configure({ state, sender, message });
-    const targets = this.audience.getBroadcastTargets();
-
-    if (this.audience instanceof PartyAudience &amp;&amp; !targets.length) {
-      // TODO: create ChannelError.NoPartyError
-      return Broadcast.sayAt(sender, "You aren't in a group.");
-    }
-
-    // Allow audience to change message e.g., strip target name.
-    message = this.audience.alterMessage(message);
-
-    // Private channels also send the target player to the formatter
-    if (this.audience instanceof PrivateAudience) {
-      if (!targets.length) {
-        // TODO: create ChannelError.NoRecipientError
-        return Broadcast.sayAt(sender, "With no one to hear your message it disappears in the wind.");
-      }
-      Broadcast.sayAt(sender, this.formatter.sender(sender, targets[0], message, this.colorify.bind(this)));
-    } else {
-      Broadcast.sayAt(sender, this.formatter.sender(sender, null, message, this.colorify.bind(this)));
-    }
-
-    // send to audience targets
-    Broadcast.sayAtFormatted(this.audience, message, (target, message) => {
-      return this.formatter.target(sender, target, message, this.colorify.bind(this));
-    });
+  getRoom(x, y) {
+    return this.map[x] &amp;&amp; this.map[x][y];
   }
 
-  describeSelf(sender) {
-    Broadcast.sayAt(sender, `\r\nChannel: ${this.name}`);
-    Broadcast.sayAt(sender, 'Syntax: ' + this.getUsage());
-    if (this.description) {
-      Broadcast.sayAt(sender, this.description);
-    }
-  }
-
-  getUsage() {
-    if (this.audience instanceof PrivateAudience) {
-      return `${this.name} &lt;target> [message]`;
+  removeRoom(x, y) {
+    if (!this.map[x] || !this.map[x][y]) {
+      throw new Error('AreaFloor.removeRoom: trying to remove non-existent room');
     }
 
-    return `${this.name} [message]`;
-  }
-
-  /**
-   * How to render the message the player just sent to the channel
-   * E.g., you may want "chat" to say "You chat, 'message here'"
-   * @param {Player} sender
-   * @param {string} message
-   * @param {Function} colorify
-   * @return {string}
-   */
-  formatToSender(sender, target, message, colorify) {
-    return colorify(`[${this.name}] ${sender.name}: ${message}`);
-  }
-
-  /**
-   * How to render the message to everyone else
-   * E.g., you may want "chat" to say "Playername chats, 'message here'"
-   * @param {Player} sender
-   * @param {Player} target
-   * @param {string} message
-   * @param {Function} colorify
-   * @return {string}
-   */
-  formatToReceipient(sender, target, message, colorify) {
-    return this.formatToSender(sender, target, message, colorify);
-  }
-
-  colorify(message) {
-    if (!this.color) {
-      return message;
-    }
-
-    const colors = Array.isArray(this.color) ? this.color : [this.color];
-
-    const open = colors.map(color => `&lt;${color}>`).join('');
-    const close = colors.reverse().map(color => `&lt;/${color}>`).join('');
-
-    return open + message + close;
+    this.map[x][y] = undefined;
   }
 }
 
-module.exports = Channel;
-
-
+module.exports = AreaFloor;
 </code></pre>
         </article>
     </section>
