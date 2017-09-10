@@ -6,6 +6,7 @@ const Logger = require('./Logger');
 
 /**
  * @property {Area}          area         Area room is in
+ * @property {{x: number, y: number, z: number}} [coordinates] Defined in yml with array [x, y, z]. Retrieved with coordinates.x, coordinates.y, ...
  * @property {Array<number>} defaultItems Default list of item ids that should load in this room
  * @property {Array<number>} defaultNpcs  Default list of npc ids that should load in this room
  * @property {string}        description  Room description seen on 'look'
@@ -34,6 +35,11 @@ class Room extends EventEmitter {
     this.defaultItems = def.items || [];
     this.defaultNpcs  = def.npcs || [];
     this.behaviors = new Map(Object.entries(def.behaviors || {}));
+    this.coordinates = Array.isArray(def.coordinates) && def.coordinates.length === 3 ? {
+      x: def.coordinates[0],
+      y: def.coordinates[1],
+      z: def.coordinates[2],
+    } : null;
     this.description = def.description;
     this.entityReference = this.area.name + ':' + def.id;
     this.exits = def.exits || [];

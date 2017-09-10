@@ -1,6 +1,7 @@
 'use strict';
 
 const EventEmitter = require('events');
+const AreaFloor = require('./AreaFloor');
 
 /**
  * Representation of an in game area
@@ -10,6 +11,7 @@ const EventEmitter = require('events');
  * @property {string} bundle Bundle this area comes from
  * @property {string} name
  * @property {string} title
+ * @property {Map}    map a Map object keyed by the floor z-index, each floor is an array with [x][y] indexes for coordinates.
  * @property {Map<string, Room>} rooms Map of room id to Room
  * @property {Set<Npc>} npcs Active NPCs that originate from this area. Note: this is NPCs that
  *   _originate_ from this area. An NPC may not actually be in this area at any given moment.
@@ -29,6 +31,8 @@ class Area extends EventEmitter {
       respawnInterval: 60
     }, manifest.info || {});
 
+    this.map = new Map();
+
     this.lastRespawnTick = -Infinity;
 
     this.on('updateTick', state => {
@@ -45,6 +49,14 @@ class Area extends EventEmitter {
   }
 
   /**
+   * Get an ordered list of floors in this area's map
+   * @return {Array<number>}
+   */
+  get floors() {
+    return [...this.map.keys()].sort();
+  }
+
+  /**
    * @param {string} id Room id
    * @return {Room|undefined}
    */
@@ -57,6 +69,11 @@ class Area extends EventEmitter {
    */
   addRoom(room) {
     this.rooms.set(room.id, room);
+
+    if (room.coordinates) {
+      console.log(room.id, room.coordinates);
+      this.addRoomToMap(room);
+    }
   }
 
   /**
@@ -64,6 +81,37 @@ class Area extends EventEmitter {
    */
   removeRoom(room) {
     this.rooms.delete(room.id);
+  }
+
+  /**
+   * @param {Room} room
+   * @throws Error
+   */
+  addRoomToMap(room) {
+    if (!room.coordinates) {
+      throw new Error('Room does not have coordinates');
+    }
+
+    const {x, y, z} = room.coordinates;
+
+    if (!this.map.has(z)) {
+      this.map.set(z, new AreaFloor(z));
+    }
+
+    const floor = this.map.get(z);
+    floor.addRoom(x, y, room);
+  }
+
+  /**
+   * find a room at the given coordinates for this area
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   * @return {Room|boolean}
+   */
+  getRoomAtCoordinates(x, y, z) {
+    const floor = this.map.get(z);
+    return floor && floor.getRoom(x, y);
   }
 
   /**

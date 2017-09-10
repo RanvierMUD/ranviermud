@@ -24,12 +24,38 @@ module.exports = (srcPath) => {
       }
 
       const exit = state.RoomManager.findExit(oldRoom, exitName);
+      let nextRoom = null;
 
       if (!exit) {
-        return B.sayAt(player, "You can't go that way.");
+        if (oldRoom.coordinates) {
+          const coords = oldRoom.coordinates;
+          const area = oldRoom.area;
+          const directions = {
+            north: [0, 1, 0],
+            south: [0, -1, 0],
+            east: [1, 0, 0],
+            west: [-1, 0, 0],
+            up: [0, 0, 1],
+            down: [0, 0, -1],
+          };
+
+          for (const [dir, diff] of Object.entries(directions)) {
+            if (dir.indexOf(exitName) !== 0) {
+              continue;
+            }
+
+            nextRoom = area.getRoomAtCoordinates(coords.x + diff[0], coords.y + diff[1], coords.z + diff[2]);
+          }
+        } else {
+          return B.sayAt(player, "You can't go that way.");
+        }
+      } else {
+        nextRoom = state.RoomManager.getRoom(exit.roomId);
       }
 
-      const nextRoom = state.RoomManager.getRoom(exit.roomId);
+      if (!nextRoom) {
+        return B.sayAt(player, "You can't go that way.");
+      }
 
       // check to see if this room has a door leading to the target room or vice versa
       const door = oldRoom.getDoor(nextRoom) || nextRoom.getDoor(oldRoom);

@@ -4,6 +4,12 @@ In Ranvier, all rooms for an area are defined in a single file within the area f
 
 ## Example File
 
+### Rooms without coordinates
+
+This is an example file of rooms that _don't_ use coordinates and always explicitly define their exits. This is pretty
+standard for old MUDs. However, described below is a way to describe a room using coordinates and such you can use
+the coordinates to infer the allowable exits for a room for you, doors work all the same.
+
 `bundles/ranvier-areas/areas/limbo/rooms.yml`
 ``` yaml
 - id: 1
@@ -41,14 +47,62 @@ In Ranvier, all rooms for an area are defined in a single file within the area f
       closed: true # if the door is closed by default
 ```
 
+### Rooms with coordinates
+
+```yaml
+- id: start
+  title: Begin
+  coordinates: [0, 0, 0]
+  description: "You are in the start of this area. There are hallways to the north and south."
+
+- id: hallway-north-1
+  title: Hallway North 1
+  coordinates: [0, 1, 0]
+  description: "You are in the north hallway."
+- id: hallway-north-2
+  title: Hallway North 2
+  coordinates: [0, 2, 0]
+  description: "You are in the north hallway."
+
+- id: hallway-south-1
+  title: Hallway South 1
+  coordinates: [0, -1, 0]
+  description: "You are in the south hallway."
+- id: hallway-south-2
+  title: Hallway South 2
+  coordinates: [0, -2, 0]
+  description: "You are in the south hallway."
+
+- id: attic-south
+  title: Attic
+  coordinates: [0, -2, 1]
+  description: "You are in the attic."
+  # this room has inferred exits from its coordinates and also manually specifies an exit to leave the area
+  exits:
+    - direction: east
+      roomId: "limbo:1"
+
+# Note that this room doesn't have coordinates, that's completely fine.
+# It will still exist in the area but it will not be on the map and will only be
+# reachable by explicitly defining an exit that leads to this room like above
+# or by having a script send the player to this room.
+- id: other-room
+  title: Secret Room
+  description: "Welcome to the secret room"
+```
+
 ## Doors
 
-Doors are specified with the `doors` config on the room you want to block access to. Meaning if I want the player in Room A to run into a door when going east to Room B you specify the door config on Room B, not on Room A.
-It should be noted that, while the `Room` object allows the definition of doors/locks, nothing in the core (or rooms themselves) block access based on these doors/locks, that is done inside the bundles. See the `move` command
-in the `ranvier-commands` bundle for an demonstration of how access is blocked or the `lock`/`open` commands to see how the doors are controlled.
+Doors are specified with the `doors` config on the room you want to block access to. Meaning if I want the player in
+Room A to run into a door when going east to Room B you specify the door config on Room B, not on Room A.  It should be
+noted that, while the `Room` object allows the definition of doors/locks, nothing in the core (or rooms themselves)
+block access based on these doors/locks, that is done inside the bundles. See the `move` command in the
+`ranvier-commands` bundle for an demonstration of how access is blocked or the `lock`/`open` commands to see how the
+doors are controlled.
 
-> Note: When defining doors be careful to make sure you don't accidentally define a double door like a hotel room where Room A has a door blocking access to Room B and Room B has _another_ door blocking access from Room A as
-> this could cause the player to have to open two doors every time they moved between the rooms.
+> Note: When defining doors be careful to make sure you don't accidentally define a double door like a hotel room where
+> Room A has a door blocking access to Room B and Room B has _another_ door blocking access from Room A as this could
+> cause the player to have to open two doors every time they moved between the rooms.
 
 ## Definition Fields
 
@@ -65,11 +119,16 @@ in the `ranvier-commands` bundle for an demonstration of how access is blocked o
 `description` _`string`_
 :    ***required*** Long description of the room, shown under the title on `look`
 
+`coordinates` _`Array<number>`_
+:    Optional coordinates for the room in `[x, y, z]` format.
+
 `npcs` _`Array<EntityReference>`_
 :    List of NPCs to place in this room on initial load. You can customize the number of max instances of the NPC per room and the respawn chance by making the `npcs` entry an object as described above in the "Test Room 2" example.
 
 `items` _`Array<EntityReference>`_
-:    List of items to place in this room on initial load. As with NPCs, you can customize the respawn chance for the item. For containers there's also `replaceOnRespawn` which when the item is due to respawn will replace an empty instance will a full one
+:    List of items to place in this room on initial load. As with NPCs, you can customize the respawn chance for the
+item. For containers there's also `replaceOnRespawn` which when the item is due to respawn will replace an empty
+instance will a full one
 
 `script` _`string`_
 :    Name of custom script to attach to this room (See [Scripting](scripting.md))
@@ -78,7 +137,9 @@ in the `ranvier-commands` bundle for an demonstration of how access is blocked o
 :    List of behaviors to attach to this room (See [Scripting](scripting.md))
 
 `metadata` _`object`_
-:    A place to put other data you want to access inside scripts/behaviors/commands/etc. that doesn't fit into one of the existing properties. See `Room.getMeta` and `Room.setMeta`. Note: changes to metadata while the server is running will be lost when the server is shut down.
+:    A place to put other data you want to access inside scripts/behaviors/commands/etc. that doesn't fit into one of
+the existing properties. See `Room.getMeta` and `Room.setMeta`. Note: changes to metadata while the server is running
+will be lost when the server is shut down.
 
 `exits` _`Array`_
 :    Rooms the player can get to from here; each `exits` entry has the following fields:
@@ -90,10 +151,12 @@ in the `ranvier-commands` bundle for an demonstration of how access is blocked o
 > :    ***required*** Room the player will end up in when they go this direction
 >
 > `leaveMessage` _`string`_
-> :    Message shown to the room when the player leaves the room in this direction. In the Room 1 example above, players in the same room will see "Shawn steps into the void and disappears." when Shawn leaves to the east.
+> :    Message shown to the room when the player leaves the room in this direction. In the Room 1 example above, players
+> in the same room will see "Shawn steps into the void and disappears." when Shawn leaves to the east.
 
 `doors` _`object`_
-:    Doors blocking access to this room. The key for each door is the room you want to block access _from_. So if you want to block access to players coming _from_ `limbo:5` into the room the key would be `"limbo:5"`
+:    Doors blocking access to this room. The key for each door is the room you want to block access _from_. So if you
+want to block access to players coming _from_ `limbo:5` into the room the key would be `"limbo:5"`
 
 > `lockedBy` _`EntityReference`_
 > :    Optional item EntityReference of the item that will be the key that locks/unlocks the door

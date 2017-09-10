@@ -76,15 +76,25 @@ module.exports = (srcPath, bundlePath) => {
   function lookRoom(state, player) {
     const room = player.room;
 
-    const [ line1, line2, line3 ] = getCompass(player);
+    if (player.room.coordinates) {
+      B.sayAt(player, '<yellow><b>' + sprintf('%-65s', room.title) + '</b></yellow>');
+      B.sayAt(player, B.line(60));
+    } else {
+      const [ line1, line2, line3 ] = getCompass(player);
 
-    // map is 15 characters wide, room is formatted to 80 character width
-    B.sayAt(player, '<yellow><b>' + sprintf('%-65s', room.title) + line1 + '</b></yellow>');
-    B.sayAt(player, B.line(60) + B.line(5, ' ') + line2);
-    B.sayAt(player, B.line(65, ' ') + '<yellow><b>' + line3 + '</b></yellow>');
+      // map is 15 characters wide, room is formatted to 80 character width
+      B.sayAt(player, '<yellow><b>' + sprintf('%-65s', room.title) + line1 + '</b></yellow>');
+      B.sayAt(player, B.line(60) + B.line(5, ' ') + line2);
+      B.sayAt(player, B.line(65, ' ') + '<yellow><b>' + line3 + '</b></yellow>');
+    }
 
     if (!player.getMeta('config.brief')) {
       B.sayAt(player, room.description, 80);
+    }
+
+    if (player.getMeta('config.minimap')) {
+      B.sayAt(player, '');
+      state.CommandManager.get('map').execute(4, player);
     }
 
     B.sayAt(player, '');
@@ -161,16 +171,46 @@ module.exports = (srcPath, bundlePath) => {
     });
 
     B.at(player, '[<yellow><b>Exits</yellow></b>: ');
-      B.at(player, Array.from(room.exits).map(ex => {
-        let exitText = ex.direction;
-        const exitRoom = state.RoomManager.getRoom(ex.roomId);
+      // find explicitly defined exits
+      let foundExits = Array.from(room.exits).map(ex => {
+        return [ex.direction, state.RoomManager.getRoom(ex.roomId)];
+      });
+
+      // infer from coordinates
+      if (room.coordinates) {
+        const coords = room.coordinates;
+        const area = room.area;
+        const directions = {
+          north: [0, 1, 0],
+          south: [0, -1, 0],
+          east: [1, 0, 0],
+          west: [-1, 0, 0],
+          up: [0, 0, 1],
+          down: [0, 0, -1],
+        };
+
+        foundExits = [...foundExits, ...(Object.entries(directions)
+          .map(([dir, diff]) => {
+            return [dir, area.getRoomAtCoordinates(coords.x + diff[0], coords.y + diff[1], coords.z + diff[2])];
+          })
+          .filter(([dir, exitRoom]) => {
+            return !!exitRoom;
+          })
+        )];
+      }
+
+      B.at(player, foundExits.map(([dir, exitRoom]) => {
         const door = room.getDoor(exitRoom) || exitRoom.getDoor(room);
         if (door && (door.locked || door.closed)) {
-          return '(' + exitText + ')';
+          return '(' + dir + ')';
         }
 
-        return exitText;
+        return dir;
       }).join(' '));
+
+      if (!foundExits.length) {
+        B.at(player, 'none');
+      }
       B.sayAt(player, ']');
   }
 

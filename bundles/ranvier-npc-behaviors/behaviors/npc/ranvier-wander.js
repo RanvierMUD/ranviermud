@@ -15,7 +15,7 @@ module.exports = srcPath => {
   return {
     listeners: {
       updateTick: state => function (config) {
-        if (this.isInCombat() || !this.room || !this.room.exits.length) {
+        if (this.isInCombat() || !this.room) {
           return;
         }
 
@@ -38,7 +38,30 @@ module.exports = srcPath => {
         }
 
         this._lastWanderTime = Date.now();
-        const randomRoom = state.RoomManager.getRoom(RandomUtil.fromArray(this.room.exits).roomId);
+        let possibleRooms = new Set(this.room.exits.map(exit => exit.roomId));
+        const coords = this.room.coordinates;
+        if (coords) {
+          // find exits from coordinates
+          const area = this.room.area;
+          const directions = {
+            north: [0, 1, 0],
+            south: [0, -1, 0],
+            east: [1, 0, 0],
+            west: [-1, 0, 0],
+            up: [0, 0, 1],
+            down: [0, 0, -1],
+          };
+
+          for (const [dir, diff] of Object.entries(directions)) {
+            const room = area.getRoomAtCoordinates(coords.x + diff[0], coords.y + diff[1], coords.z + diff[2]);
+            if (room) {
+              possibleRooms.add(room.entityReference);
+            }
+          }
+        }
+
+        const roomId = RandomUtil.fromArray([...possibleRooms]);
+        const randomRoom = state.RoomManager.getRoom(roomId);
 
         if (
           (config.restrictTo && !config.restrictTo.includes(randomRoom.entityReference)) ||

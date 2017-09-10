@@ -36,6 +36,8 @@ We have a Slack channel you can use to ask questions, suggest features, or just 
   packaging and sharing of commands/areas/items/npcs/channels/behaviors
 * Unopinionated network layer: easily swap out telnet for any network layer you like. No need to gut the whole codebase
   just to support a different transport type, just drop in a file.
+* Optional coordinate based room system allowing for the flexibilty of a standard MUD world with the easy mappability of
+  a strict 3D world.
 * Scripting support: It's in JavaScript! No need for a shitty DSL. The codebase is JavaScript, the scripting is JavaScript.
 * Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the
   event is emitted. Adding new events is easy as `npc.emit('eventName')` See documentation on Node.js event emitters for more detail
@@ -66,6 +68,8 @@ features:
 * A fast travel wayshrine system
 * Vendors with the ability to list items of multiple currencies
 * Crafting/resource gathering
+* Player minimap option
+* Emotes
 * NPC behaviors
   * Create NPCs aggressive to players or other NPCs (in general or specific NPC types)
   * Wandering NPCs (optionally restricted to certain paths or areas)

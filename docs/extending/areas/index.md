@@ -1,5 +1,7 @@
 Areas contain all the "content" of the MUD: items, npcs, rooms, and quests.
 
+[TOC]
+
 ## Directory Structure
 
 A single bundle can contain multiple areas and like bundles an area need only
@@ -61,3 +63,52 @@ and an accompanying item definition
 In the definition of Joe Schmoe, the value`foobar:1` in the `items` property's array means "Find item with the ID `1` in the area `foobar`". Entity ids are only unique within the same entity type of the same area. So Joe Schmoe's entity reference would _also_ be `foobar:1`, but would refer to an NPC.
 
 This string will be described in the subsequent docs as `EntityReference`.
+
+## Coordinates &amp; Mapping
+
+This section is only relevant if you are using coordinates for rooms as described in the [Rooms](rooms.md) guide.
+
+Coordinates for an area are local to that area meaning each area is essentially its own "universe." Think of it
+like a video game where you are walking in an area then you come up to a door and when you go in the door you get
+a loading screen and area taken to a different place. So if two areas have room at [2, 3, -1] they will not overlap
+because that [2, 3, -1] is local to that area's map.
+
+If you want the game to act as if there was one huge contiguous map then all you need to do is build one big
+contiguous area.
+
+### Mapping
+
+One way to map a room is to simply iterate over the `rooms` property of an area instance as each room will have its
+`coordinates` property has an object like `{x: 1, y: 0, z: -1}` and you can do whatever you like with those values.
+
+The other way is to use the `map` and `floors` properties like so:
+
+```javascript
+for (const z of area.floors) {
+  const floor = area.map.get(z);
+
+  /*
+  Each floor in the `map` is an instance of `AreaFloor` which has the low(X/Y) and high(X/Y) that you can use to define
+  your loop boundaries.
+
+  In this case this code will just draw a square map of the entire area.
+  */
+  let mapString = '';
+  for (let y = floor.highY; y >= floor.lowY; y--) {
+    for (let x = floor.lowX; x <= floor.highX; x++) {
+      if (area.getRoomAtCoordinates(x, y, z)) {
+        mapString += '.';
+      } else {
+        mapString += ' ';
+      }
+    }
+    mapString += '\r\n';
+  }
+
+  console.log('Floor ' + z);
+  console.log(mapString);
+}
+```
+
+You can see an example of mapping by looking at the `map` command inside `bundles/ranvier-commands/commands/map.js`. Further
+you can look at the `move` and `look` commands to see how the coordinates system is used to infer exits.
