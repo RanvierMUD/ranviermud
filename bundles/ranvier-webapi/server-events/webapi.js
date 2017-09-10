@@ -50,7 +50,7 @@ module.exports = srcPath => {
           const port = Config.get('webPort') || 9000;
           setupMiddleWare();
           const server = http.createServer(app);
-          Logger.setWssLogging(server);
+          Logger.getWinston().add(winstonWS.WSTransport, { wsoptions: { server: server, path: '/logs' }});
           server.listen(port);
           Logger.log(`[WEB]: Web API activated and running on port ${port}.`);
         }
