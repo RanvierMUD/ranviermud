@@ -6,7 +6,7 @@ const celebrate = require('celebrate');
 class APIBuilder {
 
   constructor(state, srcPath) {
-    const FileManager = require(srcPath + 'DataManagement/BundleDataManager');
+    const FileManager = require('../DataManagement/BundleDataManager');
     this.fileManager = new FileManager(state);
     this.fileManager.loadBundles(path.join(srcPath, '..'));
     this.Config = require(srcPath + 'Config');
