@@ -24,7 +24,7 @@ class APIAdmin {
 
     router.get('/npcs/count', this.getCount(MobFactory, 'entities'));
     router.get('/players/count', this.getCount(PlayerManager, 'players'));
-    router.get('/data/count', this.getCount(AccountManager, 'accounts'));
+    router.get('/data/count', this.getDataCount());
     router.get('/items/count', this.getCount(ItemManager, 'items'));
     router.get('/rooms/count', this.getCount(RoomManager, 'rooms'));
     router.get('/areas/count', this.getCount(AreaManager, 'areas'));
@@ -66,10 +66,23 @@ class APIAdmin {
     }
   }
 
+  /**
+   * Endpoint to search data in Data\accounts and Data\players
+   * 
+   * @returns 
+   * @memberof APIAdmin
+   */
   getData() {
     return (req, res) => {
       const data = this.Data.searchData(req.query.type, req.query.name);
-      return res.json({[req.query.type]: data});
+      return res.json({[req.query.type + 's']: data});
+    }
+  }
+
+  getDataCount() {
+    return (req, res) => {
+      const data = this.Data.searchData(req.query.type, '.json'); //all files contain .json
+      return res.json({count: data.length});
     }
   }
 

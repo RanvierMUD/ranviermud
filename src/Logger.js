@@ -1,6 +1,7 @@
 'use strict';
 
 const winston = require('winston');
+const winstonWS = require('winston-websocket');
 
 // Reset Console transport and configure it to include ISO timestamp.
 winston.remove(winston.transports.Console);
@@ -62,6 +63,11 @@ class Logger {
     }
     console.log("Adding file logging at " + filename);
     winston.add(winston.transports.File, { filename, timestamp: true });
+  }
+
+  static setWssLogging(server) {
+    console.log("Adding wss logging");
+    winston.add(winstonWS.WSTransport, { wsoptions: { server: server, path: '/logs'}});
   }
 
   static deactivateFileLogging() {

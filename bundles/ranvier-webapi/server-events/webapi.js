@@ -1,11 +1,13 @@
 'use strict';
 
 // import 3rd party libraries
+const http       = require('http');
 const express    = require('express');
 const whitelist  = require('whitelist-ips');
 const bodyParser = require('body-parser');
 const cors       = require('cors');
 const celebrate  = require('celebrate');
+const winstonWS  = require('winston-websocket');
 
 const ApiBuilder = require('../Api/ApiBuilder');
 const ApiAdmin   = require('../Api/ApiAdmin');
@@ -47,7 +49,9 @@ module.exports = srcPath => {
           Logger.log('[WEB] Initializing...');
           const port = Config.get('webPort') || 9000;
           setupMiddleWare();
-          app.listen(port);
+          const server = http.createServer(app);
+          Logger.setWssLogging(server);
+          server.listen(port);
           Logger.log(`[WEB]: Web API activated and running on port ${port}.`);
         }
 
