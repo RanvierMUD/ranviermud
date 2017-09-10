@@ -17,6 +17,10 @@
   title: Basement
   coordinates: [0, 2, -1]
   description: "You are in the basement."
+  doors:
+    "mapped:hallway-north-2":
+      lockedWith: false
+      closed: true
 
 - id: hallway-south-1
   title: Hallway South 1
