@@ -18,6 +18,13 @@ client specifically built for this bundle which can be found in the Neuro repo: 
 </p>
 <div style="text-align: center"><em>Ranvier with websockets and the Neuro client</em></div>
 
+Ranvier also has a GUI builder available, [Soma](https://github.com/shawncplus/soma).
+
+<p align="center">
+  <img width="640" src="https://raw.githubusercontent.com/shawncplus/soma/master/assets/screenshot.png" />
+</p>
+<div style="text-align: center"><em>Editing an area with Soma</em></div>
+
 
 ## Documentation
 
@@ -45,6 +52,8 @@ We have a Slack channel you can use to ask questions, suggest features, or just 
 * Rooms, items, and NPCs are easily described in YAML. No weird bullshit ~~~~ and byte-specific parsing that requires a
   GUI editor to build (though we do have a GUI editor in the works!)
 * Did I mention it's in blasting JavaScript? No compiling, no C, no cygwin, no 15 year old spaghetti code
+* An accompanying client for use with websockets: [Neuro](https://github.com/shawncplus/neuro)
+* A GUI area builder: [Soma](https://github.com/shawncplus/soma)
 
 ### Example Bundles
 
