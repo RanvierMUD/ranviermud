@@ -93,12 +93,17 @@ advantage of all of the core code.
 
 ## "I just want to check it out quickly"
 
-    git clone git://github.com/shawncplus/ranviermud
-    cd ranviermud
-    npm install
-    npm run bundle-install
-    ./ranvier
-    telnet localhost 4000
+```sh
+git clone git://github.com/shawncplus/ranviermud
+cd ranviermud
+npm install
+# Mac/Linux
+  npm run bundle-install
+# Windows
+  win-bundle-install
+./ranvier
+telnet localhost 4000
+```
 
 The default admin user/pass is `admin`/`ranviermud`
 

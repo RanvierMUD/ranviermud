@@ -2,15 +2,18 @@
 
 ## Installation
 
-    git clone git://github.com/shawncplus/ranviermud
-    cd ranviermud
-    npm install
-    npm run bundle-install
+```sh
+git clone git://github.com/shawncplus/ranviermud
+cd ranviermud
+npm install
+# Mac/Linux
+  npm run bundle-install
+# Windows
+  win-bundle-install
+```
 
-If you would like to use the latest, but perhaps not stable, features: before `npm install` execute `git checkout
-staging`. Note: Windows users my run into an issue with the `bundle-install` command. Or the command may silently
-fail and you'll get an error about a missing package on server startup. If this is the case go into the
-`ranvier-npc-behaviors` and `ranvier-telnet` bundles (in `bundles/`) and run `npm install`
+If you would like to use the latest, but perhaps not stable, features make sure you are on the
+`staging` branch.
 
 ### Yeoman Generator
 
