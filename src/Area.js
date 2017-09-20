@@ -71,7 +71,6 @@ class Area extends EventEmitter {
     this.rooms.set(room.id, room);
 
     if (room.coordinates) {
-      console.log(room.id, room.coordinates);
       this.addRoomToMap(room);
     }
   }
