@@ -8,6 +8,7 @@
   ],
   "bundles": [
     "ranvier-telnet",
+    "ranvier-websocket",
     "ranvier-areas",
     "ranvier-channels",
     "ranvier-commands",
