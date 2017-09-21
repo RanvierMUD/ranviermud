@@ -1,7 +1,9 @@
 'use strict';
 
+const Telnet = require('ranvier-telnet');
+const TelnetStream = require('../lib/TelnetStream');
+
 module.exports = srcPath => {
-  const Telnet = require(srcPath + 'Telnet');
   const Data = require(srcPath + 'Data');
   const Logger = require(srcPath + 'Logger');
 
@@ -11,26 +13,33 @@ module.exports = srcPath => {
         /**
         * Effectively the 'main' game loop but not really because it's a REPL
         */
-        let server = new Telnet.TelnetServer({}, socket => {
+        let server = new Telnet.TelnetServer(rawSocket => {
+          let telnetSocket = new Telnet.TelnetSocket();
+          telnetSocket.attach(rawSocket);
+          telnetSocket.telnetCommand(Telnet.Sequences.WILL, Telnet.Options.OPT_EOR);
+
           const banned = Data.parseFile(srcPath + '/../data/banned.json');
-          if (banned.includes(socket.address().address)) {
-            return socket.destroy();
+          if (banned.includes(telnetSocket.address().address)) {
+            return telnetSocket.destroy();
           }
 
-          socket.on('interrupt', () => {
-            socket.write("\n*interrupt*\n");
+          const stream = new TelnetStream();
+          stream.attach(telnetSocket);
+
+          stream.on('interrupt', () => {
+            stream.write("\n*interrupt*\n");
           });
 
-          socket.on('error', Logger.error);
+          stream.on('error', Logger.error);
 
           // Register all of the input events (login, etc.)
-          state.InputEventManager.attach(socket);
+          state.InputEventManager.attach(stream);
 
-          socket.write("Connecting...\n");
+          stream.write("Connecting...\n");
           Logger.log("User connected...");
 
           // @see: bundles/ranvier-events/events/login.js
-          socket.emit('intro', socket);
+          stream.emit('intro', stream);
         }).netServer;
 
         // Start the server and setup error handlers.
