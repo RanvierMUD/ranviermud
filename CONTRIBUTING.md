@@ -6,6 +6,10 @@ guide to get you started [https://guides.github.com/activities/contributing-to-o
 Before you start writing code, adding documentation, or submitting issues we suggest you hop in our slack channel
 ([Get an invite](https://ranviermud.signup.team/)) and say hi.
 
+## Donating
+
+Ranvier is a passion-project and I never expect to make money off of it. With that said, if you want to buy me a beer because you like Ranvier so dang much you can do so at my Patreon: [patreon.com/shawncplus](https://patreon.com/shawncplus). More than money though I appreciate contributions of the other types on this page: submitting bugs, suggesting features, and the very best: pull requests.
+
 ## Filing bugs
 
 If you find an issue click the _Issues_ tab on the github page, there will be a template to walk you through what info
