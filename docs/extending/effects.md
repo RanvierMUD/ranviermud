@@ -279,6 +279,7 @@ effect which absorbs incoming damage of a certain type up to a certain amount an
 or B) depleted.
 
 ```javascript hl_lines="1 1"
+bundles/my-effects/effects/damageshield.js
 'use strict';
 
 module.exports = srcPath => {
@@ -363,7 +364,8 @@ This example effect will also demonstrate stacking effects, which are effects th
 effect of the same type attempts to be applied, increments a stack counter and can run some code as
 we'll see below.
 
-```javascript
+```javascript hl_lines="1 1"
+bundles/my-effects/effects/skill.rend.js
 'use strict';
 
 /**
