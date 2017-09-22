@@ -34,7 +34,13 @@ module.exports = (srcPath) => {
 
         if (account.banned) {
           socket.write('This account has been banned.\r\n');
-          socket.destroy();
+          socket.end();
+          return;
+        }
+
+        if (account.deleted) {
+          socket.write('This account has been deleted.\r\n');
+          socket.end();
           return;
         }
 

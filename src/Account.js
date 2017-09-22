@@ -21,6 +21,10 @@ class Account {
     this.characters = data.characters || [];
     this.password   = data.password;
     this.banned = data.banned || false;
+    this.deleted = data.deleted || false;
+    // Arbitrary data bundles are free to shove whatever they want in
+    // WARNING: values must be JSON.stringify-able
+    this.metadata = data.metadata || {};
   }
 
   /**
@@ -34,7 +38,7 @@ class Account {
    * @param {string} username
    */
   addCharacter(username) {
-    this.characters.push(username);
+    this.characters.push({ username: username, deleted : false});
   }
 
   /**
@@ -42,7 +46,25 @@ class Account {
    * @return {boolean}
    */
   hasCharacter(name) {
-    return this.characters.indexOf(name) !== -1;
+    return this.characters.find(c => c.username === name);
+  }
+
+  /**
+   * @param {string} name Delete one of the chars
+   */
+  deleteCharacter(name) {
+    var picked = this.characters.find(c => c.username === name);
+    picked.deleted = true;
+    this.save();
+  }
+
+  /**
+   * @param {string} name Removes the deletion of one of the chars
+   */
+  undeleteCharacter(name) {
+    var picked = this.characters.find(c => c.username === name);
+    picked.deleted = false;
+    this.save();
   }
 
   /**
@@ -74,6 +96,18 @@ class Account {
    */
   ban() {
     this.banned = true;
+    this.save();
+  }
+
+  /**
+   * Set this account to deleted
+   There is no undelete because this can just be done by manually editing the account file
+   */
+  deleteAccount() {
+    this.characters.forEach(char => {
+      this.deleteCharacter(char.username);
+    });
+    this.deleted = true;
     this.save();
   }
 
@@ -120,12 +154,14 @@ class Account {
       username,
       characters,
       password,
+      metadata,
     } = this;
 
     return {
       username,
       characters,
-      password
+      password,
+      metadata
     };
   }
 }
