@@ -1,8 +1,9 @@
 'use strict';
 
-module.exports = srcPath => {
+module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: 'unlock <door direction>',
@@ -87,18 +88,18 @@ module.exports = srcPath => {
       }
 
       if (!item.closed) {
-        return B.sayAt(player, `${item.display} isn't closed...`);
+        return B.sayAt(player, `${ItemUtil.display(item)} isn't closed...`);
       }
 
       if (!item.locked) {
-        return B.sayAt(player, `${item.display} isn't locked...`);
+        return B.sayAt(player, `${ItemUtil.display(item)} isn't locked...`);
       }
 
       if (item.locked) {
         if (item.lockedBy) {
           const playerKey = player.hasItem(item.lockedBy);
           if (playerKey) {
-            B.sayAt(player, `*click* You unlock ${item.display} with ${playerKey.display}.`);
+            B.sayAt(player, `*click* You unlock ${ItemUtil.display(item)} with ${playerKey.display}.`);
             item.unlock();
             return;
           }
@@ -107,7 +108,7 @@ module.exports = srcPath => {
         return B.sayAt(player, "The item is locked and you don't have the key.");
       }
 
-      B.sayAt(player, `*click* You unlock ${item.display}.`);
+      B.sayAt(player, `*click* You unlock ${ItemUtil.display(item)}.`);
       return item.unlock();
     }
   };

@@ -1,8 +1,9 @@
 'use strict';
 
-module.exports = srcPath => {
+module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: 'open <item> / open door <door direction>',
@@ -97,7 +98,7 @@ module.exports = srcPath => {
         if (item.lockedBy) {
           const playerKey = player.hasItem(item.lockedBy);
           if (playerKey) {
-            B.sayAt(player, `*click* You unlock ${item.display} with ${playerKey.display} and open it.`);
+            B.sayAt(player, `*click* You unlock ${ItemUtil.display(item)} with ${playerKey.display} and open it.`);
             item.unlock();
             item.open();
             return;
@@ -108,10 +109,10 @@ module.exports = srcPath => {
       }
 
       if (!item.closed) {
-        return B.sayAt(player, `${item.display} isn't closed...`);
+        return B.sayAt(player, `${ItemUtil.display(item)} isn't closed...`);
       }
 
-      B.sayAt(player, `You open ${item.display}.`);
+      B.sayAt(player, `You open ${ItemUtil.display(item)}.`);
       return item.open();
     }
   };

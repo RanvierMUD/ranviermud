@@ -11,7 +11,7 @@ module.exports = (srcPath, bundlePath) => {
   const ItemType = require(srcPath + 'ItemType');
   const Logger = require(srcPath + 'Logger');
   const Player = require(srcPath + 'Player');
-  const { renderItem } = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: "look [thing]",
@@ -114,9 +114,9 @@ module.exports = (srcPath, bundlePath) => {
     // show all the items in the rom
     room.items.forEach(item => {
       if (item.hasBehavior('resource')) {
-        B.sayAt(player, `[${item.qualityColorize('Resource')}] <magenta>${item.roomDesc}</magenta>`);
+        B.sayAt(player, `[${ItemUtil.qualityColorize(item, 'Resource')}] <magenta>${item.roomDesc}</magenta>`);
       } else {
-        B.sayAt(player, `[${item.qualityColorize('Item')}] <magenta>${item.roomDesc}</magenta>`);
+        B.sayAt(player, `[${ItemUtil.qualityColorize(item, 'Item')}] <magenta>${item.roomDesc}</magenta>`);
       }
     });
 
@@ -270,7 +270,7 @@ module.exports = (srcPath, bundlePath) => {
       switch (entity.type) {
         case ItemType.WEAPON:
         case ItemType.ARMOR:
-          return B.sayAt(player, renderItem(state, entity, player));
+          return B.sayAt(player, ItemUtil.renderItem(state, entity, player));
         case ItemType.CONTAINER: {
           if (!entity.inventory || !entity.inventory.size) {
             return B.sayAt(player, `${entity.name} is empty.`);
@@ -287,7 +287,7 @@ module.exports = (srcPath, bundlePath) => {
           B.sayAt(player, ':');
 
           for (const [, item ] of entity.inventory) {
-            B.sayAt(player, '  ' + item.display);
+            B.sayAt(player, '  ' + ItemUtil.display(item));
           }
           break;
         }

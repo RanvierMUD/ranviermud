@@ -5,10 +5,10 @@
   roomDesc: "Green Plant"
   keywords: [ "green", "plant", "resource" ]
   description: "An oddly bright green plant whose thorns shine as the light hits them. Perhaps you could <b><cyan>gather</cyan></b> it."
-  level: 1
-  itemLevel: 1
-  quality: common
   properties:
+    level: 1
+    itemLevel: 1
+    quality: common
     noPickup: true
   behaviors:
     resource:
@@ -23,10 +23,10 @@
   roomDesc: "Red Rose"
   keywords: [ "red", "rose", "resource" ]
   description: "An oddly bright red rose whose thorns shine as the light hits them. Perhaps you could <b><cyan>gather</cyan></b> it."
-  level: 1
-  itemLevel: 1
-  quality: uncommon
   properties:
+    level: 1
+    itemLevel: 1
+    quality: uncommon
     noPickup: true
   behaviors:
     resource:

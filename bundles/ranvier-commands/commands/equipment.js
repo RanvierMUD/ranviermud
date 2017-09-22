@@ -1,7 +1,8 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     aliases: ['worn'],
@@ -13,7 +14,7 @@ module.exports = (srcPath) => {
 
       Broadcast.sayAt(player, "Currently Equipped:");
       for (const [slot, item] of player.equipment) {
-        Broadcast.sayAt(player, `  <${slot}> ${item.display}`);
+        Broadcast.sayAt(player, `  <${slot}> ${ItemUtil.display(item)}`);
       }
     }
   };

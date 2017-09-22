@@ -1,8 +1,9 @@
 'use strict';
 
-module.exports = srcPath => {
+module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: 'close <item> / close door <door direction>',
@@ -81,7 +82,7 @@ module.exports = srcPath => {
         return B.sayAt(player, "It's already closed.");
       }
 
-      B.sayAt(player, `You close ${item.display}.`);
+      B.sayAt(player, `You close ${ItemUtil.display(item)}.`);
       return item.close();
     }
   };

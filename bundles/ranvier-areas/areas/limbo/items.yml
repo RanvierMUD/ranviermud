@@ -6,10 +6,10 @@
   description: "An arm's-length, jagged metal sword discolored with red corrosion. The worn leather grip barely held on by fraying thread."
   script: "1-sword"
   slot: 'wield'
-  level: 1
-  itemLevel: 1
-  quality: common
   properties:
+    level: 1
+    itemLevel: 1
+    quality: common
     minDamage: 7
     maxDamage: 15
     speed: 2.8
@@ -49,10 +49,10 @@
   keywords: ["sword", "training", "iron"]
   description: "A hefty iron blade. Not the sharpest sword in the world but it will get the job done."
   slot: "wield"
-  quality: rare
-  itemLevel: 10
-  level: 5
   properties:
+    quality: rare
+    itemLevel: 10
+    level: 5
     minDamage: 11
     maxDamage: 20
     speed: 2.8
@@ -70,10 +70,10 @@
   keywords: ["leather", "vest"]
   description: "A plain leather vest. Better than nothing."
   slot: "chest"
-  quality: common
-  level: 1
-  itemLevel: 1
   properties:
+    quality: common
+    level: 1
+    itemLevel: 1
     stats:
       armor: 20
   behaviors: 
@@ -85,7 +85,8 @@
   roomDesc: "Potion of Health I"
   keywords: [ "potion", "health" ]
   type: POTION
-  level: 1
+  properties:
+    level: 1
   behaviors:
     # usable has two variants: spell, and effect
     usable:
@@ -106,7 +107,8 @@
   roomDesc: "Potion of Strength I"
   keywords: [ "potion", "strength" ]
   type: POTION
-  level: 1
+  properties:
+    level: 1
   behaviors:
     usable:
       # this is the effect variant, you specify an effect name instead of a spell
@@ -128,11 +130,11 @@
   keywords: ["sword", "blade", "ranvier"]
   description: "The blade shines a brilliant silver. Holding it you feel as if you could take on the world."
   slot: "wield"
-  quality: epic
   script: "9-ranvier-blade"
-  itemLevel: 15
-  level: 10
   properties:
+    quality: epic
+    itemLevel: 15
+    level: 10
     minDamage: 13
     maxDamage: 26
     speed: 2.8
@@ -148,10 +150,10 @@
   keywords: ["shield", "wooden"]
   description: "A rather uninteresting looking wooden shield. A rusted metal band barely hold its together and the leather arm band is nearly torn."
   slot: "shield"
-  quality: common
-  level: 1
-  itemLevel: 1
   properties:
+    quality: common
+    level: 1
+    itemLevel: 1
     stats:
       armor: 10
   behaviors: 
@@ -163,7 +165,8 @@
   keywords: ["key", "odd", "oddly", "shaped"]
   roomDesc: "A strange looking key"
   description: "This key seems overly complex with numerous grooves."
-  quality: common
+  properties:
+    quality: common
 - id: locked_chest
   type: CONTAINER
   name: "Locked Chest"

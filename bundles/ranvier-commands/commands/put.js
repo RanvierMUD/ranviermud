@@ -1,9 +1,10 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
   const ItemType = require(srcPath + 'ItemType');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: 'put <item> <container>',
@@ -52,7 +53,7 @@ module.exports = (srcPath) => {
       player.removeItem(item);
       toContainer.addItem(item);
 
-      B.sayAt(player, `<green>You put </green>${item.display}<green> into </green>${toContainer.display}<green>.</green>`);
+      B.sayAt(player, `<green>You put </green>${ItemUtil.display(item)}<green> into </green>${toContainer.display}<green>.</green>`);
 
       item.emit('put', player, toContainer);
       player.emit('put', item, toContainer);

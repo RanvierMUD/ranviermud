@@ -1,9 +1,10 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
   const ItemType = require(srcPath + 'ItemType');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: 'get <item> [container]',
@@ -47,11 +48,11 @@ module.exports = (srcPath) => {
         }
 
         if (container.type !== ItemType.CONTAINER) {
-          return Broadcast.sayAt(player, `${container.display} isn't a container.`);
+          return Broadcast.sayAt(player, `${ItemUtil.display(container)} isn't a container.`);
         }
 
         if (container.closed) {
-          return Broadcast.sayAt(player, `${container.display} is closed.`);
+          return Broadcast.sayAt(player, `${ItemUtil.display(container)} is closed.`);
         }
 
         search = parts[0];
@@ -91,7 +92,7 @@ module.exports = (srcPath) => {
 
   function pickup(item, container, player) {
     if (item.properties.noPickup) {
-      return Broadcast.sayAt(player, `${item.display} can't be picked up.`);
+      return Broadcast.sayAt(player, `${ItemUtil.display(item)} can't be picked up.`);
     }
 
     if (container) {
@@ -101,7 +102,7 @@ module.exports = (srcPath) => {
     }
     player.addItem(item);
 
-    Broadcast.sayAt(player, `<green>You receive loot: </green>${item.display}<green>.</green>`);
+    Broadcast.sayAt(player, `<green>You receive loot: </green>${ItemUtil.display(item)}<green>.</green>`);
 
     item.emit('get', player);
     player.emit('get', item);
