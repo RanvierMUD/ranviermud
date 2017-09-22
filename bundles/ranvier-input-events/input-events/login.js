@@ -39,9 +39,6 @@ module.exports = (srcPath) => {
         }
 
         return socket.emit('password', socket, { dontwelcome: false, account });
-
-
-
       });
     }
   };
