@@ -2,8 +2,8 @@
 
 module.exports = (srcPath) => {
   const Data = require(srcPath + 'Data');
-  const Account = require(srcPath + 'Account');
   const Logger = require(srcPath + 'Logger');
+  const CommonFunctions = require('../lib/CommonFunctions');
 
   return {
     event: state => (socket, args) => {
@@ -14,7 +14,7 @@ module.exports = (srcPath) => {
       socket.once('data', name => {
         name = name.toString().trim();
 
-        const invalid = Account.validateName(name);
+        const invalid = CommonFunctions.validateName(name);
         if (invalid) {
           socket.write(invalid + '\r\n');
           return socket.emit('login', socket);
@@ -39,6 +39,9 @@ module.exports = (srcPath) => {
         }
 
         return socket.emit('password', socket, { dontwelcome: false, account });
+
+
+
       });
     }
   };

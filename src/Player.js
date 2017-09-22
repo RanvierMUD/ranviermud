@@ -259,25 +259,6 @@ class Player extends Character {
   getBroadcastTargets() {
     return [this];
   }
-
-  static validateName(name) {
-    const maxLength = Config.get('maxPlayerNameLength');
-    const minLength = Config.get('minPlayerNameLength');
-
-    if (!name) {
-      return 'Please enter a name.';
-    }
-    if (name.length > maxLength) {
-      return 'Too long, try a shorter name.';
-    }
-    if (name.length < minLength) {
-      return 'Too short, try a longer name.';
-    }
-    if (!/^[a-z]+$/i.test(name)) {
-      return 'Your name may only contain A-Z without spaces or special characters.';
-    }
-    return false;
-  }
 }
 
 module.exports = Player;
