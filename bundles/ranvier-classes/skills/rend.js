@@ -11,9 +11,9 @@ module.exports = (srcPath) => {
 
   // config placed here just for easy copy/paste of this skill later on
   const attribute = 'strength';
-  const cooldown = 20;
+  const cooldown = 10;
   const cost = 50;
-  const duration = 15 * 1000;
+  const duration = 20 * 1000;
   const tickInterval = 3;
   const damagePercent = 400;
 
@@ -47,6 +47,10 @@ module.exports = (srcPath) => {
       );
       effect.skill = this;
       effect.attacker = player;
+
+      effect.on('effectDeactivated', _ => {
+        Broadcast.sayAt(player, `<red><b>${target.name}</b> stops bleeding.</red>`);
+      });
 
       Broadcast.sayAt(player, `<red>With a vicious attack you open a deep wound in <bold>${target.name}</bold>!</red>`);
       Broadcast.sayAtExcept(player.room, `<red>${player.name} viciously rends ${target.name}.</red>`, [target, player]);

@@ -40,7 +40,7 @@ We'll cover the configuration of functionality as we implement some demonstrativ
 ## Creating an Effect
 
 Effects, similar to commands, are each stored in their own `.js` file. In the case of effects it is in the `effects/`
-folder underneath your bundle directory. In our example we'll be implementing `buff`, `damageshield`, and `regen`
+folder underneath your bundle directory. In our example we'll be implementing `buff`, `damageshield`, `regen`, and `rend`
 effects, so our bundle folder would look like so:
 
 ```
@@ -49,6 +49,7 @@ bundles/my-effects/
     buff.js
     damageshield.js
     regen.js
+    rend.js
 ```
 
 ### File Structure
@@ -106,6 +107,13 @@ module.exports = srcPath => {
       effect of that type may be active at once.
       */
       type: 'buff.strength',
+
+      /**
+       * This will configure the effect so that if another effect of the same
+       * type is applied before the effect is finished it will receive a
+       * "effectRefreshed" event to do with as it will.
+       */
+      refreshes: true,
     },
 
     /*
@@ -175,6 +183,13 @@ module.exports = srcPath => {
       effectDeactivated: The effect is about to be removed from the effect list
     */
     listeners: {
+      effectRefreshed: function (newEffect) {
+        // For this buff if someone tries to refresh the effect then just restart
+        // the duration timer
+        this.startedAt = Date.now();
+        Broadcast.sayAt(this.target, "You refresh the potion's magic.");
+      },
+
       effectActivated: function () {
         // For buff we'll just send some text to the user
         Broadcast.sayAt(this.target, "Strength courses through your veins!");
@@ -334,6 +349,76 @@ module.exports = srcPath => {
           // remove the shield's remaining amount meter prompt
           this.target.removePrompt("damageshield");
         }
+      }
+    }
+  };
+};
+```
+
+### rend
+
+This rend effect is an example of a damage over time effect which could be used by a Rend skill. As
+the "damage over time" name implies this type of effect does some damage over a set amount of time.
+This example effect will also demonstrate stacking effects, which are effects that, when another
+effect of the same type attempts to be applied, increments a stack counter and can run some code as
+we'll see below.
+
+```javascript
+'use strict';
+
+/**
+ * Implementation effect for a Rend damage over time skill
+ */
+module.exports = srcPath => {
+  const Broadcast = require(srcPath + 'Broadcast');
+  const Damage = require(srcPath + 'Damage');
+  const Flag = require(srcPath + 'EffectFlag');
+
+  return {
+    config: {
+      name: 'Rend',
+      duration: 15 * 1000,
+      type: 'skill:rend',
+      tickInterval: 3,
+
+      // Sets the max number of stacks that can be added to this effect once active
+      maxStacks: 3,
+    },
+    flags: [Flag.DEBUFF],
+    listeners: {
+      // this is the event that gets fired when a new stack gets added. `newEffect` is
+      // the effect that was attempted to be added, provided so you can do things like compound
+      // damage or refresh the duration, etc.
+      effectStackAdded: function (newEffect) {
+        // add incoming rend's damage to the existing damage but don't extend duration
+        this.state.totalDamage += newEffect.state.totalDamage;
+      },
+
+      effectActivated: function () {
+        Broadcast.sayAt(this.target, "<bold><red>You've suffered a deep wound, it's bleeding profusely</red></bold>");
+      },
+
+      effectDeactivated: function () {
+        Broadcast.sayAt(this.target, "Your wound has stopped bleeding.");
+      },
+
+      updateTick: function () {
+        const amount = Math.round(this.state.totalDamage / Math.round((this.config.duration / 1000) / this.config.tickInterval));
+
+        // as seen with Skills we'll create a new damage object and commit that damage to the target
+        // of this effect
+        const damage = new Damage({
+          attribute: "health",
+          amount,
+          attacker: this.attacker,
+          source: this
+        });
+        damage.commit(this.target);
+      },
+
+      // remove this rend effect when the target dies
+      killed: function () {
+        this.remove();
       }
     }
   };

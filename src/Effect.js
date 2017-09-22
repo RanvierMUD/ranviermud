@@ -10,6 +10,8 @@ var EffectModifiers;
  * @property {object}  config Effect configuration (name/desc/duration/etc.)
  * @property {boolean} config.autoActivate If this effect immediately activates itself when added to the target
  * @property {boolean} config.hidden       If this effect is shown in the character's effect list
+ * @property {boolean} config.refreshes    If an effect with the same type is applied it will trigger an effectRefresh
+ *   event instead of applying the additional effect.
  * @property {boolean} config.unique       If multiple effects with the same `config.type` can be applied at once
  * @property {number}  config.maxStacks    When adding an effect of the same type it adds a stack to the current
  *     effect up to maxStacks instead of adding the effect. Implies `config.unique`
@@ -44,6 +46,7 @@ class Effect extends EventEmitter {
       maxStacks: 0,
       name: 'Unnamed Effect',
       persists: true,
+      refreshes: false,
       tickInterval: false,
       type: 'undef',
       unique: true,
@@ -61,6 +64,10 @@ class Effect extends EventEmitter {
     // internal state saved across player load e.g., stacks, amount of damage shield remaining, whatever
     // Default state can be found in config.state
     this.state = Object.assign({}, def.state);
+
+    if (this.config.maxStacks) {
+      this.state.stacks = 1;
+    }
 
     // If an effect has a tickInterval it should always apply when first activated
     if (this.config.tickInterval && !this.state.tickInterval) {

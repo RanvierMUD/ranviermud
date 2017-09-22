@@ -12,9 +12,15 @@ module.exports = srcPath => {
     config: {
       name: 'Rend',
       type: 'skill:rend',
+      maxStacks: 3,
     },
     flags: [Flag.DEBUFF],
     listeners: {
+      effectStackAdded: function (newEffect) {
+        // add incoming rend's damage to the existing damage but don't extend duration
+        this.state.totalDamage += newEffect.state.totalDamage;
+      },
+
       effectActivated: function () {
         Broadcast.sayAt(this.target, "<bold><red>You've suffered a deep wound, it's bleeding profusely</red></bold>");
       },
