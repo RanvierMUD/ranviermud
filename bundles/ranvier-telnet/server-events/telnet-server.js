@@ -57,7 +57,7 @@ module.exports = srcPath => {
           process.exit(1);
         });
 
-        Logger.log(`Server started on port: ${commander.port}...`);
+        Logger.log(`Telnet server started on port: ${commander.port}...`);
       },
 
       shutdown: state => function () {
