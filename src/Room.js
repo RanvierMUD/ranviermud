@@ -155,22 +155,22 @@ class Room extends EventEmitter {
   /**
    * @param {Npc} npc
    */
-  addNpc(npc) {
+  addNpc(npc, state) {
     this.npcs.add(npc);
     npc.room = this;
-    this.area.addNpc(npc);
+    this.area.addNpc(npc, state);
   }
 
   /**
    * @param {Npc} npc
    */
-  removeNpc(npc) {
+  removeNpc(npc, state) {
     this.npcs.delete(npc);
     // NOTE: It is _very_ important that the NPC's room is set to null before the Area.removeNpc call
     // otherwise the area will also remove it from its originating room spawn list and will try
     // to respawn it. Not good
     npc.room = null;
-    this.area.removeNpc(npc);
+    this.area.removeNpc(npc, state);
   }
 
   /**
@@ -203,6 +203,9 @@ class Room extends EventEmitter {
    * @return {{lockedBy: EntityReference, locked: boolean, closed: boolean}}
    */
   getDoor(fromRoom) {
+    if (!fromRoom) {
+      return null;
+    }
     return this.doors.get(fromRoom.entityReference);
   }
 
@@ -382,8 +385,7 @@ class Room extends EventEmitter {
     const newNpc = state.MobFactory.create(this.area, entityRef);
     newNpc.hydrate(state);
     newNpc.sourceRoom = this;
-    this.area.addNpc(newNpc);
-    this.addNpc(newNpc);
+    this.addNpc(newNpc, state);
     this.spawnedNpcs.add(newNpc);
     /**
      * @event Npc#spawn

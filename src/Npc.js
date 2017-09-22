@@ -59,14 +59,14 @@ class Npc extends Character {
    * @param {Room} nextRoom
    * @param {function} onMoved Function to run after the npc is moved to the next room but before enter events are fired
    */
-  moveTo(nextRoom, onMoved = _ => _) {
+  moveTo(state, nextRoom, onMoved = _ => _) {
     if (this.room) {
       this.room.emit('npcLeave', this, nextRoom);
-      this.room.removeNpc(this);
+      this.room.removeNpc(this, state);
     }
 
     this.room = nextRoom;
-    nextRoom.addNpc(this);
+    nextRoom.addNpc(this, state);
 
     onMoved();
 

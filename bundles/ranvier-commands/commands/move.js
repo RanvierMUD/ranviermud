@@ -86,8 +86,8 @@ module.exports = (srcPath) => {
           B.sayAt(follower, `\r\nYou follow ${player.name} to ${nextRoom.title}.`);
           state.CommandManager.get('move').execute(exitName, follower);
         } else {
-          follower.room.removeNpc(follower);
-          nextRoom.addNpc(follower);
+          follower.room.removeNpc(follower, state);
+          nextRoom.addNpc(follower, state);
         }
       }
 

@@ -116,20 +116,21 @@ class Area extends EventEmitter {
   /**
    * @param {Npc} npc
    */
-  addNpc(npc) {
+  addNpc(npc, state) {
     this.npcs.add(npc);
+    state.MobManager.addMob(npc);
   }
 
   /**
    * Removes an NPC from the game and frees its place in its originating room to allow it to respawn
    * @param {Npc} npc
    */
-  removeNpc(npc) {
+  removeNpc(npc, state) {
     if (npc.room) {
-      npc.room.removeNpc(npc);
+      npc.room.removeNpc(npc, state);
       npc.sourceRoom.removeSpawnedNpc(npc);
     }
-
+    state.MobManager.removeMob(npc);
     this.npcs.delete(npc);
   }
 

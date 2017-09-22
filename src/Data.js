@@ -111,10 +111,10 @@ class Data {
   static getDataFilePath(type, id) {
     switch (type) {
       case 'player': {
-        return dataPath + `/player/${id}.json`;
+        return dataPath + `player/${id}.json`;
       }
       case 'account': {
-        return dataPath + `/account/${id}.json`;
+        return dataPath + `account/${id}.json`;
       }
     }
   }
