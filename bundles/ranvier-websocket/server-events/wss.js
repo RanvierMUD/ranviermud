@@ -32,6 +32,7 @@ module.exports = srcPath => {
           // @see: bundles/ranvier-events/events/login.js
           stream.emit('intro', stream);
         });
+        Logger.log(`Websocket server started on port: ${wss.options.port}...`);
       },
 
       shutdown: state => function () {
