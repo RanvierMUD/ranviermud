@@ -5,7 +5,7 @@
  */
 module.exports = (srcPath) => {
   const EventUtil = require(srcPath + 'EventUtil');
-  const Player = require(srcPath + 'Player');
+  const CommonFunctions = require('../lib/CommonFunctions');
 
   return {
     event : (state) => (socket, args) => {
@@ -17,7 +17,7 @@ module.exports = (srcPath) => {
         say('');
         name = name.toString().trim();
 
-        const invalid = Player.validateName(name);
+        const invalid = CommonFunctions.validateName(name);
 
         if (invalid) {
           say(invalid);
