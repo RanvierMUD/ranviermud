@@ -85,6 +85,7 @@ class Npc extends Character {
 
   hydrate(state) {
     super.hydrate(state);
+    state.MobManager.addMob(this);
 
     this.setAttributeToMax('health');
 

@@ -36,6 +36,7 @@ const HelpManager = require('./src/HelpManager');
 const ItemFactory = require('./src/ItemFactory');
 const ItemManager = require('./src/ItemManager');
 const MobFactory = require('./src/MobFactory');
+const MobManager = require('./src/MobManager');
 const PartyManager = require('./src/PartyManager');
 const PlayerManager = require('./src/PlayerManager');
 const QuestFactory = require('./src/QuestFactory');
@@ -103,6 +104,7 @@ function init(restartServer) {
     ItemManager: new ItemManager(),
     MobBehaviorManager: new BehaviorManager(),
     MobFactory: new MobFactory(),
+    MobManager: new MobManager(),
     PartyManager: new PartyManager(),
     PlayerManager: new PlayerManager(),
     QuestFactory: new QuestFactory(),
