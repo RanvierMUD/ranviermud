@@ -8,7 +8,7 @@ module.exports = (srcPath, bundlePath) => {
   const CommandManager = require(srcPath + 'CommandManager');
   const ItemType = require(srcPath + 'ItemType');
   const Crafting = require(bundlePath + 'ranvier-crafting/lib/Crafting');
-  const { renderItem } = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   const subcommands = new CommandManager();
 
@@ -46,7 +46,7 @@ module.exports = (srcPath, bundlePath) => {
         }
 
         return category.items.forEach((categoryEntry, index) => {
-          say(player, sprintf('%2d) ', index + 1) + categoryEntry.item.display);
+          say(player, sprintf('%2d) ', index + 1) + ItemUtil.display(categoryEntry.item));
         });
       }
 
@@ -56,11 +56,11 @@ module.exports = (srcPath, bundlePath) => {
         return say(player, "Invalid item.");
       }
 
-      say(player, renderItem(state, item.item, player));
+      say(player, ItemUtil.renderItem(state, item.item, player));
       say(player, '<b>Recipe:</b>');
       for (const [resource, amount] of Object.entries(item.recipe)) {
         const ingredient = Crafting.getResourceItem(resource);
-        say(player, `  ${ingredient.display} x ${amount}`);
+        say(player, `  ${ItemUtil.display(ingredient)} x ${amount}`);
       }
     }
   });
@@ -110,12 +110,12 @@ module.exports = (srcPath, bundlePath) => {
       for (const [resource, amount] of Object.entries(item.recipe)) {
         player.setMeta(`resources.${resource}`, player.getMeta(`resources.${resource}`) - amount);
         const resItem = Crafting.getResourceItem(resource);
-        say(player, `<green>You spend ${amount} x ${resItem.display}.</green>`);
+        say(player, `<green>You spend ${amount} x ${ItemUtil.display(resItem)}.</green>`);
       }
 
       state.ItemManager.add(item.item);
       player.addItem(item.item);
-      say(player, `<b><green>You create: ${item.item.display}.</green></b>`);
+      say(player, `<b><green>You create: ${ItemUtil.display(item.item)}.</green></b>`);
       player.save();
     }
   });

@@ -5,6 +5,7 @@
 module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
   const Crafting = require(bundlePath + 'ranvier-crafting/lib/Crafting');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     aliases: [ "materials" ],
@@ -23,7 +24,7 @@ module.exports = (srcPath, bundlePath) => {
         totalAmount += amount;
 
         const resItem = Crafting.getResourceItem(resourceKey);
-        B.sayAt(player, `${resItem.display} x ${amount}`);
+        B.sayAt(player, `${ItemUtil.display(resItem)} x ${amount}`);
       }
 
       if (!totalAmount) {

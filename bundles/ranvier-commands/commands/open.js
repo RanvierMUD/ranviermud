@@ -6,10 +6,13 @@ module.exports = (srcPath, bundlePath) => {
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
-    usage: 'open <item> / open door <door direction>',
-    command: state => (args, player) => {
+    aliases: ['close', 'lock', 'unlock'],
+    usage: '[open/close/lock/unlock] <item> / [open/close/lock/unlock] <door direction>/ [open/close/lock/unlock] <door direction>',
+    command: state => (args, player, arg0) => {
+      const action = arg0.toString().toLowerCase();
+      let validTarget = false;
       if (!args || !args.length) {
-        return B.sayAt(player, "Open what?");
+        return B.sayAt(player, `What do you want to ${action}?`);
       }
 
       if (!player.room) {
@@ -18,102 +21,204 @@ module.exports = (srcPath, bundlePath) => {
 
       const parts = args.split(' ');
 
-      // player is opening a door
+      let exitDirection = parts[0];
       if (parts[0] === 'door' && parts.length >= 2) {
-        const exitDirection = parts[1];
+        // Exit is in second parameter
+        exitDirection = parts[1];
+      }
+
+      const directions = {
+        north: [0, 1, 0],
+        south: [0, -1, 0],
+        east: [1, 0, 0],
+        west: [-1, 0, 0],
+        up: [0, 0, 1],
+        down: [0, 0, -1],
+      };
+
+      for (const [dir, diff] of Object.entries(directions)) {
+        if (dir.indexOf(exitDirection) !== 0) {
+          continue;
+        }
+
+        exitDirection = dir;
+        validTarget = true;
         const exit = state.RoomManager.findExit(player.room, exitDirection);
         let doorRoom = player.room;
         let nextRoom = null;
+        let door = null;
+        let targetRoom = null;
 
-        if (!exit && doorRoom.coordinates) {
-          const coords = doorRoom.coordinates;
-          const area = doorRoom.area;
-          const directions = {
-            north: [0, 1, 0],
-            south: [0, -1, 0],
-            east: [1, 0, 0],
-            west: [-1, 0, 0],
-            up: [0, 0, 1],
-            down: [0, 0, -1],
-          };
-
-          for (const [dir, diff] of Object.entries(directions)) {
-            if (dir.indexOf(exitDirection) !== 0) {
-              continue;
-            }
-
+        if (exit) {
+          nextRoom = state.RoomManager.getRoom(exit.roomId);
+        } else {
+          if (doorRoom.coordinates) {
+            const coords = doorRoom.coordinates;
+            const area = doorRoom.area;
             nextRoom = area.getRoomAtCoordinates(coords.x + diff[0], coords.y + diff[1], coords.z + diff[2]);
           }
-        } else {
-          if (!exit) {
-            return B.sayAt(player, "There is no door there.");
-          }
-
-          nextRoom = state.RoomManager.getRoom(exit.roomId);
         }
 
-        let targetRoom = nextRoom;
-        let door = doorRoom.getDoor(targetRoom);
-        if (!door) {
-          doorRoom = nextRoom;
-          targetRoom = player.room;
+        if (nextRoom) {
+          targetRoom = nextRoom;
           door = doorRoom.getDoor(targetRoom);
+          if (!door) {
+            doorRoom = nextRoom;
+            targetRoom = player.room;
+            door = doorRoom.getDoor(targetRoom);
+          }
         }
 
-        if (!door) {
-          return B.sayAt(player, "That exit doesn't have a door.");
-        }
+        if (door) {
+          if (action == 'open') {
+            if (door.locked) {
+              if (door.lockedBy) {
+                const playerKey = player.hasItem(door.lockedBy);
+                if (playerKey) {
+                  B.sayAt(player, `*Click* You unlock the door with ${ItemUtil.display(playerKey)} and open it.`);
+                  doorRoom.unlockDoor(targetRoom);
+                  return doorRoom.openDoor(targetRoom);
+                }
+              }
 
-        if (door.locked) {
-          if (door.lockedBy) {
-            const playerKey = player.hasItem(door.lockedBy);
-            if (playerKey) {
-              B.sayAt(player, `*click* You unlock the door with ${playerKey.display} and open it.`);
-              doorRoom.unlockDoor(targetRoom);
-              doorRoom.openDoor(targetRoom);
-              return;
+              return B.sayAt(player, "The door is locked and you don't have the key.");
+            }
+            if (door.closed) {
+              B.sayAt(player, "The door swings opened.");
+              return doorRoom.openDoor(targetRoom);
             }
           }
+          if (action == 'close') {
+            if (door.locked || door.closed) {
+              return B.sayAt(player, "The door is already closed.");
+            }
+            B.sayAt(player, "The door swings closed.");
+            return doorRoom.closeDoor(targetRoom);
+          }
+          if (action == 'lock') {
+            if (door.locked) {
+              return B.sayAt(player, "The door is already locked.");
+            }
+            if (!door.lockedBy) {
+              return B.sayAt(player, "You can't lock that door.");
+            }
+            const playerKey = player.hasItem(door.lockedBy);
+            if (!playerKey) {
+              const keyItem = state.ItemFactory.getDefinition(door.lockedBy);
+              if (!keyItem) {
+                return B.sayAt(player, "You don't have the key.");
+              }
+              return B.sayAt(player, `The door can only be locked with ${keyItem.name}.`);
+            }
 
-          return B.sayAt(player, "The door is locked and you don't have the key.");
+            doorRoom.lockDoor(targetRoom);
+            return B.sayAt(player, '*Click* The door locks.');
+          }
+          if (action == 'unlock') {
+            if (door.locked) {
+              if (door.lockedBy) {
+                if (player.hasItem(door.lockedBy)) {
+                  B.sayAt(player, '*Click* The door unlocks.');
+                  return doorRoom.unlockDoor(targetRoom);
+                } else {
+                  return B.sayAt(player, `The door can only be unlocked with ${keyItem.name}.`);
+                }
+              } else {
+                return B.sayAt(player, "You can't unlock that door.");
+              }
+            }
+            if (door.closed) {
+              return B.sayAt(player, "It is already unlocked.");
+            } else {
+              return B.sayAt(player, "That's already open.");
+            }
+          }
         }
-
-        if (!door.closed) {
-          return B.sayAt(player, "The door isn't closed...");
-        }
-
-        B.sayAt(player, "The door swings open.");
-        return doorRoom.openDoor(targetRoom);
       }
 
       // otherwise trying to open an item
       let item = Parser.parseDot(args, player.inventory);
       item = item || Parser.parseDot(args, player.room.items);
 
-      if (!item) {
-        return B.sayAt(player, "You don't see that here.");
-      }
-
-      if (item.locked) {
-        if (item.lockedBy) {
-          const playerKey = player.hasItem(item.lockedBy);
-          if (playerKey) {
-            B.sayAt(player, `*click* You unlock ${ItemUtil.display(item)} with ${playerKey.display} and open it.`);
-            item.unlock();
-            item.open();
-            return;
-          }
+      if (item) {
+        validTarget = true;
+        if (typeof item.properties.closed == 'undefined' && typeof item.properties.locked == 'undefined') {
+          return B.sayAt(player, `${ItemUtil.display(item)} is not a container.`)
         }
-
-        return B.sayAt(player, "The item is locked and you don't have the key.");
+        if (action == 'open') {
+          if (item.properties.locked) {
+            if (item.properties.lockedBy) {
+              const playerKey = player.hasItem(item.properties.lockedBy);
+              if (playerKey) {
+                B.sayAt(player, `*Click* You unlock ${ItemUtil.display(item)} with ${ItemUtil.display(playerKey)} and open it.`);
+                item.unlock();
+                item.open();
+                return;
+              }
+            }
+            return B.sayAt(player, "The item is locked and you don't have the key.");
+          }
+          if (item.properties.closed) {
+            B.sayAt(player, `You open ${ItemUtil.display(item)}.`);
+            return item.open();
+          }
+          return B.sayAt(player, `${ItemUtil.display(item)} isn't closed...`);
+        }
+        if (action == 'close') {
+          if (item.properties.locked || item.properties.closed) {
+            return B.sayAt(player, "It's already closed.");
+          }
+          if (typeof item.properties.closed == 'undefined') {
+            return B.sayAt(player, "You can't close that.");
+          }
+          B.sayAt(player, `You close ${ItemUtil.display(item)}.`);
+          return item.close();
+        }
+        if (action == 'lock') {
+          if (item.properties.locked) {
+            return B.sayAt(player, "It's already locked.");
+          }
+          if (!item.properties.lockedBy) {
+            return B.sayAt(player, `You can't lock ${ItemUtil.display(item)}.`);
+          }
+          const keyItem = state.ItemFactory.getDefinition(item.properties.lockedBy);
+          if (!keyItem) {
+            return B.sayAt(player, `You can't lock ${ItemUtil.display(item)}.`);
+          }
+          const playerKey = player.hasItem(item.properties.lockedBy);
+          if (playerKey) {
+            B.sayAt(player, `*click* You lock ${ItemUtil.display(item)} with ${ItemUtil.display(playerKey)}.`);
+            return item.lock();
+          }
+          return B.sayAt(player, "The item is locked and you don't have the key.");
+        }
+        if (action == 'unlock') {
+          if (item.properties.locked) {
+            if (item.properties.lockedBy) {
+              const playerKey = player.hasItem(item.properties.lockedBy);
+              if (playerKey) {
+                B.sayAt(player, `*click* You unlock ${ItemUtil.display(item)} with ${ItemUtil.display(playerKey)}.`);
+                return item.unlock();
+              } else {
+                return B.sayAt(player, "The item is locked and you don't have the key.");
+              }
+            } else {
+              B.sayAt(player, `*Click* You unlock ${ItemUtil.display(item)}.`);
+              return item.unlock();
+            }
+          }
+          if (!item.properties.closed) {
+            return B.sayAt(player, `${ItemUtil.display(item)} isn't closed...`);
+          }
+          return B.sayAt(player, `${ItemUtil.display(item)} isn't locked...`);
+        }
       }
 
-      if (!item.closed) {
-        return B.sayAt(player, `${ItemUtil.display(item)} isn't closed...`);
+      if (validTarget) {
+        return B.sayAt(player, `You can't ${action} this!`);
+      } else {
+        return B.sayAt(player, `You don't see ${args} here.`);
       }
-
-      B.sayAt(player, `You open ${ItemUtil.display(item)}.`);
-      return item.open();
     }
   };
 };

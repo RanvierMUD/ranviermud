@@ -28,9 +28,9 @@
   keywords: [ "wooden", "chest" ]
   description: "Time has not been kind to this chest. It seems to be held together solely by the dirt and rust."
   items: [ "limbo:1", "limbo:6", "limbo:7", "limbo:8" ]
-  closed: true
   maxItems: 5
   properties:
+    closed: true
     noPickup: true
 - id: 4
   name: "Scraps"
@@ -173,9 +173,9 @@
   roomDesc: "A wooden chest rests open in the corner, its hinges badly rusted."
   keywords: [ "locked", "wooden", "chest" ]
   items: [ "limbo:1" ]
-  closed: true
-  locked: true
-  lockedBy: "limbo:test_key"
   maxItems: 5
   properties:
     noPickup: true
+    closed: true
+    locked: true
+    lockedBy: "limbo:test_key"
