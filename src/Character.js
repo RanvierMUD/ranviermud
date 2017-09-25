@@ -301,7 +301,8 @@ class Character extends EventEmitter
   }
 
   equip(item) {
-    if (this.equipment.has(item.slot)) {
+    const openSlot = item.slots.find(slot => !this.equipment.has(slot));
+    if (!openSlot) {
       throw new EquipSlotTakenError();
     }
 
@@ -309,7 +310,7 @@ class Character extends EventEmitter
       this.removeItem(item);
     }
 
-    this.equipment.set(item.slot, item);
+    this.equipment.set(openSlot, item);
     item.isEquipped = true;
     item.belongsTo = this;
   }
