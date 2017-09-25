@@ -46,7 +46,7 @@ module.exports = (srcPath, bundlePath) => {
         return B.sayAt(player, `${ItemUtil.display(toContainer)} can't hold any more.`);
       }
 
-      if (toContainer.properties.closed) {
+      if (toContainer.closed) {
         return B.sayAt(player, `${ItemUtil.display(toContainer)} is closed.`);
       }
 

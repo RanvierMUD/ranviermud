@@ -51,7 +51,7 @@ module.exports = (srcPath, bundlePath) => {
           return Broadcast.sayAt(player, `${ItemUtil.display(container)} isn't a container.`);
         }
 
-        if (container.properties.closed) {
+        if (container.closed) {
           return Broadcast.sayAt(player, `${ItemUtil.display(container)} is closed.`);
         }
 

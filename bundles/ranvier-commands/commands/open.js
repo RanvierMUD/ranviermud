@@ -142,13 +142,13 @@ module.exports = (srcPath, bundlePath) => {
 
       if (item) {
         validTarget = true;
-        if (typeof item.properties.closed == 'undefined' && typeof item.properties.locked == 'undefined') {
+        if (typeof item.closed == 'undefined' && typeof item.locked == 'undefined') {
           return B.sayAt(player, `${ItemUtil.display(item)} is not a container.`)
         }
         if (action == 'open') {
-          if (item.properties.locked) {
-            if (item.properties.lockedBy) {
-              const playerKey = player.hasItem(item.properties.lockedBy);
+          if (item.locked) {
+            if (item.lockedBy) {
+              const playerKey = player.hasItem(item.lockedBy);
               if (playerKey) {
                 B.sayAt(player, `*Click* You unlock ${ItemUtil.display(item)} with ${ItemUtil.display(playerKey)} and open it.`);
                 item.unlock();
@@ -158,34 +158,34 @@ module.exports = (srcPath, bundlePath) => {
             }
             return B.sayAt(player, "The item is locked and you don't have the key.");
           }
-          if (item.properties.closed) {
+          if (item.closed) {
             B.sayAt(player, `You open ${ItemUtil.display(item)}.`);
             return item.open();
           }
           return B.sayAt(player, `${ItemUtil.display(item)} isn't closed...`);
         }
         if (action == 'close') {
-          if (item.properties.locked || item.properties.closed) {
+          if (item.locked || item.closed) {
             return B.sayAt(player, "It's already closed.");
           }
-          if (typeof item.properties.closed == 'undefined') {
+          if (typeof item.closed == 'undefined') {
             return B.sayAt(player, "You can't close that.");
           }
           B.sayAt(player, `You close ${ItemUtil.display(item)}.`);
           return item.close();
         }
         if (action == 'lock') {
-          if (item.properties.locked) {
+          if (item.locked) {
             return B.sayAt(player, "It's already locked.");
           }
-          if (!item.properties.lockedBy) {
+          if (!item.lockedBy) {
             return B.sayAt(player, `You can't lock ${ItemUtil.display(item)}.`);
           }
-          const keyItem = state.ItemFactory.getDefinition(item.properties.lockedBy);
+          const keyItem = state.ItemFactory.getDefinition(item.lockedBy);
           if (!keyItem) {
             return B.sayAt(player, `You can't lock ${ItemUtil.display(item)}.`);
           }
-          const playerKey = player.hasItem(item.properties.lockedBy);
+          const playerKey = player.hasItem(item.lockedBy);
           if (playerKey) {
             B.sayAt(player, `*click* You lock ${ItemUtil.display(item)} with ${ItemUtil.display(playerKey)}.`);
             return item.lock();
@@ -193,9 +193,9 @@ module.exports = (srcPath, bundlePath) => {
           return B.sayAt(player, "The item is locked and you don't have the key.");
         }
         if (action == 'unlock') {
-          if (item.properties.locked) {
-            if (item.properties.lockedBy) {
-              const playerKey = player.hasItem(item.properties.lockedBy);
+          if (item.locked) {
+            if (item.lockedBy) {
+              const playerKey = player.hasItem(item.lockedBy);
               if (playerKey) {
                 B.sayAt(player, `*click* You unlock ${ItemUtil.display(item)} with ${ItemUtil.display(playerKey)}.`);
                 return item.unlock();
@@ -207,7 +207,7 @@ module.exports = (srcPath, bundlePath) => {
               return item.unlock();
             }
           }
-          if (!item.properties.closed) {
+          if (!item.closed) {
             return B.sayAt(player, `${ItemUtil.display(item)} isn't closed...`);
           }
           return B.sayAt(player, `${ItemUtil.display(item)} isn't locked...`);

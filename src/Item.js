@@ -23,9 +23,10 @@ const Player = require('./Player');
  * @property {string}  script      A custom script for this item
  * @property {ItemType|string} type
  * @property {string}  uuid        UUID differentiating all instances of this item
- * @property {boolean} properties.closed      Whether this item is closed
- * @property {boolean} properties.locked      Whether this item is locked
- * @property {entityReference} properties.lockedBy Item that locks/unlocks this item
+ * @property {boolean} closeable   Whether this item can be closed (Default: false, true if closed or locked is true)
+ * @property {boolean} closed      Whether this item is closed
+ * @property {boolean} locked      Whether this item is locked
+ * @property {entityReference} lockedBy Item that locks/unlocks this item
  */
 class Item extends EventEmitter {
   constructor (area, item) {
@@ -58,6 +59,10 @@ class Item extends EventEmitter {
     this.slot        = item.slot || null;
     this.type        = typeof item.type === 'string' ? ItemType[item.type] : (item.type || ItemType.OBJECT);
     this.uuid        = item.uuid || uuid.v4();
+    this.closeable   = item.closeable || item.closed || item.locked || false;
+    this.closed      = item.closed || false;
+    this.locked      = item.locked || false;
+    this.lockedBy    = item.lockedBy || null;
   }
 
   /**
@@ -168,7 +173,7 @@ class Item extends EventEmitter {
    * @fires Item#opened
    */
   open() {
-    if (!this.properties.closed) {
+    if (!this.closed) {
       return;
     }
 
@@ -176,14 +181,14 @@ class Item extends EventEmitter {
      * @event Item#opened
      */
     this.emit('opened');
-    this.properties.closed = false;
+    this.closed = false;
   }
 
   /**
    * @fires Item#closed
    */
   close() {
-    if (this.properties.closed || typeof this.properties.closed == 'undefined') {
+    if (this.closed || !this.closeable) {
       return;
     }
 
@@ -191,14 +196,14 @@ class Item extends EventEmitter {
      * @event Item#closed
      */
     this.emit('closed');
-    this.properties.closed = true;
+    this.closed = true;
   }
 
   /**
    * @fires Item#locked
    */
   lock() {
-    if (this.properties.locked || typeof this.properties.closed == 'undefined') {
+    if (this.locked || !this.closeable) {
       return;
     }
 
@@ -207,14 +212,14 @@ class Item extends EventEmitter {
      * @event Item#locked
      */
     this.emit('locked');
-    this.properties.locked = true;
+    this.locked = true;
   }
 
   /**
    * @fires Item#unlocked
    */
   unlock() {
-    if (!this.properties.locked) {
+    if (!this.locked) {
       return;
     }
 
@@ -222,7 +227,7 @@ class Item extends EventEmitter {
      * @event Item#unlocked
      */
     this.emit('unlocked');
-    this.properties.locked = false;
+    this.locked = false;
   }
 
   hydrate(state, serialized = {}) {
@@ -273,6 +278,10 @@ class Item extends EventEmitter {
       // properties are serialized to save the state of the item during gameplay
       // example: the players have a backpack that is open
       properties: this.properties,
+      closeable: this.closeable,
+      closed: this.closeable,
+      locked: this.closeable,
+      lockedBy: this.closeable,
       // behaviors are serialized in case their config was modified during gameplay
       // and that state needs to persist (charges of a scroll remaining, etc)
       behaviors,

@@ -276,7 +276,7 @@ module.exports = (srcPath, bundlePath) => {
             return B.sayAt(player, `${entity.name} is empty.`);
           }
 
-          if (entity.properties.closed) {
+          if (entity.closed) {
             return B.sayAt(player, `It is closed.`);
           }
 
