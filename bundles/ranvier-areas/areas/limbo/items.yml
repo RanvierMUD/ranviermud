@@ -173,9 +173,9 @@
   roomDesc: "A wooden chest rests open in the corner, its hinges badly rusted."
   keywords: [ "locked", "wooden", "chest" ]
   items: [ "limbo:1" ]
-    closed: true
-    locked: true
-    lockedBy: "limbo:test_key"
+  closed: true
+  locked: true
+  lockedBy: "limbo:test_key"
   maxItems: 5
   properties:
     noPickup: true
