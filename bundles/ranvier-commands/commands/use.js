@@ -1,5 +1,6 @@
 'use strict';
 
+const humanize = (sec) => { return require('humanize-duration')(sec, { round: true }); };
 /**
  * Command for items with `usable` behavior. See bundles/ranvier-areas/areas/limbo/items.yml for
  * example behavior implementation
@@ -8,6 +9,7 @@ module.exports = srcPath => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Logger = require(srcPath + 'Logger');
   const { CommandParser } = require(srcPath + 'CommandParser');
+  const SkillErrors = require(srcPath + 'SkillErrors');
 
   return {
     aliases: [ 'quaff', 'recite' ],
@@ -46,9 +48,23 @@ module.exports = srcPath => {
           useSpell.cooldownLength = usable.cooldown;
         }
 
-        if (!useSpell.execute(/* args */ null, player)) {
-          // no need to broadcast here, Skill already broadcasts the error
-          return;
+        try {
+          useSpell.execute(/* args */ null, player);
+        } catch (e) {
+          if (e instanceof SkillErrors.CooldownError) {
+            return say(`${useSpell.name} is on cooldown. ${humanize(e.effect.remaining)} remaining.`);
+          }
+
+          if (e instanceof SkillErrors.PassiveError) {
+            return say(`That skill is passive.`);
+          }
+
+          if (e instanceof SkillErrors.NotEnoughResourcesError) {
+            return say(`You do not have enough resources.`);
+          }
+
+          Logger.error(e.message);
+          B.sayAt(this, 'Huh?');
         }
       }
 
