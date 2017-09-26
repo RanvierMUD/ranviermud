@@ -276,7 +276,7 @@ class Item extends EventEmitter {
       entityReference: this.entityReference,
       inventory: this.inventory && this.inventory.serialize(),
       // properties are serialized to save the state of the item during gameplay
-      // example: the players have a backpack that is open
+      // example: the players a food that is poisoned, or a sword that is enchanted
       properties: this.properties,
       closeable: this.closeable,
       closed: this.closeable,
