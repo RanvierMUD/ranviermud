@@ -9,14 +9,6 @@ class MobManager {
   }
 
   /**
-   * @param {string} entityRef
-   * @return {Mob}
-   */
-  getMob(entityRef) {
-    return this.mobs.get(mob.uuid);
-  }
-
-  /**
    * @param {Mob} mob
    */
   addMob(mob) {
