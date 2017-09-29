@@ -57,7 +57,7 @@ module.exports = (srcPath) => {
           options.push({
             display: char.username,
             onSelect: () => {
-              handleMultiplaying(char.username)
+              handleMultiplaying(char)
                 .then(() => {
                   const player = state.PlayerManager.loadPlayer(state, account, char.username);
                   player.socket = socket;
@@ -92,7 +92,7 @@ module.exports = (srcPath) => {
       }
 
       function kickIfLoggedIn(message, character) {
-        const otherPlayer = state.PlayerManager.getPlayer(character);
+        const otherPlayer = state.PlayerManager.getPlayer(character.username);
         if (otherPlayer) {
           return bootPlayer(otherPlayer, message);
         }
