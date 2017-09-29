@@ -92,7 +92,7 @@ module.exports = (srcPath) => {
       }
 
       function kickIfLoggedIn(message, character) {
-        const otherPlayer = state.PlayerManager.getPlayer(character.username);
+        const otherPlayer = state.PlayerManager.getPlayer(character);
         if (otherPlayer) {
           return bootPlayer(otherPlayer, message);
         }
