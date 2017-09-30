@@ -1,8 +1,9 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: 'drop <item>',
@@ -32,7 +33,7 @@ module.exports = (srcPath) => {
         npc.emit('playerDropItem', player, item);
       }
 
-      Broadcast.sayAt(player, `<green>You dropped: </green>${item.display}<green>.</green>`);
+      Broadcast.sayAt(player, `<green>You dropped: </green>${ItemUtil.display(item)}<green>.</green>`);
     }
   };
 };

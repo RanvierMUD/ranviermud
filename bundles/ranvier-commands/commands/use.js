@@ -5,11 +5,12 @@ const humanize = (sec) => { return require('humanize-duration')(sec, { round: tr
  * Command for items with `usable` behavior. See bundles/ranvier-areas/areas/limbo/items.yml for
  * example behavior implementation
  */
-module.exports = srcPath => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Logger = require(srcPath + 'Logger');
   const { CommandParser } = require(srcPath + 'CommandParser');
   const SkillErrors = require(srcPath + 'SkillErrors');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     aliases: [ 'quaff', 'recite' ],
@@ -32,7 +33,7 @@ module.exports = srcPath => {
       }
 
       if ('charges' in usable && usable.charges <= 0) {
-        return say(`You've used up all the magic in ${item.display}.`);
+        return say(`You've used up all the magic in ${ItemUtil.display(item)}.`);
       }
 
       if (usable.spell) {
@@ -92,7 +93,7 @@ module.exports = srcPath => {
       usable.charges--;
 
       if (usable.destroyOnDepleted && usable.charges <= 0) {
-        say(`You used up all the magic in ${item.display} and it disappears in a puff of smoke.`);
+        say(`You used up all the magic in ${ItemUtil.display(item)} and it disappears in a puff of smoke.`);
         state.ItemManager.remove(item);
       }
     }

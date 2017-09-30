@@ -68,7 +68,7 @@ module.exports = (srcPath, bundlePath) => {
           if (door.lockedBy) {
             const playerKey = player.hasItem(door.lockedBy);
             if (playerKey) {
-              B.sayAt(player, `*click* You unlock the door with ${playerKey.display} and open it.`);
+              B.sayAt(player, `*click* You unlock the door with ${ItemUtil.display(playerKey)} and open it.`);
               doorRoom.unlockDoor(targetRoom);
               doorRoom.openDoor(targetRoom);
               return;
@@ -98,7 +98,7 @@ module.exports = (srcPath, bundlePath) => {
         if (item.lockedBy) {
           const playerKey = player.hasItem(item.lockedBy);
           if (playerKey) {
-            B.sayAt(player, `*click* You unlock ${ItemUtil.display(item)} with ${playerKey.display} and open it.`);
+            B.sayAt(player, `*click* You unlock ${ItemUtil.display(item)} with ${ItemUtil.display(playerKey)} and open it.`);
             item.unlock();
             item.open();
             return;
