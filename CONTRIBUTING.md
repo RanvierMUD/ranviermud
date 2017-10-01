@@ -1,5 +1,5 @@
-Hey, you want to help make Ranvier better? That's awesome. If you're new to the world of open source Github has a great
-guide to get you started [https://guides.github.com/activities/contributing-to-open-source/](https://guides.github.com/activities/contributing-to-open-source/).
+Hey, you want to help make Ranvier better? That's awesome. If you're new to the world of open source, Github has a [great
+guide to get you started](https://guides.github.com/activities/contributing-to-open-source/).
 
 ## Talking with the team
 
@@ -25,13 +25,13 @@ a certain Ranvier subsystem.
 
 ## Documentation
 
-If you're not sure where to get started contributing to Ranvier the best place to start is documentation. Read over the
+If you're not sure where to get started contributing to Ranvier, the best place to start is documentation. Read over the
 existing documentation, read through some of the code, try to build something and get a feel for what is missing from
 the docs that you could add.
 
 Documentation is stored in the `docs/` folder in the root of the project. Our documentation is rendered with `mkdocs`
 and the Python-Markdown extensions, any markup you can use from those is free game. If you want to change the look and
-feel of the documentation styles are in `docs/_mkdocs/theme/ranvier/assets/stylesheets/application.css`
+feel of the documentation styles are in `docs/_mkdocs/theme/ranvier/assets/stylesheets/application.css`.
 
 You can test your changes to the docs locally by installing [mkdocs](http://www.mkdocs.org/) and running `mkdocs serve`
 from the root of the repo.
@@ -45,14 +45,15 @@ An example of something that _would_ be desired for a code contribution:
 * Maybe: A feature for code in `src/`. This might have some discussion around it depending if it changes any of the data
   models or impacts existing bundles.
 * No: Your bundles. The end goal will be to have a place, like npm, where you can register your bundles for other
-  Ranvier users to download. For now as long as your bundle is on github you can submit an issue for us to link to your
+  Ranvier users to download. For now, as long as your bundle is on github, you can submit an issue for us to link to your
   bundle from our documentation.
 
 ## Code Standards
 
-For the most part you can follow the style guide outlined in [https://github.com/airbnb/javascript](https://github.com/airbnb/javascript)
-and you'll be safe. There are some differences but it's close enough that if you follow it we won't reject the PR on
-style terms alone. When in doubt look at existing code in the repo.
+For the most part you can follow the style guide outlined in
+[https://github.com/airbnb/javascript](https://github.com/airbnb/javascript) and you'll be safe. There are some differences
+but it's close enough that if you follow it we won't reject the PR on style terms alone. When in doubt look at existing code
+in the repo.
 
 ## Default Bundles
 
@@ -68,7 +69,7 @@ Suggested changes/additions to those bundles should be made with that in mind.
 
 ## Submitting your code
 
-Ranvier works by letting you build on top of it so fixing bugs and submitting them can sometimes lead with you
-submitting more code than you intended. To prevent this isolate your bug fix, re-clone Ranvier into another directory and
+Ranvier works by letting you build on top of it, so fixing bugs and submitting them can sometimes lead to you
+submitting more code than intended. To prevent this, isolate your bug fix, re-clone Ranvier into another directory and
 apply your fix/feature to the fresh clone. That way when you send your pull request it won't included any of the custom
 bundles you've built or changes you have made to the core that perhaps don't fit the criteria above.
