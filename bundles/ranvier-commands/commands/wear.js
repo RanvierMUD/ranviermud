@@ -4,6 +4,7 @@ module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const { CommandParser: Parser } = require(srcPath + 'CommandParser');
   const { EquipSlotTakenError } = require(srcPath + 'EquipErrors');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
   const Logger = require(srcPath + 'Logger');
   const say = Broadcast.sayAt;
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
