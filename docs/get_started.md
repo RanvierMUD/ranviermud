@@ -48,7 +48,7 @@ In general we, the developers of Ranvier, consider hotbooting to be a bad practi
 it literally encourages working "on live". To this end we encourage the following workflow for making changes to your
 game once it goes live:
 
-* Create two checkouts of `ranviermud`: one you will use for development, and one you use for live.
+* Clone two repos of `ranviermud`: one you will use for development, and one you use for live.
 * In your development repo create a `dev` branch
 * For the dev branch change (but do not commit) the ranvier.json port to something different than the live port
 * Make your changes in your dev repo on the dev branch, restarting the dev server when you make and want to test changes
