@@ -31,7 +31,7 @@ class Channel {
       throw new Error(`Channel ${config.name} is missing a valid audience.`);
     }
     this.name = config.name;
-    this.minRequiredRole = config.minRequiredRole || null;
+    this.minRequiredRole = typeof config.minRequiredRole !== 'undefined' ? config.minRequiredRole : null;
     this.description = config.description;
     this.bundle = config.bundle || null; // for debugging purposes, which bundle it came from
     this.audience = config.audience || (new WorldAudience());
