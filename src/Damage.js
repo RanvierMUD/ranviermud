@@ -59,9 +59,10 @@ class Damage {
     let amount = this.amount;
 
     if (this.attacker) {
-      this.critical = Random.probability(this.attacker.getMaxAttribute('critical') || 0);
+      const critChance = Math.max(this.attacker.getMaxAttribute('critical') || 0, 0);
+      this.critical = Random.probability(critChance);
       if (this.critical) {
-        amount = Math.ceil(amount * 1.);
+        amount = Math.ceil(amount * 1.5);
       }
       amount = this.attacker.evaluateOutgoingDamage(this, amount);
     }
