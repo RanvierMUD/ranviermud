@@ -18,7 +18,7 @@ module.exports = (srcPath) => {
 
       player.save();
 
-      player.setMeta('lastCommandTime', Date.now());
+      player._lastCommandTime = Date.now();
 
       player.socket.on('close', () => {
         Logger.log(player.name + ' has gone linkdead.');
@@ -26,7 +26,6 @@ module.exports = (srcPath) => {
         //if (player.inCombat.inCombat) {
         //  player.inCombat.inCombat = null;
         //}
-        player.setMeta('lastCommandTime', null);
         player.save(() => {
           player.room.removePlayer(player);
           state.PlayerManager.removePlayer(player, true);

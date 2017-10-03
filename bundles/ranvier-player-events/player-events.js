@@ -22,7 +22,7 @@ module.exports = (srcPath) => {
           this.commandQueue.execute();
           Broadcast.prompt(this);
         }
-        const lastCommandTime = this.getMeta('lastCommandTime') || Infinity;
+        const lastCommandTime = this._lastCommandTime || Infinity;
         const timeSinceLastCommand = Date.now() - lastCommandTime;
         const maxIdleTime = (Math.abs(Config.get('maxIdleTime')) * 60000) || Infinity;
 
