@@ -82,11 +82,24 @@ class EffectList {
   add(effect) {
     for (const activeEffect of this.effects) {
       if (effect.config.type === activeEffect.config.type) {
-        if (activeEffect.config.maxStacks) {
-          activeEffect.state.stack = Math.min(activeEffect.state.maxStacks, activeEffect.state.stack + 1);
-          // TODO: does this even work?
-          activeEffect.state.stack = activeEffect.state.stack + 1;
-          return false;
+        if (activeEffect.config.maxStacks && activeEffect.state.stacks < activeEffect.config.maxStacks) {
+          activeEffect.state.stacks = Math.min(activeEffect.config.maxStacks, activeEffect.state.stacks + 1);
+
+          /**
+           * @event Effect#effectStackAdded
+           * @param {Effect} effect The new effect that is trying to be added
+           */
+          activeEffect.emit('effectStackAdded', effect);
+          return true;
+        }
+
+        if (activeEffect.config.refreshes) {
+          /**
+           * @event Effect#effectRefreshed
+           * @param {Effect} effect The new effect that is trying to be added
+           */
+          activeEffect.emit('effectRefreshed', effect);
+          return true;
         }
 
         if (activeEffect.config.unique) {

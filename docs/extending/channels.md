@@ -45,6 +45,9 @@ module.exports = (srcPath) => {
       // the name of the channel is the command the player will use
       name: 'chat',
 
+      // Aliases for the channel, in this example, if your command is ". Hello" is equivalent to "chat Hello"
+      aliases: ['.'],
+
       // Information about this channel shown when player types channel name without a message
       description: 'Chat with everyone on the game',
 

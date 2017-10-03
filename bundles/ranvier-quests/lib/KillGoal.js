@@ -36,6 +36,13 @@ class KillGoal extends QuestGoal {
     this.state.count++;
     this.emit('progress', this.getProgress());
   }
+
+  serialize() {
+    let data = super.serialize();
+    data.config = this.config;
+
+    return data;
+  }
 }
 
 module.exports = KillGoal;

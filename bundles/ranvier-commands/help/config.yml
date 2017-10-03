@@ -10,6 +10,7 @@ body: |
   Possible Settings / Values 
   autoloot    - (on / off)
   brief       - (on / off)
+  minimap     - (on / off)
 
   Example
   config set autoloot on  - Turn on autoloot

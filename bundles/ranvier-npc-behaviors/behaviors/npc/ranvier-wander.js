@@ -10,12 +10,13 @@
  */
 module.exports = srcPath => {
   const RandomUtil = require(srcPath + 'RandomUtil');
+  const Broadcast = require(srcPath + 'Broadcast');
   const Logger = require(srcPath + 'Logger');
 
   return {
     listeners: {
       updateTick: state => function (config) {
-        if (this.isInCombat() || !this.room || !this.room.exits.length) {
+        if (this.isInCombat() || !this.room) {
           return;
         }
 
@@ -26,7 +27,7 @@ module.exports = srcPath => {
         config = Object.assign({
           areaRestricted: false,
           restrictTo: null,
-          interval: 20
+          interval: 20,
         }, config);
 
         if (!this._lastWanderTime) {
@@ -38,17 +39,53 @@ module.exports = srcPath => {
         }
 
         this._lastWanderTime = Date.now();
-        const randomRoom = state.RoomManager.getRoom(RandomUtil.fromArray(this.room.exits).roomId);
+        let possibleRooms = {};
+        for (const possibleExit of this.room.exits) {
+          possibleRooms[possibleExit.direction] = possibleExit.roomId;
+        }
+
+        const coords = this.room.coordinates;
+        if (coords) {
+          // find exits from coordinates
+          const area = this.room.area;
+          const directions = {
+            north: [0, 1, 0],
+            south: [0, -1, 0],
+            east: [1, 0, 0],
+            west: [-1, 0, 0],
+            up: [0, 0, 1],
+            down: [0, 0, -1],
+          };
+
+          for (const [dir, diff] of Object.entries(directions)) {
+            const room = area.getRoomAtCoordinates(coords.x + diff[0], coords.y + diff[1], coords.z + diff[2]);
+            if (room) {
+              possibleRooms[dir] = room.entityReference;
+            }
+          }
+        }
+
+        const [direction, roomId] = RandomUtil.fromArray(Object.entries(possibleRooms));
+        const randomRoom = state.RoomManager.getRoom(roomId);
+
+        const door = this.room.getDoor(randomRoom) || randomRoom.getDoor(this.room);
+        if (randomRoom && door && (door.locked || door.closed)) {
+          // maybe a possible feature where it could be configured that they can open doors
+          // or even if they have the key they can unlock the doors
+          Logger.verbose(`NPC [${this.uuid}] wander blocked by door.`);
+          return;
+        }
 
         if (
+          !randomRoom ||
           (config.restrictTo && !config.restrictTo.includes(randomRoom.entityReference)) ||
-          (config.areaRestricted && randomRoom.area !== this.area) ||
-          !randomRoom
+          (config.areaRestricted && randomRoom.area !== this.area)
         ) {
           return;
         }
 
         Logger.verbose(`NPC [${this.uuid}] wandering from ${this.room.entityReference} to ${randomRoom.entityReference}.`);
+        Broadcast.sayAt(this.room, `${this.name} wanders ${direction}.`);
         this.moveTo(randomRoom);
       }
     }

@@ -161,17 +161,17 @@ class BundleManager {
 
     // load items
     if (fs.existsSync(paths.items)) {
-      const items = this.loadItems(area, paths.items);
+      this.loadItems(area, paths.items);
     }
 
     // load npcs
     if (fs.existsSync(paths.npcs)) {
-      const npcs = this.loadNpcs(area, paths.npcs);
+      this.loadNpcs(area, paths.npcs);
     }
 
     // load rooms
     if (fs.existsSync(paths.rooms)) {
-      const rooms = this.loadRooms(area, paths.rooms);
+      this.loadRooms(area, paths.rooms);
     }
 
     return area;
@@ -187,6 +187,10 @@ class BundleManager {
 
     // parse the item files
     let items = Data.parseFile(itemsFile);
+
+    if (!items || !items.length) {
+      return;
+    }
 
     // set the item definitions onto the factory
     items.forEach(item => {
@@ -204,8 +208,6 @@ class BundleManager {
     });
 
     Logger.verbose(`\t\tENDLOAD: Items`);
-
-    return items;
   }
 
   /**
@@ -218,6 +220,10 @@ class BundleManager {
 
     // parse the npc files
     let npcs = Data.parseFile(npcsFile);
+
+    if (!npcs || !npcs.length) {
+      return;
+    }
 
     // create and load the npcs
     npcs = npcs.map(npc => {
@@ -245,8 +251,6 @@ class BundleManager {
     });
 
     Logger.verbose(`\t\tENDLOAD: Npcs`);
-
-    return npcs;
   }
 
   /**
@@ -273,6 +277,10 @@ class BundleManager {
     // parse the room files
     let rooms = Data.parseFile(roomsFile);
 
+    if (!rooms || !rooms.length) {
+      return;
+    }
+
     // create and load the rooms
     rooms = rooms.map(room => new Room(area, room));
     rooms.forEach(room => {
@@ -297,8 +305,6 @@ class BundleManager {
     });
 
     Logger.verbose(`\t\tENDLOAD: Rooms`);
-
-    return rooms;
   }
 
   /**

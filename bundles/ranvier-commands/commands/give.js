@@ -1,9 +1,10 @@
 'use strict';
 
-module.exports = srcPath => {
+module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
   const { CommandParser } = require(srcPath + 'CommandParser');
   const dot = CommandParser.parseDot;
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: 'give <item> <target>',
@@ -46,7 +47,7 @@ module.exports = srcPath => {
       }
 
       if (target === player) {
-        return B.sayAt(player, `<green>You move ${targetItem.display} from one hand to the other. That was productive.</green>`);
+        return B.sayAt(player, `<green>You move ${ItemUtil.display(targetItem)} from one hand to the other. That was productive.</green>`);
       }
 
       if (target.isInventoryFull()) {
@@ -56,9 +57,9 @@ module.exports = srcPath => {
       player.removeItem(targetItem);
       target.addItem(targetItem);
 
-      B.sayAt(player, `<green>You give <white>${target.name}</white>: ${targetItem.display}.</green>`);
+      B.sayAt(player, `<green>You give <white>${target.name}</white>: ${ItemUtil.display(targetItem)}.</green>`);
       if (!target.isNpc) {
-        B.sayAt(target, `<green>${player.name} gives you: ${targetItem.display}.</green>`);
+        B.sayAt(target, `<green>${player.name} gives you: ${ItemUtil.display(targetItem)}.</green>`);
       }
     }
   };

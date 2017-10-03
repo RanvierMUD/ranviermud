@@ -10,15 +10,47 @@ const sprintf = require('sprintf-js').sprintf;
 const ItemType = require(srcPath + 'ItemType');
 const B = require(srcPath + 'Broadcast');
 
+const qualityColors = {
+  poor: ['bold', 'black'],
+  common: ['bold', 'white'],
+  uncommon: ['bold', 'green'],
+  rare: ['bold', 'blue'],
+  epic: ['bold', 'magenta'],
+  legendary: ['bold', 'red'],
+  artifact: ['yellow'],
+};
+exports.qualityColors = qualityColors;
+
+/**
+ * Colorize the given string according to this item's quality
+ * @param {Item} item
+ * @param {string} string
+ * @return string
+ */
+function qualityColorize(item, string) {
+  const colors = qualityColors[item.properties.quality || 'common'];
+  const open = '<' + colors.join('><') + '>';
+  const close = '</' + colors.reverse().join('></') + '>';
+  return open + string + close;
+}
+exports.qualityColorize = qualityColorize;
+
+/**
+ * Friendly display colorized by quality
+ */
+exports.display = function (item) {
+  return qualityColorize(item, `[${item.name}]`);
+};
+
 /**
  * Render a pretty display of an item
  * @param {GameState} state
  * @param {Item}      item
  * @param {Player}    player
  */
-exports.renderItem = function renderItem(state, item, player) {
-  let buf = item.qualityColorize('.' + B.line(38) + '.') + '\r\n';
-  buf += '| ' + item.qualityColorize(sprintf('%-36s', item.name)) + ' |\r\n';
+exports.renderItem = function (state, item, player) {
+  let buf = qualityColorize(item, '.' + B.line(38) + '.') + '\r\n';
+  buf += '| ' + qualityColorize(item, sprintf('%-36s', item.name)) + ' |\r\n';
 
   const props = item.properties;
 
@@ -66,9 +98,11 @@ exports.renderItem = function renderItem(state, item, player) {
     });
   }
 
-  const cantUse = item.level > player.level ? '<red>%-36s</red>' : '%-36s';
-  buf += sprintf(`| ${cantUse} |\r\n`, 'Requires Level ' + item.level);
-  buf += item.qualityColorize("'" + B.line(38) + "'") + '\r\n';
+  if (props.level) {
+    const cantUse = props.level > player.level ? '<red>%-36s</red>' : '%-36s';
+    buf += sprintf(`| ${cantUse} |\r\n`, 'Requires Level ' + props.level);
+  }
+  buf += qualityColorize(item, "'" + B.line(38) + "'") + '\r\n';
 
   // On use
   const usable = item.getBehavior('usable');
@@ -91,6 +125,6 @@ exports.renderItem = function renderItem(state, item, player) {
   }
 
   // colorize border according to item quality
-  buf = buf.replace(/\|/g, item.qualityColorize('|'));
+  buf = buf.replace(/\|/g, qualityColorize(item, '|'));
   return buf;
 };

@@ -5,6 +5,7 @@ module.exports = (srcPath, bundlePath) => {
   const { CommandParser } = require(srcPath + 'CommandParser');
   const Random = require(srcPath + 'RandomUtil');
   const Crafting = require(bundlePath + 'ranvier-crafting/lib/Crafting');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
 
   return {
@@ -36,13 +37,13 @@ module.exports = (srcPath, bundlePath) => {
           const resItem = Crafting.getResourceItem(material);
           const metaKey = `resources.${material}`;
           player.setMeta(metaKey, (player.getMeta(metaKey) || 0) + amount);
-          B.sayAt(player, `<green>You gather: ${resItem.display} x${amount}.`);
+          B.sayAt(player, `<green>You gather: ${ItemUtil.display(resItem)} x${amount}.`);
         }
       }
 
       // destroy node, will be respawned
       state.ItemManager.remove(node);
-      B.sayAt(player, `${node.display} ${resource.depletedMessage}`);
+      B.sayAt(player, `${ItemUtil.display(node)} ${resource.depletedMessage}`);
       node = null;
     }
   };

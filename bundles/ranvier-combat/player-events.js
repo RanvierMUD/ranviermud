@@ -4,6 +4,7 @@ const leftPad = require('left-pad');
 const Combat = require('./lib/Combat');
 const CombatErrors = require('./lib/CombatErrors');
 const LevelUtil = require('../ranvier-lib/lib/LevelUtil');
+const WebsocketStream = require('../ranvier-websocket/lib/WebsocketStream');
 
 /**
  * Auto combat module
@@ -31,7 +32,7 @@ module.exports = (srcPath) => {
           return;
         }
 
-        const usingWebsockets = state.Config.get('bundles').includes('ranvier-websocket');
+        const usingWebsockets = this.socket instanceof WebsocketStream;
         // don't show the combat prompt to a websockets server
         if (!this.hasPrompt('combat') && !usingWebsockets) {
           this.addPrompt('combat', _ => promptBuilder(this));

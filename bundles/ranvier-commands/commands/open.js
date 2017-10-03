@@ -1,8 +1,9 @@
 'use strict';
 
-module.exports = srcPath => {
+module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: 'open <item> / open door <door direction>',
@@ -21,13 +22,36 @@ module.exports = srcPath => {
       if (parts[0] === 'door' && parts.length >= 2) {
         const exitDirection = parts[1];
         const exit = state.RoomManager.findExit(player.room, exitDirection);
+        let doorRoom = player.room;
+        let nextRoom = null;
 
-        if (!exit) {
-          return B.sayAt(player, "There is no door there.");
+        if (!exit && doorRoom.coordinates) {
+          const coords = doorRoom.coordinates;
+          const area = doorRoom.area;
+          const directions = {
+            north: [0, 1, 0],
+            south: [0, -1, 0],
+            east: [1, 0, 0],
+            west: [-1, 0, 0],
+            up: [0, 0, 1],
+            down: [0, 0, -1],
+          };
+
+          for (const [dir, diff] of Object.entries(directions)) {
+            if (dir.indexOf(exitDirection) !== 0) {
+              continue;
+            }
+
+            nextRoom = area.getRoomAtCoordinates(coords.x + diff[0], coords.y + diff[1], coords.z + diff[2]);
+          }
+        } else {
+          if (!exit) {
+            return B.sayAt(player, "There is no door there.");
+          }
+
+          nextRoom = state.RoomManager.getRoom(exit.roomId);
         }
 
-        const nextRoom = state.RoomManager.getRoom(exit.roomId);
-        let doorRoom = player.room;
         let targetRoom = nextRoom;
         let door = doorRoom.getDoor(targetRoom);
         if (!door) {
@@ -44,7 +68,7 @@ module.exports = srcPath => {
           if (door.lockedBy) {
             const playerKey = player.hasItem(door.lockedBy);
             if (playerKey) {
-              B.sayAt(player, `*click* You unlock the door with ${playerKey.display} and open it.`);
+              B.sayAt(player, `*click* You unlock the door with ${ItemUtil.display(playerKey)} and open it.`);
               doorRoom.unlockDoor(targetRoom);
               doorRoom.openDoor(targetRoom);
               return;
@@ -74,7 +98,7 @@ module.exports = srcPath => {
         if (item.lockedBy) {
           const playerKey = player.hasItem(item.lockedBy);
           if (playerKey) {
-            B.sayAt(player, `*click* You unlock ${item.display} with ${playerKey.display} and open it.`);
+            B.sayAt(player, `*click* You unlock ${ItemUtil.display(item)} with ${ItemUtil.display(playerKey)} and open it.`);
             item.unlock();
             item.open();
             return;
@@ -85,10 +109,10 @@ module.exports = srcPath => {
       }
 
       if (!item.closed) {
-        return B.sayAt(player, `${item.display} isn't closed...`);
+        return B.sayAt(player, `${ItemUtil.display(item)} isn't closed...`);
       }
 
-      B.sayAt(player, `You open ${item.display}.`);
+      B.sayAt(player, `You open ${ItemUtil.display(item)}.`);
       return item.open();
     }
   };

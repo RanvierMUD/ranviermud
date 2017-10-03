@@ -1,8 +1,9 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     aliases: [ 'unwield', 'unequip' ],
@@ -20,7 +21,7 @@ module.exports = (srcPath) => {
       const [slot, item] = result;
       player.unequip(slot);
 
-      Broadcast.sayAt(player, `<green>You un-equip: </green>${item.display}<green>.</green>`);
+      Broadcast.sayAt(player, `<green>You un-equip: </green>${ItemUtil.display(item)}<green>.</green>`);
       item.emit('unequip', player);
       player.emit('unequip', slot, item);
     }

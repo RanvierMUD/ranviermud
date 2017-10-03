@@ -62,6 +62,9 @@ some extra attributes. The old man is the most basic NPC you can have.
 :    List of behaviors to attach to this NPC. The key is the behavior name, the value is the configuration object for that
 behavior. For boolean (on/off) behaviors, `true` suffices for the config. (See [Scripting](scripting.md) for creating behaviors)
 
+`metadata` _`object`_
+:    A place to put other data you want to access inside scripts/behaviors/commands/etc. that doesn't fit into one of the existing properties. See `Character.getMeta` and `Character.setMeta`. Note: changes to metadata while the server is running will be lost when the server is shut down.
+
 `attributes` _`object`_
 :    Arbitrary list of attributes to attach to this NPC. Unlike items, these attributes will be turned into an AttributesMap (see `src/Attributes` and `src/Character`, so these are not arbitrary.
 
