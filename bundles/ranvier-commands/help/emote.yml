@@ -1,0 +1,8 @@
+---
+command: emote
+body: |
+  Send a message to the room.
+  Your message may refer to specific players and items with ~<player/item name>.
+
+keywords:
+  - emote

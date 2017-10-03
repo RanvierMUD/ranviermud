@@ -41,46 +41,12 @@ class Player extends Character {
     this.commandQueue = new CommandQueue();
     this.role = data.role || PlayerRoles.PLAYER;
 
-    // Arbitrary data bundles are free to shove whatever they want in
-    // WARNING: values must be JSON.stringify-able
-    this.metadata = data.metadata || {};
     this.playerClass = null;
 
     // Default max inventory size config
     if (!isFinite(this.inventory.getMax())) {
       this.inventory.setMax(Config.get('defaultMaxPlayerInventory') || 20);
     }
-  }
-
-  /**
-   * Set a metadata value. Does _not_ autovivify, you will need to create the parent objects if they don't exist
-   * @param {string} key   Key to set. Supports dot notation e.g., `"foo.bar"`
-   * @param {*}      value Value must be JSON.stringify-able
-   */
-  setMeta(key, value) {
-    let parts = key.split('.');
-    const property = parts.pop();
-    let base = this.metadata;
-
-    while (parts.length) {
-      let part = parts.pop();
-      if (!(part in base)) {
-        throw new RangeError(`Metadata path invalid: ${key}`);
-      }
-      base = base[part];
-    }
-
-    base[property] = value;
-  }
-
-  /**
-   * Get metadata about a player
-   * @param {string} key Key to fetch. Supports dot notation e.g., `"foo.bar"`
-   * @return {*}
-   */
-  getMeta(key) {
-    let base = this.metadata;
-    return key.split('.').reduce((obj, index) => obj && obj[index], base);
   }
 
   /**
@@ -239,12 +205,16 @@ class Player extends Character {
       this.equipment = new Map();
       for (const slot in eqDefs) {
         const itemDef = eqDefs[slot];
-        let newItem = state.ItemFactory.create(state.AreaManager.getArea(itemDef.area), itemDef.entityReference);
-        newItem.inventory = itemDef.inventory;
-        newItem.hydrate(state);
-        state.ItemManager.add(newItem);
-        newItem.isEquipped = true;
-        this.equip(newItem);
+        try {
+          let newItem = state.ItemFactory.create(state.AreaManager.getArea(itemDef.area), itemDef.entityReference);
+          newItem.initializeInventory(itemDef.inventory);
+          newItem.hydrate(state);
+          state.ItemManager.add(newItem);
+          newItem.isEquipped = true;
+          this.equip(newItem);
+        } catch (e) {
+          Logger.error(e.message);
+        }
       }
     } else {
       this.equipment = new Map();
@@ -288,25 +258,6 @@ class Player extends Character {
    */
   getBroadcastTargets() {
     return [this];
-  }
-
-  static validateName(name) {
-    const maxLength = Config.get('maxPlayerNameLength');
-    const minLength = Config.get('minPlayerNameLength');
-
-    if (!name) {
-      return 'Please enter a name.';
-    }
-    if (name.length > maxLength) {
-      return 'Too long, try a shorter name.';
-    }
-    if (name.length < minLength) {
-      return 'Too short, try a longer name.';
-    }
-    if (!/^[a-z]+$/i.test(name)) {
-      return 'Your name may only contain A-Z without spaces or special characters.';
-    }
-    return false;
   }
 }
 

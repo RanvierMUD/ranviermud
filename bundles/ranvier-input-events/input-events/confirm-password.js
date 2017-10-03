@@ -13,11 +13,11 @@ module.exports = (srcPath) => {
 
       if (!args.dontwelcome) {
         write("<cyan>Confirm your password:</cyan> ");
-        socket.toggleEcho();
+        socket.command('toggleEcho');
       }
 
       socket.once('data', pass => {
-        socket.toggleEcho();
+        socket.command('toggleEcho');
 
         if (!args.account.checkPassword(pass.toString().trim())) {
           say("<red>Passwords do not match.</red>");

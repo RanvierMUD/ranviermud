@@ -1,0 +1,11 @@
+{
+  "name": "ranvier-bundle-telnet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Shawn Biddle <shawncplus@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "ranvier-telnet": "^1.0.1"
+  }
+}

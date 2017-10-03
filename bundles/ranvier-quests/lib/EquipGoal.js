@@ -45,6 +45,13 @@ class EquipGoal extends QuestGoal {
     this.state.equipped = false;
     this.emit('progress', this.getProgress());
   }
+
+  serialize() {
+    let data = super.serialize();
+    data.config = this.config;
+
+    return data;
+  }
 }
 
 module.exports = EquipGoal;

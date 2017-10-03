@@ -1,9 +1,10 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const { CommandParser: Parser } = require(srcPath + 'CommandParser');
   const { EquipSlotTakenError } = require(srcPath + 'EquipErrors');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
   const Logger = require(srcPath + 'Logger');
   const say = Broadcast.sayAt;
 
@@ -24,7 +25,7 @@ module.exports = (srcPath) => {
       }
 
       if (!item.slot) {
-        return say(player, `You can't wear ${item.display}.`);
+        return say(player, `You can't wear ${ItemUtil.display(item)}.`);
       }
 
       if (item.level > player.level) {
@@ -36,13 +37,13 @@ module.exports = (srcPath) => {
       } catch (err) {
         if (err instanceof EquipSlotTakenError) {
           const conflict = player.equipment.get(item.slot);
-          return say(player, `You will have to remove ${conflict.display} first.`);
+          return say(player, `You will have to remove ${ItemUtil.display(conflict)} first.`);
         }
 
         return Logger.error(err);
       }
 
-      say(player, `<green>You equip:</green> ${item.display}<green>.</green>`);
+      say(player, `<green>You equip:</green> ${ItemUtil.display(item)}<green>.</green>`);
 
       item.emit('equip', player);
       player.emit('equip', item.slot, item);

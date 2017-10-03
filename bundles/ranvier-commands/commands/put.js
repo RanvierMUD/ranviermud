@@ -1,9 +1,10 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
   const ItemType = require(srcPath + 'ItemType');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: 'put <item> <container>',
@@ -38,21 +39,21 @@ module.exports = (srcPath) => {
       }
 
       if (toContainer.type !== ItemType.CONTAINER) {
-        return B.sayAt(player, `${toContainer.display} isn't a container.`);
+        return B.sayAt(player, `${ItemUtil.display(toContainer)} isn't a container.`);
       }
 
       if (toContainer.isInventoryFull()) {
-        return B.sayAt(player, `${toContainer.display} can't hold any more.`);
+        return B.sayAt(player, `${ItemUtil.display(toContainer)} can't hold any more.`);
       }
 
       if (toContainer.closed) {
-        return B.sayAt(player, `${toContainer.display} is closed.`);
+        return B.sayAt(player, `${ItemUtil.display(toContainer)} is closed.`);
       }
 
       player.removeItem(item);
       toContainer.addItem(item);
 
-      B.sayAt(player, `<green>You put </green>${item.display}<green> into </green>${toContainer.display}<green>.</green>`);
+      B.sayAt(player, `<green>You put </green>${ItemUtil.display(item)}<green> into </green>${ItemUtil.display(toContainer)}<green>.</green>`);
 
       item.emit('put', player, toContainer);
       player.emit('put', item, toContainer);

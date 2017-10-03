@@ -13,8 +13,6 @@
  *   --respawn Minutes between respawn
  */
 
-//TODO: Refactor
-
 /* NPM Modules */
 const net = require('net');
 const commander = require('commander');
@@ -33,6 +31,7 @@ const ClassManager = require('./src/ClassManager');
 const CommandManager = require('./src/CommandManager');
 const EffectFactory = require('./src/EffectFactory');
 const EventManager = require('./src/EventManager');
+const GameServer = require('./src/GameServer');
 const HelpManager = require('./src/HelpManager');
 const ItemFactory = require('./src/ItemFactory');
 const ItemManager = require('./src/ItemManager');
@@ -43,9 +42,6 @@ const QuestFactory = require('./src/QuestFactory');
 const RoomManager = require('./src/RoomManager');
 const SkillManager = require('./src/SkillManager');
 
-const Telnet = require('./src/Telnet');
-const Data = require('./src/Data');
-
 // Wrapper for ranvier.json
 const Config = require('./src/Config');
 
@@ -54,7 +50,7 @@ commander
   .version(pkg.version)
   .option('-s, --save [time]', 'Number of seconds between auto-save ticks [10]', 10)
   .option('-r, --respawn [time]', 'Number of minutes between respawn ticks [120]', 120)
-  .option('-p, --port [portNumber]', 'Port to host telnet server [23]', Config.get('port', 23))
+  .option('-p, --port [portNumber]', 'Port to host the server [23]', Config.get('port', 23))
   .option('-v, --verbose', 'Verbose console logging.', true)
   .option('-e, --prettyErrors', 'Pretty-print formatting for error stack traces.', false)
   .parse(process.argv);
@@ -78,14 +74,12 @@ if (commander.prettyErrors) {
 const logLevel = commander.verbose ?
   'verbose' :
   process.env.LOG_LEVEL || Config.get('logLevel') || 'debug';
-
 Logger.setLevel(logLevel);
 
 
 // Global state object, server instance and configurable intervals.
 let GameState = {};
-let saveInterval, tickInterval;
-let server;
+let saveInterval, tickInterval, playerTickInterval;
 
 /**
  * Do the dirty work
@@ -115,60 +109,25 @@ function init(restartServer) {
     RoomBehaviorManager: new BehaviorManager(),
     RoomManager: new RoomManager(),
     SkillManager: new SkillManager(),
-    SpellManager: new SkillManager()
+    SpellManager: new SkillManager(),
+    ServerEventManager: new EventManager(),
+    GameServer: new GameServer(),
   };
 
   // Setup bundlemanager
   const BundleManager = new (require('./src/BundleManager'))(GameState);
   GameState.BundleManager = BundleManager;
   BundleManager.loadBundles();
+  GameState.ServerEventManager.attach(GameState.GameServer);
 
   // Set up web API
+  // TODO: move into a server-events bundle
   const WebInterface = new (require('./src/Api/WebInterface'))(GameState);
   WebInterface.init();
 
   if (restartServer) {
     Logger.log("START - Starting server");
-
-    /**
-    * Effectively the 'main' game loop but not really because it's a REPL
-    */
-    server = new Telnet.TelnetServer({}, socket => {
-      const banned = Data.parseFile(__dirname + '/data/banned.json');
-      if (banned.includes(socket.address().address)) {
-        return socket.destroy();
-      }
-
-      socket.on('interrupt', () => {
-        socket.write("\n*interrupt*\n");
-      });
-
-      socket.on('error', Logger.error);
-
-      // Register all of the input events (login, etc.)
-      GameState.InputEventManager.attach(socket);
-
-      socket.write("Connecting...\n");
-      Logger.log("User connected...");
-
-      // @see: bundles/ranvier-events/events/login.js
-      socket.emit('intro', socket);
-    }).netServer;
-
-    // Start the server and setup error handlers.
-    server.listen(commander.port).on('error', err => {
-      if (err.code === 'EADDRINUSE') {
-        Logger.error(`Cannot start server on port ${commander.port}, address is already in use.`);
-        Logger.error("Do you have a MUD server already running?");
-      } else if (err.code === 'EACCES') {
-        Logger.error(`Cannot start server on port ${commander.port}: permission denied.`);
-        Logger.error("Are you trying to start it on a priviledged port without being root?");
-      } else {
-        Logger.error("Failed to start MUD server:");
-        Logger.error(err);
-      }
-      process.exit(1);
-    });
+    GameState.GameServer.startup(commander);
 
     // Save every 10 minutes by default.
     Logger.log(`Setting autosave to ${commander.save} seconds.`);
@@ -180,16 +139,16 @@ function init(restartServer) {
     // Ticks for effect processing and combat happen every half second
     clearInterval(tickInterval);
     tickInterval = setInterval(() => {
-      GameState.PlayerManager.emit('updateTick');
       GameState.AreaManager.tickAll(GameState);
       GameState.ItemManager.tickAll();
-    }, 100);
+    }, Config.get('entityTickFrequency', 100));
 
-    // TODO: RESPAWN
+    clearInterval(playerTickInterval);
+    playerTickInterval = setInterval(() => {
+      GameState.PlayerManager.emit('updateTick');
+    }, Config.get('playerTickFrequency', 100));
   }
-  Logger.log(`Server started on port: ${commander.port}...`);
-  server.emit('startup');
-};
+}
 
 // START IT UP!
 init();

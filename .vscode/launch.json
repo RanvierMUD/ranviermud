@@ -10,7 +10,7 @@
             "name": "Launch Program",
             "program": "${workspaceRoot}\\ranvier",
             "args": ["-v"],
-            "console": "integratedTerminal",
+            "console": "externalTerminal",
             "cwd": "${workspaceRoot}"
         },
         {

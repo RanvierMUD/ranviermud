@@ -37,6 +37,7 @@ if (clientKey) {
 
 module.exports = srcPath => {
   const B = require(srcPath + 'Broadcast');
+  const Logger = require(srcPath + 'Logger');
 
   return {
     listeners: {
@@ -100,7 +101,7 @@ module.exports = srcPath => {
 
         request.on('error', err => {
           Logger.error('API-AI Error Response');
-          console.log(error);
+          console.log(err);
           failure();
         });
 

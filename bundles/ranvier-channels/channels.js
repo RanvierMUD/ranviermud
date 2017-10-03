@@ -7,10 +7,12 @@ module.exports = (srcPath) => {
   const PrivateAudience = require(srcPath + 'ChannelAudience/PrivateAudience');
   const PartyAudience = require(srcPath + 'ChannelAudience/PartyAudience');
   const Channel = require(srcPath + 'Channel');
+  const PlayerRoles = require(srcPath + 'PlayerRoles');
 
   return [
     new Channel({
       name: 'chat',
+      aliases: ['.'],
       color: ['bold', 'green'],
       description: 'Chat with everyone on the game',
       audience: new WorldAudience()
@@ -21,6 +23,7 @@ module.exports = (srcPath) => {
       color: ['yellow'],
       description: 'Send a message to all players in your room',
       audience: new RoomAudience(),
+      minRequiredRole: PlayerRoles.ADMIN,
       formatter: {
         sender: function (sender, target, message, colorify) {
           return colorify(`You say: '${message}'`);

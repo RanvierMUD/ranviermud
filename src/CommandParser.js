@@ -25,7 +25,7 @@ class CommandParser {
 
     const parts = data.split(' ');
 
-    const command = parts.shift().replace(/[^a-z]/i, '').toLowerCase();
+    const command = parts.shift().toLowerCase();
     if (!command.length) {
       throw new InvalidCommandError();
     }
@@ -150,7 +150,7 @@ class CommandParser {
     let findNth = 1;
     let keyword = null;
     if (parts.length > 2) {
-      return null;
+      return false;
     }
 
     if (parts.length === 1) {

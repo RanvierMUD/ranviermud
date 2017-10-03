@@ -1,7 +1,8 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: 'inventory',
@@ -18,7 +19,7 @@ module.exports = (srcPath) => {
 
       // TODO: Implement grouping
       for (const [, item ] of player.inventory) {
-        Broadcast.sayAt(player, item.display);
+        Broadcast.sayAt(player, ItemUtil.display(item));
       }
     }
   };

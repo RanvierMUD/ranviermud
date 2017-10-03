@@ -6,6 +6,7 @@ const humanize = (sec) => { return require('humanize-duration')(sec, { round: tr
 
 module.exports = srcPath => {
   const B = require(srcPath + 'Broadcast');
+  const Logger = require(srcPath + 'Logger');
   const SkillErrors = require(srcPath + 'SkillErrors');
 
   return  {

@@ -6,6 +6,7 @@ const Logger = require('./Logger');
 
 /**
  * @property {Area}          area         Area room is in
+ * @property {{x: number, y: number, z: number}} [coordinates] Defined in yml with array [x, y, z]. Retrieved with coordinates.x, coordinates.y, ...
  * @property {Array<number>} defaultItems Default list of item ids that should load in this room
  * @property {Array<number>} defaultNpcs  Default list of npc ids that should load in this room
  * @property {string}        description  Room description seen on 'look'
@@ -34,6 +35,11 @@ class Room extends EventEmitter {
     this.defaultItems = def.items || [];
     this.defaultNpcs  = def.npcs || [];
     this.behaviors = new Map(Object.entries(def.behaviors || {}));
+    this.coordinates = Array.isArray(def.coordinates) && def.coordinates.length === 3 ? {
+      x: def.coordinates[0],
+      y: def.coordinates[1],
+      z: def.coordinates[2],
+    } : null;
     this.description = def.description;
     this.entityReference = this.area.name + ':' + def.id;
     this.exits = def.exits || [];
@@ -43,10 +49,15 @@ class Room extends EventEmitter {
     // create by-val copies of the doors config so the lock/unlock don't accidentally modify the original definition
     this.doors = new Map(Object.entries(JSON.parse(JSON.stringify(def.doors || {}))));
     this.defaultDoors = def.doors;
+    this.meta = def.meta || {};
 
     this.items = new Set();
     this.npcs = new Set();
     this.players = new Set();
+
+    // Arbitrary data bundles are free to shove whatever they want in
+    // WARNING: values must be JSON.stringify-able
+    this.metadata = def.metadata || {};
 
     /**
      * spawnedNpcs keeps track of NPCs even when they leave the room for the purposes of respawn. So if we spawn NPC A
@@ -78,6 +89,37 @@ class Room extends EventEmitter {
         entity.emit(eventName, ...args);
       }
     }
+  }
+
+  /**
+   * Set a metadata value. Does _not_ autovivify, you will need to create the parent objects if they don't exist
+   * @param {string} key   Key to set. Supports dot notation e.g., `"foo.bar"`
+   * @param {*}      value Value must be JSON.stringify-able
+   */
+  setMeta(key, value) {
+    let parts = key.split('.');
+    const property = parts.pop();
+    let base = this.metadata;
+
+    while (parts.length) {
+      let part = parts.pop();
+      if (!(part in base)) {
+        throw new RangeError(`Metadata path invalid: ${key}`);
+      }
+      base = base[part];
+    }
+
+    base[property] = value;
+  }
+
+  /**
+   * Get metadata about a player
+   * @param {string} key Key to fetch. Supports dot notation e.g., `"foo.bar"`
+   * @return {*}
+   */
+  getMeta(key) {
+    let base = this.metadata;
+    return key.split('.').reduce((obj, index) => obj && obj[index], base);
   }
 
   /**

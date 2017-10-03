@@ -48,17 +48,11 @@ class Item extends EventEmitter {
     this.id          = item.id;
 
     this.maxItems    = item.maxItems || Infinity;
-    this.inventory   = item.inventory ? new Inventory(item.inventory) : null;
-    if (this.inventory) {
-      this.inventory.setMax(this.maxItems);
-    }
+    this.initializeInventory(item.inventory, this.maxItems);
 
     this.isEquipped  = item.isEquipped || false;
     this.keywords    = item.keywords;
-    this.level       = item.level || 1;
-    this.itemLevel   = item.itemLevel || this.level;
     this.name        = item.name;
-    this.quality     = item.quality || 'common';
     this.room        = item.room || null;
     this.roomDesc    = item.roomDesc || '';
     this.script      = item.script || null;
@@ -69,6 +63,19 @@ class Item extends EventEmitter {
     this.closed      = item.closed || false;
     this.locked      = item.locked || false;
     this.lockedBy    = item.lockedBy || null;
+  }
+
+  /**
+   * Create an Inventory object from a serialized inventory
+   * @param {object} inventory Serialized inventory
+   */
+  initializeInventory(inventory) {
+    if (inventory) {
+      this.inventory = new Inventory(inventory);
+      this.inventory.setMax(this.maxItems);
+    } else {
+      this.inventory = null;
+    }
   }
 
   hasKeyword(keyword) {
@@ -139,41 +146,6 @@ class Item extends EventEmitter {
         max: this.maxItems
       });
     }
-  }
-
-  /**
-   * TODO: move to bundles
-   */
-  get qualityColors() {
-    return ({
-      poor: ['bold', 'black'],
-      common: ['bold', 'white'],
-      uncommon: ['bold', 'green'],
-      rare: ['bold', 'blue'],
-      epic: ['bold', 'magenta'],
-      legendary: ['bold', 'red'],
-      artifact: ['yellow'],
-    })[this.quality];
-  }
-
-  /**
-   * Friendly display colorized by quality
-   */
-  get display() {
-    return this.qualityColorize(`[${this.name}]`);
-  }
-
-  /**
-   * Colorize the given string according to this item's quality
-   * TODO: move to bundles
-   * @param {string} string
-   * @return string
-   */
-  qualityColorize(string) {
-    const colors = this.qualityColors;
-    const open = '<' + colors.join('><') + '>';
-    const close = '</' + colors.reverse().join('></') + '>';
-    return open + string + close;
   }
 
   /**
@@ -265,7 +237,7 @@ class Item extends EventEmitter {
 
     // if the item was saved with a custom inventory hydrate it
     if (this.inventory) {
-      this.inventory.hydrate(state);
+      this.inventory.hydrate(state, this);
     } else {
     // otherwise load its default inv
       this.defaultItems.forEach(defaultItemId => {

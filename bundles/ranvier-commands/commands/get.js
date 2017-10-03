@@ -1,9 +1,10 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
   const ItemType = require(srcPath + 'ItemType');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     usage: 'get <item> [container]',
@@ -39,13 +40,19 @@ module.exports = (srcPath) => {
         search = parts[0];
         source = player.room.items;
       } else {
-        container = Parser.parseDot(parts[1], player.room.items);
+      //Newest containers should go first, so that if you type get all corpse you get from the 
+      // most recent corpse. See issue #247.
+        container = Parser.parseDot(parts[1], [...player.room.items].reverse());
         if (!container) {
           return Broadcast.sayAt(player, "You don't see anything like that here.");
         }
 
         if (container.type !== ItemType.CONTAINER) {
-          return Broadcast.sayAt(player, `${container.name} isn't a container.`);
+          return Broadcast.sayAt(player, `${ItemUtil.display(container)} isn't a container.`);
+        }
+
+        if (container.closed) {
+          return Broadcast.sayAt(player, `${ItemUtil.display(container)} is closed.`);
         }
 
         search = parts[0];
@@ -85,20 +92,17 @@ module.exports = (srcPath) => {
 
   function pickup(item, container, player) {
     if (item.properties.noPickup) {
-      return Broadcast.sayAt(player, `${item.display} can't be picked up.`);
+      return Broadcast.sayAt(player, `${ItemUtil.display(item)} can't be picked up.`);
     }
 
     if (container) {
-      if (container.closed) {
-        return Broadcast.sayAt(player, `${container.display} is closed.`);
-      }
       container.removeItem(item);
     } else {
       player.room.removeItem(item);
     }
     player.addItem(item);
 
-    Broadcast.sayAt(player, `<green>You receive loot: </green>${item.display}<green>.</green>`);
+    Broadcast.sayAt(player, `<green>You receive loot: </green>${ItemUtil.display(item)}<green>.</green>`);
 
     item.emit('get', player);
     player.emit('get', item);

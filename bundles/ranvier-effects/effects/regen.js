@@ -22,8 +22,9 @@ module.exports = srcPath => {
         // pools that regenerate over time
         const regens = [
           { pool: 'health', modifier: this.target.isInCombat() ? 0 : 1 },
-          // energy recovers 50% faster than health
+          // energy and mana recovers 50% faster than health
           { pool: 'energy', modifier: this.target.isInCombat() ? 0.25 : 1.5 },
+          { pool: 'mana', modifier: this.target.isInCombat() ? 0.25 : 1.5 },
         ];
 
         for (const regen of regens) {

@@ -8,6 +8,7 @@ module.exports = srcPath => {
     config: {
       name: 'Potion Buff',
       type: 'potion.buff',
+      refreshes: true,
     },
     flags: [Flag.BUFF],
     state: {
@@ -24,6 +25,11 @@ module.exports = srcPath => {
       }
     },
     listeners: {
+      effectRefreshed: function (newEffect) {
+        this.startedAt = Date.now();
+        Broadcast.sayAt(this.target, "You refresh the potion's magic.");
+      },
+
       effectActivated: function () {
         Broadcast.sayAt(this.target, "You drink down the potion and feel more powerful!");
       },

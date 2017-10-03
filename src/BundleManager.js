@@ -78,6 +78,7 @@ class BundleManager {
       { path: 'effects/', fn: 'loadEffects' },
       { path: 'help/', fn: 'loadHelp' },
       { path: 'input-events/', fn: 'loadInputEvents' },
+      { path: 'server-events/', fn: 'loadServerEvents' },
       { path: 'player-events.js', fn: 'loadPlayerEvents' },
       { path: 'skills/', fn: 'loadSkills' },
     ];
@@ -160,17 +161,17 @@ class BundleManager {
 
     // load items
     if (fs.existsSync(paths.items)) {
-      const items = this.loadItems(area, paths.items);
+      this.loadItems(area, paths.items);
     }
 
     // load npcs
     if (fs.existsSync(paths.npcs)) {
-      const npcs = this.loadNpcs(area, paths.npcs);
+      this.loadNpcs(area, paths.npcs);
     }
 
     // load rooms
     if (fs.existsSync(paths.rooms)) {
-      const rooms = this.loadRooms(area, paths.rooms);
+      this.loadRooms(area, paths.rooms);
     }
 
     return area;
@@ -186,6 +187,10 @@ class BundleManager {
 
     // parse the item files
     let items = Data.parseFile(itemsFile);
+
+    if (!items || !items.length) {
+      return;
+    }
 
     // set the item definitions onto the factory
     items.forEach(item => {
@@ -203,8 +208,6 @@ class BundleManager {
     });
 
     Logger.verbose(`\t\tENDLOAD: Items`);
-
-    return items;
   }
 
   /**
@@ -217,6 +220,10 @@ class BundleManager {
 
     // parse the npc files
     let npcs = Data.parseFile(npcsFile);
+
+    if (!npcs || !npcs.length) {
+      return;
+    }
 
     // create and load the npcs
     npcs = npcs.map(npc => {
@@ -244,8 +251,6 @@ class BundleManager {
     });
 
     Logger.verbose(`\t\tENDLOAD: Npcs`);
-
-    return npcs;
   }
 
   /**
@@ -272,6 +277,10 @@ class BundleManager {
     // parse the room files
     let rooms = Data.parseFile(roomsFile);
 
+    if (!rooms || !rooms.length) {
+      return;
+    }
+
     // create and load the rooms
     rooms = rooms.map(room => new Room(area, room));
     rooms.forEach(room => {
@@ -296,8 +305,6 @@ class BundleManager {
     });
 
     Logger.verbose(`\t\tENDLOAD: Rooms`);
-
-    return rooms;
   }
 
   /**
@@ -561,6 +568,32 @@ class BundleManager {
     }
 
     Logger.verbose(`\tENDLOAD: Classes...`);
+  }
+
+  /**
+   * @param {string} bundle
+   * @param {string} serverEventsDir
+   */
+  loadServerEvents(bundle, serverEventsDir) {
+    Logger.verbose(`\tLOAD: Server Events...`);
+    const files = fs.readdirSync(serverEventsDir);
+
+    for (const eventsFile of files) {
+      const eventsPath = serverEventsDir + eventsFile;
+      if (!Data.isScriptFile(eventsPath, eventsFile)) {
+        continue;
+      }
+
+      const eventsName = path.basename(eventsFile, path.extname(eventsFile));
+      Logger.verbose(`\t\t\tLOAD: SERVER-EVENTS ${eventsName}...`);
+      const eventsListeners = require(eventsPath)(srcPath).listeners;
+
+      for (const [eventName, listener] of Object.entries(eventsListeners)) {
+        this.state.ServerEventManager.add(eventName, listener(this.state));
+      }
+    }
+
+    Logger.verbose(`\tENDLOAD: Server Events...`);
   }
 }
 

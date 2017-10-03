@@ -37,7 +37,7 @@ module.exports = (srcPath) => {
         return state.CommandManager.get('help').execute('config', player);
       }
 
-      const possibleSettings = ['brief', 'autoloot'];
+      const possibleSettings = ['brief', 'autoloot', 'minimap'];
 
       if (!possibleSettings.includes(configToSet)) {
         Broadcast.sayAt(player, `<red>Invalid setting: ${configToSet}. Possible settings: ${possibleSettings.join(', ')}`);

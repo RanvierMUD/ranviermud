@@ -97,7 +97,15 @@ class Quest extends EventEmitter {
   }
 
   serialize() {
-    return { state: this.goals.map(goal => goal.serialize()) };
+    return {
+      state: this.goals.map(goal => goal.serialize()),
+      progress: this.getProgress(),
+      config: {
+        desc: this.config.desc,
+        level: this.config.level,
+        title: this.config.title,
+      },
+    };
   }
 
   hydrate() {

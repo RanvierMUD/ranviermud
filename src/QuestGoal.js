@@ -42,7 +42,10 @@ class QuestGoal extends EventEmitter {
   }
 
   serialize() {
-    return { state: this.state };
+    return {
+      state: this.state,
+      progress: this.getProgress(),
+    };
   }
 
   hydrate(state) {

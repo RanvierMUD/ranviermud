@@ -93,6 +93,13 @@ class FetchGoal extends QuestGoal {
       this._getItem(item);
     }
   }
+
+  serialize() {
+    let data = super.serialize();
+    data.config = this.config;
+
+    return data;
+  }
 }
 
 module.exports = FetchGoal;

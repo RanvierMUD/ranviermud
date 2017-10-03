@@ -24,8 +24,13 @@ module.exports = (srcPath) => {
         Logger.error(`MISSING-HELP: [${args}]`);
         return B.sayAt(player, "Sorry, I couldn't find an entry for that topic.");
       }
-
-      B.sayAt(player, render(state, hfile));
+      try {
+        B.sayAt(player, render(state, hfile));
+      } catch (e) {
+        Logger.warn(`UNRENDERABLE-HELP: [${args}]`);
+        Logger.warn(e);
+        B.sayAt(player, `Invalid help file for ${args}.`);
+      }
     }
   };
 

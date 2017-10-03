@@ -9,7 +9,7 @@ module.exports = (srcPath, bundlePath) => {
   const CommandManager = require(srcPath + 'CommandManager');
   const ItemType = require(srcPath + 'ItemType');
   const Parser = require(srcPath + 'CommandParser').CommandParser;
-  const { renderItem } = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
+  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   const subcommands = new CommandManager();
   subcommands.add({
@@ -29,7 +29,7 @@ module.exports = (srcPath, bundlePath) => {
         item.hydrate(state);
         const vendorItem = vendorConfig.items[item.entityReference];
 
-        B.sayAt(player, renderItem(state, item, player));
+        B.sayAt(player, ItemUtil.renderItem(state, item, player));
         B.sayAt(player, `Cost: <b><white>[${friendlyCurrencyName(vendorItem.currency)}]</white></b> x ${vendorItem.cost}`);
         return;
       }
@@ -74,7 +74,7 @@ module.exports = (srcPath, bundlePath) => {
 
           B.sayAt(player,
             '<yellow>|</yellow> ' +
-            item.qualityColorize(sprintf('%-48s', `[${item.name}]`)) +
+            ItemUtil.qualityColorize(item, sprintf('%-48s', `[${item.name}]`)) +
             sprintf(' <yellow>|</yellow> <b>%-26s</b>', B.center(26, friendlyCurrencyName(vendorItem.currency) + ' x ' + vendorItem.cost)) +
             '<yellow>|</yellow> '
           );
@@ -118,7 +118,7 @@ module.exports = (srcPath, bundlePath) => {
       item.hydrate(state);
       state.ItemManager.add(item);
       player.addItem(item);
-      say(player, `<green>You spend <b><white>${vendorItem.cost} ${friendlyCurrencyName(vendorItem.currency)}</white></b> to purchase ${item.display}.</green>`);
+      say(player, `<green>You spend <b><white>${vendorItem.cost} ${friendlyCurrencyName(vendorItem.currency)}</white></b> to purchase ${ItemUtil.display(item)}.</green>`);
       player.save();
     }
   });
@@ -143,7 +143,7 @@ module.exports = (srcPath, bundlePath) => {
         return say(player, "You can't sell that item.");
       }
 
-      if (!['poor', 'common'].includes(item.quality) && confirm !== 'sure') {
+      if (!['poor', 'common'].includes(item.properties.quality || 'common') && confirm !== 'sure') {
         return say(player, "To sell higher quality items use '<b>sell <item> sure</b>'.");
       }
 
@@ -153,7 +153,7 @@ module.exports = (srcPath, bundlePath) => {
       }
       player.setMeta(currencyKey, (player.getMeta(currencyKey) || 0) + sellable.value);
 
-      say(player, `<green>You sell ${item.display} for <b><white>${sellable.value} ${friendlyCurrencyName(sellable.currency)}</white></b>.</green>`);
+      say(player, `<green>You sell ${ItemUtil.display(item)} for <b><white>${sellable.value} ${friendlyCurrencyName(sellable.currency)}</white></b>.</green>`);
       state.ItemManager.remove(item);
     }
   });
@@ -182,7 +182,7 @@ module.exports = (srcPath, bundlePath) => {
         return say(player, "You can't sell that item.");
       }
 
-      tell(`I could give you <b><white>${sellable.value} ${friendlyCurrencyName(sellable.currency)}</white></b> for ${targetItem.display}.</green>`);
+      tell(`I could give you <b><white>${sellable.value} ${friendlyCurrencyName(sellable.currency)}</white></b> for ${ItemUtil.display(targetItem)}.</green>`);
     }
   });
 

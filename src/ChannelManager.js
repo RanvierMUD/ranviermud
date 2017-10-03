@@ -23,6 +23,9 @@ class ChannelManager {
    */
   add(channel) {
     this.channels.set(channel.name, channel);
+    if (channel.aliases) {
+      channel.aliases.forEach(alias => this.channels.set(alias, channel));
+    }
   }
 
   /**

@@ -26,7 +26,9 @@ with no harm whatsoever.
 * `ranvier-lib` - Not actually loaded into the game, just a place to put common ranvier bundle functionality
 * `ranvier-player-events` - Example implementation of experience/leveling for the player
 * `ranvier-quests` - Example implementation of quest commands
+* `ranvier-telnet` - Makes Ranvier use a telnet server for player connections (enabled by default)
 * `ranvier-vendors` - Example implementation of in game shops
+* `ranvier-websocket` - WebSocket server to be used instead of/along side telnet (off by default)
 * `ranvier-npc-behaviors` - Ready-to-use standalone behaviors for NPCs: wandering, aggro, etc.
 * `debug-commands` - Commands useful while debugging (`givexp` for example), commands only usable by ADMIN role players
 
@@ -77,3 +79,16 @@ possible. Click on any of the items below to see an in-depth tutorial.
   Basically everything the player does triggers an event on them that can be attached to and perform
   functionality such as experience, leveling, combat, and time based calculations
 </pre>
+
+### 3rd party node libraries in bundles
+
+Bundles are meant to be self-contained, shareable folders. With that in mind if your bundle relies on a node module
+not present the `package.json` that comes with Ranvier the suggested approach is the following:
+
+1. Create your bundle folder: `mkdir my-bundle` and move into it: `cd my-bundle`
+2. Run `npm init` and fill out the appropriate fields
+3. Now you can safely run `npm install --save some-3rd-party-package` and that dependency will be specific to your
+   bundle.
+
+Ranvier has a helper command to run `npm install` in all bundles by running `npm run bundle-install` from the root of
+the project.
