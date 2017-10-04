@@ -84,7 +84,7 @@ module.exports = (srcPath, bundlePath) => {
               return B.sayAt(player, "The door is locked and you don't have the key.");
             }
             if (door.closed) {
-              B.sayAt(player, "The door swings opened.");
+              B.sayAt(player, "The door swings open.");
               return doorRoom.openDoor(targetRoom);
             }
           }
