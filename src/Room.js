@@ -203,6 +203,9 @@ class Room extends EventEmitter {
    * @return {{lockedBy: EntityReference, locked: boolean, closed: boolean}}
    */
   getDoor(fromRoom) {
+    if (!fromRoom) {
+      return null;
+    }
     return this.doors.get(fromRoom.entityReference);
   }
 
