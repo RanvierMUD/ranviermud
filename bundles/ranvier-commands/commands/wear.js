@@ -7,7 +7,6 @@ module.exports = (srcPath, bundlePath) => {
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
   const Logger = require(srcPath + 'Logger');
   const say = Broadcast.sayAt;
-  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     aliases: [ 'wield' ],
