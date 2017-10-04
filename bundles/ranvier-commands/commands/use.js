@@ -11,7 +11,6 @@ module.exports = (srcPath, bundlePath) => {
   const { CommandParser } = require(srcPath + 'CommandParser');
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
   const SkillErrors = require(srcPath + 'SkillErrors');
-  const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
     aliases: [ 'quaff', 'recite' ],
