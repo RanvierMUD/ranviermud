@@ -40,6 +40,9 @@ Ranvier configuration is stored in the `ranvier.json` file in the root of the pr
 `defaultMaxPlayerInventory` _`number`_ `(16)`
 :    Default maximum number of items players can carry. NPCs default to Infinity.
 
+`maxIdleTime` _`number`_ `(20)`
+:    Maximum number of minutes a player can idle without entering any commands before being automatically kicked. Remove this key/value pair or set it to 0 to disable autokicking idle players.
+
 `playerTickFrequency` _`number`_ `(100)`
 :    Number of milliseconds between `updateTick` events on players. Might want this to be faster (16ms) if using websockets.
 
