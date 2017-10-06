@@ -9,8 +9,8 @@ module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Logger = require(srcPath + 'Logger');
   const { CommandParser } = require(srcPath + 'CommandParser');
-  const SkillErrors = require(srcPath + 'SkillErrors');
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
+  const SkillErrors = require(srcPath + 'SkillErrors');
 
   return {
     aliases: [ 'quaff', 'recite' ],

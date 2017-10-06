@@ -7,7 +7,6 @@ module.exports = (srcPath, bundlePath) => {
   const Crafting = require(bundlePath + 'ranvier-crafting/lib/Crafting');
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
-
   return {
     command: state => (args, player) => {
       if (!args || !args.length) {
