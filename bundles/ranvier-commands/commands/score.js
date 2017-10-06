@@ -20,7 +20,8 @@ module.exports = (srcPath) => {
         intellect: 0,
         stamina: 0,
         armor: 0,
-        health: 0
+        health: 0,
+        critical: 0,
       };
 
       for (const stat in stats) {
@@ -110,6 +111,7 @@ module.exports = (srcPath) => {
 
       say(':' + B.line(22) + ':');
       printStat('armor');
+      printStat('critical');
       say("'" + B.line(22) + "'");
     }
   };

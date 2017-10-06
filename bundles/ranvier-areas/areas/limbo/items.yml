@@ -13,6 +13,8 @@
     minDamage: 7
     maxDamage: 15
     speed: 2.8
+    stats:
+      critical: 1
 - id: 2
   name: "Slice of Cheese"
   roomDesc: "A moldy slice of cheese"
@@ -59,7 +61,8 @@
     stats:
       strength: 2
       stamina: 2
-  behaviors: 
+      critical: -1
+  behaviors:
     sellable:
       value: 30
       currency: gold
@@ -76,7 +79,7 @@
     itemLevel: 1
     stats:
       armor: 20
-  behaviors: 
+  behaviors:
     sellable:
       value: 30
       currency: gold
@@ -143,6 +146,7 @@
     stats:
       strength: 2
       stamina: 2
+      critical: 3
 - id: 10
   name: "Wooden Shield"
   type: ARMOR
@@ -156,7 +160,7 @@
     itemLevel: 1
     stats:
       armor: 10
-  behaviors: 
+  behaviors:
     sellable:
       value: 30
       currency: gold

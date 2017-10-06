@@ -62,6 +62,11 @@ module.exports = (srcPath) => {
         }
 
         buf += ` <b>${target.name}</b> for <b>${damage.finalAmount}</b> damage.`;
+
+        if (damage.critical) {
+          buf += ' <red><b>(Critical)</b></red>';
+        }
+
         B.sayAt(this, buf);
 
         if (this.equipment.has('wield')) {
@@ -154,7 +159,12 @@ module.exports = (srcPath) => {
           buf += "Something";
         }
 
-        buf += ` hit <b>You</b> for <b><red>${damage.finalAmount}</red></b> damage`;
+        buf += ` hit <b>You</b> for <b><red>${damage.finalAmount}</red></b> damage.`;
+
+        if (damage.critical) {
+          buf += ' <red><b>(Critical)</b></red>';
+        }
+
         B.sayAt(this, buf);
 
         // show damage to party members

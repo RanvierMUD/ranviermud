@@ -46,10 +46,9 @@ class EffectFactory {
 
   /**
    * @param {string}  id      effect id
-   * @param {Player}  target
+   * @param {Character}  target
    * @param {?object} config  Effect.config override
    * @param {?object} state   Effect.state override
-   * @param {object} 
    * @return {Effect}
    */
   create(id, target, config = {}, state = {}) {
