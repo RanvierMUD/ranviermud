@@ -26,9 +26,9 @@ module.exports = (srcPath) => {
 
       for (const stat in stats) {
         stats[stat] = {
-          current: p.getAttribute(stat),
-          base: p.getBaseAttribute(stat),
-          max: p.getMaxAttribute(stat),
+          current: p.getAttribute(stat) || 0,
+          base: p.getBaseAttribute(stat) || 0,
+          max: p.getMaxAttribute(stat) || 0,
         };
       }
 

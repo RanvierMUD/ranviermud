@@ -19,11 +19,8 @@ module.exports = (srcPath, bundlePath) => {
       }
 
       const [slot, item] = result;
-      player.unequip(slot);
-
       Broadcast.sayAt(player, `<green>You un-equip: </green>${ItemUtil.display(item)}<green>.</green>`);
-      item.emit('unequip', player);
-      player.emit('unequip', slot, item);
+      player.unequip(slot);
     }
   };
 };

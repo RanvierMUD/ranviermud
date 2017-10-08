@@ -64,6 +64,34 @@ module.exports = (srcPath) => {
         this.experience += amount;
 
         this.save();
+      },
+
+      /**
+       * Handle a player equipping an item with a `stats` property
+       * @param {string} slot
+       * @param {Item} item
+       */
+      equip: state => function (slot, item) {
+        if (!item.properties || !item.properties.stats) {
+          return;
+        }
+
+        const config = {
+          name: 'Equip: ' + slot,
+          type: 'equip.' + slot
+        };
+
+        const effectState = {
+          slot,
+          stats: item.properties.stats,
+        };
+
+        this.addEffect(state.EffectFactory.create(
+          'equip',
+          this,
+          config,
+          effectState
+        ));
       }
     }
   };

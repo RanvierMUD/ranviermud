@@ -44,35 +44,6 @@ module.exports = (srcPath, bundlePath) => {
       }
 
       say(player, `<green>You equip:</green> ${ItemUtil.display(item)}<green>.</green>`);
-
-      item.emit('equip', player);
-      player.emit('equip', item.slot, item);
-
-      if (item.properties && item.properties.stats) {
-        player.addEffect(createAttributeEffect(state, player, item.slot, item.properties.stats));
-      }
     }
   };
 };
-
-/**
- * Uses effect from ranvier-effects/effects/equip.js
- */
-function createAttributeEffect(state, player, slot, stats) {
-  const config = {
-    name: 'Equip: ' + slot,
-    type: 'equip.' + slot
-  };
-
-  const effectState = {
-    slot,
-    stats,
-  };
-
-  return state.EffectFactory.create(
-    'equip',
-    player,
-    config,
-    effectState
-  );
-}

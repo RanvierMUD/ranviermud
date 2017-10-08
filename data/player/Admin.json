@@ -27,6 +27,10 @@
     "energy": {
       "delta": 0,
       "base": 100
+    },
+    "critical": {
+      "delta": 0,
+      "base": 0
     }
   },
   "level": 1,

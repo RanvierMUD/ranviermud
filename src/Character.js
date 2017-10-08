@@ -141,7 +141,8 @@ class Character extends EventEmitter
    * @return {number}
    */
   getBaseAttribute(attr) {
-    return this.attributes.get(attr).base;
+    var attr = this.attributes.get(attr);
+    return attr && attr.base;
   }
 
   /**
@@ -318,6 +319,8 @@ class Character extends EventEmitter
     this.equipment.set(item.slot, item);
     item.isEquipped = true;
     item.belongsTo = this;
+    item.emit('equip', this);
+    this.emit('equip', item.slot, item);
   }
 
   /**
@@ -332,6 +335,8 @@ class Character extends EventEmitter
     const item = this.equipment.get(slot);
     item.isEquipped = false;
     this.equipment.delete(slot);
+    item.emit('unequip', this);
+    this.emit('unequip', slot, item);
     this.addItem(item);
   }
 
