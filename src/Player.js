@@ -176,6 +176,12 @@ class Player extends Character {
   }
 
   hydrate(state) {
+    // QuestTracker has to be hydrated before the rest otherwise events fired by the subsequent
+    // hydration will be emitted onto unhydrated quest objects and error
+    this.questTracker.hydrate(state);
+
+    super.hydrate(state);
+
     if (typeof this.room === 'string') {
       let room = state.RoomManager.getRoom(this.room);
       if (!room) {
@@ -220,10 +226,6 @@ class Player extends Character {
       this.equipment = new Map();
     }
 
-    // Hydrate quests
-    this.questTracker.hydrate(state);
-
-    super.hydrate(state);
   }
 
   serialize() {
