@@ -55,6 +55,18 @@ class WebsocketStream extends TransportStream
       data
     }));
   }
+
+  executeSendAudio(audioCue, options = {}) {
+    if (!this.writeable) {
+      return;
+    }
+
+    this.socket.send(JSON.stringify({
+      type: 'audio',
+      audioCue,
+      options
+    }));
+  }
 }
 
 module.exports = WebsocketStream;

@@ -29,7 +29,7 @@ module.exports = srcPath => {
           stream.write("Connecting...\n");
           Logger.log("User connected via websocket...");
 
-          // @see: bundles/ranvier-events/events/login.js
+          // @see: bundles/ranvier-input-events/events/intro.js
           stream.emit('intro', stream);
         });
         Logger.log(`Websocket server started on port: ${wss.options.port}...`);

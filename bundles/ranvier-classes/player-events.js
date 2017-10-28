@@ -94,6 +94,8 @@ module.exports = srcPath => {
           const spell = state.SpellManager.get(abilityId);
           B.sayAt(this, `<bold><yellow>You can now use spell: ${spell.name}.</yellow></bold>`);
         }
+
+        this.socket.command('sendAudio', 'levelup');
       }
     }
   };
