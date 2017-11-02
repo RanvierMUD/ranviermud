@@ -19,8 +19,8 @@ resolve your issue right then and there!
 ## What to work on
 
 If you are new to the open source world or even a veteran who just wants an easy introduction to the Ranvier codebase
-check the issue list for issues with the [New Contributor](https://github.com/shawncplus/ranviermud/labels/New%20Contributor) label.
- _New Contributor_ issues are non-critical bugs or features that are particularly easy or provide a good introduction to
+check the issue list for issues with the [help wanted](https://github.com/shawncplus/ranviermud/labels/help%20wanted) label.
+ _help wanted_ issues are non-critical bugs or features that are particularly easy or provide a good introduction to
 a certain Ranvier subsystem.
 
 ## Documentation
