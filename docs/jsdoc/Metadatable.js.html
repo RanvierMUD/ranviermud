@@ -1,8 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Class: SkillManager | Ranvier</title>
+    <title>Source: Metadatable.js | Ranvier</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -45,764 +47,69 @@
 
 
 
-
-<section>
-
-<header>
-    
-        <h2>SkillManager</h2>
-        
-            <div class="class-description"><p>Keeps track of registered skills</p></div>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-<dt>
-
-    
-        
-        <h2>Constructor</h2>
-        
-
-        <h4 class="name" id="SkillManager">
-            <span class="type-signature"></span>new SkillManager<span class="signature">()</span><span class="type-signature"></span>
-            
-            <div class="container-source members">
-                <code><a href="SkillManager.js.html">SkillManager.js</a></code>,
-                <code><a href="SkillManager.js.html#line8">line 8</a></code>
-            </div>
-            
-        </h4>
-
-        
-    
-
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-                
-
-<dt>
-
-    
-        
-
-        <h4 class="name" id="add">
-            <span class="type-signature"></span>add<span class="signature">(skill)</span><span class="type-signature"></span>
-            
-            <div class="container-source members">
-                <code><a href="SkillManager.js.html">SkillManager.js</a></code>,
-                <code><a href="SkillManager.js.html#line24">line 24</a></code>
-            </div>
-            
-        </h4>
-
-        
-    
-
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-params">
-        <h5>Parameters:</h5>
-        
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>skill</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Skill.html">Skill</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-</dd>
-
-            
-                
-
-<dt>
-
-    
-        
-
-        <h4 class="name" id="find">
-            <span class="type-signature"></span>find<span class="signature">(search, includePassive)</span><span class="type-signature"> &rarr; {<a href="Skill.html">Skill</a>}</span>
-            
-            <div class="container-source members">
-                <code><a href="SkillManager.js.html">SkillManager.js</a></code>,
-                <code><a href="SkillManager.js.html#line41">line 41</a></code>
-            </div>
-            
-        </h4>
-
-        
-    
-
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Find executable skills</p>
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-params">
-        <h5>Parameters:</h5>
-        
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>search</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>includePassive</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-returns">
-        <h5>Returns:</h5>
-        
-                
-
-
-
-<span class="param-type"><a href="Skill.html">Skill</a></span>
-
-
-
-
-
-
-
-
-            
-    </div>
-    
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-</dd>
-
-            
-                
-
-<dt>
-
-    
-        
-
-        <h4 class="name" id="get">
-            <span class="type-signature"></span>get<span class="signature">(skill)</span><span class="type-signature"> &rarr; {<a href="Skill.html">Skill</a>|undefined}</span>
-            
-            <div class="container-source members">
-                <code><a href="SkillManager.js.html">SkillManager.js</a></code>,
-                <code><a href="SkillManager.js.html#line17">line 17</a></code>
-            </div>
-            
-        </h4>
-
-        
-    
-
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-params">
-        <h5>Parameters:</h5>
-        
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>skill</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Skill name</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-returns">
-        <h5>Returns:</h5>
-        
-                
-
-
-
-<span class="param-type"><a href="Skill.html">Skill</a></span>
-|
-
-<span class="param-type">undefined</span>
-
-
-
-
-
-
-
-
-            
-    </div>
-    
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-</dd>
-
-            
-                
-
-<dt>
-
-    
-        
-
-        <h4 class="name" id="remove">
-            <span class="type-signature"></span>remove<span class="signature">(skill)</span><span class="type-signature"></span>
-            
-            <div class="container-source members">
-                <code><a href="SkillManager.js.html">SkillManager.js</a></code>,
-                <code><a href="SkillManager.js.html#line31">line 31</a></code>
-            </div>
-            
-        </h4>
-
-        
-    
-
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-    <div class="container-params">
-        <h5>Parameters:</h5>
-        
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>skill</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Skill.html">Skill</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-</dd>
-
-            </dl>
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Mixin for objects which have a `metadata` property
+ * @mixin
+ */
+const Metadatable = parentClass => class extends parentClass {
+  /**
+   * Set a metadata value.
+   * Warning: Does _not_ autovivify, you will need to create the parent objects if they don't exist
+   * @param {string} key   Key to set. Supports dot notation e.g., `"foo.bar"`
+   * @param {*}      value Value must be JSON.stringify-able
+   *
+   * @memberof Metadatable
+   * @instance
+   * @throws Error
+   * @throws RangeError
+   */
+  setMeta(key, value) {
+    if (!this.metadata) {
+      throw new Error('Class does not have metadata property');
+    }
+
+    let parts = key.split('.');
+    const property = parts.pop();
+    let base = this.metadata;
+
+    while (parts.length) {
+      let part = parts.pop();
+      if (!(part in base)) {
+        throw new RangeError(`Metadata path invalid: ${key}`);
+      }
+      base = base[part];
+    }
+
+    base[property] = value;
+  }
+
+  /**
+   * Get metadata by dot notation
+   * Warning: This method is _very_ permissive and will not error on a non-existent key. Rather, it will return false.
+   * @param {string} key Key to fetch. Supports dot notation e.g., `"foo.bar"`
+   * @return {*}
+   *
+   * @memberof Metadatable
+   * @instance
+   * @throws Error
+   */
+  getMeta(key) {
+    if (!this.metadata) {
+      throw new Error('Class does not have metadata property');
+    }
+
+    const base = this.metadata;
+    return key.split('.').reduce((obj, index) => obj &amp;&amp; obj[index], base);
+  }
+};
+
+module.exports = Metadatable;
+</code></pre>
+        </article>
+    </section>
 
 
 
@@ -819,7 +126,7 @@
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'SkillManager_sub'.replace(/"/g, '_');
+        var id = '_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 
