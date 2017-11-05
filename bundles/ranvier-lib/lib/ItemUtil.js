@@ -63,7 +63,7 @@ exports.renderItem = function (state, item, player) {
       buf += sprintf('| %-36s |\r\n', `(${dps.toPrecision(2)} damage per second)`);
       break;
     case ItemType.ARMOR:
-      buf += sprintf('| %-36s |\r\n', item.slot[0].toUpperCase() + item.slot.slice(1));
+      buf += sprintf('| %-36s |\r\n', item.metadata.slot[0].toUpperCase() + item.metadata.slot.slice(1));
       break;
     case ItemType.CONTAINER:
       buf += sprintf('| %-36s |\r\n', `Holds ${item.maxItems} items`);

@@ -278,8 +278,14 @@ class Character extends Metadatable(EventEmitter) {
     return this.effects.evaluateOutgoingDamage(damage, currentAmount);
   }
 
-  equip(item) {
-    if (this.equipment.has(item.slot)) {
+  /**
+   * @param {Item} item
+   * @param {string} slot Slot to equip the item in
+   *
+   * @throws EquipSlotTakenError
+   */
+  equip(item, slot) {
+    if (this.equipment.has(slot)) {
       throw new EquipSlotTakenError();
     }
 
@@ -287,16 +293,18 @@ class Character extends Metadatable(EventEmitter) {
       this.removeItem(item);
     }
 
-    this.equipment.set(item.slot, item);
+    this.equipment.set(slot, item);
     item.isEquipped = true;
     item.belongsTo = this;
     item.emit('equip', this);
-    this.emit('equip', item.slot, item);
+    this.emit('equip', slot, item);
   }
 
   /**
    * Remove equipment in a given slot and move it to the character's inventory
    * @param {string} slot
+   *
+   * @throws InventoryFullError
    */
   unequip(slot) {
     if (this.isInventoryFull()) {

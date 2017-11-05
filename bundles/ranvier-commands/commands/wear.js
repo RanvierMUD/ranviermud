@@ -24,7 +24,7 @@ module.exports = (srcPath, bundlePath) => {
         return say(player, "You aren't carrying anything like that.");
       }
 
-      if (!item.slot) {
+      if (!item.metadata.slot) {
         return say(player, `You can't wear ${ItemUtil.display(item)}.`);
       }
 
@@ -33,10 +33,10 @@ module.exports = (srcPath, bundlePath) => {
       }
 
       try {
-        player.equip(item);
+        player.equip(item, item.metadata.slot);
       } catch (err) {
         if (err instanceof EquipSlotTakenError) {
-          const conflict = player.equipment.get(item.slot);
+          const conflict = player.equipment.get(item.metadata.slot);
           return say(player, `You will have to remove ${ItemUtil.display(conflict)} first.`);
         }
 
