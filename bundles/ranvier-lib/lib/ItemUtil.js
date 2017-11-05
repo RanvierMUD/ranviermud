@@ -28,7 +28,7 @@ exports.qualityColors = qualityColors;
  * @return string
  */
 function qualityColorize(item, string) {
-  const colors = qualityColors[item.properties.quality || 'common'];
+  const colors = qualityColors[item.metadata.quality || 'common'];
   const open = '<' + colors.join('><') + '>';
   const close = '</' + colors.reverse().join('></') + '>';
   return open + string + close;
@@ -52,7 +52,7 @@ exports.renderItem = function (state, item, player) {
   let buf = qualityColorize(item, '.' + B.line(38) + '.') + '\r\n';
   buf += '| ' + qualityColorize(item, sprintf('%-36s', item.name)) + ' |\r\n';
 
-  const props = item.properties;
+  const props = item.metadata;
 
   buf += sprintf('| %-36s |\r\n', item.type === ItemType.ARMOR ? 'Armor' : 'Weapon');
 

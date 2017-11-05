@@ -4,14 +4,15 @@ const EventEmitter = require('events');
 const uuid = require('node-uuid');
 
 const ItemType = require('./ItemType');
-const { Inventory, InventoryFullError } = require('./Inventory');
 const Logger = require('./Logger');
+const Metadatable = require('./Metadatable');
 const Player = require('./Player');
+const { Inventory, InventoryFullError } = require('./Inventory');
 
 /**
  * @property {Area}    area        Area the item belongs to (warning: this is not the area is currently in but the
  *                                 area it belongs to on a fresh load)
- * @property {object}  properties  Essentially a blob of whatever attrs the item designer wanted to add
+ * @property {object}  metadata    Essentially a blob of whatever attrs the item designer wanted to add
  * @property {array|string}  behaviors Single or list of behaviors this object uses
  * @property {string}  description Long description seen when looking at it
  * @property {number}  id          vnum
@@ -27,8 +28,11 @@ const Player = require('./Player');
  * @property {boolean} closed      Whether this item is closed
  * @property {boolean} locked      Whether this item is locked
  * @property {entityReference} lockedBy Item that locks/unlocks this item
+ *
+ * @extends EventEmitter
+ * @mixes Metadatable
  */
-class Item extends EventEmitter {
+class Item extends Metadatable(EventEmitter) {
   constructor (area, item) {
     super();
     const validate = ['keywords', 'name', 'id'];
@@ -40,7 +44,7 @@ class Item extends EventEmitter {
     }
 
     this.area = area;
-    this.properties  = item.properties || {};
+    this.metadata  = item.metadata || {};
     this.behaviors = item.behaviors || {};
     this.defaultItems = item.items || [];
     this.description = item.description || 'Nothing special.';

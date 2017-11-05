@@ -143,7 +143,7 @@ module.exports = (srcPath, bundlePath) => {
         return say(player, "You can't sell that item.");
       }
 
-      if (!['poor', 'common'].includes(item.properties.quality || 'common') && confirm !== 'sure') {
+      if (!['poor', 'common'].includes(item.metadata.quality || 'common') && confirm !== 'sure') {
         return say(player, "To sell higher quality items use '<b>sell <item> sure</b>'.");
       }
 

@@ -41,8 +41,6 @@ class Player extends Character {
     this.commandQueue = new CommandQueue();
     this.role = data.role || PlayerRoles.PLAYER;
 
-    this.playerClass = null;
-
     // Default max inventory size config
     if (!isFinite(this.inventory.getMax())) {
       this.inventory.setMax(Config.get('defaultMaxPlayerInventory') || 20);

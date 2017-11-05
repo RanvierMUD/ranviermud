@@ -72,7 +72,7 @@ module.exports = (srcPath) => {
        * @param {Item} item
        */
       equip: state => function (slot, item) {
-        if (!item.properties || !item.properties.stats) {
+        if (!item.metadata.stats) {
           return;
         }
 
@@ -83,7 +83,7 @@ module.exports = (srcPath) => {
 
         const effectState = {
           slot,
-          stats: item.properties.stats,
+          stats: item.metadata.stats,
         };
 
         this.addEffect(state.EffectFactory.create(

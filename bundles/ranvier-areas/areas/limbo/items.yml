@@ -6,7 +6,7 @@
   description: "An arm's-length, jagged metal sword discolored with red corrosion. The worn leather grip barely held on by fraying thread."
   script: "1-sword"
   slot: 'wield'
-  properties:
+  metadata:
     level: 1
     itemLevel: 1
     quality: common
@@ -32,7 +32,7 @@
   items: [ "limbo:1", "limbo:6", "limbo:7", "limbo:8" ]
   closed: true
   maxItems: 5
-  properties:
+  metadata:
     noPickup: true
 - id: 4
   name: "Scraps"
@@ -51,7 +51,7 @@
   keywords: ["sword", "training", "iron"]
   description: "A hefty iron blade. Not the sharpest sword in the world but it will get the job done."
   slot: "wield"
-  properties:
+  metadata:
     quality: rare
     itemLevel: 10
     level: 5
@@ -73,7 +73,7 @@
   keywords: ["leather", "vest"]
   description: "A plain leather vest. Better than nothing."
   slot: "chest"
-  properties:
+  metadata:
     quality: common
     level: 1
     itemLevel: 1
@@ -88,7 +88,7 @@
   roomDesc: "Potion of Health I"
   keywords: [ "potion", "health" ]
   type: POTION
-  properties:
+  metadata:
     level: 1
   behaviors:
     # usable has two variants: spell, and effect
@@ -110,7 +110,7 @@
   roomDesc: "Potion of Strength I"
   keywords: [ "potion", "strength" ]
   type: POTION
-  properties:
+  metadata:
     level: 1
   behaviors:
     usable:
@@ -134,7 +134,7 @@
   description: "The blade shines a brilliant silver. Holding it you feel as if you could take on the world."
   slot: "wield"
   script: "9-ranvier-blade"
-  properties:
+  metadata:
     quality: epic
     itemLevel: 15
     level: 10
@@ -154,7 +154,7 @@
   keywords: ["shield", "wooden"]
   description: "A rather uninteresting looking wooden shield. A rusted metal band barely hold its together and the leather arm band is nearly torn."
   slot: "shield"
-  properties:
+  metadata:
     quality: common
     level: 1
     itemLevel: 1
@@ -169,7 +169,7 @@
   keywords: ["key", "odd", "oddly", "shaped"]
   roomDesc: "A strange looking key"
   description: "This key seems overly complex with numerous grooves."
-  properties:
+  metadata:
     quality: common
 - id: locked_chest
   type: CONTAINER
@@ -181,5 +181,5 @@
   locked: true
   lockedBy: "limbo:test_key"
   maxItems: 5
-  properties:
+  metadata:
     noPickup: true

@@ -19,7 +19,7 @@ class Crafting {
     // create a temporary fake item for the resource for rendering purposes
     return new Item(null, {
       name: resourceDef.title,
-      properties: {
+      metadata: {
         quality: resourceDef.quality,
       },
       keywords: resourceKey,

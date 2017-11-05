@@ -24,7 +24,7 @@ module.exports = srcPath => {
           description: `The rotting corpse of ${this.name}`,
           keywords: this.keywords.concat(['corpse']),
           type: 'CONTAINER',
-          properties: {
+          metadata: {
             noPickup: true,
           },
           maxItems: items.length,

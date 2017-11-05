@@ -5,7 +5,7 @@
   roomDesc: "Green Plant"
   keywords: [ "green", "plant", "resource" ]
   description: "An oddly bright green plant whose thorns shine as the light hits them. Perhaps you could <b><cyan>gather</cyan></b> it."
-  properties:
+  metadata:
     level: 1
     itemLevel: 1
     quality: common
@@ -23,7 +23,7 @@
   roomDesc: "Red Rose"
   keywords: [ "red", "rose", "resource" ]
   description: "An oddly bright red rose whose thorns shine as the light hits them. Perhaps you could <b><cyan>gather</cyan></b> it."
-  properties:
+  metadata:
     level: 1
     itemLevel: 1
     quality: uncommon

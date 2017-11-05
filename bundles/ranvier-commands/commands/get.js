@@ -91,7 +91,7 @@ module.exports = (srcPath, bundlePath) => {
 
 
   function pickup(item, container, player) {
-    if (item.properties.noPickup) {
+    if (item.metadata.noPickup) {
       return Broadcast.sayAt(player, `${ItemUtil.display(item)} can't be picked up.`);
     }
 
