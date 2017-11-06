@@ -5,6 +5,7 @@ module.exports = srcPath => {
 
   return {
     command: state => (args, player) => {
+      player.socket.command('sendAudio', 'levelup');
       state.CommandManager.get('help').execute('credits', player);
     }
   };

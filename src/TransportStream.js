@@ -21,7 +21,7 @@ class TransportStream extends EventEmitter
 
   /**
    * A subtype-safe way to execute commands on a specific type of stream that invalid types will ignore. For given input
-   * for command (example, `"someCommand"` ill look for a method called `executeSomeCommand` on the `TransportStream`
+   * for command (example, `"someCommand"` will look for a method called `executeSomeCommand` on the `TransportStream`
    * @param {string} command
    * @param {...*} args
    * @return {*}
