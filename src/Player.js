@@ -212,7 +212,7 @@ class Player extends Character {
         try {
           let newItem = state.ItemFactory.create(state.AreaManager.getArea(itemDef.area), itemDef.entityReference);
           newItem.initializeInventory(itemDef.inventory);
-          newItem.hydrate(state);
+          newItem.hydrate(state, itemDef);
           state.ItemManager.add(newItem);
           newItem.isEquipped = true;
           this.equip(newItem, slot);
