@@ -57,7 +57,7 @@ class WebsocketStream extends TransportStream
   }
 
   executeSendAudio(audioCue, options = {}) {
-    if (!this.writeable) {
+    if (!this.writable) {
       return;
     }
 
