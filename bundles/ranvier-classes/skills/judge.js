@@ -44,7 +44,7 @@ module.exports = (srcPath) => {
       Broadcast.sayAtExcept(player.room, `<b><yellow>${player.name} conjures concentrated holy energy and slams it into ${target.name}!</yellow></b>`, [target, player]);
       Broadcast.sayAt(target, `<b><yellow>${player.name} conjures concentrated holy energy and slams it into you!</yellow></b>`);
 
-      player.socket.command(sendAudio, 'skill.judge.mp3');
+      player.socket.command('sendAudio', 'skill.judge.mp3');
       damage.commit(target);
       target.addEffect(effect);
       if (!target.isNpc) {
