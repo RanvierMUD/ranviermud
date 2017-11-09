@@ -246,6 +246,8 @@ module.exports = (srcPath) => {
           `<b><red>${this.name} collapses to the ground, dead at the hands of ${killer.name}.</b></red>` :
           `<b><red>${this.name} collapses to the ground, dead</b></red>`;
 
+        this.socket.command('sendAudio', 'player.death.mp3');
+
         B.sayAtExcept(this.room, othersDeathMessage, (killer ? [killer, this] : this));
 
         if (this.party) {
