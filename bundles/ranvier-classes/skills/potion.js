@@ -25,6 +25,9 @@ module.exports = (srcPath) => {
       });
 
       Broadcast.sayAt(player, `<bold>You drink the potion and a warm feeling fills your body.</bold>`);
+      if (!player.isNpc) {
+        player.socket.command('sendAudio', 'skill.potion.mp3');
+      }
       heal.commit(player);
     },
 

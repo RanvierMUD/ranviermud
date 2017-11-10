@@ -14,7 +14,6 @@ module.exports = (srcPath) => {
   const healthPercent = 15;
   const duration = 20 * 1000;
 
-  
   return {
     name: 'Shield Block',
     type: SkillType.SKILL,
@@ -46,6 +45,9 @@ module.exports = (srcPath) => {
 
       Broadcast.sayAt(player, `<b>You raise your shield, bracing for incoming attacks!</b>`);
       Broadcast.sayAtExcept(player.room, `<b>${player.name} raises their shield, bracing for incoming damage.</b>`, [player]);
+      if (!player.isNpc) {
+        player.socket.command('sendAudio', 'skill.shieldblock.mp3');
+      }
       player.addEffect(effect);
     },
 

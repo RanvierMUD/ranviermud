@@ -42,6 +42,14 @@ module.exports = (srcPath) => {
       if (!target.isNpc) {
         Broadcast.sayAt(target, `<red>${player.name} lunges at you with a fierce attack!</red>`);
       }
+
+      if (!player.isNpc) {
+        player.socket.command('sendAudio', 'skill.lunge.mp3');
+      }
+      if (!target.isNpc) {
+        target.socket.command('sendAudio', 'skill.lunge.mp3');
+      }
+
       damage.commit(target);
     },
 

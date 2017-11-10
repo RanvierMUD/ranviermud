@@ -44,8 +44,10 @@ module.exports = (srcPath) => {
         Broadcast.sayAtExcept(player.room, `<b>${player.name} calls upon to the light to heal their wounds.</b>`, [player, target]);
       }
 
-      player.socket.command('sendAudio', 'skill.heal.mp3');
-      if (!target.isNpc) {
+      if (!player.isNpc) {
+        player.socket.command('sendAudio', 'skill.heal.mp3');
+      }
+      if (!target.isNpc && target !== player) {
         target.socket.command('sendAudio', 'skill.heal.mp3');
       }
       heal.commit(target);

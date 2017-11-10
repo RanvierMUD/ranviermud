@@ -35,6 +35,9 @@ module.exports = srcPath => {
           attribute: 'energy',
           source: this.skill
         });
+        if (!this.target.isNpc) {
+          this.target.socket.command('sendAudio', 'skill.secondwind.mp3');
+        }
         heal.commit(this.target);
 
         this.skill.cooldown(this.target);

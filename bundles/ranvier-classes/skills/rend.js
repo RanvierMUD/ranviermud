@@ -52,6 +52,14 @@ module.exports = (srcPath) => {
         Broadcast.sayAt(player, `<red><b>${target.name}</b> stops bleeding.</red>`);
       });
 
+      if (!player.isNpc) {
+        player.socket.command('sendAudio', 'skill.rend.mp3');
+      }
+
+      if (!target.isNpc) {
+        target.socket.command('sendAudio', 'skill.rend.mp3');
+      }
+
       Broadcast.sayAt(player, `<red>With a vicious attack you open a deep wound in <bold>${target.name}</bold>!</red>`);
       Broadcast.sayAtExcept(player.room, `<red>${player.name} viciously rends ${target.name}.</red>`, [target, player]);
       Broadcast.sayAt(target, `<red>${player.name} viciously rends you!</red>`);
