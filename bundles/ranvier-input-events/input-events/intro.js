@@ -14,6 +14,11 @@ module.exports = (srcPath) => {
         EventUtil.genSay(socket)(motd);
       }
 
+      socket.command('sendAudio', 'menu_music', {
+        looping: true,
+        background: true
+      });
+
       return socket.emit('login', socket);
     }
   };
