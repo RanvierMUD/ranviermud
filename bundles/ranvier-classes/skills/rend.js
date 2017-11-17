@@ -57,7 +57,9 @@ module.exports = (srcPath) => {
       }
 
       if (!target.isNpc) {
-        target.socket.command('sendAudio', 'skill.rend.mp3');
+        target.socket.command('sendAudio', 'skill.rend.mp3', {
+          volume: 0.75
+        });
       }
 
       Broadcast.sayAt(player, `<red>With a vicious attack you open a deep wound in <bold>${target.name}</bold>!</red>`);

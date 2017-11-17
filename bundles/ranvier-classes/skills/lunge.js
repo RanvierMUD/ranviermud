@@ -47,7 +47,9 @@ module.exports = (srcPath) => {
         player.socket.command('sendAudio', 'skill.lunge.mp3');
       }
       if (!target.isNpc) {
-        target.socket.command('sendAudio', 'skill.lunge.mp3');
+        target.socket.command('sendAudio', 'skill.lunge.mp3', {
+          volume: 0.75
+        });
       }
 
       damage.commit(target);

@@ -46,7 +46,9 @@ module.exports = (srcPath) => {
       }
       damage.commit(target);
       if (!target.isNpc) {
-        target.socket.command('sendAudio', 'skill.fireball.mp3');
+        target.socket.command('sendAudio', 'skill.fireball.mp3', {
+          volume: 0.75
+        });
       }
     },
 

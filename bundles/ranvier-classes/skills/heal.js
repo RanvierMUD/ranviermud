@@ -48,7 +48,9 @@ module.exports = (srcPath) => {
         player.socket.command('sendAudio', 'skill.heal.mp3');
       }
       if (!target.isNpc && target !== player) {
-        target.socket.command('sendAudio', 'skill.heal.mp3');
+        target.socket.command('sendAudio', 'skill.heal.mp3', {
+          volume: 0.75
+        });
       }
       heal.commit(target);
     },
