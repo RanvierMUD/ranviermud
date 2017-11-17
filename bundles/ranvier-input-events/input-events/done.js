@@ -37,7 +37,7 @@ module.exports = (srcPath) => {
       player.room.emit('playerEnter', player);
       Broadcast.prompt(player);
 
-      player.socket.command('sendAudio', 'menu_music', {
+      player.socket.command('sendAudio', null, {
         stop: true
       });
 
