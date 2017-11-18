@@ -49,7 +49,7 @@ module.exports = (srcPath) => {
       if (!player.isNpc) {
         player.socket.command('sendAudio', 'skill.plea.mp3');
       }
-      if (!target.isNpc && target !== player) {
+      if (!target.isNpc) {
         target.socket.command('sendAudio', 'skill.heal.mp3', {
           volume: 0.75
         });
