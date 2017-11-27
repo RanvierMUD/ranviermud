@@ -27,7 +27,7 @@
     "ranvier-bug-report",
     "debug-commands"
   ],
-  "maxAccountNameLength": 20,
+  "maxAccountNameLength": 23,
   "minAccountNameLength": 3,
   "maxPlayerNameLength": 20,
   "minPlayerNameLength": 3,

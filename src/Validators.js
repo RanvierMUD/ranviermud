@@ -50,6 +50,8 @@ module.exports = {
     minPlayerNameLength: joi.number().integer().required(),
     maxCharacters: joi.number().integer().required(),
     allowMultiplay: joi.boolean().required(),
+    reportToAdmins: joi.boolean().required(),
+    defaultMaxPlayerInventory: joi.number().integer().required(),
     startingRoom: joi.string().required(),
     moveCommand: joi.string().required(),
     skillLag: joi.number().integer().required()

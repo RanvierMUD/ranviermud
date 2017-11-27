@@ -40,14 +40,14 @@ class APIAdmin {
 
   putConfig() {
     return (req, res) => {
-      Config.save(req.body);
+      this.Config.save(req.body);
       return res.sendStatus(200);
     };
   }
 
   getConfig() {
     return (req, res) => {
-      const response = Config.getAll();
+      const response = this.Config.getAll();
       return res.json(response);
     };
   }
