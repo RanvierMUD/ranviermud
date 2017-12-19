@@ -52,7 +52,7 @@ class BountyGoal extends QuestGoal {
       const goalNpcId = this.config.npc;
       if (goalNpcId !== null) {
         room.npcs.forEach(npc => {
-          if (npc.entityReference == goalnpcid) {
+          if (npc.entityReference == goalNpcId) {
             located = true;
             npc.follow(this.player);
           }
