@@ -1,6 +1,7 @@
 'use strict';
 
 const QuestGoal = require('../../../src/QuestGoal');
+const Logger = require('../../../src/Logger');
 
 /**
  * A quest goal requiring the player to locate and/or return an NPC.
@@ -19,7 +20,7 @@ class BountyGoal extends QuestGoal {
       found: false,
       delivered: false
     };
-
+    
     this.on('enterRoom', this._enterRoom);
   }
 
@@ -48,14 +49,16 @@ class BountyGoal extends QuestGoal {
       this.emit('progress', this.getProgress());      
     } else {
       let located = false;
-      const goalnpcid = this.config.npc;
-      if (goalnpcid != null) {
+      const goalNpcId = this.config.npc;
+      if (goalNpcId !== null) {
         room.npcs.forEach(npc => {
           if (npc.entityReference == goalnpcid) {
             located = true;
             npc.follow(this.player);
           }
         });
+      } else {
+        Logger.error(`Quest: BountyGoal [${this.config.title}] does not have target npc defined.`);
       }
       if (located) {
         this.state.found = true;
