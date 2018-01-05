@@ -13,7 +13,6 @@
  *   --respawn Minutes between respawn
  */
 
-
 /* NPM Modules */
 const semver = require('semver');
 const net = require('net');
