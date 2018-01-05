@@ -55,25 +55,25 @@ A bundle can contain any or all of the following children though it's suggested 
 possible. Click on any of the items below to see an in-depth tutorial.
 
 <pre>
-<a href="../areas/">areas/</a>
+<a href="./areas/index.md">areas/</a>
   Areas contain items, rooms, NPCs, and quests.
-<a href="../areas/scripting#behaviors">behaviors/</a>
+<a href="./areas/scripting.md#behaviors">behaviors/</a>
   Behaviors are scripts that are shared between entities of the same type (rooms, items, NPCs)
-<a href="../classes/">classes/</a>
+<a href="./classes.md">classes/</a>
   Player classes
-<a href="../commands/">commands/</a>
+<a href="./commands.md">commands/</a>
   What it says on the tin, commands to add to the game
-<a href="../effects/">effects/</a>
+<a href="./effects.md">effects/</a>
   Effects that can be applied to characters (NPCs/Players)
-<a href="../help/">help/</a>
+<a href="./help.md">help/</a>
   Helpfiles
-<a href="../events/">input-events/</a>
+<a href="./input_events.md">input-events/</a>
   Input events are events that happen on the socket, this involves login and command interpreting.
   <strong>Warning:</strong> Because of input events' important role it is generally not advised to load more than one
   bundle with input events
-<a href="../classes#skillsspells">skills/</a>
+<a href="./classes.md#skillsspells">skills/</a>
   Player skills (Spells are just skills with the SPELL type)
-<a href="../channels/">channels.js</a>
+<a href="./channels.md">channels.js</a>
   Communication channels
 <a href="../events/">player-events.js</a>
   Basically everything the player does triggers an event on them that can be attached to and perform
