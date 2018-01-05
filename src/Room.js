@@ -344,6 +344,10 @@ class Room extends Metadatable(EventEmitter) {
     newItem.sourceRoom = this;
     state.ItemManager.add(newItem);
     this.addItem(newItem);
+    /**
+     * @event Item#spawn
+     */
+    newItem.emit('spawn');
   }
 
   /**
