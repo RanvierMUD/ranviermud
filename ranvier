@@ -13,7 +13,9 @@
  *   --respawn Minutes between respawn
  */
 
+
 /* NPM Modules */
+const semver = require('semver');
 const net = require('net');
 const commander = require('commander');
 const wrap = require('wrap-ansi');
@@ -21,6 +23,10 @@ const argv = require('optimist').argv;
 
 // Package.json for versioning
 const pkg = require('./package.json');
+
+if (!semver.satisfies('7.1.0', process.version)) {
+  throw new Error(`Ranvier's core engine requires Node version >= 7.1.0, you are currently running ${process.version}.`);
+}
 
 // State managers and factories
 const AccountManager = require('./src/AccountManager');
