@@ -15,12 +15,13 @@ class Quest extends EventEmitter {
     this.id = qid;
     this.config = Object.assign({
       title: 'Missing Quest Title',
-      desc: 'Missing Quest Description',
+      description: 'Missing Quest Description',
+      completionMessage: null,
       requires: [],
       level: 1,
       autoComplete: false,
       repeatable: false,
-      reward: _ => {}
+      rewards: [],
     }, config);
 
     this.player = player;
@@ -96,6 +97,10 @@ class Quest extends EventEmitter {
     };
   }
 
+  /**
+   * Save the current state of the quest on player save
+   * @return {object}
+   */
   serialize() {
     return {
       state: this.goals.map(goal => goal.serialize()),
@@ -122,10 +127,9 @@ class Quest extends EventEmitter {
      * @event Quest#complete
      */
     this.emit('complete');
-    this.goals.forEach(goal => {
+    for (const goal of this.goals) {
       goal.complete();
-    });
-    this.config.reward(this, this.player);
+    }
   }
 }
 

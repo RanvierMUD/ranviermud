@@ -1,6 +1,7 @@
 'use strict';
 
 const Quest = require('./Quest');
+const Logger = require('./Logger');
 
 /**
  * @property {Map} quests
@@ -10,8 +11,8 @@ class QuestFactory {
     this.quests = new Map();
   }
 
-  add(areaName, id, config, goals) {
-    this.quests.set(this.makeQuestKey(areaName, id), { id, area: areaName, config, goals });
+  add(areaName, id, config) {
+    this.quests.set(this._makeQuestKey(areaName, id), config);
   }
 
   set(qid, val) {
@@ -36,11 +37,16 @@ class QuestFactory {
    */
   create(GameState, qid, player, state = []) {
     const quest = this.quests.get(qid);
-    const instance = new Quest(GameState, qid, quest.config, player);
+    if (!quest) {
+      throw new Error(`Trying to create invalid quest id [${qid}]`);
+    }
+
+    const instance = new Quest(GameState, qid, quest, player);
     instance.state = state;
-    quest.goals.forEach(goal => {
-      instance.addGoal(new goal.type(instance, goal.config, player));
-    });
+    for (const goal of quest.goals) {
+      const goalType = GameState.QuestGoalManager.get(goal.type);
+      instance.addGoal(new goalType(instance, goal.config, player));
+    }
 
     instance.on('progress', (progress) => {
       player.emit('questProgress', instance, progress);
@@ -57,8 +63,23 @@ class QuestFactory {
     });
 
     instance.on('complete', () => {
+      for (const reward of quest.rewards) {
+        try {
+          const rewardClass = GameState.QuestRewardManager.get(reward.type);
+
+          if (!rewardClass) {
+            throw new Error(`Quest [${qid}] has invalid reward type ${reward.type}`);
+          }
+
+          rewardClass.reward(instance, reward.config, player);
+        } catch (e) {
+          Logger.error(e.message);
+        }
+      }
+
       player.emit('questComplete', instance);
       player.questTracker.complete(instance.id);
+
       player.save();
     });
 

@@ -1,11 +1,29 @@
 ---
 1:
-  title: foo
+  title: "A Journey Begins"
   level: 1
-  desc: bar
+  autoComplete: true
+  description: |-
+    A voice whispers to you: Welcome to the world, young one. This is a dangerous and deadly place, you should arm yourself.
+     - Open the chest with '<white>open chest</white>'
+     - Use '<white>get sword chest</white>' and '<white>get vest chest</white>' to get some gear
+     - Equip it using '<white>wield sword</white>' and '<white>wear vest</white>'
+  completionMessage: |-
+    <b><cyan>Hint: You can use the '<white>tnl</white>' or '<white>level</white>' commands to see how much experience you need to level.</cyan></b>
+    <b><yellow>The rat looks like it is hungry, use '<white>quest list rat</white>' to see what aid you can offer. Use '<white>quest start rat 1</white>' to accept their task.</yellow></b>
+    <b><cyan>Hint: To move around the game type any of the exit names listed in <white>[Exits: ...]</white> when you use the '<white>look</white>' command.</cyan></b>
   goals:
     - type: FetchGoal
       config:
         title: Find a Weapon
         count: 1
         item: 'limbo:1'
+  rewards:
+    - type: ExperienceReward
+      config:
+        amount: 5
+        leveledTo: quest
+    - type: CurrencyReward
+      config:
+        currency: gold
+        amount: 10

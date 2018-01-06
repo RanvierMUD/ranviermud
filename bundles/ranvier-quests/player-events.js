@@ -7,9 +7,9 @@ module.exports = (srcPath) => {
     listeners: {
       questStart: state => function (quest) {
         B.sayAt(this, `\r\n<bold><yellow>Quest Started: ${quest.config.title}!</yellow></bold>`);
-        if (quest.config.desc) {
+        if (quest.config.description) {
           B.sayAt(this, B.line(80));
-          B.sayAt(this, `<bold><yellow>${quest.config.desc}</yellow></bold>`, 80);
+          B.sayAt(this, `<bold><yellow>${quest.config.description}</yellow></bold>`, 80);
         }
       },
 
@@ -23,7 +23,16 @@ module.exports = (srcPath) => {
 
       questComplete: state => function (quest) {
         B.sayAt(this, `<bold><yellow>Quest Complete: ${quest.config.title}!</yellow></bold>`);
-      }
+
+        if (quest.config.completionMessage) {
+          B.sayAt(this, B.line(80));
+          B.sayAt(this, quest.config.completionMessage);
+        }
+      },
+
+      questReward: state => function (reward) {
+        // TODO
+      },
     }
   };
 };
