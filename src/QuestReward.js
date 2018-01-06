@@ -8,11 +8,12 @@
 class QuestReward {
   /**
    * Assign the reward to the player
+   * @param {GameState} GameState
    * @param {Quest} quest   quest this reward is being given from
    * @param {object} config
    * @param {Player} player
    */
-  static reward(quest, config, player) {
+  static reward(GameState, quest, config, player) {
     throw new Error('Quest reward not implemented');
   }
 
@@ -20,7 +21,7 @@ class QuestReward {
    * Render the reward
    * @return string
    */
-  static display(quest, config, player) {
+  static display(GameState, quest, config, player) {
     throw new Error('Quest reward display not implemented');
   }
 }

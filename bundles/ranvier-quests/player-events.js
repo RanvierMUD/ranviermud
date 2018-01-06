@@ -19,7 +19,7 @@ module.exports = (srcPath) => {
 
           for (const reward of quest.config.rewards) {
             const rewardClass = state.QuestRewardManager.get(reward.type);
-            B.sayAt(this, '  ' + rewardClass.display(quest, reward.config, this));
+            B.sayAt(this, '  ' + rewardClass.display(state, quest, reward.config, this));
           }
         }
 

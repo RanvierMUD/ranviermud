@@ -74,7 +74,7 @@ class QuestFactory {
             throw new Error(`Quest [${qid}] has invalid reward type ${reward.type}`);
           }
 
-          rewardClass.reward(instance, reward.config, player);
+          rewardClass.reward(GameState, instance, reward.config, player);
           player.emit('questReward', reward);
         } catch (e) {
           Logger.error(e.message);

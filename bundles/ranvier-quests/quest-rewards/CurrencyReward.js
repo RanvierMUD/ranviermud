@@ -12,11 +12,12 @@ module.exports = srcPath => {
    *   amount: number, required
    */
   return class CurrencyReward extends QuestReward {
-    static reward(quest, config, player) {
+    static reward(GameState, quest, config, player) {
+      const amount = this._getAmount(quest, config);
       player.emit('currency', config.currency, amount);
     }
 
-    static display(quest, config, player) {
+    static display(GameState, quest, config, player) {
       const amount = this._getAmount(quest, config);
       const friendlyName = config.currency.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
 
