@@ -63,6 +63,9 @@ class QuestFactory {
     });
 
     instance.on('complete', () => {
+      player.emit('questComplete', instance);
+      player.questTracker.complete(instance.id);
+
       for (const reward of quest.rewards) {
         try {
           const rewardClass = GameState.QuestRewardManager.get(reward.type);
@@ -72,13 +75,11 @@ class QuestFactory {
           }
 
           rewardClass.reward(instance, reward.config, player);
+          player.emit('questReward', reward);
         } catch (e) {
           Logger.error(e.message);
         }
       }
-
-      player.emit('questComplete', instance);
-      player.questTracker.complete(instance.id);
 
       player.save();
     });

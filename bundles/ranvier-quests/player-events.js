@@ -30,8 +30,15 @@ module.exports = (srcPath) => {
         }
       },
 
+      /**
+       * Player received a quest reward
+       * @param {object} reward Reward config _not_ an instance of QuestReward
+       */
       questReward: state => function (reward) {
-        // TODO
+        // do stuff when the player receives a quest reward. Generally the Reward instance
+        // will emit an event that will be handled elsewhere and display its own message
+        // e.g., 'currency' or 'experience'. But if you want to handle that all in one
+        // place instead, or you'd like to show some supplemental message you can do that here
       },
     }
   };

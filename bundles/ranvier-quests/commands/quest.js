@@ -112,11 +112,13 @@ module.exports = (srcPath) => {
         say(
           player,
           Broadcast.indent(
-            Broadcast.wrap(`<b><yellow>${quest.config.desc}</yellow></b>`, 78),
+            Broadcast.wrap(`<b><yellow>${quest.config.description}</yellow></b>`, 78),
             2
           )
         );
         say(player, '  ' + Broadcast.line(78));
+
+        // TODO: Show rewards
       }
     }
   });
