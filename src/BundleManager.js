@@ -76,6 +76,7 @@ class BundleManager {
     const features = [
       // quest goals have to be loaded before areas that have quests which use those goals
       { path: 'quest-goals/', fn: 'loadQuestGoals' },
+
       { path: 'areas/', fn: 'loadAreas' },
       { path: 'behaviors/', fn: 'loadBehaviors' },
       { path: 'channels.js', fn: 'loadChannels' },
