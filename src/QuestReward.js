@@ -15,6 +15,14 @@ class QuestReward {
   static reward(quest, config, player) {
     throw new Error('Quest reward not implemented');
   }
+
+  /**
+   * Render the reward
+   * @return string
+   */
+  static display(quest, config, player) {
+    throw new Error('Quest reward display not implemented');
+  }
 }
 
 module.exports = QuestReward;

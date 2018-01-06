@@ -11,6 +11,19 @@ module.exports = (srcPath) => {
           B.sayAt(this, B.line(80));
           B.sayAt(this, `<bold><yellow>${quest.config.description}</yellow></bold>`, 80);
         }
+
+        if (quest.config.rewards.length) {
+          B.sayAt(this);
+          B.sayAt(this, '<b><yellow>' + B.center(80, 'Rewards') + '</yellow></b>');
+          B.sayAt(this, '<b><yellow>' + B.center(80, '-------') + '</yellow></b>');
+
+          for (const reward of quest.config.rewards) {
+            const rewardClass = state.QuestRewardManager.get(reward.type);
+            B.sayAt(this, '  ' + rewardClass.display(quest, reward.config, this));
+          }
+        }
+
+        B.sayAt(this, B.line(80));
       },
 
       questProgress: state => function (quest, progress) {

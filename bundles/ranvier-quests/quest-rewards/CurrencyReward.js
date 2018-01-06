@@ -13,6 +13,17 @@ module.exports = srcPath => {
    */
   return class CurrencyReward extends QuestReward {
     static reward(quest, config, player) {
+      player.emit('currency', config.currency, amount);
+    }
+
+    static display(quest, config, player) {
+      const amount = this._getAmount(quest, config);
+      const friendlyName = config.currency.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+      return `Currency: <b>${amount}</b> x <b><white>[${friendlyName}]</white></b>`
+    }
+
+    static _getAmount(quest, config) {
       config = Object.assign({
         amount: 0,
         currency: null,
@@ -22,8 +33,7 @@ module.exports = srcPath => {
         throw new Error(`Quest [${quest.id}] currency reward has invalid configuration`);
       }
 
-      let amount = config.amount;
-      player.emit('currency', config.currency, amount);
+      return config.amount;
     }
   };
 };

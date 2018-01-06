@@ -22,6 +22,16 @@ module.exports = srcPath => {
    */
   return class ExperienceReward extends QuestReward {
     static reward(quest, config, player) {
+      const amount = this._getAmount(quest, config, player);
+      player.emit('experience', amount);
+    }
+
+    static display(quest, config, player) {
+      const amount = this._getAmount(quest, config, player);
+      return `Experience: <b>${amount}</b>`;
+    }
+
+    static _getAmount(quest, config, player) {
       config = Object.assign({
         amount: 0,
         leveledTo: null,
@@ -33,7 +43,7 @@ module.exports = srcPath => {
         amount = LevelUtil.mobExp(level) * amount;
       }
 
-      player.emit('experience', amount);
+      return amount;
     }
   };
 };
