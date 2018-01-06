@@ -18,12 +18,69 @@
         title: Find a Weapon
         count: 1
         item: 'limbo:1'
+    - type: FetchGoal
+      config:
+        title: Find Some Armor
+        count: 1
+        item: 'limbo:6'
+    - type: EquipGoal
+      config:
+        title: Wield A Weapon
+        slot: wield
+    - type: EquipGoal
+      config:
+        title: Equip Some Armor
+        slot: chest
   rewards:
     - type: ExperienceReward
       config:
         amount: 5
-        leveledTo: quest
+        leveledTo: QUEST
     - type: CurrencyReward
       config:
         currency: gold
         amount: 10
+2:
+  title: One Cheese Please
+  level: 1
+  repeatable: true
+  description: |-
+    A rat's squeaks seem to indicate it wants some cheese. You check around the area, maybe someone has left some lying around.
+    
+    Once you find some bring it back to the rat, use '<white>quest log</white>' to find the quest number, then complete the quest with '<white>quest complete #</white>'
+  completionMessage: |-
+    <b><cyan>Hint: NPCs with quests available have <white>[</white><yellow>!</yellow><white>]</white> in front of their name, <white>[</white><yellow>?</yellow><white>]</white> means you have a quest ready to turn in, and <white>[</white><yellow>%</yellow><white>]</white> means you have a quest in progress.</cyan>
+  goals:
+    - type: FetchGoal
+      config:
+        title: Found Cheese
+        count: 1
+        item: 'limbo:2'
+        removeItem: true
+  rewards:
+    - type: ExperienceReward
+      config:
+        amount: 3
+        leveledTo: QUEST
+3:
+  title: Self Defense 101
+  level: 2
+  requires: [ 'limbo:1' ]
+  autoComplete: true
+  description: |-
+    A voice whispers to you: It would be wise to practice protecting yourself. There are a number of training dummies in this area that, while not pushovers, will not be too difficult.
+    - Use '<white>attack dummy</white>' to start combat against the training dummy
+    - Once it's dead any loot it drops will be in its corpse on the ground. You can use '<white>look in corpse</white>' to check again or '<white>loot corpse</white>' to retrieve all your loot.
+  completionMessage: |-
+    <b><cyan>Hint: You can get the loot from enemies with '<white>get <item> corpse</white>' but be quick about it, the corpse will decay after some time.</cyan>
+  goals:
+    - type: KillGoal
+      config:
+        title: Kill a Training Dummy
+        npc: 'limbo:4'
+        count: 1
+  rewards:
+    - type: ExperienceReward
+      config:
+        amount: 5
+        leveledTo: QUEST

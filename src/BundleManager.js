@@ -292,7 +292,7 @@ class BundleManager {
             Logger.error(`\t\t\tError: NPC is questor for non-existent quest [${qid}]`);
             continue;
           }
-          quest.config.npc = entityRef;
+          quest.npc = entityRef;
           this.state.QuestFactory.set(qid, quest);
         }
       }
