@@ -1,0 +1,11 @@
+---
+1:
+  title: foo
+  level: 1
+  desc: bar
+  goals:
+    - type: FetchGoal
+      config:
+        title: Find a Weapon
+        count: 1
+        item: 'limbo:1'

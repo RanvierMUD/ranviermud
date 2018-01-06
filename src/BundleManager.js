@@ -74,6 +74,8 @@ class BundleManager {
    */
   loadBundle(bundle, bundlePath) {
     const features = [
+      // quest goals have to be loaded before areas that have quests which use those goals
+      { path: 'quest-goals/', fn: 'loadQuestGoals' },
       { path: 'areas/', fn: 'loadAreas' },
       { path: 'behaviors/', fn: 'loadBehaviors' },
       { path: 'channels.js', fn: 'loadChannels' },
@@ -96,6 +98,27 @@ class BundleManager {
     }
 
     Logger.verbose(`ENDLOAD: BUNDLE [\x1B[1;32m${bundle}\x1B[0m]`);
+  }
+
+  loadQuestGoals(bundle, goalsDir) {
+    Logger.verbose(`\tLOAD: Goals...`);
+    const files = fs.readdirSync(goalsDir);
+
+    for (const goalFile of files) {
+      const goalPath = goalsDir + goalFile;
+      if (!Data.isScriptFile(goalPath, goalFile)) {
+        continue;
+      }
+
+      const goalName = path.basename(goalFile, path.extname(goalFile));
+      const loader = require(goalPath);
+      let goalImport = loader(srcPath);
+      Logger.verbose(`\t\t${goalName}`);
+
+      this.state.QuestGoalRegistry.set(goalName, goalImport);
+    }
+
+    Logger.verbose(`\tENDLOAD: Goals...`);
   }
 
   /**
