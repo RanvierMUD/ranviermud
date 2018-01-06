@@ -25,7 +25,7 @@ module.exports = (srcPath) => {
       }
 
       target.role = PlayerRoles.ADMIN;
-      Broadcast.sayAt(target, `You have been made an administrator by ${this.name}.`);
+      Broadcast.sayAt(target, `You have been made an administrator by ${player.name}.`);
       Broadcast.sayAt(player, `${target.name} is now an administrator.`);
     }
   };
