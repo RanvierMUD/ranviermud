@@ -68,7 +68,7 @@ Suggested changes/additions to those bundles should be made with that in mind.
 
 ## Submitting your code
 
-Ranvier works by letting you build on top of it so fixing bugs and submitting them can sometimes lead with you
+Ranvier works by letting you build on top of it so fixing bugs and submitting them can sometimes lead to you
 submitting more code than you intended. To prevent this isolate your bug fix, re-clone Ranvier into another directory and
 apply your fix/feature to the fresh clone. That way when you send your pull request it won't included any of the custom
 bundles you've built or changes you have made to the core that perhaps don't fit the criteria above.
