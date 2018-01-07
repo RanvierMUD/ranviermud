@@ -11,9 +11,12 @@ class TelnetStream extends TransportStream
   attach(socket) {
     super.attach(socket);
 
-    // websocket uses 'message' instead of the 'data' event net.Socket uses
     socket.on('data', message => {
       this.emit('data', message);
+    });
+
+    socket.on('error', err => {
+      this.emit('error', err);
     });
 
     this.socket.on('DO', opt => {

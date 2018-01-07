@@ -30,7 +30,13 @@ module.exports = srcPath => {
             stream.write("\n*interrupt*\n");
           });
 
-          stream.on('error', Logger.error);
+          stream.on('error', err => {
+            if (err.errno === 'EPIPE') {
+              return Logger.error('EPIPE on write. A websocket client probably connected to the telnet port.');
+            }
+
+            Logger.error(err);
+          });
 
           // Register all of the input events (login, etc.)
           state.InputEventManager.attach(stream);
