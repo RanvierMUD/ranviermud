@@ -9,10 +9,11 @@ const EventEmitter = require('events');
  * @extends EventEmitter
  */
 class Quest extends EventEmitter {
-  constructor(GameState, qid, config, player) {
+  constructor(GameState, id, config, player) {
     super();
 
-    this.id = qid;
+    this.id = id;
+    this.entityReference = config.entityReference;
     this.config = Object.assign({
       title: 'Missing Quest Title',
       description: 'Missing Quest Description',
@@ -22,6 +23,7 @@ class Quest extends EventEmitter {
       autoComplete: false,
       repeatable: false,
       rewards: [],
+      goals: [],
     }, config);
 
     this.player = player;

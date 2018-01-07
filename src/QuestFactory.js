@@ -12,7 +12,9 @@ class QuestFactory {
   }
 
   add(areaName, id, config) {
-    this.quests.set(this._makeQuestKey(areaName, id), config);
+    const entityRef = this._makeQuestKey(areaName, id);
+    config.entityReference = entityRef;
+    this.quests.set(entityRef, { id, area: areaName, config });
   }
 
   set(qid, val) {
@@ -41,9 +43,9 @@ class QuestFactory {
       throw new Error(`Trying to create invalid quest id [${qid}]`);
     }
 
-    const instance = new Quest(GameState, qid, quest, player);
+    const instance = new Quest(GameState, quest.id, quest.config, player);
     instance.state = state;
-    for (const goal of quest.goals) {
+    for (const goal of quest.config.goals) {
       const goalType = GameState.QuestGoalManager.get(goal.type);
       instance.addGoal(new goalType(instance, goal.config, player));
     }
@@ -66,7 +68,7 @@ class QuestFactory {
       player.emit('questComplete', instance);
       player.questTracker.complete(instance.id);
 
-      for (const reward of quest.rewards) {
+      for (const reward of quest.config.rewards) {
         try {
           const rewardClass = GameState.QuestRewardManager.get(reward.type);
 

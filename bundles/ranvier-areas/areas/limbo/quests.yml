@@ -1,5 +1,5 @@
 ---
-1:
+- id: 1
   title: "A Journey Begins"
   level: 1
   autoComplete: true
@@ -40,7 +40,7 @@
       config:
         currency: gold
         amount: 10
-2:
+- id: 2
   title: One Cheese Please
   level: 1
   repeatable: true
@@ -62,7 +62,7 @@
       config:
         amount: 3
         leveledTo: QUEST
-3:
+- id: 3
   title: Self Defense 101
   level: 2
   requires: [ 'limbo:1' ]

@@ -280,13 +280,15 @@ bundles/
         quests.yml <-- this is where we will put our quests for this area
 ```
 
-The structure of the `quests.yml` file is very similar to the `items.yml` file.
+The structure of the `quests.yml` file is very similar to the `items.yml` file, i.e., it is a YAML array of quest definitions
 
 ```yaml
 ---
-# Each quest key is the id used to reference it elsewhere. Since this quest is
-# id: 1 and is in area "some-area" its EntityReference will be "some-area:1"
-1:
+-
+  # Since this quest is id: 1 and is in area "some-area" its EntityReference will
+  # be "some-area:1"
+  id: 1
+
   # Quests have an optional level you can use for whatever you wish, the core
   # does not use this for anything
   level: 1
@@ -336,7 +338,8 @@ The structure of the `quests.yml` file is very similar to the `items.yml` file.
         leveledTo: quest
 
 # Here is another example quest. This one, however, is repeatable
-2:
+-
+  id: 2
   title: "One Cheese Please"
   level: 1,
   description: |-

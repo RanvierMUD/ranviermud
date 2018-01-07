@@ -374,10 +374,10 @@ class BundleManager {
 
     let quests = Data.parseFile(questsFile);
 
-    for (const [id, questData] of Object.entries(quests)) {
-      Logger.verbose(`\t\t\tLoading Quest [${area.name}:${id}]`);
-      this.state.QuestFactory.add(area.name, id, questData);
-      area.addDefaultQuest(this.state.QuestFactory.makeQuestKey(area.name, id));
+    for (const quest of quests) {
+      Logger.verbose(`\t\t\tLoading Quest [${area.name}:${quest.id}]`);
+      this.state.QuestFactory.add(area.name, quest.id, quest);
+      area.addDefaultQuest(this.state.QuestFactory.makeQuestKey(area.name, quest.id));
     }
 
     Logger.verbose(`\t\tENDLOAD: Quests...`);
