@@ -5,6 +5,9 @@
     "type": "git",
     "url": "git://github.com/shawncplus/ranviermud.git"
   },
+  "engines": {
+    "node": ">= 8.9.4"
+  },
   "license": "MIT",
   "scripts": {
     "start": "gulp && ./ranvier -v --save=10 --respawn=10",
@@ -32,6 +35,7 @@
     "pretty-error": "^2.0.2",
     "purdy": "^2.2.0",
     "rando-js": "^0.1.1",
+    "semver": "^5.4.1",
     "sprintf-js": "^1.0.3",
     "sty": "",
     "whitelist-ips": "^1.0.1",
