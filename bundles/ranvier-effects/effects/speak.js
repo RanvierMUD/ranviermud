@@ -15,7 +15,7 @@ module.exports = srcPath => {
     },
     state: {
       messageList: [],
-      remainingMessages: null,
+      remainingMessages: [],
       outputFn: null
     },
     listeners: {
@@ -27,6 +27,7 @@ module.exports = srcPath => {
         // copy original message list to remainingMessages
         this.state.remainingMessages = this.state.messageList.concat([]);
       },
+
       updateTick: function () {
         if (!this.state.remainingMessages.length) {
           return this.remove();

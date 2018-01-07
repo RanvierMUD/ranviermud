@@ -34,11 +34,12 @@ module.exports = (srcPath) => {
 
       state.CommandManager.get('look').execute(null, player);
 
-      player.room.emit('playerEnter', player);
       Broadcast.prompt(player);
 
       // All that shit done, let them play!
       player.socket.emit('commands', player);
+
+      player.emit('login');
     }
   };
 };

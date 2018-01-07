@@ -45,13 +45,14 @@ class WebsocketStream extends TransportStream
     this.socket.close(1000);
   }
 
-  executeSendData(data) {
+  executeSendData(group, data) {
     if (!this.writable) {
       return;
     }
 
     this.socket.send(JSON.stringify({
       type: 'data',
+      group,
       data
     }));
   }

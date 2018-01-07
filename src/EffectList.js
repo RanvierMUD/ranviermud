@@ -58,6 +58,13 @@ class EffectList {
    */
   emit(event, ...args) {
     this.validateEffects();
+    if (event === 'effectAdded' || event === 'effectRemoved') {
+      // don't forward these events on from the player as it would cause confusion between Character#effectAdded
+      // and Effect#effectAdded. The former being when any effect gets added to a character, the later is fired on
+      // an effect when it is added to a character
+      return;
+    }
+
     for (const effect of this.effects) {
       if (effect.paused) {
         continue;
@@ -114,6 +121,10 @@ class EffectList {
      * @event Effect#effectAdded
      */
     effect.emit('effectAdded');
+    /**
+     * @event Character#effectAdded
+     */
+    this.target.emit('effectAdded', effect);
     effect.on('remove', () => this.remove(effect));
     return true;
   }
@@ -130,6 +141,10 @@ class EffectList {
 
     effect.deactivate();
     this.effects.delete(effect);
+    /**
+     * @event Character#effectRemoved
+     */
+    this.target.emit('effectRemoved');
   }
 
   /**

@@ -122,6 +122,7 @@ class Character extends Metadatable(EventEmitter) {
   */
   setAttributeToMax(attr) {
     this.attributes.get(attr).setDelta(0);
+    this.emit('attributeUpdate', attr, this.getAttribute(attr));
   }
 
   /**
@@ -132,6 +133,7 @@ class Character extends Metadatable(EventEmitter) {
   */
   raiseAttribute(attr, amount) {
     this.attributes.get(attr).raise(amount);
+    this.emit('attributeUpdate', attr, this.getAttribute(attr));
   }
 
   /**
@@ -142,6 +144,7 @@ class Character extends Metadatable(EventEmitter) {
   */
   lowerAttribute(attr, amount) {
     this.attributes.get(attr).lower(amount);
+    this.emit('attributeUpdate', attr, this.getAttribute(attr));
   }
 
   /**
@@ -158,6 +161,7 @@ class Character extends Metadatable(EventEmitter) {
    */
   setAttributeBase(attr, newBase) {
     this.attributes.get(attr).setBase(newBase);
+    this.emit('attributeUpdate', attr, this.getAttribute(attr));
   }
 
   /**
@@ -197,14 +201,20 @@ class Character extends Metadatable(EventEmitter) {
       this.emit('combatStart');
     }
 
+    if (this.isInCombat(target)) {
+      return;
+    }
+
     // this doesn't use `addCombatant` because `addCombatant` automatically
     // adds this to the target's combatants list as well
     this.combatants.add(target);
     if (!target.isInCombat()) {
+      // TODO: This hardcoded 2.5 second lag on the target needs to be refactored
       target.initiateCombat(this, 2500);
     }
 
     target.addCombatant(this);
+    this.emit('combatantAdded', target);
   }
 
   /**
@@ -240,9 +250,12 @@ class Character extends Metadatable(EventEmitter) {
     this.combatants.delete(target);
     target.removeCombatant(this);
 
+    this.emit('combatantRemoved');
+
     if (!this.combatants.size) {
       this.emit('combatEnd');
     }
+
   }
 
   /**
