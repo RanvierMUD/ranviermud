@@ -77,20 +77,28 @@ module.exports = (srcPath) => {
   return {
     // Friendly name of the skill, shown to the player on the skill list command.
     name: 'Lunge',
+
     // The type defines which of the ability managers you can find it in.
     // Either in state.SkillManager or state.SpellManager, respectively.
     type: SkillType.SKILL,
 
-    // If requiresTarget is true, the skill usage will fail if the player doesn't specify a target,
-    // unless you also add the `targetSelf: true` option, in which case if the player
-    // doesn't specify a target it will target themselves (for example, a healing spell).
+    /*
+    If requiresTarget is true, the skill usage will fail if the player doesn't specify a target,
+    unless you also add the `targetSelf: true` option, in which case if the player
+    doesn't specify a target it will target themselves (for example, a healing spell).
+    */
     requiresTarget: true,
 
     // If initiatesCombat is true, using the skill against a target will make the player
     // enter combat against them.
     initiatesCombat: true,
 
-    // The resource config defines the resource cost of the skill on use and is optional.
+    /*
+    The resource config defines the resource cost of the skill on use and is
+    optional. Ranvier also supports multiple resource costs by defining an array
+    with each entry in the array following the format of the single resource cost
+    below.
+    */
     resource: {
       // attribute to deduct the cost from
       attribute: 'energy',
@@ -98,12 +106,26 @@ module.exports = (srcPath) => {
       cost: energyCost,
     },
 
-    /* Note on Resource Costs:
-      Ranvier also supports multiple resource costs. In this case, the value of resource would be an array of objects with the 'attribute' and 'cost' properties, as seen above.
-    */
 
-    // Cooldown is the number of seconds the player must wait before using this skill again
+    /*
+    Cooldown let's you prevent immediate successive use of a skill by
+    configuring the number of seconds between uses. This configuration will create
+    a skill-specific cooldown of 6 seconds.
+    */
     cooldown: 6,
+    /*
+    Cooldown can also be configured to be shared between multiple skills such
+    that while any skill in the group is on cooldown no skills in the group may be
+    used. It can be configured like so:
+
+    cooldown: {
+      length: 6,
+      group: 'warrior-direct-attack',
+    },
+
+    In either case the core will throw a SkillErrors.CooldownError exception if
+    execute() is called on a skill which cannot be used due to a cooldown.
+    */
 
     /*
     The run method is where all the magic of skills happen and has a very similar layout to a

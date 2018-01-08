@@ -40,7 +40,15 @@ class Skill {
     } = config;
 
     this.configureEffect = configureEffect;
-    this.cooldownLength = cooldown;
+
+    this.cooldownGroup = null;
+    if (cooldown && typeof cooldown === 'object') {
+      this.cooldownGroup = cooldown.group;
+      this.cooldownLength = cooldown.length;
+    } else {
+      this.cooldownLength = cooldown;
+    }
+
     this.effect = effect;
     this.flags = flags;
     this.id = id;
@@ -178,7 +186,7 @@ class Skill {
   }
 
   getCooldownId() {
-    return "skill:" + this.id;
+    return this.cooldownGroup ? "skillgroup:" + this.cooldownGroup : "skill:" + this.id;
   }
 
   /**

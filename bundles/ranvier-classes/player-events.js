@@ -57,6 +57,9 @@ module.exports = srcPath => {
           ability.execute(args, this, target);
         } catch (e) {
           if (e instanceof SkillErrors.CooldownError) {
+            if (ability.cooldownGroup) {
+              return B.sayAt(this, `Cannot use ${ability.name} while ${e.effect.skill.name} is on cooldown.`);
+            }
             return B.sayAt(this, `${ability.name} is on cooldown. ${humanize(e.effect.remaining)} remaining.`);
           }
 
