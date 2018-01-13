@@ -239,7 +239,7 @@ class Player extends Character {
       role: this.role,
     });
 
-    if (this.equipment) {
+    if (this.equipment instanceof Map) {
       let eq = {};
       for (let [ slot, item ] of this.equipment) {
         eq[slot] = item.serialize();
