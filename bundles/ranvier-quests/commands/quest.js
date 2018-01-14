@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
-  const say = Broadcast.sayAt;
+  const B = require(srcPath + 'Broadcast');
+  const say = B.sayAt;
   const Parser = require(srcPath + 'CommandParser').CommandParser;
   const CommandManager = require(srcPath + 'CommandManager');
 
@@ -99,24 +99,36 @@ module.exports = (srcPath) => {
         const [, quest] = active[i];
         const progress = quest.getProgress();
 
-        Broadcast.at(player, '<b><yellow>' + (parseInt(i, 10) + 1) + '</yellow></b>: ');
-        say(player, Broadcast.progress(60, progress.percent, 'yellow') + ` ${progress.percent}%`);
-        say(player, Broadcast.indent('<b><yellow>' + quest.getProgress().display + '</yellow></b>', 2));
+        B.at(player, '<b><yellow>' + (parseInt(i, 10) + 1) + '</yellow></b>: ');
+        say(player, B.progress(60, progress.percent, 'yellow') + ` ${progress.percent}%`);
+        say(player, B.indent('<b><yellow>' + quest.getProgress().display + '</yellow></b>', 2));
 
         if (quest.config.npc) {
           const npc = state.MobFactory.getDefinition(quest.config.npc);
           say(player, `  <b><yellow>Questor: ${npc.name}</yellow></b>`);
         }
 
-        say(player, '  ' + Broadcast.line(78));
+        say(player, '  ' + B.line(78));
         say(
           player,
-          Broadcast.indent(
-            Broadcast.wrap(`<b><yellow>${quest.config.desc}</yellow></b>`, 78),
+          B.indent(
+            B.wrap(`<b><yellow>${quest.config.description}</yellow></b>`, 78),
             2
           )
         );
-        say(player, '  ' + Broadcast.line(78));
+
+        if (quest.config.rewards.length) {
+          say(player);
+          say(player, '<b><yellow>' + B.center(80, 'Rewards') + '</yellow></b>');
+          say(player, '<b><yellow>' + B.center(80, '-------') + '</yellow></b>');
+
+          for (const reward of quest.config.rewards) {
+            const rewardClass = state.QuestRewardManager.get(reward.type);
+            say(player, '  ' + rewardClass.display(state, quest, reward.config, player));
+          }
+        }
+
+        say(player, '  ' + B.line(78));
       }
     }
   });

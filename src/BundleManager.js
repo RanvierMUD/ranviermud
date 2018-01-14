@@ -49,7 +49,7 @@ class BundleManager {
         continue;
       }
 
-      this.loadBundle(bundle, bundlePath);
+        this.loadBundle(bundle, bundlePath);
     }
 
     Logger.verbose('ENDLOAD: BUNDLES');
@@ -74,6 +74,10 @@ class BundleManager {
    */
   loadBundle(bundle, bundlePath) {
     const features = [
+      // quest goals/rewards have to be loaded before areas that have quests which use those goals
+      { path: 'quest-goals/', fn: 'loadQuestGoals' },
+      { path: 'quest-rewards/', fn: 'loadQuestRewards' },
+
       { path: 'areas/', fn: 'loadAreas' },
       { path: 'behaviors/', fn: 'loadBehaviors' },
       { path: 'channels.js', fn: 'loadChannels' },
@@ -96,6 +100,48 @@ class BundleManager {
     }
 
     Logger.verbose(`ENDLOAD: BUNDLE [\x1B[1;32m${bundle}\x1B[0m]`);
+  }
+
+  loadQuestGoals(bundle, goalsDir) {
+    Logger.verbose(`\tLOAD: Quest Goals...`);
+    const files = fs.readdirSync(goalsDir);
+
+    for (const goalFile of files) {
+      const goalPath = goalsDir + goalFile;
+      if (!Data.isScriptFile(goalPath, goalFile)) {
+        continue;
+      }
+
+      const goalName = path.basename(goalFile, path.extname(goalFile));
+      const loader = require(goalPath);
+      let goalImport = loader(srcPath);
+      Logger.verbose(`\t\t${goalName}`);
+
+      this.state.QuestGoalManager.set(goalName, goalImport);
+    }
+
+    Logger.verbose(`\tENDLOAD: Quest Goals...`);
+  }
+
+  loadQuestRewards(bundle, rewardsDir) {
+    Logger.verbose(`\tLOAD: Quest Rewards...`);
+    const files = fs.readdirSync(rewardsDir);
+
+    for (const rewardFile of files) {
+      const rewardPath = rewardsDir + rewardFile;
+      if (!Data.isScriptFile(rewardPath, rewardFile)) {
+        continue;
+      }
+
+      const rewardName = path.basename(rewardFile, path.extname(rewardFile));
+      const loader = require(rewardPath);
+      let rewardImport = loader(srcPath);
+      Logger.verbose(`\t\t${rewardName}`);
+
+      this.state.QuestRewardManager.set(rewardName, rewardImport);
+    }
+
+    Logger.verbose(`\tENDLOAD: Quest Rewards...`);
   }
 
   /**
@@ -150,15 +196,16 @@ class BundleManager {
       rooms: areaPath + '/rooms.yml',
       items: areaPath + '/items.yml',
       npcs: areaPath + '/npcs.yml',
-      quests: areaPath + '/quests.js',
+      quests: areaPath + '/quests.yml',
     };
 
     const manifest = Data.parseFile(paths.manifest);
 
     const area = new Area(bundle, areaName, manifest);
 
-    // load quests
     // Quests have to be loaded first so items/rooms/npcs that are questors have the quest defs available
+    // TODO: I _think_ this currently means that an NPC can only give out a quest from their own area but
+    // I may be mistaken
     if (fs.existsSync(paths.quests)) {
       const rooms = this.loadQuests(area, paths.quests);
     }
@@ -238,9 +285,14 @@ class BundleManager {
 
       if (npc.quests) {
         // Update quest definitions with their questor
+        // TODO: This currently means a given quest can only have a single questor, perhaps not optimal
         for (const qid of npc.quests) {
           const quest = this.state.QuestFactory.get(qid);
-          quest.config.npc = entityRef;
+          if (!quest) {
+            Logger.error(`\t\t\tError: NPC is questor for non-existent quest [${qid}]`);
+            continue;
+          }
+          quest.npc = entityRef;
           this.state.QuestFactory.set(qid, quest);
         }
       }
@@ -320,13 +372,12 @@ class BundleManager {
   loadQuests(area, questsFile) {
     Logger.verbose(`\t\tLOAD: Quests...`);
 
-    const loader = require(questsFile);
-    let quests = loader(srcPath);
+    let quests = Data.parseFile(questsFile);
 
-    for (const [id, questData] of Object.entries(quests)) {
-      Logger.verbose(`\t\t\tLoading Quest [${area.name}:${id}]`);
-      this.state.QuestFactory.add(area.name, id, questData.config, questData.goals);
-      area.addDefaultQuest(this.state.QuestFactory.makeQuestKey(area.name, id));
+    for (const quest of quests) {
+      Logger.verbose(`\t\t\tLoading Quest [${area.name}:${quest.id}]`);
+      this.state.QuestFactory.add(area.name, quest.id, quest);
+      area.addDefaultQuest(this.state.QuestFactory.makeQuestKey(area.name, quest.id));
     }
 
     Logger.verbose(`\t\tENDLOAD: Quests...`);

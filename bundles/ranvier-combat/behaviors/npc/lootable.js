@@ -48,9 +48,6 @@ module.exports = srcPath => {
         if (killer && killer instanceof Player) {
           if (currencies) {
             currencies.forEach(currency => {
-              const friendlyName = currency.name.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-              const key = `currencies.${currency.name}`;
-
               // distribute currency among group members in the same room
               const recipients = (killer.party ? [...killer.party] : [killer]).filter(recipient => {
                 return recipient.room === killer.room;
@@ -63,14 +60,7 @@ module.exports = srcPath => {
                 const amount = Math.floor(remaining / recipients.length) + (remaining % recipients.length);
                 remaining -= amount;
 
-                B.sayAt(recipient, `<green>You receive currency: <b><white>[${friendlyName}]</white></b> x${amount}.`);
-
-                if (!recipient.getMeta('currencies')) {
-                  recipient.setMeta('currencies', {});
-                }
-                recipient.setMeta(key, (recipient.getMeta(key) || 0) + amount);
-                recipient.save();
-
+                recipient.emit('currency', currency.name, amount);
                 state.CommandManager.get('look').execute(corpse.uuid, recipient);
               }
             });

@@ -45,6 +45,7 @@ class QuestGoal extends EventEmitter {
     return {
       state: this.state,
       progress: this.getProgress(),
+      config: this.config,
     };
   }
 

@@ -49,6 +49,8 @@ const MobManager = require('./src/MobManager');
 const PartyManager = require('./src/PartyManager');
 const PlayerManager = require('./src/PlayerManager');
 const QuestFactory = require('./src/QuestFactory');
+const QuestGoalManager = require('./src/QuestGoalManager');
+const QuestRewardManager = require('./src/QuestRewardManager');
 const RoomManager = require('./src/RoomManager');
 const SkillManager = require('./src/SkillManager');
 
@@ -117,6 +119,8 @@ function init(restartServer) {
     PartyManager: new PartyManager(),
     PlayerManager: new PlayerManager(),
     QuestFactory: new QuestFactory(),
+    QuestGoalManager: new QuestGoalManager(),
+    QuestRewardManager: new QuestRewardManager(),
     RoomBehaviorManager: new BehaviorManager(),
     RoomManager: new RoomManager(),
     SkillManager: new SkillManager(),
