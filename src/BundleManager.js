@@ -34,7 +34,7 @@ class BundleManager {
   /**
    * Load in all bundles
    */
-  loadBundles() {
+  loadBundles(distribute = true) {
     Logger.verbose('LOAD: BUNDLES');
 
     const bundles = fs.readdirSync(bundlesPath);
@@ -53,6 +53,10 @@ class BundleManager {
     }
 
     Logger.verbose('ENDLOAD: BUNDLES');
+
+    if (!distribute) {
+      return;
+    }
 
     // Distribution is done after all areas are loaded in case items use areas from each other
     this.state.AreaManager.distribute(this.state);
@@ -196,6 +200,7 @@ class BundleManager {
     items.forEach(item => {
       const entityRef = this.state.ItemFactory.createEntityRef(area.name, item.id);
       this.state.ItemFactory.setDefinition(entityRef, item);
+      area.addDefaultItem(entityRef);
       if (item.script) {
         const scriptPath = path.dirname(itemsFile) + '/scripts/items/' + item.script + '.js';
         if (!fs.existsSync(scriptPath)) {
@@ -229,6 +234,7 @@ class BundleManager {
     npcs = npcs.map(npc => {
       const entityRef = this.state.MobFactory.createEntityRef(area.name, npc.id);
       this.state.MobFactory.setDefinition(entityRef, npc);
+      area.addDefaultNpc(entityRef);
 
       if (npc.quests) {
         // Update quest definitions with their questor
@@ -320,6 +326,7 @@ class BundleManager {
     for (const [id, questData] of Object.entries(quests)) {
       Logger.verbose(`\t\t\tLoading Quest [${area.name}:${id}]`);
       this.state.QuestFactory.add(area.name, id, questData.config, questData.goals);
+      area.addDefaultQuest(this.state.QuestFactory.makeQuestKey(area.name, id));
     }
 
     Logger.verbose(`\t\tENDLOAD: Quests...`);

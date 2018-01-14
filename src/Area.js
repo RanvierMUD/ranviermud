@@ -33,6 +33,14 @@ class Area extends EventEmitter {
 
     this.map = new Map();
 
+    // List of entityReferences of items/npcs that come from this area
+    // Note: Only entityReferences, not instances of the items
+    this.defaultEntities = {
+      items: new Set(),
+      npcs: new Set(),
+      quests: new Set(),
+    };
+
     this.lastRespawnTick = -Infinity;
 
     this.on('updateTick', state => {
@@ -62,6 +70,18 @@ class Area extends EventEmitter {
    */
   getRoomById(id) {
     return this.rooms.get(id);
+  }
+
+  addDefaultItem(entityRef) {
+    this.defaultEntities.items.add(entityRef);
+  }
+
+  addDefaultNpc(entityRef) {
+    this.defaultEntities.npcs.add(entityRef);
+  }
+
+  addDefaultQuest(entityRef) {
+    this.defaultEntities.quests.add(entityRef);
   }
 
   /**

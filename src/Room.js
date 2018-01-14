@@ -34,6 +34,7 @@ class Room extends Metadatable(EventEmitter) {
       }
     }
 
+    this.def = def;
     this.area = area;
     this.defaultItems = def.items || [];
     this.defaultNpcs  = def.npcs || [];

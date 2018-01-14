@@ -11,7 +11,7 @@ class QuestFactory {
   }
 
   add(areaName, id, config, goals) {
-    this.quests.set(this._makeQuestKey(areaName, id), { config, goals });
+    this.quests.set(this.makeQuestKey(areaName, id), { id, area: areaName, config, goals });
   }
 
   set(qid, val) {
@@ -70,7 +70,7 @@ class QuestFactory {
    * @param {number} id
    * @return {string}
    */
-  _makeQuestKey(area, id) {
+  makeQuestKey(area, id) {
     return area + ':' + id;
   }
 }
