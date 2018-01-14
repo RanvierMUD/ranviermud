@@ -22,7 +22,7 @@ ranvier-areas/
       <a href="items/">items.yml</a>    - Item definitions
       <a href="npcs/">npcs.yml</a>     - NPC definitions
       <a href="rooms/">rooms.yml</a>    - Room definitions
-      <a href="quests/">quests.js</a>    - Quest implementations
+      <a href="quests/">quests.yml</a>    - Quest implementations
 </pre>
 
 ## The Manifest
