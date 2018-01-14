@@ -12,7 +12,7 @@ class QuestFactory {
   }
 
   add(areaName, id, config) {
-    const entityRef = this._makeQuestKey(areaName, id);
+    const entityRef = this.makeQuestKey(areaName, id);
     config.entityReference = entityRef;
     this.quests.set(entityRef, { id, area: areaName, config });
   }
