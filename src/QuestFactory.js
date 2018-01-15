@@ -66,7 +66,7 @@ class QuestFactory {
 
     instance.on('complete', () => {
       player.emit('questComplete', instance);
-      player.questTracker.complete(instance.id);
+      player.questTracker.complete(instance.entityReference);
 
       for (const reward of quest.config.rewards) {
         try {
