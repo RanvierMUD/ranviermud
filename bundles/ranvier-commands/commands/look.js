@@ -136,10 +136,12 @@ module.exports = (srcPath, bundlePath) => {
 
         hasNewQuest = quests.find(quest => player.questTracker.canStart(quest));
         hasReadyQuest = quests.find(quest => {
-          return player.questTracker.isActive(quest.id) && player.questTracker.get(quest.id).getProgress().percent >= 100;
+            return player.questTracker.isActive(quest.entityReference) &&
+              player.questTracker.get(quest.entityReference).getProgress().percent >= 100;
         });
         hasActiveQuest = quests.find(quest => {
-          return player.questTracker.isActive(quest.id) && player.questTracker.get(quest.id).getProgress().percent < 100;
+            return player.questTracker.isActive(quest.entityReference) &&
+              player.questTracker.get(quest.entityReference).getProgress().percent < 100;
         });
 
         let questString = '';

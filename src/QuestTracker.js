@@ -32,7 +32,7 @@ class QuestTracker {
   }
 
   /**
-   * @param {string} qid
+   * @param {EntityReference} qid
    * @return {boolean}
    */
   isActive(qid) {
@@ -40,7 +40,7 @@ class QuestTracker {
   }
 
   /**
-   * @param {string} qid
+   * @param {EntityReference} qid
    * @return {boolean}
    */
   isComplete(qid) {
@@ -52,7 +52,7 @@ class QuestTracker {
   }
 
   /**
-   * @param {string} qid
+   * @param {EntityReference} qid
    */
   complete(qid) {
     if (!this.isActive(qid)) {
@@ -72,12 +72,13 @@ class QuestTracker {
    * @return {boolean}
    */
   canStart(quest) {
-    if (this.completedQuests.has(quest.id) && !quest.config.repeatable) {
+    const qid = quest.entityReference;
+    if (this.completedQuests.has(qid) && !quest.config.repeatable) {
       return false;
     }
 
-    return !this.isActive(quest.id) && quest.config.requires.every((qid) => {
-      return this.isComplete(qid);
+    return !this.isActive(qid) && quest.config.requires.every(requiresRef => {
+      return this.isComplete(requiresRef);
     });
   }
 
@@ -85,12 +86,13 @@ class QuestTracker {
    * @param {Quest} queset
    */
   start(quest) {
-    if (this.activeQuests.has(quest.id)) {
+    const qid = quest.entityReference;
+    if (this.activeQuests.has(qid)) {
       throw new Error('Quest already started');
     }
 
     quest.started = (new Date()).toJSON();
-    this.activeQuests.set(quest.id, quest);
+    this.activeQuests.set(qid, quest);
     quest.emit('start');
   }
 
