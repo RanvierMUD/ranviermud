@@ -37,9 +37,12 @@ class QuestFactory {
       return false;
     }
 
-    return !player.questTracker.isActive(qid) && questConfig.requires.every(requiresRef => {
-      return player.questTracker.isComplete(requiresRef);
-    });
+    const isActive = player.questTracker.isActive(qid);
+    const hasRequirements = Array.isArray(questConfig.requires)
+    const requirementsMet = hasRequirements
+      ? !isActive && questConfig.requires.every(requiresRef => player.questTracker.isComplete(requiresRef))
+      : true;
+    return !isActive && requirementsMet;
   }
 
   /**
