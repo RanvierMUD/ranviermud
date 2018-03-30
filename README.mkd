@@ -100,7 +100,7 @@ npm install
 # Mac/Linux
   npm run bundle-install
 # Windows
-  win-bundle-install
+  cmd.exe /c win-bundle-install.bat
 ./ranvier
 telnet localhost 4000
 ```
