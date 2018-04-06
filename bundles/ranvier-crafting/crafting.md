@@ -1,7 +1,7 @@
 Crafting
 ---
 
-Recipes are defined in 'data/recipes.md' like so:
+Recipes are defined in 'data/recipes.yml' like so:
 
 ```
 - item: "limbo:7" # target item to create
