@@ -6,10 +6,12 @@
 git clone git://github.com/shawncplus/ranviermud
 cd ranviermud
 npm install
-# Mac/Linux
-  npm run bundle-install
-# Windows
-  win-bundle-install
+# Mac/Linux/Windows(bash)
+  ./bundle-install.js
+
+# If you're using cmd or powershell in windows the above command might fail
+# and you have to run:
+  node bundle-install
 ```
 
 If you would like to use the latest, but perhaps not stable, features make sure you are on the
