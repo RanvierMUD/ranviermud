@@ -14,7 +14,7 @@
     "test": "gulp && npm run-script test:coverage",
     "test:coverage": "istanbul --include-all-sources cover _mocha -- -R dot --recursive ./test/**/*.spec.js",
     "build-docs": "jsdoc -c jsdoc.conf",
-    "bundle-install": "for bundleDir in bundles/*; do (cd $bundleDir; if [ -e package.json ]; then echo \"Updating $bundleDir\"; npm install 2> /dev/null; fi;); done"
+    "bundle-install": "node setup-bundles"
   },
   "dependencies": {
     "bcryptjs": "^2.4.0",

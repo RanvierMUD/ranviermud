@@ -6,10 +6,8 @@
 git clone git://github.com/shawncplus/ranviermud
 cd ranviermud
 npm install
-# Mac/Linux
-  npm run bundle-install
-# Windows
-  win-bundle-install
+
+npm run bundle-install
 ```
 
 If you would like to use the latest, but perhaps not stable, features make sure you are on the
