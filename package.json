@@ -13,7 +13,8 @@
     "start": "gulp && ./ranvier -v --save=10 --respawn=10",
     "test": "gulp && npm run-script test:coverage",
     "test:coverage": "istanbul --include-all-sources cover _mocha -- -R dot --recursive ./test/**/*.spec.js",
-    "build-docs": "jsdoc -c jsdoc.conf"
+    "build-docs": "jsdoc -c jsdoc.conf",
+    "bundle-install": "node setup-bundles"
   },
   "dependencies": {
     "bcryptjs": "^2.4.0",
