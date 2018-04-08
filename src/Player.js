@@ -152,21 +152,32 @@ class Player extends Character {
       return false;
     }
 
-    const exits = Array.from(this.room.exits).filter(e => e.direction.indexOf(direction) === 0);
-
-    if (!exits.length) {
-      return false;
-    }
-
-    if (exits.length > 1) {
-      return false;
-    }
-
     if (this.isInCombat()) {
       return false;
     }
 
-    return true;
+    if (Array.from(this.room.exits).filter(exit => exit.direction === direction).length === 1) {
+      return true;
+    }
+
+    const coords = this.room.coordinates;
+    if (coords) {
+      const directions = {
+        north: [0, 1, 0],
+        south: [0, -1, 0],
+        east: [1, 0, 0],
+        west: [-1, 0, 0],
+        up: [0, 0, 1],
+        down: [0, 0, -1],
+      };
+
+      const diff = directions[direction];
+      if (diff) {
+        return this.room.area.getRoomAtCoordinates(coords.x + diff[0], coords.y + diff[1], coords.z + diff[2]);
+      }
+    }
+
+    return false;
   }
 
   save(callback) {
