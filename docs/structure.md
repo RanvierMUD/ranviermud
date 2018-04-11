@@ -1,6 +1,6 @@
 
 <pre>
-  bundles/         - Contains available bundles, see the <a href="/extending/bundles/">Bundles</a> section
+  bundles/         - Contains available bundles, see the <a href="/docs/extending/bundles.md">Bundles</a> section
   data/
     account/       - Account files
     player/        - Player files
@@ -19,5 +19,5 @@
   open-cov.sh      - Script to run tests and open coverage report
   package.json     - NPM config
   <strong>ranvier*</strong>         - Ranvier server executable
-  ranvier.json     - Ranvier configs as described in <a href="/server_config/">Server Config</a>
+  ranvier.json     - Ranvier configs as described in <a href="/docs/server_config.md/">Server Config</a>
 </pre>
