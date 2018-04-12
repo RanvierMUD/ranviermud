@@ -33,7 +33,7 @@ Documentation is stored in the `docs/` folder in the root of the project. Our do
 and the Python-Markdown extensions, any markup you can use from those is free game. If you want to change the look and
 feel of the documentation styles are in `docs/_mkdocs/theme/ranvier/assets/stylesheets/application.css`
 
-You can test your changes to the docs locally by installing [mkdocs](http://www.mkdocs.org/) and running `mkdocs serve`
+You can test your changes to the docs locally by installing [mkdocs](http://www.mkdocs.org/) version 0.15.0 (version is important) and running `mkdocs serve`
 from the root of the repo.
 
 ## What is and isn't part of Ranvier?
