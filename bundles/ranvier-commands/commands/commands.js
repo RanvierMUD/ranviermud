@@ -3,7 +3,6 @@
 const sprintf = require('sprintf-js').sprintf;
 
 module.exports = (srcPath) => {
-  
   const Broadcast = require(srcPath + 'Broadcast');
 
   return {
@@ -14,14 +13,21 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, "<bold><white>                  Commands</bold></white>");
       Broadcast.sayAt(player, "<bold><white>===============================================</bold></white>");
 
-      let i = 0;
+      let commands = [];
       for (let [ name, command ] of state.CommandManager.commands) {
-        if (player.role < command.requiredRole) {
-          continue;
+        if (player.role >= command.requiredRole && name && name.length) {
+          commands.push(name);
         }
+      }
 
+      commands.sort();
+
+      let i = 0;
+      for (let i = 0; i < commands.length; i++) {
+        const name = commands[i]
         Broadcast.at(player, sprintf("%-20s", name));
-        if (++i % 3 === 0) {
+
+        if ((i + 1) % 3 === 0) {
           Broadcast.sayAt(player);
         }
       }
@@ -42,7 +48,7 @@ module.exports = (srcPath) => {
           Broadcast.sayAt(player, '');
         }
       }
-      
+
       // end with a line break
       Broadcast.sayAt(player, '');
     }
