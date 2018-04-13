@@ -89,7 +89,7 @@ advantage of all of the core code.
 
 ## Requirements
 
-* Node.js >= v7.1.0
+* Node.js >= v8.9.4
 
 ## "I just want to check it out quickly"
 
