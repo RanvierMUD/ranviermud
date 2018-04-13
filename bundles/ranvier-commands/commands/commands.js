@@ -13,26 +13,49 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, "<bold><white>                  Commands</bold></white>");
       Broadcast.sayAt(player, "<bold><white>===============================================</bold></white>");
 
+      const numCols = 3;
       let commands = [];
       for (let [ name, command ] of state.CommandManager.commands) {
-        if (player.role >= command.requiredRole && name && name.length) {
+        if (player.role >= command.requiredRole) {
           commands.push(name);
         }
       }
 
-      commands.sort();
+      commands.sort()
 
-      let i = 0;
+      //Build a 2D map of commands by col/row
+      let col = 0;
+      let perCol = Math.floor(commands.length / numCols)
+      let rowCount = 0
+      const columnedCommands = commands.reduce((map, name, index) => {
+        if (rowCount > perCol) {
+          rowCount = 0
+          col++
+        }
+        map[col] = map[col] || [];
+        map[col].push(name);
+        rowCount++
+        return map;
+      }, {})
+
+      let row = -1;
+      col = 0;
       for (let i = 0; i < commands.length; i++) {
-        const name = commands[i]
+        col = i % numCols;
+        if (col == 0) {
+          row++;
+        }
+
+        const name = columnedCommands[col][row];
         Broadcast.at(player, sprintf("%-20s", name));
 
-        if ((i + 1) % 3 === 0) {
+        if ((i + 1) % numCols === 0) {
           Broadcast.sayAt(player);
         }
       }
+
       // append another line if need be
-      if ((i - 1) % 3 !== 0) {
+      if ((col) % numCols !== 0) {
         Broadcast.sayAt(player);
       }
 
@@ -41,10 +64,10 @@ module.exports = (srcPath) => {
       Broadcast.sayAt(player, "<bold><white>                  Channels</bold></white>");
       Broadcast.sayAt(player, "<bold><white>===============================================</bold></white>");
 
-      i = 0;
+      let i = 0;
       for (let [ name ] of state.ChannelManager.channels) {
         Broadcast.at(player, sprintf("%-20s", name));
-        if (++i % 3 === 0) {
+        if (++i % numCols === 0) {
           Broadcast.sayAt(player, '');
         }
       }
