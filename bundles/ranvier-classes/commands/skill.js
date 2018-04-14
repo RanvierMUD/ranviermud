@@ -29,7 +29,7 @@ module.exports = (srcPath) => {
         say(`<b>Usage</b>: ${skill.id}`);
       }
 
-      if (skill.resource.cost) {
+      if (skill.resource && skill.resource.cost) {
         say(`<b>Cost</b>: <b>${skill.resource.cost}</b> ${skill.resource.attribute}`);
       }
 
