@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: SkillType.js | Ranvier</title>
+    <title>Source: QuestRewardManager.js | Ranvier</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -50,18 +50,13 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
-
-/**
- * Used by the core to differentiate between skills and spells.
- * @enum {Symbol}
+            <pre class="prettyprint source linenums"><code>/**
+ * Simple map of quest reward name => class instance
  */
-const SkillType = {
-  SKILL: Symbol("SKILL"),
-  SPELL: Symbol("SPELL"),
-};
+class QuestRewardManager extends Map {}
 
-module.exports = SkillType;
+module.exports = QuestRewardManager;
+
 </code></pre>
         </article>
     </section>

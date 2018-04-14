@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: SkillType.js | Ranvier</title>
+    <title>Source: QuestReward.js | Ranvier</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -53,15 +53,33 @@
             <pre class="prettyprint source linenums"><code>'use strict';
 
 /**
- * Used by the core to differentiate between skills and spells.
- * @enum {Symbol}
+ * Representation of a quest reward
+ * The {@link http://ranviermud.com/extending/areas/quests/|Quest guide} has instructions on to
+ * create new reward type for quests
  */
-const SkillType = {
-  SKILL: Symbol("SKILL"),
-  SPELL: Symbol("SPELL"),
-};
+class QuestReward {
+  /**
+   * Assign the reward to the player
+   * @param {GameState} GameState
+   * @param {Quest} quest   quest this reward is being given from
+   * @param {object} config
+   * @param {Player} player
+   */
+  static reward(GameState, quest, config, player) {
+    throw new Error('Quest reward not implemented');
+  }
 
-module.exports = SkillType;
+  /**
+   * Render the reward
+   * @return string
+   */
+  static display(GameState, quest, config, player) {
+    throw new Error('Quest reward display not implemented');
+  }
+}
+
+module.exports = QuestReward;
+
 </code></pre>
         </article>
     </section>
