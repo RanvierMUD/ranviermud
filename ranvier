@@ -135,11 +135,6 @@ function init(restartServer) {
   BundleManager.loadBundles();
   GameState.ServerEventManager.attach(GameState.GameServer);
 
-  // Set up web API
-  // TODO: move into a server-events bundle
-  const WebInterface = new (require('./src/Api/WebInterface'))(GameState);
-  WebInterface.init();
-
   if (restartServer) {
     Logger.log("START - Starting server");
     GameState.GameServer.startup(commander);
