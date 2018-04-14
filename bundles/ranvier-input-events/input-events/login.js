@@ -4,6 +4,8 @@ module.exports = (srcPath) => {
   const Data = require(srcPath + 'Data');
   const CommonFunctions = require('../lib/CommonFunctions');
   const Logger = require(srcPath + 'Logger');
+  const Config = require(srcPath + 'Config');
+  const autoLogin = Config.get("autoLogin");
 
   return {
     event: state => (socket, args) => {
@@ -46,6 +48,11 @@ module.exports = (srcPath) => {
 
         return socket.emit('password', socket, { dontwelcome: false, account });
       });
+
+      //Add "autoLogin: {account: "Admin"}" to ranvier.json
+      if (autoLogin && autoLogin.account) {
+        socket.emit("data", autoLogin.account);
+      }
     }
   };
 };

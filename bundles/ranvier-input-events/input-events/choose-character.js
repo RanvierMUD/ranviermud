@@ -11,6 +11,7 @@ module.exports = (srcPath) => {
 
   return {
     event: state => (socket, args) => {
+      const autoLogin = Config.get("autoLogin");
       let account = args.account;
 
       const say = EventUtil.genSay(socket);
@@ -188,6 +189,11 @@ module.exports = (srcPath) => {
 
         return socket.emit('choose-character', socket, args);
       });
+
+      //Add "autoLogin: {character: 3}" to ranvier.json
+      if (autoLogin && autoLogin.hasOwnProperty('character')) {
+        socket.emit("data", autoLogin.character);
+      }
     }
   };
 };

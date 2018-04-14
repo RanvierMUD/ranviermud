@@ -5,9 +5,11 @@
  */
 module.exports = (srcPath) => {
   const EventUtil = require(srcPath + 'EventUtil');
+  const Config = require(srcPath + 'Config');
 
   let passwordAttempts = {};
   const maxFailedAttempts = 2;
+  const autoLogin = Config.get("autoLogin");
 
   return {
     event: state => (socket, args) => {
@@ -44,6 +46,11 @@ module.exports = (srcPath) => {
 
         return socket.emit('choose-character', socket, { account: args.account });
       });
+
+      //Add "autoLogin: {password: "your-password"}" to ranvier.json
+      if (autoLogin && autoLogin.password) {
+        socket.emit('data', autoLogin.password);
+      }
     }
   };
 };
