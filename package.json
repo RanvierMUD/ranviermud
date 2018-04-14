@@ -18,10 +18,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.0",
-    "colorize": "",
     "commander": "",
-    "fs-extra": "^2.0.0",
-    "humanize-duration": "^3.10.0",
     "js-yaml": "",
     "longjohn": "^0.2.11",
     "optimist": "",
