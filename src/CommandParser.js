@@ -111,7 +111,7 @@ class CommandParser {
       };
     }
 
-    // finally check channels
+    // check channels
     found = state.ChannelManager.find(command);
     if (found) {
       return {
@@ -121,7 +121,7 @@ class CommandParser {
       };
     }
 
-    // finally check channels
+    // finally check skills
     found = state.SkillManager.find(command);
     if (found) {
       return {
