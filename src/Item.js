@@ -1,7 +1,7 @@
 'use strict';
 
 const EventEmitter = require('events');
-const uuid = require('node-uuid');
+const uuid = require('uuid/v4');
 
 const ItemType = require('./ItemType');
 const Logger = require('./Logger');
@@ -61,7 +61,7 @@ class Item extends Metadatable(EventEmitter) {
     this.roomDesc    = item.roomDesc || '';
     this.script      = item.script || null;
     this.type        = typeof item.type === 'string' ? ItemType[item.type] : (item.type || ItemType.OBJECT);
-    this.uuid        = item.uuid || uuid.v4();
+    this.uuid        = item.uuid || uuid();
     this.closeable   = item.closeable || item.closed || item.locked || false;
     this.closed      = item.closed || false;
     this.locked      = item.locked || false;

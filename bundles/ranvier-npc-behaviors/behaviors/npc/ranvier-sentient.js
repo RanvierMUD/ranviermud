@@ -22,8 +22,8 @@
  */
 
 const apiai = require('apiai');
-const uuid = require('node-uuid');
-const sessionId = uuid.v4();
+const uuid = require('uuid/v4');
+const sessionId = uuid();
 const fs = require('fs');
 let clientKey = null;
 try {

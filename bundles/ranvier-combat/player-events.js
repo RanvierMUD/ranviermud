@@ -1,5 +1,4 @@
 'use strict';
-const leftPad = require('left-pad');
 
 const Combat = require('./lib/Combat');
 const CombatErrors = require('./lib/CombatErrors');

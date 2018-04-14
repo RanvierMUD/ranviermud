@@ -1,6 +1,5 @@
 'use strict';
 
-const leftPad = require('left-pad');
 const humanize = (sec) => { return require('humanize-duration')(sec, { round: true }); };
 const sprintf = require('sprintf-js').sprintf;
 
