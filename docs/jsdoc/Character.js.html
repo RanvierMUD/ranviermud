@@ -64,19 +64,15 @@ const { Inventory, InventoryFullError } = require('./Inventory');
 
 
 /**
- * The Character class acts as the base for both NPCs and Players. It is _opinionated_
- * about how stats are calculated (see getMaxAttribute), if you want to change what
- * stats a player has and how they are calculated it should be changed here and in
- * `Attributes.js`
+ * The Character class acts as the base for both NPCs and Players.
  *
- * @property {string}    name       Name shown on look/who/login
- * @property {Map}       inventory
- * @property {Set}       combatants Enemies this character is currently in combat with
- * @property {number}    level
- * @property {object}    attributes
+ * @property {string}     name       Name shown on look/who/login
+ * @property {Inventory}  inventory
+ * @property {Set}        combatants Enemies this character is currently in combat with
+ * @property {number}     level
+ * @property {Attributes} attributes
  * @property {EffectList} effects    List of current effects applied to the character
- * @property {Map}       skills     List of all character's skills
- * @property {Room}      room       Room the character is currently in
+ * @property {Room}       room       Room the character is currently in
  *
  * @implements {Broadcastable}
  * @extends EventEmitter
@@ -100,7 +96,6 @@ class Character extends Metadatable(EventEmitter) {
     this.party = null;
 
     this.effects = new EffectList(this, data.effects);
-    this.skills = new Map();
 
     // Arbitrary data bundles are free to shove whatever they want in
     // WARNING: values must be JSON.stringify-able
