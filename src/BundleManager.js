@@ -32,24 +32,50 @@ class BundleManager {
   }
 
   /**
-   * Load in all bundles
-   */
-  loadBundles(distribute = true) {
-    Logger.verbose('LOAD: BUNDLES');
+  * Returns all the bundle directories for this project
+  */
+  getBundleDirs () {
+    const inAppBundles = fs.readdirSync(bundlesPath);
+    const bundles = [];
+    const configBundles = this.state.Config.get('bundles', []);
 
-    const bundles = fs.readdirSync(bundlesPath);
-    for (const bundle of bundles) {
+    for (const bundle of inAppBundles) {
       const bundlePath = bundlesPath + bundle;
+
       if (fs.statSync(bundlePath).isFile() || bundle === '.' || bundle === '..') {
         continue;
       }
 
       // only load bundles the user has configured to be loaded
-      if (this.state.Config.get('bundles', []).indexOf(bundle) === -1) {
+      if (configBundles.indexOf(bundle) === -1) {
         continue;
       }
 
-        this.loadBundle(bundle, bundlePath);
+      bundles.push({name: bundle, path: bundlePath});
+    }
+
+    const pkg = require(path.join(__dirname, '..', '/package.json'));
+
+    for (const dep in pkg.dependencies) {
+      if (configBundles.indexOf(dep) >= 0) {
+        Logger.verbose('LOAD: NPM BUNDLE ' + dep);
+        bundles.push({name: dep, path: path.join(__dirname, '..', 'node_modules', dep)});
+      }
+    }
+
+    return bundles
+  }
+
+  /**
+   * Load in all bundles
+   */
+  loadBundles(distribute = true) {
+    Logger.verbose('LOAD: BUNDLES');
+
+    const bundles = this.getBundleDirs()
+
+    for (const bundle of bundles) {
+      this.loadBundle(bundle.name, bundle.path);
     }
 
     Logger.verbose('ENDLOAD: BUNDLES');
