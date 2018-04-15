@@ -22,9 +22,8 @@ function addToRanvier() {
 
   let pkgName;
   const dependencies = new Map(Object.entries(packageDotJSON.dependencies))
-  console.log('bundlePackage',bundlePackage);
   for (const [name, url] of dependencies) {
-    if (name == bundlePackage || url.indexOf(bundlePackage) == 0) {
+    if (name == bundlePackage || url.indexOf(bundlePackage) !== -1) {
       pkgName = name;
     }
   }
@@ -58,7 +57,10 @@ const npmCmd = os.platform().startsWith('win') ? 'npm.cmd' : 'npm';
 
 const args = ['install', bundlePackage, '--save'];
 console.log('Running `npm ' + args.join(" ") + '`');
-if (true) {
+
+//This is just here for testing, if you change it to true you can test
+//addToRanvier() without having to wait for npm install every time
+if (false) {
   addToRanvier()
 }
 else {
