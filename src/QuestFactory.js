@@ -19,6 +19,7 @@ class QuestFactory {
 
   set(qid, val) {
     this.quests.set(qid, val);
+    return this;
   }
 
   /**
@@ -28,6 +29,20 @@ class QuestFactory {
    */
   get(qid) {
     return this.quests.get(qid);
+  }
+
+  canStart(player, qid) {
+    const questConfig = this.quests.get(qid);
+    if (player.questTracker.completedQuests.has(qid) && !questConfig.repeatable) {
+      return false;
+    }
+
+    const isActive = player.questTracker.isActive(qid);
+    const hasRequirements = Array.isArray(questConfig.requires)
+    const requirementsMet = hasRequirements
+      ? !isActive && questConfig.requires.every(requiresRef => player.questTracker.isComplete(requiresRef))
+      : true;
+    return !isActive && requirementsMet;
   }
 
   /**

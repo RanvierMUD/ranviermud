@@ -6,8 +6,9 @@ module.exports = (srcPath) => {
   return  {
     listeners: {
       playerEnter: state => function (player) {
-        const quest = state.QuestFactory.create(state, 'limbo:1', player);
-        if (player.questTracker.canStart(quest)) {
+        const canStart = state.QuestFactory.canStart(player, 'limbo:1');
+        if (canStart) {
+          const quest = state.QuestFactory.create(state, 'limbo:1', player);
           player.questTracker.start(quest);
         }
       }
