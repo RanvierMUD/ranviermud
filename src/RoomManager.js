@@ -41,7 +41,12 @@ class RoomManager {
    * @return {false|Object}
    */
   findExit(room, exitName) {
-    const exits = Array.from(room.exits).filter(e => e.direction.indexOf(exitName) === 0);
+    const exits = Array
+    .from(room.exits)
+    .filter((e) => {
+      return e.direction.indexOf(exitName) === 0
+        || (e.description && e.description.indexOf(exitName) != -1)
+    })
 
     if (!exits.length) {
       return false;

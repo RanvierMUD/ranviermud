@@ -183,6 +183,7 @@ module.exports = (srcPath) => {
 
         if (selection) {
           Logger.log('Selected ' + selection.display);
+          socket.write('\r\n')
           return selection.onSelect();
         }
 

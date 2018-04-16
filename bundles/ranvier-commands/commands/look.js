@@ -183,7 +183,7 @@ module.exports = (srcPath, bundlePath) => {
     B.at(player, '[<yellow><b>Exits</yellow></b>: ');
       // find explicitly defined exits
       let foundExits = Array.from(room.exits).map(ex => {
-        return [ex.direction, state.RoomManager.getRoom(ex.roomId)];
+        return [ex.direction, state.RoomManager.getRoom(ex.roomId), ex.description];
       });
 
       // infer from coordinates
@@ -200,8 +200,8 @@ module.exports = (srcPath, bundlePath) => {
         };
 
         foundExits = [...foundExits, ...(Object.entries(directions)
-          .map(([dir, diff]) => {
-            return [dir, area.getRoomAtCoordinates(coords.x + diff[0], coords.y + diff[1], coords.z + diff[2])];
+          .map(([dir, diff, description]) => {
+            return [dir, area.getRoomAtCoordinates(coords.x + diff[0], coords.y + diff[1], coords.z + diff[2]), description];
           })
           .filter(([dir, exitRoom]) => {
             return !!exitRoom;
@@ -209,14 +209,24 @@ module.exports = (srcPath, bundlePath) => {
         )];
       }
 
-      B.at(player, foundExits.map(([dir, exitRoom]) => {
+      B.at(player, foundExits.map(([dir, exitRoom, desc]) => {
         const door = room.getDoor(exitRoom) || exitRoom.getDoor(room);
-        if (door && (door.locked || door.closed)) {
-          return '(' + dir + ')';
+        let str = dir
+        if (door) {
+          if (door.locked) {
+            str += ' <b><black>locked</black></b>'
+          }
+          else if (door.closed) {
+            str += ' <b><black>closed</black></b>'
+          }
         }
 
-        return dir;
-      }).join(' '));
+        if (desc) {
+          str += ' (' + desc + ')'
+        }
+
+        return str;
+      }).join(' <b>/</b> '));
 
       if (!foundExits.length) {
         B.at(player, 'none');
