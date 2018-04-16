@@ -6,7 +6,7 @@
     - id: "limbo:woodenchest"
       respawnChance: 20
       replaceOnRespawn: true # when this chest respawns completely replace it so its contents get refreshed
-  script: "1-test"
+  script: "white"
   exits:
     - roomId: "limbo:black"
       direction: east
@@ -23,7 +23,7 @@
     A completely black room. Somehow all of the light that should be coming from the room to the west does not pass
     through the archway. A single lightbulb hangs from the ceiling illuminating a small area. To the east you see a
     large white dome. There is a sign above the entrance to the dome: "Training Area"
-  script: "2-look"
+  script: "black"
   items:
     - id: "limbo:sliceofcheese"
       respawnChance: 10
@@ -116,7 +116,7 @@
     A runed black obelisk towers in the center of this clearing, surrounded by a faerie ring. The runes pulse and glow with
     a soft blue light. The grass immediately around the obelisk is immaculate in stark contrast to the dying former meadow
     that makes up the clearing. The obelisk looks like it can be used as a <b><cyan>waypoint</cyan></b>.
-  script: '8-waypoint'
+  script: 'ancientwayshrine'
   behaviors:
     waypoint: true
   exits:
@@ -139,7 +139,7 @@
       direction: east
 - id: context
   title: "Room Context Commands Test"
-  script: '10-context'
+  script: 'context'
   description: >-
     This room shows off commands that are only active in a particular room. Try out the <b><cyan>roomtest</cyan></b> command.
   behaviors:
