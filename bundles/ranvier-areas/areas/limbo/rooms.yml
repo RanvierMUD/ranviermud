@@ -11,6 +11,7 @@
     - roomId: "limbo:2"
       direction: east
       leaveMessage: " steps into the void and disappears."
+      description: "<b><black>black void</black></b>"
     - roomId: "limbo:8"
       direction: down
     - roomId: "limbo:9"
@@ -31,9 +32,11 @@
   exits:
     - roomId: "limbo:1"
       direction: west
+      description: "dark archway"
       leaveMessage: " steps into the light and disappears."
     - roomId: "limbo:3"
       direction: east
+      description: "<white><b>white</b> dome</white>"
 - &trainingroom
   id: 3
   title: "Training Room"
@@ -49,6 +52,7 @@
   exits:
     - roomId: "limbo:2"
       direction: west
+      description: "black room"
     - roomId: "limbo:4"
       direction: north
     - roomId: "limbo:6"
@@ -113,6 +117,8 @@
     A runed black obelisk towers in the center of this clearing, surrounded by a faerie ring. The runes pulse and glow with
     a soft blue light. The grass immediately around the obelisk is immaculate in stark contrast to the dying former meadow
     that makes up the clearing. The obelisk looks like it can be used as a <b><cyan>waypoint</cyan></b>.
+
+    A nearby staircase leads down.
   script: '8-waypoint'
   behaviors:
     waypoint: true
@@ -121,6 +127,7 @@
       direction: up
     - roomId: "limbo:10"
       direction: down
+      description: "staircase"
 - id: 9
   title: "Wally's Wonderful Wares (Shop)"
   description: >- 
@@ -146,6 +153,7 @@
   exits:
     - roomId: "limbo:8"
       direction: up
+      description: "staircase"
     - roomId: "limbo:11"
       direction: east
   doors:
