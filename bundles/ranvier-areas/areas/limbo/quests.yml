@@ -1,5 +1,5 @@
 ---
-- id: 1
+- id: journeybegins
   title: "A Journey Begins"
   level: 1
   autoComplete: true
@@ -17,12 +17,12 @@
       config:
         title: Find a Weapon
         count: 1
-        item: 'limbo:1'
+        item: 'limbo:rustysword'
     - type: FetchGoal
       config:
         title: Find Some Armor
         count: 1
-        item: 'limbo:6'
+        item: 'limbo:leathervest'
     - type: EquipGoal
       config:
         title: Wield A Weapon
@@ -40,7 +40,7 @@
       config:
         currency: gold
         amount: 10
-- id: 2
+- id: onecheeseplease
   title: One Cheese Please
   level: 1
   repeatable: true
@@ -55,17 +55,17 @@
       config:
         title: Found Cheese
         count: 1
-        item: 'limbo:2'
+        item: 'limbo:sliceofcheese'
         removeItem: true
   rewards:
     - type: ExperienceReward
       config:
         amount: 3
         leveledTo: QUEST
-- id: 3
+- id: selfdefense101
   title: Self Defense 101
   level: 2
-  requires: [ 'limbo:1' ]
+  requires: [ 'limbo:journeybegins' ]
   autoComplete: true
   description: |-
     A voice whispers to you: It would be wise to practice protecting yourself. There are a number of training dummies in this area that, while not pushovers, will not be too difficult.
@@ -77,7 +77,7 @@
     - type: KillGoal
       config:
         title: Kill a Training Dummy
-        npc: 'limbo:4'
+        npc: 'limbo:trainingdummy'
         count: 1
   rewards:
     - type: ExperienceReward
