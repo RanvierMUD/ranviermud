@@ -62,6 +62,9 @@ class EntityFactory {
    */
   createByType(area, entityRef, Type) {
     const definition = this.getDefinition(entityRef);
+    if (!definition) {
+      throw new Error('No Entity definition found for ' + entityRef)
+    }
     const entity = new Type(area, definition);
 
     if (this.scripts.has(entityRef)) {
@@ -84,7 +87,6 @@ class EntityFactory {
   clone(entity) {
     return this.create(entity.area, entity.entityReference);
   }
-  
 }
 
 module.exports = EntityFactory;

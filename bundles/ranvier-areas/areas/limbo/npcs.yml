@@ -10,7 +10,7 @@
     combat: true
     ranvier-wander:
       interval: 20
-      restrictTo: ['limbo:1', 'limbo:2', 'limbo:training1']
+      restrictTo: ['limbo:white', 'limbo:black', 'limbo:training1']
   attributes:
     health: 100
     energy: 100
