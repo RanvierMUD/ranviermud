@@ -1,6 +1,6 @@
 'use strict';
 
-const CommandType = require('./CommandType');
+const CommandType = require('../bundles/ranvier-lib/lib/CommandType');
 const PlayerRoles = require('./PlayerRoles');
 
 /**

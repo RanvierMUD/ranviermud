@@ -5,9 +5,11 @@
  * If you want to swap out the command parser this is the place to do it
  */
 module.exports = (src) => {
-  const { CommandParser, InvalidCommandError, RestrictedCommandError } = require(src + 'CommandParser');
+  const bundlePath = '../../ranvier-lib/lib/';
+
+  const { CommandParser, InvalidCommandError, RestrictedCommandError } = require(bundlePath + 'CommandParser');
   const PlayerRoles = require(src + 'PlayerRoles');
-  const CommandTypes = require(src + 'CommandType');
+  const CommandTypes = require(bundlePath + 'CommandType');
   const Broadcast = require(src + 'Broadcast');
   const Logger = require(src + 'Logger');
 
@@ -52,7 +54,7 @@ module.exports = (src) => {
               // See bundles/ranvier-player-events/player-events.js commandQueued and updateTick for when these
               // actually get executed
               player.queueCommand({
-                execute: _ => {
+                execute: () => {
                   player.emit('useAbility', result.skill, result.args);
                 },
                 label: data,

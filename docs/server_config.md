@@ -29,7 +29,7 @@ Ranvier configuration is stored in the `ranvier.json` file in the root of the pr
 :    Room player is placed in when first created
 
 `moveCommand` _`string`_ `("move")`
-:    Name of the command that will handle when the character types a movement direction (See [`src/CommandParser.js`](https://github.com/shawncplus/ranviermud/blob/staging/src/CommandParser.js) for natively supported directions)
+:    Name of the command that will handle when the character types a movement direction (See [`bundles/ranvier-lib/lib/CommandParser.js`](https://github.com/shawncplus/ranviermud/blob/staging/bundles/ranvier-lib/lib/CommandParser.js) for natively supported directions)
 
 `skillLag` _`number`_
 :    Default milleconds of lag to apply after a skill is used before they can use another skill. Can be configured per skill

@@ -1,8 +1,8 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const Parser = require(bundlePath + 'ranvier-lib/lib/CommandParser').CommandParser;
 
   return {
     usage: 'emote <message>',

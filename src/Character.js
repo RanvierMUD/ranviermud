@@ -7,7 +7,6 @@ const EquipSlotTakenError = require('./EquipErrors').EquipSlotTakenError;
 const EventEmitter = require('events');
 const Heal = require('./Heal');
 const Metadatable = require('./Metadatable');
-const Parser = require('./CommandParser').CommandParser;
 const { Inventory, InventoryFullError } = require('./Inventory');
 
 

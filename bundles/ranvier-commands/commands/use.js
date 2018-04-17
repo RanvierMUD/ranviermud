@@ -8,7 +8,7 @@ const humanize = (sec) => { return require('humanize-duration')(sec, { round: tr
 module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const Logger = require(srcPath + 'Logger');
-  const { CommandParser } = require(srcPath + 'CommandParser');
+  const CommandParser = require(bundlePath + 'ranvier-lib/lib/CommandParser').CommandParser;
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
   const SkillErrors = require(srcPath + 'SkillErrors');
 
@@ -65,7 +65,7 @@ module.exports = (srcPath, bundlePath) => {
           }
 
           Logger.error(e.message);
-          B.sayAt(this, 'Huh?');
+          Broadcast.sayAt(this, 'Huh?');
         }
       }
 

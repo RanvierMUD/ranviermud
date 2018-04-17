@@ -5,7 +5,7 @@ const sprintf = require('sprintf-js').sprintf;
 
 module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
-  const CommandParser = require(srcPath + 'CommandParser').CommandParser;
+  const CommandParser = require(bundlePath + 'ranvier-lib/lib/CommandParser').CommandParser;
   const Item = require(srcPath + 'Item');
   const ItemType = require(srcPath + 'ItemType');
   const Logger = require(srcPath + 'Logger');
@@ -126,7 +126,7 @@ module.exports = (srcPath, bundlePath) => {
       if (npc.quests) {
         const quests = npc.quests.map(qid => {
           try {
-            return state.QuestFactory.create(state, qid, player)
+            return state.QuestFactory.create(state, qid, player);
           } catch (e) {
             Logger.error(e.message);
             return null;

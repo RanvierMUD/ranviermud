@@ -2,8 +2,6 @@
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
-  const Data = require(srcPath + 'Data');
 
   return {
     usage: 'config <set/list> [setting] [value]',

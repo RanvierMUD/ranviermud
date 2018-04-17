@@ -2,7 +2,7 @@
 
 module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
-  const { CommandParser } = require(srcPath + 'CommandParser');
+  const CommandParser = require(bundlePath + 'ranvier-lib/lib/CommandParser').CommandParser;
   const dot = CommandParser.parseDot;
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 

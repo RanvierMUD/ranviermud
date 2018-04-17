@@ -5,7 +5,6 @@ const CombatErrors = require('../lib/CombatErrors');
 
 module.exports = (srcPath) => {
   const B = require(srcPath + 'Broadcast');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
   const Logger = require(srcPath + 'Logger');
 
   return {

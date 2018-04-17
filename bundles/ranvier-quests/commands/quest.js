@@ -1,9 +1,9 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
   const say = B.sayAt;
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const Parser = require(bundlePath + 'ranvier-lib/lib/CommandParser').CommandParser;
   const CommandManager = require(srcPath + 'CommandManager');
 
   const subcommands = new CommandManager();

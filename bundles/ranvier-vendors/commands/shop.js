@@ -8,7 +8,7 @@ module.exports = (srcPath, bundlePath) => {
 
   const CommandManager = require(srcPath + 'CommandManager');
   const ItemType = require(srcPath + 'ItemType');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const Parser = require(bundlePath + 'ranvier-lib/lib/CommandParser').CommandParser;
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   const subcommands = new CommandManager();

@@ -2,8 +2,6 @@
 
 module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const Player = require(srcPath + 'Player');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
 
   return {
     command : (state) => (args, player) => {

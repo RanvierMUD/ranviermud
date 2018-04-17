@@ -1,9 +1,9 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   const PlayerRoles = require(srcPath + 'PlayerRoles');
-  const { CommandParser: Parser } = require(srcPath + 'CommandParser');
+  const Parser = require(bundlePath + 'ranvier-lib/lib/CommandParser').CommandParser;
 
   return {
     requiredRole: PlayerRoles.ADMIN,

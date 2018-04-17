@@ -4,7 +4,7 @@ const Damage = require('../../../src/Damage');
 const Logger = require('../../../src/Logger');
 const RandomUtil = require('../../../src/RandomUtil');
 const CombatErrors = require('./CombatErrors');
-const Parser = require('../../../src/CommandParser').CommandParser;
+const Parser = require('../../ranvier-lib/lib/CommandParser').CommandParser;
 
 /**
  * This class is an example implementation of a Diku-style real time combat system. Combatants

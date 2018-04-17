@@ -1,8 +1,8 @@
 'use strict';
 
-module.exports = srcPath => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const CommandParser = require(srcPath + 'CommandParser').CommandParser;
+  const CommandParser = require(bundlePath + 'ranvier-lib/lib/CommandParser').CommandParser;
 
   return {
     command: state => (arg, player) => {

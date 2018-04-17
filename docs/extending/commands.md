@@ -101,10 +101,10 @@ command aliases.
 ```javascript
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
   // For this command we need to import the CommandParser library to parse the argument to `remove`
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
+  const Parser = require(bundlePath + 'ranvier-lib/lib/CommandParser').CommandParser;
 
   return {
     // Aliases are straightforward, just an array of other strings the player can type to call this command
@@ -157,12 +157,12 @@ Here's an example of how you might build an admin command:
 ```javascript
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
 
   // Require the PlayerRoles enum file for easy reference.
   const PlayerRoles = require(srcPath + 'PlayerRoles');
-  const { CommandParser: Parser } = require(srcPath + 'CommandParser');
+  const Parser = require(bundlePath + 'ranvier-lib/lib/CommandParser').CommandParser;
 
   return {
     /*

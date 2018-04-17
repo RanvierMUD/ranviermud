@@ -1,10 +1,8 @@
 'use strict';
 
-module.exports = (srcPath) => {
+module.exports = (srcPath, bundlePath) => {
   const B = require(srcPath + 'Broadcast');
-  const Parser = require(srcPath + 'CommandParser').CommandParser;
-  const ItemType = require(srcPath + 'ItemType');
-  const Logger = require(srcPath + 'Logger');
+  const Parser = require(bundlePath + 'ranvier-lib/lib/CommandParser').CommandParser;
 
   return {
     usage: 'talk <npc> <message>',

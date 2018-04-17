@@ -2,7 +2,7 @@
 
 module.exports = (srcPath, bundlePath) => {
   const Broadcast = require(srcPath + 'Broadcast');
-  const { CommandParser: Parser } = require(srcPath + 'CommandParser');
+  const Parser = require(bundlePath + 'ranvier-lib/lib/CommandParser').CommandParser;
   const { EquipSlotTakenError } = require(srcPath + 'EquipErrors');
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
   const Logger = require(srcPath + 'Logger');
