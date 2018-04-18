@@ -48,3 +48,15 @@ Ranvier configuration is stored in the `ranvier.json` file in the root of the pr
 
 `entityTickFrequency` _`number`_ `(100)`
 :    Same as `playerTickFrequency` but for game entities (areas, rooms, npcs, items)
+
+`autoLogin` _`object`_ `(null)`
+:    Object for automatically logging new connections into a specific account and character. Used for developing
+
+`autoLogin.account` _`string`_
+:    Account name to log in as.
+
+`autoLogin.password` _`string`_
+:    Password for that account.
+
+`autoLogin.character` _`string`_
+:    Character selection to enter. `[3]` gives you the first character on that account.
