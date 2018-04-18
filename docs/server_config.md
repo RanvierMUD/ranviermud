@@ -59,4 +59,4 @@ Ranvier configuration is stored in the `ranvier.json` file in the root of the pr
 :    Password for that account.
 
 `autoLogin.character` _`string`_
-:    Character selection to enter. `[3]` gives you the first character on that account.
+:    Character selection to enter. `"3"` gives you the first character on that account.
