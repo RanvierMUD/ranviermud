@@ -59,6 +59,8 @@ bundles/my-bundle/
 ```javascript
 'use strict';
 
+const Combat = require('../../ranvier-combat/lib/Combat');
+
 /**
  * Basic warrior attack
  */
@@ -74,7 +76,7 @@ module.exports = (srcPath) => {
   const damagePercent = 250;
   const energyCost = 20;
   
-  //This function calculates the damage.
+  //An example damage calculation using the Combat library from the ranvier-combat bundle
   function getDamage(player) {
     return Combat.calculateWeaponDamage(player) * (damagePercent / 100);
   }
