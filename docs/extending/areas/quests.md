@@ -285,9 +285,9 @@ The structure of the `quests.yml` file is very similar to the `items.yml` file, 
 ```yaml
 ---
 -
-  # Since this quest is id: 1 and is in area "some-area" its EntityReference will
-  # be "some-area:1"
-  id: 1
+  # Since this quest is id: journeybegins and is in area "some-area" its EntityReference will
+  # be "some-area:journeybegins"
+  id: journeybegins
 
   # Quests have an optional level you can use for whatever you wish, the core
   # does not use this for anything
@@ -326,7 +326,7 @@ The structure of the `quests.yml` file is very similar to the `items.yml` file, 
       config:
         title: Find a Weapon
         count: 1
-        item: 'limbo:1'
+        item: 'limbo:rustysword'
   
   # Rewards are defined exactly like goals and you may have multiple rewards
   # as well.
@@ -339,7 +339,7 @@ The structure of the `quests.yml` file is very similar to the `items.yml` file, 
 
 # Here is another example quest. This one, however, is repeatable
 -
-  id: 2
+  id: onecheeseplease
   title: "One Cheese Please"
   level: 1,
   description: |-
@@ -350,7 +350,7 @@ The structure of the `quests.yml` file is very similar to the `items.yml` file, 
       config:
         title: Found Cheese
         count: 1
-        item: "limbo:2"
+        item: "limbo:sliceofcheese"
         removeItem: true
   rewards:
     - type: ExperienceReward
@@ -359,7 +359,7 @@ The structure of the `quests.yml` file is very similar to the `items.yml` file, 
 ```
 
 In addition to the above, Quest definitions can also include a `requires` property, which is a list
-of quest EntityReferences (`"limbo:1"`) which the player must complete as prerequisites before they can
+of quest EntityReferences (`"limbo:journeybegins"`) which the player must complete as prerequisites before they can
 start that quest. This allows you to create an entire questline or branching multi-part quests.
 
 The quest system at this time does not have the ability to do sequential goals,
@@ -394,12 +394,12 @@ name when the player sees the NPC in the room. For example:
 To make an NPC a questor simply add a `quests` array to their definition in `npcs.yml` like so:
 
 ```yaml
-- id: 1
+- id: rat
   keywords: ['rat']
   name: 'Rat'
   level: 2
   description: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
-  quests: ['limbo:2']
+  quests: ['limbo:onecheesepleased']
 ```
 
 The quests array is a list of quest EntityReferences, i.e., `<area the quests.js file is in>:<quest id>`.
@@ -415,20 +415,20 @@ entered a certain room, or picked up a certain item. For this, you will need to 
 power of entity scripting. You can see more detailed documentation on scripting in
 [Scripting](scripting.md).
 
-In this example, we will implement giving the player a quest (The "Find a Weapon" quest
+In this example, we will implement giving the player a quest (The "Journey Begins" quest
 from above) when they enter a room.
 
 Here we have the definition of room Test Room 1 from `rooms.yml` and we'll attach the
-script `1-test` to the room.
+script `testroom1` to the room.
 
 ```yaml
-- id: 1
+- id: testroom1
   title: "Test Room 1"
-  script: "1-test"
+  script: "testroom1"
   ...
 ```
 
-Now we need to create the scripts file, `1-test.js`, in the room folder of scripts. So your
+Now we need to create the scripts file, `testroom1.js`, in the room folder of scripts. So your
 bundles folder should now look like this:
 
 ```
@@ -438,7 +438,7 @@ my-bundle/
     limbo/
       scripts/
         rooms/
-          1-test.js
+          testroom1.js
       manifest.yml
       items.yml
       npcs.yml
@@ -446,7 +446,7 @@ my-bundle/
       rooms.yml
 ```
 
-Now, to create the `1-test` script (again, more detail about the structure and
+Now, to create the `testroom1` script (again, more detail about the structure and
 implementation of scripts can be found in the [Scripting](scripting.md) section):
 
 ```javascript
@@ -457,8 +457,8 @@ module.exports = (srcPath) => {
     listeners: {
       // Set up a listener for when a player enters the room
       playerEnter: state => function (player) {
-        // use the QuestFactory from the GameState to find quest `limbo:1` (Find a Weapon)
-        let quest = state.QuestFactory.create(state, 'limbo:1', player);
+        // use the QuestFactory from the GameState to find quest `limbo:journeybegins` (Journey Begins)
+        let quest = state.QuestFactory.create(state, 'limbo:journeybegins', player);
 
         if (player.questTracker.canStart(quest)) {
           player.questTracker.start(quest);
@@ -471,7 +471,7 @@ module.exports = (srcPath) => {
 };
 ```
 
-Now, when the player enters `Test Room 1` they will be given the quest `Find a Weapon` (assuming
+Now, when the player enters `Test Room 1` they will be given the quest `Journey Begins` (assuming
 they don't already have the quest activated or completed).
 
 ## Displaying progress/completion

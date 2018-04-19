@@ -57,7 +57,7 @@
   id: training2
   title: "Training Room 2"
   items:
-    - id: "craft:1"
+    - id: "craft:greenplant"
       respawnChance: 30
   npcs:
     - id: "limbo:trainingdummy"
@@ -75,7 +75,7 @@
   id: training3
   title: "Training Room 3"
   items:
-    - id: "craft:2"
+    - id: "craft:redrose"
       respawnChance: 15
   exits:
     - roomId: "limbo:training2"
