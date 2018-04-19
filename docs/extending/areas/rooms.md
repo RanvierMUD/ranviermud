@@ -25,29 +25,25 @@ the coordinates to infer the allowable exits for a room for you, doors work all 
     - roomId: "limbo:black"
       direction: east
       leaveMessage: " steps into the void and disappears."
-    - roomId: "limbo:ancientwayshrine"
-      direction: down
-    - roomId: "limbo:wallys"
-      direction: west
-    - roomId: "mapped:start"
-      direction: north
 - id: black
   title: "Black Room"
   description: >-
     A completely black room. Somehow all of the light that should be coming from the room to the west does not pass
-    through the archway. A single lightbulb hangs from the ceiling illuminating a small area. To the east you see a
-    large white dome. There is a sign above the entrance to the dome: "Training Area"
-  script: "black"
+    through the archway. A single lightbulb hangs from the ceiling illuminating a small area.
   items:
     - id: "limbo:sliceofcheese"
       respawnChance: 10
-  npcs: ["limbo:wiseoldman", "limbo:puppy"]
+      maxLoad: 5
+  npcs: ["limbo:wiseoldman"]
   exits:
     - roomId: "limbo:white"
       direction: west
       leaveMessage: " steps into the light and disappears."
-    - roomId: "limbo:training1"
-      direction: east
+  doors:
+    "limbo:white": # The player encounters a door when trying to move between "limbo:white" and this room
+      lockedBy: "limbo:test_key" # this room can only be locked/unlocked with this item
+      locked: true # if the door is locked by default
+      closed: true # if the door is closed by default
 ```
 
 ### Rooms with coordinates
@@ -159,7 +155,7 @@ will be lost when the server is shut down.
 
 `doors` _`object`_
 :    Doors blocking access to this room. The key for each door is the room you want to block access _from_. So if you
-want to block access to players coming _from_ `limbo:training3` into the room the key would be `"limbo:training3"`
+want to block access to players coming _from_ `limbo:training` into the room the key would be `"limbo:training"`
 
 > `lockedBy` _`EntityReference`_
 > :    Optional item EntityReference of the item that will be the key that locks/unlocks the door

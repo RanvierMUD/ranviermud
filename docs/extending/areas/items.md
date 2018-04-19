@@ -37,7 +37,7 @@ In Ranvier all items for an area are defined in a single file within the area fo
   roomDesc: "A wooden chest rests in the corner, its hinges badly rusted."
   keywords: [ "wooden", "chest" ]
   description: "Time has not been kind to this chest. It seems to be held together solely by the dirt and rust."
-  items: [ "limbo:rustysword", "limbo:leathervest", "limbo:potionhealth1", "limbo:potionstrength1" ]
+  items: [ "limbo:rustysword" ]
   closed: true
   maxItems: 5
   metadata:

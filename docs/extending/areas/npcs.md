@@ -18,7 +18,7 @@ In Ranvier all NPCs for an area are defined in a single file within the area fol
     health: 100
     speed: 2.5
   damage: 1-7
-- id: wiseoldma
+- id: wiseoldman
   keywords: ["wise", "old", "man"]
   name: "Wise Old Man"
   behaviors:
