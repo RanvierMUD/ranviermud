@@ -73,6 +73,11 @@ module.exports = (srcPath) => {
   // change them if you need to.
   const damagePercent = 250;
   const energyCost = 20;
+  
+  //This function calculates the damage.
+  function getDamage(player) {
+    return Combat.calculateWeaponDamage(player) * (damagePercent / 100);
+  }
 
   return {
     // Friendly name of the skill, shown to the player on the skill list command.
@@ -139,7 +144,7 @@ module.exports = (srcPath) => {
         // we'll damage the health of the target
         attribute: 'health',
         // for 250% of the player's weapon damage
-        amount: player.calculateWeaponDamage() * (damagePercent / 100),
+        amount: getDamage(player),
         attacker: player,
         type: 'physical',
         // Setting damage 'source' property to 'this' will show the skill that caused the
