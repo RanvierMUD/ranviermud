@@ -1,5 +1,6 @@
 'use strict';
 
+const Random = require('../../../src/RandomUtil')
 const Damage = require('../../../src/Damage');
 const Logger = require('../../../src/Logger');
 const RandomUtil = require('../../../src/RandomUtil');
@@ -91,8 +92,19 @@ class Combat {
    * @param {Character} target
    */
   static makeAttack(attacker, target) {
-    const amount = this.calculateWeaponDamage(attacker);
-    const damage = new Damage({ attribute: 'health', amount, attacker });
+    var amount = this.calculateWeaponDamage(attacker);
+
+	//defines variables associated with critical strikes based on a random percentage chance.
+    const critChance = Math.max(attacker.getMaxAttribute('critical') || 0, 0);
+    const critMultiplier = 1.5;
+    const critical = Random.probability(critChance);
+    
+	const damage = new Damage({ attribute: 'health', amount, attacker });
+	//implements critical strike if rolled successfully
+    if (critical) {
+    	damage.amount = Math.ceil(amount * critMultiplier);
+    	damage.critical = true;
+    }
     damage.commit(target);
 
     if (target.getAttribute('health') <= 0) {

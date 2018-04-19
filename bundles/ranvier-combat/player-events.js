@@ -62,6 +62,7 @@ module.exports = (srcPath) => {
        * @param {Character} target
        */
       hit: state => function (damage, target) {
+
         if (damage.hidden) {
           return;
         }
