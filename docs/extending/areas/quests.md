@@ -427,6 +427,8 @@ entered a certain room, or picked up a certain item. For this, you will need to 
 power of entity scripting. You can see more detailed documentation on scripting in
 [Scripting](scripting.md).
 
+While the `queststart` behavior will handle this for you, it is a good idea to understand how such a script may work 'under the hood'. Here is a straightforward example of how to programmatically give a quest.
+
 In this example, we will implement giving the player a quest (The "Find a Weapon" quest
 from above) when they enter a room.
 
