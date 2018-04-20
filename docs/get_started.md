@@ -2,6 +2,8 @@
 
 ## Installation
 
+Please make sure to have the [Node LTS](https://nodejs.org/en/) installed.
+
 ```sh
 git clone git://github.com/shawncplus/ranviermud
 cd ranviermud
@@ -10,8 +12,10 @@ npm install
 npm run bundle-install
 ```
 
-If you would like to use the latest, but perhaps not stable, features make sure you are on the
+If you would like to use the latest, but perhaps not stable, feature,s make sure you are on the
 `staging` branch.
+
+It is also recommended that contributors submit PRs from the `staging` branch. For more on contributing, see [CONTRIBUTING.md in the Ranvier Github repo](https://github.com/shawncplus/ranviermud/blob/staging/CONTRIBUTING.md).
 
 ### Yeoman Generator
 
