@@ -92,14 +92,14 @@ class Combat {
    * @param {Character} target
    */
   static makeAttack(attacker, target) {
-    //defines variables associated with critical strikes based on a random percentage chance.
+    // defines variables associated with critical strikes based on a random percentage chance.
     const critChance = Math.max(attacker.getMaxAttribute('critical') || 0, 0);
     const critical = Random.probability(critChance);
     const critMultiplier = critical ? 1.5 : 1;
     const amount = Math.ceil(this.calculateWeaponDamage(attacker) * critMultiplier);
     const damage = new Damage({ attribute: 'health', amount, attacker });
     
-    //implements critical strike if rolled successfully
+    // implements critical strike if rolled successfully
     if (critical) {
       damage.critical = true;
     }
