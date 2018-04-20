@@ -407,6 +407,18 @@ The quests array is a list of quest EntityReferences, i.e., `<area the quests.js
 Now when the NPC is loaded into the game the player can access the NPC's list of available
 quests with `quest list rat`
 
+To make a quest start automatically when an eligible player enters a room, simply use the `queststart` room behavior (part of the default 'ranvier-quests' bundle):
+
+```yaml
+- id: 1
+  title: Test Room 1
+  description: "A featureless white room. A pitch black void in the shape of archway can be seen on the east side of the room."
+  # ...
+  behaviors:
+    startquest:
+      questId: 'limbo:1' # auto-start on entry
+```
+
 ### Scripts
 
 While NPC quest givers are the easiest approach, they are not the most flexible. For
