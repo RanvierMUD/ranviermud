@@ -6,7 +6,6 @@
     - id: "limbo:3"
       respawnChance: 20
       replaceOnRespawn: true # when this chest respawns completely replace it so its contents get refreshed
-  script: "1-test"
   exits:
     - roomId: "limbo:2"
       direction: east
@@ -17,6 +16,9 @@
       direction: west
     - roomId: "mapped:start"
       direction: north
+  behaviors:
+    startquest:
+      questId: 'limbo:1' # auto-start on entry
 - id: 2
   title: "Test Room 2"
   description: >-
