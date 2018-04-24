@@ -1,5 +1,6 @@
 'use strict';
 
+const Random = require('../../../src/RandomUtil')
 const Damage = require('../../../src/Damage');
 const Logger = require('../../../src/Logger');
 const RandomUtil = require('../../../src/RandomUtil');
@@ -91,18 +92,26 @@ class Combat {
    * @param {Character} target
    */
   static makeAttack(attacker, target) {
-    const amount = this.calculateWeaponDamage(attacker);
+    // defines variables associated with critical strikes based on a random percentage chance.
+    const critChance = Math.max(attacker.getMaxAttribute('critical') || 0, 0);
+    const critical = Random.probability(critChance);
+    const critMultiplier = critical ? 1.5 : 1;
+    const amount = Math.ceil(this.calculateWeaponDamage(attacker) * critMultiplier);
     const damage = new Damage({ attribute: 'health', amount, attacker });
+    
+    // implements critical strike if rolled successfully
+    if (critical) {
+      damage.critical = true;
+    }
     damage.commit(target);
-
+  
     if (target.getAttribute('health') <= 0) {
       target.combatData.killedBy = attacker;
     }
-
-    // currently lag is really simple, the character's weapon speed = lag
+  
+      // currently lag is really simple, the character's weapon speed = lag
     attacker.combatData.lag = this.getWeaponSpeed(attacker) * 1000;
   }
-
   /**
    * Any cleanup that has to be done if the character is killed
    * @param {Character} deadEntity

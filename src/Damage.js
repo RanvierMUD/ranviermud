@@ -28,8 +28,6 @@ class Damage {
       type = "physical",
       source = null,
       hidden = false,
-      critical = false,
-      criticalMultiplier = 1.5
     } = config;
 
     if (amount === null) {
@@ -46,8 +44,6 @@ class Damage {
     this.source = source;
     this.attacker = attacker;
     this.hidden = hidden;
-    this.critical = critical;
-    this.criticalMultiplier = criticalMultiplier;
   }
 
   /**
@@ -59,11 +55,6 @@ class Damage {
     let amount = this.amount;
 
     if (this.attacker) {
-      const critChance = Math.max(this.attacker.getMaxAttribute('critical') || 0, 0);
-      this.critical = Random.probability(critChance);
-      if (this.critical) {
-        amount = Math.ceil(amount * this.criticalMultiplier);
-      }
       amount = this.attacker.evaluateOutgoingDamage(this, amount);
     }
 
