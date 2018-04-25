@@ -76,7 +76,7 @@ module.exports = (srcPath) => {
   const damagePercent = 250;
   const energyCost = 20;
   
-  //An example damage calculation using the Combat library from the ranvier-combat bundle
+  // An example damage calculation using the Combat library from the ranvier-combat bundle
   function getDamage(player) {
     return Combat.calculateWeaponDamage(player) * (damagePercent / 100);
   }
