@@ -9,10 +9,36 @@ module.exports = srcPath => {
   return {
     usage: 'scan',
     command: state => (args, player) => {
-      for (const exit of player.room.exits) {
-        const room = state.RoomManager.getRoom(exit.roomId);
+      if (player.room.exits && player.room.exits.length) {
+        for (const exit of player.room.exits) {
+          const room = state.RoomManager.getRoom(exit.roomId);
+  
+          broadcastScan(exit.direction, room);
+        }
+      } else if (player.room.coordinates) {
+        const directions = {
+          north: [0, 1, 0],
+          south: [0, -1, 0],
+          east: [1, 0, 0],
+          west: [-1, 0, 0],
+          up: [0, 0, 1],
+          down: [0, 0, -1],
+        };
+        const {x, y, z} = player.room.coordinates;
+        for (const [direction, coords] of Object.entries(directions)) {
+          const [diffX, diffY, diffZ] = coords;
+          const room = player.room.area.getRoomAtCoordinates(x + diffX, y + diffY, z + diffZ);
+          
+          if (!room) continue;
 
-        B.at(player, `(${exit.direction}) ${room.title}`);
+          broadcastScan(direction, room);
+        }
+      } else {
+        B.sayAt(player, 'You scan your surroundings and see... nothing.');
+      }
+
+      function broadcastScan(direction, room) {
+        B.at(player, `(${direction}) ${room.title}`);
         if (room.npcs.size || room.players.size) {
           B.sayAt(player, ':');
         } else {
@@ -27,6 +53,7 @@ module.exports = srcPath => {
         }
         B.sayAt(player);
       }
-    }
+    } 
   };
 };
+
