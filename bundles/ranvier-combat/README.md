@@ -1,4 +1,4 @@
-The Ranvier engine itself does prescribe or prefer any certain type of combat, it simply has tools
+The Ranvier engine itself doesn't prescribe or prefer any certain type of combat, it simply has tools
 in place to allow you to implement which ever type of combat you prefer. This bundle is an example
 implementation of Diku-style autoattack combat. While it is an example implementation it is stable
 enough to be used in your game should you choose not to replace it.
