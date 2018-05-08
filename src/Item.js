@@ -38,7 +38,7 @@ class Item extends Metadatable(EventEmitter) {
     const validate = ['keywords', 'name', 'id'];
 
     for (const prop of validate) {
-      if (!(prop in item)) {
+      if (!item || !(prop in item)) {
         throw new ReferenceError(`Item in area [${area.name}] missing required property [${prop}]`);
       }
     }
