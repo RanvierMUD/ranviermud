@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * MOTD event
+ * Delete character event
  */
 module.exports = (srcPath) => {
   const EventUtil = require(srcPath + 'EventUtil');
