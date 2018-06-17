@@ -4,7 +4,7 @@ guide to get you started [https://guides.github.com/activities/contributing-to-o
 ## Talking with the team
 
 Before you start writing code, adding documentation, or submitting issues we suggest you hop in our slack channel
-([Get an invite](https://ranviermud.signup.team/)) and say hi.
+([Get an invite](https://join.slack.com/t/ranviermud/shared_invite/enQtMzczMDU3MDkxODc5LWVjZmUwNjBmNGFjYjZjOTM2OTcyMDMzZTJjZmNlOWZjNWJmNjVmMTg4ODFmOWQ3Yjg2Y2U5OTIyYTgyZTE2ZTA)) and say hi.
 
 ## Donating
 
