@@ -24,7 +24,6 @@ const PlayerRoles = require('./PlayerRoles');
 class Player extends Character {
   constructor(data) {
     super(data);
-
     this.account = data.account || null;
     this.experience = data.experience || 0;
     this.extraPrompts = new Map();

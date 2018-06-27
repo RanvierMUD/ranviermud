@@ -21,14 +21,14 @@ module.exports = (srcPath) => {
 
       // Boot and log any failed password attempts
       if (passwordAttempts[name] > maxFailedAttempts) {
-        write("Password attempts exceeded.\r\n");
+        write("Число попыток ввода пароля исчерпано.\r\n");
         passwordAttempts[name] = 0;
         socket.end();
         return false;
       }
 
       if (!args.dontwelcome) {
-        write("Enter your password: ");
+        write("Введите пароль: ");
         socket.command('toggleEcho');
       }
 
@@ -36,7 +36,7 @@ module.exports = (srcPath) => {
         socket.command('toggleEcho');
 
         if (!args.account.checkPassword(pass.toString().trim())) {
-          write("<red>Incorrect password.</red>\r\n");
+          write("<red>Неверный пароль.</red>\r\n");
           passwordAttempts[name]++;
 
           return socket.emit('password', socket, args);

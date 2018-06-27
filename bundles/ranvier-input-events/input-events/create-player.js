@@ -12,7 +12,7 @@ module.exports = (srcPath) => {
       const say    = EventUtil.genSay(socket);
       const write  = EventUtil.genWrite(socket);
 
-      write("<bold>What would you like to name your character?</bold> ");
+      write("<bold>Выберите имя для вашего персонажа:</bold> ");
       socket.once('data', name => {
         say('');
         name = name.toString().trim();
@@ -29,7 +29,7 @@ module.exports = (srcPath) => {
         const exists = state.PlayerManager.exists(name);
 
         if (exists) {
-          say(`That name is already taken.`);
+          say(`Это имя занято. Придумайте другое.`);
           return socket.emit('create-player', socket, args);
         }
 

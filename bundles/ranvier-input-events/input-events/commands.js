@@ -69,12 +69,12 @@ module.exports = (src) => {
               if (roomCommands && roomCommands.includes(commandName)) {
                 player.room.emit('command', player, commandName, args.join(' '));
               } else {
-                Broadcast.sayAt(player, "Huh?");
+                Broadcast.sayAt(player, "Чаво?");
                 Logger.warn(`WARNING: Player tried non-existent command '${data}'`);
               }
               break;
             case error instanceof RestrictedCommandError:
-              Broadcast.sayAt(player, "You can't do that.");
+              Broadcast.sayAt(player, "У вас нет доступа к этой команде.");
               break;
             default:
               Logger.error(error);

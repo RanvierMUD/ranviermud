@@ -8,7 +8,7 @@ module.exports = (srcPath) => {
   return {
     event: state => (socket, args) => {
       if (!args || !args.dontwelcome) {
-        socket.write('Welcome, what is your name? ');
+          socket.write('Введите имя аккаунта: ');
       }
 
       socket.once('data', name => {
@@ -33,13 +33,13 @@ module.exports = (srcPath) => {
         account = state.AccountManager.loadAccount(name);
 
         if (account.banned) {
-          socket.write('This account has been banned.\r\n');
+          socket.write('Ваш аккаунт был забанен.\r\n');
           socket.end();
           return;
         }
 
         if (account.deleted) {
-          socket.write('This account has been deleted.\r\n');
+          socket.write('Ваш аккаунт был удален.\r\n');
           socket.end();
           return;
         }
