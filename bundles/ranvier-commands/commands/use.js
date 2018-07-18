@@ -65,7 +65,7 @@ module.exports = (srcPath, bundlePath) => {
           }
 
           Logger.error(e.message);
-          B.sayAt(this, 'Huh?');
+          Broadcast.sayAt(this, 'Huh?');
         }
       }
 

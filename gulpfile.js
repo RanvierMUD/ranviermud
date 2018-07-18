@@ -54,7 +54,7 @@ gulp.task('todo', toDoTask);
 
 gulp.task('lint', lintTask);
 
-gulp.task('default', ['todo', 'lint']);
+gulp.task('default', gulp.series('todo', 'lint'));
 
 function lintTask() {
   return gulp
