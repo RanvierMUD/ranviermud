@@ -8,14 +8,14 @@ module.exports = (srcPath) => {
       // match cast "fireball" target
       const match = args.match(/^(['"])([^\1]+)+\1(?:$|\s+(.+)$)/);
       if (!match) {
-        return Broadcast.sayAt(player, "Casting spells must be surrounded in quotes e.g., cast 'fireball' target");
+        return Broadcast.sayAt(player, "Название заклинания должно быть заключено в символы : ' или * или !");
       }
 
       const [ , , spellName, targetArgs] = match;
       const spell = state.SpellManager.find(spellName);
 
       if (!spell) {
-        return Broadcast.sayAt(player, "No such spell.");
+        return Broadcast.sayAt(player, "И откуда вы набрались таких выражений?");
       }
 
       player.queueCommand({

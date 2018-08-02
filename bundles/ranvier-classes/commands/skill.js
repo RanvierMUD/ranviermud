@@ -10,7 +10,7 @@ module.exports = (srcPath) => {
       const say = (message, wrapWidth) => B.sayAt(player, message, wrapWidth);
 
       if (!args.length) {
-        return say("What skill or spell do you want to look up? Use 'skills' to view all skills/spells.");
+        return say("Какое умение или заклинание вы хотите найти? Используйте команду 'умения', чтобы просмотреть все  ваши умения и заклинания.");
       }
 
       let skill = state.SkillManager.find(args, true);
@@ -19,22 +19,22 @@ module.exports = (srcPath) => {
       }
 
       if (!skill) {
-        return say("No such skill.");
+        return say("Нет такого умения.");
       }
 
       say('<b>' + B.center(80, skill.name, 'white', '-') + '</b>');
       if (skill.flags.includes(SkillFlag.PASSIVE)) {
-        say('<b>Passive</b>');
+        say('<b>Пассивные</b>');
       } else {
-        say(`<b>Usage</b>: ${skill.id}`);
+        say(`<b>Использовать</b>: ${skill.id}`);
       }
 
       if (skill.resource && skill.resource.cost) {
-        say(`<b>Cost</b>: <b>${skill.resource.cost}</b> ${skill.resource.attribute}`);
+        say(`<b>Цена</b>: <b>${skill.resource.cost}</b> ${skill.resource.attribute}`);
       }
 
       if (skill.cooldownLength) {
-        say(`<b>Cooldown</b>: <b>${skill.cooldownLength}</b> seconds`);
+        say(`<b>Время перезарядки</b>: <b>${skill.cooldownLength}</b> seconds`);
       }
       say(skill.info(player), 80);
       say('<b>' + B.line(80) + '</b>');

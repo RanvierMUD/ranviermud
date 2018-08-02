@@ -1,6 +1,6 @@
 - id: 1
-  title: Test Room 1
-  description: "A featureless white room. A pitch black void in the shape of archway can be seen on the east side of the room."
+  title: Тестовая комната номер один
+  description: "Просто белая комната"
   npcs: ["limbo:1" ]
   items:
     - id: "limbo:3"
@@ -9,14 +9,14 @@
   script: "1-test"
   exits:
     - roomId: "limbo:2"
-      direction: east
+      direction: восток
       leaveMessage: " steps into the void and disappears."
     - roomId: "limbo:8"
-      direction: down
+      direction: вниз
     - roomId: "limbo:9"
-      direction: west
+      direction: запад
     - roomId: "mapped:start"
-      direction: north
+      direction: север
 - id: 2
   title: "Test Room 2"
   description: >-

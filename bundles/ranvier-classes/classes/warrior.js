@@ -9,8 +9,8 @@
  */
 module.exports = srcPath => {
   return {
-    name: 'Warrior',
-    description: 'Warriors relish being face-to-face with their enemy. Whether it be wielding axes, maces, swords, or a nearby log, Warriors focus on dealing strong physical damage to their opponent. What they lack in the raw magical damage of a Mage, or the healing prowess of a Cleric, Warriors make up for in their tenacity. Those choosing the more defensive path of the shield can outlast otherwise deadly attacks.',
+    name: 'Богатырь',
+    description: 'Воин с железными кулаками',
 
     abilityTable: {
       3: { skills: ['rend'] },
@@ -21,7 +21,7 @@ module.exports = srcPath => {
 
     setupPlayer: player => {
       player.addAttribute('energy', 100);
-      player.prompt = '[ %health.current%/%health.max% <b>hp</b> %energy.current%/%energy.max% <b>energy</b> ]';
+      player.prompt = '[ <b>Здоровье:</b> %health.current%/%health.max%  <b>Энергия:</b> %energy.current%/%energy.max% ]';
     }
   };
 };
