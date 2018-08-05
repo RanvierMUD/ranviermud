@@ -17,6 +17,7 @@
     "bundle-install": "node setup-bundles"
   },
   "dependencies": {
+    "apiai": "^4.0.3",
     "bcryptjs": "^2.4.0",
     "commander": "",
     "js-yaml": "",

@@ -22,7 +22,7 @@ module.exports = (srcPath, bundlePath) => {
       const item = Parser.parseDot(args, player.inventory);
 
       if (!item) {
-        return Broadcast.sayAt(player, `У вас нет $args .`);
+        return Broadcast.sayAt(player, `У вас нет ${args} .`);
       }
 
       player.removeItem(item);
