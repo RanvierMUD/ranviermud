@@ -7,10 +7,11 @@ module.exports = (srcPath, bundlePath) => {
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
-    usage: 'give <item> <target>',
+    usage: 'дать <предмет> <цель>',
+	aliases: ['дать' ],
     command: state => (args, player) => {
       if (!args || !args.length) {
-        return B.sayAt(player, 'Дать что и кому??');
+        return B.sayAt(player, 'Дать что и кому?');
       }
 
       let [ targetItem, to, targetRecip ] = args.split(' ');
@@ -47,7 +48,7 @@ module.exports = (srcPath, bundlePath) => {
       }
 
       if (target === player) {
-        return B.sayAt(player, `<green>Вы переместили ${ItemUtil.display(targetItem)} от одной руки к другой. Это было продуктивно.</green>`);
+        return B.sayAt(player, `<green>Вы переместили ${ItemUtil.display(targetItem)} из одной руки в другую. Это было продуктивно.</green>`);
       }
 
       if (target.isInventoryFull()) {
@@ -59,7 +60,7 @@ module.exports = (srcPath, bundlePath) => {
 
       B.sayAt(player, `<green>Вы дали <white>${target.name}</white>: ${ItemUtil.display(targetItem)}.</green>`);
       if (!target.isNpc) {
-        B.sayAt(target, `<green>${player.name} дает вам: ${ItemUtil.display(targetItem)}.</green>`);
+        B.sayAt(target, `<green>${player.name} дал вам: ${ItemUtil.display(targetItem)}.</green>`);
       }
     }
   };

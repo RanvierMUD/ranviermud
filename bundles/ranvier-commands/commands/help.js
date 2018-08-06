@@ -7,6 +7,7 @@ module.exports = (srcPath) => {
 
   return {
     usage: 'help [search] [topic keyword]',
+	aliases: ['помощь' ],
     command: (state) => (args, player) => {
       if (!args.length) {
         // look at `help help` if they haven't specified a file
@@ -14,7 +15,7 @@ module.exports = (srcPath) => {
       }
 
       // `help search`
-      if (args.indexOf('search') === 0) {
+      if (args.indexOf('search') === 0 || args.indexOf('поиск') === 0) {
         return searchHelpfiles(args, player, state);
       }
 
@@ -29,7 +30,7 @@ module.exports = (srcPath) => {
       } catch (e) {
         Logger.warn(`UNRENDERABLE-HELP: [${args}]`);
         Logger.warn(e);
-        B.sayAt(player, `Invalid help file for ${args}.`);
+        B.sayAt(player, `Невалидный файл для ${args}.`);
       }
     }
   };

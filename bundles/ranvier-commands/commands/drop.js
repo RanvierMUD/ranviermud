@@ -6,7 +6,8 @@ module.exports = (srcPath, bundlePath) => {
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
-    usage: 'drop <item>',
+    usage: 'бросить <имя предмета>',
+	aliases: ['бросить', 'выкинуть', 'выбросить'],
     command : (state) => (args, player) => {
       args = args.trim();
 
@@ -15,7 +16,7 @@ module.exports = (srcPath, bundlePath) => {
       }
 
       if (!player.room) {
-        return Broadcast.sayAt(player, 'Вы парите в НИГДЕ, вы не можете ничего никуда выбросить.');
+        return Broadcast.sayAt(player, 'Вы в НИГДЕ, вы не можете выбросить ЭТО в НИКУДА.');
       }
 
       const item = Parser.parseDot(args, player.inventory);
@@ -33,7 +34,7 @@ module.exports = (srcPath, bundlePath) => {
         npc.emit('playerDropItem', player, item);
       }
 
-      Broadcast.sayAt(player, `<green>Вы выкиули: </green>${ItemUtil.display(item)}<green>.</green>`);
+      Broadcast.sayAt(player, `<green>Вы выбросили: </green>${ItemUtil.display(item)}<green>.</green>`);
     }
   };
 };

@@ -8,6 +8,7 @@ module.exports = (srcPath) => {
 
   return {
     usage: 'flush',
+	aliases: ["~"],
     command : (state) => (args, player) => {
       player.commandQueue.flush();
       Broadcast.sayAt(player, '<bold><yellow>Очередь стерта.</yellow></bold>');

@@ -4,7 +4,8 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
 
   return {
-    usage: 'quit',
+    usage: 'выход',
+	aliases: ['выход', 'конец'],
     command: (state) => (args, player) => {
       if (player.isInCombat()) {
         return Broadcast.sayAt(player, "Вы слишком заняты, сражаясь!");

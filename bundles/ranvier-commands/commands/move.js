@@ -11,8 +11,8 @@ module.exports = (srcPath) => {
   const Player = require(srcPath + 'Player');
 
   return {
-    aliases: [ "go", "walk" ],
-    usage: 'move [direction]',
+    aliases: [ "go", "walk", 'идти' ],
+    usage: 'идти [направление]',
     command: (state) => (exitName, player) => {
       const oldRoom = player.room;
       if (!oldRoom) {

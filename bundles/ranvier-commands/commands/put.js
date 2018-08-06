@@ -7,7 +7,8 @@ module.exports = (srcPath, bundlePath) => {
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
-    usage: 'put <item> <container>',
+    usage: 'положить <вещь> <контейнер>',
+	aliases: ['положить'],
     command : (state) => (args, player) => {
       args = args.trim();
 

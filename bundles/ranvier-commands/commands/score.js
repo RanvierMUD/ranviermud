@@ -7,7 +7,7 @@ module.exports = (srcPath) => {
   const B = require(srcPath + 'Broadcast');
 
   return {
-    aliases: [ 'stats' ],
+    aliases: [ 'stats', 'счет' ],
     command : (state) => (args, p) => {
       const say = message => B.sayAt(p, message);
 
@@ -32,10 +32,10 @@ module.exports = (srcPath) => {
         };
       }
 
-      B.at(p, sprintf(' %-9s: %12s', 'Health', `${stats.health.current}/${stats.health.max}`));
+      B.at(p, sprintf(' %-9s: %12s', 'Здоровье', `${stats.health.current}/${stats.health.max}`));
       say('<b><green>' + sprintf(
         '%36s',
-        'Weapon '
+        'Оружие '
       ));
 
       // class resource
@@ -45,21 +45,21 @@ module.exports = (srcPath) => {
             current: p.getAttribute('energy'),
             max: p.getMaxAttribute('energy')
           };
-          B.at(p, sprintf(' %-9s: %12s', 'Energy', `${energy.current}/${energy.max}`));
+          B.at(p, sprintf(' %-9s: %12s', 'Энергия', `${energy.current}/${energy.max}`));
           break;
         case 'mage':
           const mana = {
             current: p.getAttribute('mana'),
             max: p.getMaxAttribute('mana')
           };
-          B.at(p, sprintf(' %-9s: %12s', 'Mana', `${mana.current}/${mana.max}`));
+          B.at(p, sprintf(' %-9s: %12s', 'Мана', `${mana.current}/${mana.max}`));
           break;
         case 'paladin':
           const favor = {
             current: p.getAttribute('favor'),
             max: p.getMaxAttribute('favor')
           };
-          B.at(p, sprintf(' %-9s: %12s', 'Favor', `${favor.current}/${favor.max}`));
+          B.at(p, sprintf(' %-9s: %12s', 'Благодать', `${favor.current}/${favor.max}`));
           break;
         default:
           B.at(p, B.line(24, ' '));
@@ -71,15 +71,15 @@ module.exports = (srcPath) => {
       const weaponDamage = Combat.getWeaponDamage(p);
       const min = Combat.normalizeWeaponDamage(p, weaponDamage.min);
       const max = Combat.normalizeWeaponDamage(p, weaponDamage.max);
-      say(sprintf(' %6s:<b>%5s</b> - <b>%-5s</b> |', 'Damage', min, max));
+      say(sprintf(' %6s:<b>%5s</b> - <b>%-5s</b> |', 'Урон', min, max));
       B.at(p, sprintf('%37s', '|'));
-      say(sprintf(' %6s: <b>%12s</b> |', 'Speed', B.center(12, Combat.getWeaponSpeed(p) + ' sec')));
+      say(sprintf(' %6s: <b>%12s</b> |', 'Скорость', B.center(12, Combat.getWeaponSpeed(p) + ' sec')));
 
       say(sprintf('%60s', "'" + B.line(22) + "'"));
 
       say('<b><green>' + sprintf(
         '%-24s',
-        ' Stats'
+        ' Характеристики'
       ) + '</green></b>');
       say('.' + B.line(22) + '.');
 
@@ -100,7 +100,7 @@ module.exports = (srcPath) => {
         }
       };
 
-      printStat('strength', false); // left
+      printStat('сиоа', false); // left
       say('<b><green>' + sprintf('%36s', 'Gold ')); // right
       printStat('agility', false); // left
       say(sprintf('%36s', '.' + B.line(12) + '.')); // right

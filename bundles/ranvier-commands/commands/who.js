@@ -5,6 +5,7 @@ module.exports = (srcPath) => {
 
   return {
     usage: 'who',
+	aliases: ['кто'],
     command: (state) => (args, player) => {
       Broadcast.sayAt(player, "<bold><red>                  Кто онлайн</bold></red>");
       Broadcast.sayAt(player, "<bold><red>===============================================</bold></red>");
@@ -19,8 +20,8 @@ module.exports = (srcPath) => {
       function getRoleString(role = 0) {
         return [
           '',
-          '<white>[Builder]</white>',
-          '<b><white>[Admin]</white></b>'
+          '<white>[Билдер]</white>',
+          '<b><white>[Бессмертный]</white></b>'
         ][role] || '';
       }
     }

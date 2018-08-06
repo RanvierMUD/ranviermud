@@ -7,14 +7,15 @@ module.exports = (srcPath) => {
   const Logger = require(srcPath + 'Logger');
 
   return {
-    usage: 'talk <npc> <message>',
+    usage: 'сказать <имя> <сообщение>',
+	aliases: [ 'сказать' ],
     command : (state) => (args, player) => {
       if (!args.length) {
         return B.sayAt(player, 'С кем ты пытаешься поговорить?');
       }
 
       if (!player.room) {
-        return B.sayAt(player, 'Ты паришь НИГДЕ, ты не можешь говорить.');
+        return B.sayAt(player, 'Ты НИГДЕ, ты не можешь говорить.');
       }
 
       let [ npcSearch, ...messageParts ] = args.split(' ');

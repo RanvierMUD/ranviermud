@@ -6,15 +6,15 @@ module.exports = (srcPath) => {
   const Data = require(srcPath + 'Data');
 
   return {
-    usage: 'config <set/list> [setting] [value]',
-    aliases: ['toggle', 'options', 'set'],
+    usage: 'режим <установить/список> [режим] [значение]',
+    aliases: ['toggle', 'options', 'set', 'режим'],
     command: (state) => (args, player) => {
       if (!args.length) {
-        Broadcast.sayAt(player, 'Настроить что?');
+        Broadcast.sayAt(player, 'Какой режим?');
         return state.CommandManager.get('help').execute('config', player);
       }
 
-      const possibleCommands = ['set', 'list'];
+      const possibleCommands = ['set', 'list', 'установить', 'список'];
 
       const [command, configToSet, valueToSet ] = args.split(' ');
 
@@ -23,7 +23,7 @@ module.exports = (srcPath) => {
         return state.CommandManager.get('help').execute('config', player);
       }
 
-      if (command === 'list') {
+      if (command === 'list' || command === 'список') {
         Broadcast.sayAt(player, 'Нынешние настройки:');
         for (const key in player.metadata.config) {
           const val = player.metadata.config[key] ? 'on' : 'off';
@@ -33,11 +33,11 @@ module.exports = (srcPath) => {
       }
 
       if (!configToSet) {
-        Broadcast.sayAt(player, 'Set what?');
+        Broadcast.sayAt(player, 'Установить ЧТО?');
         return state.CommandManager.get('help').execute('config', player);
       }
 
-      const possibleSettings = ['brief', 'autoloot', 'minimap'];
+      const possibleSettings = ['brief', 'autoloot', 'minimap', 'миникарта', 'грабеж трупов', 'краткий'];
 
       if (!possibleSettings.includes(configToSet)) {
         Broadcast.sayAt(player, `<red>Invalid setting: ${configToSet}. Possible settings: ${possibleSettings.join(', ')}`);

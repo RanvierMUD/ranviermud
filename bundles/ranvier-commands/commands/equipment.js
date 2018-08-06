@@ -5,8 +5,8 @@ module.exports = (srcPath, bundlePath) => {
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
-    aliases: ['worn'],
-    usage: 'equipment',
+    aliases: ['worn', 'экипировка'],
+    usage: 'экипировка',
     command: (state) => (args, player) => {
       if (!player.equipment.size) {
         return Broadcast.sayAt(player, "Вы абсолютно голый!");

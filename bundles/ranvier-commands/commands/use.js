@@ -13,7 +13,7 @@ module.exports = (srcPath, bundlePath) => {
   const SkillErrors = require(srcPath + 'SkillErrors');
 
   return {
-    aliases: [ 'quaff', 'recite' ],
+    aliases: [ 'quaff', 'recite', 'использовать' ],
     command: state => (args, player) => {
       const say = message => Broadcast.sayAt(player, message);
 

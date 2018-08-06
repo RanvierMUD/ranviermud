@@ -2,7 +2,8 @@ module.exports = srcPath => {
   const B = require(srcPath + 'Broadcast');
 
   return {
-    usage: 'map',
+    usage: 'карта',
+	aliases: ['карта' ],
     command: state => (args, player) => {
       const room = player.room;
       if (!room || !room.coordinates) {

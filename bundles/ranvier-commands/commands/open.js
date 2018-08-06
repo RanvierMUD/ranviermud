@@ -6,8 +6,8 @@ module.exports = (srcPath, bundlePath) => {
   const ItemUtil = require(bundlePath + 'ranvier-lib/lib/ItemUtil');
 
   return {
-    aliases: ['close', 'lock', 'unlock'],
-    usage: '[open/close/lock/unlock] <item> / [open/close/lock/unlock] <door direction>/ [open/close/lock/unlock] <door direction>',
+    aliases: ['close', 'lock', 'unlock', 'закрыть', 'запереть', 'открыть', 'отпереть'],
+    usage: '[открыть/закрыть/запереть/отпереть] <предмет> / [открыть/закрыть/запереть/отпереть] <направление двери>',
     command: state => (args, player, arg0) => {
       const action = arg0.toString().toLowerCase();
       let validTarget = false;
@@ -16,13 +16,13 @@ module.exports = (srcPath, bundlePath) => {
       }
 
       if (!player.room) {
-        return B.sayAt(player, 'Вы висите в НИГДЕ.');
+        return B.sayAt(player, 'Вы в НИГДЕ.');
       }
 
       const parts = args.split(' ');
 
       let exitDirection = parts[0];
-      if (parts[0] === 'door' && parts.length >= 2) {
+      if ((parts[0] === 'door' || parts[0] === 'дверь')  && parts.length >= 2) {
         // Exit is in second parameter
         exitDirection = parts[1];
       }
@@ -71,7 +71,9 @@ module.exports = (srcPath, bundlePath) => {
 
         if (door) {
           switch (action) {
-            case 'open': {
+            case 'open':
+			case 'открыть':
+			{
               if (door.locked) {
                 if (door.lockedBy) {
                   const playerKey = player.hasItem(door.lockedBy);
@@ -90,14 +92,18 @@ module.exports = (srcPath, bundlePath) => {
                 return B.sayAt(player, "Дверь не закрыта.");
               }
             }
-            case 'close': {
+            case 'close':
+			case 'закрыть':
+			{
               if (door.locked || door.closed) {
                 return B.sayAt(player, "Дверь уже закрыта.");
               }
               B.sayAt(player, "Дверь закрывается.");
               return doorRoom.closeDoor(targetRoom);
             }
-            case 'lock': {
+            case 'lock':
+			case 'запереть':
+			{
               if (door.locked) {
                 return B.sayAt(player, "Дверь уже заперта.");
               }
@@ -115,7 +121,9 @@ module.exports = (srcPath, bundlePath) => {
               doorRoom.lockDoor(targetRoom);
               return B.sayAt(player, '*Щелк* Дверь заперта.');
             }
-            case 'unlock': {
+            case 'unlock': 
+			case 'отпереть':
+			{
               if (door.locked) {
                 if (door.lockedBy) {
                   if (player.hasItem(door.lockedBy)) {
@@ -148,7 +156,9 @@ module.exports = (srcPath, bundlePath) => {
           return B.sayAt(player, `${ItemUtil.display(item)} не является контейнером.`)
         }
         switch (action) {
-          case 'open': {
+          case 'open': 
+		  case 'открыть':
+		  {
             if (item.locked) {
               if (item.lockedBy) {
                 const playerKey = player.hasItem(item.lockedBy);
@@ -167,7 +177,8 @@ module.exports = (srcPath, bundlePath) => {
             }
             return B.sayAt(player, `${ItemUtil.display(item)} не закрыт...`);
           }
-          case 'close': {
+          case 'close': 
+		  case 'закрыть':{
             if (item.locked || item.closed) {
               return B.sayAt(player, "Это уже закрыто.");
             }
@@ -177,7 +188,8 @@ module.exports = (srcPath, bundlePath) => {
             B.sayAt(player, `Вы закрыли ${ItemUtil.display(item)}.`);
             return item.close();
           }
-          case 'lock': {
+          case 'lock': 
+		  case 'запереть':{
             if (item.locked) {
               return B.sayAt(player, "Это уже закрыто.");
             }
@@ -195,7 +207,9 @@ module.exports = (srcPath, bundlePath) => {
             }
             return B.sayAt(player, "Предмет заперт и у вас нет ключа.");
           }
-          case 'unlock': {
+          case 'unlock': 
+		  case 'отпереть':
+		  {
             if (item.locked) {
               if (item.lockedBy) {
                 const playerKey = player.hasItem(item.lockedBy);

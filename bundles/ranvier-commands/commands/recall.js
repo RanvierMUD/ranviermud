@@ -4,7 +4,8 @@ module.exports = srcPath => {
   const B = require(srcPath + 'Broadcast');
 
   return {
-    usage: 'recall',
+    usage: 'возврат',
+	aliases: ['возврат'],
     command: state => (args, player) => {
       const home = player.getMeta('waypoints.home');
       if (!home) {

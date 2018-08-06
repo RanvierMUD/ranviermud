@@ -6,8 +6,8 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
 
   return {
-    aliases: [ 'level', 'experience' ],
-    usage: 'tnl',
+    aliases: [ 'level', 'experience', 'уровни', 'уровень', 'опыт' ],
+    usage: 'уровни',
     command: state => (args, player) => {
       const totalTnl = LevelUtil.expToLevel(player.level + 1);
       const currentPerc = player.experience ? Math.floor((player.experience / totalTnl) * 100) : 0;

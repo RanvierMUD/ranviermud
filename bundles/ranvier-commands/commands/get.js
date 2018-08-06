@@ -23,7 +23,7 @@ module.exports = (srcPath, bundlePath) => {
       }
 
       // 'loot' is an alias for 'get all'
-      if (arg0 === 'loot') {
+      if (arg0 === 'loot' || arg === 'все') {
         args = ('all ' + args).trim();
       }
 
@@ -59,7 +59,7 @@ module.exports = (srcPath, bundlePath) => {
         source = container.inventory;
       }
 
-      if (search === 'all') {
+      if (search === 'all' || search === 'все') {
         if (!source || ![...source].length) {
           return Broadcast.sayAt(player, "Здесь нечего брать.");
         }

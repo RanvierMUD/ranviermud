@@ -5,8 +5,8 @@ module.exports = (srcPath) => {
   const Parser = require(srcPath + 'CommandParser').CommandParser;
 
   return {
-    usage: 'emote <message>',
-    aliases: [':'],
+    usage: 'эмоция <сообщение>',
+    aliases: [':', 'эмоция'],
     command: (state) => (args, player) => {
       args = args.trim();
 
@@ -37,7 +37,7 @@ module.exports = (srcPath) => {
 
       player.room.players.forEach(presentPlayer => {
         if (presentPlayer === player) {
-          Broadcast.sayAt(player, `Вы сделали "${emoteMessage}"`);
+          Broadcast.sayAt(player, `${player.name} ${emoteMessage}`);
         } else {
           Broadcast.sayAt(presentPlayer, emoteMessage.replace(presentPlayer.name, 'you'));
         }

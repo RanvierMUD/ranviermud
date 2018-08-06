@@ -9,8 +9,8 @@ module.exports = (srcPath) => {
   const Broadcast = require(srcPath + 'Broadcast');
 
   return {
-    aliases: [ 'pending' ],
-    usage: 'queue',
+    aliases: [ 'pending', 'очередь' ],
+    usage: 'очередь',
     command : (state) => (args, player) => {
       Broadcast.sayAt(player, '<bold><yellow>Очередь команд:</yellow></bold>');
       if (!player.commandQueue.hasPending) {
