@@ -7,6 +7,7 @@ module.exports = (srcPath) => {
 
   return {
     usage: 'help [search] [topic keyword]',
+	aliases: ['помощь' ],
     command: (state) => (args, player) => {
       if (!args.length) {
         // look at `help help` if they haven't specified a file
@@ -14,7 +15,7 @@ module.exports = (srcPath) => {
       }
 
       // `help search`
-      if (args.indexOf('search') === 0) {
+      if (args.indexOf('search') === 0 || args.indexOf('поиск') === 0) {
         return searchHelpfiles(args, player, state);
       }
 
@@ -22,14 +23,14 @@ module.exports = (srcPath) => {
 
       if (!hfile) {
         Logger.error(`MISSING-HELP: [${args}]`);
-        return B.sayAt(player, "Sorry, I couldn't find an entry for that topic.");
+        return B.sayAt(player, "Извините, но я не могу ничего подобного найти.");
       }
       try {
         B.sayAt(player, render(state, hfile));
       } catch (e) {
         Logger.warn(`UNRENDERABLE-HELP: [${args}]`);
         Logger.warn(e);
-        B.sayAt(player, `Invalid help file for ${args}.`);
+        B.sayAt(player, `Невалидный файл для ${args}.`);
       }
     }
   };
@@ -76,14 +77,14 @@ module.exports = (srcPath) => {
 
     const results = state.HelpManager.find(args);
     if (!results.size) {
-      return B.sayAt(player, "Sorry, no results were found for your search.");
+      return B.sayAt(player, "Простите, но никаких результатов по вашему запросу нет.");
     }
     if (results.size === 1) {
       const [ _, hfile ] = [...results][0];
       return B.sayAt(player, render(state, hfile));
     }
     B.sayAt(player, "<yellow>---------------------------------------------------------------------------------</yellow>");
-    B.sayAt(player, "<white>Search Results:</white>");
+    B.sayAt(player, "<white>Результаты поиска:</white>");
     B.sayAt(player, "<yellow>---------------------------------------------------------------------------------</yellow>");
 
     for (const [name, help] of results) {

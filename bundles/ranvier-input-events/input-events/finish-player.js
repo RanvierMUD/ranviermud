@@ -11,7 +11,14 @@ module.exports = (srcPath) => {
   return {
     event: state => (socket, args) => {
       let player = new Player({
+        
         name: args.name,
+        sex: args.sex,
+        genitive_case: args.genitive_case,
+        dative_case: args.dative_case,
+        accusative_case: args.accusative_case,
+        prepositional_case: args.prepositional_case,
+        instrumental_case: args.instrumental_case,
         account: args.account,
         // TIP:DefaultAttributes: This is where you can change the default attributes for players
         attributes: {

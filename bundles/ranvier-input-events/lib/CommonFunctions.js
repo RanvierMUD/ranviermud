@@ -16,16 +16,16 @@ exports.validateName = function(name) {
   const minLength = Config.get('minAccountNameLength');
 
   if (!name) {
-    return 'Please enter a name.';
+    return 'Вы ничего не ввели.';
   }
   if (name.length > maxLength) {
-    return 'Too long, try a shorter name.';
+    return 'Имя слишком длинное.';
   }
   if (name.length < minLength) {
-    return 'Too short, try a longer name.';
+    return 'Имя слишком короткое.';
   }
-  if (!/^[a-z]+$/i.test(name)) {
-    return 'Your name may only contain A-Z without spaces or special characters.';
+  if (!/^[а-я]+$/i.test(name)) {
+    return 'Имя может состоять только из кириллицы.';
   }
   return false;
 }

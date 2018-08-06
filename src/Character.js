@@ -29,8 +29,13 @@ const { Inventory, InventoryFullError } = require('./Inventory');
 class Character extends Metadatable(EventEmitter) {
   constructor(data) {
     super();
-
     this.name = data.name;
+    this.sex = data.sex;
+    this.genitive_case = data.genitive_case;
+    this.dative_case = data.dative_case;    
+    this.accusative_case = data.accusative_case;
+    this.prepositional_case = data.prepositional_case;
+    this.instrumental_case = data.instrumental_case;
     this.inventory = new Inventory(data.inventory || {});
     this.equipment = data.equipment || new Map();
     this.combatants = new Set();
@@ -463,6 +468,12 @@ class Character extends Metadatable(EventEmitter) {
       attributes: this.attributes.serialize(),
       level: this.level,
       name: this.name,
+      sex: this.sex,
+      genitive_case: this.genitive_case,
+      dative_case: this.dative_case,
+      accusative_case: this.accusative_case,
+      prepositional_case: this.prepositional_case,
+      instrumental_case: this.instrumental_case,
       room: this.room.entityReference,
       effects: this.effects.serialize(),
     };

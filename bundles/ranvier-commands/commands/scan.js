@@ -7,7 +7,8 @@ module.exports = srcPath => {
   const B = require(srcPath + 'Broadcast');
 
   return {
-    usage: 'scan',
+    usage: 'оглядеться',
+	aliases: ['оглядеться'],
     command: state => (args, player) => {
       for (const exit of player.room.exits) {
         const room = state.RoomManager.getRoom(exit.roomId);

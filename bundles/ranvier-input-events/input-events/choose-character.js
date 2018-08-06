@@ -22,7 +22,7 @@ module.exports = (srcPath) => {
       * Can create new (if less than 3 living chars)
       */
       say("\r\n------------------------------");
-      say("|      Choose your fate");
+      say("|      Выберите вашу судьбу:");
       say("------------------------------");
 
       // This just gets their names.
@@ -35,7 +35,7 @@ module.exports = (srcPath) => {
 
       // Configure account options menu
       options.push({
-        display: 'Change Password',
+        display: 'Изменить пароль',
         onSelect: () => {
           socket.emit('change-password', socket, { account, nextStage: 'choose-character' });
         },
@@ -43,7 +43,7 @@ module.exports = (srcPath) => {
 
       if (canAddCharacter) {
         options.push({
-          display: 'Create New Character',
+          display: 'Создать нового персонажа',
           onSelect: () => {
             handleMultiplaying();
             socket.emit('create-player', socket, { account });
@@ -52,7 +52,7 @@ module.exports = (srcPath) => {
       }
 
       if (characters.length) {
-        options.push({ display: "Login As:" });
+        options.push({ display: "Войти как:" });
         characters.forEach(char => {
           options.push({
             display: char.username,
@@ -119,7 +119,7 @@ module.exports = (srcPath) => {
 
       if (characters.length) {
         options.push({
-          display: 'Delete a Character',
+          display: 'Удалить персонажа',
           onSelect: () => {
             socket.emit('delete-character', socket, args);
           },
@@ -127,7 +127,7 @@ module.exports = (srcPath) => {
       }
 
       options.push({
-        display: 'Delete This Account',
+        display: 'Удалить данный аккаунт',
         onSelect: () => {
           say('<bold>By deleting this account, all the characters will be also deleted.</bold>')
           write(`<bold>Are you sure you want to delete this account? </bold> <cyan>[Y/n]</cyan> `);
@@ -154,7 +154,7 @@ module.exports = (srcPath) => {
       });
 
       options.push({
-        display: 'Quit',
+        display: 'Выход',
         onSelect: () => socket.end(),
       });
 

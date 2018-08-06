@@ -13,35 +13,35 @@ module.exports = (srcPath, bundlePath) => {
   const SkillErrors = require(srcPath + 'SkillErrors');
 
   return {
-    aliases: [ 'quaff', 'recite' ],
+    aliases: [ 'quaff', 'recite', 'использовать' ],
     command: state => (args, player) => {
       const say = message => Broadcast.sayAt(player, message);
 
       if (!args.length) {
-        return say("Use what?");
+        return say("Использовать что?");
       }
 
       const item = CommandParser.parseDot(args, player.inventory);
 
       if (!item) {
-        return say("You don't have anything like that.");
+        return say("У вас нет ничего похожего.");
       }
 
       const usable = item.getBehavior('usable');
       if (!usable) {
-        return say("You can't use that.");
+        return say("Вы не можете это использовать.");
       }
 
       if ('charges' in usable && usable.charges <= 0) {
-        return say(`You've used up all the magic in ${ItemUtil.display(item)}.`);
+        return say(`Вы использовали магию на ${ItemUtil.display(item)}.`);
       }
 
       if (usable.spell) {
         const useSpell = state.SpellManager.get(usable.spell);
 
         if (!useSpell) {
-          Logger.error(`Item: ${item.entityReference} has invalid usable configuration.`);
-          return say("You can't use that.");
+          Logger.error(`Предмет: ${item.entityReference} имеет неправильные конфигурации.`);
+          return say("Вы не можете это использовать.");
         }
 
         useSpell.options = usable.options;
@@ -53,19 +53,19 @@ module.exports = (srcPath, bundlePath) => {
           useSpell.execute(/* args */ null, player);
         } catch (e) {
           if (e instanceof SkillErrors.CooldownError) {
-            return say(`${useSpell.name} is on cooldown. ${humanize(e.effect.remaining)} remaining.`);
+            return say(`${useSpell.name} на перезарядке. ${humanize(e.effect.remaining)} осталось.`);
           }
 
           if (e instanceof SkillErrors.PassiveError) {
-            return say(`That skill is passive.`);
+            return say(`Это пассивное умение.`);
           }
 
           if (e instanceof SkillErrors.NotEnoughResourcesError) {
-            return say(`You do not have enough resources.`);
+            return say(`У вас нет столько ресурсов.`);
           }
 
           Logger.error(e.message);
-          B.sayAt(this, 'Huh?');
+          B.sayAt(this, 'Что?');
         }
       }
 
@@ -77,12 +77,12 @@ module.exports = (srcPath, bundlePath) => {
 
         let useEffect = state.EffectFactory.create(usable.effect, player, effectConfig, effectState);
         if (!useEffect) {
-          Logger.error(`Item: ${item.entityReference} has invalid usable configuration.`);
-          return say("You can't use that.");
+          Logger.error(`Предмет: ${item.entityReference} имеет неправильные конфигурации.`);
+          return say("Вы не можете это использовать.");
         }
 
         if (!player.addEffect(useEffect)) {
-          return say("Nothing happens.");
+          return say("Ничего не произошло.");
         }
       }
 
@@ -93,7 +93,7 @@ module.exports = (srcPath, bundlePath) => {
       usable.charges--;
 
       if (usable.destroyOnDepleted && usable.charges <= 0) {
-        say(`You used up all the magic in ${ItemUtil.display(item)} and it disappears in a puff of smoke.`);
+        say(`Вы использовали всю магию на ${ItemUtil.display(item)} и он пропадает в облаке дыма.`);
         state.ItemManager.remove(item);
       }
     }

@@ -17,11 +17,13 @@
     "bundle-install": "node setup-bundles"
   },
   "dependencies": {
+    "apiai": "^4.0.3",
     "bcryptjs": "^2.4.0",
     "commander": "",
     "js-yaml": "",
     "longjohn": "^0.2.11",
     "optimist": "",
+    "petrovich": "^0.2.1",
     "pretty-error": "^2.0.2",
     "rando-js": "^0.1.1",
     "semver": "^5.4.1",

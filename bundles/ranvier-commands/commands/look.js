@@ -14,10 +14,11 @@ module.exports = (srcPath, bundlePath) => {
 
   return {
     usage: "look [thing]",
+	aliases: ['смотреть', 'посмотреть', 'оглядеть' ],
     command: state => (args, player) => {
       if (!player.room) {
         Logger.error(player.getName() + ' is in limbo.');
-        return B.sayAt(player, 'You are in a deep, dark void.');
+        return B.sayAt(player, 'Вы НИГДЕ.');
       }
 
       if (args) {

@@ -5,26 +5,23 @@
  */
 module.exports = (srcPath) => {
   const EventUtil = require(srcPath + 'EventUtil');
+  const Logger    = require(srcPath + 'Logger');
   return {
     event: state => (socket, args) => {
       const say = EventUtil.genSay(socket);
       const write  = EventUtil.genWrite(socket);
 
-      write(`<bold>${args.name} doesn't exist, would you like to create it?</bold> <cyan>[y/n]</cyan> `);
+      write(`<bold>${args.name} не найден, вы хотите создать?</bold> <cyan>[да/нет]</cyan> `);
       socket.once('data', confirmation => {
         say('');
         confirmation = confirmation.toString().trim().toLowerCase();
-
-        if (!/[yn]/.test(confirmation)) {
-          return socket.emit('player-name-check', socket, args);
-        }
-
-        if (confirmation === 'n') {
-          say(`Let's try again...`);
+        
+		Logger.log(confirmation);
+        if (confirmation != 'да')  {
+          say(`Давай попробуем снова...`);
           return socket.emit('create-player', socket, args);
         }
-
-        socket.emit('choose-class', socket, args);
+        socket.emit('choose-sex', socket, args);
       });
     }
   };

@@ -7,14 +7,15 @@ module.exports = (srcPath) => {
   const Logger = require(srcPath + 'Logger');
 
   return {
-    usage: 'talk <npc> <message>',
+    usage: 'сказать <имя> <сообщение>',
+	aliases: [ 'сказать' ],
     command : (state) => (args, player) => {
       if (!args.length) {
-        return B.sayAt(player, 'Who are you trying to talk to?');
+        return B.sayAt(player, 'С кем ты пытаешься поговорить?');
       }
 
       if (!player.room) {
-        return B.sayAt(player, 'You are floating in the nether, you cannot speak.');
+        return B.sayAt(player, 'Ты НИГДЕ, ты не можешь говорить.');
       }
 
       let [ npcSearch, ...messageParts ] = args.split(' ');
@@ -27,21 +28,21 @@ module.exports = (srcPath) => {
       }
 
       if (!npcSearch) {
-        return B.sayAt(player, 'Who are you trying to talk to?');
+        return B.sayAt(player, 'С кем ты пытаешься поговорить?');
       }
 
       if (!message.length) {
-        return B.sayAt(player, 'What did you want to say?');
+        return B.sayAt(player, 'Что ты хочешь сказать??');
       }
 
       const npc = Parser.parseDot(npcSearch, player.room.npcs);
       if (!npc) {
-        return B.sayAt(player, "You don't see them here.");
+        return B.sayAt(player, "Ты не видешь его здесь.");
       }
 
-      B.sayAt(player, `<b><cyan>You say to ${npc.name}, '${message}'</cyan></b>`);
+      B.sayAt(player, `<b><cyan>Ты сказал ${npc.name}, '${message}'</cyan></b>`);
       if (!npc.hasBehavior('ranvier-sentient')) {
-        return B.sayAt(player, "They don't seem to understand you.");
+        return B.sayAt(player, "Не похоже чтобы тебя поняли.");
       }
 
       npc.emit('conversation', player, message);
