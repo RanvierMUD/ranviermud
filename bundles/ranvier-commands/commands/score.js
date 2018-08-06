@@ -11,7 +11,7 @@ module.exports = (srcPath) => {
     command : (state) => (args, p) => {
       const say = message => B.sayAt(p, message);
 
-      say('<b>' + B.center(60, `${p.name}, level ${p.level} ${p.playerClass.config.name}`, 'green'));
+      say('<b>' + B.center(60, `${p.name}, уровня ${p.level} ${p.playerClass.config.name}`, 'green'));
       say('<b>' + B.line(60, '-', 'green'));
 
       let stats = {

@@ -12,7 +12,7 @@ module.exports = (srcPath) => {
     aliases: [ 'pending' ],
     usage: 'queue',
     command : (state) => (args, player) => {
-      Broadcast.sayAt(player, '<bold><yellow>Command Queue:</yellow></bold>');
+      Broadcast.sayAt(player, '<bold><yellow>Очередь команд:</yellow></bold>');
       if (!player.commandQueue.hasPending) {
         return Broadcast.sayAt(player, ' -) None.');
       }
@@ -28,7 +28,7 @@ module.exports = (srcPath) => {
         Broadcast.sayAt(player, buf);
       }
 
-      Broadcast.sayAt(player, '<bold><yellow>Use the "flush" command to flush the queue</yellow></bold>');
+      Broadcast.sayAt(player, '<bold><yellow>Используйте команду "flush" чтобы стереть очередь</yellow></bold>');
     }
   };
 };

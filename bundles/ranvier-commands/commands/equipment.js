@@ -9,10 +9,10 @@ module.exports = (srcPath, bundlePath) => {
     usage: 'equipment',
     command: (state) => (args, player) => {
       if (!player.equipment.size) {
-        return Broadcast.sayAt(player, "You are completely naked!");
+        return Broadcast.sayAt(player, "Вы абсолютно голый!");
       }
 
-      Broadcast.sayAt(player, "Currently Equipped:");
+      Broadcast.sayAt(player, "Надето на данный момент:");
       for (const [slot, item] of player.equipment) {
         Broadcast.sayAt(player, `  <${slot}> ${ItemUtil.display(item)}`);
       }

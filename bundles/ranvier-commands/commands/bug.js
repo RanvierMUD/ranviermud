@@ -8,7 +8,7 @@ module.exports = srcPath => {
     aliases: ['typo', 'suggestion'],
     command: state => (args, player, arg0) => {
       if (!args) {
-        return Broadcast.sayAt(player, '<b><yellow>Please describe the bug you have found.</yellow></b>');
+        return Broadcast.sayAt(player, '<b><yellow>Пожалуйста, опишите ошибку, с которой вы столкнулись.</yellow></b>');
       }
 
       player.emit('bugReport', {
@@ -16,8 +16,8 @@ module.exports = srcPath => {
         type: arg0
       });
 
-      Broadcast.sayAt(player, `<b>Your ${arg0} report has been submitted as:</b>\n${args}`);
-      Broadcast.sayAt(player, '<b>Thanks!</b>');
+      Broadcast.sayAt(player, `<b>Ваша ${arg0} жалоба была принята как:</b>\n${args}`);
+      Broadcast.sayAt(player, '<b>Спасибо!</b>');
     }
   };
 };

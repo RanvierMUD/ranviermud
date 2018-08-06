@@ -8,11 +8,11 @@ module.exports = srcPath => {
     command: state => (args, player) => {
       const home = player.getMeta('waypoints.home');
       if (!home) {
-        return B.sayAt(player, 'You do not have a home waypoint set.');
+        return B.sayAt(player, 'У вас нет настроенной дороги домой.');
       }
 
-      B.sayAt(player, '<b><cyan>You pray to the gods to be returned home and are consumed by a bright blue light.</cyan></b>');
-      B.sayAtExcept(player.room, `<b><cyan>${player.name} disappears in a flash of blue light.</cyan></b>`, [player]);
+      B.sayAt(player, '<b><cyan>Вы помолились богам, чтобы вы вернулись домой, и вас окружил яркий голубой свет.</cyan></b>');
+      B.sayAtExcept(player.room, `<b><cyan>${player.name} пропадает во вспышке голубого света.</cyan></b>`, [player]);
 
       const nextRoom = state.RoomManager.getRoom(home);
       player.moveTo(nextRoom, _ => {

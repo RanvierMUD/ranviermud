@@ -11,7 +11,7 @@ module.exports = (srcPath) => {
       args = args.trim();
 
       if (!args.length) {
-        return Broadcast.sayAt(player, 'Yes, but what do you want to emote?');
+        return Broadcast.sayAt(player, 'Так, а что именно ты делаешь?');
       }
 
       const FIND_TARGETS_REGEXP = /~((?:\d+\.)?[^\s.,!?"']+)/gi;
@@ -24,7 +24,7 @@ module.exports = (srcPath) => {
         let targetNameFromInput = execResult[1];
         const target = findTarget(player, targetNameFromInput);
         if (!target) {
-          return Broadcast.sayAt(player, `I can not seem to find ${targetNameFromInput}`);
+          return Broadcast.sayAt(player, `Я не могу найти ${targetNameFromInput}`);
         } else {
           matchedTargets.push(target);
         }
@@ -37,7 +37,7 @@ module.exports = (srcPath) => {
 
       player.room.players.forEach(presentPlayer => {
         if (presentPlayer === player) {
-          Broadcast.sayAt(player, `You emote "${emoteMessage}"`);
+          Broadcast.sayAt(player, `Вы сделали "${emoteMessage}"`);
         } else {
           Broadcast.sayAt(presentPlayer, emoteMessage.replace(presentPlayer.name, 'you'));
         }

@@ -10,7 +10,7 @@ module.exports = (srcPath, bundlePath) => {
     usage: 'give <item> <target>',
     command: state => (args, player) => {
       if (!args || !args.length) {
-        return B.sayAt(player, 'Give what to whom?');
+        return B.sayAt(player, 'Дать что и кому??');
       }
 
       let [ targetItem, to, targetRecip ] = args.split(' ');
@@ -20,13 +20,13 @@ module.exports = (srcPath, bundlePath) => {
       }
 
       if (!targetRecip) {
-        return B.sayAt(player, 'Who do you want to give it to?');
+        return B.sayAt(player, 'Кому вы хотите это дать??');
       }
 
       targetItem = dot(targetItem, player.inventory);
 
       if (!targetItem) {
-        return B.sayAt(player, 'You don\'t have that.');
+        return B.sayAt(player, 'У вас этого нет.');
       }
 
       // prioritize players before npcs
@@ -37,29 +37,29 @@ module.exports = (srcPath, bundlePath) => {
         if (target) {
           const accepts = target.getBehavior('accepts');
           if (!accepts || !accepts.includes(targetItem.entityReference)) {
-            return B.sayAt(player, 'They don\'t want that.');
+            return B.sayAt(player, 'Ему это не надо.');
           }
         } 
       }
 
       if (!target) {
-        return B.sayAt(player, 'They aren\'t here.');
+        return B.sayAt(player, 'Он, кажется, не здесь.');
       }
 
       if (target === player) {
-        return B.sayAt(player, `<green>You move ${ItemUtil.display(targetItem)} from one hand to the other. That was productive.</green>`);
+        return B.sayAt(player, `<green>Вы переместили ${ItemUtil.display(targetItem)} от одной руки к другой. Это было продуктивно.</green>`);
       }
 
       if (target.isInventoryFull()) {
-        return B.sayAt(player, 'They can\'t carry any more.');
+        return B.sayAt(player, 'Он не может больше нести.');
       }
 
       player.removeItem(targetItem);
       target.addItem(targetItem);
 
-      B.sayAt(player, `<green>You give <white>${target.name}</white>: ${ItemUtil.display(targetItem)}.</green>`);
+      B.sayAt(player, `<green>Вы дали <white>${target.name}</white>: ${ItemUtil.display(targetItem)}.</green>`);
       if (!target.isNpc) {
-        B.sayAt(target, `<green>${player.name} gives you: ${ItemUtil.display(targetItem)}.</green>`);
+        B.sayAt(target, `<green>${player.name} дает вам: ${ItemUtil.display(targetItem)}.</green>`);
       }
     }
   };

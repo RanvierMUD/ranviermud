@@ -7,7 +7,7 @@ module.exports = (srcPath) => {
     usage: 'save',
     command: state => (args, player) => {
       player.save(() => {
-        Broadcast.sayAt(player, "Saved.");
+        Broadcast.sayAt(player, "Сохранено.");
       });
     }
   };

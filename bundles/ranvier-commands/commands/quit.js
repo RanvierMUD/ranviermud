@@ -7,12 +7,12 @@ module.exports = (srcPath) => {
     usage: 'quit',
     command: (state) => (args, player) => {
       if (player.isInCombat()) {
-        return Broadcast.sayAt(player, "You're too busy fighting for your life!");
+        return Broadcast.sayAt(player, "Вы слишком заняты, сражаясь!");
       }
 
       player.save(() => {
-        Broadcast.sayAt(player, "Goodbye!");
-        Broadcast.sayAtExcept(player.room, `${player.name} disappears.`, player);
+        Broadcast.sayAt(player, "До встречи!");
+        Broadcast.sayAtExcept(player.room, `${player.name} пропадает.`, player);
         player.socket.emit('close');
       });
     }

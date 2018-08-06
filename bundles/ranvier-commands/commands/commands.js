@@ -59,7 +59,7 @@ module.exports = (srcPath) => {
     command: (state) => (args, player) => {
 
       // print standard commands
-      Broadcast.sayAt(player, "<bold><white>                  Commands</bold></white>");
+      Broadcast.sayAt(player, "<bold><white>                  Команды</bold></white>");
       Broadcast.sayAt(player, "<bold><white>===============================================</bold></white>");
 
       let commands = [];
@@ -74,7 +74,7 @@ module.exports = (srcPath) => {
 
       // channels
       Broadcast.sayAt(player);
-      Broadcast.sayAt(player, "<bold><white>                  Channels</bold></white>");
+      Broadcast.sayAt(player, "<bold><white>                  Каналы</bold></white>");
       Broadcast.sayAt(player, "<bold><white>===============================================</bold></white>");
 
       let i = 0;

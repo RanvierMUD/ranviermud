@@ -20,7 +20,7 @@ module.exports = (srcPath) => {
       }
 
       if (player.isInCombat()) {
-        return B.sayAt(player, 'You are in the middle of a fight!');
+        return B.sayAt(player, 'Вы посреди битвы!');
       }
 
       const exit = state.RoomManager.findExit(oldRoom, exitName);
@@ -47,25 +47,25 @@ module.exports = (srcPath) => {
             nextRoom = area.getRoomAtCoordinates(coords.x + diff[0], coords.y + diff[1], coords.z + diff[2]);
           }
         } else {
-          return B.sayAt(player, "You can't go that way.");
+          return B.sayAt(player, "Вы не можете пойти этим путем.");
         }
       } else {
         nextRoom = state.RoomManager.getRoom(exit.roomId);
       }
 
       if (!nextRoom) {
-        return B.sayAt(player, "You can't go that way.");
+        return B.sayAt(player, "Вы не можете пойти этим путем.");
       }
 
       // check to see if this room has a door leading to the target room or vice versa
       const door = oldRoom.getDoor(nextRoom) || nextRoom.getDoor(oldRoom);
       if (door) {
         if (door.locked) {
-          return B.sayAt(player, "The door is locked.");
+          return B.sayAt(player, "Дверь заперта.");
         }
 
         if (door.closed) {
-          return B.sayAt(player, "The door is closed.");
+          return B.sayAt(player, "Дверь заперта.");
         }
       }
 
@@ -74,8 +74,8 @@ module.exports = (srcPath) => {
         state.CommandManager.get('look').execute('', player);
       });
 
-      B.sayAt(oldRoom, `${player.name} leaves.`);
-      B.sayAtExcept(nextRoom, `${player.name} enters.`, player);
+      B.sayAt(oldRoom, `${player.name} уходит.`);
+      B.sayAtExcept(nextRoom, `${player.name} приходит.`, player);
 
       for (const follower of player.followers) {
         if (follower.room !== oldRoom) {
@@ -83,7 +83,7 @@ module.exports = (srcPath) => {
         }
 
         if (follower instanceof Player) {
-          B.sayAt(follower, `\r\nYou follow ${player.name} to ${nextRoom.title}.`);
+          B.sayAt(follower, `\r\nВы следуете за ${player.name} в ${nextRoom.title}.`);
           state.CommandManager.get('move').execute(exitName, follower);
         } else {
           follower.room.removeNpc(follower);

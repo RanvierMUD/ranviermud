@@ -10,7 +10,7 @@ module.exports = (srcPath) => {
     aliases: ['toggle', 'options', 'set'],
     command: (state) => (args, player) => {
       if (!args.length) {
-        Broadcast.sayAt(player, 'Configure what?');
+        Broadcast.sayAt(player, 'Настроить что?');
         return state.CommandManager.get('help').execute('config', player);
       }
 
@@ -19,12 +19,12 @@ module.exports = (srcPath) => {
       const [command, configToSet, valueToSet ] = args.split(' ');
 
       if (!possibleCommands.includes(command)) {
-        Broadcast.sayAt(player, `<red>Invalid config command: ${command}</red>`);
+        Broadcast.sayAt(player, `<red>Неправильная команда настройки: ${command}</red>`);
         return state.CommandManager.get('help').execute('config', player);
       }
 
       if (command === 'list') {
-        Broadcast.sayAt(player, 'Current Settings:');
+        Broadcast.sayAt(player, 'Нынешние настройки:');
         for (const key in player.metadata.config) {
           const val = player.metadata.config[key] ? 'on' : 'off';
           Broadcast.sayAt(player, `  ${key}: ${val}`);
@@ -64,7 +64,7 @@ module.exports = (srcPath) => {
 
       player.setMeta(`config.${configToSet}`, possibleValues[valueToSet]);
 
-      Broadcast.sayAt(player, 'Configuration value saved');
+      Broadcast.sayAt(player, 'Конфигурация сохранена. ');
 
       function listCurrentConfiguration() {
       }

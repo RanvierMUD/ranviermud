@@ -13,10 +13,10 @@ module.exports = srcPath => {
       const waypoints = player.getMeta('waypoints');
 
       if (!waypoints || !waypoints.saved.length) {
-        return B.sayAt(player, 'You haven\'t saved any waypoints.');
+        return B.sayAt(player, 'Вы не сохранили никаких точек путей.');
       }
 
-      B.sayAt(player, 'Waypoints:');
+      B.sayAt(player, 'Точки пути:');
       for (const [i, savedWaypoint] of Object.entries(waypoints.saved)) {
         const room = state.RoomManager.getRoom(savedWaypoint);
         B.sayAt(player, sprintf('%2s) %s%s', i + 1, waypoints.home === room.entityReference ? '(H) ' : '', room.title));

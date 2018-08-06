@@ -15,21 +15,21 @@ module.exports = (srcPath, bundlePath) => {
       arg = arg.trim();
 
       if (!arg.length) {
-        return say(player, 'Wear what?');
+        return say(player, 'Надеть что?');
       }
 
       const item = Parser.parseDot(arg, player.inventory);
 
       if (!item) {
-        return say(player, "You aren't carrying anything like that.");
+        return say(player, "У вас нет ничего такого.");
       }
 
       if (!item.metadata.slot) {
-        return say(player, `You can't wear ${ItemUtil.display(item)}.`);
+        return say(player, `Вы не можете надеть ${ItemUtil.display(item)}.`);
       }
 
       if (item.level > player.level) {
-        return say(player, "You can't use that yet.");
+        return say(player, "Вы пока не можете это использовать.");
       }
 
       try {
@@ -37,13 +37,13 @@ module.exports = (srcPath, bundlePath) => {
       } catch (err) {
         if (err instanceof EquipSlotTakenError) {
           const conflict = player.equipment.get(item.metadata.slot);
-          return say(player, `You will have to remove ${ItemUtil.display(conflict)} first.`);
+          return say(player, `Сначала вам надо убрать ${ItemUtil.display(conflict)}.`);
         }
 
         return Logger.error(err);
       }
 
-      say(player, `<green>You equip:</green> ${ItemUtil.display(item)}<green>.</green>`);
+      say(player, `<green>Вы надели:</green> ${ItemUtil.display(item)}<green>.</green>`);
     }
   };
 };

@@ -6,7 +6,7 @@ module.exports = srcPath => {
     command: state => (args, player) => {
       const room = player.room;
       if (!room || !room.coordinates) {
-        return B.sayAt(player, "You can't see a map in this room.");
+        return B.sayAt(player, "Вы не можете увидеть карту в этой комнате.");
       }
 
       let size = parseInt(args, 10);

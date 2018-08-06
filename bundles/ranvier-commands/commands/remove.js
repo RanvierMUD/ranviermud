@@ -10,12 +10,12 @@ module.exports = (srcPath, bundlePath) => {
     usage: 'remove <item>',
     command : state => (arg, player) => {
       if (!arg.length) {
-        return Broadcast.sayAt(player, 'Remove what?');
+        return Broadcast.sayAt(player, 'Убрать что?');
       }
 
       const result =  Parser.parseDot(arg, player.equipment, true);
       if (!result) {
-        return Broadcast.sayAt(player, "You aren't wearing anything like that.");
+        return Broadcast.sayAt(player, "Вы ничего такого не носите.");
       }
 
       const [slot, item] = result;
