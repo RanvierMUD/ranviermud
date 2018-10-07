@@ -242,7 +242,7 @@ module.exports = (srcPath) => {
             continue;
           }
 
-          let buf = `${attacker}${source} heals ${this.name} for <b><red>${heal.finalamount}</red></b>.`;
+          let buf = `${attacker}${source} heals ${this.name} for <b><red>${heal.finalAmount}</red></b>.`;
           B.sayAt(member, buf);
         }
       },
