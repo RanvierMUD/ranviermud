@@ -264,7 +264,8 @@ class Item extends Metadatable(EventEmitter) {
     for (let [behaviorName, config] of this.behaviors) {
       let behavior = state.ItemBehaviorManager.get(behaviorName);
       if (!behavior) {
-        return;
+        Logger.warn(`No script found for item behavior ${behaviorName}`);
+        continue;
       }
 
       // behavior may be a boolean in which case it will be `behaviorName: true`
