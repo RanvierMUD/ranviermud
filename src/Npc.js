@@ -104,7 +104,8 @@ class Npc extends Character {
     for (const [behaviorName, config] of this.behaviors) {
       let behavior = state.MobBehaviorManager.get(behaviorName);
       if (!behavior) {
-        return;
+        Logger.warn(`No script found for NPC behavior ${behaviorName}`);
+        continue;
       }
 
       // behavior may be a boolean in which case it will be `behaviorName: true`
