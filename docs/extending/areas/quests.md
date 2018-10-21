@@ -57,131 +57,128 @@ Quest goals follow the familiar `srcPath` closure structure used in entity scrip
 ```javascript
 'use strict';
 
-module.exports = srcPath => {
-  // Import core QuestGoal class
-  const QuestGoal = require(srcPath + 'QuestGoal');
+const { QuestGoal } = require('ranvier');
 
-  /**
-   * A quest goal requiring the player picks up a certain number of a particular item
-   */
-  return class FetchGoal extends QuestGoal {
-    // Quest goal constructor takes the quest it's attached to, a configuration of
-    // this particular goal, and the player the quest is active on
-    constructor(quest, config, player) {
-      // Here we'll have our custom config extend some default properties: removeItem, target item and count
-      config = Object.assign({
-        title: 'Retrieve Item',
-        removeItem: false,
-        count: 1,
-        item: null
-      }, config);
+/**
+ * A quest goal requiring the player picks up a certain number of a particular item
+ */
+module.exports = class FetchGoal extends QuestGoal {
+  // Quest goal constructor takes the quest it's attached to, a configuration of
+  // this particular goal, and the player the quest is active on
+  constructor(quest, config, player) {
+    // Here we'll have our custom config extend some default properties: removeItem, target item and count
+    config = Object.assign({
+      title: 'Retrieve Item',
+      removeItem: false,
+      count: 1,
+      item: null
+    }, config);
 
-      // Call parent QuestGoal constructor
-      super(quest, config, player);
-
-      /*
-      All quests have a "state"; this is the part that contains any data that is relevant
-      to the current progress of the quest. So in the constructor we will set the initial
-      progress of this to indicate that the player hasn't picked up any of the target item yet
-      */
-      this.state = {
-        count: 0
-      };
-
-      // Setup listeners for the events we want to update this quest's progress
-      this.on('get', this._getItem);
-      this.on('drop', this._dropItem);
-      this.on('decay', this._dropItem);
-    }
+    // Call parent QuestGoal constructor
+    super(quest, config, player);
 
     /*
-    Because Quest has no opinions and makes no assumptions, it requires you to tell it how to
-    get the current progress of this type of goal based on its state and configuration. In
-    our FetchGoal, progress is defined as how many items have they picked up out of how many
-    they need to pick up in total.
-
-    getProgress() should return an object like so:
-    {
-      percent: <number> 0-100 completion percentage,
-      display: <string> What the user should see when the progress updates
-    }
+    All quests have a "state"; this is the part that contains any data that is relevant
+    to the current progress of the quest. So in the constructor we will set the initial
+    progress of this to indicate that the player hasn't picked up any of the target item yet
     */
-    getProgress() {
-      const percent = (this.state.count / this.config.count) * 100;
-      const display = `${this.config.title}: [${this.state.count}/${this.config.count}]`;
-      return { percent, display };
+    this.state = {
+      count: 0
+    };
+
+    // Setup listeners for the events we want to update this quest's progress
+    this.on('get', this._getItem);
+    this.on('drop', this._dropItem);
+    this.on('decay', this._dropItem);
+  }
+
+  /*
+  Because Quest has no opinions and makes no assumptions, it requires you to tell it how to
+  get the current progress of this type of goal based on its state and configuration. In
+  our FetchGoal, progress is defined as how many items have they picked up out of how many
+  they need to pick up in total.
+
+  getProgress() should return an object like so:
+  {
+    percent: <number> 0-100 completion percentage,
+    display: <string> What the user should see when the progress updates
+  }
+  */
+  getProgress() {
+    const percent = (this.state.count / this.config.count) * 100;
+    const display = `${this.config.title}: [${this.state.count}/${this.config.count}]`;
+    return { percent, display };
+  }
+
+  /*
+  What should happen when the player completes the quest (or the game tries to complete it
+  for the player automatically)
+  */
+  complete() {
+    // Sanity check to make sure it doesn't actually complete before it's supposed to
+    if (this.state.count < this.config.count) {
+      return;
     }
 
-    /*
-    What should happen when the player completes the quest (or the game tries to complete it
-    for the player automatically)
-    */
-    complete() {
-      // Sanity check to make sure it doesn't actually complete before it's supposed to
-      if (this.state.count < this.config.count) {
-        return;
-      }
+    const player = this.quest.player;
 
-      const player = this.quest.player;
-
-      // Here, we implement our removeItem config.
-      // If removeItem is true, we remove all copies of the item from the player's inventory
-      // once the quest is complete.
-      if (this.config.removeItem) {
-        for (let i = 0; i < this.config.count; i++) {
-          for (const [, item] of player.inventory) {
-            if (item.entityReference === this.config.item) {
-              // Use the ItemManager to completely remove the item from the game
-              this.quest.GameState.ItemManager.remove(item);
-            }
+    // Here, we implement our removeItem config.
+    // If removeItem is true, we remove all copies of the item from the player's inventory
+    // once the quest is complete.
+    if (this.config.removeItem) {
+      for (let i = 0; i < this.config.count; i++) {
+        for (const [, item] of player.inventory) {
+          if (item.entityReference === this.config.item) {
+            // Use the ItemManager to completely remove the item from the game
+            this.quest.GameState.ItemManager.remove(item);
           }
         }
       }
-
-      super.complete();
     }
 
-    /*
-    What should happen when the player picked up any item
-    */
-    _getItem(item) {
-      // Make sure the item they picked up is the item the quest wants
-      if (item.entityReference !== this.config.item) {
-        return;
-      }
+    super.complete();
+  }
 
-      // update our state to say they progressed towards the goal
-      this.state.count = (this.state.count || 0) + 1;
-
-      // don't notify the player of further progress if it's already ready to turn in
-      if (this.state.count > this.config.count) {
-        return;
-      }
-
-      // notify the player of their updated progress
-      this.emit('progress', this.getProgress());
+  /*
+  What should happen when the player picked up any item
+  */
+  _getItem(item) {
+    // Make sure the item they picked up is the item the quest wants
+    if (item.entityReference !== this.config.item) {
+      return;
     }
 
-    /*
-    If the player drops one of the requested items make sure to subtract that from their
-    current progress
-    */
-    _dropItem(item) {
-      if (!this.state.count || item.entityReference !== this.config.item) {
-        return;
-      }
+    // update our state to say they progressed towards the goal
+    this.state.count = (this.state.count || 0) + 1;
 
-      this.state.count--;
-
-      // Again, don't notify the player of change in progress unless they can no longer
-      // turn in the quest
-      if (this.state.count >= this.config.count) {
-        return;
-      }
-
-      this.emit('progress', this.getProgress());
+    // don't notify the player of further progress if it's already ready to turn in
+    if (this.state.count > this.config.count) {
+      return;
     }
-  };
+
+    // notify the player of their updated progress
+    this.emit('progress', this.getProgress());
+  }
+
+  /*
+  If the player drops one of the requested items make sure to subtract that from their
+  current progress
+  */
+  _dropItem(item) {
+    if (!this.state.count || item.entityReference !== this.config.item) {
+      return;
+    }
+
+    this.state.count--;
+
+    // Again, don't notify the player of change in progress unless they can no longer
+    // turn in the quest
+    if (this.state.count >= this.config.count) {
+      return;
+    }
+
+    this.emit('progress', this.getProgress());
+  }
 };
 ```
 
@@ -203,52 +200,48 @@ Rewards also follow the `srcPath` closure structure.
 ```javascript
 'use strict';
 
-module.exports = srcPath => {
-  // Import core QuestReward class
-  const QuestReward = require(srcPath + 'QuestReward');
+const { QuestReward } = require('ranvier');
+
+/**
+ * Quest reward that gives experience
+ *
+ * Config options:
+ *   amount: number, default: 0, static amount of experience to give
+ */
+module.exports = class ExperienceReward extends QuestReward {
+  /*
+  IMPORTANT: Reward classes are used statically
+  */
 
   /**
-   * Quest reward that gives experience
+   * The reward method is called when the player has completed the quest and
+   * we want to actually assign the reward.
    *
-   * Config options:
-   *   amount: number, default: 0, static amount of experience to give
+   * The method accepts the GameState object allowing you to access the other
+   * factories/managers for doing things like creating effects/accessing
+   * areas/etc., the quest instance, the configuration of the reward
+   * as defined by the builder, and the player to receive the reward.
    */
-  return class ExperienceReward extends QuestReward {
+  static reward(GameState, quest, config, player) {
+    // This is a very simple reward in that it emits an event that will
+    // be handled elsewhere for actually incrementing the player's experience,
+    // leveling them up, etc.
+    player.emit('experience', config.amount);
 
-    /*
-    IMPORTANT: Reward classes are used statically
-    */
+    // However, you are free to do as you wish in here
+  }
 
-    /**
-     * The reward method is called when the player has completed the quest and
-     * we want to actually assign the reward.
-     *
-     * The method accepts the GameState object allowing you to access the other
-     * factories/managers for doing things like creating effects/accessing
-     * areas/etc., the quest instance, the configuration of the reward
-     * as defined by the builder, and the player to receive the reward.
-     */
-    static reward(GameState, quest, config, player) {
-      // This is a very simple reward in that it emits an event that will
-      // be handled elsewhere for actually incrementing the player's experience,
-      // leveling them up, etc.
-      player.emit('experience', config.amount);
+  /**
+   * the display() method is given the same parameters as reward() and is not
+   * directly used by the core but you may use it in your commands to display
+   * the rewards to the player. The default `ranvier-quests` bundle calls this
+   * when the player looks at their quest log, for example.
 
-      // However, you are free to do as you wish in here
-    }
-
-    /**
-     * the display() method is given the same parameters as reward() and is not
-     * directly used by the core but you may use it in your commands to display
-     * the rewards to the player. The default `ranvier-quests` bundle calls this
-     * when the player looks at their quest log, for example.
-
-     * The method returns a string, that's it.
-     */
-    static display(GameState, quest, config, player) {
-      return `Experience: <b>${config.amount}</b>`;
-    }
-  };
+   * The method returns a string, that's it.
+   */
+  static display(GameState, quest, config, player) {
+    return `Experience: <b>${config.amount}</b>`;
+  }
 };
 ```
 
@@ -452,22 +445,20 @@ implementation of scripts can be found in the [Scripting](scripting.md) section)
 ```javascript
 'use strict';
 
-module.exports = (srcPath) => {
-  return  {
-    listeners: {
-      // Set up a listener for when a player enters the room
-      playerEnter: state => function (player) {
-        // use the QuestFactory from the GameState to find quest `limbo:journeybegins` (Journey Begins)
-        let quest = state.QuestFactory.create(state, 'limbo:journeybegins', player);
+module.exports = {
+  listeners: {
+    // Set up a listener for when a player enters the room
+    playerEnter: state => function (player) {
+      // use the QuestFactory from the GameState to find quest `limbo:journeybegins` (Journey Begins)
+      let quest = state.QuestFactory.create(state, 'limbo:journeybegins', player);
 
-        if (player.questTracker.canStart(quest)) {
-          player.questTracker.start(quest);
-        }
-
-        // It's as simple as that: get the quest, check if the player can start it, start it
+      if (player.questTracker.canStart(quest)) {
+        player.questTracker.start(quest);
       }
+
+      // It's as simple as that: get the quest, check if the player can start it, start it
     }
-  };
+  }
 };
 ```
 
@@ -489,49 +480,47 @@ bundles/
 ```javascript
 'use strict';
 
-module.exports = (srcPath) => {
-  const B = require(srcPath + 'Broadcast');
+const { Broadcast: B } = require('ranvier');
 
-  return  {
-    listeners: {
-      /**
-       * When the player begins a quest
-       * @param {Quest} quest
-       */
-      questStart: state => function (quest) {
-        B.sayAt(this, `\r\n<bold><yellow>Quest Started: ${quest.config.title}!</yellow></bold>`);
-        if (quest.config.desc) {
-          B.sayAt(this, B.line(80));
-          B.sayAt(this, `<bold><yellow>${quest.config.desc}</yellow></bold>`, 80);
-        }
-      },
-
-      /**
-       * When any quest updates its progress
-       * @param {Quest} quest
-       * @param {object} progress See QuestGoal.getProgress for object format
-       */
-      questProgress: state => function (quest, progress) {
-        B.sayAt(this, `\r\n<bold><yellow>${progress.display}</yellow></bold>`);
-      },
-
-      /**
-       * When a non-autoComplete quest has 100% progress across all of its goals
-       * @param {Quest} quest
-       */
-      questTurnInReady: state => function (quest) {
-        B.sayAt(this, `<bold><yellow>${quest.config.title} ready to turn in!</yellow></bold>`);
-      },
-
-      /**
-       * Fired when a quest is completed, automatically or explicitly by a player command
-       * @param {Quest} quest
-       */
-      questComplete: state => function (quest) {
-        B.sayAt(this, `<bold><yellow>Quest Complete: ${quest.config.title}!</yellow></bold>`);
+module.exports = {
+  listeners: {
+    /**
+     * When the player begins a quest
+     * @param {Quest} quest
+     */
+    questStart: state => function (quest) {
+      B.sayAt(this, `\r\n<bold><yellow>Quest Started: ${quest.config.title}!</yellow></bold>`);
+      if (quest.config.desc) {
+        B.sayAt(this, B.line(80));
+        B.sayAt(this, `<bold><yellow>${quest.config.desc}</yellow></bold>`, 80);
       }
+    },
+
+    /**
+     * When any quest updates its progress
+     * @param {Quest} quest
+     * @param {object} progress See QuestGoal.getProgress for object format
+     */
+    questProgress: state => function (quest, progress) {
+      B.sayAt(this, `\r\n<bold><yellow>${progress.display}</yellow></bold>`);
+    },
+
+    /**
+     * When a non-autoComplete quest has 100% progress across all of its goals
+     * @param {Quest} quest
+     */
+    questTurnInReady: state => function (quest) {
+      B.sayAt(this, `<bold><yellow>${quest.config.title} ready to turn in!</yellow></bold>`);
+    },
+
+    /**
+     * Fired when a quest is completed, automatically or explicitly by a player command
+     * @param {Quest} quest
+     */
+    questComplete: state => function (quest) {
+      B.sayAt(this, `<bold><yellow>Quest Complete: ${quest.config.title}!</yellow></bold>`);
     }
-  };
+  }
 };
 
 ```

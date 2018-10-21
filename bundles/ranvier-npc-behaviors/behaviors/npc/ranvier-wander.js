@@ -8,10 +8,11 @@
  *     example if you want them to wander along a set path
  *   interval: number, delay in seconds between room movements. Default: 20
  */
-module.exports = srcPath => {
-  const RandomUtil = require(srcPath + 'RandomUtil');
-  const Broadcast = require(srcPath + 'Broadcast');
-  const Logger = require(srcPath + 'Logger');
+module.exports = () => {
+  const Ranvier = require('ranvier');
+  const RandomUtil = Ranvier.RandomUtil;
+  const Broadcast = Ranvier.Broadcast;
+  const Logger = Ranvier.Logger;
 
   return {
     listeners: {

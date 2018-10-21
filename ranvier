@@ -21,6 +21,11 @@ const commander = require('commander');
 const wrap = require('wrap-ansi');
 const argv = require('optimist').argv;
 
+// for dev clone the github:ranviermud/core repo, and run npm link in that folder, then come
+// back to the ranviermud repo and run npm link ranvier
+const Ranvier = require('ranvier');
+const Config = Ranvier.Config;
+
 // Package.json for versioning
 const pkg = require('./package.json');
 
@@ -31,38 +36,16 @@ if (!semver.satisfies(process.version, pkg.engines.node)) {
   );
 }
 
-// State managers and factories
-const AccountManager = require('./src/AccountManager');
-const AreaManager = require('./src/AreaManager');
-const BehaviorManager = require('./src/BehaviorManager');
-const ChannelManager = require('./src/ChannelManager');
-const ClassManager = require('./src/ClassManager');
-const CommandManager = require('./src/CommandManager');
-const EffectFactory = require('./src/EffectFactory');
-const EventManager = require('./src/EventManager');
-const GameServer = require('./src/GameServer');
-const HelpManager = require('./src/HelpManager');
-const ItemFactory = require('./src/ItemFactory');
-const ItemManager = require('./src/ItemManager');
-const MobFactory = require('./src/MobFactory');
-const MobManager = require('./src/MobManager');
-const PartyManager = require('./src/PartyManager');
-const PlayerManager = require('./src/PlayerManager');
-const QuestFactory = require('./src/QuestFactory');
-const QuestGoalManager = require('./src/QuestGoalManager');
-const QuestRewardManager = require('./src/QuestRewardManager');
-const RoomManager = require('./src/RoomManager');
-const SkillManager = require('./src/SkillManager');
-
 // Wrapper for ranvier.json
-const Config = require('./src/Config');
+Ranvier.Data.setDataPath(__dirname + '/data/');
+Config.load(require('./ranvier.json'));
 
 // cmdline options
 commander
   .version(pkg.version)
   .option('-s, --save [time]', 'Number of seconds between auto-save ticks [10]', 10)
   .option('-r, --respawn [time]', 'Number of minutes between respawn ticks [120]', 120)
-  .option('-p, --port [portNumber]', 'Port to host the server [23]', Config.get('port', 23))
+  .option('-p, --port [portNumber]', 'Port to host the server [23]', Ranvier.Config.get('port', 23))
   .option('-v, --verbose', 'Verbose console logging.', true)
   .option('-e, --prettyErrors', 'Pretty-print formatting for error stack traces.', false)
   .parse(process.argv);
@@ -72,10 +55,10 @@ commander
 process.env.NODE_DEBUG = 'net';
 process.stdin.setEncoding('utf8');
 
-const Logger = require('./src/Logger');
-const logfile = Config.get('logfile');
+const Logger = Ranvier.Logger;
+const logfile = Ranvier.Config.get('logfile');
 if (logfile) {
-  Logger.setFileLogging(logfile);
+  Logger.setFileLogging(`${__dirname}/log/${logfile}`);
 }
 
 if (commander.prettyErrors) {
@@ -101,36 +84,38 @@ function init(restartServer) {
   restartServer = typeof restartServer === 'undefined' ? true : restartServer;
 
   GameState = {
-    AccountManager: new AccountManager(),
-    AreaManager: new AreaManager(),
-    ChannelManager: new ChannelManager(),
-    ClassManager: new ClassManager(), // player class manager
-    CommandManager: new CommandManager(),
+    AccountManager: new Ranvier.AccountManager(),
+    AreaManager: new Ranvier.AreaManager(),
+    ChannelManager: new Ranvier.ChannelManager(),
+    ClassManager: new Ranvier.ClassManager(), // player class manager
+    CommandManager: new Ranvier.CommandManager(),
     Config, // All global server settings like default respawn time, save interval, port, what bundles to load, etc.
-    EffectFactory: new EffectFactory(),
-    HelpManager: new HelpManager(),
-    InputEventManager: new EventManager(),
-    ItemBehaviorManager: new BehaviorManager(),
-    ItemFactory: new ItemFactory(),
-    ItemManager: new ItemManager(),
-    MobBehaviorManager: new BehaviorManager(),
-    MobFactory: new MobFactory(),
-    MobManager: new MobManager(),
-    PartyManager: new PartyManager(),
-    PlayerManager: new PlayerManager(),
-    QuestFactory: new QuestFactory(),
-    QuestGoalManager: new QuestGoalManager(),
-    QuestRewardManager: new QuestRewardManager(),
-    RoomBehaviorManager: new BehaviorManager(),
-    RoomManager: new RoomManager(),
-    SkillManager: new SkillManager(),
-    SpellManager: new SkillManager(),
-    ServerEventManager: new EventManager(),
-    GameServer: new GameServer(),
+    EffectFactory: new Ranvier.EffectFactory(),
+    HelpManager: new Ranvier.HelpManager(),
+    InputEventManager: new Ranvier.EventManager(),
+    ItemBehaviorManager: new Ranvier.BehaviorManager(),
+    ItemFactory: new Ranvier.ItemFactory(),
+    ItemManager: new Ranvier.ItemManager(),
+    MobBehaviorManager: new Ranvier.BehaviorManager(),
+    MobFactory: new Ranvier.MobFactory(),
+    MobManager: new Ranvier.MobManager(),
+    PartyManager: new Ranvier.PartyManager(),
+    PlayerManager: new Ranvier.PlayerManager(),
+    QuestFactory: new Ranvier.QuestFactory(),
+    QuestGoalManager: new Ranvier.QuestGoalManager(),
+    QuestRewardManager: new Ranvier.QuestRewardManager(),
+    RoomBehaviorManager: new Ranvier.BehaviorManager(),
+    RoomManager: new Ranvier.RoomManager(),
+    SkillManager: new Ranvier.SkillManager(),
+    SpellManager: new Ranvier.SkillManager(),
+    ServerEventManager: new Ranvier.EventManager(),
+    GameServer: new Ranvier.GameServer(),
+    DataLoader: Ranvier.Data,
+    Config,
   };
 
   // Setup bundlemanager
-  const BundleManager = new (require('./src/BundleManager'))(GameState);
+  const BundleManager = new Ranvier.BundleManager(__dirname + '/bundles/', GameState);
   GameState.BundleManager = BundleManager;
   BundleManager.loadBundles();
   GameState.ServerEventManager.attach(GameState.GameServer);

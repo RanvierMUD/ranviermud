@@ -1,8 +1,9 @@
 
 'use strict';
 
-module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
+module.exports = () => {
+  const Ranvier = require('ranvier');
+  const Broadcast = Ranvier.Broadcast;
 
   return  {
     listeners: {

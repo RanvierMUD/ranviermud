@@ -1,41 +1,39 @@
 'use strict';
 
-module.exports = srcPath => {
-  const QuestGoal = require(srcPath + 'QuestGoal');
+const { QuestGoal } = require('ranvier');
 
-  /**
-   * A quest goal requiring the player kill a certain target a certain number of times
-   */
-  return class KillGoal extends QuestGoal {
-    constructor(quest, config, player) {
-      config = Object.assign({
-        title: 'Kill Enemy',
-        npc: null,
-        count: 1
-      }, config);
+/**
+ * A quest goal requiring the player kill a certain target a certain number of times
+ */
+module.exports = class KillGoal extends QuestGoal {
+  constructor(quest, config, player) {
+    config = Object.assign({
+      title: 'Kill Enemy',
+      npc: null,
+      count: 1
+    }, config);
 
-      super(quest, config, player);
+    super(quest, config, player);
 
-      this.state = {
-        count: 0
-      };
+    this.state = {
+      count: 0
+    };
 
-      this.on('deathblow', this._targetKilled);
+    this.on('deathblow', this._targetKilled);
+  }
+
+  getProgress() {
+    const percent = (this.state.count / this.config.count) * 100;
+    const display = `${this.config.title}: [${this.state.count}/${this.config.count}]`;
+    return { percent, display };
+  }
+
+  _targetKilled(target) {
+    if (target.entityReference !== this.config.npc || this.state.count > this.config.count) {
+      return;
     }
 
-    getProgress() {
-      const percent = (this.state.count / this.config.count) * 100;
-      const display = `${this.config.title}: [${this.state.count}/${this.config.count}]`;
-      return { percent, display };
-    }
-
-    _targetKilled(target) {
-      if (target.entityReference !== this.config.npc || this.state.count > this.config.count) {
-        return;
-      }
-
-      this.state.count++;
-      this.emit('progress', this.getProgress());
-    }
-  };
+    this.state.count++;
+    this.emit('progress', this.getProgress());
+  }
 };

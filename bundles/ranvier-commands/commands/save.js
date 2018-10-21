@@ -1,14 +1,12 @@
 'use strict';
 
-module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
+const { Broadcast } = require('ranvier');
 
-  return {
-    usage: 'save',
-    command: state => (args, player) => {
-      player.save(() => {
-        Broadcast.sayAt(player, "Saved.");
-      });
-    }
-  };
+module.exports = {
+  usage: 'save',
+  command: state => (args, player) => {
+    player.save(() => {
+      Broadcast.sayAt(player, "Saved.");
+    });
+  }
 };

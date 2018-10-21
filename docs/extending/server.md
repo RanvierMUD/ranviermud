@@ -20,22 +20,20 @@ The game server supports two events by default: `startup` and `shutdown`. As suc
 ```javascript
 'use strict'
 
-module.exports = srcPath => {
-  return {
-    listeners: {
-      /**
-       * The startup event is passed the `commander` variable which lets you access command line arguments used to start
-       * the server. As with all entity scripts/commands/etc. you also have access to the entire game state.
-       */
-      startup: state => function (commander) {
-        // startup tasks here
-      },
+module.exports = {
+  listeners: {
+    /**
+     * The startup event is passed the `commander` variable which lets you access command line arguments used to start
+     * the server. As with all entity scripts/commands/etc. you also have access to the entire game state.
+     */
+    startup: state => function (commander) {
+      // startup tasks here
+    },
 
-      shutdown: state => function () {
-        // shutdown tasks here
-      },
-    }
-  };
+    shutdown: state => function () {
+      // shutdown tasks here
+    },
+  }
 };
 ```
 
@@ -68,7 +66,7 @@ In this file we will use the `TransportStream` class provided by the core as the
 ```javascript
 'use strict';
 
-const TransportStream = require('../../../src/TransportStream');
+const { TransportStream } = require('ranvier');
 
 /**
  * Essentially we want to look at the methods of WebSocket and match them to the appropriate methods on TransportStream
@@ -130,42 +128,41 @@ bundles/my-bundle/
 // import 3rd party websocket library
 const WebSocket = require('ws');
 
+// import core logger
+const { Logger } = require('ranvier');
+
 // import our adapter
 const WebsocketStream = require('../lib/WebsocketStream');
 
-module.exports = srcPath => {
-  const Logger = require(srcPath + 'Logger');
+module.exports = {
+  listeners: {
+    startup: state => function (commander) {
+      // create a new websocket server using the port command line argument
+      const wss = new WebSocket.Server({ port: commander.port });
 
-  return {
-    listeners: {
-      startup: state => function (commander) {
-        // create a new websocket server using the port command line argument
-        const wss = new WebSocket.Server({ port: commander.port });
+      // This creates a super basic "echo" websocket server
+      wss.on('connection', function connection(ws) {
 
-        // This creates a super basic "echo" websocket server
-        wss.on('connection', function connection(ws) {
+        // create our adapter
+        const stream = new WebsocketStream();
+        // and attach the raw websocket
+        stream.attach(ws);
 
-          // create our adapter
-          const stream = new WebsocketStream();
-          // and attach the raw websocket
-          stream.attach(ws);
+        // Register all of the input events (login, etc.)
+        state.InputEventManager.attach(stream);
 
-          // Register all of the input events (login, etc.)
-          state.InputEventManager.attach(stream);
+        stream.write("Connecting...\n");
+        Logger.log("User connected via websocket...");
 
-          stream.write("Connecting...\n");
-          Logger.log("User connected via websocket...");
+        // @see: bundles/ranvier-events/events/login.js
+        stream.emit('intro', stream);
+      });
+    },
 
-          // @see: bundles/ranvier-events/events/login.js
-          stream.emit('intro', stream);
-        });
-      },
-
-      shutdown: state => function () {
-        // no need to do anything special in shutdown
-      },
-    }
-  };
+    shutdown: state => function () {
+      // no need to do anything special in shutdown
+    },
+  }
 };
 ```
 

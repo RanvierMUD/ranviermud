@@ -1,9 +1,6 @@
 'use strict';
 
-const srcPath = '../../../src/';
-
-const Data =require(srcPath + 'Data');
-const Item = require(srcPath + 'Item');
+const { Data, Item } = require('ranvier');
 
 const dataPath = __dirname + '/../data/';
 const _loadedResources = Data.parseFile(dataPath + 'resources.yml');

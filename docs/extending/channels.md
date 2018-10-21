@@ -18,12 +18,9 @@ below show only one channel per file but you can absolutely have multiple channe
 ```javascript
 'use strict';
 
-module.exports = (srcPath) => {
-  const Channel = require(srcPath + 'Channel');
+const { Channel } = require('ranvier');
 
-  return [
-  ];
-};
+module.exports = [ ];
 ```
 
 ## Example channels
@@ -35,45 +32,40 @@ This `chat` channel is an example of a game-wide communication channel. All play
 ```javascript
 'use strict';
 
-module.exports = (srcPath) => {
-  const Channel = require(srcPath + 'Channel');
-  const AudienceWorld = require(srcPath + 'ChannelAudience/World');
-  const PlayerRoles = require(srcPath + 'PlayerRoles');
+const { WorldAudience, Channel, PlayerRoles } = require('ranvier');
 
-  return [
-    new Channel({
-      // the name of the channel is the command the player will use
-      name: 'chat',
+module.exports = [
+  new Channel({
+    // the name of the channel is the command the player will use
+    name: 'chat',
 
-      // Aliases for the channel, in this example, if your command is ". Hello" is equivalent to "chat Hello"
-      aliases: ['.'],
+    // Aliases for the channel, in this example, if your command is ". Hello" is equivalent to "chat Hello"
+    aliases: ['.'],
 
-      // Information about this channel shown when player types channel name without a message
-      description: 'Chat with everyone on the game',
+    // Information about this channel shown when player types channel name without a message
+    description: 'Chat with everyone on the game',
 
-      /*
-      optional color of output from his channel.
-      Available colors are: black, red, green, yellow, blue, magenta, cyan, and white.
-      Additionally you can specify 'bold' as a color to make the text bold. e.g., color: ['bold', 'red'],
-      */
-      color: ['bold', 'green'],
+    /*
+    optional color of output from his channel.
+    Available colors are: black, red, green, yellow, blue, magenta, cyan, and white.
+    Additionally you can specify 'bold' as a color to make the text bold. e.g., color: ['bold', 'red'],
+    */
+    color: ['bold', 'green'],
 
-      /*
-      `audience` defines who will receive the message from this channel.
-      Available audiences can be seen in: `src/ChannelAudience/`
-      */
-      audience: new AudienceWorld(),
+    /*
+    `audience` defines who will receive the message from this channel.
+    */
+    audience: new WorldAudience(),
 
-      /*
-      Optionally you can specify a minimum player role required to use the channel
-      Note: This property is not used by the core to perform any restrictions, it is simply added as a
-      public property to allow bundles to access it and do their own restriction.
+    /*
+    Optionally you can specify a minimum player role required to use the channel
+    Note: This property is not used by the core to perform any restrictions, it is simply added as a
+    public property to allow bundles to access it and do their own restriction.
 
-      minRequiredRole: PlayerRoles.ADMIN,
-      */
-    }),
-  ];
-};
+    minRequiredRole: PlayerRoles.ADMIN,
+    */
+  }),
+];
 ```
 
 ### say
@@ -83,35 +75,32 @@ module.exports = (srcPath) => {
 ```javascript
 'use strict';
 
-module.exports = (srcPath) => {
-  const Channel = require(srcPath + 'Channel');
-  const AudienceRoom = require(srcPath + 'ChannelAudience/Room');
+const { Channel, RoomAudience } = require('ranvier');
 
-  return [
-    new Channel({
-      name: 'say',
-      color: ['cyan'],
-      description: 'Send a message to all players in your room',
-      audience: new AudienceRoom(),
+module.exports = [
+  new Channel({
+    name: 'say',
+    color: ['cyan'],
+    description: 'Send a message to all players in your room',
+    audience: new AudienceRoom(),
 
-      /*
-      formatter allows you to customize how message from this channel appear to the sender and receiver
-      `sender` defines how the message appears the sender, and vice versa for target.
-      Both functions get the `Player` who sent it, the `Player` receiving the message, the message itself
-      and the `colorify` function to apply the channel's color to the message.
-      */
-      formatter: {
-        sender: function (sender, target, message, colorify) {
-          return colorify(`You say, '${message}'`);
-        },
+    /*
+    formatter allows you to customize how message from this channel appear to the sender and receiver
+    `sender` defines how the message appears the sender, and vice versa for target.
+    Both functions get the `Player` who sent it, the `Player` receiving the message, the message itself
+    and the `colorify` function to apply the channel's color to the message.
+    */
+    formatter: {
+      sender: function (sender, target, message, colorify) {
+        return colorify(`You say, '${message}'`);
+      },
 
-        target: function (sender, target, message, colorify) {
-          return colorify(`${sender.name} says, '${message}'`);
-        }
+      target: function (sender, target, message, colorify) {
+        return colorify(`${sender.name} says, '${message}'`);
       }
-    }),
-  ];
-};
+    }
+  }),
+];
 ```
 
 ### tell
@@ -121,28 +110,25 @@ module.exports = (srcPath) => {
 ```javascript
 'use strict';
 
-module.exports = (srcPath) => {
-  const Channel = require(srcPath + 'Channel');
-  const AudiencePrivate = require(srcPath + 'ChannelAudience/Private');
+const { Channel, RoomAudience } = require('ranvier');
 
-  return [
-    new Channel({
-      name: 'tell',
-      color: ['bold', 'cyan'],
-      description: 'Send a private message to another player',
-      audience: new AudiencePrivate(),
-      formatter: {
-        sender: function (sender, target, message, colorify) {
-          return colorify(`You tell ${target.name}, '${message}'`);
-        },
+module.exports = [
+  new Channel({
+    name: 'tell',
+    color: ['bold', 'cyan'],
+    description: 'Send a private message to another player',
+    audience: new AudiencePrivate(),
+    formatter: {
+      sender: function (sender, target, message, colorify) {
+        return colorify(`You tell ${target.name}, '${message}'`);
+      },
 
-        target: function (sender, target, message, colorify) {
-          return colorify(`${sender.name} tells you, '${message}'`);
-        }
+      target: function (sender, target, message, colorify) {
+        return colorify(`${sender.name} tells you, '${message}'`);
       }
-    }),
-  ];
-};
+    }
+  }),
+];
 ```
 
 ### yell
@@ -152,26 +138,23 @@ module.exports = (srcPath) => {
 ```javascript
 'use strict';
 
-module.exports = (srcPath) => {
-  const Channel = require(srcPath + 'Channel');
-  const AudienceArea = require(srcPath + 'ChannelAudience/Area');
+const { Channel, AreaAudience } = require('ranvier');
 
-  return [
-    new Channel({
-      name: 'yell',
-      color: ['bold', 'red'],
-      description: 'Send a message to everyone in your area',
-      audience: new AudienceArea(),
-      formatter: {
-        sender: function (sender, target, message, colorify) {
-          return colorify(`You yell, '${message}'`);
-        },
+module.exports = [
+  new Channel({
+    name: 'yell',
+    color: ['bold', 'red'],
+    description: 'Send a message to everyone in your area',
+    audience: new AudienceArea(),
+    formatter: {
+      sender: function (sender, target, message, colorify) {
+        return colorify(`You yell, '${message}'`);
+      },
 
-        target: function (sender, target, message, colorify) {
-          return colorify(`Someone yells from nearby, '${message}'`);
-        }
+      target: function (sender, target, message, colorify) {
+        return colorify(`Someone yells from nearby, '${message}'`);
       }
-    }),
-  ];
-};
+    }
+  }),
+];
 ```

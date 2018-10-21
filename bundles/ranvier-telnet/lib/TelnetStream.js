@@ -1,7 +1,7 @@
 'use strict';
 
-const {Options, Sequences} = require('ranvier-telnet');
-const TransportStream = require('../../../src/TransportStream');
+const { Options, Sequences } = require('ranvier-telnet');
+const { TransportStream } = require('ranvier');
 
 /**
  * Thin wrapper around a ranvier-telnet `TelnetSocket`

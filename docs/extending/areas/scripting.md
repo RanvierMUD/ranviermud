@@ -58,20 +58,20 @@ Entity-specific scripts and Behavior script files follow the same file structure
 ```javascript
 'use strict';
 
-module.exports = srcPath => {
-  return {
-    /*
-    The familiar bundle script file format we've seen in commands and quests returns here.
-    To listen for an event, simply add a new key (which is the event name) to 'listeners'. The value for each listener is a closure accepting GameState (seen here as state, see the Ranvier server executable for more) and returning a function
-    whose arguments are dependent on the event. See the Default Events section below for
-    to see some examples of arguments being passed to the listeners.
-    */
-    listeners: {
-      someEvent: state => (/* event args */) => {
-        // do stuff here
-      }
+module.exports = {
+  /*
+  The familiar bundle script file format we've seen in commands and quests returns here.
+  To listen for an event, simply add a new key (which is the event name) to 'listeners'. The
+  value for each listener is a closure accepting GameState (seen here as state, see the
+  Ranvier server executable for more) and returning a function whose arguments are dependent
+  on the event. See the Default Events section below for to see some examples of arguments
+  being passed to the listeners.
+  */
+  listeners: {
+    someEvent: state => (/* event args */) => {
+      // do stuff here
     }
-  };
+  }
 };
 ```
 

@@ -1,9 +1,10 @@
 'use strict';
 
 
-module.exports = (srcPath) => {
-  const Logger = require(srcPath + 'Logger');
-  const B      = require(srcPath + 'Broadcast');
+module.exports = () => {
+  const Ranvier = require('ranvier');
+  const Logger = Ranvier.Logger;
+  const B      = Ranvier.Broadcast;
   return  {
     listeners: {
       playerEnter: state => function (config, player) {

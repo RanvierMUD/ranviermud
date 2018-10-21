@@ -1,8 +1,9 @@
 'use strict';
 
 
-module.exports = (srcPath) => {
-  const Logger = require(srcPath + 'Logger');
+module.exports = () => {
+  const Ranvier = require('ranvier');
+  const Logger = Ranvier.Logger;
   return  {
     listeners: {
       spawn: state => function () {

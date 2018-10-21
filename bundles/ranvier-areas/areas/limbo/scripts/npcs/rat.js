@@ -1,8 +1,9 @@
 'use strict';
 
-module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
-  const Logger = require(srcPath + 'Logger');
+module.exports = () => {
+  const Ranvier = require('ranvier');
+  const Broadcast = Ranvier.Broadcast;
+  const Logger = Ranvier.Logger;
 
   return  {
     listeners: {

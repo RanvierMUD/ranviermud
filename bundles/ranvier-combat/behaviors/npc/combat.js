@@ -7,7 +7,8 @@ const Combat = require('../../lib/Combat');
  * Have combat implemented in a behavior like this allows two NPCs with this behavior to fight without
  * the player having to be involved
  */
-module.exports = (srcPath) => {
+module.exports = () => {
+  const Ranvier = require('ranvier');
   return  {
     listeners: {
       /**

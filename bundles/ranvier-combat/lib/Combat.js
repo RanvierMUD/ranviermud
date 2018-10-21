@@ -1,10 +1,9 @@
 'use strict';
 
-const Damage = require('../../../src/Damage');
-const Logger = require('../../../src/Logger');
-const RandomUtil = require('../../../src/RandomUtil');
+const Ranvier = require('ranvier');
+const { Damage, Logger, RandomUtil } = Ranvier;
+const Parser = Ranvier.CommandParser.CommandParser;
 const CombatErrors = require('./CombatErrors');
-const Parser = require('../../../src/CommandParser').CommandParser;
 
 /**
  * This class is an example implementation of a Diku-style real time combat system. Combatants

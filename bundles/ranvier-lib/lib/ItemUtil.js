@@ -4,11 +4,8 @@
  * General functions used across the ranvier bundles
  */
 
-const srcPath = '../../../src/'
-
 const sprintf = require('sprintf-js').sprintf;
-const ItemType = require(srcPath + 'ItemType');
-const B = require(srcPath + 'Broadcast');
+const { Broadcast: B, ItemType } = require('ranvier');
 
 const qualityColors = {
   poor: ['bold', 'black'],

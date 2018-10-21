@@ -41,7 +41,6 @@ pages:
     - Classes/Abilities: 'extending/classes.md'
     - Commands: 'extending/commands.md'
     - Effects: 'extending/effects.md'
-    - Helpfiles: 'extending/help.md'
     - Player/Input Events: 'extending/input_events.md'
 - Contributing: contributing.md
 - Common Issues: common_issues.md

@@ -4,8 +4,7 @@
  * General functions used on the ranvier-input-events bundle
  */
 
-const srcPath = '../../../src/'
-const Config  = require(srcPath + 'Config');
+const { Config } = require('ranvier');
 
 /**
  * @param {string} name

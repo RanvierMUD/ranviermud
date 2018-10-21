@@ -2,11 +2,12 @@
 
 const LootTable = require('../../lib/LootTable');
 
-module.exports = srcPath => {
-  const B = require(srcPath + 'Broadcast');
-  const Player = require(srcPath + 'Player');
-  const Item = require(srcPath + 'Item');
-  const Logger = require(srcPath + 'Logger');
+module.exports = () => {
+  const Ranvier = require('ranvier');
+  const B = Ranvier.Broadcast;
+  const Player = Ranvier.Player;
+  const Item = Ranvier.Item;
+  const Logger = Ranvier.Logger;
 
   return {
     listeners: {

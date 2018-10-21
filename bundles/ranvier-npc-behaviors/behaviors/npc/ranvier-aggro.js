@@ -35,9 +35,10 @@
  *            players: false
  *            npcs: ["limbo:squirrel", "limbo:rabbit"]
  */
-module.exports = srcPath => {
-  const B = require(srcPath + 'Broadcast');
-  const Logger = require(srcPath + 'Logger');
+module.exports = () => {
+  const Ranvier = require('ranvier');
+  const B = Ranvier.Broadcast;
+  const Logger = Ranvier.Logger;
 
   return {
     listeners: {

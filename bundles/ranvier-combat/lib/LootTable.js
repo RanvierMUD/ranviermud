@@ -1,8 +1,6 @@
 'use strict';
 
-const Random = require('../../../src/RandomUtil');
-const Data = require('../../../src/Data');
-const Logger = require('../../../src/Logger');
+const { Data, Logger, RandomUtil: Random } = require('ranvier');
 
 let loadedPools = {};
 

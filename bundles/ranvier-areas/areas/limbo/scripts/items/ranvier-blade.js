@@ -3,10 +3,11 @@
 /**
  * Example weapon hit script
  */
-module.exports = (srcPath) => {
-  const Broadcast = require(srcPath + 'Broadcast');
-  const Random = require(srcPath + 'RandomUtil');
-  const Heal = require(srcPath + 'Heal');
+module.exports = () => {
+  const Ranvier = require('ranvier');
+  const Broadcast = Ranvier.Broadcast;
+  const Random = Ranvier.RandomUtil;
+  const Heal = Ranvier.Heal;
 
   return  {
     listeners: {

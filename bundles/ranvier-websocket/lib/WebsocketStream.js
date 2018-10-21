@@ -1,6 +1,6 @@
 'use strict';
 
-const TransportStream = require('../../../src/TransportStream');
+const { TransportStream } = require('ranvier');
 
 /**
  * Essentially we want to look at the methods of WebSocket and match them to the appropriate methods on TransportStream

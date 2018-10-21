@@ -33,34 +33,30 @@ and the only one that _must_ be implemented if you choose to disable the default
 ```javascript
 'use strict';
 
+// Import the Data helper to help load static files and EventUtil has some helpers for outputing
+text to the socket before the Player object is available
+const { Data, EventUtil } = require('ranvier');
+
 // Very similar structure to all of our bundle loaded javascript files.
-module.exports = (srcPath) => {
-  // Import the Data helper to help load static files
-  const Data = require(srcPath + 'Data');
-  // EventUtil has some helpers for outputing text to the socket before the player
-  // object is available
-  const EventUtil = require(srcPath + 'EventUtil');
-
-  return {
-    /*
-    The functionality of the input event is defined in the value of the 'event' key.  Again
-    similar to entity scripts it is a closure that accepts the GameState in the state arg
-    but returns a function accepting the socket
-    */
-    event: state => socket => {
-      // in this example case we're just loading the MOTD (Message of the Day), the screen
-      // that you commonly see when logging into MUDs, and write it to the socket
-      const motd = Data.loadMotd();
-      if (motd) {
-        EventUtil.genSay(socket)(motd);
-      }
-
-      /*
-      Here we pass the socket to the next step of the connection process, the login event.
-      Just as this file was defined in intro.js, the login event would be defined in login.js
-      */
-      return socket.emit('login', socket);
+module.exports = {
+  /*
+  The functionality of the input event is defined in the value of the 'event' key.  Again
+  similar to entity scripts it is a closure that accepts the GameState in the state arg
+  but returns a function accepting the socket
+  */
+  event: state => socket => {
+    // in this example case we're just loading the MOTD (Message of the Day), the screen
+    // that you commonly see when logging into MUDs, and write it to the socket
+    const motd = Data.loadMotd();
+    if (motd) {
+      EventUtil.genSay(socket)(motd);
     }
-  };
+
+    /*
+    Here we pass the socket to the next step of the connection process, the login event.
+    Just as this file was defined in intro.js, the login event would be defined in login.js
+    */
+    return socket.emit('login', socket);
+  }
 };
 ```

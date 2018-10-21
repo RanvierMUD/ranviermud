@@ -1,51 +1,48 @@
 'use strict';
 
-module.exports = (srcPath) => {
-  const Data = require(srcPath + 'Data');
-  const CommonFunctions = require('../lib/CommonFunctions');
-  const Logger = require(srcPath + 'Logger');
+const { Data, Logger } = require('ranvier');
+const CommonFunctions = require('../lib/CommonFunctions');
 
-  return {
-    event: state => (socket, args) => {
-      if (!args || !args.dontwelcome) {
-        socket.write('Welcome, what is your name? ');
+module.exports = {
+  event: state => (socket, args) => {
+    if (!args || !args.dontwelcome) {
+      socket.write('Welcome, what is your name? ');
+    }
+
+    socket.once('data', name => {
+      name = name.toString().trim();
+
+      const invalid = CommonFunctions.validateName(name);
+      if (invalid) {
+        socket.write(invalid + '\r\n');
+        return socket.emit('login', socket);
       }
 
-      socket.once('data', name => {
-        name = name.toString().trim();
+      name = name[0].toUpperCase() + name.slice(1);
 
-        const invalid = CommonFunctions.validateName(name);
-        if (invalid) {
-          socket.write(invalid + '\r\n');
-          return socket.emit('login', socket);
-        }
+      let account = Data.exists('account', name);
 
-        name = name[0].toUpperCase() + name.slice(1);
+      // That player account doesn't exist so ask if them to create it
+      if (!account) {
+        Logger.error(`No account found as ${name}.`);
+        return socket.emit('create-account', socket, name);
+      }
 
-        let account = Data.exists('account', name);
+      account = state.AccountManager.loadAccount(name);
 
-        // That player account doesn't exist so ask if them to create it
-        if (!account) {
-          Logger.error(`No account found as ${name}.`);
-          return socket.emit('create-account', socket, name);
-        }
+      if (account.banned) {
+        socket.write('This account has been banned.\r\n');
+        socket.end();
+        return;
+      }
 
-        account = state.AccountManager.loadAccount(name);
+      if (account.deleted) {
+        socket.write('This account has been deleted.\r\n');
+        socket.end();
+        return;
+      }
 
-        if (account.banned) {
-          socket.write('This account has been banned.\r\n');
-          socket.end();
-          return;
-        }
-
-        if (account.deleted) {
-          socket.write('This account has been deleted.\r\n');
-          socket.end();
-          return;
-        }
-
-        return socket.emit('password', socket, { dontwelcome: false, account });
-      });
-    }
-  };
+      return socket.emit('password', socket, { dontwelcome: false, account });
+    });
+  }
 };
