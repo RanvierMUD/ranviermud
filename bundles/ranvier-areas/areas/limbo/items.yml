@@ -1,4 +1,4 @@
-- id: 1
+- id: "rustysword"
   name: "Rusty Sword"
   type: WEAPON
   roomDesc: "Rusted Sword"
@@ -15,7 +15,7 @@
     speed: 2.8
     stats:
       critical: 1
-- id: 2
+- id: "sliceofcheese"
   name: "Slice of Cheese"
   roomDesc: "A moldy slice of cheese"
   keywords: [ "slice", "cheese", "moldy" ]
@@ -23,18 +23,18 @@
   behaviors:
     decay:
       duration: 240
-- id: 3
+- id: "woodenchest"
   type: CONTAINER
   name: "Wooden Chest"
   roomDesc: "A wooden chest rests in the corner, its hinges badly rusted."
   keywords: [ "wooden", "chest" ]
   description: "Time has not been kind to this chest. It seems to be held together solely by the dirt and rust."
-  items: [ "limbo:1", "limbo:6", "limbo:7", "limbo:8" ]
+  items: [ "limbo:rustysword", "limbo:leathervest", "limbo:potionhealth1", "limbo:potionstrength1" ]
   closed: true
   maxItems: 5
   metadata:
     noPickup: true
-- id: 4
+- id: "scraps"
   name: "Scraps"
   quality: poor
   roomDesc: "Scraps from a Training Dummy"
@@ -44,7 +44,7 @@
     sellable:
       value: 5
       currency: gold
-- id: 5
+- id: trainingsword
   name: "Training Sword"
   type: WEAPON
   roomDesc: "Training Sword"
@@ -66,7 +66,7 @@
     sellable:
       value: 30
       currency: gold
-- id: 6
+- id: leathervest
   name: "Leather Vest"
   type: ARMOR
   roomDesc: "Leather Vest"
@@ -83,7 +83,7 @@
     sellable:
       value: 30
       currency: gold
-- id: 7
+- id: potionhealth1
   name: "Potion of Health I"
   roomDesc: "Potion of Health I"
   keywords: [ "potion", "health" ]
@@ -105,7 +105,7 @@
       options:
         restores: 30
         stat: "health"
-- id: 8
+- id: potionstrength1
   name: "Potion of Strength I"
   roomDesc: "Potion of Strength I"
   keywords: [ "potion", "strength" ]
@@ -126,7 +126,7 @@
       state:
         magnitude: 10
         stat: "strength"
-- id: 9
+- id: bladeofranvier
   name: "Blade of Ranvier"
   type: WEAPON
   roomDesc: "Blade of Ranvier"
@@ -147,7 +147,7 @@
       strength: 2
       stamina: 2
       critical: 3
-- id: 10
+- id: woodenshield
   name: "Wooden Shield"
   type: ARMOR
   roomDesc: "Wooden Shield"
@@ -176,7 +176,7 @@
   name: "Locked Chest"
   roomDesc: "A wooden chest rests open in the corner, its hinges badly rusted."
   keywords: [ "locked", "wooden", "chest" ]
-  items: [ "limbo:1" ]
+  items: [ "limbo:rustysword" ]
   closed: true
   locked: true
   lockedBy: "limbo:test_key"

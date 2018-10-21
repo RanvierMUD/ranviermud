@@ -6,17 +6,24 @@ In Ranvier all items for an area are defined in a single file within the area fo
 
 `bundles/ranvier-areas/areas/limbo/items.yml`
 ``` yaml
-- id: 1
-  name: "Rusty Shiv"
-  roomDesc: "a razor-sharp shiv coated in rust"
-  keywords: [ "shiv", "rusty", "shank", "metal", "rust" ]
-  description: "A short, jagged metal shard, discolored with red corrosion. Rather than a handle, someone has wrapped grimy grip tape around the base of the instrument."
-  script: "1-shiv"
-  slot: 'wield'
-  attributes:
-      speed: 10
-      damage: 1-15
-- id: 2
+- id: "rustysword"
+  name: "Rusty Sword"
+  type: WEAPON
+  roomDesc: "Rusted Sword"
+  keywords: [ "sword", "rusty", "metal", "rusted" ]
+  description: "An arm's-length, jagged metal sword discolored with red corrosion. The worn leather grip barely held on by fraying thread."
+  script: "1-sword"
+  metadata:
+    level: 1
+    slot: 'wield'
+    itemLevel: 1
+    quality: common
+    minDamage: 7
+    maxDamage: 15
+    speed: 2.8
+    stats:
+      critical: 1
+- id: "sliceofcheese"
   name: "Slice of Cheese"
   roomDesc: "A moldy slice of cheese"
   keywords: [ "slice", "cheese", "moldy" ]
@@ -24,29 +31,36 @@ In Ranvier all items for an area are defined in a single file within the area fo
   behaviors:
     decay:
       duration: 240
-- id: 3
+- id: "woodenchest"
   type: CONTAINER
   name: "Wooden Chest"
   roomDesc: "A wooden chest rests in the corner, its hinges badly rusted."
   keywords: [ "wooden", "chest" ]
   description: "Time has not been kind to this chest. It seems to be held together solely by the dirt and rust."
-  items: [ "limbo:1" ]
-- id: locked_chest
-  type: CONTAINER
-  name: "Locked Chest"
-  roomDesc: "A steel chest sits in the corner."
-  keywords: [ "locked", "chest" ]
-  description: "Time has not been kind to this chest. It seems to be held together solely by the dirt and rust."
-  items: [ "limbo:1" ]
-  locked: true
+  items: [ "limbo:rustysword" ]
   closed: true
-  lockedBy: "limbo:test_key"
+  maxItems: 5
+  metadata:
+    noPickup: true
 - id: test_key
   name: "Oddly-shaped Key"
   keywords: ["key", "odd", "oddly", "shaped"]
   roomDesc: "A strange looking key"
   description: "This key seems overly complex with numerous grooves."
-  quality: common
+  metadata:
+    quality: common
+- id: locked_chest
+  type: CONTAINER
+  name: "Locked Chest"
+  roomDesc: "A wooden chest rests open in the corner, its hinges badly rusted."
+  keywords: [ "locked", "wooden", "chest" ]
+  items: [ "limbo:rustysword" ]
+  closed: true
+  locked: true
+  lockedBy: "limbo:test_key"
+  maxItems: 5
+  metadata:
+    noPickup: true
 ```
 
 ## Definition Fields
@@ -55,7 +69,7 @@ In Ranvier all items for an area are defined in a single file within the area fo
 
 ----
 
-`id` _`number`_
+`id` _`string`_
 :    ***required*** Item id unique among the items of the current area
 
 `type` _`ItemType`_ `(OBJECT)`

@@ -1,5 +1,5 @@
 ---
-- item: "limbo:7"
+- item: "limbo:potionhealth1"
   recipe:
     plant_material: 3
     rose_petal: 1

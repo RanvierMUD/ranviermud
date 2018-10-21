@@ -1,41 +1,41 @@
-- id: 1
-  title: Test Room 1
+- id: white
+  title: "White Room"
   description: "A featureless white room. A pitch black void in the shape of archway can be seen on the east side of the room."
-  npcs: ["limbo:1" ]
+  npcs: ["limbo:rat" ]
   items:
-    - id: "limbo:3"
+    - id: "limbo:woodenchest"
       respawnChance: 20
       replaceOnRespawn: true # when this chest respawns completely replace it so its contents get refreshed
-  script: "1-test"
+  script: "white"
   exits:
-    - roomId: "limbo:2"
+    - roomId: "limbo:black"
       direction: east
       leaveMessage: " steps into the void and disappears."
-    - roomId: "limbo:8"
+    - roomId: "limbo:ancientwayshrine"
       direction: down
-    - roomId: "limbo:9"
+    - roomId: "limbo:wallys"
       direction: west
     - roomId: "mapped:start"
       direction: north
-- id: 2
-  title: "Test Room 2"
+- id: black
+  title: "Black Room"
   description: >-
     A completely black room. Somehow all of the light that should be coming from the room to the west does not pass
     through the archway. A single lightbulb hangs from the ceiling illuminating a small area. To the east you see a
     large white dome. There is a sign above the entrance to the dome: "Training Area"
-  script: "2-look"
+  script: "black"
   items:
-    - id: "limbo:2"
+    - id: "limbo:sliceofcheese"
       respawnChance: 10
-  npcs: ["limbo:2", "limbo:3"]
+  npcs: ["limbo:wiseoldman", "limbo:puppy"]
   exits:
-    - roomId: "limbo:1"
+    - roomId: "limbo:white"
       direction: west
       leaveMessage: " steps into the light and disappears."
-    - roomId: "limbo:3"
+    - roomId: "limbo:training1"
       direction: east
 - &trainingroom
-  id: 3
+  id: training1
   title: "Training Room"
   script: "combat-training"
   description: >-
@@ -43,85 +43,88 @@
     to horizon, punctuated by the lines of the grid. The dome shimmers as virtual birds fly into and out of its surface.
     The pure green grass is eerily undisturbed by you walking over it or by the simulated breeze.
   npcs:
-    - id: "limbo:4"
+    - id: "limbo:trainingdummy"
       respawnChance: 25
       maxLoad: 3
   exits:
-    - roomId: "limbo:2"
+    - roomId: "limbo:black"
       direction: west
-    - roomId: "limbo:4"
+    - roomId: "limbo:training2"
       direction: north
-    - roomId: "limbo:6"
+    - roomId: "limbo:training4"
       direction: east
 - <<: *trainingroom
-  id: 4
+  id: training2
+  title: "Training Room 2"
   items:
-    - id: "craft:1"
+    - id: "craft:greenplant"
       respawnChance: 30
   npcs:
-    - id: "limbo:4"
+    - id: "limbo:trainingdummy"
       respawnChance: 25
       maxLoad: 3
     - id: "limbo:aggro-player-test"
       respawnChance: 25
       maxLoad: 1
   exits:
-    - roomId: "limbo:3"
+    - roomId: "limbo:training1"
       direction: south
-    - roomId: "limbo:5"
+    - roomId: "limbo:training3"
       direction: east
 - <<: *trainingroom
-  id: 5
+  id: training3
+  title: "Training Room 3"
   items:
-    - id: "craft:2"
+    - id: "craft:redrose"
       respawnChance: 15
   exits:
-    - roomId: "limbo:4"
+    - roomId: "limbo:training2"
       direction: west
-    - roomId: "limbo:6"
+    - roomId: "limbo:training4"
       direction: south
-    - roomId: "limbo:7"
+    - roomId: "limbo:bosstraining"
       direction: north
 - <<: *trainingroom
-  id: 6
+  id: training4
+  title: "Training Room 4"
   npcs:
-    - id: "limbo:4"
+    - id: "limbo:trainingdummy"
       respawnChance: 25
       maxLoad: 3
     - id: "limbo:aggro-npc-test"
       respawnChance: 50
       maxLoad: 2
   exits:
-    - roomId: "limbo:3"
+    - roomId: "limbo:training1"
       direction: west
-    - roomId: "limbo:5"
+    - roomId: "limbo:training3"
       direction: north
-- id: 7
+- id: bosstraining
   title: "Boss Training Room"
   description: >-
     The dome in this section is bright red, the pure green grass is replaced with a smooth white surface. The ground
     beneath your feet has the word "Danger" in bright red letters tiled across the area.
   npcs:
-    - id: "limbo:5"
+    - id: "limbo:bossdummy"
       respawnChance: 50
   exits:
-    - roomId: "limbo:5"
+    - roomId: "limbo:training3"
       direction: south
-- id: 8
+- id: ancientwayshrine
   title: "Ancient Wayshrine (Waypoint)"
   description: >
     A runed black obelisk towers in the center of this clearing, surrounded by a faerie ring. The runes pulse and glow with
     a soft blue light. The grass immediately around the obelisk is immaculate in stark contrast to the dying former meadow
     that makes up the clearing. The obelisk looks like it can be used as a <b><cyan>waypoint</cyan></b>.
-  script: '8-waypoint'
+  script: 'ancientwayshrine'
   behaviors:
     waypoint: true
   exits:
-    - roomId: "limbo:1"
+    - roomId: "limbo:white"
       direction: up
-    - roomId: "limbo:10"
+    - roomId: "limbo:context"
       direction: down
-- id: 9
+- id: wallys
   title: "Wally's Wonderful Wares (Shop)"
   description: >- 
     A very brightly colored shop stall stands in the middle of an otherwise desolate clearing. The stall is covered in
@@ -129,14 +132,14 @@
     "<b><yellow>Wally's Wonderful Wares</yellow></b> has the best products in town! Armor, weapons and potions, you name
     and we... might have it!"
   npcs:
-    - id: "limbo:6"
+    - id: "limbo:wallythewonderful"
       respawnChance: 0
   exits:
-    - roomId: "limbo:1"
+    - roomId: "limbo:white"
       direction: east
-- id: 10
+- id: context
   title: "Room Context Commands Test"
-  script: '10-context'
+  script: 'context'
   description: >-
     This room shows off commands that are only active in a particular room. Try out the <b><cyan>roomtest</cyan></b> command.
   behaviors:
@@ -144,12 +147,12 @@
   items:
     - id: "limbo:test_key"
   exits:
-    - roomId: "limbo:8"
+    - roomId: "limbo:ancientwayshrine"
       direction: up
-    - roomId: "limbo:11"
+    - roomId: "limbo:locked"
       direction: east
   doors:
-    "limbo:8":
+    "limbo:ancientwayshrine":
       lockedWith: false
       closed: true
 - id: 11
@@ -160,10 +163,10 @@
       respawnChance: 5
       replaceOnRespawn: true
   exits:
-    - roomId: "limbo:10"
+    - roomId: "limbo:context"
       direction: west
   doors:
-    "limbo:10":
+    "limbo:context":
       lockedBy: "limbo:test_key"
       locked: true
       closed: true

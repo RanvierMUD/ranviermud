@@ -43,24 +43,24 @@ info:
 
 ## Entity References
 
-You'll often see strings like `limbo:1`. These are entity references and can refer to Items, NPCs, Rooms, and Quests. The type of entity the reference points to is inferred from its context (e.g., `foobar:1` in an `items` list would point to an Item.) Let's take a look at an example NPC definition:
+You'll often see strings like `limbo:sliceofcheese`. These are entity references and can refer to Items, NPCs, Rooms, and Quests. The type of entity the reference points to is inferred from its context (e.g., `foo:bar` in an `items` list would point to an Item.) Let's take a look at an example NPC definition:
 
 Assuming both of these definitions live in `bundles/awesome-bundle/areas/foobar/`
 
 ``` yaml
-- id: 1
-  name: "Joe Schmoe"
-  items: [ "foobar:1" ]
+- id: dirk
+  name: "Dirk Jones"
+  items: [ "foobar:dirk" ]
 ```
 
 and an accompanying item definition
 
 ``` yaml
-- id: 1
-  name: "Sword of Awesomeness"
+- id: dirk
+  name: "Dirk of Awesomeness"
 ```
 
-In the definition of Joe Schmoe, the value`foobar:1` in the `items` property's array means "Find item with the ID `1` in the area `foobar`". Entity ids are only unique within the same entity type of the same area. So Joe Schmoe's entity reference would _also_ be `foobar:1`, but would refer to an NPC.
+In the definition of Dirk Jones, the value `foobar:dirk` in the `items` property's array means "Find item with the ID `dirk` in the area `foobar`". Entity ids are only unique within the same entity type of the same area. So even though Dirk Jone's entity reference is _also_ `foobar:dirk`, `items: ["foobar:dirk"]` would refer to an item.
 
 This string will be described in the subsequent docs as `EntityReference`.
 

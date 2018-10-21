@@ -6,19 +6,19 @@ In Ranvier all NPCs for an area are defined in a single file within the area fol
 
 `bundles/ranvier-areas/areas/limbo/npcs.yml`
 ``` yaml
-- id: 1
+- id: rat
   keywords: ['rat']
   name: 'Rat'
   level: 2
   description: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
   script: '1-rat'
-  items: ['limbo:2']
-  quests: ['limbo:2']
+  items: ['limbo:sliceofcheese']
+  quests: ['limbo:onecheeseplease']
   attributes:
     health: 100
     speed: 2.5
   damage: 1-7
-- id: 2
+- id: wiseoldman
   keywords: ["wise", "old", "man"]
   name: "Wise Old Man"
   behaviors:
@@ -31,7 +31,9 @@ In Ranvier all NPCs for an area are defined in a single file within the area fol
   behaviors:
     lootable:
       table:
-        "limbo:4": 50
+        pools:
+        - "limbo:junk"
+        - "limbo:sliceofcheese": 25
 ```
 
 Here we have two NPCs. The rat can enter combat, has a custom script, a default inventory, hands out a quest and has
@@ -43,7 +45,7 @@ some extra attributes. The old man is the most basic NPC you can have.
 
 ----
 
-`id` _`number`_
+`id` _`string`_
 :    ***required*** NPC id, unique among the NPCs of the current area
 
 `name` _`string`_

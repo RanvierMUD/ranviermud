@@ -1,20 +1,20 @@
-- id: 1
+- id: rat
   keywords: ['rat']
   name: A Rat
   level: 2
   description: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
   script: '1-rat'
-  items: ['limbo:2']
-  quests: ['limbo:2']
+  items: ['limbo:sliceofcheese']
+  quests: ['limbo:onecheeseplease']
   behaviors:
     combat: true
     ranvier-wander:
       interval: 20
-      restrictTo: ['limbo:1', 'limbo:2', 'limbo:3']
+      restrictTo: ['limbo:white', 'limbo:black', 'limbo:training1']
   attributes:
     health: 100
     energy: 100
-- id: 2
+- id: wiseoldman
   keywords: ["wise", "old", "man"]
   name: "Wise Old Man"
   level: 99
@@ -23,14 +23,14 @@
   description: "A wise looking old man sits on the ground with legs crossed."
   behaviors:
     ranvier-sentient: true
-- id: 3
+- id: puppy
   keywords: ["puppy", "dog", "loyal", "wide", "eyed", "wide-eyed"]
   name: A Puppy
   description: "A wide-eyed puppy stares up at you."
   pacifist: true
   level: 1
   script: '3-puppy'
-- id: 4
+- id: trainingdummy
   keywords: ["dummy", "target", "practice"]
   level: 2
   name: "Training Dummy"
@@ -53,12 +53,12 @@
       pools:
         - "limbo:junk"
         - "limbo:potions"
-        - "limbo:2": 25
+        - "limbo:sliceofcheese": 25
   description: >-
     The training dummy is almost human shaped although slightly out of proportion. The material it's made of is hard to
     discern; it seems to constantly change between metal, wood, cloth, and glass depending on the angle. There is a
     large red and white bullseye painted on its chest. The dummy has no eyes and mindlessly meanders about the area.
-- id: 5
+- id: bossdummy
   keywords: ["boss", "target", "dummy", "practice"]
   name: "Boss Training Dummy"
   level: 5
@@ -77,9 +77,9 @@
           max: 100
       pools:
         - "limbo:potions"
-        - "limbo:5": 100
-        - "limbo:9": 5
-- id: 6
+        - "limbo:trainingsword": 100
+        - "limbo:bladeofranvier": 5
+- id: wallythewonderful
   keywords: ["wally", "wonderful", "shop", "vendor"]
   name: "Wally the Wonderful"
   description: >-
@@ -90,22 +90,22 @@
     ranvier-sentient: true
     vendor:
       items:
-        "limbo:5":
+        "limbo:trainingsword":
           cost: 30
           currency: gold
-        "limbo:6":
+        "limbo:leathervest":
           cost: 30
           currency: gold
-        "limbo:10":
+        "limbo:woodenshield":
           cost: 30
           currency: gold
-        "limbo:7":
+        "limbo:potionhealth1":
           cost: 100
           currency: gold
-        "limbo:8":
+        "limbo:potionstrength2":
           cost: 150
           currency: gold
-        "limbo:9":
+        "limbo:bladeofranvier":
           cost: 99999
           currency: gold
       enterMessage: "Step right up! Get your wares at Moe's Shop!"

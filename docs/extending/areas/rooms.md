@@ -12,36 +12,35 @@ the coordinates to infer the allowable exits for a room for you, doors work all 
 
 `bundles/ranvier-areas/areas/limbo/rooms.yml`
 ``` yaml
-- id: 1
-  title: "Test Room 1"
+- id: white
+  title: "White Room"
   description: "A featureless white room. A pitch black void in the shape of archway can be seen on the east side of the room."
-  npcs: ["limbo:1"]
+  npcs: ["limbo:rat" ]
   items:
-    - id: "limbo:3"
-      replaceOnRespawn: true
-      respawnChance: 30
-  script: "1-test"
-  exits:
-    - roomId: "limbo:2"
-      direction: "east"
-      leaveMessage: " steps into the void and disappears."
-- id: 2
-  title: "Test Room 2"
-  description: "A completely black room. Somehow all of the light that should be coming from the room to the west does not pass through the archway. A single lightbulb hangs from the ceiling illuminating a small area."
-  behaviors: [ "test" ]
-  items: ["limbo:2"]
-  npcs:
-    - id: "limbo:2"
+    - id: "limbo:woodenchest"
       respawnChance: 20
-      maxLoad: 5
-  metadata:
-    fooType: 'bar'
+      replaceOnRespawn: true # when this chest respawns completely replace it so its contents get refreshed
+  script: "white"
   exits:
-    - roomId: "limbo:1"
-      direction: "west"
+    - roomId: "limbo:black"
+      direction: east
+      leaveMessage: " steps into the void and disappears."
+- id: black
+  title: "Black Room"
+  description: >-
+    A completely black room. Somehow all of the light that should be coming from the room to the west does not pass
+    through the archway. A single lightbulb hangs from the ceiling illuminating a small area.
+  items:
+    - id: "limbo:sliceofcheese"
+      respawnChance: 10
+      maxLoad: 5
+  npcs: ["limbo:wiseoldman"]
+  exits:
+    - roomId: "limbo:white"
+      direction: west
       leaveMessage: " steps into the light and disappears."
   doors:
-    "limbo:1": # The player encounters a door when trying to move between "limbo:1" and this room
+    "limbo:white": # The player encounters a door when trying to move between "limbo:white" and this room
       lockedBy: "limbo:test_key" # this room can only be locked/unlocked with this item
       locked: true # if the door is locked by default
       closed: true # if the door is closed by default
@@ -80,7 +79,7 @@ the coordinates to infer the allowable exits for a room for you, doors work all 
   # this room has inferred exits from its coordinates and also manually specifies an exit to leave the area
   exits:
     - direction: east
-      roomId: "limbo:1"
+      roomId: "limbo:white"
 
 # Note that this room doesn't have coordinates, that's completely fine.
 # It will still exist in the area but it will not be on the map and will only be
@@ -110,7 +109,7 @@ doors are controlled.
 
 ----
 
-`id` _`number`_
+`id` _`string`_
 :    ***required*** Room id, unique among the rooms of the current area
 
 `title` _`string`_
@@ -156,7 +155,7 @@ will be lost when the server is shut down.
 
 `doors` _`object`_
 :    Doors blocking access to this room. The key for each door is the room you want to block access _from_. So if you
-want to block access to players coming _from_ `limbo:5` into the room the key would be `"limbo:5"`
+want to block access to players coming _from_ `limbo:training` into the room the key would be `"limbo:training"`
 
 > `lockedBy` _`EntityReference`_
 > :    Optional item EntityReference of the item that will be the key that locks/unlocks the door

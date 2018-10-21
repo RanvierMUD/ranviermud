@@ -22,7 +22,7 @@ Ranvier configuration is stored in the `ranvier.json` file in the root of the pr
 `allowMultiplay` _`boolean`_ `(false)`
 :    If enabled players can log into multiple players on their account at once
 
-`startingRoom` _`EntityReference`_ `("limbo:1")`
+`startingRoom` _`EntityReference`_ `("limbo:white")`
 :    Room player is placed in when first created
 
 `moveCommand` _`string`_ `("move")`
