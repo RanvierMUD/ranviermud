@@ -1,9 +1,0 @@
-verbose: false
-instrumentation:
-    root: ./
-    excludes: ['node-modules/*', 'lib/*', 'webpack.config.js', 'src/3rdparty/*.js', 'scripts/**/*.js', 'events/**/*.js']
-    include-all-sources: true
-    es-modules: true
-reporting:
-hooks:
-check:
