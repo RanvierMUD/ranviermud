@@ -30,8 +30,8 @@ existing documentation, read through some of the code, try to build something an
 the docs that you could add.
 
 Documentation is stored in the `docs/` folder in the root of the project. Our documentation is rendered with `mkdocs`
-and the Python-Markdown extensions, any markup you can use from those is free game. If you want to change the look and
-feel of the documentation styles are in `docs/_mkdocs/theme/ranvier/assets/stylesheets/application.css`
+version 0.17.x and the Python-Markdown extensions, any markup you can use from those is free game. If you want to change
+the look and feel of the documentation styles are in `docs/_mkdocs/theme/ranvier/assets/stylesheets/application.css`
 
 You can test your changes to the docs locally by installing [mkdocs](http://www.mkdocs.org/) version 0.15.0 (version is important) and running `mkdocs serve`
 from the root of the repo.

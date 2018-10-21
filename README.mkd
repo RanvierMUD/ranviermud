@@ -100,7 +100,7 @@ Neuro is a starter kit to build a custom client for Ranvier when using the webso
 
 ### Soma
 
-[Soma](https://github.com/shawncplus/soma)
+[github.com/shawncplus/soma](https://github.com/shawncplus/soma)
 
 Soma is an experimental GUI builder for Ranvier.
 
