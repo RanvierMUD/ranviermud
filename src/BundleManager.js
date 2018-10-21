@@ -251,6 +251,7 @@ class BundleManager {
       if (item.script) {
         const scriptPath = path.dirname(itemsFile) + '/scripts/items/' + item.script + '.js';
         if (!fs.existsSync(scriptPath)) {
+          Logger.warn(`\t\t\t[${entityRef}] has non-existent script "${item.script}"`);
           return;
         }
 
@@ -300,6 +301,7 @@ class BundleManager {
       if (npc.script) {
         const scriptPath = path.dirname(npcsFile) + '/scripts/npcs/' + npc.script + '.js';
         if (!fs.existsSync(scriptPath)) {
+          Logger.warn(`\t\t\t[${entityRef}] has non-existent script "${npc.script}"`);
           return;
         }
 
@@ -347,6 +349,7 @@ class BundleManager {
       if (room.script) {
         const scriptPath = path.dirname(roomsFile) + '/scripts/rooms/' + room.script + '.js';
         if (!fs.existsSync(scriptPath)) {
+          Logger.warn(`\t\t\t[${entityRef}] has non-existent script "${room.script}"`);
           return;
         }
 

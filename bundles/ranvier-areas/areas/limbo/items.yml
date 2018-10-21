@@ -4,7 +4,6 @@
   roomDesc: "Rusted Sword"
   keywords: [ "sword", "rusty", "metal", "rusted" ]
   description: "An arm's-length, jagged metal sword discolored with red corrosion. The worn leather grip barely held on by fraying thread."
-  script: "1-sword"
   metadata:
     level: 1
     slot: 'wield'
@@ -132,7 +131,7 @@
   roomDesc: "Blade of Ranvier"
   keywords: ["sword", "blade", "ranvier"]
   description: "The blade shines a brilliant silver. Holding it you feel as if you could take on the world."
-  script: "9-ranvier-blade"
+  script: "ranvier-blade"
   metadata:
     quality: epic
     slot: "wield"

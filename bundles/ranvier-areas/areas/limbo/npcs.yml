@@ -3,7 +3,7 @@
   name: A Rat
   level: 2
   description: "The rat's beady red eyes dart frantically, its mouth foaming as it scampers about."
-  script: '1-rat'
+  script: 'rat'
   items: ['limbo:sliceofcheese']
   quests: ['limbo:onecheeseplease']
   behaviors:
@@ -18,7 +18,7 @@
   keywords: ["wise", "old", "man"]
   name: "Wise Old Man"
   level: 99
-  script: '2-old-man'
+  script: 'old-man'
   pacifist: true
   description: "A wise looking old man sits on the ground with legs crossed."
   behaviors:
@@ -29,7 +29,7 @@
   description: "A wide-eyed puppy stares up at you."
   pacifist: true
   level: 1
-  script: '3-puppy'
+  script: 'puppy'
 - id: trainingdummy
   keywords: ["dummy", "target", "practice"]
   level: 2
