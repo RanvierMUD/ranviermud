@@ -27,11 +27,7 @@
     "sty": "",
     "uuid": "^3.3.2",
     "winston": "^2.4.4",
-    "wrap-ansi": "^2.0.0"
-  },
-  "devDependencies": {
-    "jsdoc": "^3.5.5",
-    "ndb": "^1.0.26",
-    "tui-jsdoc-template": "^1.2.2"
+    "wrap-ansi": "^2.0.0",
+    "ranvier": "latest"
   }
 }
