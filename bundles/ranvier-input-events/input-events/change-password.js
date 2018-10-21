@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * MOTD event
+ * Change password event
  */
 module.exports = (srcPath) => {
   const EventUtil = require(srcPath + 'EventUtil');
