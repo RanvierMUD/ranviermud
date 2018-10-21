@@ -4,27 +4,27 @@
 
 ## Node.js-based MUD engine
 
-See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features. Current version: 2.0
+Ranvier is a [MUD](https://en.wikipedia.org/wiki/MUD) game engine whose goal is to be a simple but powerful way to build whatever MUD you want with special care given to extensibility. The core code strives to be completely unopinionated toward any specific style of game while using the bundle system to build the game you want without having to dig through the engine's code.
 
-Ranvier is a [MUD](https://en.wikipedia.org/wiki/MUD) game engine. Out of the box Ranvier is configured to use a telnet
-server and will work with any MUD client you've used to connect to other MUDs. It runs a websocket server simultaneously,
-meaning players can also connect to your game with a websocket client at the same time. However, Ranvier supports any transport
-server you want to use; changing the entire networking layer is as easy as adding a command.
+NOTE: Use the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for new projects. Pull requests/issues must be submitted against `staging` as well.
 
-There is an accompanying client specifically built for the websocket bundle which can be found in the Neuro repo: [github.com/shawncplus/neuro](https://github.com/shawncplus/neuro)
+## Special Features
 
-<p align="center">
-  <img width="640" src="https://raw.githubusercontent.com/shawncplus/neuro/master/assets/demo.gif" />
-</p>
-<div style="text-align: center"><em>Ranvier with websockets and the Neuro client</em></div>
-
-Ranvier also has a GUI builder available, [Soma](https://github.com/shawncplus/soma).
-
-<p align="center">
-  <img width="640" src="https://raw.githubusercontent.com/shawncplus/soma/master/assets/screenshot.png" />
-</p>
-<div style="text-align: center"><em>Editing an area with Soma</em></div>
-
+* Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy
+  packaging and sharing of commands/areas/items/npcs/channels/behaviors
+* Unopinionated network layer: easily swap out telnet for any network layer you like. No need to gut the whole codebase
+  just to support a different transport type, just drop in a file.
+* Optional coordinate based room system allowing for the flexibilty of a standard MUD world with the easy mappability of
+  a strict 3D world.
+* Scripting for all entities in the game for any event along with behaviors to create shared, composable scripts
+* Pfile saving in JSON, easy to parse for external usage
+* Rooms, items, and NPCs are easily described in YAML. No weird ~ delimited formats or byte-specific parsing that requires a
+  GUI editor to build (though we do have a GUI editor in the works!)
+* Skill system with passive/active skills
+* Effects e.g., buffs/debuffs
+* Quest system allowing for starting/progress/completion from any event in the game
+* Communication channels with custom audiences
+* Player accounts
 
 ## Documentation
 
@@ -37,38 +37,15 @@ We have a Slack channel you can use to ask questions, suggest features, or just 
 
 [Get an invite](https://join.slack.com/t/ranviermud/shared_invite/enQtMzczMDU3MDkxODc5LWVjZmUwNjBmNGFjYjZjOTM2OTcyMDMzZTJjZmNlOWZjNWJmNjVmMTg4ODFmOWQ3Yjg2Y2U5OTIyYTgyZTE2ZTA)
 
-## Features
 
-* Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy
-  packaging and sharing of commands/areas/items/npcs/channels/behaviors
-* Unopinionated network layer: easily swap out telnet for any network layer you like. No need to gut the whole codebase
-  just to support a different transport type, just drop in a file.
-* Optional coordinate based room system allowing for the flexibilty of a standard MUD world with the easy mappability of
-  a strict 3D world.
-* Scripting support: It's in JavaScript! No need for a shitty DSL. The codebase is JavaScript, the scripting is JavaScript.
-* Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the
-  event is emitted. Adding new events is easy as `npc.emit('eventName')` See documentation on Node.js event emitters for more detail
-* Pfile saving in JSON, easy to parse for external usage
-* Rooms, items, and NPCs are easily described in YAML. No weird bullshit ~~~~ and byte-specific parsing that requires a
-  GUI editor to build (though we do have a GUI editor in the works!)
-* Did I mention it's in blasting JavaScript? No compiling, no C, no cygwin, no 15 year old spaghetti code
-* An accompanying client for use with websockets: [Neuro](https://github.com/shawncplus/neuro)
-* A GUI area builder: [Soma](https://github.com/shawncplus/soma)
+## Example Bundles
 
-### Example Bundles
-
-Ranvier is built on the concept of bundles: self-contained packages that are combined to create the game you want
-without having to modify the core engine. The example bundles combine to make a basic Diku-style MUD with the following
+Ranvier comes with a number of example bundles which combine to make a basic Diku-style MUD with the following
 features:
 
-* Telnet connections
+* Telnet and websocket connections
 * Classes
 * Leveling
-* Passive/active skills
-* Spell effects
-* Flexible channel system
-* Incredibly simple-to-add commands
-* Quest system allowing for starting/progress/completion from any event in the game
 * Simple Diku-style combat system
 * Grouping/following
 * Rooms with closeable/lockable doors, and items that can be closed/locked
@@ -79,19 +56,19 @@ features:
 * Crafting/resource gathering
 * Player minimap option
 * Emotes
-* NPC behaviors
+* Example NPC behaviors
   * Create NPCs aggressive to players or other NPCs (in general or specific NPC types)
   * Wandering NPCs (optionally restricted to certain paths or areas)
-  * Conversational NPCs controlled via an integration with [API.AI](https://api.ai)
+  * Conversational NPCs controlled via an integration with [Dialogflow](https://dialogflow.com)
 
 You can build your game using these bundles or disable them and build yours completely fresh while still taking
 advantage of all of the core code.
 
 ## Requirements
 
-* Node.js >= v8.9.4
+* Node.js >= v10.12.0
 
-## "I just want to check it out quickly"
+## Quick Start
 
 ```sh
 git clone git://github.com/shawncplus/ranviermud
@@ -104,8 +81,30 @@ telnet localhost 4000
 
 The default admin user/pass is `admin`/`ranviermud`
 
-## Play it
+## Demo
 
-To try out what Ranvier looks like out of the box, as a player, `telnet` or point your favorite client to
-mud.ranviermud.com on port 4000. The server is updated from the Github `staging` branch, reset, and restarted every
-hour.
+Point your favorite client or telnet to `mud.ranviermud.com` port 4000. This demo server is wiped and updated from the `staging` branch every hour.
+
+## Related Projects
+
+### Neuro
+
+[github.com/shawncplus/neuro](https://github.com/shawncplus/neuro)
+
+Neuro is a starter kit to build a custom client for Ranvier when using the websockets bundle.
+
+<p align="center">
+  <img width="640" src="https://raw.githubusercontent.com/shawncplus/neuro/master/assets/demo.gif" />
+</p>
+<div style="text-align: center"><em>Ranvier with websockets and the Neuro client</em></div>
+
+### Soma
+
+[Soma](https://github.com/shawncplus/soma)
+
+Soma is an experimental GUI builder for Ranvier.
+
+<p align="center">
+  <img width="640" src="https://raw.githubusercontent.com/shawncplus/soma/master/assets/screenshot.png" />
+</p>
+<div style="text-align: center"><em>Editing an area with Soma</em></div>
