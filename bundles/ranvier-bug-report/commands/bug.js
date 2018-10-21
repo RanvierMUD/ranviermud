@@ -11,6 +11,7 @@ module.exports = srcPath => {
         return Broadcast.sayAt(player, '<b><yellow>Please describe the bug you have found.</yellow></b>');
       }
 
+      // TODO: There's absolutely no reason for this to be an event, just move the event code into the command
       player.emit('bugReport', {
         description: args,
         type: arg0
