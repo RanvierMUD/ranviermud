@@ -403,7 +403,7 @@ class Room extends Metadatable(EventEmitter) {
     for (let [behaviorName, config] of this.behaviors) {
       let behavior = state.RoomBehaviorManager.get(behaviorName);
       if (!behavior) {
-        Logger.warn(`No script found for item behavior ${behaviorName}`);
+        Logger.warn(`No script found for room behavior ${behaviorName}`);
         continue;
       }
 
