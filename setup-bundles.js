@@ -59,7 +59,6 @@ async function main() {
   }
 
   const modified = cp.execSync('git status -uno --porcelain').toString();
-  console.log(modified);
   if (modified) {
     console.warn('You have uncommitted changes. For safety setup-bundles must be run on a clean repository.');
     process.exit(1);
