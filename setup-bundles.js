@@ -1,24 +1,108 @@
 #!/usr/bin/env node
 'use strict';
 
-const fs = require('fs');
-const resolve = require('path').resolve;
-const join = require('path').join;
 const cp = require('child_process');
-const os = require('os');
+const fs = require('fs');
+const readline = require('readline');
 
-const bundles = resolve(__dirname, './bundles/');
-
-fs.readdirSync(bundles)
-  .forEach(bundle => {
-    const bundlePath = join(bundles, bundle);
-
-    // ensure path has package.json
-    if (!fs.existsSync(join(bundlePath, 'package.json'))) return;
-
-    // npm binary based on OS
-    const npmCmd = os.platform().startsWith('win') ? 'npm.cmd' : 'npm';
-
-    // install folder
-    cp.spawn(npmCmd, ['i'], { env: process.env, cwd: bundlePath, stdio: 'inherit' });
+async function prompt() {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
   });
+
+  return new Promise((resolve, reject) => {
+    rl.question('Do you want to install the example bundles? [Y/n] ', resolve);
+  });
+}
+
+async function main() {
+
+  try {
+    let answer = await prompt();
+
+    if (answer === 'n') {
+      throw 'foo';
+    }
+  } catch (err) {
+    console.log('Done.');
+    process.exit(0);
+  }
+
+  const githubPath = 'https://github.com/ranviermud/';
+  const defaultBundles = [
+    'bundle-example-areas',
+    'bundle-example-bugreport',
+    'bundle-example-channels',
+    'bundle-example-classes',
+    'bundle-example-combat',
+    'bundle-example-commands',
+    'bundle-example-crafting',
+    'bundle-example-debug',
+    'bundle-example-effects',
+    'bundle-example-groups',
+    'bundle-example-input-events',
+    'bundle-example-lib',
+    'bundle-example-npc-behaviors',
+    'bundle-example-player-events',
+    'bundle-example-quests',
+    'bundle-example-telnet',
+    'bundle-example-vendors',
+    'bundle-example-websocket',
+  ];
+  const enabledBundles = [];
+
+  // check if we're in a repo
+  if (!fs.existsSync(`${__dirname}/.git`)) {
+    console.error('Not in a git repo.');
+    process.exit(1);
+  }
+
+  const modified = cp.execSync('git status -uno --porcelain').toString();
+  console.log(modified);
+  if (modified) {
+    console.warn('You have uncommitted changes. For safety setup-bundles must be run on a clean repository.');
+    process.exit(1);
+  }
+
+  console.info('Adding bundles as submodules...');
+  const cpOpts = {
+    env: process.env, cwd: __dirname, stdio: 'inherit'
+  };
+
+  // add each bundle as a submodule
+  for (const bundle of defaultBundles) {
+    const bundlePath = `bundles/${bundle}`;
+    cp.spawnSync('git', ['submodule', 'add', githubPath + bundle, bundlePath], );
+    enabledBundles.push(bundle);
+  }
+
+  cp.spawnSync('git', ['add', './ranvier.json'], cpOpts);
+  console.info('Done.');
+
+  console.info('Updating enabled bundle list...');
+  const ranvierJson = require('./ranvier.json');
+  const joinedBundles = new Set([...enabledBundles, ...ranvierJson.bundles]);
+  ranvierJson.bundles = [...joinedBundles];
+  fs.writeFileSync('./ranvier.json', JSON.stringify(ranvierJson, null, 2));
+  console.info('Done.');
+
+  console.info(`
+-------------------------------------------------------------------------------
+Example bundles have been installed as submodules. It's recommended that you now
+run the following commands:
+
+  git commit -m "Install bundles"
+
+You're all set! See https://ranviermud.com for guides and API references
+`);
+
+  process.exit(0);
+}
+
+try {
+  main();
+} catch (err) {
+  console.error(err);
+  process.exit(1);
+}
