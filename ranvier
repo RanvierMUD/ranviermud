@@ -18,7 +18,6 @@
 const semver = require('semver');
 const net = require('net');
 const commander = require('commander');
-const wrap = require('wrap-ansi');
 const argv = require('optimist').argv;
 
 // for dev clone the github:ranviermud/core repo, and run npm link in that folder, then come
