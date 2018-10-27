@@ -75,8 +75,6 @@ async function main() {
     cp.spawnSync('git', ['submodule', 'add', githubPath + bundle, bundlePath], );
     enabledBundles.push(bundle);
   }
-
-  cp.spawnSync('git', ['add', './ranvier.json'], cpOpts);
   console.info('Done.');
 
   console.info('Updating enabled bundle list...');
@@ -84,6 +82,7 @@ async function main() {
   const joinedBundles = new Set([...enabledBundles, ...ranvierJson.bundles]);
   ranvierJson.bundles = [...joinedBundles];
   fs.writeFileSync('./ranvier.json', JSON.stringify(ranvierJson, null, 2));
+  cp.spawnSync('git', ['add', './ranvier.json'], cpOpts);
   console.info('Done.');
 
   console.info(`
