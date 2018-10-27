@@ -72,8 +72,16 @@ async function main() {
   // add each bundle as a submodule
   for (const bundle of defaultBundles) {
     const bundlePath = `bundles/${bundle}`;
-    cp.spawnSync('git', ['submodule', 'add', githubPath + bundle, bundlePath], );
+    cp.spawnSync('git', ['submodule', 'add', githubPath + bundle, bundlePath], cpOpts);
     enabledBundles.push(bundle);
+
+    const fullBundlePath = __dirname + '/' + bundlePath;
+
+    if (fs.existsSync(fullBundlePath + '/package.json')) {
+      cp.spawnSync('npm', ['install', '--no-audit'], {
+        cwd: fullBundlePath
+      })
+    }
   }
   console.info('Done.');
 
