@@ -1,9 +1,0 @@
----
-command: flee
-body: |
-  Run away from a fight. You can optionally specify a direction to run, if you don't a random direction will be picked for you.
-related:
-  - kill
-keywords:
-- flee
-- run

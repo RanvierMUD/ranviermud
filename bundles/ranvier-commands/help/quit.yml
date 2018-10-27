@@ -1,6 +1,0 @@
----
-command: quit
-body: |
-  Quit the game (cannot be in combat when quitting)
-related:
-- save

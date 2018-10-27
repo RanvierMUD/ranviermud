@@ -1,4 +1,0 @@
----
-command: scan
-body: |
-  Check enemies and players in surrounding rooms

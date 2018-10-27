@@ -1,9 +1,0 @@
----
-command: wear
-body: |
-  Wear an item
-related:
-- equipment
-- remove
-keywords:
-- loot

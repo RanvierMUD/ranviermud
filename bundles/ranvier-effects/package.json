@@ -1,8 +1,0 @@
-{
-  "name": "ranvier-example-effects",
-  "version": "1.0.0",
-  "description": "",
-  "dependencies": {
-    "humanize-duration": "^3.14.0"
-  }
-}

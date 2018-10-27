@@ -1,9 +1,0 @@
-This bundle is a set of useful NPC behaviors.
-
-For the `ranvier-sentient` behavior to work you will need an account with
-api.ai and you will need to put your developer key in a file called `APIAIKEY`
-in the same directory as this README file.
-
-The behavior as-implemented is based off the agent provided in the `resources/`
-directory of this bundle (`Ranvier-agent.zip`.) See the api.ai documentation on
-how to import an agent.

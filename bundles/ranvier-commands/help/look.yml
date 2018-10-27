@@ -1,4 +1,0 @@
----
-command: look
-body: |
-  Look at a room or a specific thing (player, item, etc...)
