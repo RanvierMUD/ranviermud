@@ -3,6 +3,7 @@
 
 const cp = require('child_process');
 const fs = require('fs');
+const os = require('os');
 const readline = require('readline');
 
 async function prompt() {
@@ -77,10 +78,13 @@ async function main() {
 
     const fullBundlePath = __dirname + '/' + bundlePath;
 
+    // npm binary based on OS
+    const npmCmd = os.platform().startsWith('win') ? 'npm.cmd' : 'npm';
+
     if (fs.existsSync(fullBundlePath + '/package.json')) {
-      cp.spawnSync('npm', ['install', '--no-audit'], {
+      cp.spawnSync(npmCmd, ['install', '--no-audit'], {
         cwd: fullBundlePath
-      })
+      });
     }
   }
   console.info('Done.');
