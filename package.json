@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "./ranvier -v --save=10 --respawn=10",
+    "start": "node ./ranvier -v --save=10 --respawn=10",
     "build-docs": "jsdoc -c jsdoc.conf",
     "bundle-install": "node setup-bundles"
   },
