@@ -85,6 +85,7 @@ function init(restartServer) {
   GameState = {
     AccountManager: new Ranvier.AccountManager(),
     AreaManager: new Ranvier.AreaManager(),
+    AttributeFactory: new Ranvier.AttributeFactory(),
     ChannelManager: new Ranvier.ChannelManager(),
     ClassManager: new Ranvier.ClassManager(), // player class manager
     CommandManager: new Ranvier.CommandManager(),
