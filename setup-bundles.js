@@ -50,6 +50,7 @@ async function main() {
     'bundle-example-telnet',
     'bundle-example-vendors',
     'bundle-example-websocket',
+    'progressive-respawn',
   ];
   const enabledBundles = [];
 
