@@ -84,6 +84,8 @@ function init(restartServer) {
 
   GameState = {
     AccountManager: new Ranvier.AccountManager(),
+    AreaBehaviorManager: new Ranvier.BehaviorManager(),
+    AreaFactory: new Ranvier.AreaFactory(),
     AreaManager: new Ranvier.AreaManager(),
     AttributeFactory: new Ranvier.AttributeFactory(),
     ChannelManager: new Ranvier.ChannelManager(),
@@ -105,6 +107,7 @@ function init(restartServer) {
     QuestGoalManager: new Ranvier.QuestGoalManager(),
     QuestRewardManager: new Ranvier.QuestRewardManager(),
     RoomBehaviorManager: new Ranvier.BehaviorManager(),
+    RoomFactory: new Ranvier.RoomFactory(),
     RoomManager: new Ranvier.RoomManager(),
     SkillManager: new Ranvier.SkillManager(),
     SpellManager: new Ranvier.SkillManager(),
