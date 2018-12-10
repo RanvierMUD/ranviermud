@@ -355,6 +355,7 @@ class Room extends Metadatable(EventEmitter) {
    * @param {GameState} state
    * @param {string} entityRef
    * @fires Npc#spawn
+   * @returns {Npc}
    */
   spawnNpc(state, entityRef) {
     Logger.verbose(`\tSPAWN: Adding npc [${entityRef}] to room [${this.title}]`);
@@ -368,6 +369,7 @@ class Room extends Metadatable(EventEmitter) {
      * @event Npc#spawn
      */
     newNpc.emit('spawn');
+    return newNpc;
   }
 
   /**
