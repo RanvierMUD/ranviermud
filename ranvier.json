@@ -7,7 +7,6 @@
   "maxPlayerNameLength": 20,
   "minPlayerNameLength": 3,
   "maxCharacters": 3,
-  "allowMultiplay": false,
   "reportToAdmins": false,
   "startingRoom": "limbo:white",
   "moveCommand": "move",
