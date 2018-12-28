@@ -78,7 +78,7 @@ let saveInterval, tickInterval, playerTickInterval;
 /**
  * Do the dirty work
  */
-function init(restartServer) {
+async function init(restartServer) {
   Logger.log("START - Loading entities");
   restartServer = typeof restartServer === 'undefined' ? true : restartServer;
 
@@ -114,13 +114,19 @@ function init(restartServer) {
     ServerEventManager: new Ranvier.EventManager(),
     GameServer: new Ranvier.GameServer(),
     DataLoader: Ranvier.Data,
+    EntityLoaderRegistry: new Ranvier.EntityLoaderRegistry(),
+    DataSourceRegistry: new Ranvier.DataSourceRegistry(),
     Config,
   };
+
+  // setup entity loaders
+  GameState.DataSourceRegistry.load(__dirname, Config.get('dataSources'));
+  GameState.EntityLoaderRegistry.load(GameState.DataSourceRegistry, Config.get('entitySources'));
 
   // Setup bundlemanager
   const BundleManager = new Ranvier.BundleManager(__dirname + '/bundles/', GameState);
   GameState.BundleManager = BundleManager;
-  BundleManager.loadBundles();
+  await BundleManager.loadBundles();
   GameState.ServerEventManager.attach(GameState.GameServer);
 
   if (restartServer) {

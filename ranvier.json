@@ -2,6 +2,46 @@
   "port": 4000,
   "bundles": [
   ],
+  "dataSources": {
+    "YamlArea": {
+      "require": "ranvier-datasource-file.YamlAreaDataSource"
+    },
+    "Yaml": {
+      "require": "ranvier-datasource-file.YamlDataSource"
+    }
+  },
+  "entitySources": {
+    "areas": {
+      "source": "YamlArea",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas"
+      }
+    },
+    "npcs": {
+      "source": "Yaml",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas/[AREA]/npcs.yml"
+      }
+    },
+    "items": {
+      "source": "Yaml",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas/[AREA]/items.yml"
+      }
+    },
+    "rooms": {
+      "source": "Yaml",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas/[AREA]/rooms.yml"
+      }
+    },
+    "quests": {
+      "source": "Yaml",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas/[AREA]/quests.yml"
+      }
+    }
+  },
   "maxAccountNameLength": 20,
   "minAccountNameLength": 3,
   "maxPlayerNameLength": 20,
