@@ -8,9 +8,6 @@
  * Options:
  *   -v Verbose loggin
  *   --port Port to listen on
- *   --locale Locale to act as the default
- *   --save Minutes between autosave
- *   --respawn Minutes between respawn
  */
 
 
@@ -42,8 +39,6 @@ Config.load(require('./ranvier.json'));
 // cmdline options
 commander
   .version(pkg.version)
-  .option('-s, --save [time]', 'Number of seconds between auto-save ticks [10]', 10)
-  .option('-r, --respawn [time]', 'Number of minutes between respawn ticks [120]', 120)
   .option('-p, --port [portNumber]', 'Port to host the server [23]', Ranvier.Config.get('port', 23))
   .option('-v, --verbose', 'Verbose console logging.', true)
   .option('-e, --prettyErrors', 'Pretty-print formatting for error stack traces.', false)
@@ -123,6 +118,9 @@ async function init(restartServer) {
   GameState.DataSourceRegistry.load(__dirname, Config.get('dataSources'));
   GameState.EntityLoaderRegistry.load(GameState.DataSourceRegistry, Config.get('entitySources'));
 
+  GameState.AccountManager.setLoader(GameState.EntityLoaderRegistry.get('accounts'));
+  GameState.PlayerManager.setLoader(GameState.EntityLoaderRegistry.get('players'));
+
   // Setup bundlemanager
   const BundleManager = new Ranvier.BundleManager(__dirname + '/bundles/', GameState);
   GameState.BundleManager = BundleManager;
@@ -132,13 +130,6 @@ async function init(restartServer) {
   if (restartServer) {
     Logger.log("START - Starting server");
     GameState.GameServer.startup(commander);
-
-    // Save every 10 minutes by default.
-    Logger.log(`Setting autosave to ${commander.save} seconds.`);
-    clearInterval(saveInterval);
-    saveInterval = setInterval(() => {
-      GameState.PlayerManager.saveAll();
-    }, commander.save * 1000);
 
     // Ticks for effect processing and combat happen every half second
     clearInterval(tickInterval);
