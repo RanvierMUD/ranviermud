@@ -8,9 +8,27 @@
     },
     "Yaml": {
       "require": "ranvier-datasource-file.YamlDataSource"
+    },
+    "YamlDirectory": {
+      "require": "ranvier-datasource-file.YamlDirectoryDataSource"
+    },
+    "JsonDirectory": {
+      "require": "ranvier-datasource-file.JsonDirectoryDataSource"
     }
   },
   "entitySources": {
+    "accounts": {
+      "source": "JsonDirectory",
+      "config": {
+        "path": "data/account"
+      }
+    },
+    "players": {
+      "source": "JsonDirectory",
+      "config": {
+        "path": "data/player"
+      }
+    },
     "areas": {
       "source": "YamlArea",
       "config": {
@@ -39,6 +57,12 @@
       "source": "Yaml",
       "config": {
         "path": "bundles/[BUNDLE]/areas/[AREA]/quests.yml"
+      }
+    },
+    "help": {
+      "source": "YamlDirectory",
+      "config": {
+        "path": "bundles/[BUNDLE]/help"
       }
     }
   },
