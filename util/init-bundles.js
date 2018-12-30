@@ -47,10 +47,10 @@ async function main() {
     'bundle-example-npc-behaviors',
     'bundle-example-player-events',
     'bundle-example-quests',
-    'bundle-example-telnet',
     'bundle-example-vendors',
-    'bundle-example-websocket',
     'progressive-respawn',
+    'telnet-networking',
+    'websocket-networking',
   ];
   const enabledBundles = [];
 
