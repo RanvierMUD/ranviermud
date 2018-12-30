@@ -6,6 +6,9 @@ const fs = require('fs');
 const os = require('os');
 const readline = require('readline');
 
+const gitRoot = cp.execSync('git rev-parse --show-toplevel').toString('utf8').trim();
+process.chdir(gitRoot);
+
 async function prompt() {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -32,33 +35,27 @@ async function main() {
 
   const githubPath = 'https://github.com/ranviermud/';
   const defaultBundles = [
-    'bundle-example-areas',
-    'bundle-example-bugreport',
-    'bundle-example-channels',
-    'bundle-example-classes',
-    'bundle-example-combat',
-    'bundle-example-commands',
-    'bundle-example-crafting',
-    'bundle-example-debug',
-    'bundle-example-effects',
-    'bundle-example-groups',
-    'bundle-example-input-events',
-    'bundle-example-lib',
-    'bundle-example-npc-behaviors',
-    'bundle-example-player-events',
-    'bundle-example-quests',
-    'bundle-example-vendors',
-    'progressive-respawn',
-    'telnet-networking',
-    'websocket-networking',
+    'https://github.com/RanvierMUD/bundle-example-areas',
+    'https://github.com/RanvierMUD/bundle-example-bugreport',
+    'https://github.com/RanvierMUD/bundle-example-channels',
+    'https://github.com/RanvierMUD/bundle-example-classes',
+    'https://github.com/RanvierMUD/bundle-example-combat',
+    'https://github.com/RanvierMUD/bundle-example-commands',
+    'https://github.com/RanvierMUD/bundle-example-crafting',
+    'https://github.com/RanvierMUD/bundle-example-debug',
+    'https://github.com/RanvierMUD/bundle-example-effects',
+    'https://github.com/RanvierMUD/bundle-example-groups',
+    'https://github.com/RanvierMUD/bundle-example-input-events',
+    'https://github.com/RanvierMUD/bundle-example-lib',
+    'https://github.com/RanvierMUD/bundle-example-npc-behaviors',
+    'https://github.com/RanvierMUD/bundle-example-player-events',
+    'https://github.com/RanvierMUD/bundle-example-quests',
+    'https://github.com/RanvierMUD/bundle-example-vendors',
+    'https://github.com/RanvierMUD/progressive-respawn',
+    'https://github.com/RanvierMUD/telnet-networking',
+    'https://github.com/RanvierMUD/websocket-networking',
   ];
   const enabledBundles = [];
-
-  // check if we're in a repo
-  if (!fs.existsSync(`${__dirname}/.git`)) {
-    console.error('Not in a git repo.');
-    process.exit(1);
-  }
 
   const modified = cp.execSync('git status -uno --porcelain').toString();
   if (modified) {
@@ -66,36 +63,11 @@ async function main() {
     process.exit(1);
   }
 
-  console.info('Adding bundles as submodules...');
-  const cpOpts = {
-    env: process.env, cwd: __dirname, stdio: 'inherit'
-  };
-
   // add each bundle as a submodule
   for (const bundle of defaultBundles) {
     const bundlePath = `bundles/${bundle}`;
-    cp.spawnSync('git', ['submodule', 'add', githubPath + bundle, bundlePath], cpOpts);
-    enabledBundles.push(bundle);
-
-    const fullBundlePath = __dirname + '/' + bundlePath;
-
-    // npm binary based on OS
-    const npmCmd = os.platform().startsWith('win') ? 'npm.cmd' : 'npm';
-
-    if (fs.existsSync(fullBundlePath + '/package.json')) {
-      cp.spawnSync(npmCmd, ['install', '--no-audit'], {
-        cwd: fullBundlePath
-      });
-    }
+    cp.execSync(`npm run install-bundle ${bundle}`);
   }
-  console.info('Done.');
-
-  console.info('Updating enabled bundle list...');
-  const ranvierJson = require('./ranvier.json');
-  const joinedBundles = new Set([...enabledBundles, ...ranvierJson.bundles]);
-  ranvierJson.bundles = [...joinedBundles];
-  fs.writeFileSync('./ranvier.json', JSON.stringify(ranvierJson, null, 2));
-  cp.spawnSync('git', ['add', './ranvier.json'], cpOpts);
   console.info('Done.');
 
   console.info(`
