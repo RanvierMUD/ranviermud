@@ -47,7 +47,8 @@ async function main() {
     'https://github.com/RanvierMUD/bundle-example-npc-behaviors',
     'https://github.com/RanvierMUD/bundle-example-player-events',
     'https://github.com/RanvierMUD/bundle-example-quests',
-    'https://github.com/RanvierMUD/vendors-npcs',
+    'https://github.com/RanvierMUD/simple-crafting',
+    'https://github.com/RanvierMUD/vendor-npcs',
     'https://github.com/RanvierMUD/player-groups',
     'https://github.com/RanvierMUD/progressive-respawn',
     'https://github.com/RanvierMUD/telnet-networking',
@@ -67,6 +68,15 @@ async function main() {
     cp.execSync(`npm run install-bundle ${bundle}`);
   }
   console.info('Done.');
+
+  console.info('Enabling bundles...');
+  const ranvierJsonPath = __dirname + '/../ranvier.json';
+  const ranvierJson = require(ranvierJsonPath);
+  ranvierJson.bundles = defaultBundles.map(bundle => bundle.replace(/^.+\/([a-z\-]+)$/, '$1'));
+  fs.writeFileSync(ranvierJsonPath, JSON.stringify(ranvierJson, null, 2));
+  console.info('Done.');
+
+  cp.execSync('git add ranvier.json');
 
   console.info(`
 -------------------------------------------------------------------------------
