@@ -116,7 +116,7 @@ async function init(restartServer) {
 
   // setup entity loaders
   GameState.DataSourceRegistry.load(require, __dirname, Config.get('dataSources'));
-  GameState.EntityLoaderRegistry.load(GameState.DataSourceRegistry, Config.get('entitySources'));
+  GameState.EntityLoaderRegistry.load(GameState.DataSourceRegistry, Config.get('entityLoaders'));
 
   GameState.AccountManager.setLoader(GameState.EntityLoaderRegistry.get('accounts'));
   GameState.PlayerManager.setLoader(GameState.EntityLoaderRegistry.get('players'));

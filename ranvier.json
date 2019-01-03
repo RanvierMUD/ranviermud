@@ -16,7 +16,7 @@
       "require": "ranvier-datasource-file.JsonDirectoryDataSource"
     }
   },
-  "entitySources": {
+  "entityLoaders": {
     "accounts": {
       "source": "JsonDirectory",
       "config": {
