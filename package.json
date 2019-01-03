@@ -19,7 +19,7 @@
   "dependencies": {
     "commander": "^2.19.0",
     "optimist": "",
-    "ranvier": "^3.0.0",
+    "ranvier": "^3.0.1",
     "ranvier-datasource-file": "^1.0.0",
     "semver": "^5.6.0",
     "sprintf-js": "^1.0.3",
