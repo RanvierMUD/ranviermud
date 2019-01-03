@@ -19,12 +19,13 @@
   "dependencies": {
     "commander": "^2.19.0",
     "optimist": "",
+    "ranvier": "^3.0.0",
+    "ranvier-datasource-file": "^1.0.0",
     "semver": "^5.6.0",
     "sprintf-js": "^1.0.3",
     "sty": "",
     "uuid": "^3.3.2",
-    "winston": "^2.4.4",
-    "ranvier": "latest"
+    "winston": "^2.4.4"
   },
   "devDependencies": {
     "git-url-parse": "^11.1.1"
