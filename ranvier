@@ -16,6 +16,7 @@ const semver = require('semver');
 const net = require('net');
 const commander = require('commander');
 const argv = require('optimist').argv;
+const fs = require('fs');
 
 // for dev clone the github:ranviermud/core repo, and run npm link in that folder, then come
 // back to the ranviermud repo and run npm link ranvier
@@ -34,7 +35,15 @@ if (!semver.satisfies(process.version, pkg.engines.node)) {
 
 // Wrapper for ranvier.json
 Ranvier.Data.setDataPath(__dirname + '/data/');
-Config.load(require('./ranvier.json'));
+if (fs.existsSync('./ranvier.conf.js')) {
+  console.log(require('./ranvier.conf.js').dataSources);
+  Config.load(require('./ranvier.conf.js'));
+} else if (fs.existsSync('./ranvier.json')) {
+  Config.load(require('./ranvier.json'));
+} else {
+  console.error('ERROR: No ranvier.json or ranvier.conf.js found');
+  process.exit(1);
+}
 
 // cmdline options
 commander
