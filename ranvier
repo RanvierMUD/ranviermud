@@ -36,7 +36,6 @@ if (!semver.satisfies(process.version, pkg.engines.node)) {
 // Wrapper for ranvier.json
 Ranvier.Data.setDataPath(__dirname + '/data/');
 if (fs.existsSync('./ranvier.conf.js')) {
-  console.log(require('./ranvier.conf.js').dataSources);
   Config.load(require('./ranvier.conf.js'));
 } else if (fs.existsSync('./ranvier.json')) {
   Config.load(require('./ranvier.json'));
