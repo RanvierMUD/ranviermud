@@ -14,13 +14,15 @@
     "init": "node ./util/init-bundles.js",
     "update-bundle-remote": "node ./util/update-bundle-url.js",
     "remove-bundle": "node ./util/remove-bundle.js",
-    "install-bundle": "node ./util/install-bundle.js"
+    "install-bundle": "node ./util/install-bundle.js",
+    "postinstall": "link-module-alias"
   },
   "dependencies": {
     "commander": "^2.19.0",
+    "link-module-alias": "^1.1.5",
     "optimist": "",
     "ranvier": "^3.0.1",
-    "ranvier-datasource-file": "^1.0.0",
+    "ranvier-datasource-file": "^1.0.3",
     "semver": "^5.6.0",
     "sprintf-js": "^1.0.3",
     "sty": "",
@@ -28,6 +30,9 @@
     "winston": "^2.4.4"
   },
   "devDependencies": {
-    "git-url-parse": "^11.1.1"
+    "git-url-parse": "^11.1.2"
+  },
+  "_moduleAliases": {
+    "@bundles": "bundles/"
   }
 }
