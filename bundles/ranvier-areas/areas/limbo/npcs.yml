@@ -102,7 +102,7 @@
         "limbo:potionhealth1":
           cost: 100
           currency: gold
-        "limbo:potionstrength2":
+        "limbo:potionstrength1":
           cost: 150
           currency: gold
         "limbo:bladeofranvier":
