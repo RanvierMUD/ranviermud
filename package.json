@@ -15,6 +15,7 @@
     "update-bundle-remote": "node ./util/update-bundle-url.js",
     "remove-bundle": "node ./util/remove-bundle.js",
     "install-bundle": "node ./util/install-bundle.js",
+    "bundle-npm-install": "node ./util/bundle-npm-install.js",
     "postinstall": "link-module-alias"
   },
   "dependencies": {
