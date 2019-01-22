@@ -15,7 +15,8 @@
     "update-bundle-remote": "node ./util/update-bundle-url.js",
     "remove-bundle": "node ./util/remove-bundle.js",
     "install-bundle": "node ./util/install-bundle.js",
-    "bundle-npm-install": "node ./util/bundle-npm-install.js",
+    "bundle-npm-install": "git submodule foreach npm install",
+    "preinstall": "command -v link-module-alias && link-module-alias clean || :",
     "postinstall": "link-module-alias"
   },
   "dependencies": {
