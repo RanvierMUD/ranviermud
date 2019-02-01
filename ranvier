@@ -92,7 +92,6 @@ async function init(restartServer) {
     AreaManager: new Ranvier.AreaManager(),
     AttributeFactory: new Ranvier.AttributeFactory(),
     ChannelManager: new Ranvier.ChannelManager(),
-    ClassManager: new Ranvier.ClassManager(), // player class manager
     CommandManager: new Ranvier.CommandManager(),
     Config, // All global server settings like default respawn time, save interval, port, what bundles to load, etc.
     EffectFactory: new Ranvier.EffectFactory(),
