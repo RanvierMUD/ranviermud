@@ -1,5 +1,6 @@
 {
   "port": 4000,
+  "wsPort": 4001,
   "bundles": [
     "ranvier-telnet",
     "ranvier-websocket",

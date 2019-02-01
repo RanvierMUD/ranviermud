@@ -63,6 +63,7 @@ commander
   .option('-s, --save [time]', 'Number of seconds between auto-save ticks [10]', 10)
   .option('-r, --respawn [time]', 'Number of minutes between respawn ticks [120]', 120)
   .option('-p, --port [portNumber]', 'Port to host the server [23]', Config.get('port', 23))
+  .option('-w, --wsPort [portNumber]', 'Web socket port [4001]', Config.get('wsPort', 4001))
   .option('-v, --verbose', 'Verbose console logging.', true)
   .option('-e, --prettyErrors', 'Pretty-print formatting for error stack traces.', false)
   .parse(process.argv);
