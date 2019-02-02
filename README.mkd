@@ -1,4 +1,4 @@
-<p align="center"><img class="readme-logo" src="https://raw.githubusercontent.com/shawncplus/ranviermud/staging/resources/logo.png"></p>
+<p align="center"><img class="readme-logo" src="https://raw.githubusercontent.com/RanvierMUD/docs/master/resources/logo.png"></p>
 
 # ranvier
 
@@ -37,4 +37,4 @@ We have a Slack channel you can use to ask questions, suggest features, or just 
 
 ## Demo
 
-Point your favorite client or telnet to `ranviermud.com` port 4000. This demo server is wiped and updated from the `staging` branch every hour.
+Point your favorite client or telnet to `ranviermud.com` port 4000. This demo server is wiped and updated from the `master` branch every hour.
