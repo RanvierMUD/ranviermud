@@ -23,7 +23,7 @@ Ranvier is a [MUD](https://en.wikipedia.org/wiki/MUD) game engine whose goal is 
 
 ## Documentation
 
-Ranvier prides itself on having thorough documentation which is available on our website: [ranviermud.com](http://www.ranviermud.com)
+Ranvier prides itself on having thorough documentation which is available on our website: [ranviermud.com](https://ranviermud.com)
 
 ## Slack
 
