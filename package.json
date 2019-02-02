@@ -20,9 +20,9 @@
   },
   "dependencies": {
     "commander": "^2.19.0",
-    "link-module-alias": "^1.1.5",
+    "link-module-alias": "^1.1.6",
     "optimist": "",
-    "ranvier": "^3.0.1",
+    "ranvier": "^3.0.2",
     "ranvier-datasource-file": "^1.0.3",
     "semver": "^5.6.0",
     "sprintf-js": "^1.0.3",
