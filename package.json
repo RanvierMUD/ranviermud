@@ -22,7 +22,7 @@
     "commander": "^2.19.0",
     "link-module-alias": "^1.1.6",
     "optimist": "",
-    "ranvier": "^3.0.2",
+    "ranvier": "^3.0.3",
     "ranvier-datasource-file": "^1.0.3",
     "semver": "^5.6.0",
     "sprintf-js": "^1.0.3",
