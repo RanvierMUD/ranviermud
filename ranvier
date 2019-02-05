@@ -147,7 +147,7 @@ async function init(restartServer) {
 
     clearInterval(playerTickInterval);
     playerTickInterval = setInterval(() => {
-      GameState.PlayerManager.emit('updateTick');
+      GameState.PlayerManager.tickAll();
     }, Config.get('playerTickFrequency', 100));
   }
 }
