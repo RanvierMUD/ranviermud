@@ -43,4 +43,4 @@ if (fs.existsSync(`${gitRoot}/bundles/${name}/package.json`)) {
   });
 }
 
-console.log(`Bundle installed. Commit the bundle with: git commit -m \"Added ${name} bundle\"");
+console.log(`Bundle installed. Commit the bundle with: git commit -m \"Added ${name} bundle\"`);
