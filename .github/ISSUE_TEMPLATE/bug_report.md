@@ -1,24 +1,16 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: 2 basic programing bug 
 
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
-
-**To Reproduce**
-Steps to reproduce the behavior
-
-**Expected behavior**
-A clear and concise description of what you expected to happen.
-
-**Error logs**
-If the server produced an error paste the log here
+Two of the variables that had been defined const net = require('net'); and const argv = require('optimist').argv;
+were not being used and i suppose new version of node has argv built in.
 
 **Environment (please complete the following information):**
- - OS: [e.g. Ubuntu 16.04]
- - Node version
+ - OS: Mac OSX
+ - Node 12.2.0
 
 **Additional context**
-Add any other context about the problem here.
+none
