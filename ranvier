@@ -13,9 +13,9 @@
 
 /* NPM Modules */
 const semver = require('semver');
-const net = require('net');
+//const net = require('net'); Not Being used anywhere in the code
 const commander = require('commander');
-const argv = require('optimist').argv;
+//const argv = require('optimist').argv;   New Node provides argv functuion built in
 const fs = require('fs');
 
 // for dev clone the github:ranviermud/core repo, and run npm link in that folder, then come
