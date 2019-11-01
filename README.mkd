@@ -29,7 +29,7 @@ Ranvier prides itself on having thorough documentation which is available on our
 
 We have a Slack channel you can use to ask questions, suggest features, or just keep up to date with the project: [https://ranviermud.slack.com](https://ranviermud.slack.com)
 
-[Get an invite](https://join.slack.com/t/ranviermud/shared_invite/enQtMzczMDU3MDkxODc5LWVjZmUwNjBmNGFjYjZjOTM2OTcyMDMzZTJjZmNlOWZjNWJmNjVmMTg4ODFmOWQ3Yjg2Y2U5OTIyYTgyZTE2ZTA)
+[Get an invite](https://join.slack.com/t/ranviermud/shared_invite/enQtMzczMDU3MDkxODc5LTYxODc5MDM3YWY5NDExOTEyMDQzM2ExNDJmZDE1MmJkNmYzN2QyMWUxMzc2ZWFjZTYzOTI1MTBkODNiMzhiOTI)
 
 ## Requirements
 
