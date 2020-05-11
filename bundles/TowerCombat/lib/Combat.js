@@ -4,20 +4,7 @@ const { Random } = require("rando-js");
 const { Damage, Logger, Broadcast: B } = require("ranvier");
 const Parser = require("../../bundle-example-lib/lib/ArgParser");
 const CombatErrors = require("./CombatErrors");
-
-const roundState = {
-  PREPARE: "PREPARE",
-  REACT: "REACT",
-  RESOLUTION: "RESOLUTION",
-};
-
-const choices = {
-  STRIKE: "STRIKE",
-  DODGE: "DODGE",
-  BLOCK: "BLOCK",
-  RETREAT: "RETREAT",
-  FEINT: "FEINT",
-};
+const { roundState, combatOptions } = require('./Combat.enums')
 
 const luck = {
   CRITICAL: 2,
@@ -119,6 +106,7 @@ class Combat {
     }
 
     Combat.markTime(attacker, target);
+    Combat.advancePhase(attacker, target);
 
     switch (attacker.combatData.round) {
       case roundState.PREPARE:
@@ -135,7 +123,6 @@ class Combat {
         attacker.combatData.lag = 3000;
         return true;
     }
-    Combat.advancePhase(attacker, target);
   }
 
   static markTime(attacker, target) {
@@ -161,10 +148,10 @@ class Combat {
    * @param {Character} attacker
    */
   static react(attacker, target) {
-    B.sayAt(attacker, "You study your opponent carefully");
-    B.sayAt(target, "You study your opponent carefully");
     Combat.defaultActionSelection(attacker);
     Combat.defaultActionSelection(target);
+    B.sayAt(attacker, "You study your opponent carefully");
+    B.sayAt(target, "You study your opponent carefully");
     return true;
   }
 
@@ -174,9 +161,6 @@ class Combat {
    */
   static resolve(attacker, target) {
     Combat.processOutcome(attacker, target);
-    // if (attacker.combatData.decision === choices.STRIKE) {
-    //   Combat.makeAttack(attacker, target);
-    // }
     return true;
   }
 
@@ -204,7 +188,7 @@ class Combat {
 
   static defaultActionSelection(combatant) {
     if (!combatant.combatData.decision) {
-      combatant.combatData.decision = choices.STRIKE;
+      combatant.combatData.decision = combatOptions.STRIKE;
       B.sayAt(combatant, "Your instincts lead you to strike!");
     }
   }
@@ -274,26 +258,26 @@ class Combat {
   static resolvePositions(attacker, target, attackerPosition) {
     switch (attackerPosition) {
       case resultPosition.NEUTRAL:
-        Combat.processStrikeNeutral(attacker, target);
+        Combat.resolveNeutralStrike(attacker, target);
         break;
       case resultPosition.ADVANTAGED:
-        Combat.processStrikeAdvantaged(attacker, target);
+        Combat.resolveAdvStrike(attacker, target);
         break;
       case resultPosition.GR_ADVANTAGED:
-        Combat.processStrikeGrAdvantaged(attacker, target);
+        Combat.resolveGrAdvStrike(attacker, target);
         break;
       case resultPosition.DISADVANTAGED:
-        Combat.processStrikeAdvantaged(target, attacker);
+        Combat.resolveAdvStrike(target, attacker);
         break;
       case resultPosition.GR_DISADVANTAGED:
-        Combat.processStrikeGrAdvantaged(target, attacker);
+        Combat.resolveGrAdvStrike(target, attacker);
         break;
       default:
         return null;
     }
   }
 
-  static processStrikeNeutral(attacker, target) {
+  static resolveNeutralStrike(attacker, target) {
     // this has three branches
     B.sayAt(attacker, "Neutral strike");
     B.sayAt(target, "Neutral strike");
@@ -330,14 +314,14 @@ class Combat {
     Combat.makeAttack(attacker, target);
   }
 
-  static processStrikeAdvantaged(attacker, target) {
+  static resolveAdvStrike(attacker, target) {
     B.sayAt(attacker, "You make an advantaged hit");
     B.sayAt(target, "You receive an advantaged hit");
     Combat.makeAttack(attacker, target);
     Combat.makeAttack(target, attacker, probabilityMap.SEVENTY_FIVE);
   }
 
-  static processStrikeGrAdvantaged(attacker, target) {
+  static resolveGrAdvStrike(attacker, target) {
     B.sayAt(attacker, "You make a greatly advantaged hit");
     B.sayAt(target, "You receive a greatly advantaged hit");
     Combat.makeAttack(attacker, target);
