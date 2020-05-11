@@ -1,0 +1,10 @@
+---
+command: kill
+body: |
+  Initiate combat against a target
+related:
+  - flee
+keywords:
+  - attack
+  - kill
+  - combat

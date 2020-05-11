@@ -14,11 +14,13 @@
     "init": "node ./util/init-bundles.js",
     "update-bundle-remote": "node ./util/update-bundle-url.js",
     "remove-bundle": "node ./util/remove-bundle.js",
-    "install-bundle": "node ./util/install-bundle.js"
+    "install-bundle": "node ./util/install-bundle.js",
+    "test": "jest"
   },
   "dependencies": {
     "commander": "^2.19.0",
-    "optimist": "",
+    "optimist": "^0.6.1",
+    "rando-js": "^0.2.0",
     "ranvier": "^3.0.6",
     "ranvier-datasource-file": "^1.0.3",
     "semver": "^5.6.0",
@@ -28,6 +30,7 @@
     "winston": "^2.4.4"
   },
   "devDependencies": {
-    "git-url-parse": "^11.1.2"
+    "git-url-parse": "^11.1.2",
+    "jest": "^26.0.1"
   }
 }

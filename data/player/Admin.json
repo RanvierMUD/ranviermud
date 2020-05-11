@@ -17,7 +17,7 @@
       "base": 11
     },
     "health": {
-      "delta": 0,
+      "delta": -46,
       "base": 154
     },
     "armor": {
@@ -33,7 +33,7 @@
       "base": 0
     }
   },
-  "level": 2,
+  "level": 3,
   "name": "Admin",
   "room": "limbo:training1",
   "effects": [
@@ -51,13 +51,13 @@
         "type": "regen",
         "unique": true
       },
-      "elapsed": 491922,
+      "elapsed": 70869736,
       "id": "regen",
       "remaining": null,
       "state": {
         "magnitude": 15,
-        "lastTick": 2105,
-        "ticks": 164
+        "lastTick": 603,
+        "ticks": 680
       }
     },
     {
@@ -74,7 +74,7 @@
         "type": "equip.wield",
         "unique": true
       },
-      "elapsed": 483767,
+      "elapsed": 70861574,
       "id": "equip",
       "remaining": null,
       "state": {
@@ -98,7 +98,7 @@
         "type": "equip.chest",
         "unique": true
       },
-      "elapsed": 482502,
+      "elapsed": 70860309,
       "id": "equip",
       "remaining": null,
       "state": {
@@ -109,7 +109,7 @@
       }
     }
   ],
-  "experience": 140,
+  "experience": 537,
   "inventory": {
     "items": [
       [
@@ -179,7 +179,11 @@
     "max": 16
   },
   "metadata": {
-    "class": "warrior"
+    "class": "warrior",
+    "resources": {
+      "plant_material": 10,
+      "rose_petal": 5
+    }
   },
   "prompt": "[ %health.current%/%health.max% <b>hp</b> %energy.current%/%energy.max% <b>energy</b> ]",
   "quests": {

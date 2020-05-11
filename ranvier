@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
 /**
  * Main file, use this to run the server:
@@ -10,21 +10,20 @@
  *   --port Port to listen on
  */
 
-
 /* NPM Modules */
-const semver = require('semver');
-const net = require('net');
-const commander = require('commander');
-const argv = require('optimist').argv;
-const fs = require('fs');
+const semver = require("semver");
+const net = require("net");
+const commander = require("commander");
+const argv = require("optimist").argv;
+const fs = require("fs");
 
 // for dev clone the github:ranviermud/core repo, and run npm link in that folder, then come
 // back to the ranviermud repo and run npm link ranvier
-const Ranvier = require('ranvier');
+const Ranvier = require("ranvier");
 const Config = Ranvier.Config;
 
 // Package.json for versioning
-const pkg = require('./package.json');
+const pkg = require("./package.json");
 
 if (!semver.satisfies(process.version, pkg.engines.node)) {
   throw new Error(
@@ -34,31 +33,39 @@ if (!semver.satisfies(process.version, pkg.engines.node)) {
 }
 
 // Wrapper for ranvier.json
-Ranvier.Data.setDataPath(__dirname + '/data/');
-if (fs.existsSync('./ranvier.conf.js')) {
-  Config.load(require('./ranvier.conf.js'));
-} else if (fs.existsSync('./ranvier.json')) {
-  Config.load(require('./ranvier.json'));
+Ranvier.Data.setDataPath(__dirname + "/data/");
+if (fs.existsSync("./ranvier.conf.js")) {
+  Config.load(require("./ranvier.conf.js"));
+} else if (fs.existsSync("./ranvier.json")) {
+  Config.load(require("./ranvier.json"));
 } else {
-  console.error('ERROR: No ranvier.json or ranvier.conf.js found');
+  console.error("ERROR: No ranvier.json or ranvier.conf.js found");
   process.exit(1);
 }
 
 // cmdline options
 commander
   .version(pkg.version)
-  .option('-p, --port [portNumber]', 'Port to host the server [23]', Ranvier.Config.get('port', 23))
-  .option('-v, --verbose', 'Verbose console logging.', true)
-  .option('-e, --prettyErrors', 'Pretty-print formatting for error stack traces.', false)
+  .option(
+    "-p, --port [portNumber]",
+    "Port to host the server [23]",
+    Ranvier.Config.get("port", 23)
+  )
+  .option("-v, --verbose", "Verbose console logging.", true)
+  .option(
+    "-e, --prettyErrors",
+    "Pretty-print formatting for error stack traces.",
+    false
+  )
   .parse(process.argv);
 
 // Set debug variable and encoding.
 // 'net' by default to help find possible server errors.
-process.env.NODE_DEBUG = 'net';
-process.stdin.setEncoding('utf8');
+process.env.NODE_DEBUG = "net";
+process.stdin.setEncoding("utf8");
 
 const Logger = Ranvier.Logger;
-const logfile = Ranvier.Config.get('logfile');
+const logfile = Ranvier.Config.get("logfile");
 if (logfile) {
   Logger.setFileLogging(`${__dirname}/log/${logfile}`);
 }
@@ -68,11 +75,10 @@ if (commander.prettyErrors) {
 }
 
 // Set logging level based on CLI option or environment variable.
-const logLevel = commander.verbose ?
-  'verbose' :
-  process.env.LOG_LEVEL || Config.get('logLevel') || 'debug';
+const logLevel = commander.verbose
+  ? "verbose"
+  : process.env.LOG_LEVEL || Config.get("logLevel") || "debug";
 Logger.setLevel(logLevel);
-
 
 // Global state object, server instance and configurable intervals.
 let GameState = {};
@@ -82,76 +88,104 @@ let saveInterval, tickInterval, playerTickInterval;
  * Do the dirty work
  */
 async function init(restartServer) {
-  Logger.log("START - Loading entities");
-  restartServer = typeof restartServer === 'undefined' ? true : restartServer;
+  return new Promise(async (resolve, reject) => {
+    try {
+      Logger.log("START - Loading entities");
+      restartServer =
+        typeof restartServer === "undefined" ? true : restartServer;
 
-  GameState = {
-    AccountManager: new Ranvier.AccountManager(),
-    AreaBehaviorManager: new Ranvier.BehaviorManager(),
-    AreaFactory: new Ranvier.AreaFactory(),
-    AreaManager: new Ranvier.AreaManager(),
-    AttributeFactory: new Ranvier.AttributeFactory(),
-    ChannelManager: new Ranvier.ChannelManager(),
-    CommandManager: new Ranvier.CommandManager(),
-    Config, // All global server settings like default respawn time, save interval, port, what bundles to load, etc.
-    EffectFactory: new Ranvier.EffectFactory(),
-    HelpManager: new Ranvier.HelpManager(),
-    InputEventManager: new Ranvier.EventManager(),
-    ItemBehaviorManager: new Ranvier.BehaviorManager(),
-    ItemFactory: new Ranvier.ItemFactory(),
-    ItemManager: new Ranvier.ItemManager(),
-    MobBehaviorManager: new Ranvier.BehaviorManager(),
-    MobFactory: new Ranvier.MobFactory(),
-    MobManager: new Ranvier.MobManager(),
-    PartyManager: new Ranvier.PartyManager(),
-    PlayerManager: new Ranvier.PlayerManager(),
-    QuestFactory: new Ranvier.QuestFactory(),
-    QuestGoalManager: new Ranvier.QuestGoalManager(),
-    QuestRewardManager: new Ranvier.QuestRewardManager(),
-    RoomBehaviorManager: new Ranvier.BehaviorManager(),
-    RoomFactory: new Ranvier.RoomFactory(),
-    RoomManager: new Ranvier.RoomManager(),
-    SkillManager: new Ranvier.SkillManager(),
-    SpellManager: new Ranvier.SkillManager(),
-    ServerEventManager: new Ranvier.EventManager(),
-    GameServer: new Ranvier.GameServer(),
-    DataLoader: Ranvier.Data,
-    EntityLoaderRegistry: new Ranvier.EntityLoaderRegistry(),
-    DataSourceRegistry: new Ranvier.DataSourceRegistry(),
-    Config,
-  };
+      GameState = {
+        AccountManager: new Ranvier.AccountManager(),
+        AreaBehaviorManager: new Ranvier.BehaviorManager(),
+        AreaFactory: new Ranvier.AreaFactory(),
+        AreaManager: new Ranvier.AreaManager(),
+        AttributeFactory: new Ranvier.AttributeFactory(),
+        ChannelManager: new Ranvier.ChannelManager(),
+        CommandManager: new Ranvier.CommandManager(),
+        Config, // All global server settings like default respawn time, save interval, port, what bundles to load, etc.
+        EffectFactory: new Ranvier.EffectFactory(),
+        HelpManager: new Ranvier.HelpManager(),
+        InputEventManager: new Ranvier.EventManager(),
+        ItemBehaviorManager: new Ranvier.BehaviorManager(),
+        ItemFactory: new Ranvier.ItemFactory(),
+        ItemManager: new Ranvier.ItemManager(),
+        MobBehaviorManager: new Ranvier.BehaviorManager(),
+        MobFactory: new Ranvier.MobFactory(),
+        MobManager: new Ranvier.MobManager(),
+        PartyManager: new Ranvier.PartyManager(),
+        PlayerManager: new Ranvier.PlayerManager(),
+        QuestFactory: new Ranvier.QuestFactory(),
+        QuestGoalManager: new Ranvier.QuestGoalManager(),
+        QuestRewardManager: new Ranvier.QuestRewardManager(),
+        RoomBehaviorManager: new Ranvier.BehaviorManager(),
+        RoomFactory: new Ranvier.RoomFactory(),
+        RoomManager: new Ranvier.RoomManager(),
+        SkillManager: new Ranvier.SkillManager(),
+        SpellManager: new Ranvier.SkillManager(),
+        ServerEventManager: new Ranvier.EventManager(),
+        GameServer: new Ranvier.GameServer(),
+        DataLoader: Ranvier.Data,
+        EntityLoaderRegistry: new Ranvier.EntityLoaderRegistry(),
+        DataSourceRegistry: new Ranvier.DataSourceRegistry(),
+        Config,
+      };
 
-  // setup entity loaders
-  GameState.DataSourceRegistry.load(require, __dirname, Config.get('dataSources'));
-  GameState.EntityLoaderRegistry.load(GameState.DataSourceRegistry, Config.get('entityLoaders'));
+      // setup entity loaders
+      GameState.DataSourceRegistry.load(
+        require,
+        __dirname,
+        Config.get("dataSources")
+      );
+      GameState.EntityLoaderRegistry.load(
+        GameState.DataSourceRegistry,
+        Config.get("entityLoaders")
+      );
 
-  GameState.AccountManager.setLoader(GameState.EntityLoaderRegistry.get('accounts'));
-  GameState.PlayerManager.setLoader(GameState.EntityLoaderRegistry.get('players'));
+      GameState.AccountManager.setLoader(
+        GameState.EntityLoaderRegistry.get("accounts")
+      );
+      GameState.PlayerManager.setLoader(
+        GameState.EntityLoaderRegistry.get("players")
+      );
 
-  // Setup bundlemanager
-  const BundleManager = new Ranvier.BundleManager(__dirname + '/bundles/', GameState);
-  GameState.BundleManager = BundleManager;
-  await BundleManager.loadBundles();
-  GameState.ServerEventManager.attach(GameState.GameServer);
+      // Setup bundlemanager
+      const BundleManager = new Ranvier.BundleManager(
+        __dirname + "/bundles/",
+        GameState
+      );
+      GameState.BundleManager = BundleManager;
+      await BundleManager.loadBundles();
+      GameState.ServerEventManager.attach(GameState.GameServer);
 
-  if (restartServer) {
-    Logger.log("START - Starting server");
-    GameState.GameServer.startup(commander);
+      if (restartServer) {
+        Logger.log("START - Starting server");
+        GameState.GameServer.startup(commander);
 
-    // Ticks for effect processing and combat happen every half second
-    clearInterval(tickInterval);
-    tickInterval = setInterval(() => {
-      GameState.AreaManager.tickAll(GameState);
-      GameState.ItemManager.tickAll();
-    }, Config.get('entityTickFrequency', 100));
+        // Ticks for effect processing and combat happen every half second
+        clearInterval(tickInterval);
+        tickInterval = setInterval(() => {
+          GameState.AreaManager.tickAll(GameState);
+          GameState.ItemManager.tickAll();
+        }, Config.get("entityTickFrequency", 100));
 
-    clearInterval(playerTickInterval);
-    playerTickInterval = setInterval(() => {
-      GameState.PlayerManager.emit('updateTick');
-    }, Config.get('playerTickFrequency', 100));
-  }
+        clearInterval(playerTickInterval);
+        playerTickInterval = setInterval(() => {
+          GameState.PlayerManager.emit("updateTick");
+        }, Config.get("playerTickFrequency", 100));
+        resolve(GameState);
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
 }
 
 // START IT UP!
-init();
+init()
+  .then((gameState) => {
+    return gameState;
+  })
+  .catch((error) => console.log(error.message));
 // vim: set syn=javascript :
+
+module.exports = init;
