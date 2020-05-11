@@ -17,7 +17,7 @@
       "base": 11
     },
     "health": {
-      "delta": 0,
+      "delta": -46,
       "base": 154
     },
     "armor": {
@@ -27,26 +27,240 @@
     "energy": {
       "delta": 0,
       "base": 100
+    },
+    "critical": {
+      "delta": 0,
+      "base": 0
     }
   },
-  "level": 1,
+  "level": 3,
   "name": "Admin",
-  "room": "limbo:1",
-  "effects": [],
-  "experience": 0,
+  "room": "limbo:training1",
+  "effects": [
+    {
+      "config": {
+        "autoActivate": true,
+        "description": "You are regenerating over time.",
+        "duration": "inf",
+        "hidden": true,
+        "maxStacks": 0,
+        "name": "Regenerate",
+        "persists": true,
+        "refreshes": false,
+        "tickInterval": 3,
+        "type": "regen",
+        "unique": true
+      },
+      "elapsed": 70869757,
+      "id": "regen",
+      "remaining": null,
+      "state": {
+        "magnitude": 15,
+        "lastTick": 624,
+        "ticks": 680
+      }
+    },
+    {
+      "config": {
+        "autoActivate": true,
+        "description": "",
+        "duration": "inf",
+        "hidden": true,
+        "maxStacks": 0,
+        "name": "Equip: wield",
+        "persists": true,
+        "refreshes": false,
+        "tickInterval": false,
+        "type": "equip.wield",
+        "unique": true
+      },
+      "elapsed": 70861592,
+      "id": "equip",
+      "remaining": null,
+      "state": {
+        "slot": "wield",
+        "stats": {
+          "critical": 1
+        }
+      }
+    },
+    {
+      "config": {
+        "autoActivate": true,
+        "description": "",
+        "duration": "inf",
+        "hidden": true,
+        "maxStacks": 0,
+        "name": "Equip: chest",
+        "persists": true,
+        "refreshes": false,
+        "tickInterval": false,
+        "type": "equip.chest",
+        "unique": true
+      },
+      "elapsed": 70860327,
+      "id": "equip",
+      "remaining": null,
+      "state": {
+        "slot": "chest",
+        "stats": {
+          "armor": 20
+        }
+      }
+    }
+  ],
+  "experience": 537,
   "inventory": {
-    "items": [],
+    "items": [
+      [
+        "add72461-a5a5-46e7-a532-fe0ec7e0ccc4",
+        {
+          "entityReference": "limbo:potionhealth1",
+          "inventory": null,
+          "metadata": {
+            "level": 1,
+            "usable": {
+              "spell": "potion",
+              "charges": 5,
+              "destroyOnDepleted": true,
+              "cooldown": 30,
+              "options": {
+                "restores": 30,
+                "stat": "health"
+              }
+            }
+          },
+          "description": "Nothing special.",
+          "keywords": [
+            "potion",
+            "health"
+          ],
+          "name": "Potion of Health I",
+          "roomDesc": "Potion of Health I",
+          "closed": false,
+          "locked": false,
+          "behaviors": {}
+        }
+      ],
+      [
+        "15ab8645-811b-44c7-8c10-f39fa4eb9610",
+        {
+          "entityReference": "limbo:potionstrength1",
+          "inventory": null,
+          "metadata": {
+            "level": 1,
+            "usable": {
+              "effect": "potion.buff",
+              "charges": 2,
+              "destroyOnDepleted": true,
+              "config": {
+                "description": "Increases strength by <b>10</b> for <b>15</b> seconds",
+                "duration": 15000
+              },
+              "state": {
+                "magnitude": 10,
+                "stat": "strength"
+              }
+            }
+          },
+          "description": "Nothing special.",
+          "keywords": [
+            "potion",
+            "strength"
+          ],
+          "name": "Potion of Strength I",
+          "roomDesc": "Potion of Strength I",
+          "closed": false,
+          "locked": false,
+          "behaviors": {}
+        }
+      ]
+    ],
     "max": 16
   },
   "metadata": {
-    "class": "warrior"
+    "class": "warrior",
+    "resources": {
+      "plant_material": 10,
+      "rose_petal": 5
+    }
   },
-  "playerClass": "warrior",
   "prompt": "[ %health.current%/%health.max% <b>hp</b> %energy.current%/%energy.max% <b>energy</b> ]",
   "quests": {
-    "completed": [],
+    "completed": [
+      [
+        "limbo:journeybegins",
+        {
+          "started": "2020-05-08T20:48:25.127Z",
+          "completedAt": "2020-05-08T20:48:34.609Z"
+        }
+      ],
+      [
+        "limbo:selfdefense101",
+        {
+          "started": "2020-05-08T21:01:51.680Z",
+          "completedAt": "2020-05-08T21:02:08.483Z"
+        }
+      ]
+    ],
     "active": []
   },
   "role": 2,
-  "equipment": {}
+  "equipment": {
+    "wield": {
+      "entityReference": "limbo:rustysword",
+      "inventory": null,
+      "metadata": {
+        "level": 1,
+        "slot": "wield",
+        "itemLevel": 1,
+        "quality": "common",
+        "minDamage": 7,
+        "maxDamage": 15,
+        "speed": 2.8,
+        "stats": {
+          "critical": 1
+        }
+      },
+      "description": "An arm's-length, jagged metal sword discolored with red corrosion. The worn leather grip barely held on by fraying thread.",
+      "keywords": [
+        "sword",
+        "rusty",
+        "metal",
+        "rusted"
+      ],
+      "name": "Rusty Sword",
+      "roomDesc": "Rusted Sword",
+      "closed": false,
+      "locked": false,
+      "behaviors": {}
+    },
+    "chest": {
+      "entityReference": "limbo:leathervest",
+      "inventory": null,
+      "metadata": {
+        "quality": "common",
+        "slot": "chest",
+        "level": 1,
+        "itemLevel": 1,
+        "stats": {
+          "armor": 20
+        },
+        "sellable": {
+          "value": 30,
+          "currency": "gold"
+        }
+      },
+      "description": "A plain leather vest. Better than nothing.",
+      "keywords": [
+        "leather",
+        "vest"
+      ],
+      "name": "Leather Vest",
+      "roomDesc": "Leather Vest",
+      "closed": false,
+      "locked": false,
+      "behaviors": {}
+    }
+  }
 }

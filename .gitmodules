@@ -1,0 +1,54 @@
+[submodule "bundles/bundle-example-areas"]
+	path = bundles/bundle-example-areas
+	url = https://github.com/RanvierMUD/bundle-example-areas
+[submodule "bundles/bundle-example-channels"]
+	path = bundles/bundle-example-channels
+	url = https://github.com/RanvierMUD/bundle-example-channels
+[submodule "bundles/bundle-example-classes"]
+	path = bundles/bundle-example-classes
+	url = https://github.com/RanvierMUD/bundle-example-classes
+[submodule "bundles/bundle-example-combat"]
+	path = bundles/bundle-example-combat
+	url = https://github.com/RanvierMUD/bundle-example-combat
+[submodule "bundles/bundle-example-commands"]
+	path = bundles/bundle-example-commands
+	url = https://github.com/RanvierMUD/bundle-example-commands
+[submodule "bundles/bundle-example-debug"]
+	path = bundles/bundle-example-debug
+	url = https://github.com/RanvierMUD/bundle-example-debug
+[submodule "bundles/bundle-example-effects"]
+	path = bundles/bundle-example-effects
+	url = https://github.com/RanvierMUD/bundle-example-effects
+[submodule "bundles/bundle-example-input-events"]
+	path = bundles/bundle-example-input-events
+	url = https://github.com/RanvierMUD/bundle-example-input-events
+[submodule "bundles/bundle-example-lib"]
+	path = bundles/bundle-example-lib
+	url = https://github.com/RanvierMUD/bundle-example-lib
+[submodule "bundles/bundle-example-npc-behaviors"]
+	path = bundles/bundle-example-npc-behaviors
+	url = https://github.com/RanvierMUD/bundle-example-npc-behaviors
+[submodule "bundles/bundle-example-player-events"]
+	path = bundles/bundle-example-player-events
+	url = https://github.com/RanvierMUD/bundle-example-player-events
+[submodule "bundles/bundle-example-quests"]
+	path = bundles/bundle-example-quests
+	url = https://github.com/RanvierMUD/bundle-example-quests
+[submodule "bundles/simple-crafting"]
+	path = bundles/simple-crafting
+	url = https://github.com/RanvierMUD/simple-crafting
+[submodule "bundles/vendor-npcs"]
+	path = bundles/vendor-npcs
+	url = https://github.com/RanvierMUD/vendor-npcs
+[submodule "bundles/player-groups"]
+	path = bundles/player-groups
+	url = https://github.com/RanvierMUD/player-groups
+[submodule "bundles/progressive-respawn"]
+	path = bundles/progressive-respawn
+	url = https://github.com/RanvierMUD/progressive-respawn
+[submodule "bundles/telnet-networking"]
+	path = bundles/telnet-networking
+	url = https://github.com/RanvierMUD/telnet-networking
+[submodule "bundles/websocket-networking"]
+	path = bundles/websocket-networking
+	url = https://github.com/RanvierMUD/websocket-networking

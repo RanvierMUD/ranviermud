@@ -1,8 +1,0 @@
----
-command: consider
-body: |
-  Size up an enemy to see how difficult a fight against them would be.
-related:
-  - kill
-keywords:
-- combat

@@ -4,7 +4,11 @@ guide to get you started [https://guides.github.com/activities/contributing-to-o
 ## Talking with the team
 
 Before you start writing code, adding documentation, or submitting issues we suggest you hop in our slack channel
-([Get an invite](https://ranviermud.signup.team/)) and say hi.
+([Get an invite](https://join.slack.com/t/ranviermud/shared_invite/enQtMzczMDU3MDkxODc5LWVjZmUwNjBmNGFjYjZjOTM2OTcyMDMzZTJjZmNlOWZjNWJmNjVmMTg4ODFmOWQ3Yjg2Y2U5OTIyYTgyZTE2ZTA)) and say hi.
+
+## Donating
+
+Ranvier is a passion-project and I never expect to make money off of it. With that said, if you want to buy me a beer because you like Ranvier so dang much you can do so at my Patreon: [patreon.com/shawncplus](https://patreon.com/shawncplus). More than money though I appreciate contributions of the other types on this page: submitting bugs, suggesting features, and the very best: pull requests.
 
 ## Filing bugs
 
@@ -15,8 +19,8 @@ resolve your issue right then and there!
 ## What to work on
 
 If you are new to the open source world or even a veteran who just wants an easy introduction to the Ranvier codebase
-check the issue list for issues with the [New Contributor](https://github.com/shawncplus/ranviermud/labels/New%20Contributor) label.
- _New Contributor_ issues are non-critical bugs or features that are particularly easy or provide a good introduction to
+check the issue list for issues with the [help wanted](https://github.com/shawncplus/ranviermud/labels/help%20wanted) label.
+ _help wanted_ issues are non-critical bugs or features that are particularly easy or provide a good introduction to
 a certain Ranvier subsystem.
 
 ## Documentation
@@ -26,10 +30,10 @@ existing documentation, read through some of the code, try to build something an
 the docs that you could add.
 
 Documentation is stored in the `docs/` folder in the root of the project. Our documentation is rendered with `mkdocs`
-and the Python-Markdown extensions, any markup you can use from those is free game. If you want to change the look and
-feel of the documentation styles are in `docs/_mkdocs/theme/ranvier/assets/stylesheets/application.css`
+version 0.17.x and the Python-Markdown extensions, any markup you can use from those is free game. If you want to change
+the look and feel of the documentation styles are in `docs/_mkdocs/theme/ranvier/assets/stylesheets/application.css`
 
-You can test your changes to the docs locally by installing [mkdocs](http://www.mkdocs.org/) and running `mkdocs serve`
+You can test your changes to the docs locally by installing [mkdocs](http://www.mkdocs.org/) version 0.15.0 (version is important) and running `mkdocs serve`
 from the root of the repo.
 
 ## What is and isn't part of Ranvier?
@@ -64,7 +68,7 @@ Suggested changes/additions to those bundles should be made with that in mind.
 
 ## Submitting your code
 
-Ranvier works by letting you build on top of it so fixing bugs and submitting them can sometimes lead with you
+Ranvier works by letting you build on top of it so fixing bugs and submitting them can sometimes lead to you
 submitting more code than you intended. To prevent this isolate your bug fix, re-clone Ranvier into another directory and
 apply your fix/feature to the fresh clone. That way when you send your pull request it won't included any of the custom
 bundles you've built or changes you have made to the core that perhaps don't fit the criteria above.

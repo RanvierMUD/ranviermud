@@ -1,39 +1,98 @@
 {
   "port": 4000,
-  "webPort": 9001,
-  "webWhitelist": [
-    "localhost",
-    "127.0.0.1",
-    "::1"
-  ],
   "bundles": [
-    "ranvier-telnet",
-    "ranvier-areas",
-    "ranvier-channels",
-    "ranvier-commands",
-    "ranvier-effects",
-    "ranvier-groups",
-    "ranvier-input-events",
-    "ranvier-player-events",
-    "ranvier-skills",
-    "ranvier-combat",
-    "ranvier-classes",
-    "ranvier-crafting",
-    "ranvier-quests",
-    "ranvier-vendors",
-    "ranvier-npc-behaviors",
-    "ranvier-bug-report",
-    "debug-commands"
+    "bundle-example-areas",
+    "bundle-example-channels",
+    "bundle-example-classes",
+    "TowerCombat",
+    "bundle-example-commands",
+    "bundle-example-debug",
+    "bundle-example-effects",
+    "bundle-example-input-events",
+    "bundle-example-lib",
+    "bundle-example-npc-behaviors",
+    "bundle-example-player-events",
+    "bundle-example-quests",
+    "simple-crafting",
+    "vendor-npcs",
+    "player-groups",
+    "progressive-respawn",
+    "telnet-networking",
+    "websocket-networking"
   ],
+  "dataSources": {
+    "YamlArea": {
+      "require": "ranvier-datasource-file.YamlAreaDataSource"
+    },
+    "Yaml": {
+      "require": "ranvier-datasource-file.YamlDataSource"
+    },
+    "YamlDirectory": {
+      "require": "ranvier-datasource-file.YamlDirectoryDataSource"
+    },
+    "JsonDirectory": {
+      "require": "ranvier-datasource-file.JsonDirectoryDataSource"
+    }
+  },
+  "entityLoaders": {
+    "accounts": {
+      "source": "JsonDirectory",
+      "config": {
+        "path": "data/account"
+      }
+    },
+    "players": {
+      "source": "JsonDirectory",
+      "config": {
+        "path": "data/player"
+      }
+    },
+    "areas": {
+      "source": "YamlArea",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas"
+      }
+    },
+    "npcs": {
+      "source": "Yaml",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas/[AREA]/npcs.yml"
+      }
+    },
+    "items": {
+      "source": "Yaml",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas/[AREA]/items.yml"
+      }
+    },
+    "rooms": {
+      "source": "Yaml",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas/[AREA]/rooms.yml"
+      }
+    },
+    "quests": {
+      "source": "Yaml",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas/[AREA]/quests.yml"
+      }
+    },
+    "help": {
+      "source": "YamlDirectory",
+      "config": {
+        "path": "bundles/[BUNDLE]/help"
+      }
+    }
+  },
   "maxAccountNameLength": 20,
   "minAccountNameLength": 3,
   "maxPlayerNameLength": 20,
   "minPlayerNameLength": 3,
   "maxCharacters": 3,
-  "allowMultiplay": false,
   "reportToAdmins": false,
-  "startingRoom": "limbo:1",
+  "startingRoom": "limbo:white",
   "moveCommand": "move",
   "skillLag": 2000,
-  "defaultMaxPlayerInventory": 16
+  "defaultMaxPlayerInventory": 16,
+  "maxIdleTime": 20
 }

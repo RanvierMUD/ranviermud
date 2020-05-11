@@ -1,8 +1,0 @@
----
-command: recall
-body: |
-  Return to the waypoint you have saved as your home with '<b>waypoint home</b>'
-related:
-  - waypoint
-keywords:
-  - travel

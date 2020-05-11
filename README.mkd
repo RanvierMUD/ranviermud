@@ -1,96 +1,40 @@
-<p align="center"><img class="readme-logo" src="https://raw.githubusercontent.com/shawncplus/ranviermud/staging/resources/logo.png"></p>
+<p align="center"><img class="readme-logo" src="https://raw.githubusercontent.com/RanvierMUD/docs/master/resources/logo.png"></p>
 
 # ranvier
 
 ## Node.js-based MUD engine
 
-See the [staging](https://github.com/shawncplus/ranviermud/tree/staging) branch for the latest features. Current version: 2.0
+Ranvier is a [MUD](https://en.wikipedia.org/wiki/MUD) game engine whose goal is to be a simple but powerful way to build whatever MUD you want with special care given to extensibility. The core code strives to be completely unopinionated toward any specific style of game while using the bundle system to build the game you want without having to dig through the engine's code.
 
-Ranvier is a [MUD](https://en.wikipedia.org/wiki/MUD) game engine. Out of the box Ranvier is configured to use a telnet
-server and will work with any MUD client you've used to connect to other MUDs. However, Ranvier supports any transport
-server you want to use; changing the entire networking layer is as easy as adding a command.
-
-Ranvier also ships with a websocket networking bundle you can optionally enable. There is an accompanying
-client specifically built for this bundle which can be found in the Neuro repo: [github.com/shawncplus/neuro](https://github.com/shawncplus/neuro)
-
-<p align="center">
-  <img width="640" src="https://raw.githubusercontent.com/shawncplus/neuro/master/assets/demo.gif" />
-</p>
-<div style="text-align: center"><em>Ranvier with websockets and the Neuro client</em></div>
-
-
-## Documentation
-
-Ranvier prides itself on having thorough documentation which is available on our website: [ranviermud.com](http://www.ranviermud.com)
-(You can also view them locally; see the Documentation section of our [Contributing](http://www.ranviermud.com/contributing/#documentation) guide.)
-
-## Slack
-
-We have a Slack channel you can use to ask questions, suggest features, or just keep up to date with the project: [https://ranviermud.slack.com](https://ranviermud.slack.com)
-
-[Get an invite](https://ranviermud.signup.team/)
-
-## Features
+## Special Features
 
 * Robust bundle system: Nearly every aspect of the game can be modified without changing the core and allows for easy
   packaging and sharing of commands/areas/items/npcs/channels/behaviors
 * Unopinionated network layer: easily swap out telnet for any network layer you like. No need to gut the whole codebase
   just to support a different transport type, just drop in a file.
-* Scripting support: It's in JavaScript! No need for a shitty DSL. The codebase is JavaScript, the scripting is JavaScript.
-* Scripting is event-based. Put a listener in the script attached to your mob and it'll automagically happen when the
-  event is emitted. Adding new events is easy as `npc.emit('eventName')` See documentation on Node.js event emitters for more detail
-* Pfile saving in JSON, easy to parse for external usage
-* Rooms, items, and NPCs are easily described in YAML. No weird bullshit ~~~~ and byte-specific parsing that requires a
-  GUI editor to build (though we do have a GUI editor in the works!)
-* Did I mention it's in blasting JavaScript? No compiling, no C, no cygwin, no 15 year old spaghetti code
-
-### Example Bundles
-
-Ranvier is built on the concept of bundles: self-contained packages that are combined to create the game you want
-without having to modify the core engine. The example bundles combine to make a basic Diku-style MUD with the following
-features:
-
-* Telnet connections
-* Classes
-* Leveling
-* Passive/active skills
-* Spell effects
-* Flexible channel system
-* Incredibly simple-to-add commands
+* Customizable data layer: You are not tied to saving in any particular database or file storage sytem
+* Optional coordinate based room system allowing for the flexibilty of a standard MUD world with the easy mappability of
+  a strict 3D world.
+* Scripting for all entities in the game for any event along with behaviors to create shared, composable scripts
+* Skill system with passive/active skills
+* Effects e.g., buffs/debuffs
 * Quest system allowing for starting/progress/completion from any event in the game
-* Simple Diku-style combat system
-* Grouping/following
-* Rooms with closeable/lockable doors, and items that can be closed/locked
-* Loot tables allowing for meta pools for things like world or area drops in addition to NPC specific loot
-* Currency system allowing NPCs to be configured to drop different amounts of multiple currencies instead of just gold
-* A fast travel wayshrine system
-* Vendors with the ability to list items of multiple currencies
-* Crafting/resource gathering
-* NPC behaviors
-  * Create NPCs aggressive to players or other NPCs (in general or specific NPC types)
-  * Wandering NPCs (optionally restricted to certain paths or areas)
-  * Conversational NPCs controlled via an integration with [API.AI](https://api.ai)
+* Communication channels with custom audiences
 
-You can build your game using these bundles or disable them and build yours completely fresh while still taking
-advantage of all of the core code.
+## Documentation
+
+Ranvier prides itself on having thorough documentation which is available on our website: [ranviermud.com](https://ranviermud.com)
+
+## Slack
+
+We have a Slack channel you can use to ask questions, suggest features, or just keep up to date with the project: [https://ranviermud.slack.com](https://ranviermud.slack.com)
+
+[Get an invite](https://join.slack.com/t/ranviermud/shared_invite/enQtODA1NTI4MTc5MjgyLWU1OTI2YTYxMTcwYTBjNmIyMzhmMWZmNTQ3ZmFiMWEwYjQ5N2MyYWQzODFhZDUwNmZiODE1ODVlNWE5NTlmYzU)
 
 ## Requirements
 
-* Node.js >= v7.1.0
+* [Node.js](https://nodejs.org) >= v10.12.0
 
-## "I just want to check it out quickly"
+## Demo
 
-    git clone git://github.com/shawncplus/ranviermud
-    cd ranviermud
-    npm install
-    npm run bundle-install
-    ./ranvier
-    telnet localhost 4000
-
-The default admin user/pass is `admin`/`ranviermud`
-
-## Play it
-
-To try out what Ranvier looks like out of the box, as a player, `telnet` or point your favorite client to
-mud.ranviermud.com on port 4000. The server is updated from the Github `staging` branch, reset, and restarted every
-hour.
+Point your favorite client or telnet to `ranviermud.com` port 4000. This demo server is wiped and updated from the `master` branch every hour.

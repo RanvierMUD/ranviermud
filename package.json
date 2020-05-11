@@ -5,52 +5,32 @@
     "type": "git",
     "url": "git://github.com/shawncplus/ranviermud.git"
   },
+  "engines": {
+    "node": ">= 10.12.0"
+  },
   "license": "MIT",
   "scripts": {
-    "start": "gulp && sudo ./ranvier -v --save=10 --respawn=10",
-    "test": "gulp && npm run-script test:coverage",
-    "test:coverage": "istanbul --include-all-sources cover _mocha -- -R dot --recursive ./test/**/*.spec.js",
-    "build-docs": "jsdoc -c jsdoc.conf",
-    "bundle-install": "for bundleDir in bundles/*; do (cd $bundleDir; if [ -e package.json ]; then echo \"Updating $bundleDir\"; npm install 2> /dev/null; fi;); done"
+    "start": "node ./ranvier -v --save=10 --respawn=10",
+    "init": "node ./util/init-bundles.js",
+    "update-bundle-remote": "node ./util/update-bundle-url.js",
+    "remove-bundle": "node ./util/remove-bundle.js",
+    "install-bundle": "node ./util/install-bundle.js",
+    "test": "jest"
   },
   "dependencies": {
-    "bcryptjs": "^2.4.0",
-    "celebrate": "^4.0.1",
-    "chokidar": "^1.6.1",
-    "colorize": "",
-    "commander": "",
-    "express": "^4.14.0",
-    "express-jwt": "^5.1.0",
-    "fs-extra": "^2.0.0",
-    "humanize-duration": "^3.10.0",
-    "joi": "^10.2.2",
-    "js-yaml": "",
-    "left-pad": "^1.1.3",
-    "longjohn": "^0.2.11",
-    "node-uuid": "",
-    "optimist": "",
-    "pretty-error": "^2.0.2",
-    "purdy": "^2.2.0",
-    "rando-js": "^0.1.1",
+    "commander": "^2.19.0",
+    "optimist": "^0.6.1",
+    "rando-js": "^0.2.0",
+    "ranvier": "^3.0.6",
+    "ranvier-datasource-file": "^1.0.3",
+    "semver": "^5.6.0",
     "sprintf-js": "^1.0.3",
     "sty": "",
-    "whitelist-ips": "^1.0.1",
-    "winston": "^2.3.1",
-    "wrap-ansi": "^2.0.0",
-    "yaml": ""
+    "uuid": "^3.3.2",
+    "winston": "^2.4.4"
   },
   "devDependencies": {
-    "body-parser": "^1.15.2",
-    "chai": "^3.5.0",
-    "gulp": "^3.9.1",
-    "gulp-eslint": "^2.0.0",
-    "gulp-todo": "^4.1.0",
-    "istanbul": "^0.4.4",
-    "jsdoc": "^3.5.3",
-    "jsonwebtoken": "^7.2.1",
-    "mocha": "^2.5.3",
-    "mocha-istanbul": "^0.3.0",
-    "sinon": "^1.17.5",
-    "tui-jsdoc-template": "^1.1.0"
+    "git-url-parse": "^11.1.2",
+    "jest": "^26.0.1"
   }
 }

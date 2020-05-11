@@ -1,7 +1,0 @@
----
-command: craft
-body: |
-  craft list                  View crafting recipe categories
-  craft list <category #>     List recipes for a given category
-  craft list   <cat #> <item #> View stats and ingredients for a given item
-  craft create <cat #> <item #> Create item viewed with list <#> <#>
