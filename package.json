@@ -30,6 +30,7 @@
     "winston": "^2.4.4"
   },
   "devDependencies": {
+    "eslint": "^7.0.0",
     "git-url-parse": "^11.1.2",
     "jest": "^26.0.1"
   }
