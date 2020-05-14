@@ -1,0 +1,271 @@
+{
+  "attributes": {
+    "health": {
+      "delta": 0,
+      "base": 100
+    },
+    "strength": {
+      "delta": 0,
+      "base": 20
+    },
+    "agility": {
+      "delta": 0,
+      "base": 20
+    },
+    "intellect": {
+      "delta": 0,
+      "base": 20
+    },
+    "stamina": {
+      "delta": 0,
+      "base": 20
+    },
+    "armor": {
+      "delta": 0,
+      "base": 0
+    },
+    "critical": {
+      "delta": 0,
+      "base": 0
+    },
+    "mana": {
+      "delta": 0,
+      "base": 100
+    }
+  },
+  "level": 2,
+  "name": "Tom",
+  "room": "limbo:training1",
+  "effects": [{
+      "config": {
+        "autoActivate": true,
+        "description": "You are regenerating over time.",
+        "duration": "inf",
+        "hidden": true,
+        "maxStacks": 0,
+        "name": "Regenerate",
+        "persists": true,
+        "refreshes": false,
+        "tickInterval": 3,
+        "type": "regen",
+        "unique": true
+      },
+      "elapsed": 1259001,
+      "id": "regen",
+      "remaining": null,
+      "state": {
+        "magnitude": 15,
+        "lastTick": 251,
+        "ticks": 420
+      }
+    },
+    {
+      "config": {
+        "autoActivate": true,
+        "description": "",
+        "duration": "inf",
+        "hidden": true,
+        "maxStacks": 0,
+        "name": "Equip: chest",
+        "persists": true,
+        "refreshes": false,
+        "tickInterval": false,
+        "type": "equip.chest",
+        "unique": true
+      },
+      "elapsed": 43935,
+      "id": "equip",
+      "remaining": null,
+      "state": {
+        "slot": "chest",
+        "stats": {
+          "armor": 20
+        }
+      }
+    },
+    {
+      "config": {
+        "autoActivate": true,
+        "description": "",
+        "duration": "inf",
+        "hidden": true,
+        "maxStacks": 0,
+        "name": "Equip: wield",
+        "persists": true,
+        "refreshes": false,
+        "tickInterval": false,
+        "type": "equip.wield",
+        "unique": true
+      },
+      "elapsed": 42551,
+      "id": "equip",
+      "remaining": null,
+      "state": {
+        "slot": "wield",
+        "stats": {
+          "critical": 1
+        }
+      }
+    }
+  ],
+  "experience": 290,
+  "inventory": {
+    "items": [
+      [
+        "a9c34648-1a6e-4aba-b613-acb0b93537f7",
+        {
+          "entityReference": "limbo:potionhealth1",
+          "inventory": null,
+          "metadata": {
+            "level": 1,
+            "usable": {
+              "spell": "potion",
+              "charges": 5,
+              "destroyOnDepleted": true,
+              "cooldown": 30,
+              "options": {
+                "restores": 30,
+                "stat": "health"
+              }
+            }
+          },
+          "description": "Nothing special.",
+          "keywords": [
+            "potion",
+            "health"
+          ],
+          "name": "Potion of Health I",
+          "roomDesc": "Potion of Health I",
+          "closed": false,
+          "locked": false,
+          "behaviors": {}
+        }
+      ],
+      [
+        "faca92b5-9e3e-4ffd-ac25-7b314ea89248",
+        {
+          "entityReference": "limbo:potionstrength1",
+          "inventory": null,
+          "metadata": {
+            "level": 1,
+            "usable": {
+              "effect": "potion.buff",
+              "charges": 2,
+              "destroyOnDepleted": true,
+              "config": {
+                "description": "Increases strength by <b>10</b> for <b>15</b> seconds",
+                "duration": 15000
+              },
+              "state": {
+                "magnitude": 10,
+                "stat": "strength"
+              }
+            }
+          },
+          "description": "Nothing special.",
+          "keywords": [
+            "potion",
+            "strength"
+          ],
+          "name": "Potion of Strength I",
+          "roomDesc": "Potion of Strength I",
+          "closed": false,
+          "locked": false,
+          "behaviors": {}
+        }
+      ]
+    ],
+    "max": 16
+  },
+  "metadata": {
+    "class": "mage",
+    "resources": {
+      "plant_material": 2,
+      "rose_petal": 2
+    }
+  },
+  "prompt": "[ %health.current%/%health.max% <b>hp</b> %mana.current%/%mana.max% <b>mana</b> ]",
+  "quests": {
+    "completed": [
+      [
+        "limbo:journeybegins",
+        {
+          "completedAt": "2020-05-08T20:47:34.287Z"
+        }
+      ],
+      [
+        "limbo:onecheeseplease",
+        {
+          "started": "2020-05-08T20:47:49.009Z",
+          "completedAt": "2020-05-08T20:47:52.578Z"
+        }
+      ],
+      [
+        "limbo:selfdefense101",
+        {
+          "started": "2020-05-08T20:47:53.398Z",
+          "completedAt": "2020-05-08T20:48:04.388Z"
+        }
+      ]
+    ],
+    "active": []
+  },
+  "role": 0,
+  "equipment": {
+    "chest": {
+      "entityReference": "limbo:leathervest",
+      "inventory": null,
+      "metadata": {
+        "quality": "common",
+        "slot": "chest",
+        "level": 1,
+        "itemLevel": 1,
+        "stats": {
+          "armor": 20
+        },
+        "sellable": {
+          "value": 30,
+          "currency": "gold"
+        }
+      },
+      "description": "A plain leather vest. Better than nothing.",
+      "keywords": [
+        "leather",
+        "vest"
+      ],
+      "name": "Leather Vest",
+      "roomDesc": "Leather Vest",
+      "closed": false,
+      "locked": false,
+      "behaviors": {}
+    },
+    "wield": {
+      "entityReference": "limbo:rustysword",
+      "inventory": null,
+      "metadata": {
+        "level": 1,
+        "slot": "wield",
+        "itemLevel": 1,
+        "quality": "common",
+        "minDamage": 7,
+        "maxDamage": 15,
+        "speed": 2.8,
+        "stats": {
+          "critical": 1
+        }
+      },
+      "description": "An arm's-length, jagged metal sword discolored with red corrosion. The worn leather grip barely held on by fraying thread.",
+      "keywords": [
+        "sword",
+        "rusty",
+        "metal",
+        "rusted"
+      ],
+      "name": "Rusty Sword",
+      "roomDesc": "Rusted Sword",
+      "closed": false,
+      "locked": false,
+      "behaviors": {}
+    }
+  }
+}

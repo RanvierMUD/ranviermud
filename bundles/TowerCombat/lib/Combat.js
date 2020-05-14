@@ -4,7 +4,8 @@ const { Random } = require("rando-js");
 const { Damage, Logger, Broadcast: B } = require("ranvier");
 const Parser = require("../../bundle-example-lib/lib/ArgParser");
 const CombatErrors = require("./CombatErrors");
-const { roundState, combatOptions } = require('./Combat.enums')
+const { combatOptions } = require("./Combat.enums");
+const Engagement = require("./Engagement");
 
 const luck = {
   CRITICAL: 2,
@@ -53,76 +54,54 @@ class Combat {
    * @param {Character} attacker
    * @return {boolean}  true if combat actions were performed this round
    */
-  static updateRound(state, attacker) {
-    if (attacker.combatData.killed) {
+  static updateRound(state, primary) {
+    if (primary.combatData.killed) {
       // entity was removed from the game but update event was still in flight, ignore it
       return false;
     }
 
-    if (!attacker.isInCombat()) {
-      if (!attacker.isNpc) {
-        attacker.removePrompt("combat");
+    if (!primary.isInCombat()) {
+      if (!primary.isNpc) {
+        primary.removePrompt("combat");
       }
       return false;
     }
 
-    let lastRoundStarted = attacker.combatData.roundStarted;
-    attacker.combatData.roundStarted = Date.now();
+    let lastRoundStarted = primary.combatData.roundStarted;
+    primary.combatData.roundStarted = Date.now();
 
-    // cancel if the attacker's combat lag hasn't expired yet
-    if (attacker.combatData.lag > 0) {
+    // cancel if the primary's combat lag hasn't expired yet
+    if (primary.combatData.lag > 0) {
       const elapsed = Date.now() - lastRoundStarted;
-      attacker.combatData.lag -= elapsed;
+      primary.combatData.lag -= elapsed;
       return false;
     }
 
     // currently just grabs the first combatant from their list but could easily be modified to
-    // implement a threat table and grab the attacker with the highest threat
-    let target = null;
-    try {
-      target = Combat.chooseCombatant(attacker);
-    } catch (e) {
-      attacker.removeFromCombat();
-      attacker.combatData = {};
-      throw e;
-    }
+    // implement a threat table and grab the primary with the highest threat
 
+    const engagement = Engagement.getEngagement(primary);
+    const target = engagement.target;
     if (target.combatData.killed) {
       // entity was removed from the game but update event was still in flight, ignore it
       return false;
     }
 
-    // no targets left, remove attacker from combat
+    // no targets left, remove primary from combat
     if (!target) {
-      attacker.removeFromCombat();
+      primary.removeFromCombat();
       // reset combat data to remove any lag
-      attacker.combatData = {};
+      primary.combatData = {};
       return false;
     }
 
-    if (target.combatData.round !== attacker.combatData.round) {
-      target.combatData.round = roundState.PREPARE;
-      attacker.combatData.round = roundState.PREPARE;
-    }
+    Combat.resolveRound(primary, target);
 
-    Combat.markTime(attacker, target);
-    Combat.advancePhase(attacker, target);
+    Combat.markTime(primary, target);
+  }
 
-    switch (attacker.combatData.round) {
-      case roundState.PREPARE:
-        Combat.prepare(attacker, target);
-        break;
-      case roundState.REACT:
-        Combat.react(attacker, target);
-        break;
-      case roundState.RESOLUTION:
-        Combat.resolve(attacker, target);
-        break;
-      default:
-        attacker.combatData.round = roundState.PREPARE;
-        attacker.combatData.lag = 3000;
-        return true;
-    }
+  static resolveRound(attacker, target) {
+    //
   }
 
   static markTime(attacker, target) {
@@ -141,49 +120,6 @@ class Combat {
     B.sayAt(target, "Consider your options");
 
     return true;
-  }
-
-  /**
-   * Find a target for a given attacker
-   * @param {Character} attacker
-   */
-  static react(attacker, target) {
-    Combat.defaultActionSelection(attacker);
-    Combat.defaultActionSelection(target);
-    B.sayAt(attacker, "You study your opponent carefully");
-    B.sayAt(target, "You study your opponent carefully");
-    return true;
-  }
-
-  /**
-   * Find a target for a given attacker
-   * @param {Character} attacker
-   */
-  static resolve(attacker, target) {
-    Combat.processOutcome(attacker, target);
-    return true;
-  }
-
-  static advancePhase(attacker, target) {
-    switch (attacker.combatData.round) {
-      case roundState.PREPARE:
-        attacker.combatData.round = roundState.REACT;
-        target.combatData.round = roundState.REACT;
-        break;
-      case roundState.REACT:
-        attacker.combatData.round = roundState.RESOLUTION;
-        target.combatData.round = roundState.RESOLUTION;
-        break;
-      case roundState.RESOLUTION:
-        attacker.combatData.round = roundState.PREPARE;
-        target.combatData.round = roundState.PREPARE;
-        Combat.clearDecisions(attacker, target);
-        break;
-      default:
-        attacker.combatData.round = roundState.PREPARE;
-        target.combatData.round = roundState.PREPARE;
-        Combat.clearDecisions(attacker, target);
-    }
   }
 
   static defaultActionSelection(combatant) {
@@ -325,28 +261,6 @@ class Combat {
     B.sayAt(attacker, "You make a greatly advantaged hit");
     B.sayAt(target, "You receive a greatly advantaged hit");
     Combat.makeAttack(attacker, target);
-  }
-
-  /**
-   * Find a target for a given attacker
-   * @param {Character} attacker
-   * @return {Character|null}
-   */
-  static chooseCombatant(attacker) {
-    if (!attacker.combatants.size) {
-      return null;
-    }
-
-    for (const target of attacker.combatants) {
-      if (!target.hasAttribute("health")) {
-        throw new CombatErrors.CombatInvalidTargetError();
-      }
-      if (target.getAttribute("health") > 0) {
-        return target;
-      }
-    }
-
-    return null;
   }
 
   /**

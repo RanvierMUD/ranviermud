@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "commander": "^2.19.0",
+    "eslint-plugin-jest": "^23.11.0",
     "optimist": "^0.6.1",
     "rando-js": "^0.2.0",
     "ranvier": "^3.0.6",
