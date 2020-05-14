@@ -95,12 +95,12 @@ class Combat {
       return false;
     }
 
-    Combat.resolveRound(primary, target);
+    Combat.resolveRound(primary);
 
     Combat.markTime(primary, target);
   }
 
-  static resolveRound(attacker, target) {
+  static resolveRound(primary) {
     //
   }
 
