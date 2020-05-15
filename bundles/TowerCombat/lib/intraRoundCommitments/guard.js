@@ -3,8 +3,8 @@
 const IntraCommand = require('./IntraCommand')
 
 class Guard extends IntraCommand {
-  constructor() {
-    super()
+  constructor(user, target) {
+    super(user, target)
   }
 
   isInstanceOf(string) {

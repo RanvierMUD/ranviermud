@@ -2,8 +2,9 @@
 
 const _ = require("lodash");
 const IntraCommand = require('../../lib/intraRoundCommitments/IntraCommand')
+const Engagement = require('../../lib/Engagement')
 
-const handleIntraCmd = (arg, character, commandType) => {
+const handleIntraCmd = (target, character, commandType) => {
   const { decision: characterDecision } = character.combatData;
   const decDefinedAsIntraCommand = characterDecision instanceof IntraCommand
 
@@ -19,9 +20,11 @@ const handleIntraCmd = (arg, character, commandType) => {
     }
     character.emit("commandSwitch");
   }
-
+  if (!target) {
+    target = Engagement.chooseCombatant(character)
+  }
   character.emit("msgPrepareCmd", commandType);
-  character.emit("prepareCmd", commandType);
+  character.emit("prepareCmd", commandType, target);
 };
 
 module.exports = handleIntraCmd;

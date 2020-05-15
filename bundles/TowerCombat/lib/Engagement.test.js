@@ -11,7 +11,7 @@ describe("Engagement", () => {
     getAttribute,
     playerFive;
   beforeEach(() => {
-    hasAttribute = jest.fn();
+    hasAttribute = () => true;
     getAttribute = () => 10;
     playerTwo = {
       ...playerData,

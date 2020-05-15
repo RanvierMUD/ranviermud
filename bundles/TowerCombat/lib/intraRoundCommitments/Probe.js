@@ -2,14 +2,14 @@
 
 const IntraCommand = require('./IntraCommand')
 
-class Strike extends IntraCommand {
+class Probe extends IntraCommand {
   constructor(user, target) {
     super(user, target)
   }
 
   isInstanceOf(string) {
-    return string === "strike" || string === "Strike"
+    return string === "probe" || string === "Probe"
   }
 }
 
-module.exports = Strike;
+module.exports = Probe;

@@ -56,7 +56,7 @@ class Engagement {
    * @return {Character|null}
    */
   static chooseCombatant(attacker) {
-    if (!attacker.combatants.size) {
+    if (!attacker.combatants.length) {
       return null;
     }
 
