@@ -1,7 +1,7 @@
 "use strict";
 
 const { Random } = require("rando-js");
-const { combatMapDefaults } = require("./Combat.enums");
+const { combatMapDefaults } = require("../Combat.enums");
 
 class CombatMap {
   constructor(characters) {

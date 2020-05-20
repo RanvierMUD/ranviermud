@@ -1,9 +1,9 @@
 "use strict";
 
 const IntraCommand = require("./IntraCommand");
-const { probe } = require("./configuration");
+const { dodge } = require("./configuration");
 
-class Probe extends IntraCommand {
+class Dodge extends IntraCommand {
   constructor(user, target) {
     super(user, target);
     this.user = user;
@@ -11,14 +11,14 @@ class Probe extends IntraCommand {
   }
 
   isInstanceOf(string) {
-    return string.match(new RegExp(probe.type, "gi"));
+    return string.match(new RegExp(dodge.type, "gi"));
   }
 
   get config() {
     return {
-      ...probe,
+      ...dodge,
     };
   }
 }
 
-module.exports = Probe;
+module.exports = Dodge;

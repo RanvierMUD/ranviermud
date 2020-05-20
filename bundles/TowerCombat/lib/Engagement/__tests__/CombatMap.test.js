@@ -1,5 +1,5 @@
-const CombatMap = require("./CombatMap");
-const { combatMapDefaults } = require("./Combat.enums");
+const CombatMap = require("../CombatMap");
+const { combatMapDefaults } = require("../../Combat.enums");
 describe("CombatMap", () => {
   const playerOne = {
     name: "Tom Bombadil",

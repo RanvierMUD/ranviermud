@@ -6,6 +6,7 @@ const Parser = require("../../bundle-example-lib/lib/ArgParser");
 const CombatErrors = require("./CombatErrors");
 const { combatOptions } = require("./Combat.enums");
 const Engagement = require("./Engagement");
+const Perception = require("./Perception");
 
 const luck = {
   CRITICAL: 2,
@@ -67,48 +68,26 @@ class Combat {
       return false;
     }
 
-    let lastRoundStarted = primary.combatData.roundStarted;
-    primary.combatData.roundStarted = Date.now();
+    const engagement = Engagement.getEngagement(primary);
 
     // cancel if the primary's combat lag hasn't expired yet
-    if (primary.combatData.lag > 0) {
-      const elapsed = Date.now() - lastRoundStarted;
-      primary.combatData.lag -= elapsed;
+    if (!engagement.lagIsComplete) {
+      engagement.reduceLag();
       return false;
     }
 
-    // currently just grabs the first combatant from their list but could easily be modified to
-    // implement a threat table and grab the primary with the highest threat
-
-    const engagement = Engagement.getEngagement(primary);
-    const target = engagement.target;
-    if (target.combatData.killed) {
-      // entity was removed from the game but update event was still in flight, ignore it
-      return false;
-    }
-
-    // no targets left, remove primary from combat
-    if (!target) {
-      primary.removeFromCombat();
-      // reset combat data to remove any lag
-      primary.combatData = {};
-      return false;
-    }
-
-    Combat.resolveRound(primary);
-
-    Combat.markTime(primary, target);
+    engagement.applyDefaults(state);
+    Combat.resolveRound(engagement);
+    Perception.perceptionCheck(engagement);
+    Combat.markTime(engagement);
+    engagement.completionCheck();
   }
 
-  static resolveRound(primary) {
-    //
-  }
+  static resolveRound(engagement) {}
 
-  static markTime(attacker, target) {
-    attacker.combatData.roundStarted = Date.now();
-    target.combatData.roundStarted = Date.now();
-    attacker.combatData.lag = 3000;
-    target.combatData.lag = 3000;
+  static markTime(engagement) {
+    engagement.roundStarted = Date.now();
+    engagement.lag = 3000;
   }
 
   /**
@@ -333,56 +312,6 @@ class Combat {
     if (entity.addEffect(regenEffect)) {
       regenEffect.activate();
     }
-  }
-
-  /**
-   * @param {string} args
-   * @param {Player} player
-   * @return {Entity|null} Found entity... or not.
-   */
-  static findCombatant(attacker, search) {
-    if (!search.length) {
-      return null;
-    }
-
-    let possibleTargets = [...attacker.room.npcs];
-    if (attacker.getMeta("pvp")) {
-      possibleTargets = [...possibleTargets, ...attacker.room.players];
-    }
-
-    const target = Parser.parseDot(search, possibleTargets);
-
-    if (!target) {
-      return null;
-    }
-
-    if (target === attacker) {
-      throw new CombatErrors.CombatSelfError(
-        "You smack yourself in the face. Ouch!"
-      );
-    }
-
-    if (!target.hasBehavior("combat")) {
-      throw new CombatErrors.CombatPacifistError(
-        `${target.name} is a pacifist and will not fight you.`,
-        target
-      );
-    }
-
-    if (!target.hasAttribute("health")) {
-      throw new CombatErrors.CombatInvalidTargetError(
-        "You can't attack that target"
-      );
-    }
-
-    if (!target.isNpc && !target.getMeta("pvp")) {
-      throw new CombatErrors.CombatNonPvpError(
-        `${target.name} has not opted into PvP.`,
-        target
-      );
-    }
-
-    return target;
   }
 
   /**

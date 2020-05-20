@@ -46,6 +46,17 @@ class CombatTuple {
   get characters() {
     return [this.primary, this.secondary];
   }
+  /**
+   * @return {Character} Other charcacter in this array
+   */
+  getOpposite(character) {
+    if (this.characterIsInTuple(character)) {
+      return [this.primary, this.secondary].find(
+        (member) => member !== character
+      );
+    }
+    throw new Error("Character not found in tuple");
+  }
 
   /**
    * Returns this character's relative position
@@ -75,7 +86,7 @@ class CombatTuple {
 
   static getTuple(primary, secondary) {
     for (const tuple of primary.combatData.tuples) {
-      if (tuple.characterIsInTuple(primary, secondary)) {
+      if (tuple.charactersAreInTuple(primary, secondary)) {
         return tuple;
       }
     }

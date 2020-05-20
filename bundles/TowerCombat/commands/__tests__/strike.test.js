@@ -18,6 +18,8 @@ describe("strike command", () => {
       getAttribute: () => 10,
       hasAttribute: () => true
     };
+    const combatants = new Set()
+    combatants.add(target);
     character = {
       isInCombat: function () {
         return false;
@@ -25,7 +27,7 @@ describe("strike command", () => {
       combatData: {
         decision: null,
       },
-      combatants: [target],
+      combatants: combatants,
       emit: jest.fn(),
       getAttribute: () => 10,
       hasAttribute: () => true
@@ -64,7 +66,7 @@ describe("strike command", () => {
 
   it("will auto fill with tuple target when no target is defined", () => {
     character.isInCombat = () => true;
-    const engagement = new Engagement(character)
+    new Engagement(character)
     expect(character.combatData.tuples).toHaveLength(1)
     expect(character.emit).not.toHaveBeenCalled();
     strCommand()(null, character)

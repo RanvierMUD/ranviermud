@@ -33,6 +33,9 @@
       "base": 100
     }
   },
+  "combatData": {
+    
+  },
   "level": 2,
   "name": "Tom",
   "room": "limbo:training1",
