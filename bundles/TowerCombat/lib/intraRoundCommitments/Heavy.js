@@ -1,9 +1,9 @@
 "use strict";
 
 const IntraCommand = require("./IntraCommand");
-const { strike } = require("./configuration");
+const { heavy } = require("./configuration");
 
-class Strike extends IntraCommand {
+class Heavy extends IntraCommand {
   constructor(user, target) {
     super(user, target);
     this.user = user;
@@ -11,14 +11,14 @@ class Strike extends IntraCommand {
   }
 
   isInstanceOf(string) {
-    return string.match(new RegExp(strike.type, "gi"));
+    return string.match(new RegExp(heavy.type, "gi"));
   }
 
   get config() {
     return {
-      ...strike,
+      ...heavy,
     };
   }
 }
 
-module.exports = Strike;
+module.exports = Heavy;

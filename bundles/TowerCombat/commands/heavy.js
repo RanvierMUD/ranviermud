@@ -3,5 +3,5 @@ const handleIntraCmd = require("./intraCmdHandler");
 
 module.exports = {
   command: (state) => (arg, character) =>
-    handleIntraCmd(arg, character, "strike"),
+    handleIntraCmd(arg, character, "heavy"),
 };

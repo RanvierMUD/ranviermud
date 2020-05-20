@@ -11,7 +11,7 @@ class IntraCommand {
     this.target = target;
   }
 
-  resolution(targetAction) {}
+  resolve() {}
 
   /**
    * This funciton reinforces basic rules for the configs. A sanity check

@@ -9,7 +9,9 @@ const commandTypes = {
   DODGE: "DODGE",
   GUARD: "GUARD",
   PROBE: "PROBE",
-  STRIKE: "STRIKE",
+  LIGHT: "LIGHT",
+  HEAVY: "HEAVY",
+  PARRY: "PARRY",
 };
 
 module.exports = {
