@@ -23,17 +23,22 @@ class Guard extends IntraCommand {
     switch (incomingAction) {
       case commandTypes.LIGHT:
         incomingAction.mitigate(lightMitigationFactor);
+        this.user.emit("guardLightMitigate");
         break;
       case commandTypes.HEAVY:
-        incomingAction.mitigate(heavyMitigationFactor);
+        incomingAction.mitigate(heavyMitigationFactor, this.config.type);
+        this.user.emit("guardHeavyMitigate");
         break;
     }
     this.elapsedRounds++;
   }
+
   switch(nextAction) {
     if (this.elapsedRounds > 1 && nextAction.isInstanceOf(commandTypes.DODGE)) {
       nextAction.gainAdvantage();
+      this.user.emit("guardDodgeAdvantage");
     }
+    this.user.combatData.decision = nextAction;
   }
 
   get config() {

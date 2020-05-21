@@ -5,8 +5,10 @@ const Probe = require("../lib/intraRoundCommitments/Probe");
 const Dodge = require("../lib/intraRoundCommitments/Dodge");
 const Parry = require("../lib/intraRoundCommitments/Parry");
 const Heavy = require("../lib/intraRoundCommitments/Heavy");
+const guardComms = require("./commandSpecific/guardComms");
 
 module.exports = {
+  ...guardComms,
   prepareCmd: (state) =>
     function (type, target) {
       if (!target) Logger.error(`No target found for type ${type}`);
@@ -52,6 +54,20 @@ module.exports = {
       B.sayAt(
         this,
         `You regard ${target} warily, waiting for a chance to strike.`
+      );
+    },
+  guardLightMitigate: (state) =>
+    function (target) {
+      B.sayAt(
+        this,
+        `You lean into ${target}'s strike, shrugging off some of the blow.`
+      );
+    },
+  guardHeavyMitigate: (state) =>
+    function (target) {
+      B.sayAt(
+        this,
+        `You lean into ${target}'s mighty blow, taking the worst of it but preventing some of the pain.`
       );
     },
 };
