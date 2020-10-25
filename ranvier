@@ -138,7 +138,7 @@ async function init(restartServer) {
     Logger.log("START - Starting server");
     GameState.GameServer.startup(commander);
 
-    // Ticks for effect processing and combat happen every half second
+    // Ticks for effect processing and combat happen every 100ms
     clearInterval(tickInterval);
     tickInterval = setInterval(() => {
       GameState.AreaManager.tickAll(GameState);
