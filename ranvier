@@ -118,6 +118,7 @@ async function init(restartServer) {
     DataLoader: Ranvier.Data,
     EntityLoaderRegistry: new Ranvier.EntityLoaderRegistry(),
     DataSourceRegistry: new Ranvier.DataSourceRegistry(),
+    BroadcastProxyRegistry: new Ranvier.BroadcastProxyRegistry(),
     Config,
   };
 
@@ -127,6 +128,8 @@ async function init(restartServer) {
 
   GameState.AccountManager.setLoader(GameState.EntityLoaderRegistry.get('accounts'));
   GameState.PlayerManager.setLoader(GameState.EntityLoaderRegistry.get('players'));
+
+  GameState.BroadcastProxyRegistry.load(require, __dirname, Config.get('broadcastProxies'));
 
   // Setup bundlemanager
   const BundleManager = new Ranvier.BundleManager(__dirname + '/bundles/', GameState);
