@@ -1,56 +1,176 @@
 {
   "attributes": {
+    "health": {
+      "delta": -15,
+      "base": 100
+    },
     "strength": {
       "delta": 0,
-      "base": 17
+      "base": 20
     },
     "agility": {
       "delta": 0,
-      "base": 10
+      "base": 20
     },
     "intellect": {
       "delta": 0,
-      "base": 8
+      "base": 20
     },
     "stamina": {
       "delta": 0,
-      "base": 11
-    },
-    "health": {
-      "delta": 0,
-      "base": 154
+      "base": 20
     },
     "armor": {
       "delta": 0,
       "base": 0
     },
-    "energy": {
-      "delta": 0,
-      "base": 100
-    },
     "critical": {
       "delta": 0,
       "base": 0
+    },
+    "favor": {
+      "delta": -10,
+      "base": 10
     }
   },
   "level": 1,
   "name": "Admin",
-  "room": "limbo:white",
-  "effects": [],
-  "experience": 0,
+  "room": "limbo:training1",
+  "effects": [
+    {
+      "config": {
+        "autoActivate": true,
+        "description": "You are regenerating over time.",
+        "duration": "inf",
+        "hidden": true,
+        "maxStacks": 0,
+        "name": "Regenerate",
+        "persists": true,
+        "refreshes": false,
+        "tickInterval": 3,
+        "type": "regen",
+        "unique": true
+      },
+      "elapsed": 359223,
+      "id": "regen",
+      "remaining": null,
+      "state": {
+        "magnitude": 15,
+        "lastTick": 1970,
+        "ticks": 117
+      }
+    },
+    {
+      "config": {
+        "autoActivate": true,
+        "description": "Tear a deep wound in your target's flesh dealing <bold>400%</bold> weapon damage over <bold>20</bold> seconds.",
+        "duration": 20000,
+        "hidden": false,
+        "maxStacks": 3,
+        "name": "Rend",
+        "persists": true,
+        "refreshes": false,
+        "tickInterval": 3,
+        "type": "skill:rend",
+        "unique": true
+      },
+      "elapsed": 19818,
+      "id": "skill.rend",
+      "remaining": 182,
+      "skill": "rend",
+      "state": {
+        "totalDamage": 8,
+        "stacks": 2,
+        "lastTick": 1315,
+        "ticks": 7
+      }
+    }
+  ],
+  "experience": 55,
   "inventory": {
     "items": [],
     "max": 16
   },
   "metadata": {
-    "class": "warrior"
+    "class": "paladin"
   },
-  "playerClass": "warrior",
-  "prompt": "[ %health.current%/%health.max% <b>hp</b> %energy.current%/%energy.max% <b>energy</b> ]",
+  "prompt": "[ <b><red>%health.current%</red></b>/<red>%health.max%</red> <b>hp</b> <b><yellow>%favor.current%</yellow></b>/<yellow>%favor.max%</yellow> <b>favor</b> ]",
   "quests": {
     "completed": [],
-    "active": []
+    "active": [
+      [
+        "limbo:journeybegins",
+        {
+          "state": [
+            {
+              "state": {
+                "count": 0
+              },
+              "progress": {
+                "percent": 0,
+                "display": "Find a Weapon: [0/1]"
+              },
+              "config": {
+                "title": "Find a Weapon",
+                "removeItem": false,
+                "count": 1,
+                "item": "limbo:rustysword"
+              }
+            },
+            {
+              "state": {
+                "count": 0
+              },
+              "progress": {
+                "percent": 0,
+                "display": "Find Some Armor: [0/1]"
+              },
+              "config": {
+                "title": "Find Some Armor",
+                "removeItem": false,
+                "count": 1,
+                "item": "limbo:leathervest"
+              }
+            },
+            {
+              "state": {
+                "equipped": false
+              },
+              "progress": {
+                "percent": 0,
+                "display": "Wield A Weapon: Not Equipped"
+              },
+              "config": {
+                "title": "Wield A Weapon",
+                "slot": "wield"
+              }
+            },
+            {
+              "state": {
+                "equipped": false
+              },
+              "progress": {
+                "percent": 0,
+                "display": "Equip Some Armor: Not Equipped"
+              },
+              "config": {
+                "title": "Equip Some Armor",
+                "slot": "chest"
+              }
+            }
+          ],
+          "progress": {
+            "percent": 0,
+            "display": "Find a Weapon: [0/1]\r\nFind Some Armor: [0/1]\r\nWield A Weapon: Not Equipped\r\nEquip Some Armor: Not Equipped"
+          },
+          "config": {
+            "level": 1,
+            "title": "A Journey Begins"
+          }
+        }
+      ]
+    ]
   },
-  "role": 2,
+  "role": 0,
   "equipment": {}
 }

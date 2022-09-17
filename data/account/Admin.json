@@ -3,10 +3,14 @@
   "characters": [
     {
       "username": "Admin",
+      "deleted": true
+    },
+    {
+      "username": "Admin",
       "deleted": false
     }
   ],
-  "password": "$2a$10$kE4d5oRcQOCksbKHur7nbezcGD6gUil/cqkwhGagfM1u4WfhDjR8.",
+  "password": "$2a$10$qVT8V1.Np1r6LKvVdVqwO.Rpmz.wZw8tGsjQUAza7t6KMDIc33Vqi",
   "banned": false,
   "deleted": false,
   "metadata": {}
