@@ -15,7 +15,7 @@
 const semver = require('semver');
 const net = require('net');
 const commander = require('commander');
-const argv = require('optimist').argv;
+const argv = require('minimist')(process.argv.slice(2));
 const fs = require('fs');
 
 // for dev clone the github:ranviermud/core repo, and run npm link in that folder, then come

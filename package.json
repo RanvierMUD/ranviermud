@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "commander": "^2.19.0",
-    "optimist": "",
+    "minimist": "^1.2.8",
     "ranvier": "^3.0.5",
     "ranvier-datasource-file": "^1.0.3",
     "semver": "^5.6.0",
@@ -28,6 +28,6 @@
     "winston": "^2.4.4"
   },
   "devDependencies": {
-    "git-url-parse": "^11.1.2"
+    "git-url-parse": "^16.0.1"
   }
 }
